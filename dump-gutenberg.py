@@ -11,6 +11,7 @@ from docopt import docopt
 from gutenberg import logger
 from gutenberg.database import db
 from gutenberg.rdf import setup_rdf_folder, parse_and_fill
+from gutenberg.rdf import download_all_books
 
 help = """Usage: dump-gutenberg.py [-f RDF_FOLDER] [-m URL_MIRROR] """ \
        """[--prepare] [--parse] [--download] [--export] [--zim] [--complete]
@@ -56,6 +57,8 @@ def main(arguments):
         logger.info("PARSING rdf-files in {}".format(RDF_FOLDER))
         parse_and_fill(RDF_FOLDER)
 
+    if DO_DOWNLOAD:
+        download_all_books()
 
 if __name__ == '__main__':
     main(docopt(help, version=0.1))
