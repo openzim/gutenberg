@@ -4,13 +4,12 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-import logging
 
 from peewee import (Model, SqliteDatabase,
                     CharField, DateField, BooleanField,
                     IntegerField, ForeignKeyField)
 
-logger = logging.getLogger(__name__)
+from gutenberg import logger
 
 db = SqliteDatabase('gutenberg.db')
 db.connect()
@@ -203,7 +202,7 @@ class BookFormat(Model):
 
 
 def load_fixtures(model):
-    logger.info("Loading fixtures for {}".format(model))
+    logger.info("Loading fixtures for {}".format(model._meta.name))
 
     for fixture in getattr(model._meta, 'fixtures', []):
         f = model.create(**fixture)
@@ -216,9 +215,9 @@ def setup_database():
     for model in (License, Format, Author, Book, BookFormat):
         if not model.table_exists():
             model.create_table()
-            logger.debug("Created table for {}".format(model))
+            logger.debug("Created table for {}".format(model._meta.name))
             load_fixtures(model)
         else:
-            logger.debug("License table already exists.")
+            logger.debug("{} table already exists.".format(model._meta.name))
 
 setup_database()
