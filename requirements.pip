@@ -1,4 +1,4 @@
-BeautifulSoup==3.2.1
+beautifulsoup4==4.3.2
 Jinja2==2.7.3
 ipdb==0.8
 ipython==2.1.0
