@@ -18,6 +18,7 @@ db.connect()
 class License(Model):
 
     class Meta:
+        database = db
         fixtures = [
             {'slug': 'PD', 'name': ""},
             {'slug': 'None', 'name': ""},
@@ -31,6 +32,7 @@ class License(Model):
 class Format(Model):
 
     class Meta:
+        database = db
         fixtures = [
             {
                 'slug': 'html',
@@ -145,6 +147,7 @@ class Format(Model):
 class Author(Model):
 
     class Meta:
+        database = db
         fixtures = [
             {
                 'gut_id': 'various',
