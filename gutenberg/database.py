@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 db = SqliteDatabase('gutenberg.db')
 db.connect()
 
+
 class License(Model):
 
     class Meta:
@@ -27,6 +28,9 @@ class License(Model):
 
     slug = CharField(max_length=20, primary_key=True)
     name = CharField()
+
+    def __unicode__(self):
+        return self.name
 
 
 class Format(Model):
@@ -143,6 +147,9 @@ class Format(Model):
     images = BooleanField(default=False)
     pattern = CharField(max_length=50)
 
+    def __unicode__(self):
+        return self.name
+
 
 class Author(Model):
 
@@ -161,9 +168,15 @@ class Author(Model):
 
     gut_id = CharField(max_length=100)
     last_name = CharField(max_length=150)
-    first_names = CharField(max_length=300)
+    first_names = CharField(max_length=300, null=True)
     birth_date = DateField(null=True)
     death_date = DateField(null=True)
+
+    def __unicode__(self):
+        return self.name()
+
+    def name(self):
+        return "{}, {}".format(self.last_name, self.first_names)
 
 
 class Book(Model):
@@ -177,18 +190,22 @@ class Book(Model):
     language = CharField(max_length=10)
     downloads = IntegerField(default=0)
 
+    def __unicode__(self):
+        return "{}/{}".format(self.id, self.title)
+
 
 class BookFormat(Model):
     book = ForeignKeyField(Book)
     format = ForeignKeyField(Format)
 
+    def __unicode__(self):
+        return "[{}] {}".format(self.format, self.book.title)
+
 
 def load_fixtures(model):
     logger.info("Loading fixtures for {}".format(model))
 
-
-
-    for fixture in getattr(model.Meta, 'fixtures', []):
+    for fixture in getattr(model._meta, 'fixtures', []):
         f = model.create(**fixture)
         logger.debug("[fixtures] Created {}".format(f))
 
@@ -197,12 +214,11 @@ def setup_database():
     logger.info("Setting up the database")
 
     for model in (License, Format, Author, Book, BookFormat):
-        try:
-            License.create_table()
+        if not model.table_exists():
+            model.create_table()
             logger.debug("Created table for {}".format(model))
-        except:
-            logger.debug("License table already exists.")
+            load_fixtures(model)
         else:
-            load_fixtures(License)
+            logger.debug("License table already exists.")
 
 setup_database()
