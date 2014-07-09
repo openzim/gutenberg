@@ -172,7 +172,6 @@ class Book(Model):
     title = CharField(max_length=500)
     subtitle = CharField(max_length=500, null=True)
     author = ForeignKeyField(Author)
-    date = DateField(formats='%Y-%m-%d', null=True)
     license = ForeignKeyField(License, related_name='books')
     language = CharField(max_length=10)
     downloads = IntegerField(default=0)
