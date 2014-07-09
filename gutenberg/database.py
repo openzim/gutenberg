@@ -169,8 +169,8 @@ class Author(Model):
     gut_id = CharField(max_length=100)
     last_name = CharField(max_length=150)
     first_names = CharField(max_length=300, null=True)
-    birth_date = DateField(null=True)
-    death_date = DateField(null=True)
+    birth_date = CharField(null=True)
+    death_date = CharField(null=True)
 
     def __unicode__(self):
         return self.name()
