@@ -157,7 +157,7 @@ class Author(Model):
         database = db
         fixtures = [
             {
-                'gut_id': 'various',
+                'gut_id': '116',
                 'last_name': "Various",
             },
             {
