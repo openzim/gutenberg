@@ -1,0 +1,6 @@
+BeautifulSoup==3.2.1
+Jinja2==2.7.3
+ipdb==0.8
+ipython==2.1.0
+peewee==2.2.5
+requests==2.3.0
