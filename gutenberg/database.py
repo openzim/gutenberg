@@ -156,7 +156,7 @@ class Author(Model):
         database = db
         fixtures = [
             {
-                'gut_id': 'various',
+                'gut_id': '116',
                 'last_name': "Various",
             },
             {
@@ -168,8 +168,8 @@ class Author(Model):
     gut_id = CharField(max_length=100)
     last_name = CharField(max_length=150)
     first_names = CharField(max_length=300, null=True)
-    birth_date = DateField(null=True)
-    death_date = DateField(null=True)
+    birth_date = CharField(max_length=10, null=True)
+    death_date = CharField(max_length=10, null=True)
 
     def __unicode__(self):
         return self.name()
@@ -184,7 +184,6 @@ class Book(Model):
     title = CharField(max_length=500)
     subtitle = CharField(max_length=500, null=True)
     author = ForeignKeyField(Author)
-    date = DateField(formats='%Y-%m-%d', null=True)
     license = ForeignKeyField(License, related_name='books')
     language = CharField(max_length=10)
     downloads = IntegerField(default=0)

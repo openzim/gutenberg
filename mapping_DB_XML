@@ -1,0 +1,24 @@
+Mapping between the database and the XML
+
+Book
+id: node=pgterms:ebook attribute=rdf:about "ebooks/45213"
+title: node=dcterms:title 1st line
+subtitle: node=dcterms:title 2nd-last lines
+language: node=dcterms:language/rdf:Description/rdf:value
+downloads: node=pgterms:downloads
+
+Author:
+gut_id: node=dcterms:creator/pgterms:agent attribute=rdf:about "2009/agents/216"
+last_name: node=dcterms:creator/pgterms:agent/pgterms:name before the comma
+           node=marcrel:com/pgterms:agent/pgterms:name before the comma
+first_name: node=dcterms:creator/pgterms:agent/pgterms:name after the comma
+            node=marcrel:com/pgterms:agent/pgterms:name after the comma
+birth_date: node=marcrel:com/pgterms:agent/pgterms:birthdate
+death_date: node=marcrel:com/pgterms:agent/pgterms:deathdate
+
+Format:
+node=dcterms:hasFormat/pgterms:file attribute=rdf:about
+
+License:
+node=dcterms:rights
+
