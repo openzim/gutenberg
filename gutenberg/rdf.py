@@ -36,7 +36,7 @@ def download_rdf_file(rdf_url):
 
 def extract_rdf_files(rdf_tarball, rdf_path):
     if path(rdf_path).exists():
-        logger.info("\RDF files already exists in {}".format(rdf_path))
+        logger.info("\tRDF files already exists in {}".format(rdf_path))
         return
 
     logger.info("\tExtracting {} into {}".format(rdf_tarball, rdf_path))

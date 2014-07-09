@@ -9,5 +9,5 @@ from gutenberg import logger
 
 
 def download_all_books():
-
+    logger.warn("\tNothing to do yet ://")
     return

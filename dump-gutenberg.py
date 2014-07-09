@@ -9,22 +9,21 @@ import os
 from docopt import docopt
 
 from gutenberg import logger
-from gutenberg.database import db
 from gutenberg.rdf import setup_rdf_folder, parse_and_fill
-from gutenberg.rdf import download_all_books
+from gutenberg.download import download_all_books
 
 help = """Usage: dump-gutenberg.py [-f RDF_FOLDER] [-m URL_MIRROR] """ \
        """[--prepare] [--parse] [--download] [--export] [--zim] [--complete]
 
--h --help                   Display this help message
--m --mirror URL_MIRROR      Use URL as base for all downloads.
--f --rdf-folder RDF_FOLDER  Don't download rdf-files.tar.bz2 and use extracted folder instead
+-h --help                       Display this help message
+-m --mirror=<URL_MIRROR>        Use URL as base for all downloads.
+-f --rdf-folder=<RDF_FOLDER>    Don't download rdf-files.tar.bz2 and use extracted folder instead
 
---prepare                   Download & extract rdf-files.tar.bz2
---parse                     Parse all RDF files and fill-up the DB
---download                  Download ebooks based on filters
---export                    Export downloaded content to zim-friendly static HTML
---zim                       Create a ZIM file
+--prepare                       Download & extract rdf-files.tar.bz2
+--parse                         Parse all RDF files and fill-up the DB
+--download                      Download ebooks based on filters
+--export                        Export downloaded content to zim-friendly static HTML
+--zim                           Create a ZIM file
 
 This script is used to produce a ZIM file (and any intermediate state)
 of Gutenberg repository using a mirror."""
@@ -41,8 +40,8 @@ def main(arguments):
     DO_ZIM = arguments.get('--zim', False)
     COMPLETE_DUMP = arguments.get('--complete', False)
 
-    URL_MIRROR = arguments.get('URL_MIRROR', 'http://zimfarm.kiwix.org/gutenberg')
-    RDF_FOLDER = arguments.get('RDF_FOLDER')
+    URL_MIRROR = arguments.get('--mirror', 'http://zimfarm.kiwix.org/gutenberg')
+    RDF_FOLDER = arguments.get('--rdf-folder')
     RDF_URL = arguments.get('RDF_URL', 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2')
 
     if COMPLETE_DUMP:
@@ -58,6 +57,7 @@ def main(arguments):
         parse_and_fill(RDF_FOLDER)
 
     if DO_DOWNLOAD:
+        logger.info("DOWNLOADING ebooks from mirror using filters")
         download_all_books()
 
 if __name__ == '__main__':
