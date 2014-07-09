@@ -20,9 +20,9 @@ class License(Model):
     class Meta:
         database = db
         fixtures = [
-            {'slug': 'PD', 'name': ""},
-            {'slug': 'None', 'name': ""},
-            {'slug': 'Copyright', 'name': ""},
+            {'slug': 'PD', 'name': "Copyrighted. Read the copyright notice inside this book for details."},
+            {'slug': 'None', 'name': "None"},
+            {'slug': 'Copyright', 'name': "Public domain in the USA."},
         ]
 
     slug = CharField(max_length=20, primary_key=True)
