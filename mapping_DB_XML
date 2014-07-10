@@ -27,4 +27,36 @@ License values:
 * "Copyrighted. Read the copyright notice inside this book for details." 937 books
 * "None" 99 books
 * "Public domain in the USA." 45160 books
-
+-------------------
+Format values:
+application/epub+zip			ebooks/{id}.epub.noimages
+application/msword				
+application/octet-stream		
+application/postscript			
+application/prs.plucker			ebooks/{id}.plucker
+application/prs.tei				
+application/prs.tex				
+application/vnd.palm			
+application/x-iso9660-image		
+application/x-mobipocket-ebook	ebooks/{id}.kindle.noimages
+application/x-mslit-ebook		
+application/x-qioo-ebook		ebooks/{id}.qioo
+application/zip					files/{id}/{id}-8.zip (zip+text8) files/{id}/{id}-h.zip (zip+html)
+audio/midi						
+audio/mp4						
+audio/mpeg						
+audio/ogg						
+audio/x-ms-wma					
+audio/x-wav						
+image/gif						
+image/jpeg						
+image/png						
+image/tiff						
+text/html						files/{id}/{id}-h/{id}-h.htm
+text/plain						ebooks/{id}.txt.utf-8 (textu) files/{id}/{id}-8.txt (text8)
+text/rtf						
+text/xml						
+text/x-rst						
+video/mpeg						
+video/quicktime					
+video/x-msvideo					
