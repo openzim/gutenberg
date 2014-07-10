@@ -118,8 +118,10 @@ class RdfParser():
         if not self.author:
             self.author = soup.find('marcrel:com')
         if self.author:
-            self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
-            self.author_name = re.sub(r' +', ' ', self.author.find('pgterms:name').text).split(',')
+            self.author_id = re.match(
+                r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
+            self.author_name = re.sub(
+                r' +', ' ', self.author.find('pgterms:name').text)).split(',')
             if len(self.author_name) == 1:
                 self.last_name = self.author_name[0]
                 self.first_name = ''
@@ -154,14 +156,9 @@ class RdfParser():
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
-        self.file_types = ({x.attrs['rdf:about']: x.find('rdf:value').text
+        self.file_types = ({x.attrs['rdf:about'].split('/')[-1]: x.find('rdf:value').text
                        for x in file_types
                        if not x.find('rdf:value').text.endswith('application/zip')})
-        # file_types = [x.attrs['rdf:about'] for x in file_types]
-        # file_types = [x.split('/')[-1] for x in file_types]
-        # valid_formats = [
-        #     x['pattern'].format(id=self.gid) for x in Format._meta.fixtures]
-        # self.file_types = [x for x in file_types if x in valid_formats]
 
         return self
 
@@ -171,11 +168,11 @@ def save_rdf_in_database(parser):
     # Insert author, if it not exists
     if parser.author_id:
         author_record = Author.get_or_create(
-            gut_id = parser.author_id,
-            last_name = parser.last_name,
-            first_names = parser.first_name,
-            birth_year = parser.birth_year,
-            death_year = parser.death_year
+            gut_id=parser.author_id,
+            last_name=parser.last_name,
+            first_names=parser.first_name,
+            birth_year=parser.birth_year,
+            death_year=parser.death_year
         )
     else:
         # No author, set Anonymous
@@ -189,13 +186,13 @@ def save_rdf_in_database(parser):
 
     # Insert book
     book_record = Book.create(
-        id = parser.gid,
-        title = parser.title,
-        subtitle = parser.subtitle,
-        author = author_record, #foreign key
-        license = license_record, #foreign key
-        language = parser.language,
-        downloads = parser.downloads
+        id=parser.gid,
+        title=parser.title,
+        subtitle=parser.subtitle,
+        author=author_record,  # foreign key
+        license=license_record,  # foreign key
+        language=parser.language,
+        downloads=parser.downloads
     )
 
     # Insert formats
@@ -204,24 +201,24 @@ def save_rdf_in_database(parser):
         # Sanitize MIME
         mime = parser.file_types[file_type]
         if not mime.startswith('text/plain'):
-            mime = re.sub(r'; charset=[a-z0-9-]+','', mime)
-        #else:
+            mime = re.sub(r'; charset=[a-z0-9-]+', '', mime)
+        # else:
         #    charset = re.match(r'; charset=([a-z0-9-]+)', mime).groups()[0]
 
         # Insert format type
-        format_record = Format.get_or_create(
-            mime = mime,
-            images = file_type.endswith('.images') or parser.file_types[file_type] == 'application/pdf',
-            pattern = re.sub(r'http://www.gutenberg.org/','',re.sub(r''+parser.gid, '{id}', file_type))
-        )
-
-        pattern = re.sub( r''+parser.gid, '{id}', file_type )
+        pattern = re.sub(r'' + parser.gid, '{id}', file_type)
         pattern = pattern.split('/')[-1]
+
+        format_record = Format.get_or_create(
+            mime=mime,
+            images=file_type.endswith(
+                '.images') or parser.file_types[file_type] == 'application/pdf',
+            pattern=pattern)
 
         # Insert book format
         bookformat_record = BookFormat.create(
-            book = book_record, #foreign key
-            format = format_record #foreign key
+            book=book_record,  # foreign key
+            format=format_record  # foreign key
         )
 
 
@@ -244,8 +241,8 @@ def get_formatted_number(num):
 if __name__ == '__main__':
     # Bacic Test with a sample rdf file
     import os
-    curd = os.path.join(os.path.abspath(__file__), 'pg45213.rdf')
-
+    curd = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), 'pg45213.rdf')
     if os.path.isfile(curd):
         data = ''
         with open('pg45213.rdf', 'r') as f:
