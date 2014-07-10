@@ -53,16 +53,18 @@ def main(arguments):
     DO_ZIM = arguments.get('--zim', False)
     COMPLETE_DUMP = arguments.get('--complete', False)
 
-    URL_MIRROR = arguments.get('--mirror', 'http://zimfarm.kiwix.org/gutenberg')
-    RDF_FOLDER = arguments.get('--rdf-folder', os.path.join('rdf-files'))
-    STATIC_FOLDER = arguments.get('--static-folder')
-    ZIM_FILE = arguments.get('--zim-file', 'gutenberg.zim')
-    WIPE_DB = not arguments.get('--keep-db', False)
-    RDF_URL = arguments.get('--rdf-url', 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2')
-    DL_CACHE = arguments.get('--dl-folder', os.path.join('dl-cache'))
+    URL_MIRROR = arguments.get('--mirror') or 'http://zimfarm.kiwix.org/gutenberg'
+    RDF_FOLDER = arguments.get('--rdf-folder') or os.path.join('rdf-files')
+    STATIC_FOLDER = arguments.get('--static-folder') or os.path.join('static')
+    ZIM_FILE = arguments.get('--zim-file') or 'gutenberg.zim'
+    WIPE_DB = not arguments.get('--keep-db') or False
+    RDF_URL = arguments.get('--rdf-url') or 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2'
+    DL_CACHE = arguments.get('--dl-folder') or os.path.join('dl-cache')
 
-    LANGUAGES = (arguments.get('--languages') or '').split(',')
-    FORMATS = (arguments.get('--formats') or '').split(',')
+    LANGUAGES = [x.strip().lower()
+                 for x in (arguments.get('--languages') or '').split(',')]
+    FORMATS = [x.strip().lower()
+               for x in (arguments.get('--formats') or '').split(',')]
 
     # no arguments, default to --complete
     if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM):
@@ -90,6 +92,7 @@ def main(arguments):
     if DO_EXPORT:
         logger.info("EXPORTING ebooks to satic folder (and JSON)")
         export_all_books(static_folder=STATIC_FOLDER,
+                         download_cache=DL_CACHE,
                          languages=LANGUAGES,
                          formats=FORMATS)
 
