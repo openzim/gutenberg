@@ -17,14 +17,17 @@ from gutenberg.database import Book, Format, BookFormat, Author
 
 
 def get_list_of_filtered_books(languages, formats):
-    qs = Book.select()
+
+    if len(formats):
+        qs = Book.select().join(BookFormat) \
+                 .join(Format) \
+                 .where(Format.mime << [FORMAT_MATRIX.get(f)
+                                        for f in formats]).group_by(Book.id)
+    else:
+        qs = Book.select()
 
     if len(languages):
         qs = qs.where(Book.language << languages)
-
-    if len(formats):
-        qs = qs.join(BookFormat) \
-               .where(Format.mime << [FORMAT_MATRIX.get(f) for f in formats])
 
     return qs
 
@@ -38,6 +41,9 @@ def export_all_books(static_folder,
     path(static_folder).mkdir_p()
 
     books = get_list_of_filtered_books(languages, formats)
+
+    sz = len(list(books))
+    logger.debug("\tFiltered book collection size: {}".format(sz))
 
     # export to HTML
     for book in books:
@@ -58,7 +64,7 @@ def article_name_for(book, cover=False):
 
 
 def fname_for(book, format):
-    return "{book.id}.{format}"
+    return "{id}.{format}".format(id=book.id, format=format)
 
 
 def html_content_for(book, static_folder, download_cache):
@@ -66,7 +72,7 @@ def html_content_for(book, static_folder, download_cache):
     html_fpath = os.path.join(download_cache, fname_for(book, 'html'))
 
     # is HTML file present?
-    if not path(html_fpath).exist():
+    if not path(html_fpath).exists():
         raise ValueError("Missing HTML content for #{} at {}"
                          .format(book.id, html_fpath))
 
@@ -98,7 +104,7 @@ def cover_html_content_for(book):
 
 
 def export_book_to(book, static_folder, download_cache):
-    logger.info("\tExporting Book #{id}.")
+    logger.info("\tExporting Book #{id}.".format(id=book.id))
 
     # actual book content, as HTML
     article_fpath = os.path.join(static_folder, article_name_for(book))
