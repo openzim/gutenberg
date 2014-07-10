@@ -109,7 +109,7 @@ class RdfParser():
         self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
         self.author = self.author.find('pgterms:name').text
         self.author_name = self.author.split(',')
-        self.first_name = ''.join(self.author.split(',')[::-1])
+        self.first_name = ' '.join(self.author.split(',')[::-1])
         self.last_name = self.author.split(',')[0]
 
         # Parsing the birth and (death, if the case) year of the author.
