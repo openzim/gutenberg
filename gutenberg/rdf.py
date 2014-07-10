@@ -10,13 +10,11 @@ import re
 from path import path
 
 from gutenberg import logger
-<<<<<<< HEAD
 from gutenberg.database import Format
 from gutenberg.utils import exec_cmd
-=======
 from gutenberg.utils import exec_cmd, download_file
-from gutenberg.database import db, Author, Format, BookFormat, License, Book
->>>>>>> dd1be53e1db6d4c37f91089cc728bfd3e00b3505
+from gutenberg.database import (db, Author, Format, BookFormat,
+                                License, Book)
 
 from bs4 import BeautifulSoup
 
@@ -152,16 +150,7 @@ class RdfParser():
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
-<<<<<<< HEAD
-        file_types = [x.attrs['rdf:about'] for x in file_types]
-        file_types = [x.split('/')[-1] for x in file_types]
-        valid_formats = [
-            x['pattern'].format(id=self.gid) for x in Format._meta.fixtures]
-
-        self.file_types = [x for x in file_types if x in valid_formats]
-=======
         self.file_types = { x.attrs['rdf:about']: x.find('rdf:value').text for x in file_types if not x.find('rdf:value').text.endswith('application/zip') }
->>>>>>> dd1be53e1db6d4c37f91089cc728bfd3e00b3505
 
         return self
 
@@ -196,7 +185,7 @@ def save_rdf_in_database(parser):
 
     # Insert formats
     for file_type in parser.file_types:
-        
+
         # Insert format type
         format_record = Format.get_or_create(
             mime = parser.file_types[file_type],
