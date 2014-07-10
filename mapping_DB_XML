@@ -22,3 +22,9 @@ node=dcterms:hasFormat/pgterms:file attribute=rdf:about
 License:
 node=dcterms:rights
 
+-------------------
+License values:
+* "Copyrighted. Read the copyright notice inside this book for details." 937 books
+* "None" 99 books
+* "Public domain in the USA." 45160 books
+
