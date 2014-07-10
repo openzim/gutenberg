@@ -1,0 +1,100 @@
+/* Global stuff */
+body {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #333333;
+    font-family: "Helvetica Neue",Verdana,Helvetica,sans-serif;
+    font-size: 75%;
+    line-height: 1.5;
+}
+
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+    border: 0 none;
+    font-family: inherit;
+    font-size: 100%;
+    font-style: inherit;
+    font-weight: inherit;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+a {
+    text-decoration: none;
+}
+
+.container {
+    display: block;
+    margin: 0 auto;
+    width: 950px;
+}
+
+/* Header top-menu */
+#header {
+    padding-bottom: 2em;
+}
+
+#top-menu {
+    background: none repeat scroll 0 0 #eddab7;
+    height: 73px;
+}
+
+#top-menu a {
+    color: inherit;
+    text-decoration: none;
+}
+
+#top-menu a img {
+    float: left;
+}
+
+#top-menu a div {
+    float: left;
+    font-weight: bold;
+    font-size: 25px;
+    padding-top: 3px;
+    line-height: 130%;
+    color: #b88b35;
+}
+
+/* Header bottom-menu */
+#bottom-menu {
+    background: none repeat scroll 0 0 #f5ecdb;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+    height: 35px;
+}
+
+ul.menu {
+    font-family: Arial,sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    list-style-type: none;
+    margin: 0;
+    padding: 7px;
+    float: left;
+}
+
+ul.menu > li {
+    float: left;
+    position: relative;
+    white-space: nowrap;
+}
+
+ul.menu > li > a {
+    margin-right: 8px;
+    padding: 0 15px 5px;
+    display: block;
+    height: 23px;
+    line-height: 23px;
+    text-decoration: none;
+    color: #b88b35;
+}
+
+.sort {
+    float: right;
+    height: 100%;
+}
+
+.sort > img {
+    padding: 6px;
+}
