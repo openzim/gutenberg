@@ -11,6 +11,13 @@ import envoy
 logger = logging.getLogger(__name__)
 
 
+FORMAT_MATRIX = {
+    'epub': 'application/epub+zip',
+    'pdf': 'application/pdf',
+    'html': 'text/html'
+}
+
+
 def exec_cmd(cmd):
     return envoy.run(str(cmd))
 
