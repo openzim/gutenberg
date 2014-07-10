@@ -20,9 +20,9 @@ class License(Model):
     class Meta:
         database = db
         fixtures = [
-            {'slug': 'PD', 'name': ""},
-            {'slug': 'None', 'name': ""},
-            {'slug': 'Copyright', 'name': ""},
+            {'slug': 'PD', 'name': "Copyrighted. Read the copyright notice inside this book for details."},
+            {'slug': 'None', 'name': "None"},
+            {'slug': 'Copyright', 'name': "Public domain in the USA."},
         ]
 
     slug = CharField(max_length=20, primary_key=True)
@@ -40,102 +40,119 @@ class Format(Model):
             {
                 'slug': 'html',
                 'name': "HTML",
+                'mime': 'text/html',
                 'images': False,
                 'pattern': "files/{id}/{id}-h.zip"
             },
             {
                 'slug': 'epubi',
                 'name': "ePUB with images",
+                'mime': 'application/epub+zip',
                 'images': True,
                 'pattern': "ebooks/{id}.epub.images"
             },
             {
                 'slug': 'epub',
                 'name': "ePUB no images",
+                'mime': 'application/epub+zip',
                 'images': False,
                 'pattern': "ebooks/{id}.epub.noimages"
             },
             {
                 'slug': 'kindlei',
                 'name': "Kindle with images",
+                'mime': 'application/x-mobipocket-ebook',
                 'images': True,
                 'pattern': "ebooks/{id}.kindle.images"
             },
             {
                 'slug': 'kindle',
                 'name': "Kindle no images",
+                'mime': 'application/x-mobipocket-ebook',
                 'images': False,
                 'pattern': "ebooks/{id}.kindle.noimages"
             },
             {
                 'slug': 'text',
                 'name': "Plain Text",
+                'mime': 'text/plain',
                 'images': False,
                 'pattern': "files/{id}/{id}.txt"
             },
             {
                 'slug': 'textu',
                 'name': "Plain Text Unicode",
+                'mime': 'text/plain', # two Unicode: UTF-8 and UTF-16
                 'images': False,
                 'pattern': "files/{id}/{id}-0.txt"
             },
             {
                 'slug': 'text8',
                 'name': "Plain Text 8-bit",
+                'mime': 'text/plain', # six 8-bit: iso-8859-{1,2,3,7,15} and macintosh
                 'images': False,
                 'pattern': "files/{id}/{id}-8.txt"
             },
             {
                 'slug': 'text5',
                 'name': "Plain Text Big-5",
+                'mime': 'text/plain; charset=big5',
                 'images': False,
                 'pattern': "files/{id}/{id}-5.txt"
             },
             {
                 'slug': 'tex',
                 'name': "TeX",
+                'mime': 'application/prs.tex',
                 'images': False,
                 'pattern': "files/{id}/{id}-t.tex"
             },
             {
                 'slug': 'xml',
                 'name': "XML",
+                'mime': 'text/xml',
                 'images': False,
                 'pattern': "files/{id}/{id}-x.xml"
             },
             {
                 'slug': 'mp3',
                 'name': "MP3",
+                'mime': 'audio/mpeg',
                 'images': False,
                 'pattern': "files/{id}/{id}-m-###.mp3"
             },
             {
                 'slug': 'rtf',
                 'name': "RTF",
+                'mime': 'text/rtf',
                 'images': False,
                 'pattern': "files/{id}/{id}-r.rtf"
             },
             {
                 'slug': 'pdf',
                 'name': "PDF",
+                'mime': 'application/pdf',
                 'images': True,
                 'pattern': "files/{id}/{id}-pdf.pdf"
             },
             {
                 'slug': 'lit',
                 'name': "LIT",
+                'mime': 'application/x-mslit-ebook',
                 'images': False,
                 'pattern': "files/{id}/{id}-lit.lit"
             },
             {
                 'slug': 'doc',
                 'name': "Word",
+                'mime': 'application/msword',
                 'images': False,
                 'pattern': "files/{id}/{id}-doc.doc"
             },
             {
                 'slug': 'pdb',
                 'name': "PDB",
+                'mime': '', # no PDB file
                 'images': False,
                 'pattern': "files/{id}/{id}-pdb.pdb"
             },
@@ -143,6 +160,7 @@ class Format(Model):
 
     slug = CharField(primary_key=True)
     name = CharField(max_length=100)
+    mime = CharField(max_length=50)
     images = BooleanField(default=False)
     pattern = CharField(max_length=50)
 
@@ -168,8 +186,8 @@ class Author(Model):
     gut_id = CharField(max_length=100)
     last_name = CharField(max_length=150)
     first_names = CharField(max_length=300, null=True)
-    birth_date = CharField(max_length=10, null=True)
-    death_date = CharField(max_length=10, null=True)
+    birth_year = CharField(max_length=10, null=True)
+    death_year = CharField(max_length=10, null=True)
 
     def __unicode__(self):
         return self.name()
