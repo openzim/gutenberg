@@ -94,7 +94,7 @@ class RdfParser():
         self.gid = gid
 
     def parse(self):
-        soup = BeautifulSoup(self.rdf_data)
+        soup = BeautifulSoup(self.rdf_data,from_encoding='utf-8')
 
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.
@@ -120,8 +120,12 @@ class RdfParser():
             self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
             self.author = re.sub(r' +', ' ', self.author.find('pgterms:name').text)
             self.author_name = self.author.split(',')
-            self.first_name = ' '.join(self.author_name[::-1]).strip()
-            self.last_name = self.author_name[0]
+            if len(self.author_name) == 1:
+                self.last_name = self.author_name[0]
+                self.first_name = ''
+            else:
+                self.first_name = ' '.join(self.author_name[::-2]).strip()
+                self.last_name = self.author_name[0]
         else:
             self.author_id = self.author = self.author_name = self.first_name = self.last_name = None
 
