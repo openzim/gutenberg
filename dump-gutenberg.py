@@ -11,13 +11,17 @@ from docopt import docopt
 from gutenberg import logger
 from gutenberg.rdf import setup_rdf_folder, parse_and_fill
 from gutenberg.download import download_all_books
+from gutenberg.export import export_all_books
+from gutenberg.zim import build_zimfile
 
 help = """Usage: dump-gutenberg.py [-f RDF_FOLDER] [-m URL_MIRROR] """ \
        """[--prepare] [--parse] [--download] [--export] [--zim] [--complete]
 
 -h --help                       Display this help message
--m --mirror=<URL_MIRROR>        Use URL as base for all downloads.
--f --rdf-folder=<RDF_FOLDER>    Don't download rdf-files.tar.bz2 and use extracted folder instead
+-m --mirror=<url>               Use URL as base for all downloads.
+-f --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use extracted folder instead
+-e --static-folder=<folder>     Use-as/Write-to this folder static HTML
+-e --zim-file=<file>            Write ZIM into this file path
 
 --prepare                       Download & extract rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
@@ -30,8 +34,6 @@ of Gutenberg repository using a mirror."""
 
 def main(arguments):
 
-    from pprint import pprint as pp ; pp(arguments)
-
     # actions constants
     DO_PREPARE = arguments.get('--prepare', False)
     DO_PARSE = arguments.get('--parse', False)
@@ -42,7 +44,13 @@ def main(arguments):
 
     URL_MIRROR = arguments.get('--mirror', 'http://zimfarm.kiwix.org/gutenberg')
     RDF_FOLDER = arguments.get('--rdf-folder')
+    STATIC_FOLDER = arguments.get('--static-folder')
+    ZIM_FILE = arguments.get('--zim-file', 'gutenberg.zim')
     RDF_URL = arguments.get('RDF_URL', 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2')
+
+    # no arguments, default to --complete
+    if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM):
+        COMPLETE_DUMP = True
 
     if COMPLETE_DUMP:
         DO_PREPARE = DO_PARSE = DO_DOWNLOAD = DO_EXPORT = DO_ZIM = True
@@ -58,7 +66,15 @@ def main(arguments):
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
-        download_all_books()
+        download_all_books(URL_MIRROR)
+
+    if DO_EXPORT:
+        logger.info("EXPORTING ebooks to satic folder (and JSON)")
+        export_all_books(STATIC_FOLDER)
+
+    if DO_ZIM:
+        logger.info("BUILDING ZIM off satic folder {}".format(STATIC_FOLDER))
+        build_zimfile(STATIC_FOLDER, ZIM_FILE)
 
 if __name__ == '__main__':
     main(docopt(help, version=0.1))

@@ -8,6 +8,6 @@ from __future__ import (unicode_literals, absolute_import,
 from gutenberg import logger
 
 
-def download_all_books(url_mirror):
+def build_zimfile(static_folder, zim_path):
     logger.warn("\tNothing to do yet ://")
     return

@@ -8,6 +8,6 @@ from __future__ import (unicode_literals, absolute_import,
 from gutenberg import logger
 
 
-def download_all_books(url_mirror):
+def export_all_books(export_folder):
     logger.warn("\tNothing to do yet ://")
     return
