@@ -10,6 +10,7 @@ import re
 from path import path
 
 from gutenberg import logger
+from gutenberg.database import Format
 from gutenberg.utils import exec_cmd
 
 from bs4 import BeautifulSoup
@@ -95,11 +96,11 @@ class RdfParser():
         soup = BeautifulSoup(self.rdf_data)
 
         # The tile of the book: this may or may not be divided
-        # into a new-line-seperated title and subtitle. 
+        # into a new-line-seperated title and subtitle.
         # If it is, then we will just split the title.
         self.title = soup.find('dcterms:title').text
-        self.title = title.split('\n')[0]
-        self.subtitle = ' '.join(title.split('\n')[1:])
+        self.title = self.title.split('\n')[0]
+        self.subtitle = ' '.join(self.title.split('\n')[1:])
 
         # Parsing the name of the Author. Sometimes it's the name of
         # an organization or the name is not known and therefore
@@ -142,7 +143,12 @@ class RdfParser():
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
-        self.file_types = map(lambda x: x.attrs['rdf:about'], file_types)
+        file_types = [x.attrs['rdf:about'] for x in file_types]
+        file_types = [x.split('/')[-1] for x in file_types]
+        valid_formats = [
+            x['pattern'].format(id=self.gid) for x in Format._meta.fixtures]
+
+        self.file_types = [x for x in file_types if x in valid_formats]
 
         return self
 
@@ -173,5 +179,5 @@ if __name__ == '__main__':
         with open('pg45213.rdf', 'r') as f:
             data = f.read()
 
-        parser = RdfParser(data).parse()
-        print(vars(parser))
+        parser = RdfParser(data, 45213).parse()
+        print(parser.file_types)
