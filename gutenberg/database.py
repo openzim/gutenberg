@@ -20,9 +20,9 @@ class License(Model):
     class Meta:
         database = db
         fixtures = [
-            {'slug': 'PD', 'name': "Copyrighted. Read the copyright notice inside this book for details."},
+            {'slug': 'PD', 'name': "Public domain in the USA."},
             {'slug': 'None', 'name': "None"},
-            {'slug': 'Copyright', 'name': "Public domain in the USA."},
+            {'slug': 'Copyright', 'name': "Copyrighted. Read the copyright notice inside this book for details."},
         ]
 
     slug = CharField(max_length=20, primary_key=True)
@@ -36,6 +36,113 @@ class Format(Model):
 
     class Meta:
         database = db
+<<<<<<< HEAD
+        fixtures = [
+            {
+                'slug': 'html',
+                'name': "HTML",
+                'images': False,
+                'pattern': "{id}-h.zip"
+            },
+            {
+                'slug': 'epubi',
+                'name': "ePUB with images",
+                'images': True,
+                'pattern': "{id}.epub.images"
+            },
+            {
+                'slug': 'epub',
+                'name': "ePUB no images",
+                'images': False,
+                'pattern': "{id}.epub.noimages"
+            },
+            {
+                'slug': 'kindlei',
+                'name': "Kindle with images",
+                'images': True,
+                'pattern': "{id}.kindle.images"
+            },
+            {
+                'slug': 'kindle',
+                'name': "Kindle no images",
+                'images': False,
+                'pattern': "{id}.kindle.noimages"
+            },
+            {
+                'slug': 'text',
+                'name': "Plain Text",
+                'images': False,
+                'pattern': "{id}.txt"
+            },
+            {
+                'slug': 'textu',
+                'name': "Plain Text Unicode",
+                'images': False,
+                'pattern': "{id}-0.txt"
+            },
+            {
+                'slug': 'text8',
+                'name': "Plain Text 8-bit",
+                'images': False,
+                'pattern': "{id}-8.txt"
+            },
+            {
+                'slug': 'text5',
+                'name': "Plain Text Big-5",
+                'images': False,
+                'pattern': "{id}-5.txt"
+            },
+            {
+                'slug': 'tex',
+                'name': "TeX",
+                'images': False,
+                'pattern': "{id}-t.tex"
+            },
+            {
+                'slug': 'xml',
+                'name': "XML",
+                'images': False,
+                'pattern': "{id}-x.xml"
+            },
+            {
+                'slug': 'mp3',
+                'name': "MP3",
+                'images': False,
+                'pattern': "{id}-m-###.mp3"
+            },
+            {
+                'slug': 'rtf',
+                'name': "RTF",
+                'images': False,
+                'pattern': "{id}-r.rtf"
+            },
+            {
+                'slug': 'pdf',
+                'name': "PDF",
+                'images': True,
+                'pattern': "{id}-pdf.pdf"
+            },
+            {
+                'slug': 'lit',
+                'name': "LIT",
+                'images': False,
+                'pattern': "{id}-lit.lit"
+            },
+            {
+                'slug': 'doc',
+                'name': "Word",
+                'images': False,
+                'pattern': "{id}-doc.doc"
+            },
+            {
+                'slug': 'pdb',
+                'name': "PDB",
+                'images': False,
+                'pattern': "{id}-pdb.pdb"
+            },
+        ]
+=======
+>>>>>>> dd1be53e1db6d4c37f91089cc728bfd3e00b3505
 
     mime = CharField(max_length=100)
     images = BooleanField(default=True)
