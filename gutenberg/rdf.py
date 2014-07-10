@@ -125,8 +125,8 @@ class RdfParser():
 
         # Book title
         self.title = soup.find('dcterms:title').text
-        self.subtitle = ' '.join(title.split('\n')[1:])
-        self.title = title.split('\n')[0]
+        self.subtitle = ' '.join(self.title.split('\n')[1:])
+        self.title = self.title.split('\n')[0]
 
         # ISO 639-3 language codes that consist of 2 or 3 letters
         self.language = soup.find('dcterms:language').find('rdf:value').text
@@ -147,7 +147,7 @@ class RdfParser():
 
 
 def save_rdf_in_database(parser):
-    
+
     # Insert author, if it not exists
     author_record = Author.get_or_create(
         gut_id = parser.author_id,
@@ -156,7 +156,7 @@ def save_rdf_in_database(parser):
         birth_year = parser.birth_year,
         death_year = parser.death_year
     )
-    
+
     # Get license
     try:
         license_record = License.get(name=parser.license)
@@ -173,7 +173,7 @@ def save_rdf_in_database(parser):
         language = parser.language,
         downloads = parser.downloads
     )
-    
+
     # Insert formats
     for file_type in parser.file_types:
         
@@ -183,7 +183,7 @@ def save_rdf_in_database(parser):
             images = file_type.endswith('.images') or parser.file_types[file_type] == 'application/pdf',
             pattern = re.sub( r''+parser.gid, '{id}', file_type )
         )
-        
+
         # Insert book format
         bookformat_record = BookFormat.create(
             book = book_record, #foreign key
