@@ -107,10 +107,10 @@ class RdfParser():
         if not self.author:
             self.author = soup.find('marcrel:com')
         self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
-        self.author = self.author.find('pgterms:name').text
+        self.author = re.sub(r' +', ' ', self.author.find('pgterms:name').text)
         self.author_name = self.author.split(',')
-        self.first_name = ' '.join(self.author.split(',')[::-1])
-        self.last_name = self.author.split(',')[0]
+        self.first_name = ' '.join(self.author_name[::-1]).strip()
+        self.last_name = self.author_name[0]
 
         # Parsing the birth and (death, if the case) year of the author.
         # These values are likely to be null.
@@ -176,9 +176,16 @@ def save_rdf_in_database(parser):
     # Insert formats
     for file_type in parser.file_types:
         
+        # Sanitize MIME
+        mime = parser.file_types[file_type]
+        if not mime.startswith('text/plain'):
+            mime = re.sub(r'; charset=[a-z0-9-]+','', mime)
+        #else:
+        #    charset = re.match(r'; charset=([a-z0-9-]+)', mime).groups()[0]
+        
         # Insert format type
         format_record = Format.get_or_create(
-            mime = parser.file_types[file_type],
+            mime = mime,
             images = file_type.endswith('.images') or parser.file_types[file_type] == 'application/pdf',
             pattern = re.sub( r''+parser.gid, '{id}', file_type )
         )
