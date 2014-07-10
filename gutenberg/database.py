@@ -75,6 +75,9 @@ class Author(Model):
     def to_dict(self):
         return {'label': self.name(), 'id': self.gut_id}
 
+    def to_array(self):
+        return [self.name(), self.gut_id]
+
 
 class Book(Model):
 
@@ -95,6 +98,9 @@ class Book(Model):
     def to_dict(self):
         return {'title': self.title,
                 'author': self.author.name()}
+
+    def to_array(self):
+        return [self.title, self.author.name()]
 
 
 class BookFormat(Model):
