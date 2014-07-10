@@ -77,7 +77,6 @@ def parse_and_process_file(rdf_file):
         raise ValueError(rdf_file)
 
     gid = re.match(r'.*/pg([0-9]+).rdf', rdf_file).groups()[0]
-    logger.info(gid)
 
     with open(rdf_file, 'r') as f:
         parser = RdfParser(f.read(), gid).parse()
