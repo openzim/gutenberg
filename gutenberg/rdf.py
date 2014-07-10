@@ -121,7 +121,7 @@ class RdfParser():
             self.author_id = re.match(
                 r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
             self.author_name = re.sub(
-                r' +', ' ', self.author.find('pgterms:name').text)).split(',')
+                r' +', ' ', self.author.find('pgterms:name').text).split(',')
             if len(self.author_name) == 1:
                 self.last_name = self.author_name[0]
                 self.first_name = ''
