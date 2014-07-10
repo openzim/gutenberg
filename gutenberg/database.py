@@ -41,103 +41,103 @@ class Format(Model):
                 'slug': 'html',
                 'name': "HTML",
                 'images': False,
-                'pattern': "files/{id}/{id}-h.zip"
+                'pattern': "{id}-h.zip"
             },
             {
                 'slug': 'epubi',
                 'name': "ePUB with images",
                 'images': True,
-                'pattern': "ebooks/{id}.epub.images"
+                'pattern': "{id}.epub.images"
             },
             {
                 'slug': 'epub',
                 'name': "ePUB no images",
                 'images': False,
-                'pattern': "ebooks/{id}.epub.noimages"
+                'pattern': "{id}.epub.noimages"
             },
             {
                 'slug': 'kindlei',
                 'name': "Kindle with images",
                 'images': True,
-                'pattern': "ebooks/{id}.kindle.images"
+                'pattern': "{id}.kindle.images"
             },
             {
                 'slug': 'kindle',
                 'name': "Kindle no images",
                 'images': False,
-                'pattern': "ebooks/{id}.kindle.noimages"
+                'pattern': "{id}.kindle.noimages"
             },
             {
                 'slug': 'text',
                 'name': "Plain Text",
                 'images': False,
-                'pattern': "files/{id}/{id}.txt"
+                'pattern': "{id}/{id}.txt"
             },
             {
                 'slug': 'textu',
                 'name': "Plain Text Unicode",
                 'images': False,
-                'pattern': "files/{id}/{id}-0.txt"
+                'pattern': "{id}-0.txt"
             },
             {
                 'slug': 'text8',
                 'name': "Plain Text 8-bit",
                 'images': False,
-                'pattern': "files/{id}/{id}-8.txt"
+                'pattern': "{id}-8.txt"
             },
             {
                 'slug': 'text5',
                 'name': "Plain Text Big-5",
                 'images': False,
-                'pattern': "files/{id}/{id}-5.txt"
+                'pattern': "{id}-5.txt"
             },
             {
                 'slug': 'tex',
                 'name': "TeX",
                 'images': False,
-                'pattern': "files/{id}/{id}-t.tex"
+                'pattern': "{id}-t.tex"
             },
             {
                 'slug': 'xml',
                 'name': "XML",
                 'images': False,
-                'pattern': "files/{id}/{id}-x.xml"
+                'pattern': "{id}-x.xml"
             },
             {
                 'slug': 'mp3',
                 'name': "MP3",
                 'images': False,
-                'pattern': "files/{id}/{id}-m-###.mp3"
+                'pattern': "{id}-m-###.mp3"
             },
             {
                 'slug': 'rtf',
                 'name': "RTF",
                 'images': False,
-                'pattern': "files/{id}/{id}-r.rtf"
+                'pattern': "{id}-r.rtf"
             },
             {
                 'slug': 'pdf',
                 'name': "PDF",
                 'images': True,
-                'pattern': "files/{id}/{id}-pdf.pdf"
+                'pattern': "{id}-pdf.pdf"
             },
             {
                 'slug': 'lit',
                 'name': "LIT",
                 'images': False,
-                'pattern': "files/{id}/{id}-lit.lit"
+                'pattern': "{id}-lit.lit"
             },
             {
                 'slug': 'doc',
                 'name': "Word",
                 'images': False,
-                'pattern': "files/{id}/{id}-doc.doc"
+                'pattern': "{id}-doc.doc"
             },
             {
                 'slug': 'pdb',
                 'name': "PDB",
                 'images': False,
-                'pattern': "files/{id}/{id}-pdb.pdb"
+                'pattern': "{id}-pdb.pdb"
             },
         ]
 
