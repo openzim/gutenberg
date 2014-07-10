@@ -58,6 +58,6 @@ docs/_build/
 *.sublime-workspace
 *.tar.bz2
 rdf-files
-gutenberg.db
+*.db
 *~
 
