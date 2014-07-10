@@ -94,7 +94,14 @@ class RdfParser():
     def parse(self):
         soup = BeautifulSoup(self.rdf_data)
 
-        # Parsing the name. Sometimes it's the name of
+        # The tile of the book: this may or may not be divided
+        # into a new-line-seperated title and subtitle. 
+        # If it is, then we will just split the title.
+        self.title = soup.find('dcterms:title').text
+        self.title = title.split('\n')[0]
+        self.subtitle = ' '.join(title.split('\n')[1:])
+
+        # Parsing the name of the Author. Sometimes it's the name of
         # an organization or the name is not known and therefore
         # the <dcterms:creator> or <marcrel:com> node only return
         # "anonymous" or "unknown". For the case that it's only one word
