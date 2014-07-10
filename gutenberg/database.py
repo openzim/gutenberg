@@ -20,9 +20,9 @@ class License(Model):
     class Meta:
         database = db
         fixtures = [
-            {'slug': 'PD', 'name': ""},
-            {'slug': 'None', 'name': ""},
-            {'slug': 'Copyright', 'name': ""},
+            {'slug': 'PD', 'name': "Public domain in the USA."},
+            {'slug': 'None', 'name': "None"},
+            {'slug': 'Copyright', 'name': "Copyrighted. Read the copyright notice inside this book for details."},
         ]
 
     slug = CharField(max_length=20, primary_key=True)
@@ -36,6 +36,7 @@ class Format(Model):
 
     class Meta:
         database = db
+<<<<<<< HEAD
         fixtures = [
             {
                 'slug': 'html',
@@ -140,11 +141,12 @@ class Format(Model):
                 'pattern': "{id}-pdb.pdb"
             },
         ]
+=======
+>>>>>>> dd1be53e1db6d4c37f91089cc728bfd3e00b3505
 
-    slug = CharField(primary_key=True)
-    name = CharField(max_length=100)
-    images = BooleanField(default=False)
-    pattern = CharField(max_length=50)
+    mime = CharField(max_length=100)
+    images = BooleanField(default=True)
+    pattern = CharField(max_length=100)
 
     def __unicode__(self):
         return self.name
@@ -168,8 +170,8 @@ class Author(Model):
     gut_id = CharField(max_length=100)
     last_name = CharField(max_length=150)
     first_names = CharField(max_length=300, null=True)
-    birth_date = CharField(max_length=10, null=True)
-    death_date = CharField(max_length=10, null=True)
+    birth_year = CharField(max_length=10, null=True)
+    death_year = CharField(max_length=10, null=True)
 
     def __unicode__(self):
         return self.name()
@@ -179,6 +181,9 @@ class Author(Model):
 
 
 class Book(Model):
+
+    class Meta:
+        database = db
 
     id = IntegerField(primary_key=True)
     title = CharField(max_length=500)
@@ -193,6 +198,10 @@ class Book(Model):
 
 
 class BookFormat(Model):
+
+    class Meta:
+        database = db
+
     book = ForeignKeyField(Book)
     format = ForeignKeyField(Format)
 
@@ -208,15 +217,15 @@ def load_fixtures(model):
         logger.debug("[fixtures] Created {}".format(f))
 
 
-def setup_database():
+def setup_database(wipe=False):
     logger.info("Setting up the database")
 
     for model in (License, Format, Author, Book, BookFormat):
+        if wipe:
+            model.drop_table(fail_silently=True)
         if not model.table_exists():
             model.create_table()
             logger.debug("Created table for {}".format(model._meta.name))
             load_fixtures(model)
         else:
             logger.debug("{} table already exists.".format(model._meta.name))
-
-setup_database()

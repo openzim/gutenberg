@@ -10,11 +10,15 @@ import re
 from path import path
 
 from gutenberg import logger
+<<<<<<< HEAD
 from gutenberg.database import Format
 from gutenberg.utils import exec_cmd
+=======
+from gutenberg.utils import exec_cmd, download_file
+from gutenberg.database import db, Author, Format, BookFormat, License, Book
+>>>>>>> dd1be53e1db6d4c37f91089cc728bfd3e00b3505
 
 from bs4 import BeautifulSoup
-import requests
 
 
 def setup_rdf_folder(rdf_url, rdf_path):
@@ -28,20 +32,18 @@ def download_rdf_file(rdf_url):
     fname = 'rdf-files.tar.bz2'
 
     if path(fname).exists():
-        logger.info("\rdf-files.tar.bz2 already exists in {}".format(fname))
+        logger.info("\tdf-files.tar.bz2 already exists in {}".format(fname))
         return fname
 
     logger.info("\tDownloading {} into {}".format(rdf_url, fname))
-
-    cmd = "wget -O {fname} -c {url}".format(fname=fname, url=rdf_url)
-    exec_cmd(cmd)
+    download_file(rdf_url, fname)
 
     return fname
 
 
 def extract_rdf_files(rdf_tarball, rdf_path):
     if path(rdf_path).exists():
-        logger.info("\tRDF files already exists in {}".format(rdf_path))
+        logger.info("\tRDF-files folder already exists in {}".format(rdf_path))
         return
 
     logger.info("\tExtracting {} into {}".format(rdf_tarball, rdf_path))
@@ -80,10 +82,11 @@ def parse_and_process_file(rdf_file):
         raise ValueError(rdf_file)
 
     gid = re.match(r'.*/pg([0-9]+).rdf', rdf_file).groups()[0]
-    logger.info(gid)
 
     with open(rdf_file, 'r') as f:
         parser = RdfParser(f.read(), gid).parse()
+
+    save_rdf_in_database(parser)
 
 
 class RdfParser():
@@ -106,7 +109,7 @@ class RdfParser():
         # an organization or the name is not known and therefore
         # the <dcterms:creator> or <marcrel:com> node only return
         # "anonymous" or "unknown". For the case that it's only one word
-        # `self.laste_name` will be null.
+        # `self.last_name` will be null.
         # Because of a rare edge case that the fild of the parsed author's name
         # has more than one comma we will join the first name in reverse, starting
         # with the second item.
@@ -115,9 +118,10 @@ class RdfParser():
         self.author = soup.find('dcterms:creator')
         if not self.author:
             self.author = soup.find('marcrel:com')
+        self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
         self.author = self.author.find('pgterms:name').text
         self.author_name = self.author.split(',')
-        self.first_name = ''.join(self.author.split(',')[::-1])
+        self.first_name = ' '.join(self.author.split(',')[::-1])
         self.last_name = self.author.split(',')[0]
 
         # Parsing the birth and (death, if the case) year of the author.
@@ -130,7 +134,12 @@ class RdfParser():
         self.death_year = self.death_year.text if self.death_year else None
         self.death_year = get_formatted_number(self.death_year)
 
-        # ISO 639-1 language codes that consist of 2 letters
+        # Book title
+        self.title = soup.find('dcterms:title').text
+        self.subtitle = ' '.join(self.title.split('\n')[1:])
+        self.title = self.title.split('\n')[0]
+
+        # ISO 639-3 language codes that consist of 2 or 3 letters
         self.language = soup.find('dcterms:language').find('rdf:value').text
 
         # The download count of the books on www.gutenberg.org.
@@ -143,19 +152,68 @@ class RdfParser():
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
+<<<<<<< HEAD
         file_types = [x.attrs['rdf:about'] for x in file_types]
         file_types = [x.split('/')[-1] for x in file_types]
         valid_formats = [
             x['pattern'].format(id=self.gid) for x in Format._meta.fixtures]
 
         self.file_types = [x for x in file_types if x in valid_formats]
+=======
+        self.file_types = { x.attrs['rdf:about']: x.find('rdf:value').text for x in file_types if not x.find('rdf:value').text.endswith('application/zip') }
+>>>>>>> dd1be53e1db6d4c37f91089cc728bfd3e00b3505
 
         return self
 
 
+def save_rdf_in_database(parser):
+
+    # Insert author, if it not exists
+    author_record = Author.get_or_create(
+        gut_id = parser.author_id,
+        last_name = parser.last_name,
+        first_names = parser.first_name,
+        birth_year = parser.birth_year,
+        death_year = parser.death_year
+    )
+
+    # Get license
+    try:
+        license_record = License.get(name=parser.license)
+    except:
+        license_record = None
+
+    # Insert book
+    book_record = Book.create(
+        id = parser.gid,
+        title = parser.title,
+        subtitle = parser.subtitle,
+        author = author_record, #foreign key
+        license = license_record, #foreign key
+        language = parser.language,
+        downloads = parser.downloads
+    )
+
+    # Insert formats
+    for file_type in parser.file_types:
+        
+        # Insert format type
+        format_record = Format.get_or_create(
+            mime = parser.file_types[file_type],
+            images = file_type.endswith('.images') or parser.file_types[file_type] == 'application/pdf',
+            pattern = re.sub( r''+parser.gid, '{id}', file_type )
+        )
+
+        # Insert book format
+        bookformat_record = BookFormat.create(
+            book = book_record, #foreign key
+            format = format_record #foreign key
+        )
+
+
 def get_formatted_number(num):
     """
-    Get a formatted string of a number from a not-predictable-string 
+    Get a formatted string of a number from a not-predictable-string
     that may or may not actually contain a number.
     Append a BC notation to the number num with, if the
     number is negative.

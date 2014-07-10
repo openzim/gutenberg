@@ -54,3 +54,10 @@ coverage.xml
 docs/_build/
 
 .DS_Store
+*.sublime-project
+*.sublime-workspace
+*.tar.bz2
+rdf-files
+gutenberg.db
+*~
+
