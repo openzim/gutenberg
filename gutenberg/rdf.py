@@ -81,7 +81,7 @@ def parse_and_process_file(rdf_file):
 
     with open(rdf_file, 'r') as f:
         parser = RdfParser(f.read(), gid).parse()
-    
+
     save_rdf_in_database(parser)
 
 
@@ -142,7 +142,7 @@ class RdfParser():
 
 
 def save_rdf_in_database(parser):
-    
+
     try:
         author_record = Author.get(gut_id=parser.author_id)
     except:
@@ -153,7 +153,7 @@ def save_rdf_in_database(parser):
             birth_date = parser.birth_year,
             death_date = parser.death_year
         )
-    
+
     # Get format
     try:
         format_record = Format.get(mime='text/plain') # TODO change
@@ -163,15 +163,15 @@ def save_rdf_in_database(parser):
         #    slug = ,
         #    name = ,
         #    images = ,
-        #    pattern = 
+        #    pattern =
         #)
-    
+
     # Get license
     try:
         license_record = License.get(name=parser.license)
     except:
         license_record = None
-    
+
     # Insert book
     book_record = Book.create(
         id = parser.gid,
