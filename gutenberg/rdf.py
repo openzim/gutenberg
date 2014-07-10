@@ -99,7 +99,8 @@ class RdfParser():
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.
         # If it is, then we will just split the title.
-        self.title = soup.find('dcterms:title').text
+        self.title = soup.find('dcterms:title')
+        self.title = self.title.text if self.title else ''
         self.title = self.title.split('\n')[0]
         self.subtitle = ' '.join(self.title.split('\n')[1:])
 
@@ -116,11 +117,14 @@ class RdfParser():
         self.author = soup.find('dcterms:creator')
         if not self.author:
             self.author = soup.find('marcrel:com')
-        self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
-        self.author = re.sub(r' +', ' ', self.author.find('pgterms:name').text)
-        self.author_name = self.author.split(',')
-        self.first_name = ' '.join(self.author_name[::-1]).strip()
-        self.last_name = self.author_name[0]
+        if self.author:
+            self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
+            self.author = re.sub(r' +', ' ', self.author.find('pgterms:name').text)
+            self.author_name = self.author.split(',')
+            self.first_name = ' '.join(self.author_name[::-1]).strip()
+            self.last_name = self.author_name[0]
+        else:
+            self.author_id = self.author = self.author_name = self.first_name = self.last_name = None
 
         # Parsing the birth and (death, if the case) year of the author.
         # These values are likely to be null.
@@ -131,11 +135,6 @@ class RdfParser():
         self.death_year = soup.find('pgterms:deathhdate')
         self.death_year = self.death_year.text if self.death_year else None
         self.death_year = get_formatted_number(self.death_year)
-
-        # Book title
-        self.title = soup.find('dcterms:title').text
-        self.subtitle = ' '.join(self.title.split('\n')[1:])
-        self.title = self.title.split('\n')[0]
 
         # ISO 639-3 language codes that consist of 2 or 3 letters
         self.language = soup.find('dcterms:language').find('rdf:value').text
@@ -150,7 +149,14 @@ class RdfParser():
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
-        self.file_types = { x.attrs['rdf:about']: x.find('rdf:value').text for x in file_types if not x.find('rdf:value').text.endswith('application/zip') }
+        self.file_types = ({x.attrs['rdf:about']: x.find('rdf:value').text
+                       for x in file_types
+                       if not x.find('rdf:value').text.endswith('application/zip')})
+        # file_types = [x.attrs['rdf:about'] for x in file_types]
+        # file_types = [x.split('/')[-1] for x in file_types]
+        # valid_formats = [
+        #     x['pattern'].format(id=self.gid) for x in Format._meta.fixtures]
+        # self.file_types = [x for x in file_types if x in valid_formats]
 
         return self
 
@@ -158,13 +164,17 @@ class RdfParser():
 def save_rdf_in_database(parser):
 
     # Insert author, if it not exists
-    author_record = Author.get_or_create(
-        gut_id = parser.author_id,
-        last_name = parser.last_name,
-        first_names = parser.first_name,
-        birth_year = parser.birth_year,
-        death_year = parser.death_year
-    )
+    if parser.author_id:
+        author_record = Author.get_or_create(
+            gut_id = parser.author_id,
+            last_name = parser.last_name,
+            first_names = parser.first_name,
+            birth_year = parser.birth_year,
+            death_year = parser.death_year
+        )
+    else:
+        # No author, set Anonymous
+        author_record = Author.get(gut_id='216')
 
     # Get license
     try:
@@ -197,8 +207,11 @@ def save_rdf_in_database(parser):
         format_record = Format.get_or_create(
             mime = mime,
             images = file_type.endswith('.images') or parser.file_types[file_type] == 'application/pdf',
-            pattern = re.sub( r''+parser.gid, '{id}', file_type )
+            pattern = re.sub(r'http://www.gutenberg.org/','',re.sub(r''+parser.gid, '{id}', file_type))
         )
+
+        pattern = re.sub( r''+parser.gid, '{id}', file_type )
+        pattern = pattern.split('/')[-1]
 
         # Insert book format
         bookformat_record = BookFormat.create(
@@ -226,7 +239,7 @@ def get_formatted_number(num):
 if __name__ == '__main__':
     # Bacic Test with a sample rdf file
     import os
-    curd = os.path.abspath(__file__)
+    curd = os.path.join(os.path.abspath(__file__), 'pg45213.rdf')
 
     if os.path.isfile(curd):
         data = ''
