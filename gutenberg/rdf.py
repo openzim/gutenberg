@@ -171,13 +171,7 @@ def save_rdf_in_database(parser):
         )
     else:
         # No author, set Anonymous
-        author_record = Author.get_or_create(
-            gut_id = '216',
-            last_name = 'Anonymous',
-            first_names = '',
-            birth_year = '',
-            death_year = '',
-        )
+        author_record = Author.get(gut_id='216')
 
     # Get license
     try:
@@ -210,7 +204,7 @@ def save_rdf_in_database(parser):
         format_record = Format.get_or_create(
             mime = mime,
             images = file_type.endswith('.images') or parser.file_types[file_type] == 'application/pdf',
-            pattern = re.sub( r''+parser.gid, '{id}', file_type )
+            pattern = re.sub(r'http://www.gutenberg.org/','',re.sub(r''+parser.gid, '{id}', file_type))
         )
 
         # Insert book format
