@@ -16,14 +16,7 @@ from gutenberg.utils import FORMAT_MATRIX
 from gutenberg.database import Book, Format, BookFormat, Author
 
 
-def export_all_books(static_folder,
-                     download_cache,
-                     languages=[],
-                     formats=[]):
-
-    # ensure dir exist
-    path(static_folder).mkdir_p()
-
+def get_list_of_filtered_books(languages, formats):
     qs = Book.select()
 
     if len(languages):
@@ -33,14 +26,27 @@ def export_all_books(static_folder,
         qs = qs.join(BookFormat) \
                .where(Format.mime << [FORMAT_MATRIX.get(f) for f in formats])
 
+    return qs
+
+
+def export_all_books(static_folder,
+                     download_cache,
+                     languages=[],
+                     formats=[]):
+
+    # ensure dir exist
+    path(static_folder).mkdir_p()
+
+    books = get_list_of_filtered_books(languages, formats)
+
     # export to HTML
-    for book in qs:
+    for book in books:
         export_book_to(book=book,
                        static_folder=static_folder,
                        download_cache=download_cache)
 
     # export to JSON helpers
-    export_to_json_helpers(books=qs,
+    export_to_json_helpers(books=books,
                            static_folder=static_folder,
                            languages=languages,
                            formats=formats)
