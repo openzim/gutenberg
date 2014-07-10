@@ -72,6 +72,9 @@ class Author(Model):
     def name(self):
         return "{}, {}".format(self.last_name, self.first_names)
 
+    def to_dict(self):
+        return {'label': self.name(), 'id': self.gut_id}
+
 
 class Book(Model):
 
@@ -81,7 +84,7 @@ class Book(Model):
     id = IntegerField(primary_key=True)
     title = CharField(max_length=500)
     subtitle = CharField(max_length=500, null=True)
-    author = ForeignKeyField(Author)
+    author = ForeignKeyField(Author, related_name='books')
     license = ForeignKeyField(License, related_name='books')
     language = CharField(max_length=10)
     downloads = IntegerField(default=0)
@@ -89,14 +92,18 @@ class Book(Model):
     def __unicode__(self):
         return "{}/{}".format(self.id, self.title)
 
+    def to_dict(self):
+        return {'title': self.title,
+                'author': self.author.name()}
+
 
 class BookFormat(Model):
 
     class Meta:
         database = db
 
-    book = ForeignKeyField(Book)
-    format = ForeignKeyField(Format)
+    book = ForeignKeyField(Book, related_name='bookformats')
+    format = ForeignKeyField(Format, related_name='bookformats')
 
     def __unicode__(self):
         return "[{}] {}".format(self.format, self.book.title)

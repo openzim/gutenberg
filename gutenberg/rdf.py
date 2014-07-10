@@ -48,7 +48,7 @@ def extract_rdf_files(rdf_tarball, rdf_path):
 
     # create destdir if not exists
     dest = path(rdf_path)
-    dest.mkdir()
+    dest.mkdir_p()
 
     cmd = "tar -C {dest} --strip-components 2 -x -f {tarb}".format(
         dest=rdf_path, tarb=rdf_tarball)
