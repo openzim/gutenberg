@@ -119,26 +119,27 @@ class RdfParser():
             self.author = soup.find('marcrel:com')
         if self.author:
             self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
-            self.author = re.sub(r' +', ' ', self.author.find('pgterms:name').text)
-            self.author_name = self.author.split(',')
+            self.author_name = re.sub(r' +', ' ', self.author.find('pgterms:name').text).split(',')
             if len(self.author_name) == 1:
                 self.last_name = self.author_name[0]
                 self.first_name = ''
             else:
                 self.first_name = ' '.join(self.author_name[::-2]).strip()
                 self.last_name = self.author_name[0]
+
+            # Parsing the birth and (death, if the case) year of the author.
+            # These values are likely to be null.
+            self.birth_year = soup.find('pgterms:birthdate')
+            self.birth_year = self.birth_year.text if self.birth_year else None
+            self.birth_year = get_formatted_number(self.birth_year)
+
+            self.death_year = self.author.find('pgterms:deathdate')
+            self.death_year = self.death_year.text if self.death_year else None
+            self.death_year = get_formatted_number(self.death_year)
         else:
-            self.author_id = self.author = self.author_name = self.first_name = self.last_name = None
-
-        # Parsing the birth and (death, if the case) year of the author.
-        # These values are likely to be null.
-        self.birth_year = soup.find('pgterms:birthhdate')
-        self.birth_year = self.birth_year.text if self.birth_year else None
-        self.birth_year = get_formatted_number(self.birth_year)
-
-        self.death_year = soup.find('pgterms:deathhdate')
-        self.death_year = self.death_year.text if self.death_year else None
-        self.death_year = get_formatted_number(self.death_year)
+            self.author_id = self.author = None
+            self.author_name = self.first_name = self.last_name = None
+            self.birth_year = self.death_year = None
 
         # ISO 639-3 language codes that consist of 2 or 3 letters
         self.language = soup.find('dcterms:language').find('rdf:value').text
