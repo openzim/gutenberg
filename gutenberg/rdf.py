@@ -11,7 +11,7 @@ from path import path
 
 from gutenberg import logger
 from gutenberg.utils import exec_cmd, download_file
-from gutenberg.database import db, Author, Format, License, Book
+from gutenberg.database import db, Author, Format, BookFormat, License, Book
 
 from bs4 import BeautifulSoup
 
@@ -107,7 +107,7 @@ class RdfParser():
         self.author = soup.find('dcterms:creator')
         if not self.author:
             self.author = soup.find('marcrel:com')
-        self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent')['rdf:about']).groups()[0]
+        self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
         self.author = self.author.find('pgterms:name').text
         self.author_name = self.author.split(',')
         self.first_name = ''.join(self.author.split(',')[::-1])
@@ -136,35 +136,21 @@ class RdfParser():
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
-        self.file_types = map(lambda x: x.attrs['rdf:about'], file_types)
-
+        self.file_types = { x.attrs['rdf:about']: x.find('rdf:value').text for x in file_types if not x.find('rdf:value').text.endswith('application/zip') }
+        
         return self
 
 
 def save_rdf_in_database(parser):
     
-    try:
-        author_record = Author.get(gut_id=parser.author_id)
-    except:
-        author_record = Author.create(
-            gut_id = parser.author_id,
-            last_name = parser.last_name,
-            first_names = parser.first_name,
-            birth_date = parser.birth_year,
-            death_date = parser.death_year
-        )
-    
-    # Get format
-    try:
-        format_record = Format.get(mime='text/plain') # TODO change
-    except:
-        print('')
-        #format_record = Format.create(
-        #    slug = ,
-        #    name = ,
-        #    images = ,
-        #    pattern = 
-        #)
+    # Insert author, if it not exists
+    author_record = Author.get_or_create(
+        gut_id = parser.author_id,
+        last_name = parser.last_name,
+        first_names = parser.first_name,
+        birth_year = parser.birth_year,
+        death_year = parser.death_year
+    )
     
     # Get license
     try:
@@ -182,6 +168,25 @@ def save_rdf_in_database(parser):
         language = parser.language,
         downloads = parser.downloads
     )
+    
+    # Insert formats
+    for file_type in parser.file_types:
+        
+        print(file_type)
+        print(parser.file_types[file_type])
+        print(file_type.endswith('.images'))
+        # Insert format type
+        format_record = Format.get_or_create(
+            mime = parser.file_types[file_type],
+            images = file_type.endswith('.images') or parser.file_types[file_type] == 'application/pdf',
+            pattern = re.sub( r''+parser.gid, '{id}', file_type )
+        )
+        
+        # Insert book format
+        bookformat_record = BookFormat.create(
+            book = book_record,
+            format = format_record
+        )
 
 
 def get_formatted_number(num):
