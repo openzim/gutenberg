@@ -180,6 +180,9 @@ class Author(Model):
 
 class Book(Model):
 
+    class Meta:
+        database = db
+
     id = IntegerField(primary_key=True)
     title = CharField(max_length=500)
     subtitle = CharField(max_length=500, null=True)
@@ -193,6 +196,10 @@ class Book(Model):
 
 
 class BookFormat(Model):
+
+    class Meta:
+        database = db
+
     book = ForeignKeyField(Book)
     format = ForeignKeyField(Format)
 
@@ -208,15 +215,15 @@ def load_fixtures(model):
         logger.debug("[fixtures] Created {}".format(f))
 
 
-def setup_database():
+def setup_database(wipe=False):
     logger.info("Setting up the database")
 
     for model in (License, Format, Author, Book, BookFormat):
+        if wipe:
+            model.drop_table(fail_silently=True)
         if not model.table_exists():
             model.create_table()
             logger.debug("Created table for {}".format(model._meta.name))
             load_fixtures(model)
         else:
             logger.debug("{} table already exists.".format(model._meta.name))
-
-setup_database()

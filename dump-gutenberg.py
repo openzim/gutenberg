@@ -9,6 +9,7 @@ import os
 from docopt import docopt
 
 from gutenberg import logger
+from gutenberg.database import setup_database
 from gutenberg.rdf import setup_rdf_folder, parse_and_fill
 from gutenberg.download import download_all_books
 from gutenberg.export import export_all_books
@@ -18,6 +19,7 @@ help = """Usage: dump-gutenberg.py [-f RDF_FOLDER] [-m URL_MIRROR] """ \
        """[--prepare] [--parse] [--download] [--export] [--zim] [--complete]
 
 -h --help                       Display this help message
+-k --keep-db                    Do not wipe the DB during parse stage
 -m --mirror=<url>               Use URL as base for all downloads.
 -f --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use extracted folder instead
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
@@ -46,6 +48,7 @@ def main(arguments):
     RDF_FOLDER = arguments.get('--rdf-folder')
     STATIC_FOLDER = arguments.get('--static-folder')
     ZIM_FILE = arguments.get('--zim-file', 'gutenberg.zim')
+    WIPE_DB = not arguments.get('--keep-db', False)
     RDF_URL = arguments.get('RDF_URL', 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2')
 
     # no arguments, default to --complete
@@ -62,6 +65,7 @@ def main(arguments):
 
     if DO_PARSE:
         logger.info("PARSING rdf-files in {}".format(RDF_FOLDER))
+        setup_database(wipe=WIPE_DB)
         parse_and_fill(RDF_FOLDER)
 
     if DO_DOWNLOAD:
