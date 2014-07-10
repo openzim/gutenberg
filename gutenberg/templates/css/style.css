@@ -44,7 +44,9 @@ a {
 }
 
 #top-menu a img {
-    float: left;
+    float: right;
+    margin: 4px;
+    margin-right: 7px;
 }
 
 #top-menu a div {
@@ -54,6 +56,7 @@ a {
     padding-top: 3px;
     line-height: 130%;
     color: #b88b35;
+    margin-left: 10px;
 }
 
 /* Header bottom-menu */
@@ -64,13 +67,22 @@ a {
     height: 35px;
 }
 
+#bottom-menu a img {
+    display: none;
+    float: left;
+    margin-top: 1px;
+    margin-left: 10px;
+    margin-right: -7px;
+}
+
 ul.menu {
     font-family: Arial,sans-serif;
     font-size: 14px;
     font-weight: bold;
     list-style-type: none;
     margin: 0;
-    padding: 7px;
+    padding: 6px;
+    padding-left: 0px;
     float: left;
 }
 
@@ -82,7 +94,7 @@ ul.menu > li {
 
 ul.menu > li > a {
     margin-right: 8px;
-    padding: 0 15px 5px;
+    padding: 0 15px;
     display: block;
     height: 23px;
     line-height: 23px;
@@ -91,8 +103,17 @@ ul.menu > li > a {
 }
 
 .sort {
+    font-family: Arial,sans-serif;
+    font-weight: bold;
+    color: #b88b35;
     float: right;
     height: 100%;
+}
+
+.sort > div {
+    float: left;
+    height: 100%;
+    padding-top: 4px;
 }
 
 .sort > img {
