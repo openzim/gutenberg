@@ -4,14 +4,11 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-import logging
+import os
 
-from os import path
+import envoy
 
-#import envoy
-
-logger = logging.getLogger(__name__)
-
+from gutenberg import logger
 
 FORMAT_MATRIX = {
     'epub': 'application/epub+zip',
@@ -24,7 +21,14 @@ def exec_cmd(cmd):
     return envoy.run(str(cmd))
 
 
-<<<<<<< HEAD
+def download_file(url, fname):
+    output = "--output {}".format(fname) if fname else "--remote-name"
+    cmd = ("curl --fail --insecure --location {output} --silent "
+           "--show-error -C - --url {url}".format(output=output, url=url))
+    cmdr = exec_cmd(cmd)
+    return cmdr.status_code == 0
+
+
 class UrlBuilder:
 
     """
@@ -37,9 +41,9 @@ class UrlBuilder:
 
     def build(self):
         if self.id > 10:
-            base_url = path.join(path.join(*list(str(self.id))[:-1]), str(self.id))
-            base_url = path.join(self.base, base_url)
-            urls = [path.join(base_url, x) for x in self.file_types]
+            base_url = os.path.join(os.path.join(*list(str(self.id))[:-1]), str(self.id))
+            base_url = os.path.join(self.base, base_url)
+            urls = [os.path.join(base_url, x) for x in self.file_types]
         else:
             logger.warning('Figuring out the url of books \
                 with an ID of {ID <= 10} is not implemented yet')
@@ -64,14 +68,6 @@ class UrlBuilder:
 if __name__ == '__main__':
     b = UrlBuilder()
     b.with_id(1234)
-    b.with_files([u'1234.kindle.noimages', u'1234-8.txt', u'1234.kindle.images', 
+    b.with_files([u'1234.kindle.noimages', u'1234-8.txt', u'1234.kindle.images',
         u'1234-h.zip', u'1234.epub.images', u'1234.epub.noimages'])
     print('Url of the book: ' + str(b.build()))
-=======
-def download_file(url, fname):
-    output = "--output {}".format(fname) if fname else "--remote-name"
-    cmd = ("curl --fail --insecure --location {output} --silent "
-           "--show-error -C - --url {url}".format(output=output, url=url))
-    cmdr = exec_cmd(cmd)
-    return cmdr.status_code == 0
->>>>>>> dd1be53e1db6d4c37f91089cc728bfd3e00b3505
