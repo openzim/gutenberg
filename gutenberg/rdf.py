@@ -116,11 +116,14 @@ class RdfParser():
         self.author = soup.find('dcterms:creator')
         if not self.author:
             self.author = soup.find('marcrel:com')
-        self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
-        self.author = re.sub(r' +', ' ', self.author.find('pgterms:name').text)
-        self.author_name = self.author.split(',')
-        self.first_name = ' '.join(self.author_name[::-1]).strip()
-        self.last_name = self.author_name[0]
+        if self.author:
+            self.author_id = re.match(r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
+            self.author = re.sub(r' +', ' ', self.author.find('pgterms:name').text)
+            self.author_name = self.author.split(',')
+            self.first_name = ' '.join(self.author_name[::-1]).strip()
+            self.last_name = self.author_name[0]
+        else:
+            self.author_id = self.author = self.author_name = self.first_name = self.last_name = None
 
         # Parsing the birth and (death, if the case) year of the author.
         # These values are likely to be null.
@@ -158,13 +161,23 @@ class RdfParser():
 def save_rdf_in_database(parser):
 
     # Insert author, if it not exists
-    author_record = Author.get_or_create(
-        gut_id = parser.author_id,
-        last_name = parser.last_name,
-        first_names = parser.first_name,
-        birth_year = parser.birth_year,
-        death_year = parser.death_year
-    )
+    if parser.author_id:
+        author_record = Author.get_or_create(
+            gut_id = parser.author_id,
+            last_name = parser.last_name,
+            first_names = parser.first_name,
+            birth_year = parser.birth_year,
+            death_year = parser.death_year
+        )
+    else:
+        # No author, set Anonymous
+        author_record = Author.get_or_create(
+            gut_id = '216',
+            last_name = 'Anonymous',
+            first_names = '',
+            birth_year = '',
+            death_year = '',
+        )
 
     # Get license
     try:
