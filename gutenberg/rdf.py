@@ -123,6 +123,11 @@ class RdfParser():
         self.death_year = self.death_year.text if self.death_year else None
         self.death_year = get_formatted_number(self.death_year)
 
+        # Book title
+        self.title = soup.find('dcterms:title').text
+        self.subtitle = ' '.join(title.split('\n')[1:])
+        self.title = title.split('\n')[0]
+
         # ISO 639-3 language codes that consist of 2 or 3 letters
         self.language = soup.find('dcterms:language').find('rdf:value').text
 
@@ -137,7 +142,7 @@ class RdfParser():
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
         self.file_types = { x.attrs['rdf:about']: x.find('rdf:value').text for x in file_types if not x.find('rdf:value').text.endswith('application/zip') }
-        
+
         return self
 
 
@@ -161,8 +166,8 @@ def save_rdf_in_database(parser):
     # Insert book
     book_record = Book.create(
         id = parser.gid,
-        title = 'a', #parser.title,
-        subtitle = 'b', #parser.subtitle,
+        title = parser.title,
+        subtitle = parser.subtitle,
         author = author_record, #foreign key
         license = license_record, #foreign key
         language = parser.language,
@@ -172,9 +177,6 @@ def save_rdf_in_database(parser):
     # Insert formats
     for file_type in parser.file_types:
         
-        print(file_type)
-        print(parser.file_types[file_type])
-        print(file_type.endswith('.images'))
         # Insert format type
         format_record = Format.get_or_create(
             mime = parser.file_types[file_type],
@@ -184,8 +186,8 @@ def save_rdf_in_database(parser):
         
         # Insert book format
         bookformat_record = BookFormat.create(
-            book = book_record,
-            format = format_record
+            book = book_record, #foreign key
+            format = format_record #foreign key
         )
 
 
