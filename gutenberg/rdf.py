@@ -81,7 +81,7 @@ def parse_and_process_file(rdf_file):
 
     with open(rdf_file, 'r') as f:
         parser = RdfParser(f.read(), gid).parse()
-    
+
     save_rdf_in_database(parser)
 
 
@@ -157,7 +157,7 @@ def save_rdf_in_database(parser):
         license_record = License.get(name=parser.license)
     except:
         license_record = None
-    
+
     # Insert book
     book_record = Book.create(
         id = parser.gid,

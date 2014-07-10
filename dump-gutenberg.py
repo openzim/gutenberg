@@ -15,15 +15,22 @@ from gutenberg.download import download_all_books
 from gutenberg.export import export_all_books
 from gutenberg.zim import build_zimfile
 
-help = """Usage: dump-gutenberg.py [-f RDF_FOLDER] [-m URL_MIRROR] """ \
-       """[--prepare] [--parse] [--download] [--export] [--zim] [--complete]
+help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
+        """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] [-z ZIM_PATH] [-u RDF_URL]"""
+        """[--prepare] [--parse] [--download] [--export] [--zim] [--complete]
 
 -h --help                       Display this help message
 -k --keep-db                    Do not wipe the DB during parse stage
+
+-l --languages=<list>           Comma-separated list of lang codes to filter export to.
+-f --formats=<list>             Comma-separated list of formats to filter export to (pdf, epub, all)
+
 -m --mirror=<url>               Use URL as base for all downloads.
--f --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use extracted folder instead
+-r --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use extracted folder instead
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
--e --zim-file=<file>            Write ZIM into this file path
+-z --zim-file=<file>            Write ZIM into this file path
+-d --dl-folder=<file>           Folder to use/write-to downloaded ebooks
+-u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 
 --prepare                       Download & extract rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
@@ -32,9 +39,11 @@ help = """Usage: dump-gutenberg.py [-f RDF_FOLDER] [-m URL_MIRROR] """ \
 --zim                           Create a ZIM file
 
 This script is used to produce a ZIM file (and any intermediate state)
-of Gutenberg repository using a mirror."""
+of Gutenberg repository using a mirror.""")
 
 def main(arguments):
+
+    from pprint import pprint as pp ; pp(arguments)
 
     # actions constants
     DO_PREPARE = arguments.get('--prepare', False)
@@ -45,11 +54,15 @@ def main(arguments):
     COMPLETE_DUMP = arguments.get('--complete', False)
 
     URL_MIRROR = arguments.get('--mirror', 'http://zimfarm.kiwix.org/gutenberg')
-    RDF_FOLDER = arguments.get('--rdf-folder')
+    RDF_FOLDER = arguments.get('--rdf-folder', os.path.join('rdf-files'))
     STATIC_FOLDER = arguments.get('--static-folder')
     ZIM_FILE = arguments.get('--zim-file', 'gutenberg.zim')
     WIPE_DB = not arguments.get('--keep-db', False)
-    RDF_URL = arguments.get('RDF_URL', 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2')
+    RDF_URL = arguments.get('--rdf-url', 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2')
+    DL_CACHE = arguments.get('--dl-folder', os.path.join('dl-cache'))
+
+    LANGUAGES = (arguments.get('--languages') or '').split(',')
+    FORMATS = (arguments.get('--formats') or '').split(',')
 
     # no arguments, default to --complete
     if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM):
@@ -58,23 +71,27 @@ def main(arguments):
     if COMPLETE_DUMP:
         DO_PREPARE = DO_PARSE = DO_DOWNLOAD = DO_EXPORT = DO_ZIM = True
 
-    if DO_PREPARE or RDF_FOLDER is None:
+    if DO_PREPARE:
         logger.info("PREPARING rdf-files cache from {}".format(RDF_URL))
-        RDF_FOLDER = os.path.join('rdf-files')
-        setup_rdf_folder(RDF_URL, RDF_FOLDER)
+        setup_rdf_folder(rdf_url=RDF_URL, rdf_path=RDF_FOLDER)
 
     if DO_PARSE:
         logger.info("PARSING rdf-files in {}".format(RDF_FOLDER))
         setup_database(wipe=WIPE_DB)
-        parse_and_fill(RDF_FOLDER)
+        parse_and_fill(rdf_path=RDF_FOLDER)
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
-        download_all_books(URL_MIRROR)
+        download_all_books(url_mirror=URL_MIRROR,
+                           download_cache=DL_CACHE,
+                           languages=LANGUAGES,
+                           formats=FORMATS)
 
     if DO_EXPORT:
         logger.info("EXPORTING ebooks to satic folder (and JSON)")
-        export_all_books(STATIC_FOLDER)
+        export_all_books(static_folder=STATIC_FOLDER,
+                         languages=LANGUAGES,
+                         formats=FORMATS)
 
     if DO_ZIM:
         logger.info("BUILDING ZIM off satic folder {}".format(STATIC_FOLDER))
