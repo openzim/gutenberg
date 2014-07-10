@@ -99,7 +99,8 @@ class RdfParser():
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.
         # If it is, then we will just split the title.
-        self.title = soup.find('dcterms:title').text
+        self.title = soup.find('dcterms:title')
+        self.title = self.title.text if self.title else ''
         self.title = self.title.split('\n')[0]
         self.subtitle = ' '.join(self.title.split('\n')[1:])
 
@@ -135,11 +136,6 @@ class RdfParser():
         self.death_year = self.death_year.text if self.death_year else None
         self.death_year = get_formatted_number(self.death_year)
 
-        # Book title
-        self.title = soup.find('dcterms:title').text
-        self.subtitle = ' '.join(self.title.split('\n')[1:])
-        self.title = self.title.split('\n')[0]
-
         # ISO 639-3 language codes that consist of 2 or 3 letters
         self.language = soup.find('dcterms:language').find('rdf:value').text
 
@@ -153,7 +149,14 @@ class RdfParser():
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
-        self.file_types = { x.attrs['rdf:about']: x.find('rdf:value').text for x in file_types if not x.find('rdf:value').text.endswith('application/zip') }
+        self.file_types = ({x.attrs['rdf:about']: x.find('rdf:value').text
+                       for x in file_types
+                       if not x.find('rdf:value').text.endswith('application/zip')})
+        # file_types = [x.attrs['rdf:about'] for x in file_types]
+        # file_types = [x.split('/')[-1] for x in file_types]
+        # valid_formats = [
+        #     x['pattern'].format(id=self.gid) for x in Format._meta.fixtures]
+        # self.file_types = [x for x in file_types if x in valid_formats]
 
         return self
 
@@ -213,6 +216,9 @@ def save_rdf_in_database(parser):
             pattern = re.sub( r''+parser.gid, '{id}', file_type )
         )
 
+        pattern = re.sub( r''+parser.gid, '{id}', file_type )
+        pattern = pattern.split('/')[-1]
+
         # Insert book format
         bookformat_record = BookFormat.create(
             book = book_record, #foreign key
@@ -239,7 +245,7 @@ def get_formatted_number(num):
 if __name__ == '__main__':
     # Bacic Test with a sample rdf file
     import os
-    curd = os.path.abspath(__file__)
+    curd = os.path.join(os.path.abspath(__file__), 'pg45213.rdf')
 
     if os.path.isfile(curd):
         data = ''
