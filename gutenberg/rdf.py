@@ -64,7 +64,7 @@ def parse_and_fill(rdf_path):
             continue
 
         for fname in files:
-            if fname in ('.', '..'):
+            if fname in ('.', '..', 'pg0.rdf'):
                 continue
 
             if not fname.endswith('.rdf'):
@@ -185,14 +185,14 @@ def save_rdf_in_database(parser):
 
     # Insert formats
     for file_type in parser.file_types:
-        
+
         # Sanitize MIME
         mime = parser.file_types[file_type]
         if not mime.startswith('text/plain'):
             mime = re.sub(r'; charset=[a-z0-9-]+','', mime)
         #else:
         #    charset = re.match(r'; charset=([a-z0-9-]+)', mime).groups()[0]
-        
+
         # Insert format type
         format_record = Format.get_or_create(
             mime = mime,
