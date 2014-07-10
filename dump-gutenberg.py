@@ -43,8 +43,6 @@ of Gutenberg repository using a mirror.""")
 
 def main(arguments):
 
-    from pprint import pprint as pp ; pp(arguments)
-
     # actions constants
     DO_PREPARE = arguments.get('--prepare', False)
     DO_PARSE = arguments.get('--parse', False)
@@ -62,9 +60,11 @@ def main(arguments):
     DL_CACHE = arguments.get('--dl-folder') or os.path.join('dl-cache')
 
     LANGUAGES = [x.strip().lower()
-                 for x in (arguments.get('--languages') or '').split(',')]
+                 for x in (arguments.get('--languages') or '').split(',')
+                 if x.strip()]
     FORMATS = [x.strip().lower()
-               for x in (arguments.get('--formats') or '').split(',')]
+               for x in (arguments.get('--formats') or '').split(',')
+               if x.strip()]
 
     # no arguments, default to --complete
     if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM):

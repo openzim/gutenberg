@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>{% block title %}Gutenberg Project{% endblock %}</title>
+  <meta name="description" content="Download free ebooks." />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/style.css" media="screen, projection" type="text/css" />
+  <script type="text/javascript" src="jquery/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="js/tools.js"></script>
+</head>
+
+<body>
+
+  <div id="header">
+
+    <div id="top-menu" class="container">
+      <a href="index.html">
+    <img alt="Homepage" id="logo1" src="css/logo_1.png" title="Homepage" />
+    <div>
+      Project Gutenberg Library</br>
+      The first producer of free ebooks
+    </div>
+      </a>
+    </div>
+
+    <div id="bottom-menu" class="container">
+
+      <a href="index.html">
+    <img alt="Homepage" id="logo2" src="css/logo_2.png" title="Homepage" />
+      </a>
+
+      <ul class="menu">
+        <li id="language_filter" onclick="minimizeUI()">
+          <span>Language</span>
+        </li>
+        <li id="author_filter" onclick="minimizeUI()">
+          <span>Author</span>
+        </li>
+      </ul>
+
+      <div class="sort">
+    <div>Sort:</div>
+    <img src="css/popularity_icon.png" onclick="minimizeUI()" />
+    <img src="css/alpha_icon.png" onclick="minimizeUI()" />
+      </div>
+
+    </div>
+
+  </div>
+
+{% block precontent %}{% endblock %}
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+</body>
+</html>

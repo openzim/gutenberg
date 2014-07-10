@@ -10,8 +10,11 @@ import re
 from path import path
 
 from gutenberg import logger
+from gutenberg.database import Format
+from gutenberg.utils import exec_cmd
 from gutenberg.utils import exec_cmd, download_file
-from gutenberg.database import db, Author, Format, BookFormat, License, Book
+from gutenberg.database import (db, Author, Format, BookFormat,
+                                License, Book)
 
 from bs4 import BeautifulSoup
 
@@ -93,7 +96,14 @@ class RdfParser():
     def parse(self):
         soup = BeautifulSoup(self.rdf_data)
 
-        # Parsing the name. Sometimes it's the name of
+        # The tile of the book: this may or may not be divided
+        # into a new-line-seperated title and subtitle.
+        # If it is, then we will just split the title.
+        self.title = soup.find('dcterms:title').text
+        self.title = self.title.split('\n')[0]
+        self.subtitle = ' '.join(self.title.split('\n')[1:])
+
+        # Parsing the name of the Author. Sometimes it's the name of
         # an organization or the name is not known and therefore
         # the <dcterms:creator> or <marcrel:com> node only return
         # "anonymous" or "unknown". For the case that it's only one word
@@ -223,5 +233,5 @@ if __name__ == '__main__':
         with open('pg45213.rdf', 'r') as f:
             data = f.read()
 
-        parser = RdfParser(data).parse()
-        print(vars(parser))
+        parser = RdfParser(data, 45213).parse()
+        print(parser.file_types)
