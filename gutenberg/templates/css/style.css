@@ -92,7 +92,7 @@ ul.menu > li {
     white-space: nowrap;
 }
 
-ul.menu > li > a {
+ul.menu > li > span {
     margin-right: 8px;
     padding: 0 15px;
     display: block;
