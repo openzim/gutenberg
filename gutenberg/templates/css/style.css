@@ -92,7 +92,7 @@ ul.menu > li {
     white-space: nowrap;
 }
 
-ul.menu > li > a {
+ul.menu > li > span {
     margin-right: 8px;
     padding: 0 15px;
     display: block;
@@ -119,3 +119,14 @@ ul.menu > li > a {
 .sort > img {
     padding: 6px;
 }
+
+/* About */
+#home-about {
+    color: #b88b35;
+    text-align:justify;
+    text-justify:inter-word;
+    font-size: 20px;
+    margin: 0 15px;
+}
+
+/* Results */
