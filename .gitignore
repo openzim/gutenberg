@@ -59,4 +59,5 @@ docs/_build/
 *.tar.bz2
 rdf-files
 gutenberg.db
+*~
 
