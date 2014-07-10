@@ -71,7 +71,7 @@ class Format(Model):
                 'slug': 'text',
                 'name': "Plain Text",
                 'images': False,
-                'pattern': "{id}/{id}.txt"
+                'pattern': "{id}.txt"
             },
             {
                 'slug': 'textu',
