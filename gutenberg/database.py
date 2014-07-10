@@ -42,7 +42,7 @@ class Format(Model):
     pattern = CharField(max_length=100)
 
     def __unicode__(self):
-        return self.name
+        return self.mime
 
 
 class Author(Model):
