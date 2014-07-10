@@ -10,10 +10,9 @@ import re
 from path import path
 
 from gutenberg import logger
-from gutenberg.utils import exec_cmd
+from gutenberg.utils import exec_cmd, download_file
 
 from bs4 import BeautifulSoup
-import requests
 
 
 def setup_rdf_folder(rdf_url, rdf_path):
@@ -27,20 +26,18 @@ def download_rdf_file(rdf_url):
     fname = 'rdf-files.tar.bz2'
 
     if path(fname).exists():
-        logger.info("\rdf-files.tar.bz2 already exists in {}".format(fname))
+        logger.info("\tdf-files.tar.bz2 already exists in {}".format(fname))
         return fname
 
     logger.info("\tDownloading {} into {}".format(rdf_url, fname))
-
-    cmd = "wget -O {fname} -c {url}".format(fname=fname, url=rdf_url)
-    exec_cmd(cmd)
+    download_file(rdf_url, fname)
 
     return fname
 
 
 def extract_rdf_files(rdf_tarball, rdf_path):
     if path(rdf_path).exists():
-        logger.info("\tRDF files already exists in {}".format(rdf_path))
+        logger.info("\tRDF-files folder already exists in {}".format(rdf_path))
         return
 
     logger.info("\tExtracting {} into {}".format(rdf_tarball, rdf_path))
@@ -142,7 +139,7 @@ class RdfParser():
 
 def get_formatted_number(num):
     """
-    Get a formatted string of a number from a not-predictable-string 
+    Get a formatted string of a number from a not-predictable-string
     that may or may not actually contain a number.
     Append a BC notation to the number num with, if the
     number is negative.
