@@ -48,7 +48,7 @@ def extract_rdf_files(rdf_tarball, rdf_path):
 
     # create destdir if not exists
     dest = path(rdf_path)
-    dest.mkdir()
+    dest.mkdir_p()
 
     cmd = "tar -C {dest} --strip-components 2 -x -f {tarb}".format(
         dest=rdf_path, tarb=rdf_tarball)
@@ -94,7 +94,7 @@ class RdfParser():
         self.gid = gid
 
     def parse(self):
-        soup = BeautifulSoup(self.rdf_data)
+        soup = BeautifulSoup(self.rdf_data,from_encoding='utf-8')
 
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.
@@ -123,8 +123,12 @@ class RdfParser():
             self.author = re.sub(
                 r' +', ' ', self.author.find('pgterms:name').text)
             self.author_name = self.author.split(',')
-            self.first_name = ' '.join(self.author_name[::-1]).strip()
-            self.last_name = self.author_name[0]
+            if len(self.author_name) == 1:
+                self.last_name = self.author_name[0]
+                self.first_name = ''
+            else:
+                self.first_name = ' '.join(self.author_name[::-2]).strip()
+                self.last_name = self.author_name[0]
         else:
             self.author_id = self.author = self.author_name = self.first_name = self.last_name = None
 
