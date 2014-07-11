@@ -70,6 +70,15 @@ class Author(Model):
         return self.name()
 
     def name(self):
+        if not self.first_names and not self.last_name:
+            return "Anonymous"
+
+        if not self.first_names:
+            return self.last_name
+
+        if not self.last_name:
+            return self.first_names
+
         return "{}, {}".format(self.last_name, self.first_names)
 
     def to_dict(self):
