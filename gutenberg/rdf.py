@@ -70,6 +70,9 @@ def parse_and_fill(rdf_path):
             if not fname.endswith('.rdf'):
                 continue
 
+            if Book.filter(id=fname[2:-4]).count():
+                continue
+
             fpath = os.path.join(root, fname)
             parse_and_process_file(fpath)
 
@@ -94,7 +97,7 @@ class RdfParser():
         self.gid = gid
 
     def parse(self):
-        soup = BeautifulSoup(self.rdf_data,from_encoding='utf-8')
+        soup = BeautifulSoup(self.rdf_data, from_encoding='utf-8')
 
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.
@@ -115,8 +118,21 @@ class RdfParser():
         self.first_name = ''
         self.last_name = ''
         self.author = soup.find('dcterms:creator')
+
         if not self.author:
             self.author = soup.find('marcrel:com')
+
+        # special case when parser switches content between
+        # rdf:about and rdf:resource
+        def get_mixedup_creator(about_str):
+            creator = soup.find("pgterms:agent")
+            if hasattr(creator, 'attrs') and creator.attrs['rdf:about'] == about_str:
+                return creator.parent
+            return None
+
+        if self.author.attrs.get('rdf:resource'):
+            self.author = get_mixedup_creator(self.author.attrs.get('rdf:resource'))
+
         if self.author:
             self.author_id = re.match(
                 r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
