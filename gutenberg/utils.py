@@ -57,7 +57,6 @@ class UrlBuilder:
     def with_id(self, id):
         self.id = id
 
-
     def with_files(self, file_types):
         self.file_types = file_types
 

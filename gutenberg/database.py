@@ -60,7 +60,7 @@ class Author(Model):
             },
         ]
 
-    gut_id = CharField(primary_key=True,max_length=100)
+    gut_id = CharField(primary_key=True, max_length=100)
     last_name = CharField(max_length=150)
     first_names = CharField(max_length=300, null=True)
     birth_year = CharField(max_length=10, null=True)
@@ -70,10 +70,22 @@ class Author(Model):
         return self.name()
 
     def name(self):
+        if not self.first_names and not self.last_name:
+            return "Anonymous"
+
+        if not self.first_names:
+            return self.last_name
+
+        if not self.last_name:
+            return self.first_names
+
         return "{}, {}".format(self.last_name, self.first_names)
 
     def to_dict(self):
         return {'label': self.name(), 'id': self.gut_id}
+
+    def to_array(self):
+        return [self.name(), self.gut_id]
 
 
 class Book(Model):
@@ -95,6 +107,9 @@ class Book(Model):
     def to_dict(self):
         return {'title': self.title,
                 'author': self.author.name()}
+
+    def to_array(self):
+        return [self.title, self.author.name()]
 
 
 class BookFormat(Model):

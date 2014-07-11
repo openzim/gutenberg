@@ -16,6 +16,15 @@ from gutenberg.utils import FORMAT_MATRIX
 from gutenberg.database import Book, Format, BookFormat, Author
 
 
+def main_formats_for(book):
+    fmts = [fmt.format.mime
+            for fmt in BookFormat.select(BookFormat, Book, Format)
+                                 .join(Book).switch(BookFormat)
+                                 .join(Format)
+                                 .where(Book.id == book.id)]
+    return [k for k, v in FORMAT_MATRIX.items() if v in fmts]
+
+
 def get_list_of_filtered_books(languages, formats):
 
     if len(formats):
@@ -40,22 +49,36 @@ def export_all_books(static_folder,
     # ensure dir exist
     path(static_folder).mkdir_p()
 
-    books = get_list_of_filtered_books(languages, formats)
+    books = get_list_of_filtered_books(languages=languages,
+                                       formats=formats)
 
     sz = len(list(books))
     logger.debug("\tFiltered book collection size: {}".format(sz))
 
-    # export to HTML
-    for book in books:
-        export_book_to(book=book,
-                       static_folder=static_folder,
-                       download_cache=download_cache)
+    def nb_by_fmt(fmt):
+        return sum([1 for book in books
+                    if BookFormat.select(BookFormat, Book, Format)
+                                 .join(Book).switch(BookFormat)
+                                 .join(Format)
+                                 .where(Book.id == book.id)
+                                 .where(Format.mime == FORMAT_MATRIX.get(fmt))
+                                 .count()])
+
+    logger.debug("\tFiltered book collection, PDF: {}".format(nb_by_fmt('pdf')))
+    logger.debug("\tFiltered book collection, ePUB: {}".format(nb_by_fmt('epub')))
+    logger.debug("\tFiltered book collection, HTML: {}".format(nb_by_fmt('html')))
 
     # export to JSON helpers
     export_to_json_helpers(books=books,
                            static_folder=static_folder,
                            languages=languages,
                            formats=formats)
+
+    # export to HTML
+    for book in books:
+        export_book_to(book=book,
+                       static_folder=static_folder,
+                       download_cache=download_cache)
 
 
 def article_name_for(book, cover=False):
@@ -94,9 +117,7 @@ def cover_html_content_for(book):
     context = {
         'book': book,
         'cover_img': cover_img,
-        'formats': [k for k, v in FORMAT_MATRIX.items()
-                    if BookFormat.select().where(Book.id == book.id)
-                                          .where(Format.mime == v)]
+        'formats': main_formats_for(book)
     }
     with open(os.path.join('templates', 'cover_article.html'), 'r') as tmpl:
         template = Template(tmpl.read())
@@ -129,30 +150,37 @@ def export_to_json_helpers(books, static_folder, languages, formats):
 
     def dumpjs(col, fn):
         with open(os.path.join(static_folder, fn), 'w') as f:
-            json.dump(col, f)
+            f.write("var json_data = ")
+            f.write(json.dumps(col))
+            f.write(";")
+            # json.dump(col, f)
 
     # all books sorted by popularity
-    dumpjs([book.to_dict()
+    logger.info("\t\tDumping full_by_popularity.js")
+    dumpjs([book.to_array()
             for book in books.order_by(Book.downloads.desc())],
-           'full_by_popularity.json')
+           'full_by_popularity.js')
 
     # all books sorted by title
-    dumpjs([book.to_dict()
+    logger.info("\t\tDumping full_by_title.js")
+    dumpjs([book.to_array()
             for book in books.order_by(Book.title.asc())],
-           'full_by_title.json')
+           'full_by_title.js')
 
     # language-specific collections
     for lang in languages:
         # by popularity
-        dumpjs([book.to_dict()
+        logger.info("\t\tDumping lang_{}_by_popularity.js".format(lang))
+        dumpjs([book.to_array()
                 for book in books.where(Book.language == lang)
                                  .order_by(Book.downloads.desc())],
-                'lang_{}_by_popularity.json'.format(lang))
+                'lang_{}_by_popularity.js'.format(lang))
         # by title
-        dumpjs([book.to_dict()
+        logger.info("\t\tDumping lang_{}_by_title.js".format(lang))
+        dumpjs([book.to_array()
                 for book in books.where(Book.language == lang)
                                  .order_by(Book.title.asc())],
-                'lang_{}_by_popularity.json'.format(lang))
+                'lang_{}_by_title.js'.format(lang))
 
     # author specific collections
     authors = Author.select().where(
@@ -160,22 +188,26 @@ def export_to_json_helpers(books, static_folder, languages, formats):
                                    for book in books])))
     for author in authors:
         # by popularity
-        dumpjs([book.to_dict()
+        logger.info("\t\tDumping auth_{}_by_popularity.js".format(author.gut_id))
+        dumpjs([book.to_array()
                 for book in books.where(Book.author == author)
                                  .order_by(Book.downloads.desc())],
-                'auth_{}_by_popularity.json'.format(author.gut_id))
+                'auth_{}_by_popularity.js'.format(author.gut_id))
         # by title
-        dumpjs([book.to_dict()
+        logger.info("\t\tDumping auth_{}_by_title.js".format(author.gut_id))
+        dumpjs([book.to_array()
                 for book in books.where(Book.author == author)
                                  .order_by(Book.title.asc())],
-                'auth_{}_by_popularity.json'.format(author.gut_id))
+                'auth_{}_by_title.js'.format(author.gut_id))
 
     # authors list sorted by name
-    dumpjs([author.to_dict()
+    logger.info("\t\tDumping authors.js")
+    dumpjs([author.to_array()
             for author in authors.order_by(Author.last_name.asc(),
                                            Author.first_names.asc())],
-                'authors.json')
+                'authors.js')
 
     # languages list sorted by code
+    logger.info("\t\tDumping languages.js")
     avail_langs = list(set([b.language for b in books]))
-    dumpjs(sorted(avail_langs), 'languages.json')
+    dumpjs(sorted(avail_langs), 'languages.js')
