@@ -12,33 +12,9 @@ from bs4 import BeautifulSoup
 from jinja2 import Template
 
 from gutenberg import logger
-from gutenberg.utils import FORMAT_MATRIX
+from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
+                             get_list_of_filtered_books)
 from gutenberg.database import Book, Format, BookFormat, Author
-
-
-def main_formats_for(book):
-    fmts = [fmt.format.mime
-            for fmt in BookFormat.select(BookFormat, Book, Format)
-                                 .join(Book).switch(BookFormat)
-                                 .join(Format)
-                                 .where(Book.id == book.id)]
-    return [k for k, v in FORMAT_MATRIX.items() if v in fmts]
-
-
-def get_list_of_filtered_books(languages, formats):
-
-    if len(formats):
-        qs = Book.select().join(BookFormat) \
-                 .join(Format) \
-                 .where(Format.mime << [FORMAT_MATRIX.get(f)
-                                        for f in formats]).group_by(Book.id)
-    else:
-        qs = Book.select()
-
-    if len(languages):
-        qs = qs.where(Book.language << languages)
-
-    return qs
 
 
 def export_all_books(static_folder,

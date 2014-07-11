@@ -14,7 +14,8 @@ from path import path
 from gutenberg import logger
 from gutenberg.database import BookFormat, Format
 from gutenberg.export import get_list_of_filtered_books, fname_for
-from gutenberg.utils import UrlBuilder, download_file, FORMAT_MATRIX
+from gutenberg.utils import (get_possible_urls_for_book,
+                             download_file, FORMAT_MATRIX)
 
 
 def resource_exists(url):
@@ -75,9 +76,6 @@ def download_all_books(url_mirror, download_cache,
         logger.info("\tDownloading content files for Book #{id}"
                     .format(id=book.id))
 
-        urlb = UrlBuilder()
-        urlb.with_id(book.id)
-
         # apply filters
         if not formats:
             formats = FORMAT_MATRIX.keys()
@@ -116,8 +114,8 @@ def download_all_books(url_mirror, download_cache,
             if bf.downloaded_from and not force:
                 urls = [bf.downloaded_from]
             else:
-                # urls = reversed(urlb.urls_for(format=format))
-                urls = []
+                urld = get_possible_urls_for_book(book.id)
+                urls = reversed(urld.get(FORMAT_MATRIX.get(format)))
 
             while(urls):
                 url = urls.pop()

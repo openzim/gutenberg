@@ -11,7 +11,7 @@ from collections import defaultdict
 import envoy
 
 from gutenberg import logger
-from gutenberg.database import *
+from gutenberg.database import Book, BookFormat, Format
 
 
 FORMAT_MATRIX = {
@@ -75,7 +75,6 @@ class UrlBuilder:
 
 def get_possible_urls_for_book(id):
     formats = []
-    from gutenberg.export import get_list_of_filtered_books
 
     book = Book.get(id=id)
     filtered_book = [bf.format for bf in
@@ -150,7 +149,7 @@ def build_html(files):
     file_names = [i['name'] for i in files]
     u = UrlBuilder()
     u.with_id(i['id'])
-    
+
     if all([not '-h.html' in file_names, '-h.zip' in file_names]):
         for i in files:
             url = os.path.join(u.build(), i['name'])
@@ -161,6 +160,31 @@ def build_html(files):
     url_htm = os.path.join(u.build(), id + '-h' + '.htm')
     urls.extend([url_zip, url_htm, url_html])
     return list(set(urls))
+
+
+def main_formats_for(book):
+    fmts = [fmt.format.mime
+            for fmt in BookFormat.select(BookFormat, Book, Format)
+                                 .join(Book).switch(BookFormat)
+                                 .join(Format)
+                                 .where(Book.id == book.id)]
+    return [k for k, v in FORMAT_MATRIX.items() if v in fmts]
+
+
+def get_list_of_filtered_books(languages, formats):
+
+    if len(formats):
+        qs = Book.select().join(BookFormat) \
+                 .join(Format) \
+                 .where(Format.mime << [FORMAT_MATRIX.get(f)
+                                        for f in formats]).group_by(Book.id)
+    else:
+        qs = Book.select()
+
+    if len(languages):
+        qs = qs.where(Book.language << languages)
+
+    return qs
 
 
 if __name__ == '__main__':
