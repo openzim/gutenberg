@@ -70,9 +70,6 @@ def parse_and_fill(rdf_path):
             if not fname.endswith('.rdf'):
                 continue
 
-            if Book.filter(id=fname[2:-4]).count():
-                continue
-
             fpath = os.path.join(root, fname)
             parse_and_process_file(fpath)
 
@@ -97,7 +94,7 @@ class RdfParser():
         self.gid = gid
 
     def parse(self):
-        soup = BeautifulSoup(self.rdf_data, from_encoding='utf-8')
+        soup = BeautifulSoup(self.rdf_data,from_encoding='utf-8')
 
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.
@@ -118,21 +115,8 @@ class RdfParser():
         self.first_name = ''
         self.last_name = ''
         self.author = soup.find('dcterms:creator')
-
         if not self.author:
             self.author = soup.find('marcrel:com')
-
-        # special case when parser switches content between
-        # rdf:about and rdf:resource
-        def get_mixedup_creator(about_str):
-            creator = soup.find("pgterms:agent")
-            if hasattr(creator, 'attrs') and creator.attrs['rdf:about'] == about_str:
-                return creator.parent
-            return None
-
-        if self.author and self.author.attrs.get('rdf:resource'):
-            self.author = get_mixedup_creator(self.author.attrs.get('rdf:resource'))
-
         if self.author:
             self.author_id = re.match(
                 r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
@@ -185,22 +169,14 @@ def save_rdf_in_database(parser):
     if parser.author_id:
         try:
             author_record = Author.get(gut_id=parser.author_id)
-            if parser.last_name:
-                author_record.last_name
-            if parser.first_name:
-                author_record.first_names = parser.first_name
-            if parser.birth_year:
-                author_record.birth_year = parser.birth_year
-            if parser.death_year:
-                author_record.death_year = parser.death_year
-            author_record.save()
         except:
-            author_record = Author.create(
+            author_record = Author.get_or_create(
                 gut_id=parser.author_id,
                 last_name=parser.last_name,
                 first_names=parser.first_name,
                 birth_year=parser.birth_year,
-                death_year=parser.death_year)
+                death_year=parser.death_year
+            )
     else:
         # No author, set Anonymous
         author_record = Author.get(gut_id='216')
