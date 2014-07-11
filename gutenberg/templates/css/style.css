@@ -29,6 +29,15 @@ a {
     margin: 0 auto;
 }
 
+th {
+    text-align: left;
+    color: #b88b35;
+}
+
+td {
+    color: #b88b35;
+}
+
 /* Header top-menu */
 #header {
     padding-bottom: 2em;
@@ -127,10 +136,13 @@ ul.menu > li > span {
 /* About */
 #home-about {
     color: #b88b35;
-    text-align:justify;
-    text-justify:inter-word;
+    text-align: justify;
     font-size: 20px;
-    margin: 0 15px;
+    margin: 0;
+    margin-bottom: 15px;
 }
 
-/* Results */
+/* Books */
+#content {    
+    margin-bottom: 15px;
+}
