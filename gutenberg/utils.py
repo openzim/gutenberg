@@ -39,7 +39,7 @@ class UrlBuilder:
     Url builder for the files of a Gutenberg book.
     """
     BASE_ONE = 'http://zimfarm.kiwix.org/gutenberg/'
-    BASE_TWO = 'http://zimfarm.kiwix.org/gutenberg-generated/'
+    BASE_TWO = 'http://gutenberg.readingroo.ms/cache/generated/'
 
     def __init__(self):
         self.base = self.BASE_ONE
