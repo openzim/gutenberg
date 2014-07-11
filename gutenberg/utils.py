@@ -6,11 +6,12 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
 
+from collections import defaultdict
+
 import envoy
 
 from gutenberg import logger
-
-from gutenberg.export import get_list_of_filtered_books
+from gutenberg.database import *
 
 
 FORMAT_MATRIX = {
@@ -37,23 +38,30 @@ class UrlBuilder:
     """
     Url builder for the files of a Gutenberg book.
     """
-    base = 'http://zimfarm.kiwix.org/gutenberg/'
+    BASE_ONE = 'http://zimfarm.kiwix.org/gutenberg/'
+    BASE_TWO = 'http://zimfarm.kiwix.org/gutenberg-generated/'
 
     def __init__(self):
-        pass
+        self.base = self.BASE_ONE
 
     def build(self):
         if self.id > 10:
-            base_url = os.path.join(
-                os.path.join(*list(str(self.id))[:-1]), str(self.id))
-            base_url = os.path.join(self.base, base_url)
-            urls = [os.path.join(base_url, x) for x in self.file_types]
+            if self.base == self.BASE_ONE:
+                base_url = os.path.join(
+                    os.path.join(*list(str(self.id))[:-1]), str(self.id))
+                url = os.path.join(self.base, base_url)
+            elif self.base == self.BASE_TWO:
+                url = os.path.join(self.base, str(self.id))
+
         else:
             logger.warning('Figuring out the url of books \
                 with an ID of {ID <= 10} is not implemented yet')
             return None
 
-        return urls
+        return url
+
+    def get_base_one_links():
+        pass
 
     def with_base(self, base):
         self.base = base
@@ -61,79 +69,101 @@ class UrlBuilder:
     def with_id(self, id):
         self.id = id
 
-    def with_files(self, file_types):
-        self.file_types = file_types
-
     def __unicode__(self):
         return self.build_url()
 
 
-def download_all_books(url_mirror, download_cache,
-                       languages=[], formats=[]):
+def get_possible_urls_for_book(id):
+    formats = []
+    from gutenberg.export import get_list_of_filtered_books
 
-    available_books = get_list_of_filtered_books(languages, formats)
+    book = Book.get(id=id)
+    filtered_book = [bf.format for bf in
+                     BookFormat.select().where(BookFormat.book == book)]
 
-    for b in available_books:
-        book = Book.get(id=b.id)
-        filtered_book = [bf.format for bf in
-                         BookFormat.select().where(BookFormat.book == book)]
+    allowed_mime = ''
+    if formats:
+        allowed_mime = [formats[x] for x in formats if x in FORMAT_MATRIX]
+    else:
+        allowed_mime = FORMAT_MATRIX.values()
 
-        allowed_mime = ''
-        if formats:
-            allowed_mime = [formats[x] for x in formats if x in FORMAT_MATRIX]
-        else:
-            allowed_mime = FORMAT_MATRIX.values()
-
-        f = lambda x: x.mime.split(';')[0].strip()
-        available_formats = [{x.pattern.format(id=b.id): {'mime': f(x), 'id': b.id}}
-                             for x in filtered_book if f(x) in allowed_mime]
-        # print(available_formats)
-        # files = filter_out_file_types(available_formats)
-        # build_urls(files)
-
-        break
+    f = lambda x: x.mime.split(';')[0].strip()
+    available_formats = [{x.pattern.format(id=id): {'mime': f(x), 'id': id}}
+                         for x in filtered_book if f(x) in allowed_mime]
+    files = sort_by_mime_type(available_formats)
+    build_urls(files)
     return
 
 
-def filter_out_file_types(files):
+def sort_by_mime_type(files):
     count = defaultdict(list)
     for f in files:
         for k, v in f.items():
             count[v['mime']].append({'name': k, 'id': v['id']})
-
-    for k, v in count.items():
-        index = index_of_substring(v, '.images')
-        if index:
-            count[k] = v[index]
-        else:
-            if len(v) > 1:
-                index = index_of_substring(v, '.noimages')
-                if index:
-                    count[k] = v[index]
-            else:
-                count[k] = v[0]
-        if len(v) > 1:
-            count[k] = v[0]
     return dict(count)
 
 
-def index_of_substring(lst, substring):
-    for i, s in enumerate(lst):
-        if substring in s['name']:
-            return i
-    return False
-
-
 def build_urls(files):
-    for k, v in files.items():
-        print('')
-        print(v)
-        print(v['name'])
+    mapping = {
+        'application/epub+zip': build_epub,
+        'application/pdf': build_pdf,
+        'text/html': build_html
+    }
+
+    for i in mapping:
+        if i in files:
+            files[i] = mapping[i](files[i])
+
+    print(files)
+
+
+def build_epub(files):
+    urls = []
+    id = str(files[0]['id'])
+    u = UrlBuilder()
+    u.with_id(files[0]['id'])
+    u.with_base(UrlBuilder.BASE_TWO)
+    name = ''.join(['pg', id])
+    url = os.path.join(u.build(), name + '.epub')
+    urls.append(url)
+    return urls
+
+
+def build_pdf(files):
+    urls = []
+    id = str(files[0]['id'])
+    u = UrlBuilder()
+    u.with_id(files[0]['id'])
+    for i in files:
+        if not 'images' in i['name']:
+            url = os.path.join(u.build(), i['name'])
+            urls.append(url)
+    url_dash = os.path.join(u.build(), id + '-' + 'pdf' + '.pdf')
+    url_normal = os.path.join(u.build(), id + '.pdf')
+    urls.extend([url_dash, url_normal])
+    return list(set(urls))
+
+
+def build_html(files):
+    urls = []
+    id = str(files[0]['id'])
+    file_names = [i['name'] for i in files]
+    u = UrlBuilder()
+    u.with_id(i['id'])
+    
+    if all([not '-h.html' in file_names, '-h.zip' in file_names]):
+        for i in files:
+            url = os.path.join(u.build(), i['name'])
+            urls.append(url)
+
+    url_zip = os.path.join(u.build(), id + '-h' + '.zip')
+    url_html = os.path.join(u.build(), id + '-h' + '.html')
+    url_htm = os.path.join(u.build(), id + '-h' + '.htm')
+    urls.extend([url_zip, url_htm, url_html])
+    return list(set(urls))
 
 
 if __name__ == '__main__':
     b = UrlBuilder()
     b.with_id(1234)
-    b.with_files([u'1234.kindle.noimages', u'1234-8.txt', u'1234.kindle.images',
-                  u'1234-h.zip', u'1234.epub.images', u'1234.epub.noimages'])
     print('Url of the book: ' + str(b.build()))
