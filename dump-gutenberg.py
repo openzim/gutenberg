@@ -14,7 +14,7 @@ from gutenberg.rdf import setup_rdf_folder, parse_and_fill
 from gutenberg.download import download_all_books
 from gutenberg.export import export_all_books
 from gutenberg.zim import build_zimfile
-from gutenberg.utils import run
+
 
 help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
         """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] [-z ZIM_PATH] [-u RDF_URL]"""
@@ -100,13 +100,6 @@ def main(arguments):
     if DO_ZIM:
         logger.info("BUILDING ZIM off satic folder {}".format(STATIC_FOLDER))
         build_zimfile(STATIC_FOLDER, ZIM_FILE)
-
-
-print('')
-print('')
-run(11)
-print('')
-print('')
 
 if __name__ == '__main__':
     main(docopt(help, version=0.1))
