@@ -80,7 +80,7 @@ def get_possible_urls_for_book(book):
                      BookFormat.select().where(BookFormat.book == book)]
 
     f = lambda x: x.mime.split(';')[0].strip()
-    available_formats = [{x.pattern.format(id=id): {'mime': f(x), 'id': id}}
+    available_formats = [{x.pattern.format(id=book.id): {'mime': f(x), 'id': book.id}}
                          for x in filtered_book]
     files = sort_by_mime_type(available_formats)
     return build_urls(files)
@@ -178,8 +178,3 @@ def get_list_of_filtered_books(languages, formats):
 
     return qs
 
-
-if __name__ == '__main__':
-    b = UrlBuilder()
-    b.with_id(1234)
-    print('Url of the book: ' + str(b.build()))
