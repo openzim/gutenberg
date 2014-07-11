@@ -169,14 +169,22 @@ def save_rdf_in_database(parser):
     if parser.author_id:
         try:
             author_record = Author.get(gut_id=parser.author_id)
+            if parser.last_name:
+                author_record.last_name
+            if parser.first_name:
+                author_record.first_names = parser.first_name
+            if parser.birth_year:
+                author_record.birth_year = parser.birth_year
+            if parser.death_year:
+                author_record.death_year = parser.death_year
+            author_record.save()
         except:
-            author_record = Author.get_or_create(
+            author_record = Author.create(
                 gut_id=parser.author_id,
                 last_name=parser.last_name,
                 first_names=parser.first_name,
                 birth_year=parser.birth_year,
-                death_year=parser.death_year
-            )
+                death_year=parser.death_year)
     else:
         # No author, set Anonymous
         author_record = Author.get(gut_id='216')
