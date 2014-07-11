@@ -22,7 +22,7 @@ def download_all_books(url_mirror, download_cache,
         book = Book.get(id=b.id)
         filtered_book = [bf.format for bf in
                          BookFormat.select().where(BookFormat.book == book)]
-
+        
         allowed_mime = ''
         if formats:
             allowed_mime = [formats[x] for x in formats if x in FORMAT_MATRIX]
@@ -32,18 +32,11 @@ def download_all_books(url_mirror, download_cache,
         f = lambda x: x.mime.split(';')[0].strip()
         available_formats = [{x.pattern.format(id=b.id): {'mime': f(x), 'id': b.id}}
                              for x in filtered_book if f(x) in allowed_mime]
-
-        files = filter_out_file_types(available_formats)
-        build_urls(files)
-        #print(files)
+        print(available_formats)
+        # files = filter_out_file_types(available_formats)
+        # build_urls(files)
         
-    # tmppath = tempfile
-    # extract zip from tempfile
-    # write html from inside zip to 'id.html'
-    # write all images from images directory into id_cover.jpg
-
-    # for foröat iun foröamt :
-    #     download as id.format (pdf, epub)
+        break
     return
 
 
