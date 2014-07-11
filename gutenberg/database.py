@@ -82,10 +82,22 @@ class Author(Model):
         return "{}, {}".format(self.last_name, self.first_names)
 
     def to_dict(self):
-        return {'label': self.name(), 'id': self.gut_id}
+        return {'label': self.name(),
+                'id': self.gut_id,
+                'last_name': self.last_name,
+                'first_names': self.first_names,
+                'birth_year': self.birth_year,
+                'death_year': self.death_year}
 
     def to_array(self):
-        return [self.name(), self.gut_id]
+        return [
+            self.name(),
+            self.gut_id,
+            # self.last_name,
+            # self.first_names,
+            # self.birth_year,
+            # self.death_year,
+        ]
 
 
 class Book(Model):
@@ -106,10 +118,21 @@ class Book(Model):
 
     def to_dict(self):
         return {'title': self.title,
-                'author': self.author.name()}
+                'subtitle': self.subtitle,
+                'author': self.author.name(),
+                'license': self.license,
+                'language': self.language,
+                'downloads': self.downloads}
 
     def to_array(self):
-        return [self.title, self.author.name()]
+        return [
+            self.title,
+            # self.subtitle,
+            self.author.name(),
+            # self.license,
+            # self.language,
+            # self.downloads
+        ]
 
 
 class BookFormat(Model):
