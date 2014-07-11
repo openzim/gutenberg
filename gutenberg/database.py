@@ -142,6 +142,7 @@ class BookFormat(Model):
 
     book = ForeignKeyField(Book, related_name='bookformats')
     format = ForeignKeyField(Format, related_name='bookformats')
+    downloaded_from = CharField(max_length=300, null=True)
 
     def __unicode__(self):
         return "[{}] {}".format(self.format, self.book.title)
