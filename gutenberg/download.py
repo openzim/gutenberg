@@ -4,73 +4,138 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
+import os
+import tempfile
+import zipfile
 
-from collections import defaultdict
+import requests
+from path import path
 
 from gutenberg import logger
-from gutenberg.export import get_list_of_filtered_books
-from gutenberg.utils import UrlBuilder, FORMAT_MATRIX
-from gutenberg.database import *
+from gutenberg.database import BookFormat, Format
+from gutenberg.export import get_list_of_filtered_books, fname_for
+from gutenberg.utils import UrlBuilder, download_file, FORMAT_MATRIX
+
+
+def resource_exists(url):
+    r = requests.get(url, stream=True)
+    return r.status_code == requests.codes.ok
+
+
+def handle_zipped_epub(zippath,
+                       book,
+                       download_cache):
+
+    def is_safe(fname):
+        if path(fname).basename() == fname:
+            return True
+        return fname == os.path.join("images",
+                                     path(fname).splitpath()[-1])
+
+
+    zipped_files = []
+    with zipfile.ZipFile(zippath, 'r') as zf:
+        # check that there is no insecure data (absolute names)
+        if sum([1 for n in zf.namelist()
+                if not is_safe(n)]):
+            return False
+        else:
+            zipped_files = zf.namelist()
+
+        # create temp directory to extract to
+        tmpd = tempfile.mkdtemp()
+        # extract files from zip
+        zf.extractall(tmpd)
+
+    # move all extracted files to proper locations
+    for fname in zipped_files:
+        src = os.path.join(tmpd, fname)
+
+        if fname.endswith('.html') or fname.endswith('.htm'):
+            dst = os.path.join(download_cache,
+                               "{bid}.html".format(bid=book.id))
+
+        dst = os.path.join(download_cache,
+                           "{bid}_{fname}".format(bid=book.id,
+                                                  fname=fname))
+        path(src).move(dst)
+
+    # delete temp directory
+    path(tmpd).rmtree_p()
 
 
 def download_all_books(url_mirror, download_cache,
-                       languages=[], formats=[]):
+                       languages=[], formats=[],
+                       force=False):
 
     available_books = get_list_of_filtered_books(languages, formats)
 
-    for b in available_books:
-        book = Book.get(id=b.id)
-        filtered_book = [bf.format for bf in
-                         BookFormat.select().where(BookFormat.book == book)]
-        
-        allowed_mime = ''
-        if formats:
-            allowed_mime = [formats[x] for x in formats if x in FORMAT_MATRIX]
-        else:
-            allowed_mime = FORMAT_MATRIX.values()
+    for book in available_books:
 
-        f = lambda x: x.mime.split(';')[0].strip()
-        available_formats = [{x.pattern.format(id=b.id): {'mime': f(x), 'id': b.id}}
-                             for x in filtered_book if f(x) in allowed_mime]
-        # print(available_formats)
-        # files = filter_out_file_types(available_formats)
-        # build_urls(files)
-        
-        break
-    return
+        logger.info("\tDownloading content files for Book #{id}"
+                    .format(id=book.id))
 
+        urlb = UrlBuilder()
+        urlb.with_id(book.id)
 
-def filter_out_file_types(files):
-    count = defaultdict(list)
-    for f in files:
-        for k, v in f.items():
-            count[v['mime']].append({'name': k, 'id': v['id']})
+        # apply filters
+        if not formats:
+            formats = FORMAT_MATRIX.keys()
 
-    for k, v in count.items():
-        index = index_of_substring(v, '.images')
-        if index:
-            count[k] = v[index]
-        else:
-            if len(v) > 1:
-                index = index_of_substring(v, '.noimages')
-                if index:
-                    count[k] = v[index]
+        # HTML is our base for ZIM for add it if not present
+        if not 'html' in formats:
+            formats.append('html')
+
+        for format in formats:
+
+            fpath = os.path.join(download_cache, fname_for(book, format))
+
+            # check if already downloaded
+            if path(fpath).exists() and not force:
+                logger.debug("\t\t{fmt} already exists at {path}"
+                             .format(fmt=format, path=fpath))
+                continue
+
+            # retrieve corresponding BookFormat
+            bfs = BookFormat.filter(book=book,
+                                    format=Format.get(mime=FORMAT_MATRIX.get(format)))
+            if not bfs.count():
+                logger.debug("[{}] not avail. for #{}# {}"
+                             .format(format, book.id, book.title))
+                continue
+
+            if bfs.count() > 1:
+                bf = bfs.get(images=True)
             else:
-                count[k] = v[0]
-        if len(v) > 1:
-            count[k] = v[0]
-    return dict(count)
+                bf = bfs.get()
 
+            logger.debug("[{}] Requesting URLs for #{}# {}"
+                         .format(format, book.id, book.title))
 
-def index_of_substring(lst, substring):
-    for i, s in enumerate(lst):
-        if substring in s['name']:
-            return i
-    return False
+            # retrieve list of URLs for format unless we have it in DB
+            if bf.downloaded_from and not force:
+                urls = [bf.downloaded_from]
+            else:
+                # urls = reversed(urlb.urls_for(format=format))
+                urls = []
 
+            while(urls):
+                url = urls.pop()
+                if not resource_exists(url):
+                    continue
 
-def build_urls(files):
-    for k, v in files.items():
-        print ('')
-        print (v)
-        print (v['name'])
+                # HTML files are *sometime* available as ZIP files
+                if url.endswith('.zip'):
+                    zpath = "{}.zip".format(fpath)
+                    download_file(url, zpath)
+
+                    # extract zipfile
+                    handle_zipped_epub(zippath=zpath, book=book,
+                                       download_cache=download_cache)
+                else:
+                    download_file(url, fpath)
+
+                # store working URL in DB
+                bf.downloaded_from = url
+                bf.save()
+
