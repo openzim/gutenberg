@@ -83,8 +83,7 @@ def get_possible_urls_for_book(book):
     available_formats = [{x.pattern.format(id=id): {'mime': f(x), 'id': id}}
                          for x in filtered_book]
     files = sort_by_mime_type(available_formats)
-    build_urls(files)
-    return
+    return build_urls(files)
 
 
 def sort_by_mime_type(files):
@@ -106,7 +105,7 @@ def build_urls(files):
         if i in files:
             files[i] = mapping[i](files[i])
 
-    print(files)
+    return files
 
 
 def build_epub(files):
