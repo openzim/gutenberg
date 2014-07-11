@@ -73,22 +73,15 @@ class UrlBuilder:
         return self.build_url()
 
 
-def get_possible_urls_for_book(id):
+def get_possible_urls_for_book(book):
     formats = []
 
-    book = Book.get(id=id)
     filtered_book = [bf.format for bf in
                      BookFormat.select().where(BookFormat.book == book)]
 
-    allowed_mime = ''
-    if formats:
-        allowed_mime = [formats[x] for x in formats if x in FORMAT_MATRIX]
-    else:
-        allowed_mime = FORMAT_MATRIX.values()
-
     f = lambda x: x.mime.split(';')[0].strip()
     available_formats = [{x.pattern.format(id=id): {'mime': f(x), 'id': id}}
-                         for x in filtered_book if f(x) in allowed_mime]
+                         for x in filtered_book]
     files = sort_by_mime_type(available_formats)
     build_urls(files)
     return
