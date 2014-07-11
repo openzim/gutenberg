@@ -32,7 +32,7 @@ def download_all_books(url_mirror, download_cache,
         f = lambda x: x.mime.split(';')[0].strip()
         available_formats = [{x.pattern.format(id=b.id): {'mime': f(x), 'id': b.id}}
                              for x in filtered_book if f(x) in allowed_mime]
-        print(available_formats)
+        # print(available_formats)
         # files = filter_out_file_types(available_formats)
         # build_urls(files)
         
