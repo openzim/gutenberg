@@ -60,7 +60,7 @@ class Author(Model):
             },
         ]
 
-    gut_id = CharField(primary_key=True,max_length=100)
+    gut_id = CharField(primary_key=True, max_length=100)
     last_name = CharField(max_length=150)
     first_names = CharField(max_length=300, null=True)
     birth_year = CharField(max_length=10, null=True)

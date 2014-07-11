@@ -130,7 +130,7 @@ class RdfParser():
                 return creator.parent
             return None
 
-        if self.author.attrs.get('rdf:resource'):
+        if self.author and self.author.attrs.get('rdf:resource'):
             self.author = get_mixedup_creator(self.author.attrs.get('rdf:resource'))
 
         if self.author:
@@ -183,13 +183,24 @@ def save_rdf_in_database(parser):
 
     # Insert author, if it not exists
     if parser.author_id:
-        author_record = Author.get_or_create(
-            gut_id=parser.author_id,
-            last_name=parser.last_name,
-            first_names=parser.first_name,
-            birth_year=parser.birth_year,
-            death_year=parser.death_year
-        )
+        try:
+            author_record = Author.get(gut_id=parser.author_id)
+            if parser.last_name:
+                author_record.last_name
+            if parser.first_name:
+                author_record.first_names = parser.first_name
+            if parser.birth_year:
+                author_record.birth_year = parser.birth_year
+            if parser.death_year:
+                author_record.death_year = parser.death_year
+            author_record.save()
+        except:
+            author_record = Author.create(
+                gut_id=parser.author_id,
+                last_name=parser.last_name,
+                first_names=parser.first_name,
+                birth_year=parser.birth_year,
+                death_year=parser.death_year)
     else:
         # No author, set Anonymous
         author_record = Author.get(gut_id='216')
