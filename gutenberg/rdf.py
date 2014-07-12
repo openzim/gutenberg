@@ -116,7 +116,8 @@ class RdfParser():
         self.author = soup.find('dcterms:creator') or soup.find('marcrel:com')
         if self.author:
             self.author_id = self.author.find('pgterms:agent')
-            self.author_id = self.author_id.attrs['rdf:about'].split('/')[-1]
+            self.author_id = self.author_id.attrs['rdf:about'].split('/')[-1] \
+                if 'rdf:about' in self.author_id.attrs else None
             self.author_name = self.author.find('pgterms:name').text.split(',')
 
             if len(self.author_name) == 1:
