@@ -215,7 +215,7 @@ def build_html(files):
     etext_names = ["{0:0=2d}".format(i) for i in etext_nums]
     etext_urls = []
     for i in etext_names:
-        etext_urls.append(os.path.join(u.build() + i , file_name))
+        etext_urls.append(os.path.join(u.build() + i, file_name))
 
     urls.extend([url_zip, url_htm, url_utf8, url_html, html_utf8])
     urls.extend(etext_urls)
