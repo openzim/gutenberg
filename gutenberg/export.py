@@ -120,7 +120,9 @@ def update_html_for_static(book, html_content):
         utf = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
         # title = soup.find('title')
         # title.insert_before(utf)
-        return soup.encode().replace('<head>', '<head>' + utf)
+        utf = '<head>{}'.format(utf)
+
+        return soup.encode().replace(str('<head>'), str(utf))
 
     return soup.encode()
 
@@ -156,6 +158,7 @@ def export_book_to(book,
         src = os.path.join(download_cache, fname)
         dst = os.path.join(static_folder, fname)
         logger.info("\t\tSymlinking {}".format(dst))
+        path(dst).unlink_p()
         path(src).symlink(dst)
 
     # associated files (images, etc)
