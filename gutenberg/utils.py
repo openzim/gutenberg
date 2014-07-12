@@ -198,6 +198,7 @@ def build_html(files):
             urls.append(url)
 
     url_zip = os.path.join(u.build(), b_id + '-h' + '.zip')
+    url_utf8 = os.path.join(u.build(), b_id + '-8' + '.zip')
     url_html = os.path.join(u.build(), b_id + '-h' + '.html')
     url_htm = os.path.join(u.build(), b_id + '-h' + '.htm')
 
@@ -216,7 +217,7 @@ def build_html(files):
     for i in etext_names:
         etext_urls.append(os.path.join(u.build() + i , file_name))
 
-    urls.extend([url_zip, url_htm, url_html, html_utf8])
+    urls.extend([url_zip, url_htm, url_utf8, url_html, html_utf8])
     urls.extend(etext_urls)
     return list(set(urls))
 
