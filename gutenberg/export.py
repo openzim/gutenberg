@@ -9,12 +9,17 @@ import json
 
 from path import path
 from bs4 import BeautifulSoup
-from jinja2 import Template
+from jinja2 import Environment, PackageLoader
 
+import gutenberg
 from gutenberg import logger
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
                              get_list_of_filtered_books)
 from gutenberg.database import Book, Format, BookFormat, Author
+
+
+def tmpl_path():
+    return os.path.join(path(gutenberg.__file__).parent, 'templates')
 
 
 def export_all_books(static_folder,
@@ -44,17 +49,17 @@ def export_all_books(static_folder,
     logger.debug("\tFiltered book collection, ePUB: {}".format(nb_by_fmt('epub')))
     logger.debug("\tFiltered book collection, HTML: {}".format(nb_by_fmt('html')))
 
-    # export to JSON helpers
-    export_to_json_helpers(books=books,
-                           static_folder=static_folder,
-                           languages=languages,
-                           formats=formats)
-
     # export to HTML
     for book in books:
         export_book_to(book=book,
                        static_folder=static_folder,
                        download_cache=download_cache)
+
+    # export to JSON helpers
+    export_to_json_helpers(books=books,
+                           static_folder=static_folder,
+                           languages=languages,
+                           formats=formats)
 
 
 def article_name_for(book, cover=False):
@@ -84,7 +89,8 @@ def update_html_for_static(book, html_content):
     soup = BeautifulSoup(html_content)
     for img in soup.findAll('img'):
         img.attrs['href'] = img.attrs['href'].replace('images/', '{id}_'.format(book.id))
-    return soup.text
+
+    return soup.encode()
 
 
 def cover_html_content_for(book):
@@ -95,8 +101,10 @@ def cover_html_content_for(book):
         'cover_img': cover_img,
         'formats': main_formats_for(book)
     }
-    with open(os.path.join('templates', 'cover_article.html'), 'r') as tmpl:
-        template = Template(tmpl.read())
+    env = Environment(loader=PackageLoader('gutenberg', 'templates'))
+    template = env.get_template('cover_article.html')
+    # with open(os.path.join(tmpl_path(), 'cover_article.html'), 'r') as tmpl:
+    #     template = Template(tmpl.read())
     return template.render(**context)
 
 
@@ -119,14 +127,14 @@ def export_book_to(book, static_folder, download_cache):
     logger.info("\t\tExporting to {}".format(cover_fpath))
     html = cover_html_content_for(book=book)
     with open(cover_fpath, 'w') as f:
-        f.write(html)
+        f.write(html.encode('utf-8'))
 
 
 def export_to_json_helpers(books, static_folder, languages, formats):
 
-    def dumpjs(col, fn):
+    def dumpjs(col, fn, var='json_data'):
         with open(os.path.join(static_folder, fn), 'w') as f:
-            f.write("var json_data = ")
+            f.write("var {var} = ".format(var=var))
             f.write(json.dumps(col))
             f.write(";")
             # json.dump(col, f)
@@ -181,9 +189,9 @@ def export_to_json_helpers(books, static_folder, languages, formats):
     dumpjs([author.to_array()
             for author in authors.order_by(Author.last_name.asc(),
                                            Author.first_names.asc())],
-                'authors.js')
+                'authors.js', 'authors_json_data')
 
     # languages list sorted by code
     logger.info("\t\tDumping languages.js")
     avail_langs = list(set([b.language for b in books]))
-    dumpjs(sorted(avail_langs), 'languages.js')
+    dumpjs(sorted(avail_langs), 'languages.js', 'languages_json_data')

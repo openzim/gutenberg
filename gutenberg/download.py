@@ -27,7 +27,10 @@ def handle_zipped_epub(zippath,
                        book,
                        download_cache):
 
+    clfn = lambda fn: os.path.join(*os.path.split(fn)[1:])
+
     def is_safe(fname):
+        fname = clfn(fname)
         if path(fname).basename() == fname:
             return True
         return fname == os.path.join("images",
@@ -35,31 +38,44 @@ def handle_zipped_epub(zippath,
 
 
     zipped_files = []
+    # create temp directory to extract to
+    tmpd = tempfile.mkdtemp()
     with zipfile.ZipFile(zippath, 'r') as zf:
         # check that there is no insecure data (absolute names)
         if sum([1 for n in zf.namelist()
                 if not is_safe(n)]):
+            path(tmpd).rmtree_p()
             return False
         else:
+            # zipped_files = [clfn(fn) for fn in zf.namelist()]
             zipped_files = zf.namelist()
 
-        # create temp directory to extract to
-        tmpd = tempfile.mkdtemp()
         # extract files from zip
         zf.extractall(tmpd)
 
     # move all extracted files to proper locations
     for fname in zipped_files:
+        # skip folders
+        if not path(fname).ext:
+            continue
+
         src = os.path.join(tmpd, fname)
+        fname = path(fname).basename()
 
         if fname.endswith('.html') or fname.endswith('.htm'):
             dst = os.path.join(download_cache,
                                "{bid}.html".format(bid=book.id))
-
-        dst = os.path.join(download_cache,
-                           "{bid}_{fname}".format(bid=book.id,
-                                                  fname=fname))
-        path(src).move(dst)
+        else:
+            dst = os.path.join(download_cache,
+                               "{bid}_{fname}".format(bid=book.id,
+                                                      fname=fname))
+        try:
+            path(src).move(dst)
+        except Exception as e:
+            import traceback
+            print(e)
+            print("".join(traceback.format_exc()))
+            import ipdb; ipdb.set_trace()
 
     # delete temp directory
     path(tmpd).rmtree_p()
@@ -70,6 +86,9 @@ def download_all_books(url_mirror, download_cache,
                        force=False):
 
     available_books = get_list_of_filtered_books(languages, formats)
+
+    # ensure dir exist
+    path(download_cache).mkdir_p()
 
     for book in available_books:
 
@@ -95,15 +114,16 @@ def download_all_books(url_mirror, download_cache,
                 continue
 
             # retrieve corresponding BookFormat
-            bfs = BookFormat.filter(book=book,
-                                    format=Format.get(mime=FORMAT_MATRIX.get(format)))
+            bfs = BookFormat.filter(book=book).filter(BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get(format)))
+            if format == 'html':
+                bfs = bfs.join(Format).filter(Format.pattern == '{id}-h.htm')
             if not bfs.count():
                 logger.debug("[{}] not avail. for #{}# {}"
                              .format(format, book.id, book.title))
                 continue
 
             if bfs.count() > 1:
-                bf = bfs.get(images=True)
+                bf = bfs.join(Format).filter(Format.images == True).get()
             else:
                 bf = bfs.get()
 
@@ -114,11 +134,12 @@ def download_all_books(url_mirror, download_cache,
             if bf.downloaded_from and not force:
                 urls = [bf.downloaded_from]
             else:
-                urld = get_possible_urls_for_book(book.id)
-                urls = reversed(urld.get(FORMAT_MATRIX.get(format)))
+                urld = get_possible_urls_for_book(book)
+                urls = list(reversed(urld.get(FORMAT_MATRIX.get(format))))
 
             while(urls):
                 url = urls.pop()
+
                 if not resource_exists(url):
                     continue
 
