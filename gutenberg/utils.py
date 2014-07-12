@@ -37,14 +37,30 @@ class UrlBuilder:
 
     """
     Url builder for the files of a Gutenberg book.
+    Example:
+        >>> builder = UrlBuilder()
+        >>> builder.with_id(<some_id>)
+        >>> builder.base(UrlBuilder.BASE_{ONE or TWO})
+        >>> url = builder.build()
     """
-    BASE_ONE = 'http://zimfarm.kiwix.org/gutenberg/'
+    BASE_ONE = 'http://ftp.ibiblio.org/pub/docs/books/gutenberg/'
     BASE_TWO = 'http://gutenberg.readingroo.ms/cache/generated/'
 
     def __init__(self):
         self.base = self.BASE_ONE
 
     def build(self):
+        """
+        Build either an url depending on whether the base url
+        is `BASE_ONE` or `BASE_TWO`. 
+        The former generates urls according to the Url pattern:
+            id: 10023 -> pattern: <base-url>/1/0/0/2/10023
+        The latter generates urls according to the Url pattern:
+            id: 10023 -> pattern: <base-url>/10023
+        There's no implementation for the book Id's 0-10, because
+        these books do not exist.
+
+        """
         if self.b_id > 10:
             if self.base == self.BASE_ONE:
                 base_url = os.path.join(
@@ -55,13 +71,10 @@ class UrlBuilder:
 
         else:
             logger.warning('Figuring out the url of books \
-                with an ID of {ID <= 10} is not implemented yet')
+                with an ID of {ID <= 10} is not implemented')
             return None
 
         return url
-
-    def get_base_one_links():
-        pass
 
     def with_base(self, base):
         self.base = base
@@ -74,22 +87,35 @@ class UrlBuilder:
 
 
 def get_possible_urls_for_book(book):
+    """
+    Get all possible urls that could point to the 
+    book on either of the two mirrors.
+    param: book: The book you want the possible urls from
+    returns: a list of all possible urls sorted by their probability
+    """
     filtered_book = [bf.format for bf in
                      BookFormat.select().where(BookFormat.book == book)]
 
+    # Strip out the encoding of the file
     f = lambda x: x.mime.split(';')[0].strip()
     available_formats = [{x.pattern.format(id=book.id): {'mime': f(x), 'id': book.id}}
-                         for x in filtered_book]
+                         for x in filtered_book 
+                         if f(x) in FORMAT_MATRIX.values()]
     files = sort_by_mime_type(available_formats)
     return build_urls(files)
 
 
 def sort_by_mime_type(files):
-    count = defaultdict(list)
+    """
+    Reverse the passed in `files` dict and return a dict 
+    that is sorted by `{mimetype: {filetype, id}}` instead of 
+    by `{filetype: mimetype}`.
+    """
+    mime = defaultdict(list)
     for f in files:
         for k, v in f.items():
-            count[v['mime']].append({'name': k, 'id': v['id']})
-    return dict(count)
+            mime[v['mime']].append({'name': k, 'id': v['id']})
+    return dict(mime)
 
 
 def build_urls(files):
@@ -107,38 +133,58 @@ def build_urls(files):
 
 
 def build_epub(files):
+    """
+    Build the posssible urls of the epub file.
+    """
     urls = []
     b_id = str(files[0]['id'])
     u = UrlBuilder()
-    u.with_id(files[0]['id'])
+    u.with_id(b_id)
     u.with_base(UrlBuilder.BASE_TWO)
+  
+    if not u.build(): return []
+  
     name = ''.join(['pg', b_id])
     url = os.path.join(u.build(), name + '.epub')
     urls.append(url)
     return urls
 
 
+
 def build_pdf(files):
+    """
+    Build the posssible urls of the pdf files.
+    """
     urls = []
     b_id = str(files[0]['id'])
     u = UrlBuilder()
-    u.with_id(files[0]['id'])
+    u.with_id(b_id)
+    
+    if not u.build(): return []
+    
     for i in files:
         if not 'images' in i['name']:
             url = os.path.join(u.build(), i['name'])
             urls.append(url)
+    
     url_dash = os.path.join(u.build(), b_id + '-' + 'pdf' + '.pdf')
     url_normal = os.path.join(u.build(), b_id + '.pdf')
+
     urls.extend([url_dash, url_normal])
     return list(set(urls))
 
 
 def build_html(files):
+    """
+    Build the posssible urls of the html files.
+    """
     urls = []
     b_id = str(files[0]['id'])
     file_names = [i['name'] for i in files]
     u = UrlBuilder()
     u.with_id(i['id'])
+    
+    if not u.build(): return []
 
     if all([not '-h.html' in file_names, '-h.zip' in file_names]):
         for i in files:
@@ -148,6 +194,7 @@ def build_html(files):
     url_zip = os.path.join(u.build(), b_id + '-h' + '.zip')
     url_html = os.path.join(u.build(), b_id + '-h' + '.html')
     url_htm = os.path.join(u.build(), b_id + '-h' + '.htm')
+
     u.with_base(UrlBuilder.BASE_TWO)
     name = ''.join(['pg', b_id])
     html_utf8 = os.path.join(u.build(), name + '.html.utf8')
@@ -165,12 +212,12 @@ def main_formats_for(book):
 
 
 def get_list_of_filtered_books(languages, formats):
-
     if len(formats):
         qs = Book.select().join(BookFormat) \
                  .join(Format) \
                  .where(Format.mime << [FORMAT_MATRIX.get(f)
-                                        for f in formats]).group_by(Book.id)
+                                        for f in formats]) \
+                 .group_by(Book.id)
     else:
         qs = Book.select()
 
@@ -180,5 +227,5 @@ def get_list_of_filtered_books(languages, formats):
     return qs
 
 if __name__ == '__main__':
-    book = Book.get(id=112)
+    book = Book.get(id=122)
     print(get_possible_urls_for_book(book))
