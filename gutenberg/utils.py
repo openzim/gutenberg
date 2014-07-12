@@ -249,13 +249,6 @@ def get_list_of_filtered_books(languages, formats):
     else:
         qs = Book.select()
 
-    # make sure we always have HTML version
-    html_ids = [b.id
-                for b in Book.select().join(BookFormat).join(Format) \
-                             .where(Format.mime == 'text/html') \
-                             .group_by(Book.id)]
-    qs = qs.filter(Book.id << html_ids)
-
     if len(languages):
         qs = qs.where(Book.language << languages)
 

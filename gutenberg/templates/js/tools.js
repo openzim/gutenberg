@@ -9,18 +9,18 @@ function minimizeUI() {
 }
 
 function showBooks() {
-    var url = "static/full_by_" + sortMethod + ".js";
-    
+    var url = "full_by_" + sortMethod + ".js";
+
     if ( $( "#language_filter" ).val() ) {
-	url = "static/lang_" + $( "#language_filter" ).val() + "_by_" + sortMethod + ".js";
+	url = "lang_" + $( "#language_filter" ).val() + "_by_" + sortMethod + ".js";
     }
-    
+
     if ( $( "#author_filter" ).val() ) {
 	var count = authors_json_data.length;
 	var author_filter_value = $( "#author_filter" ).val();
 	for ( i = 0 ; i < count ; i++ ) {
 	    if (authors_json_data[i][0] === author_filter_value) {
-		url = "static/auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
+		url = "auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
 		break;
 	    };
 	};
@@ -31,24 +31,24 @@ function showBooks() {
 	if ( $('#books_table').attr("filled") ) {
 	    $('#books_table').dataTable().fnDestroy();
 	}
-	
+
 	$('#books_table').dataTable( {
 	    "searching": false,
 	    "ordering":  false,
 	    "deferRender": true,
 	    "bDeferRender": true,
 	    "ordering": false,
-	    "lengthChange": false, 
-	    "info": false, 
+	    "lengthChange": false,
+	    "info": false,
 	    "data": json_data,
 	    "columns": [
 		{ "title": "Title" },
 		{ "title": "Author" }
 	    ]
 	} );
-	
+
 	$('#books_table').attr("filled", true);
-	
+
     });
 }
 
@@ -123,7 +123,7 @@ function init() {
 	    }
 	}
     });
-    
+
     /* Show books */
     showBooks();
 }

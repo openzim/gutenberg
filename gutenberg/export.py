@@ -59,7 +59,8 @@ def export_all_books(static_folder,
 
     # copy CSS/JS/* to static_folder
     src_folder = tmpl_path()
-    for fname in ('css', 'js', 'jquery', 'favicon.ico'):
+    for fname in ('css', 'js', 'jquery', 'favicon.ico',
+                  'jquery-ui', 'datatables'):
         src = os.path.join(src_folder, fname)
         dst = os.path.join(static_folder, fname)
         if not path(fname).ext:
@@ -145,14 +146,15 @@ def export_book_to(book,
     logger.info("\tExporting Book #{id}.".format(id=book.id))
 
     # actual book content, as HTML
-    article_fpath = os.path.join(static_folder, article_name_for(book))
-    logger.info("\t\tExporting to {}".format(article_fpath))
     html = html_content_for(book=book,
                             static_folder=static_folder,
                             download_cache=download_cache)
-    new_html = update_html_for_static(book=book, html_content=html)
-    with open(article_fpath, 'w') as f:
-        f.write(new_html)
+    if html:
+        article_fpath = os.path.join(static_folder, article_name_for(book))
+        logger.info("\t\tExporting to {}".format(article_fpath))
+        new_html = update_html_for_static(book=book, html_content=html)
+        with open(article_fpath, 'w') as f:
+            f.write(new_html)
 
     def symlink_from_cache(fname):
         src = os.path.join(download_cache, fname)
