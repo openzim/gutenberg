@@ -45,7 +45,7 @@ class UrlBuilder:
     """
     BASE_ONE = 'http://ftp.ibiblio.org/pub/docs/books/gutenberg/'
     BASE_TWO = 'http://gutenberg.readingroo.ms/cache/generated/'
-    BASE_THREE = BASE_ONE
+    BASE_THREE = 'http://ftp.ibiblio.org/pub/docs/books/gutenberg/etext'
 
     def __init__(self):
         self.base = self.BASE_ONE
@@ -67,9 +67,9 @@ class UrlBuilder:
                 base_url = os.path.join(
                     os.path.join(*list(str(self.b_id))[:-1]), str(self.b_id))
                 url = os.path.join(self.base, base_url)
-            if self.base == self.BASE_TWO:
+            elif self.base == self.BASE_TWO:
                 url = os.path.join(self.base, str(self.b_id))
-            if self.base == self.BASE_THREE:
+            elif self.base == self.BASE_THREE:
                 url = self.base
 
         else:
@@ -213,8 +213,7 @@ def build_html(files):
     etext_names = ["{0:0=2d}".format(i) for i in etext_nums]
     etext_urls = []
     for i in etext_names:
-        path_name = ''.join(['etext', i])
-        etext_urls.append(os.path.join(u.build(), path_name, file_name))
+        etext_urls.append(os.path.join(u.build() + i , file_name))
 
     urls.extend([url_zip, url_htm, url_html, html_utf8])
     urls.extend(etext_urls)
