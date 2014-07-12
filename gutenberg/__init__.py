@@ -7,6 +7,13 @@ from __future__ import (unicode_literals, absolute_import,
 import logging
 from logging.config import dictConfig
 
+try:
+    import lxml
+except ImportError:
+    XML_PARSER = "html.parser"
+else:
+    XML_PARSER = "lxml"
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

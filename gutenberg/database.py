@@ -125,6 +125,7 @@ class Book(Model):
                 'downloads': self.downloads}
 
     def to_array(self):
+        fmts = self.formats()
         return [
             self.title,
             # self.subtitle,
@@ -132,7 +133,15 @@ class Book(Model):
             # self.license,
             # self.language,
             # self.downloads
+            "{html}{epub}{pdf}".format(
+                html=int('html' in fmts),
+                epub=int('epub' in fmts),
+                pdf=int('pdf' in fmts))
         ]
+
+    def formats(self):
+        from gutenberg.utils import main_formats_for
+        return main_formats_for(self)
 
 
 class BookFormat(Model):
