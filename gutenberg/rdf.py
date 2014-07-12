@@ -8,15 +8,14 @@ import os
 import re
 
 from path import path
+from bs4 import BeautifulSoup
 
-from gutenberg import logger
+from gutenberg import logger, XML_PARSER
 from gutenberg.database import Format
 from gutenberg.utils import exec_cmd
 from gutenberg.utils import exec_cmd, download_file
 from gutenberg.database import (db, Author, Format, BookFormat,
                                 License, Book)
-
-from bs4 import BeautifulSoup
 
 
 def setup_rdf_folder(rdf_url, rdf_path):
@@ -94,7 +93,7 @@ class RdfParser():
         self.gid = gid
 
     def parse(self):
-        soup = BeautifulSoup(self.rdf_data,from_encoding='utf-8')
+        soup = BeautifulSoup(self.rdf_data, XML_PARSER, from_encoding='utf-8')
 
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.
