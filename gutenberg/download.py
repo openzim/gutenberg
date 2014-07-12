@@ -90,8 +90,6 @@ def download_all_books(url_mirror, download_cache,
     # ensure dir exist
     path(download_cache).mkdir_p()
 
-    missings = []
-
     for book in available_books:
 
         logger.info("\tDownloading content files for Book #{id}"
@@ -187,6 +185,3 @@ def download_all_books(url_mirror, download_cache,
                 logger.debug("NO FILE FOR #{}/{}".format(book.id, format))
                 from pprint import pprint as pp ; pp(allurls)
                 import ipdb; ipdb.set_trace()
-                missings.append(book.id)
-
-    from pprint import pprint as pp ; pp(missings)
