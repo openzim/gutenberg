@@ -100,7 +100,7 @@ class RdfParser():
         # into a new-line-seperated title and subtitle.
         # If it is, then we will just split the title.
         self.title = soup.find('dcterms:title')
-        self.title = self.title.text if self.title else ''
+        self.title = self.title.text if self.title else '- No Title -'
         self.title = self.title.split('\n')[0]
         self.subtitle = ' '.join(self.title.split('\n')[1:])
 
