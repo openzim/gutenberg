@@ -108,49 +108,36 @@ class RdfParser():
         # the <dcterms:creator> or <marcrel:com> node only return
         # "anonymous" or "unknown". For the case that it's only one word
         # `self.last_name` will be null.
-        # Because of a rare edge case that the fild of the parsed author's name
+        # Because of a rare edge case that the field of the parsed author's name
         # has more than one comma we will join the first name in reverse, starting
         # with the second item.
         self.first_name = ''
         self.last_name = ''
-        self.author = soup.find('dcterms:creator')
-        if not self.author:
-            self.author = soup.find('marcrel:com')
+        self.author = soup.find('dcterms:creator') or soup.find('marcrel:com')
         if self.author:
-            agent = self.author.find('pgterms:agent')
-            if 'rdf:about' in getattr(agent, 'attrs', ''):
-                self.author_id = re.match(
-                r'[0-9]+/agents/([0-9]+)', agent.attrs['rdf:about']).groups()[0]
-            elif 'rdf:resource' in getattr(agent, 'attrs', ''):
-                self.author_id = re.match(
-                r'[0-9]+/agents/([0-9]+)', agent.attrs['rdf:resource']).groups()[0]
-            else:
-                self.author = None
-            if self.author.find('pgterms:name'):
-                self.author_name = re.sub(
-                r' +', ' ', self.author.find('pgterms:name').text).split(',')
-                if len(self.author_name) == 1:
-                    self.last_name = self.author_name[0]
-                    self.first_name = ''
-                else:
-                    self.first_name = ' '.join(self.author_name[::-2]).strip()
-                    self.last_name = self.author_name[0]
-            else:
-                self.author_name = self.first_name = self.last_name = None
+            self.author_id = self.author.find('pgterms:agent')
+            self.author_id = self.author_id.attrs['rdf:about'].split('/')[-1] \
+                if 'rdf:about' in self.author_id.attrs else None
+            self.author_name = self.author.find('pgterms:name').text.split(',')
 
-            # Parsing the birth and (death, if the case) year of the author.
-            # These values are likely to be null.
-            self.birth_year = soup.find('pgterms:birthdate')
-            self.birth_year = self.birth_year.text if self.birth_year else None
-            self.birth_year = get_formatted_number(self.birth_year)
-
-            self.death_year = self.author.find('pgterms:deathdate')
-            self.death_year = self.death_year.text if self.death_year else None
-            self.death_year = get_formatted_number(self.death_year)
+            if len(self.author_name) == 1:
+                self.last_name = self.author_name[0]
+                self.first_name = None
+            else:
+                self.first_name = ' '.join(self.author_name[::-2]).strip()
+                self.last_name = self.author_name[0]
         else:
-            self.author_id = self.author = None
-            self.author_name = self.first_name = self.last_name = None
-            self.birth_year = self.death_year = None
+            self.author_id = self.author_name = self.first_name = self.last_name = None
+
+        # Parsing the birth and (death, if the case) year of the author.
+        # These values are likely to be null.
+        self.birth_year = soup.find('pgterms:birthdate')
+        self.birth_year = self.birth_year.text if self.birth_year else None
+        self.birth_year = get_formatted_number(self.birth_year)
+
+        self.death_year = soup.find('pgterms:deathdate')
+        self.death_year = self.death_year.text if self.death_year else None
+        self.death_year = get_formatted_number(self.death_year)
 
         # ISO 639-3 language codes that consist of 2 or 3 letters
         self.language = soup.find('dcterms:language').find('rdf:value').text
@@ -265,8 +252,8 @@ if __name__ == '__main__':
         os.path.dirname(os.path.realpath(__file__)), 'pg45213.rdf')
     if os.path.isfile(curd):
         data = ''
-        with open('pg45213.rdf', 'r') as f:
+        with open(curd, 'r') as f:
             data = f.read()
 
         parser = RdfParser(data, 45213).parse()
-        print(parser.file_types)
+        print(parser.first_name, parser.last_name)
