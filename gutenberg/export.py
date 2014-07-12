@@ -116,7 +116,11 @@ def update_html_for_static(book, html_content):
         if 'href' in img.attrs:
             img.attrs['href'] = img.attrs['href'].replace('images/', '{id}_'.format(book.id))
 
+    # Add the title
+    soup.title.string = book.title
+
     # Remove paragraphs until the beginning of the actual book
+    body_children = soup.find('body').contents
     ip = 0
     while not hasattr(body_children[ip],'text') or body_children[ip].text.find('*** START OF THIS PROJECT GUTENBERG EBOOK') == -1:
         body_children[ip].decompose()
