@@ -181,3 +181,8 @@ td {
 #content {
     margin-bottom: 15px;
 }
+
+table.display td {
+    cursor: pointer;
+    * cursor: hand;
+}
