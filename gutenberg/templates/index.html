@@ -1,75 +1,13 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+{% extends "base.html" %}
 
-<head>
-  <title>Project Gutenberg</title>
-  <meta name="description" content="Download free ebooks." />
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta http-equiv="Content-Language" content="en" />
-  <link rel="shortcut icon" href="favicon.ico" />
+{% block title %}The Gutenberg Project{% endblock %}
 
-  <script src="jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
-
-  <link rel="stylesheet" href="jquery-ui/jquery-ui.min.css" media="screen, projection" type="text/css" />
-  <script src="jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
-
-  <link rel="stylesheet" type="text/css" href="datatables/media/css/jquery.dataTables.css">
-  <script type="text/javascript" charset="utf8" src="datatables/media/js/jquery.dataTables.js"></script>
-
-  <link rel="stylesheet" href="css/style.css" media="screen, projection" type="text/css" />
-  <script src="js/tools.js" type="text/javascript"></script>
-
-</head>
-
-<body onload="init()">
-
-  <div id="header">
-
-    <div id="top-menu" class="container">
-      <a href="index.html">
-	<img alt="Homepage" id="logo1" src="css/logo_1.png" title="Homepage" />
-	<div>
-	  Project Gutenberg Library</br>
-	  The first producer of free ebooks
-	</div>
-      </a>
-    </div>
-
-    <div id="bottom-menu" class="container">
-
-      <a href="index.html">
-	<img alt="Homepage" id="logo2" src="css/logo_2.png" title="Homepage" />
-      </a>
-
-      <ul class="menu">
-        <li id="language_filter" onclick="minimizeUI()">
-          <span>Language</span>
-        </li>
-        <li id="author_filter" onclick="minimizeUI()">
-          <span>Author</span>
-        </li>
-      </ul>
-      
-      <div class="sort">
-	<div>Sort:</div>
-	<img src="css/popularity_icon.png" onclick="minimizeUI()" />
-	<img src="css/alpha_icon.png" onclick="minimizeUI()" />
-      </div>
-      
-    </div>
-
-  </div>
-
+{% block precontent %}
 <div class="container">
   <div id="home-about">
     Project Gutenberg offers over 45,000 free ebooks: choose among free epub books, free kindle books, download them or read them online.<br/>
     <br/>
-    We carry high quality ebooks: All our ebooks were previously published by bona fide publishers. We digitized and diligently proofread them with the help of thousands of volunteers. 
+    We carry high quality ebooks: All our ebooks were previously published by bona fide publishers. We digitized and diligently proofread them with the help of thousands of volunteers.
   </div>
 </div>
-
-<div id="content" class="container">
-</div>
-
-</body>
-</html>
+{% endblock %}

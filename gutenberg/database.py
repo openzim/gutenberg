@@ -36,120 +36,13 @@ class Format(Model):
 
     class Meta:
         database = db
-<<<<<<< HEAD
-        fixtures = [
-            {
-                'slug': 'html',
-                'name': "HTML",
-                'images': False,
-                'pattern': "{id}-h.zip"
-            },
-            {
-                'slug': 'epubi',
-                'name': "ePUB with images",
-                'images': True,
-                'pattern': "{id}.epub.images"
-            },
-            {
-                'slug': 'epub',
-                'name': "ePUB no images",
-                'images': False,
-                'pattern': "{id}.epub.noimages"
-            },
-            {
-                'slug': 'kindlei',
-                'name': "Kindle with images",
-                'images': True,
-                'pattern': "{id}.kindle.images"
-            },
-            {
-                'slug': 'kindle',
-                'name': "Kindle no images",
-                'images': False,
-                'pattern': "{id}.kindle.noimages"
-            },
-            {
-                'slug': 'text',
-                'name': "Plain Text",
-                'images': False,
-                'pattern': "{id}.txt"
-            },
-            {
-                'slug': 'textu',
-                'name': "Plain Text Unicode",
-                'images': False,
-                'pattern': "{id}-0.txt"
-            },
-            {
-                'slug': 'text8',
-                'name': "Plain Text 8-bit",
-                'images': False,
-                'pattern': "{id}-8.txt"
-            },
-            {
-                'slug': 'text5',
-                'name': "Plain Text Big-5",
-                'images': False,
-                'pattern': "{id}-5.txt"
-            },
-            {
-                'slug': 'tex',
-                'name': "TeX",
-                'images': False,
-                'pattern': "{id}-t.tex"
-            },
-            {
-                'slug': 'xml',
-                'name': "XML",
-                'images': False,
-                'pattern': "{id}-x.xml"
-            },
-            {
-                'slug': 'mp3',
-                'name': "MP3",
-                'images': False,
-                'pattern': "{id}-m-###.mp3"
-            },
-            {
-                'slug': 'rtf',
-                'name': "RTF",
-                'images': False,
-                'pattern': "{id}-r.rtf"
-            },
-            {
-                'slug': 'pdf',
-                'name': "PDF",
-                'images': True,
-                'pattern': "{id}-pdf.pdf"
-            },
-            {
-                'slug': 'lit',
-                'name': "LIT",
-                'images': False,
-                'pattern': "{id}-lit.lit"
-            },
-            {
-                'slug': 'doc',
-                'name': "Word",
-                'images': False,
-                'pattern': "{id}-doc.doc"
-            },
-            {
-                'slug': 'pdb',
-                'name': "PDB",
-                'images': False,
-                'pattern': "{id}-pdb.pdb"
-            },
-        ]
-=======
->>>>>>> dd1be53e1db6d4c37f91089cc728bfd3e00b3505
 
     mime = CharField(max_length=100)
     images = BooleanField(default=True)
     pattern = CharField(max_length=100)
 
     def __unicode__(self):
-        return self.name
+        return self.mime
 
 
 class Author(Model):
@@ -167,7 +60,7 @@ class Author(Model):
             },
         ]
 
-    gut_id = CharField(max_length=100)
+    gut_id = CharField(primary_key=True, max_length=100)
     last_name = CharField(max_length=150)
     first_names = CharField(max_length=300, null=True)
     birth_year = CharField(max_length=10, null=True)
@@ -177,7 +70,34 @@ class Author(Model):
         return self.name()
 
     def name(self):
-        return "{}, {}".format(self.last_name, self.first_names)
+        if not self.first_names and not self.last_name:
+            return "Anonymous"
+
+        if not self.first_names:
+            return self.last_name
+
+        if not self.last_name:
+            return self.first_names
+
+        return "{f} {l}".format(l=self.last_name, f=self.first_names)
+
+    def to_dict(self):
+        return {'label': self.name(),
+                'id': self.gut_id,
+                'last_name': self.last_name,
+                'first_names': self.first_names,
+                'birth_year': self.birth_year,
+                'death_year': self.death_year}
+
+    def to_array(self):
+        return [
+            self.name(),
+            self.gut_id,
+            # self.last_name,
+            # self.first_names,
+            # self.birth_year,
+            # self.death_year,
+        ]
 
 
 class Book(Model):
@@ -188,7 +108,7 @@ class Book(Model):
     id = IntegerField(primary_key=True)
     title = CharField(max_length=500)
     subtitle = CharField(max_length=500, null=True)
-    author = ForeignKeyField(Author)
+    author = ForeignKeyField(Author, related_name='books')
     license = ForeignKeyField(License, related_name='books')
     language = CharField(max_length=10)
     downloads = IntegerField(default=0)
@@ -196,14 +116,33 @@ class Book(Model):
     def __unicode__(self):
         return "{}/{}".format(self.id, self.title)
 
+    def to_dict(self):
+        return {'title': self.title,
+                'subtitle': self.subtitle,
+                'author': self.author.name(),
+                'license': self.license,
+                'language': self.language,
+                'downloads': self.downloads}
+
+    def to_array(self):
+        return [
+            self.title,
+            # self.subtitle,
+            self.author.name(),
+            # self.license,
+            # self.language,
+            # self.downloads
+        ]
+
 
 class BookFormat(Model):
 
     class Meta:
         database = db
 
-    book = ForeignKeyField(Book)
-    format = ForeignKeyField(Format)
+    book = ForeignKeyField(Book, related_name='bookformats')
+    format = ForeignKeyField(Format, related_name='bookformats')
+    downloaded_from = CharField(max_length=300, null=True)
 
     def __unicode__(self):
         return "[{}] {}".format(self.format, self.book.title)

@@ -15,6 +15,7 @@ from gutenberg.download import download_all_books
 from gutenberg.export import export_all_books
 from gutenberg.zim import build_zimfile
 
+
 help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
         """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] [-z ZIM_PATH] [-u RDF_URL]"""
         """[--prepare] [--parse] [--download] [--export] [--zim] [--complete]
@@ -43,8 +44,6 @@ of Gutenberg repository using a mirror.""")
 
 def main(arguments):
 
-    from pprint import pprint as pp ; pp(arguments)
-
     # actions constants
     DO_PREPARE = arguments.get('--prepare', False)
     DO_PARSE = arguments.get('--parse', False)
@@ -62,9 +61,11 @@ def main(arguments):
     DL_CACHE = arguments.get('--dl-folder') or os.path.join('dl-cache')
 
     LANGUAGES = [x.strip().lower()
-                 for x in (arguments.get('--languages') or '').split(',')]
+                 for x in (arguments.get('--languages') or '').split(',')
+                 if x.strip()]
     FORMATS = [x.strip().lower()
-               for x in (arguments.get('--formats') or '').split(',')]
+               for x in (arguments.get('--formats') or '').split(',')
+               if x.strip()]
 
     # no arguments, default to --complete
     if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM):
@@ -102,3 +103,4 @@ def main(arguments):
 
 if __name__ == '__main__':
     main(docopt(help, version=0.1))
+
