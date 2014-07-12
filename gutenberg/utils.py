@@ -43,7 +43,7 @@ class UrlBuilder:
         >>> builder.base(UrlBuilder.BASE_{ONE or TWO})
         >>> url = builder.build()
     """
-    BASE_ONE = 'http://zimfarm.kiwix.org/gutenberg/'
+    BASE_ONE = 'http://ftp.ibiblio.org/pub/docs/books/gutenberg/'
     BASE_TWO = 'http://gutenberg.readingroo.ms/cache/generated/'
 
     def __init__(self):
