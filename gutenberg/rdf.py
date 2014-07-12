@@ -118,10 +118,10 @@ class RdfParser():
             self.author = soup.find('marcrel:com')
         if self.author:
             agent = self.author.find('pgterms:agent')
-            if 'rdf:about' in agent.attrs:
+            if 'rdf:about' in getattr(agent, 'attrs', ''):
                 self.author_id = re.match(
                 r'[0-9]+/agents/([0-9]+)', agent.attrs['rdf:about']).groups()[0]
-            elif 'rdf:resource' in agent.attrs:
+            elif 'rdf:resource' in getattr(agent, 'attrs', ''):
                 self.author_id = re.match(
                 r'[0-9]+/agents/([0-9]+)', agent.attrs['rdf:resource']).groups()[0]
             else:
