@@ -117,10 +117,13 @@ class RdfParser():
         if not self.author:
             self.author = soup.find('marcrel:com')
         if self.author:
-            self.author_id = re.match(
-                r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
-            self.author_name = re.sub(
-                r' +', ' ', self.author.find('pgterms:name').text).split(',')
+            if self.author.find('pgterms:agent'):
+                self.author_id = re.match(
+                    r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
+                self.author_name = re.sub(
+                    r' +', ' ', self.author.find('pgterms:name').text).split(',')
+            else:
+                self.author = 'Unknown'
             if len(self.author_name) == 1:
                 self.last_name = self.author_name[0]
                 self.first_name = ''
@@ -156,8 +159,8 @@ class RdfParser():
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
         self.file_types = ({x.attrs['rdf:about'].split('/')[-1]: x.find('rdf:value').text
-                       for x in file_types
-                       if not x.find('rdf:value').text.endswith('application/zip')})
+                            for x in file_types
+                            if not x.find('rdf:value').text.endswith('application/zip')})
 
         return self
 
