@@ -90,6 +90,8 @@ def download_all_books(url_mirror, download_cache,
     # ensure dir exist
     path(download_cache).mkdir_p()
 
+    missings = []
+
     for book in available_books:
 
         logger.info("\tDownloading content files for Book #{id}"
@@ -114,16 +116,30 @@ def download_all_books(url_mirror, download_cache,
                 continue
 
             # retrieve corresponding BookFormat
-            bfs = BookFormat.filter(book=book).filter(BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get(format)))
+            bfs = BookFormat.filter(book=book)
+
             if format == 'html':
-                bfs = bfs.join(Format).filter(Format.pattern == '{id}-h.htm')
+                # patterns = ['{id}-h.zip', '{id}.html.noimages', '{id}.html.gen', 'salme10h.htm']
+                patterns = ['mnsrb10h.htm', '8ledo10h.htm', 'tycho10f.htm', '8ledo10h.zip', 'salme10h.htm', '8nszr10h.htm', '{id}-h.html', '{id}.html.gen', '{id}-h.htm', '8regr10h.zip', '{id}.html.noimages', '8lgme10h.htm', 'tycho10h.htm', 'tycho10h.zip', '8lgme10h.zip', '8indn10h.zip', '8resp10h.zip', '20004-h.htm', '8indn10h.htm', '8memo10h.zip', 'fondu10h.zip', '{id}-h.zip', '8mort10h.zip']
+                bfso = bfs
+                bfs = bfs.join(Format).filter(Format.pattern << patterns)
+                if not bfs.count():
+                    from pprint import pprint as pp ; pp(list([(b.format.mime, b.format.images, b.format.pattern) for b in bfs]))
+                    from pprint import pprint as pp ; pp(list([(b.format.mime, b.format.images, b.format.pattern) for b in bfso]))
+                    import ipdb; ipdb.set_trace()
+            else:
+                bfs = bfs.filter(BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get(format)))
+
             if not bfs.count():
                 logger.debug("[{}] not avail. for #{}# {}"
                              .format(format, book.id, book.title))
                 continue
 
             if bfs.count() > 1:
-                bf = bfs.join(Format).filter(Format.images == True).get()
+                try:
+                    bf = bfs.join(Format).filter(Format.images == True).get()
+                except:
+                    bf = bfs.get()
             else:
                 bf = bfs.get()
 
@@ -136,6 +152,9 @@ def download_all_books(url_mirror, download_cache,
             else:
                 urld = get_possible_urls_for_book(book)
                 urls = list(reversed(urld.get(FORMAT_MATRIX.get(format))))
+
+            import copy
+            allurls = copy.copy(urls)
 
             while(urls):
                 url = urls.pop()
@@ -158,3 +177,10 @@ def download_all_books(url_mirror, download_cache,
                 bf.downloaded_from = url
                 bf.save()
 
+            if not bf.downloaded_from:
+                logger.debug("NO FILE FOR #{}/{}".format(book.id, format))
+                from pprint import pprint as pp ; pp(allurls)
+                # import ipdb; ipdb.set_trace()
+                missings.append(book.id)
+
+    from pprint import pprint as pp ; pp(missings)

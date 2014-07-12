@@ -29,6 +29,15 @@ a {
     margin: 0 auto;
 }
 
+th {
+    text-align: left;
+    color: #b88b35;
+}
+
+td {
+    color: #b88b35;
+}
+
 /* Header top-menu */
 #header {
     padding-bottom: 2em;
@@ -72,43 +81,47 @@ a {
     display: none;
     float: left;
     margin-top: 1px;
-    margin-left: 10px;
-    margin-right: -7px;
+    margin-left: 13px;
 }
 
-ul.menu {
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.filter {
     font-family: Arial,sans-serif;
-    font-size: 16px;
     font-weight: bold;
-    list-style-type: none;
-    margin: 0;
-    padding: 6px;
-    padding-left: 0px;
+    color: #b88b35;
     float: left;
+    margin-left: 12px;
 }
 
-ul.menu > li {
+.filter > div {
     float: left;
-    position: relative;
-    white-space: nowrap;
-}
-
-ul.menu > li > span {
-    margin-right: 8px;
-    padding: 0 15px;
     display: block;
+    font-size: 16px;
     height: 23px;
     line-height: 23px;
-    text-decoration: none;
-    color: #b88b35;
+    padding-top: 6px;
+}
+
+.filter > input {
+    float: left;
+    margin-left: 10px;
+    height: 25px;
+    margin-top: 5px;
 }
 
 .sort {
     font-family: Arial,sans-serif;
     font-weight: bold;
     color: #b88b35;
-    float: right;
     height: 100%;
+    float: right;
+    padding-right: 10px;
+    padding-top: 6px;
 }
 
 .sort > div {
@@ -117,20 +130,22 @@ ul.menu > li > span {
     font-size: 16px;
     height: 23px;
     line-height: 23px;
-    padding-top: 4px;
 }
 
 .sort > img {
-    padding: 6px;
+    padding-left: 5px;
 }
 
 /* About */
 #home-about {
     color: #b88b35;
-    text-align:justify;
-    text-justify:inter-word;
+    text-align: justify;
     font-size: 20px;
-    margin: 0 15px;
+    margin: 0;
+    margin-bottom: 15px;
 }
 
-/* Results */
+/* Books */
+#content {    
+    margin-bottom: 15px;
+}
