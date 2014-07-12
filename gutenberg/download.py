@@ -75,7 +75,7 @@ def handle_zipped_epub(zippath,
             import traceback
             print(e)
             print("".join(traceback.format_exc()))
-            import ipdb; ipdb.set_trace()
+            # import ipdb; ipdb.set_trace()
 
     # delete temp directory
     path(tmpd).rmtree_p()

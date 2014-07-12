@@ -75,15 +75,20 @@ def export_all_books(static_folder,
         f.write(template.render(**context))
 
     # export to HTML
+    cached_files = os.listdir(download_cache)
     for book in books:
         export_book_to(book=book,
                        static_folder=static_folder,
-                       download_cache=download_cache)
+                       download_cache=download_cache,
+                       cached_files=cached_files,
+                       languages=languages,
+                       formats=formats)
 
 
 def article_name_for(book, cover=False):
     cover = "_cover" if cover else ""
-    return "{title}{cover}.html".format(title=book.title, cover=cover)
+    title = book.title.replace('/', '-')
+    return "{title}{cover}.html".format(title=title, cover=cover)
 
 
 def fname_for(book, format):
@@ -107,10 +112,15 @@ def update_html_for_static(book, html_content):
     # update all <img> links from images/xxx.xxx to {id}_xxx.xxx
     soup = BeautifulSoup(html_content)
     for img in soup.findAll('img'):
-        img.attrs['href'] = img.attrs['href'].replace('images/', '{id}_'.format(book.id))
+        if 'href' in img.attrs:
+            img.attrs['href'] = img.attrs['href'].replace('images/', '{id}_'.format(book.id))
 
     # if there is no charset, set it to utf8
-    # <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+    if not soup.encoding:
+        utf = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
+        # title = soup.find('title')
+        # title.insert_before(utf)
+        return soup.encode().replace('<head>', '<head>' + utf)
 
     return soup.encode()
 
@@ -127,7 +137,9 @@ def cover_html_content_for(book):
     return template.render(**context)
 
 
-def export_book_to(book, static_folder, download_cache):
+def export_book_to(book,
+                   static_folder, download_cache,
+                   cached_files, languages, formats):
     logger.info("\tExporting Book #{id}.".format(id=book.id))
 
     # actual book content, as HTML
@@ -139,6 +151,21 @@ def export_book_to(book, static_folder, download_cache):
     new_html = update_html_for_static(book=book, html_content=html)
     with open(article_fpath, 'w') as f:
         f.write(new_html)
+
+    def symlink_from_cache(fname):
+        src = os.path.join(download_cache, fname)
+        dst = os.path.join(static_folder, fname)
+        logger.info("\t\tSymlinking {}".format(dst))
+        path(src).symlink(dst)
+
+    # associated files (images, etc)
+    for fname in [fn for fn in cached_files
+                  if fn.startswith("{}_".format(book.id))]:
+        symlink_from_cache(fname)
+
+    # other formats
+    for format in formats:
+        symlink_from_cache(fname_for(book, format))
 
     # book presentation article
     cover_fpath = os.path.join(static_folder,
