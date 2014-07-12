@@ -116,7 +116,7 @@ class RdfParser():
         self.author = soup.find('dcterms:creator')
         if not self.author:
             self.author = soup.find('marcrel:com')
-        else:
+        if self.author:
             if self.author.find('pgterms:agent'):
                 self.author_id = re.match(
                     r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
@@ -159,8 +159,8 @@ class RdfParser():
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
         self.file_types = ({x.attrs['rdf:about'].split('/')[-1]: x.find('rdf:value').text
-                       for x in file_types
-                       if not x.find('rdf:value').text.endswith('application/zip')})
+                            for x in file_types
+                            if not x.find('rdf:value').text.endswith('application/zip')})
 
         return self
 
