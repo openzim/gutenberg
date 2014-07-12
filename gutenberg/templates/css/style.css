@@ -120,8 +120,8 @@ td {
     color: #b88b35;
     height: 100%;
     float: right;
-    padding-right: 10px;
-    padding-top: 6px;
+    padding-right: 7px;
+    padding-top: 0px;
 }
 
 .sort > div {
@@ -130,10 +130,48 @@ td {
     font-size: 16px;
     height: 23px;
     line-height: 23px;
+    margin-top: 6px;
 }
 
-.sort > img {
-    padding-left: 5px;
+#popularity_sort {
+    width: 32px;
+    height: 27px;
+    margin: 4px 0 0 10px;
+}
+
+#alpha_sort {
+    width: 29px;
+    height: 27px;
+    margin: 4px 0 0 5px;
+}
+
+#alpha_sort > span {
+    top: 11px;
+    left: 12px;
+}
+
+#popularity_sort > span {
+    top: 11px;
+    left: 12px;
+}
+
+.sort_popularity_icon {
+    display: block;
+    background-image: url(popularity_icon.png) !important;
+    width: 25px;
+    height: 25px;
+}
+
+.sort_alpha_icon {
+    display: block;
+    background-image: url(alpha_icon.png) !important;
+    width: 23px;
+    height: 23px;
+}
+
+.ui-button-icon-only .ui-icon {
+
+    top: 12px;
 }
 
 /* About */

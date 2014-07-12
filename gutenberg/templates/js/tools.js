@@ -52,6 +52,16 @@ function showBooks() {
 
 function init() {
 
+    /* Sort buttons */
+    $( "#popularity_sort" ).button({
+	icons: { primary: 'sort_popularity_icon' },
+	text: false
+    })
+    $( "#alpha_sort" ).button({
+	icons: { primary: 'sort_alpha_icon' },
+	text: false
+    })
+
     /* Language filter */
     var language_count = languages_json_data.length;
     if ( language_count > 1 ) {
