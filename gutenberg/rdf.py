@@ -102,6 +102,7 @@ class RdfParser():
         self.title = self.title.text if self.title else '- No Title -'
         self.title = self.title.split('\n')[0]
         self.subtitle = ' '.join(self.title.split('\n')[1:])
+        self.author_id = None
 
         # Parsing the name of the Author. Sometimes it's the name of
         # an organization or the name is not known and therefore
@@ -116,16 +117,23 @@ class RdfParser():
         self.author = soup.find('dcterms:creator') or soup.find('marcrel:com')
         if self.author:
             self.author_id = self.author.find('pgterms:agent')
-            self.author_id = self.author_id.attrs['rdf:about'].split('/')[-1] \
-                if 'rdf:about' in self.author_id.attrs else None
-            self.author_name = self.author.find('pgterms:name').text.split(',')
-
-            if len(self.author_name) == 1:
-                self.last_name = self.author_name[0]
-                self.first_name = None
+            if self.author_id:
+                if 'rdf:about' in getattr(self.author_id, 'attrs'):
+                    self.author_id = self.author_id.attrs[
+                        'rdf:about'].split('/')[-1]
+            print(self.author)
+            if self.author.find('pgterms:name'):
+                self.author_name = self.author.find('pgterms:name').text.split(',')
             else:
-                self.first_name = ' '.join(self.author_name[::-2]).strip()
-                self.last_name = self.author_name[0]
+                self.author_name = None
+
+            if self.author_name:
+                if len(self.author_name) == 1:
+                    self.last_name = self.author_name[0]
+                    self.first_name = None
+                else:
+                    self.first_name = ' '.join(self.author_name[::-2]).strip()
+                    self.last_name = self.author_name[0]
         else:
             self.author_id = self.author_name = self.first_name = self.last_name = None
 
@@ -248,12 +256,16 @@ def get_formatted_number(num):
 if __name__ == '__main__':
     # Bacic Test with a sample rdf file
     import os
-    curd = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), 'pg45213.rdf')
-    if os.path.isfile(curd):
-        data = ''
-        with open(curd, 'r') as f:
-            data = f.read()
+    nums = ["{0:0=4d}".format(i) for i in range(1800, 10000)]
+    for i in nums:
+        print(i)
+        num = '2' + i 
+        curd = os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), '..', 'rdf-files', num, 'pg' + num + '.rdf')
+        if os.path.isfile(curd):
+            data = ''
+            with open(curd, 'r') as f:
+                data = f.read()
 
-        parser = RdfParser(data, 45213).parse()
-        print(parser.first_name, parser.last_name)
+            parser = RdfParser(data, 45213).parse()
+            print(parser.first_name, parser.last_name)
