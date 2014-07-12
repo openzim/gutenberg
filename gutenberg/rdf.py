@@ -121,9 +121,11 @@ class RdfParser():
             if 'rdf:about' in agent.attrs:
                 self.author_id = re.match(
                 r'[0-9]+/agents/([0-9]+)', agent.attrs['rdf:about']).groups()[0]
-            else:
+            elif 'rdf:resource' in agent.attrs:
                 self.author_id = re.match(
                 r'[0-9]+/agents/([0-9]+)', agent.attrs['rdf:resource']).groups()[0]
+            else:
+                self.author = None
             if self.author.find('pgterms:name'):
                 self.author_name = re.sub(
                 r' +', ' ', self.author.find('pgterms:name').text).split(',')
@@ -164,8 +166,8 @@ class RdfParser():
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
         self.file_types = ({x.attrs['rdf:about'].split('/')[-1]: x.find('rdf:value').text
-                       for x in file_types
-                       if not x.find('rdf:value').text.endswith('application/zip')})
+                            for x in file_types
+                            if not x.find('rdf:value').text.endswith('application/zip')})
 
         return self
 
