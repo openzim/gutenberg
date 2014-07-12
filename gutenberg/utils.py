@@ -45,13 +45,13 @@ class UrlBuilder:
         self.base = self.BASE_ONE
 
     def build(self):
-        if self.id > 10:
+        if self.b_id > 10:
             if self.base == self.BASE_ONE:
                 base_url = os.path.join(
-                    os.path.join(*list(str(self.id))[:-1]), str(self.id))
+                    os.path.join(*list(str(self.b_id))[:-1]), str(self.b_id))
                 url = os.path.join(self.base, base_url)
             elif self.base == self.BASE_TWO:
-                url = os.path.join(self.base, str(self.id))
+                url = os.path.join(self.base, str(self.b_id))
 
         else:
             logger.warning('Figuring out the url of books \
@@ -66,16 +66,14 @@ class UrlBuilder:
     def with_base(self, base):
         self.base = base
 
-    def with_id(self, id):
-        self.id = id
+    def with_id(self, b_id):
+        self.b_id = b_id
 
     def __unicode__(self):
         return self.build_url()
 
 
 def get_possible_urls_for_book(book):
-    formats = []
-
     filtered_book = [bf.format for bf in
                      BookFormat.select().where(BookFormat.book == book)]
 
@@ -110,11 +108,11 @@ def build_urls(files):
 
 def build_epub(files):
     urls = []
-    id = str(files[0]['id'])
+    b_id = str(files[0]['id'])
     u = UrlBuilder()
     u.with_id(files[0]['id'])
     u.with_base(UrlBuilder.BASE_TWO)
-    name = ''.join(['pg', id])
+    name = ''.join(['pg', b_id])
     url = os.path.join(u.build(), name + '.epub')
     urls.append(url)
     return urls
@@ -122,22 +120,22 @@ def build_epub(files):
 
 def build_pdf(files):
     urls = []
-    id = str(files[0]['id'])
+    b_id = str(files[0]['id'])
     u = UrlBuilder()
     u.with_id(files[0]['id'])
     for i in files:
         if not 'images' in i['name']:
             url = os.path.join(u.build(), i['name'])
             urls.append(url)
-    url_dash = os.path.join(u.build(), id + '-' + 'pdf' + '.pdf')
-    url_normal = os.path.join(u.build(), id + '.pdf')
+    url_dash = os.path.join(u.build(), b_id + '-' + 'pdf' + '.pdf')
+    url_normal = os.path.join(u.build(), b_id + '.pdf')
     urls.extend([url_dash, url_normal])
     return list(set(urls))
 
 
 def build_html(files):
     urls = []
-    id = str(files[0]['id'])
+    b_id = str(files[0]['id'])
     file_names = [i['name'] for i in files]
     u = UrlBuilder()
     u.with_id(i['id'])
@@ -147,12 +145,12 @@ def build_html(files):
             url = os.path.join(u.build(), i['name'])
             urls.append(url)
 
-    url_zip = os.path.join(u.build(), id + '-h' + '.zip')
-    url_html = os.path.join(u.build(), id + '-h' + '.html')
-    url_htm = os.path.join(u.build(), id + '-h' + '.htm')
-    u.with_base(Urlbuilder.BASE_TWO)
-    name = ''.join(['pg', id])
-    html_utf8 = os.path.join(u.build(), id + name + '.html.utf8')
+    url_zip = os.path.join(u.build(), b_id + '-h' + '.zip')
+    url_html = os.path.join(u.build(), b_id + '-h' + '.html')
+    url_htm = os.path.join(u.build(), b_id + '-h' + '.htm')
+    u.with_base(UrlBuilder.BASE_TWO)
+    name = ''.join(['pg', b_id])
+    html_utf8 = os.path.join(u.build(), b_id + name + '.html.utf8')
     urls.extend([url_zip, url_htm, url_html])
     return list(set(urls))
 
@@ -181,3 +179,6 @@ def get_list_of_filtered_books(languages, formats):
 
     return qs
 
+if __name__ == '__main__':
+    book = Book.get(id=112)
+    print(get_possible_urls_for_book(book))
