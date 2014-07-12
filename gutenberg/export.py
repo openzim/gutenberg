@@ -116,6 +116,21 @@ def update_html_for_static(book, html_content):
         if 'href' in img.attrs:
             img.attrs['href'] = img.attrs['href'].replace('images/', '{id}_'.format(book.id))
 
+    # Remove paragraphs until the beginning of the actual book
+    ip = 0
+    while not hasattr(body_children[ip],'text') or body_children[ip].text.find('*** START OF THIS PROJECT GUTENBERG EBOOK') == -1:
+        body_children[ip].decompose()
+        ip = ip+1
+    body_children[ip].decompose()
+    ip = ip+1
+
+    # Remove paragraphs after the end of the actual book
+    while not hasattr(body_children[ip],'text') or body_children[ip].text.find('*** END OF THIS PROJECT GUTENBERG EBOOK') == -1:
+        ip = ip+1
+    while ip < len(body_children):
+        body_children[ip].decompose()
+        ip = ip+1
+
     # if there is no charset, set it to utf8
     if not soup.encoding:
         utf = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
