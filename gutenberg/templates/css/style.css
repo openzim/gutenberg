@@ -39,10 +39,6 @@ td {
 }
 
 /* Header top-menu */
-#header {
-    padding-bottom: 2em;
-}
-
 #top-menu {
     background: none repeat scroll 0 0 #eddab7;
     height: 73px;
@@ -170,7 +166,6 @@ td {
 }
 
 .ui-button-icon-only .ui-icon {
-
     top: 12px;
 }
 
@@ -179,8 +174,7 @@ td {
     color: #b88b35;
     text-align: justify;
     font-size: 20px;
-    margin: 0;
-    margin-bottom: 15px;
+    margin: 1em 0 1em 0;
 }
 
 /* Books */
