@@ -72,7 +72,7 @@ def export_all_books(static_folder,
     # export homepage
     template = jinja_env.get_template('index.html')
     context = {}
-    with open(os.path.join(static_folder, 'gutenberg_home.html'), 'w') as f:
+    with open(os.path.join(static_folder, 'Home.html'), 'w') as f:
         f.write(template.render(**context))
 
     # export to HTML
