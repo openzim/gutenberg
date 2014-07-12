@@ -41,7 +41,7 @@ class UrlBuilder:
     Example:
         >>> builder = UrlBuilder()
         >>> builder.with_id(<some_id>)
-        >>> builder.base(UrlBuilder.BASE_{ONE or TWO})
+        >>> builder.with_base(UrlBuilder.BASE_{ONE|TWO|THREE})
         >>> url = builder.build()
     """
     BASE_ONE = 'http://ftp.ibiblio.org/pub/docs/books/gutenberg/'
