@@ -1,3 +1,5 @@
+var sortMethod = "popularity";
+
 function minimizeUI() {
     $( "#top-menu" ).slideUp( 300 );
     $( "#home-about" ).slideUp( 300 );
@@ -7,10 +9,10 @@ function minimizeUI() {
 }
 
 function showBooks() {
-    var url = "static/full_by_popularity.js";
+    var url = "static/full_by_" + sortMethod + ".js";
     
     if ( $( "#language_filter" ).val() ) {
-	url = "static/lang_" + $( "#language_filter" ).val() + "_by_popularity.js";
+	url = "static/lang_" + $( "#language_filter" ).val() + "_by_" + sortMethod + ".js";
     }
     
     if ( $( "#author_filter" ).val() ) {
@@ -18,7 +20,7 @@ function showBooks() {
 	var author_filter_value = $( "#author_filter" ).val();
 	for ( i = 0 ; i < count ; i++ ) {
 	    if (authors_json_data[i][0] === author_filter_value) {
-		url = "static/auth_" + authors_json_data[i][1] + "_by_popularity.js";
+		url = "static/auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
 		break;
 	    };
 	};
@@ -55,12 +57,22 @@ function init() {
     /* Sort buttons */
     $( "#popularity_sort" ).button({
 	icons: { primary: 'sort_popularity_icon' },
-	text: false
+	text: false,
     })
+    $( "#popularity_sort" ).click(function() {
+	sortMethod = "popularity";
+	showBooks();
+    });
+
+
     $( "#alpha_sort" ).button({
 	icons: { primary: 'sort_alpha_icon' },
 	text: false
     })
+    $( "#alpha_sort" ).click(function() {
+	sortMethod = "title";
+	showBooks();
+    });
 
     /* Language filter */
     var language_count = languages_json_data.length;
