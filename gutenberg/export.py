@@ -17,6 +17,8 @@ from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
                              get_list_of_filtered_books)
 from gutenberg.database import Book, Format, BookFormat, Author
 
+jinja_env = Environment(loader=PackageLoader('gutenberg', 'templates'))
+
 
 def tmpl_path():
     return os.path.join(path(gutenberg.__file__).parent, 'templates')
@@ -48,6 +50,23 @@ def export_all_books(static_folder,
     logger.debug("\tFiltered book collection, PDF: {}".format(nb_by_fmt('pdf')))
     logger.debug("\tFiltered book collection, ePUB: {}".format(nb_by_fmt('epub')))
     logger.debug("\tFiltered book collection, HTML: {}".format(nb_by_fmt('html')))
+
+    # copy CSS/JS/* to static_folder
+    src_folder = tmpl_path()
+    for fname in ('css', 'js', 'jquery', 'favicon.ico'):
+        src = os.path.join(src_folder, fname)
+        dst = os.path.join(static_folder, fname)
+        if not path(fname).ext:
+            path(dst).rmtree_p()
+            path(src).copytree(dst)
+        else:
+            path(src).copyfile(dst)
+
+    # export homepage
+    template = jinja_env.get_template('index.html')
+    context = {}
+    with open(os.path.join(static_folder, 'gutenberg_home.html'), 'w') as f:
+        f.write(template.render(**context))
 
     # export to HTML
     for book in books:
@@ -101,10 +120,7 @@ def cover_html_content_for(book):
         'cover_img': cover_img,
         'formats': main_formats_for(book)
     }
-    env = Environment(loader=PackageLoader('gutenberg', 'templates'))
-    template = env.get_template('cover_article.html')
-    # with open(os.path.join(tmpl_path(), 'cover_article.html'), 'r') as tmpl:
-    #     template = Template(tmpl.read())
+    template = jinja_env.get_template('cover_article.html')
     return template.render(**context)
 
 

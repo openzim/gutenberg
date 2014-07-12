@@ -150,7 +150,7 @@ def build_html(files):
     url_htm = os.path.join(u.build(), b_id + '-h' + '.htm')
     u.with_base(UrlBuilder.BASE_TWO)
     name = ''.join(['pg', b_id])
-    html_utf8 = os.path.join(u.build(), b_id + name + '.html.utf8')
+    html_utf8 = os.path.join(u.build(), name + '.html.utf8')
     urls.extend([url_zip, url_htm, url_html, html_utf8])
     return list(set(urls))
 

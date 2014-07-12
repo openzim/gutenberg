@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>{{ book.title }}</h1>
-<h2>Author: {{ book.author.name }}</h2>
+<h2>Author: {{ book.author.name() }}</h2>
 {% if book.subtitle %}
 <h3>Subtitle: {{ book.subtitle }}</h3>
 {% endif %}

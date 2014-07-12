@@ -79,7 +79,7 @@ class Author(Model):
         if not self.last_name:
             return self.first_names
 
-        return "{}, {}".format(self.last_name, self.first_names)
+        return "{f} {l}".format(l=self.last_name, f=self.first_names)
 
     def to_dict(self):
         return {'label': self.name(),
