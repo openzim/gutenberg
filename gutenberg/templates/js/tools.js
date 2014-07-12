@@ -53,20 +53,26 @@ function showBooks() {
 function init() {
 
     /* Language filter */
-    $( "#language_filter" ).autocomplete({
-	source: languages_json_data,
-	select: function (event, ui) {
-	    minimizeUI();
-	    showBooks();
-	}
-    });
-    $( "#language_filter" ).keypress( function( event ) {
-	if( event.which == 13 ) {
-	    if ( !this.value ) {
+    var language_count = languages_json_data.length;
+    if ( language_count > 1 ) {
+	$( "#language_filter" ).autocomplete({
+	    source: languages_json_data,
+	    select: function (event, ui) {
+		minimizeUI();
 		showBooks();
 	    }
-	}
-    });
+	});
+	$( "#language_filter" ).keypress( function( event ) {
+	    if( event.which == 13 ) {
+		if ( !this.value ) {
+		    showBooks();
+		}
+	    }
+	});
+    } else {
+	$( "#language_filter" ).val( languages_json_data[0] );
+	$( "#language_filter" ).hide();
+    }
 
     /* Author filter */
     $( "#author_filter" ).autocomplete({
