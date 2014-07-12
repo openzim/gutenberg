@@ -7,12 +7,13 @@ from __future__ import (unicode_literals, absolute_import,
 import os
 import json
 
-from path import path
+import bs4
 from bs4 import BeautifulSoup
+from path import path
 from jinja2 import Environment, PackageLoader
 
 import gutenberg
-from gutenberg import logger
+from gutenberg import logger, XML_PARSER
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
                              get_list_of_filtered_books)
 from gutenberg.database import Book, Format, BookFormat, Author
@@ -59,7 +60,7 @@ def export_all_books(static_folder,
 
     # copy CSS/JS/* to static_folder
     src_folder = tmpl_path()
-    for fname in ('css', 'js', 'jquery', 'favicon.ico',
+    for fname in ('css', 'js', 'jquery', 'favicon.ico', 'favicon.png',
                   'jquery-ui', 'datatables'):
         src = os.path.join(src_folder, fname)
         dst = os.path.join(static_folder, fname)
@@ -85,12 +86,20 @@ def export_all_books(static_folder,
                        languages=languages,
                        formats=formats)
 
+def book_name_for_fs(book):
+    return book.title.replace('/', '-')
+
 
 def article_name_for(book, cover=False):
     cover = "_cover" if cover else ""
-    title = book.title.replace('/', '-')
-    return "{title}{cover}.html".format(title=title, cover=cover)
+    title = book_name_for_fs(book)
+    return "{title}{cover}.{id}.html".format(title=title, cover=cover, id=book.id)
 
+
+def archive_name_for(book, format):
+    return "{title}.{id}.{format}".format(
+        title=book_name_for_fs(book),
+        id=book.id, format=format)
 
 def fname_for(book, format):
     return "{id}.{format}".format(id=book.id, format=format)
@@ -102,8 +111,9 @@ def html_content_for(book, static_folder, download_cache):
 
     # is HTML file present?
     if not path(html_fpath).exists():
-        raise ValueError("Missing HTML content for #{} at {}"
-                         .format(book.id, html_fpath))
+        logger.warn("Missing HTML content for #{} at {}"
+                    .format(book.id, html_fpath))
+        return None
 
     with open(html_fpath, 'r') as f:
         return f.read()
@@ -111,7 +121,7 @@ def html_content_for(book, static_folder, download_cache):
 
 def update_html_for_static(book, html_content):
     # update all <img> links from images/xxx.xxx to {id}_xxx.xxx
-    soup = BeautifulSoup(html_content)
+    soup = BeautifulSoup(html_content, XML_PARSER)
     for img in soup.findAll('img'):
         if 'href' in img.attrs:
             img.attrs['href'] = img.attrs['href'].replace('images/', '{id}_'.format(book.id))
@@ -126,7 +136,7 @@ def update_html_for_static(book, html_content):
     remove = True
     for child in body.children:
 
-        if child == '\n':
+        if isinstance(child, bs4.NavigableString):
             continue
 
         if end_of_text in getattr(child, 'text', ''):
@@ -179,9 +189,11 @@ def export_book_to(book,
         with open(article_fpath, 'w') as f:
             f.write(new_html)
 
-    def symlink_from_cache(fname):
+    def symlink_from_cache(fname, dstfname=None):
         src = os.path.join(download_cache, fname)
-        dst = os.path.join(static_folder, fname)
+        if dstfname is None:
+            dstfname = fname
+        dst = os.path.join(static_folder, dstfname)
         logger.info("\t\tSymlinking {}".format(dst))
         path(dst).unlink_p()
         path(src).symlink(dst)
@@ -193,7 +205,8 @@ def export_book_to(book,
 
     # other formats
     for format in formats:
-        symlink_from_cache(fname_for(book, format))
+        symlink_from_cache(fname_for(book, format),
+                           archive_name_for(book, format))
 
     # book presentation article
     cover_fpath = os.path.join(static_folder,

@@ -33,6 +33,9 @@ help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
 -d --dl-folder=<file>           Folder to use/write-to downloaded ebooks
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 
+-x --zim-title=<title>          Custom title for the ZIM file
+-q --zim-desc=<desc>            Custom description for the ZIM file
+
 --prepare                       Download & extract rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
@@ -55,17 +58,23 @@ def main(arguments):
     URL_MIRROR = arguments.get('--mirror') or 'http://zimfarm.kiwix.org/gutenberg'
     RDF_FOLDER = arguments.get('--rdf-folder') or os.path.join('rdf-files')
     STATIC_FOLDER = arguments.get('--static-folder') or os.path.join('static')
-    ZIM_FILE = arguments.get('--zim-file') or 'gutenberg.zim'
+    ZIM_FILE = arguments.get('--zim-file')
     WIPE_DB = not arguments.get('--keep-db') or False
     RDF_URL = arguments.get('--rdf-url') or 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2'
     DL_CACHE = arguments.get('--dl-folder') or os.path.join('dl-cache')
+    ZTITLE = arguments.get('--zim-title')
+    ZDESC = arguments.get('--zim-desc')
 
     LANGUAGES = [x.strip().lower()
                  for x in (arguments.get('--languages') or '').split(',')
                  if x.strip()]
-    FORMATS = [x.strip().lower()
-               for x in (arguments.get('--formats') or '').split(',')
-               if x.strip()]
+    # special shortcuts for "all"
+    if arguments.get('--formats') == 'all':
+        FORMATS = ['epub', 'pdf']
+    else:
+        FORMATS = [x.strip().lower()
+                   for x in (arguments.get('--formats') or '').split(',')
+                   if x.strip()]
 
     # no arguments, default to --complete
     if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM):
@@ -99,7 +108,9 @@ def main(arguments):
 
     if DO_ZIM:
         logger.info("BUILDING ZIM off satic folder {}".format(STATIC_FOLDER))
-        build_zimfile(STATIC_FOLDER, ZIM_FILE)
+        build_zimfile(static_folder=STATIC_FOLDER, zim_path=ZIM_FILE,
+                      languages=LANGUAGES, formats=FORMATS,
+                      title=ZTITLE, description=ZDESC)
 
 if __name__ == '__main__':
     main(docopt(help, version=0.1))
