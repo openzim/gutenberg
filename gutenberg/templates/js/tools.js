@@ -57,7 +57,17 @@ function showBooks() {
 		{
 		    "targets": 2,
 		    "render": function ( data, type, full, meta ) {
-			return "<a href='42'>" + data + "</a>";
+			var html = "";
+			if (data[0] == 1) {
+			    html += "<a href=\"\"><img src=\"css/html_icon.png\" style=\"margin: 0px;\" /></a> ";
+			}
+			if (data[1] == 1) {
+			    html += "<a href=\"\"><img src=\"css/epub_icon.png\" style=\"margin: 0px;\" /></a> ";
+			}
+			if (data[2] == 1) {
+			    html += "<a href=\"\"><img src=\"css/pdf_icon.png\" style=\"margin: 0px;\" /></a> ";
+			}
+			return html;
 		    }
 		}
 	    ]
