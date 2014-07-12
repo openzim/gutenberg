@@ -119,8 +119,14 @@ def download_all_books(url_mirror, download_cache,
             bfs = BookFormat.filter(book=book)
 
             if format == 'html':
-                # patterns = ['{id}-h.zip', '{id}.html.noimages', '{id}.html.gen', 'salme10h.htm']
-                patterns = ['mnsrb10h.htm', '8ledo10h.htm', 'tycho10f.htm', '8ledo10h.zip', 'salme10h.htm', '8nszr10h.htm', '{id}-h.html', '{id}.html.gen', '{id}-h.htm', '8regr10h.zip', '{id}.html.noimages', '8lgme10h.htm', 'tycho10h.htm', 'tycho10h.zip', '8lgme10h.zip', '8indn10h.zip', '8resp10h.zip', '20004-h.htm', '8indn10h.htm', '8memo10h.zip', 'fondu10h.zip', '{id}-h.zip', '8mort10h.zip']
+                patterns = ['mnsrb10h.htm', '8ledo10h.htm', 'tycho10f.htm',
+                            '8ledo10h.zip', 'salme10h.htm', '8nszr10h.htm',
+                            '{id}-h.html', '{id}.html.gen', '{id}-h.htm',
+                            '8regr10h.zip', '{id}.html.noimages',
+                            '8lgme10h.htm', 'tycho10h.htm', 'tycho10h.zip',
+                            '8lgme10h.zip', '8indn10h.zip', '8resp10h.zip',
+                            '20004-h.htm', '8indn10h.htm', '8memo10h.zip',
+                            'fondu10h.zip', '{id}-h.zip', '8mort10h.zip']
                 bfso = bfs
                 bfs = bfs.join(Format).filter(Format.pattern << patterns)
                 if not bfs.count():
@@ -180,7 +186,7 @@ def download_all_books(url_mirror, download_cache,
             if not bf.downloaded_from:
                 logger.debug("NO FILE FOR #{}/{}".format(book.id, format))
                 from pprint import pprint as pp ; pp(allurls)
-                # import ipdb; ipdb.set_trace()
+                import ipdb; ipdb.set_trace()
                 missings.append(book.id)
 
     from pprint import pprint as pp ; pp(missings)

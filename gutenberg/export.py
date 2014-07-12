@@ -51,6 +51,12 @@ def export_all_books(static_folder,
     logger.debug("\tFiltered book collection, ePUB: {}".format(nb_by_fmt('epub')))
     logger.debug("\tFiltered book collection, HTML: {}".format(nb_by_fmt('html')))
 
+    # export to JSON helpers
+    export_to_json_helpers(books=books,
+                           static_folder=static_folder,
+                           languages=languages,
+                           formats=formats)
+
     # copy CSS/JS/* to static_folder
     src_folder = tmpl_path()
     for fname in ('css', 'js', 'jquery', 'favicon.ico'):
@@ -73,12 +79,6 @@ def export_all_books(static_folder,
         export_book_to(book=book,
                        static_folder=static_folder,
                        download_cache=download_cache)
-
-    # export to JSON helpers
-    export_to_json_helpers(books=books,
-                           static_folder=static_folder,
-                           languages=languages,
-                           formats=formats)
 
 
 def article_name_for(book, cover=False):
@@ -108,6 +108,9 @@ def update_html_for_static(book, html_content):
     soup = BeautifulSoup(html_content)
     for img in soup.findAll('img'):
         img.attrs['href'] = img.attrs['href'].replace('images/', '{id}_'.format(book.id))
+
+    # if there is no charset, set it to utf8
+    # <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
 
     return soup.encode()
 
