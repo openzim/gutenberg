@@ -44,7 +44,8 @@ function showBooks() {
 	    "columns": [
 		{ "title": "Title" },
 		{ "title": "Author" }
-	    ]
+	    ],
+	    "bAutoWidth": true
 	} );
 
 	$('#books_table').attr("filled", true);
