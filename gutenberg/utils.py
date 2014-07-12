@@ -29,6 +29,7 @@ def download_file(url, fname):
     output = "--output {}".format(fname) if fname else "--remote-name"
     cmd = ("curl --fail --insecure --location {output} --silent "
            "--show-error -C - --url {url}".format(output=output, url=url))
+    # logger.debug("--/ {}".format(cmd))
     cmdr = exec_cmd(cmd)
     return cmdr.status_code == 0
 
@@ -53,7 +54,7 @@ class UrlBuilder:
     def build(self):
         """
         Build either an url depending on whether the base url
-        is `BASE_ONE` or `BASE_TWO`. 
+        is `BASE_ONE` or `BASE_TWO`.
         The former generates urls according to the Url pattern:
             id: 10023 -> pattern: <base-url>/1/0/0/2/10023
         The latter generates urls according to the Url pattern:
@@ -91,7 +92,7 @@ class UrlBuilder:
 
 def get_possible_urls_for_book(book):
     """
-    Get all possible urls that could point to the 
+    Get all possible urls that could point to the
     book on either of the two mirrors.
     param: book: The book you want the possible urls from
     returns: a list of all possible urls sorted by their probability
@@ -110,8 +111,8 @@ def get_possible_urls_for_book(book):
 
 def sort_by_mime_type(files):
     """
-    Reverse the passed in `files` dict and return a dict 
-    that is sorted by `{mimetype: {filetype, id}}` instead of 
+    Reverse the passed in `files` dict and return a dict
+    that is sorted by `{mimetype: {filetype, id}}` instead of
     by `{filetype: mimetype}`.
     """
     mime = defaultdict(list)
