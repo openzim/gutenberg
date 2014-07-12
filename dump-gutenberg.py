@@ -68,9 +68,13 @@ def main(arguments):
     LANGUAGES = [x.strip().lower()
                  for x in (arguments.get('--languages') or '').split(',')
                  if x.strip()]
-    FORMATS = [x.strip().lower()
-               for x in (arguments.get('--formats') or '').split(',')
-               if x.strip()]
+    # special shortcuts for "all"
+    if arguments.get('--formats') == ['all']:
+        FORMATS = ['epub', 'pdf']
+    else:
+        FORMATS = [x.strip().lower()
+                   for x in (arguments.get('--formats') or '').split(',')
+                   if x.strip()]
 
     # no arguments, default to --complete
     if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM):
