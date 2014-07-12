@@ -69,7 +69,7 @@ def main(arguments):
                  for x in (arguments.get('--languages') or '').split(',')
                  if x.strip()]
     # special shortcuts for "all"
-    if arguments.get('--formats') == ['all']:
+    if arguments.get('--formats') == 'all':
         FORMATS = ['epub', 'pdf']
     else:
         FORMATS = [x.strip().lower()
