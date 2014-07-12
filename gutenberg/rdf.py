@@ -117,16 +117,24 @@ class RdfParser():
         if not self.author:
             self.author = soup.find('marcrel:com')
         if self.author:
-            self.author_id = re.match(
-                r'[0-9]+/agents/([0-9]+)', self.author.find('pgterms:agent').attrs['rdf:about']).groups()[0]
-            self.author_name = re.sub(
-                r' +', ' ', self.author.find('pgterms:name').text).split(',')
-            if len(self.author_name) == 1:
-                self.last_name = self.author_name[0]
-                self.first_name = ''
+            agent = self.author.find('pgterms:agent')
+            if 'rdf:about' in agent.attrs:
+                self.author_id = re.match(
+                r'[0-9]+/agents/([0-9]+)', agent.attrs['rdf:about']).groups()[0]
             else:
-                self.first_name = ' '.join(self.author_name[::-2]).strip()
-                self.last_name = self.author_name[0]
+                self.author_id = re.match(
+                r'[0-9]+/agents/([0-9]+)', agent.attrs['rdf:resource']).groups()[0]
+            if self.author.find('pgterms:name'):
+                self.author_name = re.sub(
+                r' +', ' ', self.author.find('pgterms:name').text).split(',')
+                if len(self.author_name) == 1:
+                    self.last_name = self.author_name[0]
+                    self.first_name = ''
+                else:
+                    self.first_name = ' '.join(self.author_name[::-2]).strip()
+                    self.last_name = self.author_name[0]
+            else:
+                self.author_name = self.first_name = self.last_name = None
 
             # Parsing the birth and (death, if the case) year of the author.
             # These values are likely to be null.
