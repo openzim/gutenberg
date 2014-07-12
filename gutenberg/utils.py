@@ -45,7 +45,7 @@ class UrlBuilder:
     """
     BASE_ONE = 'http://ftp.ibiblio.org/pub/docs/books/gutenberg/'
     BASE_TWO = 'http://gutenberg.readingroo.ms/cache/generated/'
-    BASE_THREE = BASE_TWO
+    BASE_THREE = BASE_ONE
 
     def __init__(self):
         self.base = self.BASE_ONE
@@ -67,9 +67,9 @@ class UrlBuilder:
                 base_url = os.path.join(
                     os.path.join(*list(str(self.b_id))[:-1]), str(self.b_id))
                 url = os.path.join(self.base, base_url)
-            elif self.base == self.BASE_TWO:
+            if self.base == self.BASE_TWO:
                 url = os.path.join(self.base, str(self.b_id))
-            elif self.base == self.BASE_THREE:
+            if self.base == self.BASE_THREE:
                 url = self.base
 
         else:
