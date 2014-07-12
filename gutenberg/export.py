@@ -119,21 +119,25 @@ def update_html_for_static(book, html_content):
     # Add the title
     soup.title.string = book.title
 
-    # Remove paragraphs until the beginning of the actual book
-    body_children = soup.find('body').contents
-    ip = 0
-    while not hasattr(body_children[ip],'text') or body_children[ip].text.find('*** START OF THIS PROJECT GUTENBERG EBOOK') == -1:
-        body_children[ip].decompose()
-        ip = ip+1
-    body_children[ip].decompose()
-    ip = ip+1
+    start_of_text = '*** START OF THIS PROJECT GUTENBERG EBOOK'
+    end_of_text = '*** END OF THIS PROJECT GUTENBERG EBOOK'
 
-    # Remove paragraphs after the end of the actual book
-    while not hasattr(body_children[ip],'text') or body_children[ip].text.find('*** END OF THIS PROJECT GUTENBERG EBOOK') == -1:
-        ip = ip+1
-    while ip < len(body_children):
-        body_children[ip].decompose()
-        ip = ip+1
+    body = soup.find('body')
+    remove = True
+    for child in body.children:
+
+        if child == '\n':
+            continue
+
+        if end_of_text in getattr(child, 'text', ''):
+            remove = True
+
+        if start_of_text in getattr(child, 'text', ''):
+            child.decompose()
+            remove = False
+
+        if remove:
+            child.decompose()
 
     # if there is no charset, set it to utf8
     if not soup.encoding:
