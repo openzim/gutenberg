@@ -208,7 +208,7 @@ function init() {
     });
     if ( languages_json_data.length == 1 ) {
 	$( "#language_filter" ).val( languages_json_data[0][0] );
-	//$( "#language_filter" ).hide();
+	$( "#language_filter" ).hide();
     }
 
     /* Author filter */
