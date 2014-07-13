@@ -239,7 +239,7 @@ def main_formats_for(book):
     return [k for k, v in FORMAT_MATRIX.items() if v in fmts]
 
 
-def get_list_of_filtered_books(languages, formats):
+def get_list_of_filtered_books(languages, formats, bookslist):
     if len(formats):
         qs = Book.select().join(BookFormat) \
                  .join(Format) \
@@ -248,6 +248,9 @@ def get_list_of_filtered_books(languages, formats):
                  .group_by(Book.id)
     else:
         qs = Book.select()
+
+    if len(bookslist):
+        qs = qs.where(Book.id << bookslist)
 
     if len(languages):
         qs = qs.where(Book.language << languages)
