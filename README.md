@@ -27,3 +27,6 @@ Working in the environment:
 * Quit the environment: deactivate
 * Install dependancies in the environment: pip install -r requirements.pip
 
+OSX Dependencies
+----------------
+brew install advancecomp jpegoptim pngquant p7zip
