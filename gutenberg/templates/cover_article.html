@@ -34,12 +34,8 @@
     </table>
 
         {% for format in formats %}
-            <li>{{ format }}</li>
+            <li><a href="{{ book|name_for_fs }}.{{ book.id }}.{{ format }}"><img src="css/{{ format }}_icon_50.png" />{{ format }}</li>
         {% endfor %}
-
-<img src="css/html_icon_50.png" />
-<img src="css/epub_icon_50.png" />
-<img src="css/pdf_icon_50.png" />
 
   </div>
 {% endblock %}
