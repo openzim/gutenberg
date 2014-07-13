@@ -7,3 +7,4 @@
 - Fix download click on the table not working on recent version of FF
 - Better handling of failed downloads and mirrors
 - Language on the summary page should not be the ISO code, but the name in mother tongue
+- get a js "author_by_lang" (one per language)
