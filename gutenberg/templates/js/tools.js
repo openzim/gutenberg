@@ -95,6 +95,10 @@ function showBooks() {
 	}
     }
 
+    if ( $( "#cover" ).length > 0 ) {
+	$(location).attr("href", "Home.html");
+    }
+
     loadScript( url, function () {
 
 	if ( $('#books_table').attr("filled") ) {
