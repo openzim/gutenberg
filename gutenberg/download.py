@@ -170,13 +170,18 @@ def download_all_books(url_mirror, download_cache,
                 # HTML files are *sometime* available as ZIP files
                 if url.endswith('.zip'):
                     zpath = "{}.zip".format(fpath)
-                    download_file(url, zpath)
+
+                    if not download_file(url, zpath):
+                        logger.error("ZIP file donwload failed: {}".format(zpath))
+                        continue
 
                     # extract zipfile
                     handle_zipped_epub(zippath=zpath, book=book,
                                        download_cache=download_cache)
                 else:
-                    download_file(url, fpath)
+                    if not download_file(url, fpath):
+                        logger.error("file donwload failed: {}".format(fpath))
+                        continue
 
                 # store working URL in DB
                 bf.downloaded_from = url
