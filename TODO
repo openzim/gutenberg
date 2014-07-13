@@ -6,3 +6,4 @@
   jpg: jpegoptim --strip-all -m50 "' + path + '"'
   rezip: 7za a -tzip -mx9 test2.epub * -mmt
 - Fix download click on the table not working on recent version of FF
+- Better handling of failed downloads and mirrors
