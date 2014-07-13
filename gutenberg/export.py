@@ -38,13 +38,15 @@ def get_list_of_all_languages():
 def export_all_books(static_folder,
                      download_cache,
                      languages=[],
-                     formats=[]):
+                     formats=[],
+                     only_books=[]):
 
     # ensure dir exist
     path(static_folder).mkdir_p()
 
     books = get_list_of_filtered_books(languages=languages,
-                                       formats=formats)
+                                       formats=formats,
+                                       only_books=only_books)
 
     sz = len(list(books))
     logger.debug("\tFiltered book collection size: {}".format(sz))

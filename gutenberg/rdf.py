@@ -55,14 +55,16 @@ def extract_rdf_files(rdf_tarball, rdf_path):
     return
 
 
-def parse_and_fill(rdf_path,bookslist):
+def parse_and_fill(rdf_path, only_books=[]):
     logger.info("\tLooping throught RDF files in {}".format(rdf_path))
 
     for root, dirs, files in os.walk(rdf_path):
         if root.endswith('999999'):
             continue
 
-        if len(bookslist) and root not in bookslist:
+        # skip books outside of requsted list
+        if len(only_books) and path(root).basename() not in \
+            [str(bid) for bid in only_books]:
             continue
 
         for fname in files:

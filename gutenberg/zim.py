@@ -14,7 +14,8 @@ from gutenberg.iso639 import ISO_MATRIX
 
 def build_zimfile(static_folder, zim_path=None,
                   languages=[], formats=[],
-                  title=None, description=None):
+                  title=None, description=None,
+                  only_books=[]):
 
     if not languages:
         languages = ['en']
