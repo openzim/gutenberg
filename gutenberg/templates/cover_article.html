@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ book.title }}{% endblock %}
+{% block title %}{{ book.title }} (cover){% endblock %}
 {% block content %}
 
   <h1>{{ book.title }}</h1>
@@ -34,7 +34,7 @@
     </table>
 
         {% for format in formats %}
-           <a href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}"><img src="css/{{ format }}_icon_50.png" />{{ format }}
+           <a href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}"><img src="css/{{ format }}_icon_50.png" />
         {% endfor %}
 
   </div>
