@@ -22,6 +22,11 @@ from gutenberg.iso639 import language_name
 jinja_env = Environment(loader=PackageLoader('gutenberg', 'templates'))
 
 
+def book_name_for_fs(book):
+    return book.title.replace('/', '-')
+jinja_env.filters['book_name_for_fs'] = book_name_for_fs
+
+
 def tmpl_path():
     return os.path.join(path(gutenberg.__file__).parent, 'templates')
 
@@ -87,9 +92,6 @@ def export_all_books(static_folder,
                        languages=languages,
                        formats=formats)
 
-def book_name_for_fs(book):
-    return book.title.replace('/', '-')
-
 
 def article_name_for(book, cover=False):
     cover = "_cover" if cover else ""
@@ -134,21 +136,28 @@ def update_html_for_static(book, html_content):
     end_of_text = '*** END OF THIS PROJECT GUTENBERG EBOOK'
 
     body = soup.find('body')
-    remove = True
-    for child in body.children:
+    if start_of_text in body.text or end_of_text in body.text:
+        remove = True
+        for child in body.children:
 
-        if isinstance(child, bs4.NavigableString):
-            continue
+            if isinstance(child, bs4.NavigableString):
+                continue
 
-        if end_of_text in getattr(child, 'text', ''):
-            remove = True
+            if end_of_text in getattr(child, 'text', ''):
+                remove = True
 
-        if start_of_text in getattr(child, 'text', ''):
-            child.decompose()
-            remove = False
+            if start_of_text in getattr(child, 'text', ''):
+                child.decompose()
+                remove = False
 
-        if remove:
-            child.decompose()
+            if remove:
+                child.decompose()
+
+    # build infobox
+    infobox = jinja_env.get_template('book_infobox.html')
+    infobox_html = infobox.render({'book': book})
+    info_soup = BeautifulSoup(infobox_html)
+    body.insert(0, info_soup.find('div'))
 
     # if there is no charset, set it to utf8
     if not soup.encoding:
