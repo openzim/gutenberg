@@ -334,7 +334,7 @@ def export_book_to(book,
         else:
             # PDF mostly
             logger.debug("shitty ext: {}".format(dst))
-            symlink_from_cache(src, dst)
+            copy_from_cache(src, dst)
 
     # associated files (images, etc)
     for fname in [fn for fn in cached_files
@@ -352,15 +352,12 @@ def export_book_to(book,
             with open(dst, 'w') as f:
                 f.write(new_html)
         else:
-            # symlink_from_cache(fname)
             handle_companion_file(fname)
 
     # other formats
     for format in formats:
         if format == 'html':
             continue
-        # symlink_from_cache(fname_for(book, format),
-        #                    archive_name_for(book, format))
         handle_companion_file(fname_for(book, format),
                               archive_name_for(book, format))
 
