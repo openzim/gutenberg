@@ -82,7 +82,7 @@ def export_all_books(static_folder,
 
     # export homepage
     template = jinja_env.get_template('index.html')
-    context = {}
+    context = {'show_books': True}
     with open(os.path.join(static_folder, 'Home.html'), 'w') as f:
         f.write(template.render(**context))
 
@@ -139,23 +139,50 @@ def update_html_for_static(book, html_content):
     start_of_text = '*** START OF THIS PROJECT GUTENBERG EBOOK'
     end_of_text = '*** END OF THIS PROJECT GUTENBERG EBOOK'
 
+    patterns = [
+        ("*** START OF THIS PROJECT GUTENBERG EBOOK",
+         "*** END OF THIS PROJECT GUTENBERG EBOOK"),
+        ("=========================================================================",
+         "——————————————————————————-"),
+        ("—————————————————-", "Encode an ISO 8859/1 Etext into LaTeX or HTML"),
+        ("Project Gutenberg Etext", "End of Project Gutenberg Etext"),
+        ("***START OF THE PROJECT GUTENBERG",
+         "***END OF THE PROJECT GUTENBERG EBOOK"),
+        ("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>",
+         "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>"),
+        ("Text encoding is iso-8859-1", "Fin de Project Gutenberg Etext"),
+        ("COPYRIGHT PROTECTED ETEXTS*END*",
+         "==========================================================="),
+        ("Nous remercions la Bibliothèque Nationale de France qui a mis à",
+         "The Project Gutenberg Etext of"),
+        ("Nous remercions la Bibliothèque Nationale de France qui a mis à",
+         "End of The Project Gutenberg EBook"),
+        ("*** START OF THE PROJECT GUTENBERG EBOOK",
+         "*** END OF THE PROJECT GUTENBERG EBOOK"),
+        ("***START OF THE PROJECT GUTENBERG EBOOK",
+         "***END OF THE PROJECT GUTENBERG EBOOK"),
+    ]
+
+
     body = soup.find('body')
-    if start_of_text in body.text or end_of_text in body.text:
-        remove = True
-        for child in body.children:
+    for start_of_text, end_of_text in patterns:
+        if start_of_text in body.text and end_of_text in body.text:
+            remove = True
+            for child in body.children:
 
-            if isinstance(child, bs4.NavigableString):
-                continue
+                if isinstance(child, bs4.NavigableString):
+                    continue
 
-            if end_of_text in getattr(child, 'text', ''):
-                remove = True
+                if end_of_text in getattr(child, 'text', ''):
+                    remove = True
 
-            if start_of_text in getattr(child, 'text', ''):
-                child.decompose()
-                remove = False
+                if start_of_text in getattr(child, 'text', ''):
+                    child.decompose()
+                    remove = False
 
-            if remove:
-                child.decompose()
+                if remove:
+                    child.decompose()
+            break
 
     # build infobox
     infobox = jinja_env.get_template('book_infobox.html')
