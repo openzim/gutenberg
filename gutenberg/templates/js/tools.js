@@ -106,14 +106,13 @@ function showBooks() {
 		}
 	    ]
 	} );
-
 	$('#books_table').on('click', 'tr', function () {
             var id = $('td', this).children()[0].innerHTML;
             var titre = $('td', this).children()[1].innerHTML;
 	    var url = titre.replace( "/", "-" ) + "_cover." + id + ".html";
 	    $(location).attr("href", url);
 	} );
-
+	$("#books_table_paginate").click( function() { minimizeUI() }); 
 	$('#books_table').attr("filled", true);
 
     });
