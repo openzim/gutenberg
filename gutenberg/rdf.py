@@ -204,11 +204,11 @@ def save_rdf_in_database(parser):
     # Insert book
     book_record = Book.create(
         id=parser.gid,
-        title=parser.title,
-        subtitle=parser.subtitle,
+        title=parser.title.strip(),
+        subtitle=parser.subtitle.strip(),
         author=author_record,  # foreign key
         license=license_record,  # foreign key
-        language=parser.language,
+        language=parser.language.strip(),
         downloads=parser.downloads
     )
 
