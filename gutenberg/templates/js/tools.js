@@ -141,23 +141,33 @@ function init() {
     });
 
     /* Language filter */
-    var language_count = languages_json_data.length;
-    if ( language_count > 1 ) {
-	$( "#language_filter" ).autocomplete({
-	    source: languages_json_data,
-	    select: function (event, ui) {
-		minimizeUI();
+    $( "#language_filter" ).autocomplete({
+	source: function ( request, response ) {
+	    var results = [];
+	    var pattern = new RegExp(request.term, "i");
+	    var count = languages_json_data.length;
+	    var i = 0;
+	    while (i < count && results.length < 100) {
+		if ( languages_json_data[i][0].match(pattern) ) {
+		    results.push( languages_json_data[i][0] );
+		}
+		i++;
+	    };
+	    response( results );
+        },
+	select: function (event, ui) {
+	    minimizeUI();
+	    showBooks();
+	}
+    });
+    $( "#language_filter" ).keypress( function( event ) {
+	if( event.which == 13 ) {
+	    if ( !this.value ) {
 		showBooks();
 	    }
-	});
-	$( "#language_filter" ).keypress( function( event ) {
-	    if( event.which == 13 ) {
-		if ( !this.value ) {
-		    showBooks();
-		}
-	    }
-	});
-    } else {
+	}
+    });
+    if ( languages_json_data.length == 1 ) {
 	$( "#language_filter" ).val( languages_json_data[0][0] );
 	$( "#language_filter" ).hide();
     }
