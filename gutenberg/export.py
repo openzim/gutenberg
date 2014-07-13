@@ -31,6 +31,10 @@ def tmpl_path():
     return os.path.join(path(gutenberg.__file__).parent, 'templates')
 
 
+def get_list_of_all_languages():
+    return list(set(list([b.language for b in Book.select(Book.language)])))
+
+
 def export_all_books(static_folder,
                      download_cache,
                      languages=[],
@@ -248,8 +252,11 @@ def export_to_json_helpers(books, static_folder, languages, formats):
             for book in books.order_by(Book.title.asc())],
            'full_by_title.js')
 
+    avail_langs = list(set([(language_name(b.language), b.language)
+                            for b in books]))
+
     # language-specific collections
-    for lang in languages:
+    for lang_name, lang in avail_langs:
         # by popularity
         logger.info("\t\tDumping lang_{}_by_popularity.js".format(lang))
         dumpjs([book.to_array()
@@ -290,6 +297,4 @@ def export_to_json_helpers(books, static_folder, languages, formats):
 
     # languages list sorted by code
     logger.info("\t\tDumping languages.js")
-    avail_langs = list(set([(language_name(b.language), b.language)
-                            for b in books]))
     dumpjs(sorted(avail_langs), 'languages.js', 'languages_json_data')
