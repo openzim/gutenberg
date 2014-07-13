@@ -265,5 +265,5 @@ if __name__ == '__main__':
             with open(rdf, 'r') as f:
                 data = f.read()
 
-            parser = RdfParser(data, 45213).parse()
-            print(parser.first_name, parser.file_types)
+            parser = RdfParser(data, num).parse()
+            print(parser.first_name, parser.last_name)
