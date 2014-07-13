@@ -5,6 +5,7 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
+import re
 import datetime
 
 from gutenberg import logger
@@ -18,12 +19,16 @@ def build_zimfile(static_folder, zim_path=None,
                   only_books=[]):
 
     if not languages:
-        languages = ['en']
+        languages = ['mul']
 
     if title is None:
-        title = ("Project Gutenberg Library ({langs}) with {formats}"
-                 .format(langs=",".join(languages),
-                         formats=",".join(formats)))
+        if len(languages) > 5:
+            title = ("Project Gutenberg Library with {formats}"
+                     .format(formats=",".join(formats)))
+        else:
+            title = ("Project Gutenberg Library ({langs}) with {formats}"
+                     .format(langs=",".join(languages),
+                             formats=",".join(formats)))
 
     logger.info("\tWritting ZIM for {}".format(title))
 
@@ -31,16 +36,20 @@ def build_zimfile(static_folder, zim_path=None,
         description = "The first producer of free ebooks"
 
     if zim_path is None:
-        zim_path = "gutenberg_{lang}_all_{date}.zim".format(
-                lang=languages[0],
-                date=datetime.datetime.now().strftime('%m_%Y'))
+        if len(languages) > 1:
+            zim_path = "gutenberg_all_{date}.zim".format(
+                    date=datetime.datetime.now().strftime('%m_%Y'))
+        else:
+            zim_path = "gutenberg_{lang}_all_{date}.zim".format(
+                    lang=languages[0],
+                    date=datetime.datetime.now().strftime('%m_%Y'))
 
     context = {
-        'languages': ISO_MATRIX.get(languages[0], languages[0]),
+        'languages': ','.join([ISO_MATRIX.get(lang, lang) for lang in languages]),
         'title': title,
         'description': description,
-        'creator': "gutenberg.org",
-        'publisher': "Kiwix",
+        'creator': 'gutenberg.org',
+        'publisher': 'Kiwix',
 
         'home': 'Home.html',
         'favicon': 'favicon.png',
@@ -49,12 +58,12 @@ def build_zimfile(static_folder, zim_path=None,
         'zim': zim_path
     }
 
-    cmd = ('zimwriterfs --welcome={home} --favicon={favicon} '
-           '--language={languages} --title=\\"{title}\\" '
+    cmd = ('zimwriterfs --welcome=\\"{home}\\" --favicon=\\"{favicon}\\" '
+           '--language=\\"{languages}\\" --title=\\"{title}\\" '
            '--description=\\"{description}\\" '
-           '--creator=\\"{creator}\\" --publisher=\\"{publisher}\\" {static} {zim}'
+           '--creator=\\"{creator}\\" --publisher=\\"{publisher}\\" \\"{static}\\" \\"{zim}\\"'
            .format(**context))
 
-    logger.debug(cmd)
+    logger.debug(re.sub('\\\\"','"',cmd))
     return exec_cmd(cmd)
 
