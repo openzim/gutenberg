@@ -151,6 +151,7 @@ function showBooks() {
 	$("#books_table_paginate").click( function() { minimizeUI() }); 
 	$('#books_table').attr("filled", true);
 	
+	$('#sort').show();
     });
     
     return true;
@@ -159,6 +160,8 @@ function showBooks() {
 function init() {
 
     /* Sort buttons */
+    $( "#sort" ).hide();
+
     $( "#popularity_sort" ).button({
 	icons: { primary: 'sort_popularity_icon' },
 	text: false,
@@ -239,7 +242,4 @@ function init() {
 	    }
 	}
     });
-
-    /* Show books */
-    showBooks();
 }
