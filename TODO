@@ -1,3 +1,5 @@
 - manage the case where a book has multiple language (e.g. 10 books for French)
 - popularity sort button should "active" per default
 - identify patterns for gutenberg headers on top of files
+- check the 2753 which has a strange DB entry -- Seb: there should not be a problem, correct on my computer, to be checked after a new parsing
+- Change Home lang input to a select with 2 optgroups: main (sorted by pop) and others (sorted alphabetically). Both have nb of books inside.
