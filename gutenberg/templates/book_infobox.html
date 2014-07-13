@@ -1,0 +1,14 @@
+<div style="">
+    <span class="zim_info">
+        <a title="{{ book.title }}" href="{{ book|book_name_for_fs }}_cover.{{ book.id }}.html">
+            <img src="css/info_icon.png" style="width: 24px;"></a>
+    </span>
+    {% for format in book.formats() %}
+    {% if not format == 'html' %}
+    <span class="zim_{{ format }}">
+        <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}">
+            <img src="css/format_{{ format }}.png" style="width: 24px;"></a>
+    </span>
+    {% endif %}
+    {% endfor %}
+</div>
