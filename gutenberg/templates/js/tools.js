@@ -9,7 +9,12 @@ function minimizeUI() {
 }
 
 function loadScript(url, callback) {
-    var script = document.getElementById("books_script")
+    document.getElementById("books_script").parentElement.
+	removeChild( document.getElementById("books_script") );
+ 
+    var script = document.createElement("script")
+    script.type = "text/javascript";
+    script.id = "books_script";
  
     if (script.readyState) { //IE
         script.onreadystatechange = function () {
@@ -25,6 +30,7 @@ function loadScript(url, callback) {
     }
  
     script.src = url;
+    document.getElementsByTagName("head")[0].appendChild(script);
 }
 
 function showBooks() {
