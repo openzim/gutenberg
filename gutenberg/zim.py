@@ -55,6 +55,8 @@ def build_zimfile(static_folder, zim_path=None,
            '--creator=\\"{creator}\\" --publisher=\\"{publisher}\\" {static} {zim}'
            .format(**context))
 
-    logger.debug(cmd)
-    return exec_cmd(cmd)
-
+    logger.debug("\t\t{}".format(cmd))
+    if exec_cmd(cmd):
+        logger.info("Successfuly created ZIM file at {}".format(zim_path))
+    else:
+        logger.error("Unable to create ZIM file :(")
