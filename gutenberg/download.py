@@ -130,6 +130,8 @@ def download_all_books(url_mirror, download_cache,
                 if not bfs.count():
                     from pprint import pprint as pp ; pp(list([(b.format.mime, b.format.images, b.format.pattern) for b in bfs]))
                     from pprint import pprint as pp ; pp(list([(b.format.mime, b.format.images, b.format.pattern) for b in bfso]))
+                    logger.error("html not found")
+                    continue
             else:
                 bfs = bfs.filter(BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get(format)))
 
@@ -181,5 +183,6 @@ def download_all_books(url_mirror, download_cache,
                 bf.save()
 
             if not bf.downloaded_from:
-                logger.debug("NO FILE FOR #{}/{}".format(book.id, format))
+                logger.error("NO FILE FOR #{}/{}".format(book.id, format))
                 from pprint import pprint as pp ; pp(allurls)
+                continue
