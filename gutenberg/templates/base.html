@@ -16,7 +16,7 @@
     <script src="authors.js" type="text/javascript"></script>
     <script id="books_script" type="text/javascript"></script>
   </head>
-  <body onload="init()">
+  <body onload="init(); showBooks();">
     <div id="header">
       <div id="top-menu" class="container">
         <a href="Home.html">
@@ -36,7 +36,7 @@
           <input id="language_filter" placeholder="Language..." />
           <input id="author_filter" placeholder="Author..." />
         </div>
-        <div class="sort">
+        <div class="sort" id="sort">
           <div>Sort:</div>
           <button id="popularity_sort" class="sort_button" onclick="minimizeUI()"></button>
           <button id="alpha_sort" class="sort_button" onclick="minimizeUI()"></button>
