@@ -350,6 +350,24 @@ def export_book_to(book,
                 with open(fnp, 'w') as f:
                     f.write(html)
 
+            if path(fname).ext == '.ncx':
+                pattern = "*** START: FULL LICENSE ***"
+                f = open(fnp, 'r')
+                ncx = f.read()
+                from pprint import pprint as pp ; pp(ncx)
+                f.close()
+                soup = BeautifulSoup(ncx, ["lxml", "xml"])
+                for tag in soup.findAll('text'):
+                    if pattern in tag.text:
+                        s = tag.parent.parent
+                        s.decompose()
+                        for s in s.next_siblings:
+                            s.decompose()
+                        s.next_sibling
+
+                with open(fnp, 'w') as f:
+                    f.write(soup.encode().replace('\n\n\n','\n\n'))
+
 
         with cd(tmpd):
             exec_cmd('zip -q0X "{dst}" mimetype'.format(dst=dst))
