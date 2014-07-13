@@ -1,3 +1,51 @@
+/* Fonts */
+
+@font-face {
+    font-family: 'RobotoLight'; 
+    src: url('../fonts/Roboto-Light.ttf'); 
+}
+
+@font-face {
+    font-family: 'RobotoBlack';
+    src: url('../fonts/Roboto-Black.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoBold';
+    src: url('../fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoLight';
+    src: url('../fonts/Roboto-Light.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoMedium';
+    src: url('../fonts/Roboto-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoRegular';
+    src: url('../fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoCondensedBold';
+    src: url('../fonts/RobotoCondensed-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoCondensedLight';
+    src: url('../fonts/RobotoCondensed-Light.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoCondensedRegular';
+    src: url('../fonts/RobotoCondensed-Regular.ttf');
+}
+
+
 /* Global stuff */
 
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6,
@@ -15,8 +63,6 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 }
 
 body {
-    padding-right: 2em;
-    padding-left: 2em;
     font-family: "Helvetica Neue",Verdana,Helvetica,sans-serif;
     font-size: 75%;
     line-height: 1.5;
@@ -74,8 +120,6 @@ td {
 
 #bottom-menu {
     height: 70px;
-    border-bottom-left-radius: 7px;
-    border-bottom-right-radius: 7px;
     background: none repeat scroll 0 0 #f5ecdb;
 }
 
@@ -91,6 +135,18 @@ td {
     overflow-x: hidden;
     overflow-y: auto;
 }
+
+.ui-menu-item,
+.ui-menu-item:hover,
+.ui-menu-item:link,
+.ui-menu-item:focus,
+.ui-menu-item:active
+.ui-menu-item:visited {
+    background: #ddd!important;
+    border: #ffffff;
+    height: 30px!important;
+}
+
 
 .filter {
     float: left;
@@ -296,9 +352,12 @@ div.bibrec img {
     margin: 1em;
 }
 
-/* Fonts */
+.text {
+    padding-left: 5em;
+    padding-right: 5em;
+}
 
-@font-face {
-    font-family: 'RobotoLight'; 
-    src: url('../fonts/Roboto-Light.ttf'); 
+.main {
+    padding-left: 5em;
+    padding-right: 5em;   
 }
