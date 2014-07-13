@@ -312,10 +312,7 @@ def export_book_to(book,
 
         with cd(tmpd):
             exec_cmd('zip -q0X "{dst}" mimetype'.format(dst=dst))
-            exec_cmd('zip -qXr9D "{dst}" {files}'
-                     .format(dst=dst, tmpd=tmpd,
-                             files=" ".join([f for f in zipped_files
-                                         if not f == 'mimetype'])))
+            exec_cmd('zip -qXr9D "{dst}" * -x mimetype'.format(dst=dst))
 
         path(tmpd).rmtree_p()
 
