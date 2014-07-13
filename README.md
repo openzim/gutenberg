@@ -10,7 +10,7 @@ Setting the environement
 Using virtualenv.
 
 Setting the system:
-* sudo apt-get install python-pip
+* sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev
 * sudo pip install virtualenvwrapper
 * add in your .bashrc:
 
