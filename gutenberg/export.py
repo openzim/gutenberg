@@ -132,8 +132,8 @@ def update_html_for_static(book, html_content):
     # update all <img> links from images/xxx.xxx to {id}_xxx.xxx
     soup = BeautifulSoup(html_content, XML_PARSER)
     for img in soup.findAll('img'):
-        if 'href' in img.attrs:
-            img.attrs['href'] = img.attrs['href'].replace('images/', '{id}_'.format(book.id))
+        if 'src' in img.attrs:
+            img.attrs['src'] = img.attrs['src'].replace('images/', '{id}_'.format(book.id))
 
     # Add the title
     soup.title.string = book.title
