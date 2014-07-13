@@ -43,9 +43,43 @@ function showBooks() {
 	    "data": json_data,
 	    "columns": [
 		{ "title": "Title" },
-		{ "title": "Author" }
+		{ "title": "Author" },
+		{ "title": "Format" }
 	    ],
-	    "bAutoWidth": true
+	    "bAutoWidth": true,
+	    "columnDefs": [
+		{
+		    "targets": 0,
+		    "render": function ( data, type, full, meta ) {
+			return "<span style=\"display: none\">" + full[3] + "</span><span>" + full[0] + "</span>";
+		    }
+		}, 
+		{
+		    "targets": 2,
+		    "render": function ( data, type, full, meta ) {
+			var html = "";
+			var urlBase = full[0].replace( "/", "-" );
+
+			if (data[0] == 1) {
+			    html += "<a href=\"" + urlBase + ".html\"><img alt=\"Read in HTML\" src=\"css/html_icon.png\" style=\"margin: 0px;\" /></a> ";
+			}
+			if (data[1] == 1) {
+			    html += "<a href=\"" + urlBase + ".epub\"><img alt=\"Read in EPUB\" src=\"css/epub_icon.png\" style=\"margin: 0px;\" /></a> ";
+			}
+			if (data[2] == 1) {
+			    html += "<a href=\"" + urlBase + ".pdf\"><img alrt=\"Read in PDF\" src=\"css/pdf_icon.png\" style=\"margin: 0px;\" /></a> ";
+			}
+			return html;
+		    }
+		}
+	    ]
+	} );
+
+	$('#books_table').on('click', 'tr', function () {
+            var id = $('td', this).children()[0].innerHTML;
+            var titre = $('td', this).children()[1].innerHTML;
+	    var url = titre.replace( "/", "-" ) + "_cover." + id + ".html";
+	    $(location).attr("href", url);
 	} );
 
 	$('#books_table').attr("filled", true);
@@ -59,6 +93,7 @@ function init() {
     $( "#popularity_sort" ).button({
 	icons: { primary: 'sort_popularity_icon' },
 	text: false,
+	label: 'Sort books by popularity'
     })
     $( "#popularity_sort" ).click(function() {
 	sortMethod = "popularity";
@@ -68,7 +103,8 @@ function init() {
 
     $( "#alpha_sort" ).button({
 	icons: { primary: 'sort_alpha_icon' },
-	text: false
+	text: false,
+	label: 'Sort books by title'
     })
     $( "#alpha_sort" ).click(function() {
 	sortMethod = "title";

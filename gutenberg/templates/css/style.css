@@ -169,6 +169,13 @@ td {
     top: 12px;
 }
 
+table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
+    padding: 4px;
+    overflow: hidden; /* this is what fixes the expansion */
+    text-overflow: ellipsis; /* not supported in all browsers, but I accepted the tradeoff */
+    white-space: nowrap;
+}
+
 /* About */
 #home-about {
     color: #b88b35;
