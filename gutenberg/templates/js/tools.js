@@ -61,13 +61,13 @@ function showBooks() {
 			var urlBase = full[0].replace( "/", "-" );
 
 			if (data[0] == 1) {
-			    html += "<a href=\"" + urlBase + ".html\"><img alt=\"Read in HTML\" src=\"css/html_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + "." + full[3] + ".html\"><img alt=\"Read in HTML\" src=\"css/html_icon.png\" style=\"margin: 0px;\" /></a> ";
 			}
 			if (data[1] == 1) {
-			    html += "<a href=\"" + urlBase + ".epub\"><img alt=\"Read in EPUB\" src=\"css/epub_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + "." + full[3] + ".epub\"><img alt=\"Read in EPUB\" src=\"css/epub_icon.png\" style=\"margin: 0px;\" /></a> ";
 			}
 			if (data[2] == 1) {
-			    html += "<a href=\"" + urlBase + ".pdf\"><img alrt=\"Read in PDF\" src=\"css/pdf_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + "." + full[3] + ".pdf\"><img alrt=\"Read in PDF\" src=\"css/pdf_icon.png\" style=\"margin: 0px;\" /></a> ";
 			}
 			return html;
 		    }
