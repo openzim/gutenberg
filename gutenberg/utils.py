@@ -5,7 +5,7 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
-
+from contextlib import contextmanager
 from collections import defaultdict
 
 import envoy
@@ -21,8 +21,19 @@ FORMAT_MATRIX = {
 }
 
 
+@contextmanager
+def cd(newdir):
+    prevdir = os.getcwd()
+    os.chdir(newdir)
+    try:
+        yield
+    finally:
+        os.chdir(prevdir)
+
+
 def exec_cmd(cmd):
-    return envoy.run(str(cmd))
+    # logger.debug("** {}".format(cmd))
+    return envoy.run(str(cmd.encode('utf-8')))
 
 
 def download_file(url, fname):

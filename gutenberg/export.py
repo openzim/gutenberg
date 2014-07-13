@@ -6,6 +6,8 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
 import json
+import zipfile
+import tempfile
 
 import bs4
 from bs4 import BeautifulSoup
@@ -15,7 +17,7 @@ from jinja2 import Environment, PackageLoader
 import gutenberg
 from gutenberg import logger, XML_PARSER
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
-                             get_list_of_filtered_books)
+                             get_list_of_filtered_books, exec_cmd, cd)
 from gutenberg.database import Book, Format, BookFormat, Author
 from gutenberg.iso639 import language_name
 
@@ -266,7 +268,76 @@ def export_book_to(book,
         dst = os.path.join(path(static_folder).abspath(), dstfname)
         logger.info("\t\tSymlinking {}".format(dst))
         path(dst).unlink_p()
-        path(src).symlink(dst)
+        path(src).link(dst) # hard link
+
+    def copy_from_cache(fname, dstfname=None):
+        src = os.path.join(path(download_cache).abspath(), fname)
+        if dstfname is None:
+            dstfname = fname
+        dst = os.path.join(path(static_folder).abspath(), dstfname)
+        logger.info("\t\tCopying {}".format(dst))
+        path(dst).unlink_p()
+        path(src).copy(dst)
+
+    def optimize_image(fpath):
+        if path(fpath).ext == '.png':
+            return optimize_png(fpath)
+        if path(fpath).ext in ('.jpg', '.jpeg'):
+            return optimize_jpeg(fpath)
+        return fpath
+
+    def optimize_png(fpath):
+        pngquant = 'pngquant --nofs --force --ext=".png" "{path}"'
+        advdef = 'advdef -z -4 -i 5 "{path}"'
+        exec_cmd(pngquant.format(path=fpath))
+        exec_cmd(advdef.format(path=fpath))
+
+    def optimize_jpeg(fpath):
+        exec_cmd('jpegoptim --strip-all -m50 "{path}"'
+                 .format(path=fpath))
+
+    def optimize_epub(src, dst):
+        logger.info("\t\tCreating ePUB at {}".format(dst))
+        zipped_files = []
+        # create temp directory to extract to
+        tmpd = tempfile.mkdtemp()
+        with zipfile.ZipFile(src, 'r') as zf:
+            zipped_files = zf.namelist()
+            zf.extractall(tmpd)
+
+        for fname in zipped_files:
+            fnp = os.path.join(tmpd, fname)
+            if path(fname).ext in ('.png', '.jpeg', '.jpg'):
+                optimize_image(fnp)
+
+        with cd(tmpd):
+            exec_cmd('zip -q0X "{dst}" mimetype'.format(dst=dst))
+            exec_cmd('zip -qXr9D "{dst}" {files}'
+                     .format(dst=dst, tmpd=tmpd,
+                             files=" ".join([f for f in zipped_files
+                                         if not f == 'mimetype'])))
+
+        path(tmpd).rmtree_p()
+
+    def handle_companion_file(fname, dstfname=None, book=None):
+        src = os.path.join(path(download_cache).abspath(), fname)
+        if dstfname is None:
+            dstfname = fname
+        dst = os.path.join(path(static_folder).abspath(), dstfname)
+
+        # optimization based on mime/extension
+        if path(fname).ext in ('.png', '.jpg', '.jpeg'):
+            copy_from_cache(src, dst)
+            optimize_image(dst)
+        elif path(fname).ext == '.epub':
+            tmp_epub = tempfile.NamedTemporaryFile(suffix='.epub')
+            tmp_epub.close()
+            optimize_epub(src, tmp_epub.name)
+            path(tmp_epub.name).move(dst)
+        else:
+            # PDF mostly
+            logger.debug("shitty ext: {}".format(dst))
+            symlink_from_cache(src, dst)
 
     # associated files (images, etc)
     for fname in [fn for fn in cached_files
@@ -284,14 +355,17 @@ def export_book_to(book,
             with open(dst, 'w') as f:
                 f.write(new_html)
         else:
-            symlink_from_cache(fname)
+            # symlink_from_cache(fname)
+            handle_companion_file(fname)
 
     # other formats
     for format in formats:
         if format == 'html':
             continue
-        symlink_from_cache(fname_for(book, format),
-                           archive_name_for(book, format))
+        # symlink_from_cache(fname_for(book, format),
+        #                    archive_name_for(book, format))
+        handle_companion_file(fname_for(book, format),
+                              archive_name_for(book, format))
 
     # book presentation article
     cover_fpath = os.path.join(static_folder,
