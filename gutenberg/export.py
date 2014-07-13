@@ -356,7 +356,7 @@ def export_book_to(book,
 
     # other formats
     for format in formats:
-        if format == 'html':
+        if not format in book.formats() or format == 'html':
             continue
         handle_companion_file(fname_for(book, format),
                               archive_name_for(book, format))
