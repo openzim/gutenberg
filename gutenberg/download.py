@@ -130,7 +130,8 @@ def download_all_books(url_mirror, download_cache,
                 if not bfs.count():
                     from pprint import pprint as pp ; pp(list([(b.format.mime, b.format.images, b.format.pattern) for b in bfs]))
                     from pprint import pprint as pp ; pp(list([(b.format.mime, b.format.images, b.format.pattern) for b in bfso]))
-                    import ipdb; ipdb.set_trace()
+                    logger.error("html not found")
+                    continue
             else:
                 bfs = bfs.filter(BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get(format)))
 
@@ -169,19 +170,24 @@ def download_all_books(url_mirror, download_cache,
                 # HTML files are *sometime* available as ZIP files
                 if url.endswith('.zip'):
                     zpath = "{}.zip".format(fpath)
-                    download_file(url, zpath)
+
+                    if not download_file(url, zpath):
+                        logger.error("ZIP file donwload failed: {}".format(zpath))
+                        continue
 
                     # extract zipfile
                     handle_zipped_epub(zippath=zpath, book=book,
                                        download_cache=download_cache)
                 else:
-                    download_file(url, fpath)
+                    if not download_file(url, fpath):
+                        logger.error("file donwload failed: {}".format(fpath))
+                        continue
 
                 # store working URL in DB
                 bf.downloaded_from = url
                 bf.save()
 
             if not bf.downloaded_from:
-                logger.debug("NO FILE FOR #{}/{}".format(book.id, format))
+                logger.error("NO FILE FOR #{}/{}".format(book.id, format))
                 from pprint import pprint as pp ; pp(allurls)
-                import ipdb; ipdb.set_trace()
+                continue

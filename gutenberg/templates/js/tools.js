@@ -12,7 +12,14 @@ function showBooks() {
     var url = "full_by_" + sortMethod + ".js";
 
     if ( $( "#language_filter" ).val() ) {
-	url = "lang_" + $( "#language_filter" ).val() + "_by_" + sortMethod + ".js";
+	var count = languages_json_data.length;
+	var language_filter_value = $( "#language_filter" ).val();
+	for ( i = 0 ; i < count ; i++ ) {
+	    if (languages_json_data[i][0] === language_filter_value) {
+		url = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
+		break;
+	    };
+	};
     }
 
     if ( $( "#author_filter" ).val() ) {
@@ -61,13 +68,13 @@ function showBooks() {
 			var urlBase = full[0].replace( "/", "-" );
 
 			if (data[0] == 1) {
-			    html += "<a href=\"" + urlBase + ".html\"><img alt=\"Read in HTML\" src=\"css/html_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + "." + full[3] + ".html\"><img alt=\"Read in HTML\" src=\"css/html_icon.png\" style=\"margin: 0px;\" /></a> ";
 			}
 			if (data[1] == 1) {
-			    html += "<a href=\"" + urlBase + ".epub\"><img alt=\"Read in EPUB\" src=\"css/epub_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + "." + full[3] + ".epub\"><img alt=\"Read in EPUB\" src=\"css/epub_icon.png\" style=\"margin: 0px;\" /></a> ";
 			}
 			if (data[2] == 1) {
-			    html += "<a href=\"" + urlBase + ".pdf\"><img alrt=\"Read in PDF\" src=\"css/pdf_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + "." + full[3] + ".pdf\"><img alrt=\"Read in PDF\" src=\"css/pdf_icon.png\" style=\"margin: 0px;\" /></a> ";
 			}
 			return html;
 		    }
@@ -129,7 +136,7 @@ function init() {
 	    }
 	});
     } else {
-	$( "#language_filter" ).val( languages_json_data[0] );
+	$( "#language_filter" ).val( languages_json_data[0][0] );
 	$( "#language_filter" ).hide();
     }
 
