@@ -83,7 +83,12 @@ def parse_and_process_file(rdf_file):
     with open(rdf_file, 'r') as f:
         parser = RdfParser(f.read(), gid).parse()
 
-    save_rdf_in_database(parser)
+    if parser.license == 'None':
+        logger.info("\tWARN: Unusable book without any information {}".format(gid))
+    elif parser.title == '':
+        logger.info("\tWARN: Unusable book without title {}".format(gid))
+    else:
+        save_rdf_in_database(parser)
 
 
 class RdfParser():
