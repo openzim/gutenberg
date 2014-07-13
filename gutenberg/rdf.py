@@ -127,7 +127,6 @@ class RdfParser():
                 self.author_name = self.author.find('pgterms:name')
                 self.author_name = self.author_name.text.split(',')
 
-            if self.author_name:
                 if len(self.author_name) > 1:
                     self.first_name = ' '.join(self.author_name[::-2]).strip()
                 self.last_name = self.author_name[0]
@@ -254,9 +253,8 @@ def get_formatted_number(num):
 if __name__ == '__main__':
     # Bacic Test with a sample rdf file
     import os
-    nums = ["{0:0=4d}".format(i) for i in range(3200, 10000)]
-    for i in nums:
-        num = '4' + i
+    nums = ["{0:0=5d}".format(i) for i in range(21000, 40000)]
+    for num in nums:
         print(num)
         curd = os.path.dirname(os.path.realpath(__file__))
         rdf = os.path.join(curd, '..', 'rdf-files', num, 'pg' + num + '.rdf')
