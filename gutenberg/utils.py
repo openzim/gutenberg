@@ -44,9 +44,9 @@ class UrlBuilder:
         >>> builder.with_base(UrlBuilder.BASE_{ONE|TWO|THREE})
         >>> url = builder.build()
     """
-    BASE_ONE = 'http://ftp.ibiblio.org/pub/docs/books/gutenberg/'
+    BASE_ONE = 'http://gutenberg.readingroo.ms/'
     BASE_TWO = 'http://gutenberg.readingroo.ms/cache/generated/'
-    BASE_THREE = 'http://ftp.ibiblio.org/pub/docs/books/gutenberg/etext'
+    BASE_THREE = 'http://gutenberg.readingroo.ms/etext'
 
     def __init__(self):
         self.base = self.BASE_ONE
