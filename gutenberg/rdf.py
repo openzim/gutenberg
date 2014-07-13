@@ -92,6 +92,11 @@ class RdfParser():
         self.rdf_data = rdf_data
         self.gid = gid
 
+        self.author_id = None
+        self.author_name = None
+        self.first_name = None
+        self.last_name = None
+
     def parse(self):
         soup = BeautifulSoup(self.rdf_data, XML_PARSER, from_encoding='utf-8')
 
@@ -112,30 +117,20 @@ class RdfParser():
         # Because of a rare edge case that the field of the parsed author's name
         # has more than one comma we will join the first name in reverse, starting
         # with the second item.
-        self.first_name = ''
-        self.last_name = ''
         self.author = soup.find('dcterms:creator') or soup.find('marcrel:com')
         if self.author:
             self.author_id = self.author.find('pgterms:agent')
-            if self.author_id:
-                if 'rdf:about' in getattr(self.author_id, 'attrs'):
-                    self.author_id = self.author_id.attrs[
-                        'rdf:about'].split('/')[-1]
-            print(self.author)
+            self.author_id = self.author_id.attrs['rdf:about'].split('/')[-1] \
+                if 'rdf:about' in getattr(self.author_id, 'attrs', '') else None
+
             if self.author.find('pgterms:name'):
-                self.author_name = self.author.find('pgterms:name').text.split(',')
-            else:
-                self.author_name = None
+                self.author_name = self.author.find('pgterms:name')
+                self.author_name = self.author_name.text.split(',')
 
             if self.author_name:
-                if len(self.author_name) == 1:
-                    self.last_name = self.author_name[0]
-                    self.first_name = None
-                else:
+                if len(self.author_name) > 1:
                     self.first_name = ' '.join(self.author_name[::-2]).strip()
-                    self.last_name = self.author_name[0]
-        else:
-            self.author_id = self.author_name = self.first_name = self.last_name = None
+                self.last_name = self.author_name[0]
 
         # Parsing the birth and (death, if the case) year of the author.
         # These values are likely to be null.
@@ -258,13 +253,13 @@ if __name__ == '__main__':
     import os
     nums = ["{0:0=4d}".format(i) for i in range(1800, 10000)]
     for i in nums:
-        print(i)
-        num = '2' + i 
-        curd = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)), '..', 'rdf-files', num, 'pg' + num + '.rdf')
-        if os.path.isfile(curd):
+        num = '2' + i
+        print(num)
+        curd = os.path.dirname(os.path.realpath(__file__))
+        rdf = os.path.join(curd, '..', 'rdf-files', num, 'pg' + num + '.rdf')
+        if os.path.isfile(rdf):
             data = ''
-            with open(curd, 'r') as f:
+            with open(rdf, 'r') as f:
                 data = f.read()
 
             parser = RdfParser(data, 45213).parse()
