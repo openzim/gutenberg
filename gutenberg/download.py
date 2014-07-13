@@ -183,4 +183,3 @@ def download_all_books(url_mirror, download_cache,
             if not bf.downloaded_from:
                 logger.debug("NO FILE FOR #{}/{}".format(book.id, format))
                 from pprint import pprint as pp ; pp(allurls)
-                import ipdb; ipdb.set_trace()
