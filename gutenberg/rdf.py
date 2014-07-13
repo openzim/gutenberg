@@ -155,12 +155,12 @@ class RdfParser():
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
-        self.file_types = []
+        self.file_types = {}
         for x in file_types:
             if not x.find('rdf:value').text.endswith('application/zip'):
                 k = x.attrs['rdf:about'].split('/')[-1]
                 v = x.find('rdf:value').text
-                self.file_types.append({k:v})
+                self.file_types.update({k:v})
 
         return self
 
@@ -254,9 +254,9 @@ def get_formatted_number(num):
 if __name__ == '__main__':
     # Bacic Test with a sample rdf file
     import os
-    nums = ["{0:0=4d}".format(i) for i in range(1800, 10000)]
+    nums = ["{0:0=4d}".format(i) for i in range(3200, 10000)]
     for i in nums:
-        num = '2' + i
+        num = '4' + i
         print(num)
         curd = os.path.dirname(os.path.realpath(__file__))
         rdf = os.path.join(curd, '..', 'rdf-files', num, 'pg' + num + '.rdf')
