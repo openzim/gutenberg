@@ -58,14 +58,16 @@ function showBooks() {
 		    "targets": 2,
 		    "render": function ( data, type, full, meta ) {
 			var html = "";
+			var urlBase = full[0].replace( "/", "-" );
+
 			if (data[0] == 1) {
-			    html += "<a href=\"\"><img src=\"css/html_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + ".html\"><img alt=\"Read in HTML\" src=\"css/html_icon.png\" style=\"margin: 0px;\" /></a> ";
 			}
 			if (data[1] == 1) {
-			    html += "<a href=\"\"><img src=\"css/epub_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + ".epub\"><img alt=\"Read in EPUB\" src=\"css/epub_icon.png\" style=\"margin: 0px;\" /></a> ";
 			}
 			if (data[2] == 1) {
-			    html += "<a href=\"\"><img src=\"css/pdf_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + ".pdf\"><img alrt=\"Read in PDF\" src=\"css/pdf_icon.png\" style=\"margin: 0px;\" /></a> ";
 			}
 			return html;
 		    }
@@ -76,7 +78,7 @@ function showBooks() {
 	$('#books_table').on('click', 'tr', function () {
             var id = $('td', this).children()[0].innerHTML;
             var titre = $('td', this).children()[1].innerHTML;
-	    var url = titre + "." + id + ".html";
+	    var url = titre.replace( "/", "-" ) + "_cover." + id + ".html";
 	    $(location).attr("href", url);
 	} );
 
