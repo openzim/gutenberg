@@ -284,7 +284,12 @@ def export_book_to(book,
             return optimize_png(fpath)
         if path(fpath).ext in ('.jpg', '.jpeg'):
             return optimize_jpeg(fpath)
+        if path(fpath).ext == '.gif':
+            return optimize_gif(fpath)
         return fpath
+
+    def optimize_gif(fpath):
+        exec_cmd('gifsicle -O3 "{path}" -o "{path}"'.format(path=fpath))
 
     def optimize_png(fpath):
         pngquant = 'pngquant --nofs --force --ext=".png" "{path}"'
@@ -307,7 +312,7 @@ def export_book_to(book,
 
         for fname in zipped_files:
             fnp = os.path.join(tmpd, fname)
-            if path(fname).ext in ('.png', '.jpeg', '.jpg'):
+            if path(fname).ext in ('.png', '.jpeg', '.jpg', '.gif'):
                 optimize_image(fnp)
 
         with cd(tmpd):
@@ -415,9 +420,10 @@ def export_to_json_helpers(books, static_folder, languages, formats):
         authors = Author.select().where(
             Author.gut_id << list(set([book.author.gut_id
                                        for book in books.filter(language=lang)])))
+        logger.info("\t\tDumping authors_lang_{}.js".format(lang))
         dumpjs([author.to_array()
-            for author in authors.order_by(Author.last_name.asc(),
-                                           Author.first_names.asc())],
+                for author in authors.order_by(Author.last_name.asc(),
+                                               Author.first_names.asc())],
                 'authors_lang_{}.js'.format(lang), 'authors_json_data')
 
     # author specific collections
