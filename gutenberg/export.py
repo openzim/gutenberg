@@ -73,7 +73,7 @@ def export_all_books(static_folder,
     # copy CSS/JS/* to static_folder
     src_folder = tmpl_path()
     for fname in ('css', 'js', 'jquery', 'favicon.ico', 'favicon.png',
-                  'jquery-ui', 'datatables'):
+                  'jquery-ui', 'datatables', 'fonts'):
         src = os.path.join(src_folder, fname)
         dst = os.path.join(static_folder, fname)
         if not path(fname).ext:
