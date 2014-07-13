@@ -162,6 +162,17 @@ function showBooks() {
     return true;
 }
 
+function onLocalized() {
+    var l10n = document.webL10n,
+        l10nselect = document.getElementById('l10nselect');
+    l10nselect.value = l10n.getLanguage(); // not working with IE<9
+    l10nselect.onchange = function() {
+        l10n.setLanguage(this.value || this.options[this.selectedIndex].text);
+    };
+};
+
+document.webL10n.ready(onLocalized);
+
 function init() {
 
     /* Sort buttons */
@@ -266,3 +277,4 @@ function init() {
 	}
     );
 }
+
