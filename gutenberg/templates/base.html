@@ -16,7 +16,7 @@
     <script src="authors.js" type="text/javascript"></script>
     <script id="books_script" type="text/javascript"></script>
   </head>
-  <body onload="init(); showBooks();">
+  <body onload="init(); {% if show_books %} showBooks(); {% endif %}">
     <div id="header">
       <div id="top-menu" class="container">
         <a href="Home.html">
