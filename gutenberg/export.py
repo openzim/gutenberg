@@ -130,12 +130,15 @@ def html_content_for(book, static_folder, download_cache):
         return f.read()
 
 
-def update_html_for_static(book, html_content):
-    # update all <img> links from images/xxx.xxx to {id}_xxx.xxx
+def update_html_for_static(book, html_content, epub=False):
+
     soup = BeautifulSoup(html_content, XML_PARSER)
-    for img in soup.findAll('img'):
-        if 'src' in img.attrs:
-            img.attrs['src'] = img.attrs['src'].replace('images/', '{id}_'.format(id=book.id))
+
+    # update all <img> links from images/xxx.xxx to {id}_xxx.xxx
+    if not epub:
+        for img in soup.findAll('img'):
+            if 'src' in img.attrs:
+                img.attrs['src'] = img.attrs['src'].replace('images/', '{id}_'.format(id=book.id))
 
     # update all <a> links to internal HTML pages
     # should only apply to relative URLs to HTML files.
@@ -159,16 +162,15 @@ def update_html_for_static(book, html_content):
 
         return nurl
 
-    for link in soup.findAll('a'):
-        new_link = replacablement_link(book=book, url=link.attrs.get('href', ''))
-        if new_link is not None:
-            link.attrs['href'] = new_link
+    if not epub:
+        for link in soup.findAll('a'):
+            new_link = replacablement_link(book=book, url=link.attrs.get('href', ''))
+            if new_link is not None:
+                link.attrs['href'] = new_link
 
     # Add the title
-    soup.title.string = book.title
-
-    start_of_text = '*** START OF THIS PROJECT GUTENBERG EBOOK'
-    end_of_text = '*** END OF THIS PROJECT GUTENBERG EBOOK'
+    if not epub:
+        soup.title.string = book.title
 
     patterns = [
         ("*** START OF THIS PROJECT GUTENBERG EBOOK",
@@ -192,37 +194,61 @@ def update_html_for_static(book, html_content):
          "*** END OF THE PROJECT GUTENBERG EBOOK"),
         ("***START OF THE PROJECT GUTENBERG EBOOK",
          "***END OF THE PROJECT GUTENBERG EBOOK"),
+        # ePub only
+        ("*** START OF THIS PROJECT GUTENBERG EBOOK",
+         "*** START: FULL LICENSE ***"),
     ]
-
 
     body = soup.find('body')
     for start_of_text, end_of_text in patterns:
+        if not start_of_text in body.text and not end_of_text in body.text:
+            continue
+
         if start_of_text in body.text and end_of_text in body.text:
             remove = True
             for child in body.children:
-
                 if isinstance(child, bs4.NavigableString):
                     continue
-
                 if end_of_text in getattr(child, 'text', ''):
                     remove = True
-
                 if start_of_text in getattr(child, 'text', ''):
                     child.decompose()
                     remove = False
+                if remove:
+                    child.decompose()
+            break
 
+        elif start_of_text in body.text:
+            remove = True
+            for child in body.children:
+                if isinstance(child, bs4.NavigableString):
+                    continue
+                if start_of_text in getattr(child, 'text', ''):
+                    child.decompose()
+                    remove = False
+                if remove:
+                    child.decompose()
+            break
+        elif end_of_text in body.text:
+            remove = False
+            for child in body.children:
+                if isinstance(child, bs4.NavigableString):
+                    continue
+                if end_of_text in getattr(child, 'text', ''):
+                    remove = True
                 if remove:
                     child.decompose()
             break
 
     # build infobox
-    infobox = jinja_env.get_template('book_infobox.html')
-    infobox_html = infobox.render({'book': book})
-    info_soup = BeautifulSoup(infobox_html)
-    body.insert(0, info_soup.find('div'))
+    if not epub:
+        infobox = jinja_env.get_template('book_infobox.html')
+        infobox_html = infobox.render({'book': book})
+        info_soup = BeautifulSoup(infobox_html)
+        body.insert(0, info_soup.find('div'))
 
     # if there is no charset, set it to utf8
-    if not soup.encoding:
+    if not epub and not soup.encoding:
         utf = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
         # title = soup.find('title')
         # title.insert_before(utf)
@@ -315,6 +341,16 @@ def export_book_to(book,
             if path(fname).ext in ('.png', '.jpeg', '.jpg', '.gif'):
                 optimize_image(fnp)
 
+            if path(fname).ext in ('.htm', '.html'):
+                f = open(fnp, 'r')
+                html = update_html_for_static(book=book,
+                                              html_content=f.read(),
+                                              epub=True)
+                f.close()
+                with open(fnp, 'w') as f:
+                    f.write(html)
+
+
         with cd(tmpd):
             exec_cmd('zip -q0X "{dst}" mimetype'.format(dst=dst))
             exec_cmd('zip -qXr9D "{dst}" {files}'
@@ -331,7 +367,7 @@ def export_book_to(book,
         dst = os.path.join(path(static_folder).abspath(), dstfname)
 
         # optimization based on mime/extension
-        if path(fname).ext in ('.png', '.jpg', '.jpeg'):
+        if path(fname).ext in ('.png', '.jpg', '.jpeg', '.gif'):
             copy_from_cache(src, dst)
             optimize_image(dst)
         elif path(fname).ext == '.epub':
@@ -341,7 +377,7 @@ def export_book_to(book,
             path(tmp_epub.name).move(dst)
         else:
             # PDF mostly
-            logger.debug("shitty ext: {}".format(dst))
+            logger.debug("\t\tshitty ext: {}".format(dst))
             copy_from_cache(src, dst)
 
     # associated files (images, etc)
