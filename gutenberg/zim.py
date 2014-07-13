@@ -42,19 +42,19 @@ def build_zimfile(static_folder, zim_path=None,
         'creator': "gutenberg.org",
         'publisher': "Kiwix",
 
-        'home': os.path.join(static_folder, 'Home.html'),
-        'favicon': os.path.join(static_folder, 'favicon.png'),
+        'home': 'Home.html',
+        'favicon': 'favicon.png',
 
         'static': static_folder,
         'zim': zim_path
     }
 
     cmd = ('zimwriterfs --welcome={home} --favicon={favicon} '
-           '--language={languages} --title="{title}" '
-           '--description="{description}" '
-           '--creator="{creator}" --publisher="{publisher}" {static} {zim}'
+           '--language={languages} --title=\\"{title}\\" '
+           '--description=\\"{description}\\" '
+           '--creator=\\"{creator}\\" --publisher=\\"{publisher}\\" {static} {zim}'
            .format(**context))
 
     logger.debug(cmd)
-    return
     return exec_cmd(cmd)
+
