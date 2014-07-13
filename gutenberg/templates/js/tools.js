@@ -9,13 +9,14 @@ function minimizeUI() {
 }
 
 function displayError(message) {
-  // create unique id for div
+
+    // create unique id for div
     var dialog_id = "error_dialog_" + new Date().getTime();
- 
-  // append html to body
+    
+    // append html to body
     $("body").append("<div id=\"" + dialog_id + "\">" + message + "</div>");
- 
-  // display the error dialog
+    
+    // display the error dialog
     $("#" + dialog_id).dialog({
 	modal: true,
 	resizable: false,
@@ -28,7 +29,7 @@ function displayError(message) {
 	    }
 	},
 	beforeClose: function(event, ui) {
-      // remove dialog div from document
+	    // remove dialog div from document
 	    $("#" + dialog_id).remove();
 	}
     });
@@ -170,7 +171,11 @@ function init() {
     $( "#popularity_sort" ).click(function() {
 	sortMethod = "popularity";
 	showBooks();
+	$( "#popularity_sort" ).addClass('ui-state-focus');
+	$( "#alpha_sort" ).removeClass('ui-state-focus');
     });
+    $( "#popularity_sort" ).addClass('ui-state-focus');
+
     $( "#alpha_sort" ).button({
 	icons: { primary: 'sort_alpha_icon' },
 	text: false,
@@ -179,6 +184,8 @@ function init() {
     $( "#alpha_sort" ).click(function() {
 	sortMethod = "title";
 	showBooks();
+	$( "#popularity_sort" ).removeClass('ui-state-focus');
+	$( "#alpha_sort" ).addClass('ui-state-focus');
     });
 
     /* Language filter */
