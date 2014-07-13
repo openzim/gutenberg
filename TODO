@@ -5,3 +5,4 @@
 - Language on the summary page should not be the ISO code, but the name in mother tongue
 - get a js "author_by_lang" (one per language)
 - cleanup header/footer from ePub
+- better switch from cover page to index page
