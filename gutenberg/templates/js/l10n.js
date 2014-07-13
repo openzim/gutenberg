@@ -20,6 +20,8 @@
  * IN THE SOFTWARE.
  */
 
+/* Source: https://github.com/fabi1cazenave/webL10n */
+
 /*jshint browser: true, devel: true, es5: true, globalstrict: true */
 'use strict';
 
