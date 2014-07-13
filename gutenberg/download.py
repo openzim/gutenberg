@@ -53,6 +53,9 @@ def handle_zipped_epub(zippath,
         # extract files from zip
         zf.extractall(tmpd)
 
+    # is there multiple HTML files in ZIP ? (rare)
+    mhtml = sum([1 for f in zipped_files
+                 if f.endswith('html') or f.endswith('.htm')]) > 1
     # move all extracted files to proper locations
     for fname in zipped_files:
         # skip folders
@@ -63,8 +66,17 @@ def handle_zipped_epub(zippath,
         fname = path(fname).basename()
 
         if fname.endswith('.html') or fname.endswith('.htm'):
-            dst = os.path.join(download_cache,
-                               "{bid}.html".format(bid=book.id))
+            if mhtml:
+                if fname.startswith("{}-h.".format(book.id)):
+                    dst = os.path.join(download_cache,
+                                       "{bid}.html".format(bid=book.id))
+                else:
+                    dst = os.path.join(download_cache,
+                               "{bid}_{fname}".format(bid=book.id,
+                                                      fname=fname))
+            else:
+                dst = os.path.join(download_cache,
+                                   "{bid}.html".format(bid=book.id))
         else:
             dst = os.path.join(download_cache,
                                "{bid}_{fname}".format(bid=book.id,

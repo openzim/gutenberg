@@ -133,7 +133,34 @@ def update_html_for_static(book, html_content):
     soup = BeautifulSoup(html_content, XML_PARSER)
     for img in soup.findAll('img'):
         if 'src' in img.attrs:
-            img.attrs['src'] = img.attrs['src'].replace('images/', '{id}_'.format(book.id))
+            img.attrs['src'] = img.attrs['src'].replace('images/', '{id}_'.format(id=book.id))
+
+    # update all <a> links to internal HTML pages
+    # should only apply to relative URLs to HTML files.
+    # examples on #16816, #22889, #30021
+    def replacablement_link(book, url):
+        try:
+            urlp, anchor = url.rsplit('#', 1)
+        except ValueError:
+            urlp = url
+            anchor = None
+        if '/' in urlp:
+            return None
+
+        if len(urlp.strip()):
+            nurl = "{id}_{url}".format(id=book.id, url=urlp)
+        else:
+            nurl = ""
+
+        if anchor is not None:
+            return "#".join([nurl, anchor])
+
+        return nurl
+
+    for link in soup.findAll('a'):
+        new_link = replacablement_link(book=book, url=link.attrs.get('href', ''))
+        if new_link is not None:
+            link.attrs['href'] = new_link
 
     # Add the title
     soup.title.string = book.title
@@ -233,10 +260,10 @@ def export_book_to(book,
             f.write(new_html)
 
     def symlink_from_cache(fname, dstfname=None):
-        src = os.path.join(download_cache, fname)
+        src = os.path.join(path(download_cache).abspath(), fname)
         if dstfname is None:
             dstfname = fname
-        dst = os.path.join(static_folder, dstfname)
+        dst = os.path.join(path(static_folder).abspath(), dstfname)
         logger.info("\t\tSymlinking {}".format(dst))
         path(dst).unlink_p()
         path(src).symlink(dst)
@@ -244,10 +271,25 @@ def export_book_to(book,
     # associated files (images, etc)
     for fname in [fn for fn in cached_files
                   if fn.startswith("{}_".format(book.id))]:
-        symlink_from_cache(fname)
+
+        if path(fname).ext in ('.html', '.htm'):
+            src = os.path.join(path(download_cache).abspath(), fname)
+            dst = os.path.join(path(static_folder).abspath(), fname)
+            # article_fpath = os.path.join(static_folder, article_name_for(book))
+            logger.info("\t\tExporting HTML file to {}".format(dst))
+            html = "CAN'T READ FILE"
+            with open(src, 'r') as f:
+                html = f.read()
+            new_html = update_html_for_static(book=book, html_content=html)
+            with open(dst, 'w') as f:
+                f.write(new_html)
+        else:
+            symlink_from_cache(fname)
 
     # other formats
     for format in formats:
+        if format == 'html':
+            continue
         symlink_from_cache(fname_for(book, format),
                            archive_name_for(book, format))
 
