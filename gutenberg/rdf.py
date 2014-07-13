@@ -92,6 +92,11 @@ class RdfParser():
         self.rdf_data = rdf_data
         self.gid = gid
 
+        self.author_id = None
+        self.author_name = None
+        self.first_name = None
+        self.last_name = None
+
     def parse(self):
         soup = BeautifulSoup(self.rdf_data, XML_PARSER, from_encoding='utf-8')
 
@@ -102,6 +107,7 @@ class RdfParser():
         self.title = self.title.text if self.title else '- No Title -'
         self.title = self.title.split('\n')[0]
         self.subtitle = ' '.join(self.title.split('\n')[1:])
+        self.author_id = None
 
         # Parsing the name of the Author. Sometimes it's the name of
         # an organization or the name is not known and therefore
@@ -111,23 +117,19 @@ class RdfParser():
         # Because of a rare edge case that the field of the parsed author's name
         # has more than one comma we will join the first name in reverse, starting
         # with the second item.
-        self.first_name = ''
-        self.last_name = ''
         self.author = soup.find('dcterms:creator') or soup.find('marcrel:com')
         if self.author:
             self.author_id = self.author.find('pgterms:agent')
             self.author_id = self.author_id.attrs['rdf:about'].split('/')[-1] \
-                if 'rdf:about' in self.author_id.attrs else None
-            self.author_name = self.author.find('pgterms:name').text.split(',')
+                if 'rdf:about' in getattr(self.author_id, 'attrs', '') else None
 
-            if len(self.author_name) == 1:
+            if self.author.find('pgterms:name'):
+                self.author_name = self.author.find('pgterms:name')
+                self.author_name = self.author_name.text.split(',')
+
+                if len(self.author_name) > 1:
+                    self.first_name = ' '.join(self.author_name[::-2]).strip()
                 self.last_name = self.author_name[0]
-                self.first_name = None
-            else:
-                self.first_name = ' '.join(self.author_name[::-2]).strip()
-                self.last_name = self.author_name[0]
-        else:
-            self.author_id = self.author_name = self.first_name = self.last_name = None
 
         # Parsing the birth and (death, if the case) year of the author.
         # These values are likely to be null.
@@ -152,9 +154,12 @@ class RdfParser():
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
-        self.file_types = ({x.attrs['rdf:about'].split('/')[-1]: x.find('rdf:value').text
-                            for x in file_types
-                            if not x.find('rdf:value').text.endswith('application/zip')})
+        self.file_types = {}
+        for x in file_types:
+            if not x.find('rdf:value').text.endswith('application/zip'):
+                k = x.attrs['rdf:about'].split('/')[-1]
+                v = x.find('rdf:value').text
+                self.file_types.update({k:v})
 
         return self
 
@@ -248,12 +253,15 @@ def get_formatted_number(num):
 if __name__ == '__main__':
     # Bacic Test with a sample rdf file
     import os
-    curd = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), 'pg45213.rdf')
-    if os.path.isfile(curd):
-        data = ''
-        with open(curd, 'r') as f:
-            data = f.read()
+    nums = ["{0:0=5d}".format(i) for i in range(21000, 40000)]
+    for num in nums:
+        print(num)
+        curd = os.path.dirname(os.path.realpath(__file__))
+        rdf = os.path.join(curd, '..', 'rdf-files', num, 'pg' + num + '.rdf')
+        if os.path.isfile(rdf):
+            data = ''
+            with open(rdf, 'r') as f:
+                data = f.read()
 
-        parser = RdfParser(data, 45213).parse()
-        print(parser.first_name, parser.last_name)
+            parser = RdfParser(data, num).parse()
+            print(parser.first_name, parser.last_name)
