@@ -17,7 +17,7 @@ from gutenberg.zim import build_zimfile
 
 
 help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
-        """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] [-z ZIM_PATH] [-u RDF_URL]"""
+        """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] [-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
         """[--prepare] [--parse] [--download] [--export] [--zim] [--complete]
 
 -h --help                       Display this help message
@@ -30,8 +30,9 @@ help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
 -r --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use extracted folder instead
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
 -z --zim-file=<file>            Write ZIM into this file path
--d --dl-folder=<file>           Folder to use/write-to downloaded ebooks
+-d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
+-b --books=<ids>                Execute the processes for specific books,separated by commas
 
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file
@@ -62,6 +63,7 @@ def main(arguments):
     WIPE_DB = not arguments.get('--keep-db') or False
     RDF_URL = arguments.get('--rdf-url') or 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2'
     DL_CACHE = arguments.get('--dl-folder') or os.path.join('dl-cache')
+    BOOKS = arguments.get('--books') or []
     ZTITLE = arguments.get('--zim-title')
     ZDESC = arguments.get('--zim-desc')
 
@@ -75,6 +77,11 @@ def main(arguments):
         FORMATS = [x.strip().lower()
                    for x in (arguments.get('--formats') or '').split(',')
                    if x.strip()]
+
+    try:
+        BOOKS = [int(bid) for bid in BOOKS.split(',')]
+    except:
+        BOOKS = []
 
     # no arguments, default to --complete
     if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM):
@@ -90,26 +97,29 @@ def main(arguments):
     if DO_PARSE:
         logger.info("PARSING rdf-files in {}".format(RDF_FOLDER))
         setup_database(wipe=WIPE_DB)
-        parse_and_fill(rdf_path=RDF_FOLDER)
+        parse_and_fill(rdf_path=RDF_FOLDER, only_books=BOOKS)
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
         download_all_books(url_mirror=URL_MIRROR,
                            download_cache=DL_CACHE,
                            languages=LANGUAGES,
-                           formats=FORMATS)
+                           formats=FORMATS,
+                           only_books=BOOKS)
 
     if DO_EXPORT:
         logger.info("EXPORTING ebooks to satic folder (and JSON)")
         export_all_books(static_folder=STATIC_FOLDER,
                          download_cache=DL_CACHE,
                          languages=LANGUAGES,
-                         formats=FORMATS)
+                         formats=FORMATS,
+                         only_books=BOOKS)
 
     if DO_ZIM:
         logger.info("BUILDING ZIM off satic folder {}".format(STATIC_FOLDER))
         build_zimfile(static_folder=STATIC_FOLDER, zim_path=ZIM_FILE,
                       languages=LANGUAGES, formats=FORMATS,
+                      only_books=BOOKS,
                       title=ZTITLE, description=ZDESC)
 
 if __name__ == '__main__':

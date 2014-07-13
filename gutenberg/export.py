@@ -38,13 +38,15 @@ def get_list_of_all_languages():
 def export_all_books(static_folder,
                      download_cache,
                      languages=[],
-                     formats=[]):
+                     formats=[],
+                     only_books=[]):
 
     # ensure dir exist
     path(static_folder).mkdir_p()
 
     books = get_list_of_filtered_books(languages=languages,
-                                       formats=formats)
+                                       formats=formats,
+                                       only_books=only_books)
 
     sz = len(list(books))
     logger.debug("\tFiltered book collection size: {}".format(sz))
@@ -130,8 +132,8 @@ def update_html_for_static(book, html_content):
     # update all <img> links from images/xxx.xxx to {id}_xxx.xxx
     soup = BeautifulSoup(html_content, XML_PARSER)
     for img in soup.findAll('img'):
-        if 'href' in img.attrs:
-            img.attrs['href'] = img.attrs['href'].replace('images/', '{id}_'.format(book.id))
+        if 'src' in img.attrs:
+            img.attrs['src'] = img.attrs['src'].replace('images/', '{id}_'.format(book.id))
 
     # Add the title
     soup.title.string = book.title

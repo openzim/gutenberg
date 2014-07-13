@@ -237,7 +237,64 @@ input:focus {
     width: 14.7em;
 }
 
+/* Cover */
 
+h1 {
+    font-weight: bold;
+    font-size: 250%;
+    margin-top: 10px;
+}
+
+h2 {
+    font-weight: bold;
+    font-size: 200%;
+    line-height: 80%;
+    margin-bottom: 15px;
+}
+
+#cover {
+    float: left;
+    margin: 1em;
+}
+
+#cover img {
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.698);
+}
+
+img.cover-art {
+    max-width: 100%;
+}
+
+div.bibrec {
+    float: left;
+}
+
+table.bibrec {
+    margin-left: 1em;
+    margin-top: 1em;
+    font-weight: bold;
+    font-size: 120%;
+    background: #EEEEEE;
+    border: 1px solid #BBBBBB;
+    border-spacing : 0;
+    border-collapse : collapse;
+}
+
+table.bibrec th {
+    background: #DDDDDD;
+    border: 1px solid #BBBBBB;
+    padding: 4px;
+    spacing: 0px;
+}
+
+table.bibrec td {
+    border: 1px solid #BBBBBB;
+    padding: 4px;
+}
+
+div.bibrec img {
+    margin: 1em;
+}
 
 /* Fonts */
 

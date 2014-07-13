@@ -83,9 +83,12 @@ def handle_zipped_epub(zippath,
 
 def download_all_books(url_mirror, download_cache,
                        languages=[], formats=[],
-                       force=False):
+                       only_books=[], force=False):
 
-    available_books = get_list_of_filtered_books(languages, formats)
+    available_books = get_list_of_filtered_books(
+        languages=languages,
+        formats=formats,
+        only_books=only_books)
 
     # ensure dir exist
     path(download_cache).mkdir_p()
