@@ -13,11 +13,25 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
 body {
     background: none repeat scroll 0 0 #FFFFFF;
     color: #333333;
-    font-family: "Helvetica Neue",Verdana,Helvetica,sans-serif;
+    font-family: "Helvetica Neue", Verdana, Helvetica, sans-serif;
     font-size: 75%;
     line-height: 1.5;
     padding-left: 2em;
     padding-right: 2em;
+}
+
+h1 {
+    font-size: 150%;
+    margin: 1em 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 110%;
+    margin: 1em 0;
+    text-align: center;
+    font-weight: bold;
 }
 
 a {
@@ -192,4 +206,49 @@ table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.
 table.display td {
     cursor: pointer;
     * cursor: hand;
+}
+
+/* Cover page */
+#cover {
+    width: 200px;
+    margin: 15px;
+    display: inline-block;
+}
+
+#cover img {
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.698);
+}
+
+img.cover-art {
+    max-width: 100%;
+}
+
+div.bibrec {
+    width: auto; 
+    display: inline-block;
+    vertical-align: top;
+}
+
+table.bibrec {
+    width: 100%;
+    background-color: #FFFFFF;
+    padding: 0;
+    margin: 15px 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+    font-size: larger;
+}
+
+table.bibrec th {
+    background-color: #ECEADF;
+    border: 1px solid #D9D6C4;
+    font-weight: bold;
+    text-align: left;
+    padding: 0.5em;
+}
+
+table.bibrec td {
+    border: 1px solid #D9D6C4;
+    padding: 0.5em;
 }
