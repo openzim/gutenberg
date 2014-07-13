@@ -12,7 +12,14 @@ function showBooks() {
     var url = "full_by_" + sortMethod + ".js";
 
     if ( $( "#language_filter" ).val() ) {
-	url = "lang_" + $( "#language_filter" ).val() + "_by_" + sortMethod + ".js";
+	var count = languages_json_data.length;
+	var language_filter_value = $( "#language_filter" ).val();
+	for ( i = 0 ; i < count ; i++ ) {
+	    if (languages_json_data[i][0] === language_filter_value) {
+		url = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
+		break;
+	    };
+	};
     }
 
     if ( $( "#author_filter" ).val() ) {
@@ -129,7 +136,7 @@ function init() {
 	    }
 	});
     } else {
-	$( "#language_filter" ).val( languages_json_data[0] );
+	$( "#language_filter" ).val( languages_json_data[0][0] );
 	$( "#language_filter" ).hide();
     }
 
