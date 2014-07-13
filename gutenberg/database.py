@@ -136,7 +136,8 @@ class Book(Model):
             "{html}{epub}{pdf}".format(
                 html=int('html' in fmts),
                 epub=int('epub' in fmts),
-                pdf=int('pdf' in fmts))
+                pdf=int('pdf' in fmts)),
+            self.id
         ]
 
     def formats(self):
