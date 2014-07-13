@@ -312,7 +312,10 @@ def export_book_to(book,
 
         with cd(tmpd):
             exec_cmd('zip -q0X "{dst}" mimetype'.format(dst=dst))
-            exec_cmd('zip -qXr9D "{dst}" * -x mimetype'.format(dst=dst))
+            exec_cmd('zip -qXr9D "{dst}" {files}'
+                     .format(dst=dst,
+                             files=" ".join([f for f in zipped_files
+                                             if not f == 'mimetype'])))
 
         path(tmpd).rmtree_p()
 
@@ -408,6 +411,14 @@ def export_to_json_helpers(books, static_folder, languages, formats):
                 for book in books.where(Book.language == lang)
                                  .order_by(Book.title.asc())],
                 'lang_{}_by_title.js'.format(lang))
+        # authors for that lang
+        authors = Author.select().where(
+            Author.gut_id << list(set([book.author.gut_id
+                                       for book in books.filter(language=lang)])))
+        dumpjs([author.to_array()
+            for author in authors.order_by(Author.last_name.asc(),
+                                           Author.first_names.asc())],
+                'authors_lang_{}.js'.format(lang), 'authors_json_data')
 
     # author specific collections
     authors = Author.select().where(
@@ -433,6 +444,7 @@ def export_to_json_helpers(books, static_folder, languages, formats):
             for author in authors.order_by(Author.last_name.asc(),
                                            Author.first_names.asc())],
                 'authors.js', 'authors_json_data')
+
 
     # languages list sorted by code
     logger.info("\t\tDumping languages.js")
