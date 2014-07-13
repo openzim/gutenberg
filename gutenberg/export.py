@@ -17,6 +17,7 @@ from gutenberg import logger, XML_PARSER
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
                              get_list_of_filtered_books)
 from gutenberg.database import Book, Format, BookFormat, Author
+from gutenberg.iso639 import language_name
 
 jinja_env = Environment(loader=PackageLoader('gutenberg', 'templates'))
 
@@ -280,5 +281,6 @@ def export_to_json_helpers(books, static_folder, languages, formats):
 
     # languages list sorted by code
     logger.info("\t\tDumping languages.js")
-    avail_langs = list(set([b.language for b in books]))
+    avail_langs = list(set([(language_name(b.language), b.language)
+                            for b in books]))
     dumpjs(sorted(avail_langs), 'languages.js', 'languages_json_data')
