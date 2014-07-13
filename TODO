@@ -7,3 +7,4 @@
   png: pngquant --nofs --force --ext=".png" "' + path+ '"; ' + 'advdef -z -4 -i 5 "' + path+ '"'
   jpg: jpegoptim --strip-all -m50 "' + path + '"'
   rezip: 7za a -tzip -mx9 test2.epub * -mmt
+- Fix download click on the table not working on recent version of FF
