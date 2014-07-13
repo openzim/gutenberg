@@ -8,8 +8,44 @@ import babel
 def language_name(code): 
     try: 
         return babel.Locale(code).get_language_name(code)
-    except: 
+    except:
+        if code in other_language_names:
+            return other_language_names[code]
         return code
+
+
+# Autonyms unknown by babel
+# collected from CLDR, MediaWiki languages/Names.php, and English Wikipedia
+other_language_names = { 'fy': 'Frysk',
+                         'iu': 'ᐃᓄᒃᑎᑐᑦ / inuktitut',
+                         'la': 'Latina',
+                         'mi': 'Māori',
+                         'no': 'norsk bokmål',
+                         'oc': 'occitan',
+                         'sa': 'संस्कृतम्',
+                         'tl': 'Tagalog',
+                         'yi': 'ייִדיש',
+                         'ale': 'Unangam Tunuu / Унáҥам Тунý',
+                         'ang': 'Ænglisc',
+                         'arp': 'Hinónoʼeitíít',
+                         'bgi': 'Giangan',
+                         'ceb': 'Cebuano',
+                         'csb': 'kaszëbsczi',
+                         'enm': 'Middle English',
+                         'fur': 'furlan',
+                         'gla': 'Gàidhlig',
+                         'grc': 'Ἀρχαία ἑλληνικὴ',
+                         'ilo': 'Ilokano',
+                         'kha': 'Khasi',
+                         'kld': 'Gamilaraay',
+                         'myn': 'Maya',
+                         'nah': 'Nāhuatl',
+                         'nai': 'Amérindien',
+                         'nap': 'Napulitano',
+                         'nav': 'Diné bizaad',
+                         'oji': 'Ojibwe',
+                         'rmr': 'Caló' }
+
 
 # Imported from http://www-01.sil.org/iso639-3/download.asp
 ISO_MATRIX = {'aa': 'aar',
