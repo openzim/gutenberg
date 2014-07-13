@@ -130,7 +130,6 @@ def download_all_books(url_mirror, download_cache,
                 if not bfs.count():
                     from pprint import pprint as pp ; pp(list([(b.format.mime, b.format.images, b.format.pattern) for b in bfs]))
                     from pprint import pprint as pp ; pp(list([(b.format.mime, b.format.images, b.format.pattern) for b in bfso]))
-                    import ipdb; ipdb.set_trace()
             else:
                 bfs = bfs.filter(BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get(format)))
 
