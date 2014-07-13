@@ -1,23 +1,27 @@
 /* Global stuff */
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6,
+p, blockquote, pre, a, abbr, acronym, address, code, del, dfn,
+em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
     border: 0 none;
     font-family: inherit;
     font-size: 100%;
     font-style: inherit;
     font-weight: inherit;
-    margin: 0;
-    padding: 0;
     vertical-align: baseline;
 }
 
 body {
-    background: none repeat scroll 0 0 #FFFFFF;
-    color: #333333;
+    padding-right: 2em;
+    padding-left: 2em;
     font-family: "Helvetica Neue",Verdana,Helvetica,sans-serif;
     font-size: 75%;
     line-height: 1.5;
-    padding-left: 2em;
-    padding-right: 2em;
+    color: #333333;
+    background: none repeat scroll 0 0 #FFFFFF;
 }
 
 a {
@@ -39,14 +43,15 @@ td {
 }
 
 /* Header top-menu */
+
 #top-menu {
-    background: none repeat scroll 0 0 #eddab7;
     height: 73px;
+    background: none repeat scroll 0 0 #eddab7;
 }
 
 #top-menu a {
-    color: inherit;
     text-decoration: none;
+    color: inherit;
 }
 
 #top-menu a img {
@@ -57,20 +62,21 @@ td {
 
 #top-menu a div {
     float: left;
-    font-weight: bold;
-    font-size: 25px;
+    margin-left: 10px;
     padding-top: 3px;
+    font-size: 25px;
+    font-weight: bold;
     line-height: 130%;
     color: #b88b35;
-    margin-left: 10px;
 }
 
 /* Header bottom-menu */
+
 #bottom-menu {
-    background: none repeat scroll 0 0 #f5ecdb;
+    height: 70px;
     border-bottom-left-radius: 7px;
     border-bottom-right-radius: 7px;
-    height: 35px;
+    background: none repeat scroll 0 0 #f5ecdb;
 }
 
 #bottom-menu a img {
@@ -82,51 +88,50 @@ td {
 
 .ui-autocomplete {
     max-height: 100px;
-    overflow-y: auto;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .filter {
+    float: left;
+    margin-left: 12px;
     font-family: Arial,sans-serif;
     font-weight: bold;
     color: #b88b35;
-    float: left;
-    margin-left: 12px;
 }
 
 .filter > div {
-    float: left;
     display: block;
-    font-size: 16px;
+    float: left;
     height: 23px;
-    line-height: 23px;
     padding-top: 6px;
+    font-size: 16px;
+    line-height: 23px;
 }
 
 .filter > input {
     float: left;
-    margin-left: 10px;
-    height: 25px;
     margin-top: 5px;
+    margin-left: 10px;
 }
 
 .sort {
+    float: right;
+    height: 100%;
+    padding-top: 0;
+    padding-right: 7px;
     font-family: Arial,sans-serif;
     font-weight: bold;
     color: #b88b35;
-    height: 100%;
-    float: right;
-    padding-right: 7px;
-    padding-top: 0px;
 }
 
 .sort > div {
-    float: left;
     display: block;
-    font-size: 16px;
+    float: left;
     height: 23px;
-    line-height: 23px;
     margin-top: 6px;
+    font-size: 16px;
+    line-height: 23px;
 }
 
 #popularity_sort {
@@ -153,23 +158,26 @@ td {
 
 .sort_popularity_icon {
     display: block;
-    background-image: url(popularity_icon.png) !important;
     width: 25px;
     height: 25px;
+    background-image: url(popularity_icon.png) !important;
 }
 
 .sort_alpha_icon {
     display: block;
-    background-image: url(alpha_icon.png) !important;
     width: 23px;
     height: 23px;
+    background-image: url(alpha_icon.png) !important;
 }
 
 .ui-button-icon-only .ui-icon {
     top: 12px;
 }
 
-table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
+table.dataTable.row-border tbody th,
+table.dataTable.row-border tbody td,
+table.dataTable.display tbody th,
+table.dataTable.display tbody td {
     padding: 4px;
     overflow: hidden; /* this is what fixes the expansion */
     text-overflow: ellipsis; /* not supported in all browsers, but I accepted the tradeoff */
@@ -177,14 +185,16 @@ table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.
 }
 
 /* About */
+
 #home-about {
-    color: #b88b35;
+    margin: 1em 0 1em 0;
     text-align: justify;
     font-size: 20px;
-    margin: 1em 0 1em 0;
+    color: #b88b35;
 }
 
 /* Books */
+
 #content {
     margin-bottom: 15px;
 }
@@ -192,4 +202,46 @@ table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.
 table.display td {
     cursor: pointer;
     * cursor: hand;
+}
+
+input {
+    width: 15em;
+    padding: 1em 0.625em;
+    border: 1px solid #d9dbdd;
+    font-size: 1em;
+    outline: none;
+    -webkit-border-radius: 0.3125em;
+    -moz-border-radius: 0.3125em;
+    border-radius: 0.3125em;
+    font-family: 'RobotoLight'; 
+}
+
+input:hover,
+input:focus {
+    border: 1px solid #bbbdbe;
+}
+
+::-webkit-input-placeholder {
+    color: #858d9c;
+}
+
+:-moz-placeholder {
+    color: #858d9c;
+}
+
+.ui-autocomplete {
+    background: #ffffff
+}
+
+.ui-autocomplete {
+    width: 14.7em;
+}
+
+
+
+/* Fonts */
+
+@font-face {
+    font-family: 'RobotoLight'; 
+    src: url('../fonts/Roboto-Light.ttf'); 
 }
