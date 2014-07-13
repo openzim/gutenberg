@@ -48,14 +48,13 @@ def build_zimfile(static_folder, zim_path=None,
         'static': static_folder,
         'zim': zim_path
     }
-    print(context)
 
     cmd = ('zimwriterfs --welcome={home} --favicon={favicon} '
-           '--language={languages} --title="{title}" '
-           '--description="{description}" '
-           '--creator="{creator}" --publisher="{publisher}" {static} {zim}'
+           '--language={languages} --title=\\"{title}\\" '
+           '--description=\\"{description}\\" '
+           '--creator=\\"{creator}\\" --publisher=\\"{publisher}\\" {static} {zim}'
            .format(**context))
 
     logger.debug(cmd)
-    return
     return exec_cmd(cmd)
+

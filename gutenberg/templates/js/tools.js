@@ -249,4 +249,16 @@ function init() {
 	    }
 	}
     });
+
+    /* Persistence of form values */
+    jQuery('input,select,textarea').persist(
+	{ 
+            context : 'gutenberg',  // a context or namespace for each field
+            replace : true,         // replace existing field contents if any
+            cookie  : 'gutenberg',  // cookies basename
+            path    : '/',          // cookie path
+            domain  : null,         // cookie domain
+            expires : null          // cookie expiry (eg 365)
+	}
+    );
 }
