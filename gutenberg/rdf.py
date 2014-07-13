@@ -155,9 +155,12 @@ class RdfParser():
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all('pgterms:file')
-        self.file_types = ({x.attrs['rdf:about'].split('/')[-1]: x.find('rdf:value').text
-                            for x in file_types
-                            if not x.find('rdf:value').text.endswith('application/zip')})
+        self.file_types = []
+        for x in file_types:
+            if not x.find('rdf:value').text.endswith('application/zip'):
+                k = x.attrs['rdf:about'].split('/')[-1]
+                v = x.find('rdf:value').text
+                self.file_types.append({k:v})
 
         return self
 
@@ -263,4 +266,4 @@ if __name__ == '__main__':
                 data = f.read()
 
             parser = RdfParser(data, 45213).parse()
-            print(parser.first_name, parser.last_name)
+            print(parser.first_name, parser.file_types)
