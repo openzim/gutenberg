@@ -8,6 +8,25 @@ function minimizeUI() {
     });
 }
 
+function loadScript(url, callback) {
+    var script = document.getElementById("books_script")
+ 
+    if (script.readyState) { //IE
+        script.onreadystatechange = function () {
+            if (script.readyState == "loaded" || script.readyState == "complete") {
+                script.onreadystatechange = null;
+                callback();
+            }
+        };
+    } else { //Others
+        script.onload = function () {
+            callback();
+        };
+    }
+ 
+    script.src = url;
+}
+
 function showBooks() {
     var url = "full_by_" + sortMethod + ".js";
 
@@ -33,7 +52,7 @@ function showBooks() {
 	};
     }
 
-    $.getScript( url, function( data, textStatus, jqxhr ) {
+    loadScript( url, function () {
 
 	if ( $('#books_table').attr("filled") ) {
 	    $('#books_table').dataTable().fnDestroy();
@@ -106,8 +125,6 @@ function init() {
 	sortMethod = "popularity";
 	showBooks();
     });
-
-
     $( "#alpha_sort" ).button({
 	icons: { primary: 'sort_alpha_icon' },
 	text: false,
