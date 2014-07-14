@@ -436,10 +436,11 @@ table.dataTable.display tbody tr.even:hover {
 }
 
 .title-div {
-    padding-top: 25px;
+    padding-top: 43px;
     float: left;
     width: 100%;
     text-align: center;
+    line-height: 37px;
 }
 
 
@@ -512,10 +513,9 @@ dataTables_wrapper
 
 
 .l10nselector{
-    position: fixed;
-    right: 0px;
-    top: 0px;
-    padding: 10px 21px;
+    position: absolute;
+    right: 1em;
+    top: 1em;
 }
 
 button {
