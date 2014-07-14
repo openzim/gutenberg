@@ -285,8 +285,12 @@ def get_langs_with_count(books):
             lang_count[book.language] = 0
         lang_count[book.language] += 1
 
+    import ipdb; ipdb.set_trace()
+
     return [(language_name(l), l, nb)
-            for l, nb in sorted(lang_count.items(), key=lambda x: x[1])]
+            for l, nb in sorted(lang_count.items(),
+                                key=lambda x: x[1],
+                                reverse=True)]
 
 
 def get_lang_groups(books):
