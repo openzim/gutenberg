@@ -33,7 +33,7 @@
           </div>
         </a>
         <div class="l10nselector">
-          <select id="l10nselect" name="l10nselect">
+          <select id="l10nselect" name="l10nselect" class="filter_ui">
             {% for lang in ui_languages %}
             <option value="{{ lang }}" label="{{ lang|language_name }}">{{ lang|language_name }}</option>
             {% endfor %}
@@ -45,9 +45,9 @@
           <img data-l10n-id="homepage" alt="Homepage" id="logo2" src="css/logo_2.png" title="Homepage" />
         </a>
         <div class="filter">
-          <select id="language_filter" data-l10n-id="choose-language" placeholder="Choose a language..."><option value="" label="Any Language">Any Language</option></select>
+          <select id="language_filter" data-l10n-id="choose-language" class="filter_ui" placeholder="Choose a language..."><option value="" label="Any Language">Any Language</option></select>
           <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" />
-	  {% if not show_books %} <button onclick="showBooks()" data-l10n-id="search">Search</button> {% endif %}
+	      {% if not show_books %}<button onclick="showBooks()" class="search" data-l10n-id="search"><i class="fa fa-search fa-1x"></i> Search</button>{% endif %}
         </div>
         <div class="sort" id="sort">
           <i class="fa fa-heart fa-3x"  onclick="minimizeUI()" id="popularity_sort"></i>
