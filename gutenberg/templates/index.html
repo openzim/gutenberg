@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% block title %}The Gutenberg Project{% endblock %}
 {% block precontent %}
-    <div class="container">
+    <div class="text container">
         <div id="home-about">
-            Project Gutenberg offers over 45,000 free ebooks: choose among free epub books, free kindle books, download them or read them online.<br/>
-            <br/>
-            We carry high quality ebooks: All our ebooks were previously published by bona fide publishers. We digitized and diligently proofread them with the help of thousands of volunteers.
+            <p class="bolder">Project Gutenberg offers over 45,000 free ebooks</p>
+            <p class="light">choose among free epub books, free kindle books.<br>Download them or read them online.</p>
+            <p class="bolder">We carry high quality ebooks</p>
+            <p class="light">All our ebooks were previously published by bona fide publishers.<br>We digitized and diligently proofread them with the help of thousands of volunteers.</p>
         </div>
     </div>
 {% endblock %}
 {% block content %}
-<table cellpadding="0" cellspacing="0" border="0" class="display" id="books_table"></table>
+<table class="data-table display" cellpadding="0" cellspacing="0" border="0" id="books_table"></table>
 {% endblock %}
