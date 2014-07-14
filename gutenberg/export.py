@@ -464,12 +464,14 @@ def export_book_to(book,
             with open(dst, 'w') as f:
                 f.write(new_html)
         else:
+            logger.info("\t\tCopying companion file to {}".format(fname))
             handle_companion_file(fname)
 
     # other formats
     for format in formats:
         if not format in book.formats() or format == 'html':
             continue
+        logger.info("\t\tCopying format file to {}".format(archive_name_for(book, format)))
         handle_companion_file(fname_for(book, format),
                               archive_name_for(book, format))
 
