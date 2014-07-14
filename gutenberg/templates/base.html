@@ -23,7 +23,7 @@
     <script id="authors_script" type="text/javascript"></script>
     <script id="books_script" type="text/javascript"></script>
   </head>
-  <body onload="init(); {% if show_books %} showBooks(); {% endif %}">
+  <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}">
     <div id="header">
       <div id="top-menu" class="container">
         <a href="Home.html">
