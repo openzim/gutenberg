@@ -1,8 +1,6 @@
-- Fix download click on the table not working on recent version of FF
 - better switch from cover page to index page
 - include progress bar/waiting visual system during json_data loading
 - remember topmenu visibility over reloads
-
 - Better handling of failed downloads and mirrors
 
 WONTFIX:

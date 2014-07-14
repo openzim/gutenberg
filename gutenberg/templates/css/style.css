@@ -169,7 +169,7 @@ td {
 .sort {
     float: right;
     height: 100%;
-    padding-top: 0;
+    padding-bottom: 12px;
     padding-right: 7px;
     font-family: Arial,sans-serif;
     font-weight: bold;
@@ -349,6 +349,7 @@ div.bibrec img {
 .text {
     padding-left: 5em;
     padding-right: 5em;
+    padding-top: 1em;
 }
 
 .main {
@@ -437,11 +438,32 @@ table.dataTable.display tbody tr.even:hover {
     color: black;
 }
 
-
-/*
-.tr:hover, .ui-menu-item:focus,
-.ui-menu-item:active,
-.ui-menu-item:visited{
-    background: #000000!important;
+.fa-2x {
+    color: #D00000;
+    font-size: 3em!important; 
+    padding-right: 10px;
 }
-*/
+
+.fa-2x:hover {
+    color: black;
+}
+
+dataTables_wrapper
+.dataTables_length,
+.dataTables_wrapper
+.dataTables_filter,
+.dataTables_wrapper
+.dataTables_info,
+.dataTables_wrapper
+.dataTables_processing,
+.dataTables_wrapper
+.dataTables_paginate {
+    padding-top: 3em;
+    width: 100%;
+    text-align: center;
+}
+
+.table-icons {
+    text-align: right;
+    vertical-align: middle;
+}
