@@ -5,13 +5,11 @@
 import babel
 
 
-def language_name(code): 
-    try: 
-        return babel.Locale(code).get_language_name(code)
+def language_name(code):
+    try:
+        return babel.Locale(code).get_language_name(code).title()
     except:
-        if code in other_language_names:
-            return other_language_names[code]
-        return code
+        return other_language_names.get(code, code)
 
 
 # Autonyms unknown by babel
