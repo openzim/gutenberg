@@ -233,7 +233,7 @@ function init() {
         minimizeUI();
         if (!showBooks()) {
             displayError( "No books matching these criterias." );
-            // $(this).val("");
+            $(this).val("");
         }
     });
     if ( languages_json_data.length == 1 ) {
