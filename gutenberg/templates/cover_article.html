@@ -5,13 +5,11 @@
     {% if book.subtitle %}
         <h2>{{ book.subtitle }}</h2>
     {% endif %}
+    <div id="cover">
     {% if cover_img %}
-        <div id="cover">
-            
             <img data-l10n-id="cover-img" class="cover-art" src="{{ cover_img }}" title="Book Cover" alt="Book Cover" />
-            
-        </div>
     {% endif %}
+    </div>
     <div class="bibrec">
         <table class="bibrec">
             <tr>
