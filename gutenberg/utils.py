@@ -5,10 +5,12 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
+import hashlib
 from contextlib import contextmanager
 from collections import defaultdict
 
 import envoy
+from path import path
 
 from gutenberg import logger
 from gutenberg.iso639 import language_name
@@ -293,6 +295,20 @@ def get_lang_groups(books):
     else:
         return (langs_wt_count[:NB_MAIN_LANGS],
                 sorted(langs_wt_count[NB_MAIN_LANGS:], key=lambda x: x[0]))
+
+def md5sum(fpath):
+    with open(fpath, 'r') as f:
+        return hashlib.md5(f.read()).hexdigest()
+
+
+def is_bad_cover(fpath):
+    bad_sizes = [19263]
+    bad_sums = ['a059007e7a2e86f2bf92e4070b3e5c73']
+
+    if path(fpath).size not in bad_sizes:
+        return False
+
+    return md5sum(fpath) in bad_sums
 
 if __name__ == '__main__':
     book = Book.get(id=1339)

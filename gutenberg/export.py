@@ -18,7 +18,8 @@ import gutenberg
 from gutenberg import logger, XML_PARSER
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
                              get_list_of_filtered_books, exec_cmd, cd,
-                             get_langs_with_count, get_lang_groups)
+                             get_langs_with_count, get_lang_groups,
+                             is_bad_cover)
 from gutenberg.database import Book, Format, BookFormat, Author
 from gutenberg.iso639 import language_name
 
@@ -175,6 +176,8 @@ def update_html_for_static(book, html_content, epub=False):
         soup.title.string = book.title
 
     patterns = [
+        ("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>",
+         "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>"),
         ("*** START OF THIS PROJECT GUTENBERG EBOOK",
          "*** END OF THIS PROJECT GUTENBERG EBOOK"),
         ("=========================================================================",
@@ -183,8 +186,6 @@ def update_html_for_static(book, html_content, epub=False):
         ("Project Gutenberg Etext", "End of Project Gutenberg Etext"),
         ("***START OF THE PROJECT GUTENBERG",
          "***END OF THE PROJECT GUTENBERG EBOOK"),
-        ("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>",
-         "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>"),
         ("Text encoding is iso-8859-1", "Fin de Project Gutenberg Etext"),
         ("COPYRIGHT PROTECTED ETEXTS*END*",
          "==========================================================="),
@@ -338,10 +339,17 @@ def export_book_to(book,
             zipped_files = zf.namelist()
             zf.extractall(tmpd)
 
+        remove_cover = False
         for fname in zipped_files:
             fnp = os.path.join(tmpd, fname)
             if path(fname).ext in ('.png', '.jpeg', '.jpg', '.gif'):
-                optimize_image(fnp)
+
+                # special case to remove ugly cover
+                if fname.endswith('cover.jpg') and is_bad_cover(fnp):
+                    zipped_files.remove(fname)
+                    remove_cover = True
+                else:
+                    optimize_image(fnp)
 
             if path(fname).ext in ('.htm', '.html'):
                 f = open(fnp, 'r')
@@ -369,6 +377,23 @@ def export_book_to(book,
                 with open(fnp, 'w') as f:
                     f.write(soup.encode())
 
+        # delete {id}/cover.jpg if exist and update {id}/content.opf
+        if remove_cover:
+
+            # remove cover
+            path(os.path.join(tmpd, str(book.id), 'cover.jpg')).unlink_p()
+
+            soup = None
+            opff = os.path.join(tmpd, str(book.id), 'content.opf')
+            with open(opff, 'r') as fd:
+                soup = BeautifulSoup(fd.read(), ["lxml", "xml"])
+
+            for elem in soup.findAll():
+                if getattr(elem, 'attrs', {}).get('href') == 'cover.jpg':
+                    elem.decompose()
+
+            with(open(opff, 'w')) as fd:
+                fd.write(soup.encode())
 
         with cd(tmpd):
             exec_cmd('zip -q0X "{dst}" mimetype'.format(dst=dst))
