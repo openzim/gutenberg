@@ -81,7 +81,7 @@ function showBooks() {
 
     var authors_url = "authors.js";
 
-    loadScript( url, "authors_script", function () {
+    loadScript( authors_url, "authors_script", function () {
 	if ( $( "#author_filter" ).val() ) {
 	    var count = authors_json_data.length;
 	    var author_filter_value = $( "#author_filter" ).val();
