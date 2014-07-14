@@ -440,7 +440,8 @@ table.dataTable.display tbody tr.even:hover {
 
 .fa-2x {
     color: #D00000;
-    padding-right: 3px;
+    font-size: 3em!important; 
+    padding-right: 10px;
 }
 
 .fa-2x:hover {
@@ -460,4 +461,9 @@ dataTables_wrapper
     padding-top: 3em;
     width: 100%;
     text-align: center;
+}
+
+.table-icons {
+    text-align: right;
+    vertical-align: middle;
 }

@@ -122,6 +122,7 @@ function showBooks() {
 	    "bAutoWidth": false,
 	    "columnDefs": [
         { "bVisible": false, "aTargets": [1] },
+        { "sClass": "table-icons", "aTargets": [2] },
 		{
 		    "targets": 0,
 		    "render": function ( data, type, full, meta ) {
@@ -197,8 +198,6 @@ function init() {
     $( "#alpha_sort" ).click(function() {
     sortMethod = "title";
     showBooks();
-    $( "#popularity_sort" ).removeClass('ui-state-focus');
-    $( "#alpha_sort" ).addClass('ui-state-focus');
     });
 
     /* Language filter */
