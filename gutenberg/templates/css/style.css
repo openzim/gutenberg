@@ -290,7 +290,7 @@ input:focus {
 h1 {
     font-size: 3em;
     font-family: "RobotoThin";
-    margin-top: 25px;
+    margin-top: 1em;
     text-align: center;
 }
 
@@ -315,7 +315,7 @@ img.cover-art {
 div.bibrec {
     margin: 0 auto;
     width: 100%;
-    margin-top: 2em;
+    margin-top: 2.5em;
 }
 
 table.bibrec {
@@ -453,6 +453,17 @@ table.dataTable.display tbody tr.even:hover {
     color: black;
 }
 
+.fa-6x {
+    color: #D00000;
+    font-size: 5.5em!important;
+    padding: 0px 30px 0px 30px;
+    margin-top: 5px;
+}
+
+.fa-6x:hover {
+    color: black;
+}
+
 dataTables_wrapper
 .dataTables_length,
 .dataTables_wrapper
@@ -482,7 +493,7 @@ dataTables_wrapper
 }
 
 button {
-     background: none repeat scroll 0% 0% #FFF;
+    background: none repeat scroll 0% 0% #FFF;
     border: 1px solid #D9DBDD;
     margin-left: 20px;
     height: 25px;
@@ -493,4 +504,9 @@ button {
 
 button:hover {
     background: whitesmoke!important;
+}
+
+.icons-footer {
+    text-align: center;
+    margin-top: 3em;
 }

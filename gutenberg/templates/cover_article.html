@@ -30,8 +30,22 @@
             <td>{{ book.downloads }} downloads in the last 30 days.</td>
         </tr>
     </table>
-    {% for format in formats %}
-        <a href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}"><img src="css/{{ format }}_icon_50.png" />
+    {% if formats %}
+    <div class="icons-footer">
+        {% for format in formats %}
+        <a href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}">
+            {% if format == "html" %}
+            <i class="fa fa-html5 fa-6x"></i>
+            {% endif %}        
+            {% if format == "epub" %}
+            <i class="fa fa-book fa-6x"></i>
+            {% endif %}        
+            {% if format == "pdf" %}
+            <i class="fa fa-file-pdf-o fa-6x"></i>
+            {% endif %}        
+        </a>
         {% endfor %}
+    </div>
+    {% endif %}
     </div>
 {% endblock %}
