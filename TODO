@@ -19,4 +19,4 @@ WONTFIX:
 * [seb] Complete JS translations (Anonymous, Previous/Next, Others..)
 * [ahmad] Improve style for pagination
 * [seb, reg] Change nb of downloads to heart icons
-
+* [reg] fix the crash that happens when you don't have any zimwriterfs binary
