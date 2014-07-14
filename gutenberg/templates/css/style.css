@@ -469,3 +469,25 @@ dataTables_wrapper
     text-align: right;
     vertical-align: middle;
 }
+
+
+.l10nselector{
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    padding: 10px 21px;
+}
+
+button {
+     background: none repeat scroll 0% 0% #FFF;
+    border: 1px solid #D9DBDD;
+    margin-left: 20px;
+    height: 25px;
+    margin-top: 12px;
+    border-radius: 0.3125em;
+    width: 10em;
+}
+
+button:hover {
+    background: whitesmoke!important;
+}

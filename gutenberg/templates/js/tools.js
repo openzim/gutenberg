@@ -1,11 +1,7 @@
 var sortMethod = "popularity";
 
 function minimizeUI() {
-    $( "#top-menu" ).slideUp( 300 );
     $( "#home-about" ).slideUp( 300 );
-    $( "#logo2" ).show( 500, function() {
-	$( "#logo2" ).show();
-    });
 }
 
 function displayError(message) {
@@ -79,8 +75,7 @@ function showBooks() {
         }
     }
 
-    var authors_url = "authors.js";
-
+    var authors_url = language_filter_value ? "authors_lang_" + language_filter_value + ".js" : "authors.js";
     loadScript( authors_url, "authors_script", function () {
 	if ( $( "#author_filter" ).val() ) {
 	    var count = authors_json_data.length;
@@ -94,6 +89,7 @@ function showBooks() {
 		};
 	    };
 	    if ( !ok ) {
+		$( "#author_filter" ).val("")
 		return false;
 	    }
 	}
@@ -200,16 +196,9 @@ function init() {
 	showBooks();
     });
 
-    $( "#alpha_sort" ).button({
-    icons: { primary: 'sort_alpha_icon' },
-    text: false,
-    label: 'Sort books by title'
-    })
     $( "#alpha_sort" ).click(function() {
     sortMethod = "title";
     showBooks();
-    $( "#popularity_sort" ).removeClass('ui-state-focus');
-    $( "#alpha_sort" ).addClass('ui-state-focus');
     });
 
     /* Language filter */
@@ -293,7 +282,4 @@ function init() {
             expires : null          // cookie expiry (eg 365)
     }
     );
-
-    var l10nselect = document.getElementById('l10nselect');
-    document.webL10n.setLanguage(l10nselect.value || l10nselect.options[this.selectedIndex].text);
 }
