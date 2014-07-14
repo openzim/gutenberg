@@ -176,30 +176,43 @@ def update_html_for_static(book, html_content, epub=False):
         soup.title.string = book.title
 
     patterns = [
+        ("*** START OF THE PROJECT GUTENBERG EBOOK",
+         "*** END OF THE PROJECT GUTENBERG EBOOK"),
+
+        ("***START OF THE PROJECT GUTENBERG EBOOK",
+         "***END OF THE PROJECT GUTENBERG EBOOK"),
+
         ("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>",
          "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>"),
+
+        # ePub only
+        ("*** START OF THIS PROJECT GUTENBERG EBOOK",
+         "*** START: FULL LICENSE ***"),
+        ("*END THE SMALL PRINT! FOR PUBLIC DOMAIN ETEXT",
+         "——————————————————————————-"),
+
         ("*** START OF THIS PROJECT GUTENBERG EBOOK",
          "*** END OF THIS PROJECT GUTENBERG EBOOK"),
-        ("=========================================================================",
-         "——————————————————————————-"),
-        ("—————————————————-", "Encode an ISO 8859/1 Etext into LaTeX or HTML"),
-        ("Project Gutenberg Etext", "End of Project Gutenberg Etext"),
+
         ("***START OF THE PROJECT GUTENBERG",
          "***END OF THE PROJECT GUTENBERG EBOOK"),
-        ("Text encoding is iso-8859-1", "Fin de Project Gutenberg Etext"),
+
         ("COPYRIGHT PROTECTED ETEXTS*END*",
          "==========================================================="),
+
         ("Nous remercions la Bibliothèque Nationale de France qui a mis à",
          "The Project Gutenberg Etext of"),
         ("Nous remercions la Bibliothèque Nationale de France qui a mis à",
          "End of The Project Gutenberg EBook"),
-        ("*** START OF THE PROJECT GUTENBERG EBOOK",
-         "*** END OF THE PROJECT GUTENBERG EBOOK"),
-        ("***START OF THE PROJECT GUTENBERG EBOOK",
-         "***END OF THE PROJECT GUTENBERG EBOOK"),
-        # ePub only
-        ("*** START OF THIS PROJECT GUTENBERG EBOOK",
-         "*** START: FULL LICENSE ***"),
+
+        ("=========================================================================",
+         "——————————————————————————-"),
+
+        ("Project Gutenberg Etext", "End of Project Gutenberg Etext"),
+
+        ("Text encoding is iso-8859-1", "Fin de Project Gutenberg Etext"),
+
+        ("—————————————————-", "Encode an ISO 8859/1 Etext into LaTeX or HTML"),
     ]
 
     body = soup.find('body')
@@ -208,6 +221,7 @@ def update_html_for_static(book, html_content, epub=False):
             continue
 
         if start_of_text in body.text and end_of_text in body.text:
+            # logger.debug("FOUND BOTH: {} |*| {}".format(start_of_text, end_of_text))
             remove = True
             for child in body.children:
                 if isinstance(child, bs4.NavigableString):
@@ -222,6 +236,7 @@ def update_html_for_static(book, html_content, epub=False):
             break
 
         elif start_of_text in body.text:
+            # logger.debug("FOUND START: {}".format(start_of_text))
             remove = True
             for child in body.children:
                 if isinstance(child, bs4.NavigableString):
@@ -233,6 +248,7 @@ def update_html_for_static(book, html_content, epub=False):
                     child.decompose()
             break
         elif end_of_text in body.text:
+            # logger.debug("FOUND END: {}".format(end_of_text))
             remove = False
             for child in body.children:
                 if isinstance(child, bs4.NavigableString):
