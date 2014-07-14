@@ -23,7 +23,7 @@
     <script id="books_script" type="text/javascript"></script>
     <link rel="prefetch" type="application/l10n" href="l10n/locales.ini" />
   </head>
-  <body onload="init(); {% if show_books %} showBooks(); {% endif %}">
+  <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}">
     <div id="header">
       <div id="top-menu" class="container">
         <a href="Home.html">

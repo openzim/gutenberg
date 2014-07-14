@@ -1,4 +1,5 @@
 var sortMethod = "popularity";
+var books_url = "full_by_popularity.js";
 
 function minimizeUI() {
     $( "#home-about" ).slideUp( 300 );
@@ -32,6 +33,10 @@ function displayError(message) {
 }
 
 function loadScript(url, nodeId, callback) {
+    if (document.getElementById( nodeId ).src == url) {
+	return;
+    }
+
     document.getElementById( nodeId ).parentElement.
     removeChild( document.getElementById( nodeId ) );
 
@@ -56,11 +61,8 @@ function loadScript(url, nodeId, callback) {
     document.getElementsByTagName("head")[0].appendChild(script);
 }
 
-function refreshFilters( callback ) {
-}
-
-function showBooks() {
-    var books_url = "full_by_" + sortMethod + ".js";
+function populateFilters( callback ) {
+    books_url = "full_by_" + sortMethod + ".js";
 
     var language_filter_value = $( "#language_filter" ).val();
     if ( language_filter_value ) {
@@ -73,6 +75,9 @@ function showBooks() {
                 break;
             };
         };
+	if ( !ok ) {
+	    $( "#language_filter" ).val("")
+	}
     }
 
     var authors_url = language_filter_value ? "authors_lang_" + language_filter_value + ".js" : "authors.js";
@@ -93,10 +98,21 @@ function showBooks() {
 	    }
 	}
 	
+	if ( callback ) {
+	    callback();
+	}
+
+    });
+}
+
+function showBooks() {
+
+    populateFilters( function() {
+
 	if ( $( "#cover" ).length > 0 ) {
 	    $(location).attr("href", "Home.html");
 	}
-	
+
 	loadScript( books_url, "books_script", function () {
 	    
 	    if ( $('#books_table').attr("filled") ) {
@@ -171,8 +187,6 @@ function showBooks() {
 	    $('#sort').show();
 	});
     });
-
-    return true;
 }
 
 function onLocalized() {
@@ -230,10 +244,7 @@ function init() {
 
     language_filter.on('change', function (e) {
         minimizeUI();
-        if (!showBooks()) {
-            displayError( "No books matching these criterias." );
-            $(this).val("");
-        }
+        showBooks();
     });
     if ( languages_json_data.length == 1 ) {
         language_filter.val( languages_json_data[0][1] );
@@ -262,10 +273,7 @@ function init() {
     });
     $( "#author_filter" ).keypress( function( event ) {
     if( event.which == 13 ) {
-        if (!showBooks()) {
-        displayError( "No books matching these criterias." );
-        this.value = "";
-        }
+        showBooks();
     }
     });
 
@@ -280,4 +288,5 @@ function init() {
             expires : null          // cookie expiry (eg 365)
     }
     );
+
 }
