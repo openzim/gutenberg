@@ -355,7 +355,6 @@ def export_book_to(book,
                 pattern = "*** START: FULL LICENSE ***"
                 f = open(fnp, 'r')
                 ncx = f.read()
-                from pprint import pprint as pp ; pp(ncx)
                 f.close()
                 soup = BeautifulSoup(ncx, ["lxml", "xml"])
                 for tag in soup.findAll('text'):
@@ -367,7 +366,7 @@ def export_book_to(book,
                         s.next_sibling
 
                 with open(fnp, 'w') as f:
-                    f.write(soup.encode().replace('\n\n\n','\n\n'))
+                    f.write(soup.encode())
 
 
         with cd(tmpd):
