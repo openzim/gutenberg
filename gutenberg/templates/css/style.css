@@ -469,3 +469,11 @@ dataTables_wrapper
     text-align: right;
     vertical-align: middle;
 }
+
+
+.l10nselector{
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    padding: 10px 21px;
+}
