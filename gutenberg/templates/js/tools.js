@@ -2,6 +2,7 @@ var sortMethod = "popularity";
 var books_url = "full_by_popularity.js";
 
 function minimizeUI() {
+    $( "#hide-home-about").val( "yes" );
     $( "#home-about" ).slideUp( 300 );
 }
 
@@ -201,6 +202,23 @@ document.webL10n.ready(onLocalized);
 
 function init() {
 
+    /* Persistence of form values */
+    jQuery('input,select,textarea').persist(
+    {
+            context : 'gutenberg',  // a context or namespace for each field
+            replace : true,         // replace existing field contents if any
+            cookie  : 'gutenberg',  // cookies basename
+            path    : '/',          // cookie path
+            domain  : null,         // cookie domain
+            expires : null          // cookie expiry (eg 365)
+    }
+    );
+
+    /* Hide home about */
+    if ( $("#hide-home-about").val() ) {
+	minimizeUI();
+    }
+
     /* Sort buttons */
     $( "#sort" ).hide();
     $( "#popularity_sort" ).click(function() {
@@ -276,17 +294,5 @@ function init() {
         showBooks();
     }
     });
-
-    /* Persistence of form values */
-    jQuery('input,select,textarea').persist(
-    {
-            context : 'gutenberg',  // a context or namespace for each field
-            replace : true,         // replace existing field contents if any
-            cookie  : 'gutenberg',  // cookies basename
-            path    : '/',          // cookie path
-            domain  : null,         // cookie domain
-            expires : null          // cookie expiry (eg 365)
-    }
-    );
 
 }
