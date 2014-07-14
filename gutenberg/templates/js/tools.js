@@ -207,14 +207,31 @@ function init() {
     /* Language filter */
     var language_filter = $("#language_filter");
     // fill language selector with langs from JS file
-    $(languages_json_data).each(function (index, lang) {
-        var opt = $('<option />');
-        opt.val(lang[1]);
-        var txt = lang[0] + ' (' + lang[2] + ')';
-        opt.text(txt);
-        opt.attr('label', txt);
-        language_filter.append(opt);
-    });
+
+    function create_options(parent, langlist) {
+        $(langlist).each(function (index, lang) {
+            var opt = $('<option />');
+            opt.val(lang[1]);
+            var txt = lang[0] + ' (' + lang[2] + ')';
+            opt.text(txt);
+            opt.attr('label', txt);
+            parent.append(opt);
+        });
+    }
+
+    if (other_languages_json_data.length) {
+        var main_group = $('<optgroup>');
+        main_group.attr('label', "Main languages");
+        create_options(main_group, main_languages_json_data);
+        language_filter.append(main_group);
+
+        var other_group = $('<optgroup>');
+        other_group.attr('label', "Other languages");
+        create_options(other_group, other_languages_json_data);
+        language_filter.append(other_group);
+    } else {
+        create_options(language_filter, languages_json_data);
+    }
 
     language_filter.on('change', function (e) {
         minimizeUI();

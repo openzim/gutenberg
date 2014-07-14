@@ -21,6 +21,8 @@ FORMAT_MATRIX = {
     'html': 'text/html'
 }
 
+NB_MAIN_LANGS = 5
+
 
 @contextmanager
 def cd(newdir):
@@ -283,6 +285,14 @@ def get_langs_with_count(books):
             for l, nb in sorted(lang_count.items(), key=lambda x: x[1])]
 
 
+def get_lang_groups(books):
+
+    langs_wt_count = get_langs_with_count(books)
+    if len(langs_wt_count) <= NB_MAIN_LANGS:
+        return langs_wt_count, []
+    else:
+        return (langs_wt_count[:NB_MAIN_LANGS],
+                sorted(langs_wt_count[NB_MAIN_LANGS:], key=lambda x: x[0]))
 
 if __name__ == '__main__':
     book = Book.get(id=1339)

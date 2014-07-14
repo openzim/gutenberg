@@ -18,7 +18,7 @@ import gutenberg
 from gutenberg import logger, XML_PARSER
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
                              get_list_of_filtered_books, exec_cmd, cd,
-                             get_langs_with_count)
+                             get_langs_with_count, get_lang_groups)
 from gutenberg.database import Book, Format, BookFormat, Author
 from gutenberg.iso639 import language_name
 
@@ -508,4 +508,10 @@ def export_to_json_helpers(books, static_folder, languages, formats):
 
     # languages list sorted by code
     logger.info("\t\tDumping languages.js")
-    dumpjs(sorted(avail_langs), 'languages.js', 'languages_json_data')
+    dumpjs(avail_langs, 'languages.js', 'languages_json_data')
+
+    # languages by weight
+    main_languages, other_languages = get_lang_groups(books)
+    logger.info("\t\tDumping main_languages.js")
+    dumpjs(main_languages, 'main_languages.js', 'main_languages_json_data')
+    dumpjs(other_languages, 'other_languages.js', 'other_languages_json_data')
