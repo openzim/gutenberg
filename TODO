@@ -1,7 +1,8 @@
-- manage the case where a book has multiple language (e.g. 10 books for French)
 - Fix download click on the table not working on recent version of FF
-- Better handling of failed downloads and mirrors
 - cleanup header/footer from ePub
 - better switch from cover page to index page
 - include progress bar/waiting visual system during json_data loading
 - remember topmenu visibility over reloads
+
+- Better handling of failed downloads and mirrors
+- manage the case where a book has multiple language (e.g. 10 books for French)
