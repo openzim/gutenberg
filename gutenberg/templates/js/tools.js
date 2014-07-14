@@ -198,7 +198,6 @@ function onLocalized() {
         l10n.setLanguage($(this).val());
     });
 };
-document.webL10n.ready(onLocalized);
 
 function init() {
 
@@ -210,13 +209,13 @@ function init() {
             cookie  : 'gutenberg',  // cookies basename
             path    : '/',          // cookie path
             domain  : null,         // cookie domain
-            expires : null          // cookie expiry (eg 365)
+            expires : 1             // cookie expiry (eg 365)
     }
     );
 
     /* Hide home about */
     if ( $("#hide-home-about").val() ) {
-	minimizeUI();
+	$( "#home-about" ).hide();
     }
 
     /* Sort buttons */
@@ -296,3 +295,5 @@ function init() {
     });
 
 }
+
+document.webL10n.ready(onLocalized);
