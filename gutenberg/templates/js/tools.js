@@ -200,16 +200,9 @@ function init() {
 	showBooks();
     });
 
-    $( "#alpha_sort" ).button({
-    icons: { primary: 'sort_alpha_icon' },
-    text: false,
-    label: 'Sort books by title'
-    })
     $( "#alpha_sort" ).click(function() {
     sortMethod = "title";
     showBooks();
-    $( "#popularity_sort" ).removeClass('ui-state-focus');
-    $( "#alpha_sort" ).addClass('ui-state-focus');
     });
 
     /* Language filter */
