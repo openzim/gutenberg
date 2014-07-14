@@ -555,3 +555,10 @@ button.search:hover {
     text-align: center;
     margin-top: 3em;
 }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    font-family: "RobotoLight"!important;
+    border: 0!important;
+    color: white !important;
+    background: red;
+}
