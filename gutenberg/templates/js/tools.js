@@ -56,8 +56,11 @@ function loadScript(url, nodeId, callback) {
     document.getElementsByTagName("head")[0].appendChild(script);
 }
 
+function refreshFilters( callback ) {
+}
+
 function showBooks() {
-    var url = "full_by_" + sortMethod + ".js";
+    var books_url = "full_by_" + sortMethod + ".js";
 
     var language_filter_value = $( "#language_filter" ).val();
     if ( language_filter_value ) {
@@ -65,14 +68,11 @@ function showBooks() {
         var ok = false;
         for ( i = 0 ; i < count ; i++ ) {
             if (languages_json_data[i][1] === language_filter_value) {
-                url = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
+		books_url = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
                 ok = true;
                 break;
             };
         };
-        if ( !ok ) {
-            return false;
-        }
     }
 
     var authors_url = language_filter_value ? "authors_lang_" + language_filter_value + ".js" : "authors.js";
@@ -83,14 +83,13 @@ function showBooks() {
 	    var ok = false;
 	    for ( i = 0 ; i < count ; i++ ) {
 		if (authors_json_data[i][0] === author_filter_value) {
-		    url = "auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
+		    books_url = "auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
 		    ok = true;
 		    break;
 		};
 	    };
 	    if ( !ok ) {
 		$( "#author_filter" ).val("")
-		return false;
 	    }
 	}
 	
@@ -98,7 +97,7 @@ function showBooks() {
 	    $(location).attr("href", "Home.html");
 	}
 	
-	loadScript( url, "books_script", function () {
+	loadScript( books_url, "books_script", function () {
 	    
 	    if ( $('#books_table').attr("filled") ) {
 		$('#books_table').dataTable().fnDestroy();
@@ -164,8 +163,7 @@ function showBooks() {
 	    $('#books_table').on('click', 'tr td:first-child', function () {
 		var id = $('span', this)[0].innerHTML;
 		var titre = $('span.table-title', this)[0].innerHTML;
-		var url = titre.replace( "/", "-" ) + "_cover." + id + ".html";
-		$(location).attr("href", url);
+		$(location).attr("href", titre.replace( "/", "-" ) + "_cover." + id + ".html" );
 	    } );
 	    $("#books_table_paginate").click( function() { minimizeUI() }); 
 	    $('#books_table').attr("filled", true);
