@@ -438,6 +438,15 @@ table.dataTable.display tbody tr.even:hover {
     color: black;
 }
 
+.fa-2x {
+    color: #D00000;
+    padding-right: 3px;
+}
+
+.fa-2x:hover {
+    color: black;
+}
+
 dataTables_wrapper
 .dataTables_length,
 .dataTables_wrapper
