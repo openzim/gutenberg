@@ -37,7 +37,7 @@
         </a>
         <div class="filter">
           <div>Filter:</div>
-          <input type="text" name="language_filter" id="language_filter" placeholder="Language" />
+          <select name="language_filter" id="language_filter"><option value="" label="All">All</option></select>
           <input type="text" name="author_filter" id="author_filter" placeholder="Author" />
 	  {% if not show_books %} <button onclick="showBooks()">Search</button> {% endif %}
         </div>
