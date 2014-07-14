@@ -171,8 +171,6 @@ function onLocalized() {
     };
 };
 
-document.webL10n.ready(onLocalized);
-
 function init() {
 
     /* Sort buttons */
@@ -264,6 +262,9 @@ function init() {
 	    }
 	}
     });
+
+    /* UI language select */
+    document.webL10n.ready(onLocalized);
 
     /* Persistence of form values */
     jQuery('input,select,textarea').persist(
