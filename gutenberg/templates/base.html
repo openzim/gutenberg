@@ -38,7 +38,7 @@
           <img alt="Homepage" id="logo2" src="css/logo_2.png" title="Homepage" />
         </a>
         <div class="filter">
-          <input type="text" name="language_filter" id="language_filter" placeholder="Language" />
+          <select id="language_filter" placeholder="Choose a language...">
           <input type="text" name="author_filter" id="author_filter" placeholder="Author" />
 	  {% if not show_books %} <button onclick="showBooks()">Search</button> {% endif %}
         </div>
