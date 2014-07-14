@@ -161,7 +161,8 @@ function showBooks() {
 		}
 	    ]
 	} );
-	$('#books_table').on('click', 'tr', function () {
+
+	$('#books_table').on('click', 'tr td:first-child', function () {
             var id = $('span', this)[0].innerHTML;
             var titre = $('span.table-title', this)[0].innerHTML;
 	    var url = titre.replace( "/", "-" ) + "_cover." + id + ".html";
