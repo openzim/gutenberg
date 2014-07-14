@@ -303,7 +303,7 @@ def update_html_for_static(book, html_content, epub=False):
 
     return soup.encode()
 
-
+# 42271
 def cover_html_content_for(book):
     cover_img = path("{id}_cover.jpg")
     cover_img = str(cover_img) if cover_img.exists() else None
