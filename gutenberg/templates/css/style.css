@@ -166,7 +166,6 @@ td {
     margin-left: 20px;
     margin-top: 1em;
     font-family: Arial,sans-serif;
-    font-weight: bold;
     color: #000000;
 }
 
@@ -192,7 +191,6 @@ td {
     padding-bottom: 12px;
     padding-right: 7px;
     font-family: Arial,sans-serif;
-    font-weight: bold;
     color: #000000;
 }
 
@@ -316,15 +314,14 @@ input:focus {
 /* Cover */
 
 h1 {
-    font-weight: bold;
-    font-size: 250%;
-    margin-top: 10px;
+    font-size: 3em;
+    font-family: "RobotoThin";
+    margin-top: 25px;
+    text-align: center;
 }
 
 h2 {
-    font-weight: bold;
-    font-size: 200%;
-    line-height: 80%;
+    font-size: 2em;
     margin-bottom: 15px;
 }
 
@@ -342,30 +339,36 @@ img.cover-art {
 }
 
 div.bibrec {
-    float: left;
+    margin: 0 auto;
+    width: 100%;
+    margin-top: 2em;
 }
 
 table.bibrec {
-    margin-left: 1em;
-    margin-top: 1em;
-    font-weight: bold;
-    font-size: 120%;
+    margin-top: 2em;
+    font-size: 1.5em;
     background: #EEEEEE;
     border: 1px solid #BBBBBB;
-    border-spacing : 0;
-    border-collapse : collapse;
+    border-spacing: 0;
+    border-collapse: collapse;
+    text-align: left;
+    margin: 0 auto;
+    max-width: 700px;
 }
 
 table.bibrec th {
     background: #DDDDDD;
     border: 1px solid #BBBBBB;
-    padding: 4px;
-    spacing: 0px;
+    padding: 12px;
+    font-size: 1.2em;
+    font-family: "RobotoLight";
 }
 
 table.bibrec td {
     border: 1px solid #BBBBBB;
-    padding: 4px;
+    padding: 12px;
+    font-size: 1.1em;
+    font-family: "RobotoThin";
 }
 
 div.bibrec img {

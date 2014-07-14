@@ -1,41 +1,37 @@
 {% extends "base.html" %}
 {% block title %}{{ book.title }} (cover){% endblock %}
 {% block content %}
-
-  <h1>{{ book.title }}</h1>
-  {% if book.subtitle %}
-  <h2>{{ book.subtitle }}</h2>
-  {% endif %}
-
-  <div id="cover">
-    {% if cover_img %}
-    <img data-l10n-id="cover-img" class="cover-art" src="{{ cover_img }}" title="Book Cover" alt="Book Cover" />
+    <h1>{{ book.title }}</h1>
+    {% if book.subtitle %}
+        <h2>{{ book.subtitle }}</h2>
     {% endif %}
-  </div>
-
-  <div class="bibrec">
-
-    <table class="bibrec">
-      <tr>
-	<th data-l10n-id="author">Author</th>
-	<td>{{ book.author.name() }}</td>
-      </tr>
-      <tr>
-	<th data-l10n-id="language">Language</th>
-	<td>{{ book.language|language_name|title }}</td>
-      </tr>
-	<th data-l10n-id="license">License</th>
-	<td>{{ book.license.name }}</td>
-      </tr>
-      <tr>
-	<th data-l10n-id="popularity">Popularity</th>
-	<td>{{ book.downloads }} downloads in the last 30 days.</td>
-      </tr>
+    {% if cover_img %}
+        <div id="cover">
+            
+            <img data-l10n-id="cover-img" class="cover-art" src="{{ cover_img }}" title="Book Cover" alt="Book Cover" />
+            
+        </div>
+    {% endif %}
+    <div class="bibrec">
+        <table class="bibrec">
+            <tr>
+                <th data-l10n-id="author">Author</th>
+                <td>{{ book.author.name() }}</td>
+            </tr>
+            <tr>
+                <th data-l10n-id="language">Language</th>
+                <td>{{ book.language|language_name|title }}</td>
+            </tr>
+            <th data-l10n-id="license">License</th>
+            <td>{{ book.license.name }}</td>
+        </tr>
+        <tr>
+            <th data-l10n-id="popularity">Popularity</th>
+            <td>{{ book.downloads }} downloads in the last 30 days.</td>
+        </tr>
     </table>
-
-        {% for format in formats %}
-           <a href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}"><img src="css/{{ format }}_icon_50.png" />
+    {% for format in formats %}
+        <a href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}"><img src="css/{{ format }}_icon_50.png" />
         {% endfor %}
-
-  </div>
+    </div>
 {% endblock %}
