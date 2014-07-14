@@ -170,9 +170,7 @@ function onLocalized() {
         l10n.setLanguage(this.value || this.options[this.selectedIndex].text);
     };
 };
-
 document.webL10n.ready(onLocalized);
-
 
 function init() {
 
@@ -285,4 +283,7 @@ function init() {
             expires : null          // cookie expiry (eg 365)
     }
     );
+
+    var l10nselect = document.getElementById('l10nselect');
+    document.webL10n.setLanguage(l10nselect.value || l10nselect.options[this.selectedIndex].text);
 }
