@@ -19,7 +19,7 @@
     <script src="languages.js" type="text/javascript"></script>
     <script src="main_languages.js" type="text/javascript"></script>
     <script src="other_languages.js" type="text/javascript"></script>
-    <script src="authors.js" type="text/javascript"></script>
+    <script id="authors_script" type="text/javascript"></script>
     <script id="books_script" type="text/javascript"></script>
     <link rel="prefetch" type="application/l10n" href="l10n/locales.ini" />
   </head>
@@ -28,25 +28,25 @@
       <div id="top-menu" class="container">
         <a href="Home.html">
           <div class="title-div">
-            <p class="top-title">Project Gutenberg Library</p>
-            <p class="sub-title">The first producer of free ebooks</p>
+            <p data-l10n-id="top-title" class="top-title">Project Gutenberg Library</p>
+            <p data-l10n-id="sub-title" class="sub-title">The first producer of free ebooks</p>
           </div>
         </a>
-      </div>
-      <div id="bottom-menu" class="container">
-        <a href="Home.html">
-          <img alt="Homepage" id="logo2" src="css/logo_2.png" title="Homepage" />
-        </a>
-        <div class="filter">
-          <select id="language_filter" placeholder="Choose a language...">
-          <input type="text" name="author_filter" id="author_filter" placeholder="Author" />
-	  {% if not show_books %} <button onclick="showBooks()">Search</button> {% endif %}
-        </div>
         <div class="l10nselector">
           <select id="l10nselect" name="l10nselect">
             <option>en</option>
             <option>fr</option>
           </select>
+        </div>
+      </div>
+      <div id="bottom-menu" class="container">
+        <a href="Home.html">
+          <img data-l10n-id="homepage" alt="Homepage" id="logo2" src="css/logo_2.png" title="Homepage" />
+        </a>
+        <div class="filter">
+          <select id="language_filter" data-l10n-id="choose-language" placeholder="Choose a language...">
+          <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" />
+	  {% if not show_books %} <button onclick="showBooks()" data-l10n-id="search">Search</button> {% endif %}
         </div>
         <div class="sort" id="sort">
           <i class="fa fa-heart fa-3x"  onclick="minimizeUI()" id="popularity_sort"></i>
