@@ -17,7 +17,8 @@ from jinja2 import Environment, PackageLoader
 import gutenberg
 from gutenberg import logger, XML_PARSER
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
-                             get_list_of_filtered_books, exec_cmd, cd)
+                             get_list_of_filtered_books, exec_cmd, cd,
+                             get_langs_with_count)
 from gutenberg.database import Book, Format, BookFormat, Author
 from gutenberg.iso639 import language_name
 
@@ -453,11 +454,10 @@ def export_to_json_helpers(books, static_folder, languages, formats):
             for book in books.order_by(Book.title.asc())],
            'full_by_title.js')
 
-    avail_langs = list(set([(language_name(b.language), b.language)
-                            for b in books]))
+    avail_langs = get_langs_with_count(books=books)
 
     # language-specific collections
-    for lang_name, lang in avail_langs:
+    for lang_name, lang, lang_count in avail_langs:
         # by popularity
         logger.info("\t\tDumping lang_{}_by_popularity.js".format(lang))
         dumpjs([book.to_array()

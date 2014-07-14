@@ -11,6 +11,7 @@ from collections import defaultdict
 import envoy
 
 from gutenberg import logger
+from gutenberg.iso639 import language_name
 from gutenberg.database import Book, BookFormat, Format
 
 
@@ -268,6 +269,20 @@ def get_list_of_filtered_books(languages, formats, only_books=[]):
         qs = qs.where(Book.language << languages)
 
     return qs
+
+
+def get_langs_with_count(books):
+
+    lang_count = {}
+    for book in books:
+        if not book.language in lang_count:
+            lang_count[book.language] = 0
+        lang_count[book.language] += 1
+
+    return [(language_name(l), l, nb)
+            for l, nb in sorted(lang_count.items(), key=lambda x: x[1])]
+
+
 
 if __name__ == '__main__':
     book = Book.get(id=1339)

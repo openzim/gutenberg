@@ -209,9 +209,10 @@ function init() {
     // fill language selector with langs from JS file
     $(languages_json_data).each(function (index, lang) {
         var opt = $('<option />');
-        opt.text(lang[0]);
         opt.val(lang[1]);
-        opt.attr('label', lang[0]);
+        var txt = lang[0] + ' (' + lang[2] + ')';
+        opt.text(txt);
+        opt.attr('label', txt);
         language_filter.append(opt);
     });
 
