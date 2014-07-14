@@ -20,7 +20,12 @@
  * IN THE SOFTWARE.
  */
 
-/* Source: https://github.com/fabi1cazenave/webL10n */
+/* Source: https://github.com/fabi1cazenave/webL10n
+With some changes to keep the language in a cookie with jQuery.cookie:
+  - in loadLocale(): add `$.cookie('language',lang);` in the beginning
+  - in l10nStartup(): var userLocale = $.cookie('language') 
+                          || navigator.language || navigator.userLanguage;
+ */
 
 /*jshint browser: true, devel: true, es5: true, globalstrict: true */
 'use strict';
@@ -291,6 +296,7 @@ document.webL10n = (function(window, document, undefined) {
 
     clear();
     gLanguage = lang;
+    $.cookie('language',lang);
 
     // check all <link type="application/l10n" href="..." /> nodes
     // and load the resource files
@@ -973,7 +979,7 @@ document.webL10n = (function(window, document, undefined) {
 
     // most browsers expose the UI language as `navigator.language'
     // but IE uses `navigator.userLanguage' instead
-    var userLocale = navigator.language || navigator.userLanguage;
+    var userLocale = $.cookie('language') || navigator.language || navigator.userLanguage;
     consoleLog('loading [' + userLocale + '] resources, ' +
         (gAsyncResourceLoading ? 'asynchronously.' : 'synchronously.'));
 
