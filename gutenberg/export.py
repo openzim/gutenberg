@@ -32,6 +32,7 @@ DEBUG_COUNT = []
 def get_default_context():
     return {
         'l10n_strings': json.dumps(l10n_strings),
+        'ui_languages': ['en', 'fr']
     }
 
 def book_name_for_fs(book):
@@ -100,7 +101,7 @@ def export_all_books(static_folder,
     context = get_default_context()
     context.update({'show_books': True})
     with open(os.path.join(static_folder, 'Home.html'), 'w') as f:
-        f.write(template.render(**context))
+        f.write(template.render(**context).encode('utf-8'))
 
     # export to HTML
     cached_files = os.listdir(download_cache)

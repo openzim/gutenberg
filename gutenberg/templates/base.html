@@ -34,8 +34,9 @@
         </a>
         <div class="l10nselector">
           <select id="l10nselect" name="l10nselect">
-            <option>en</option>
-            <option>fr</option>
+            {% for lang in ui_languages %}
+            <option value="{{ lang }}" label="{{ lang|language_name }}">{{ lang|language_name }}</option>
+            {% endfor %}
           </select>
         </div>
       </div>

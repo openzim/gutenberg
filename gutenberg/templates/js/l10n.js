@@ -23,7 +23,7 @@
 /* Source: https://github.com/fabi1cazenave/webL10n
 With some changes to keep the language in a cookie with jQuery.cookie:
   - in loadLocale(): add `$.cookie('language',lang);` in the beginning
-  - in l10nStartup(): var userLocale = $.cookie('language') 
+  - in l10nStartup(): var userLocale = $.cookie('language')
                           || navigator.language || navigator.userLanguage;
  */
 
@@ -980,6 +980,9 @@ document.webL10n = (function(window, document, undefined) {
     // most browsers expose the UI language as `navigator.language'
     // but IE uses `navigator.userLanguage' instead
     var userLocale = $.cookie('language') || navigator.language || navigator.userLanguage;
+    if (userLocale.indexOf('-') != -1) {
+        userLocale = userLocale.split('-')[0];
+    }
     consoleLog('loading [' + userLocale + '] resources, ' +
         (gAsyncResourceLoading ? 'asynchronously.' : 'synchronously.'));
 

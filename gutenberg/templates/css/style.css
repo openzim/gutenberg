@@ -1,8 +1,8 @@
 /* Fonts */
 
 @font-face {
-    font-family: 'RobotoLight'; 
-    src: url('../fonts/Roboto-Light.ttf'); 
+    font-family: 'RobotoLight';
+    src: url('../fonts/Roboto-Light.ttf');
 }
 
 @font-face {
@@ -263,7 +263,7 @@ input {
     -webkit-border-radius: 0.3125em;
     -moz-border-radius: 0.3125em;
     border-radius: 0.3125em;
-    font-family: 'RobotoLight'; 
+    font-family: 'RobotoLight';
 }
 
 input:hover,
@@ -354,12 +354,12 @@ div.bibrec img {
 
 .main {
     padding-left: 5em;
-    padding-right: 5em;   
+    padding-right: 5em;
 }
 
 
 .bolder {
-    font-family: "RobotoBold";  
+    font-family: "RobotoBold";
     margin-top: 10px;
 }
 
@@ -384,7 +384,7 @@ tr {
 }
 
 .table-author {
-    font-family: "RobotoLight";    
+    font-family: "RobotoLight";
     color: rgba(43, 34, 34, 0.88);
 }
 
@@ -442,7 +442,7 @@ table.dataTable.display tbody tr.even:hover {
 
 .fa-2x {
     color: #D00000;
-    font-size: 3em!important; 
+    font-size: 3em!important;
     padding-right: 10px;
 }
 
@@ -474,7 +474,7 @@ dataTables_wrapper
 .l10nselector{
     position: fixed;
     right: 0px;
-    bottom: 0px;
+    top: 0px;
     padding: 10px 21px;
 }
 
