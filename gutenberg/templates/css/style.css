@@ -169,7 +169,7 @@ td {
 .sort {
     float: right;
     height: 100%;
-    padding-top: 0;
+    padding-bottom: 12px;
     padding-right: 7px;
     font-family: Arial,sans-serif;
     font-weight: bold;
@@ -349,6 +349,7 @@ div.bibrec img {
 .text {
     padding-left: 5em;
     padding-right: 5em;
+    padding-top: 1em;
 }
 
 .main {
