@@ -402,7 +402,7 @@ div.bibrec img {
 .data-table {
     font-family: "RobotoRegular";
     font-size: 15px;
-    width: 900px!important;
+    max-width: 900px!important;
 }
 
 tr {
@@ -560,7 +560,15 @@ button.search:hover {
     margin-top: 3em;
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button {
+/* mobile */
+@media (max-width: 650px) {
+    /*No l10n selector*/
+    .l10nselector {
+        display: none;
+    }
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     font-family: "RobotoLight"!important;
     border: 0!important;
 }

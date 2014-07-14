@@ -31,7 +31,7 @@
     {% if formats %}
     <div class="icons-footer">
         {% for format in formats %}
-        <a href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}">
+        <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}">
             {% if format == "html" %}
             <i class="fa fa-html5 fa-6x"></i>
             {% endif %}        
