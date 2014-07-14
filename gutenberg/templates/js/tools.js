@@ -147,13 +147,13 @@ function showBooks() {
 			var urlBase = full[0].replace( "/", "-" );
 
 			if (data[0] == 1) {
-			    html += "<a href=\"" + urlBase + "." + full[3] + ".html\"><img alt=\"Read in HTML\" src=\"css/html_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-2x\"></i></a>";
 			}
 			if (data[1] == 1) {
-			    html += "<a href=\"" + urlBase + "." + full[3] + ".epub\"><img alt=\"Read in EPUB\" src=\"css/epub_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-book fa-2x\"></i></a>";
 			}
 			if (data[2] == 1) {
-			    html += "<a href=\"" + urlBase + "." + full[3] + ".pdf\"><img alrt=\"Read in PDF\" src=\"css/pdf_icon.png\" style=\"margin: 0px;\" /></a> ";
+			    html += "<a href=\"" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-2x\"></i></a>";
 			}
 			return html;
 		    }
