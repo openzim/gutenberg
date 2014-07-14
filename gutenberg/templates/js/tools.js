@@ -6,33 +6,6 @@ function minimizeUI() {
     $( "#home-about" ).slideUp( 300 );
 }
 
-function displayError(message) {
-
-    // create unique id for div
-    var dialog_id = "error_dialog_" + new Date().getTime();
-
-    // append html to body
-    $("body").append("<div id=\"" + dialog_id + "\">" + message + "</div>");
-
-    // display the error dialog
-    $("#" + dialog_id).dialog({
-    modal: true,
-    resizable: false,
-    height: 130,
-    width: 250,
-    title: "Error",
-    buttons: {
-        Ok: function() {
-        $(this).dialog("close");
-        }
-    },
-    beforeClose: function(event, ui) {
-        // remove dialog div from document
-        $("#" + dialog_id).remove();
-    }
-    });
-}
-
 function loadScript(url, nodeId, callback) {
     if (document.getElementById( nodeId ).src == url) {
 	return;
