@@ -436,10 +436,11 @@ table.dataTable.display tbody tr.even:hover {
 }
 
 .title-div {
-    padding-top: 25px;
+    padding-top: 43px;
     float: left;
     width: 100%;
     text-align: center;
+    line-height: 37px;
 }
 
 
