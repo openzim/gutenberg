@@ -1,9 +1,9 @@
-- manage the case where a book has multiple language (e.g. 10 books for French)
-- Change Home lang input to a select with 2 optgroups: main (sorted by pop) and others (sorted alphabetically). Both have nb of books inside.
-- recompress:
-  png: pngquant --nofs --force --ext=".png" "' + path+ '"; ' + 'advdef -z -4 -i 5 "' + path+ '"'
-  jpg: jpegoptim --strip-all -m50 "' + path + '"'
-  rezip: 7za a -tzip -mx9 test2.epub * -mmt
 - Fix download click on the table not working on recent version of FF
+- better switch from cover page to index page
+- include progress bar/waiting visual system during json_data loading
+- remember topmenu visibility over reloads
+
 - Better handling of failed downloads and mirrors
-- Language on the summary page should not be the ISO code, but the name in mother tongue
+
+WONTFIX:
+- manage the case where a book has multiple language (e.g. 10 books for French): not possible automatically because sometimes there are multiple files one-per-language (e.g. 1000 some in French and some in English even if only French is written in the metadata), sometimes the multiple languages written in the metadata are for books with mixed languages (e.g. 14568 in Middle English enm and English en); even if it should be better to manage these cases, the various cases must be carefully studied and sorted, and probably the books should be manually sorted, or equivalently the metadata should be improved

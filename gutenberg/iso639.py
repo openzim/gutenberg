@@ -1,17 +1,18 @@
 #!/usr/bin/env python
-# -*- coding:  utf-8 -*-
-# vim:  ai ts=4 sts=4 et sw=4 nu
+# -*- coding: utf-8 -*-
+# vim: ai ts=4 sts=4 et sw=4 nu
+
+from __future__ import (unicode_literals, absolute_import,
+                        division, print_function)
 
 import babel
 
 
-def language_name(code): 
-    try: 
-        return babel.Locale(code).get_language_name(code)
+def language_name(code):
+    try:
+        return babel.Locale(code).get_language_name(code).title()
     except:
-        if code in other_language_names:
-            return other_language_names[code]
-        return code
+        return other_language_names.get(code, code)
 
 
 # Autonyms unknown by babel

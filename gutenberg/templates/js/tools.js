@@ -12,37 +12,37 @@ function displayError(message) {
 
     // create unique id for div
     var dialog_id = "error_dialog_" + new Date().getTime();
-    
+
     // append html to body
     $("body").append("<div id=\"" + dialog_id + "\">" + message + "</div>");
-    
+
     // display the error dialog
     $("#" + dialog_id).dialog({
-	modal: true,
-	resizable: false,
-	height: 130,
-	width: 250,
-	title: "Error",
-	buttons: {
-	    Ok: function() {
-		$(this).dialog("close");
-	    }
-	},
-	beforeClose: function(event, ui) {
-	    // remove dialog div from document
-	    $("#" + dialog_id).remove();
-	}
+    modal: true,
+    resizable: false,
+    height: 130,
+    width: 250,
+    title: "Error",
+    buttons: {
+        Ok: function() {
+        $(this).dialog("close");
+        }
+    },
+    beforeClose: function(event, ui) {
+        // remove dialog div from document
+        $("#" + dialog_id).remove();
+    }
     });
 }
 
 function loadScript(url, callback) {
     document.getElementById("books_script").parentElement.
-	removeChild( document.getElementById("books_script") );
- 
+    removeChild( document.getElementById("books_script") );
+
     var script = document.createElement("script")
     script.type = "text/javascript";
     script.id = "books_script";
- 
+
     if (script.readyState) { //IE
         script.onreadystatechange = function () {
             if (script.readyState == "loaded" || script.readyState == "complete") {
@@ -55,7 +55,7 @@ function loadScript(url, callback) {
             callback();
         };
     }
- 
+
     script.src = url;
     document.getElementsByTagName("head")[0].appendChild(script);
 }
@@ -63,43 +63,47 @@ function loadScript(url, callback) {
 function showBooks() {
     var url = "full_by_" + sortMethod + ".js";
 
-    if ( $( "#language_filter" ).val() ) {
-	var count = languages_json_data.length;
-	var language_filter_value = $( "#language_filter" ).val();
-	var ok = false;
-	for ( i = 0 ; i < count ; i++ ) {
-	    if (languages_json_data[i][0] === language_filter_value) {
-		url = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
-		ok = true;
-		break;
-	    };
-	};
-	if ( !ok ) {
-	    return false;
-	}
+    var language_filter_value = $( "#language_filter" ).val();
+    if ( language_filter_value ) {
+        var count = languages_json_data.length;
+        var ok = false;
+        for ( i = 0 ; i < count ; i++ ) {
+            if (languages_json_data[i][1] === language_filter_value) {
+                url = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
+                ok = true;
+                break;
+            };
+        };
+        if ( !ok ) {
+            return false;
+        }
     }
 
     if ( $( "#author_filter" ).val() ) {
-	var count = authors_json_data.length;
-	var author_filter_value = $( "#author_filter" ).val();
-	var ok = false;
-	for ( i = 0 ; i < count ; i++ ) {
-	    if (authors_json_data[i][0] === author_filter_value) {
-		url = "auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
-		ok = true;
-		break;
-	    };
-	};
-	if ( !ok ) {
-	    return false;
-	}
+    var count = authors_json_data.length;
+    var author_filter_value = $( "#author_filter" ).val();
+    var ok = false;
+    for ( i = 0 ; i < count ; i++ ) {
+        if (authors_json_data[i][0] === author_filter_value) {
+        url = "auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
+        ok = true;
+        break;
+        };
+    };
+    if ( !ok ) {
+        return false;
+    }
+    }
+
+    if ( $( "#cover" ).length > 0 ) {
+    $(location).attr("href", "Home.html");
     }
 
     loadScript( url, function () {
 
-	if ( $('#books_table').attr("filled") ) {
-	    $('#books_table').dataTable().fnDestroy();
-	}
+    if ( $('#books_table').attr("filled") ) {
+        $('#books_table').dataTable().fnDestroy();
+    }
 
 	$('#books_table').dataTable( {
 	    "searching": false,
@@ -167,9 +171,19 @@ function showBooks() {
 	
 	$('#sort').show();
     });
-    
+
     return true;
 }
+
+function onLocalized() {
+    var l10n = document.webL10n,
+        l10nselect = document.getElementById('l10nselect');
+    l10nselect.value = l10n.getLanguage(); // not working with IE<9
+    l10nselect.onchange = function() {
+        l10n.setLanguage(this.value || this.options[this.selectedIndex].text);
+    };
+};
+document.webL10n.ready(onLocalized);
 
 function init() {
 
@@ -180,82 +194,100 @@ function init() {
 	showBooks();
     });
 
+    $( "#alpha_sort" ).button({
+    icons: { primary: 'sort_alpha_icon' },
+    text: false,
+    label: 'Sort books by title'
+    })
     $( "#alpha_sort" ).click(function() {
-	sortMethod = "title";
-	showBooks();
+    sortMethod = "title";
+    showBooks();
+    $( "#popularity_sort" ).removeClass('ui-state-focus');
+    $( "#alpha_sort" ).addClass('ui-state-focus');
     });
 
     /* Language filter */
-    $( "#language_filter" ).autocomplete({
-	source: function ( request, response ) {
-	    var results = [];
-	    var pattern = new RegExp(request.term, "i");
-	    var count = languages_json_data.length;
-	    var i = 0;
-	    while (i < count && results.length < 100) {
-		if ( languages_json_data[i][0].match(pattern) ) {
-		    results.push( languages_json_data[i][0] );
-		}
-		i++;
-	    };
-	    response( results );
-        },
-	select: function (event, ui) {
-	    minimizeUI();
-	    showBooks();
-	}
-    });
-    $( "#language_filter" ).keypress( function( event ) {
-	if( event.which == 13 ) {
-	    if (!showBooks()) {
-		displayError( "No books matching these criterias." );
-		this.value = "";
-	    }
-	}
+    var language_filter = $("#language_filter");
+    // fill language selector with langs from JS file
+
+    function create_options(parent, langlist) {
+        $(langlist).each(function (index, lang) {
+            var opt = $('<option />');
+            opt.val(lang[1]);
+            var txt = lang[0] + ' (' + lang[2] + ')';
+            opt.text(txt);
+            opt.attr('label', txt);
+            parent.append(opt);
+        });
+    }
+
+    if (other_languages_json_data.length) {
+        var main_group = $('<optgroup>');
+        main_group.attr('label', "Main languages");
+        create_options(main_group, main_languages_json_data);
+        language_filter.append(main_group);
+
+        var other_group = $('<optgroup>');
+        other_group.attr('label', "Other languages");
+        create_options(other_group, other_languages_json_data);
+        language_filter.append(other_group);
+    } else {
+        create_options(language_filter, languages_json_data);
+    }
+
+    language_filter.on('change', function (e) {
+        minimizeUI();
+        if (!showBooks()) {
+            displayError( "No books matching these criterias." );
+            // $(this).val("");
+        }
     });
     if ( languages_json_data.length == 1 ) {
-	$( "#language_filter" ).val( languages_json_data[0][0] );
-	$( "#language_filter" ).hide();
+        language_filter.val( languages_json_data[0][1] );
+        language_filter.hide();
     }
 
     /* Author filter */
     $( "#author_filter" ).autocomplete({
-	source: function ( request, response ) {
+    source: function ( request, response ) {
             var results = [];
-	    var pattern = new RegExp(request.term, "i");
-	    var count = authors_json_data.length;
-	    var i = 0;
-	    while (i < count && results.length < 100) {
-		if ( authors_json_data[i][0].match(pattern) ) {
-		    results.push( authors_json_data[i][0] );
-		}
-		i++;
-	    };
-	    response( results );
+        var pattern = new RegExp(request.term, "i");
+        var count = authors_json_data.length;
+        var i = 0;
+        while (i < count && results.length < 100) {
+        if ( authors_json_data[i][0].match(pattern) ) {
+            results.push( authors_json_data[i][0] );
+        }
+        i++;
+        };
+        response( results );
         },
-	select: function ( event, ui ) {
-	    minimizeUI();
-	    showBooks();
+    select: function ( event, ui ) {
+        minimizeUI();
+        showBooks();
         }
     });
     $( "#author_filter" ).keypress( function( event ) {
-	if( event.which == 13 ) {
-	    if (!showBooks()) {
-		displayError( "No books matching these criterias." );
-		this.value = "";
-	    }
-	}
+    if( event.which == 13 ) {
+        if (!showBooks()) {
+        displayError( "No books matching these criterias." );
+        this.value = "";
+        }
+    }
     });
 
     /* Persistence of form values */
     jQuery('input,select,textarea').persist(
-	{ 
+    {
             context : 'gutenberg',  // a context or namespace for each field
             replace : true,         // replace existing field contents if any
             cookie  : 'gutenberg',  // cookies basename
             path    : '/',          // cookie path
             domain  : null,         // cookie domain
             expires : null          // cookie expiry (eg 365)
-	}
+    }
     );
+
+    var l10nselect = document.getElementById('l10nselect');
+    document.webL10n.setLanguage(l10nselect.value || l10nselect.options[this.selectedIndex].text);
 }

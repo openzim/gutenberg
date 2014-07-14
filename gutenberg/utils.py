@@ -5,12 +5,15 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
-
+import hashlib
+from contextlib import contextmanager
 from collections import defaultdict
 
 import envoy
+from path import path
 
 from gutenberg import logger
+from gutenberg.iso639 import language_name
 from gutenberg.database import Book, BookFormat, Format
 
 
@@ -20,9 +23,22 @@ FORMAT_MATRIX = {
     'html': 'text/html'
 }
 
+NB_MAIN_LANGS = 5
+
+
+@contextmanager
+def cd(newdir):
+    prevdir = os.getcwd()
+    os.chdir(newdir)
+    try:
+        yield
+    finally:
+        os.chdir(prevdir)
+
 
 def exec_cmd(cmd):
-    return envoy.run(str(cmd))
+    # logger.debug("** {}".format(cmd))
+    return envoy.run(str(cmd.encode('utf-8')))
 
 
 def download_file(url, fname):
@@ -257,6 +273,42 @@ def get_list_of_filtered_books(languages, formats, only_books=[]):
         qs = qs.where(Book.language << languages)
 
     return qs
+
+
+def get_langs_with_count(books):
+
+    lang_count = {}
+    for book in books:
+        if not book.language in lang_count:
+            lang_count[book.language] = 0
+        lang_count[book.language] += 1
+
+    return [(language_name(l), l, nb)
+            for l, nb in sorted(lang_count.items(), key=lambda x: x[1])]
+
+
+def get_lang_groups(books):
+
+    langs_wt_count = get_langs_with_count(books)
+    if len(langs_wt_count) <= NB_MAIN_LANGS:
+        return langs_wt_count, []
+    else:
+        return (langs_wt_count[:NB_MAIN_LANGS],
+                sorted(langs_wt_count[NB_MAIN_LANGS:], key=lambda x: x[0]))
+
+def md5sum(fpath):
+    with open(fpath, 'r') as f:
+        return hashlib.md5(f.read()).hexdigest()
+
+
+def is_bad_cover(fpath):
+    bad_sizes = [19263]
+    bad_sums = ['a059007e7a2e86f2bf92e4070b3e5c73']
+
+    if path(fpath).size not in bad_sizes:
+        return False
+
+    return md5sum(fpath) in bad_sums
 
 if __name__ == '__main__':
     book = Book.get(id=1339)
