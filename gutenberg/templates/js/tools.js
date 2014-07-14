@@ -115,9 +115,9 @@ function showBooks() {
 	    "info": false,
 	    "data": json_data,
 	    "columns": [
-		{ "title": "Title" },
-        { "title": "Author" },
-		{ "title": "Format" }
+		{ "title": "" },
+        { "title": "" },
+		{ "title": "" }
 	    ],
 	    "bAutoWidth": false,
 	    "columnDefs": [
@@ -194,11 +194,6 @@ function init() {
 	showBooks();
     });
 
-    $( "#alpha_sort" ).button({
-    icons: { primary: 'sort_alpha_icon' },
-    text: false,
-    label: 'Sort books by title'
-    })
     $( "#alpha_sort" ).click(function() {
     sortMethod = "title";
     showBooks();
