@@ -79,8 +79,7 @@ function showBooks() {
         }
     }
 
-    var authors_url = "authors.js";
-
+    var authors_url = language_filter_value ? "authors_lang_" + language_filter_value + ".js" : "authors.js";
     loadScript( authors_url, "authors_script", function () {
 	if ( $( "#author_filter" ).val() ) {
 	    var count = authors_json_data.length;
@@ -94,6 +93,7 @@ function showBooks() {
 		};
 	    };
 	    if ( !ok ) {
+		$( "#author_filter" ).val("")
 		return false;
 	    }
 	}
