@@ -550,3 +550,8 @@ button.search:hover {
     background: white;
     color: black;
 }
+
+.icons-footer {
+    text-align: center;
+    margin-top: 3em;
+}
