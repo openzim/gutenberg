@@ -286,7 +286,4 @@ function init() {
             expires : null          // cookie expiry (eg 365)
     }
     );
-
-    var l10nselect = document.getElementById('l10nselect');
-    document.webL10n.setLanguage(l10nselect.value || l10nselect.options[this.selectedIndex].text);
 }
