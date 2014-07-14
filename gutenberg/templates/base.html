@@ -33,7 +33,7 @@
           </div>
         </a>
         <div class="l10nselector">
-          <select id="l10nselect" name="l10nselect">
+          <select id="l10nselect" name="l10nselect" title="Interface language" data-l10n-id="ui-language-switcher">
             {% for lang in ui_languages %}
             <option value="{{ lang }}" label="{{ lang|language_name }}">{{ lang|language_name }}</option>
             {% endfor %}
