@@ -45,7 +45,10 @@
     src: url('../fonts/RobotoCondensed-Regular.ttf');
 }
 
-
+@font-face {
+    font-family: 'RobotoThin';
+    src: url('../fonts/Roboto-Thin.ttf');
+}
 /* Global stuff */
 
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6,
@@ -67,7 +70,7 @@ body {
     font-size: 75%;
     line-height: 1.5;
     color: #333333;
-    background: none repeat scroll 0 0 #FFFFFF;
+    background: #f9f9f9;
 }
 
 a {
@@ -81,18 +84,18 @@ a {
 
 th {
     text-align: left;
-    color: #b88b35;
+    color: #000000;
 }
 
 td {
-    color: #b88b35;
+    color: #000000;
 }
 
 /* Header top-menu */
 
 #top-menu {
     height: 73px;
-    background: none repeat scroll 0 0 #eddab7;
+    background: #D00000;
 }
 
 #top-menu a {
@@ -106,21 +109,12 @@ td {
     margin-right: 7px;
 }
 
-#top-menu a div {
-    float: left;
-    margin-left: 10px;
-    padding-top: 3px;
-    font-size: 25px;
-    font-weight: bold;
-    line-height: 130%;
-    color: #b88b35;
-}
-
 /* Header bottom-menu */
 
 #bottom-menu {
-    height: 70px;
-    background: none repeat scroll 0 0 #f5ecdb;
+    height: 75px;
+    background: #D00000;
+    padding-top: 25px;
 }
 
 #bottom-menu a img {
@@ -150,10 +144,10 @@ td {
 
 .filter {
     float: left;
-    margin-left: 12px;
+    margin-left: 20px;
     font-family: Arial,sans-serif;
     font-weight: bold;
-    color: #b88b35;
+    color: #000000;
 }
 
 .filter > div {
@@ -169,6 +163,7 @@ td {
     float: left;
     margin-top: 5px;
     margin-left: 10px;
+    height: 12px;
 }
 
 .sort {
@@ -178,7 +173,7 @@ td {
     padding-right: 7px;
     font-family: Arial,sans-serif;
     font-weight: bold;
-    color: #b88b35;
+    color: #000000;
 }
 
 .sort > div {
@@ -234,19 +229,18 @@ table.dataTable.row-border tbody th,
 table.dataTable.row-border tbody td,
 table.dataTable.display tbody th,
 table.dataTable.display tbody td {
-    padding: 4px;
+    padding: inherit;
     overflow: hidden; /* this is what fixes the expansion */
     text-overflow: ellipsis; /* not supported in all browsers, but I accepted the tradeoff */
-    white-space: nowrap;
 }
 
 /* About */
 
 #home-about {
-    margin: 1em 0 1em 0;
-    text-align: justify;
+    margin: 1.5em 0 1em 0;
+    text-align: center;
     font-size: 20px;
-    color: #b88b35;
+    color: #000000;
 }
 
 /* Books */
@@ -361,3 +355,93 @@ div.bibrec img {
     padding-left: 5em;
     padding-right: 5em;   
 }
+
+
+.bolder {
+    font-family: "RobotoBold";  
+    margin-top: 10px;
+}
+
+.light {
+    font-family: "RobotoThin";
+    font-size: 19px;
+}
+
+.data-table {
+    font-family: "RobotoRegular";
+    font-size: 15px;
+    width: 900px!important;
+}
+
+tr {
+    padding: 20px;
+}
+
+.table-title {
+    font-family: RobotoCondensedBold;
+    font-size: 1.4em;
+}
+
+.table-author {
+    font-family: "RobotoLight";    
+    color: rgba(43, 34, 34, 0.88);
+}
+
+div.list-stripe {
+    width: 10px;
+    min-height: 65px;
+    background: #D00000;
+    float: left;
+    margin-right: 20px;
+}
+
+tr.odd {
+    background-color: white!important;
+}
+
+table.dataTable.display tbody tr:hover,
+table.dataTable.display tbody tr.odd:hover,
+table.dataTable.display tbody tr.even:hover {
+    background-color: whitesmoke!important;
+}
+
+.title-div {
+    padding-top: 25px;
+    float: left;
+    width: 100%;
+    text-align: center;
+}
+
+
+.top-title {
+    font-family: "RobotoCondensedRegular";
+    font-size: 40px;
+    color: white;
+}
+
+.sub-title {
+    font-family: "RobotoThin";
+    font-size: 19px;
+    color: white;
+
+}
+
+.fa-3x {
+    height: inherit;
+    color: white;
+    margin-top: 12px;
+    padding-right: 20px;
+}
+
+.fa-3x:hover {
+    color: black;
+}
+
+
+/*
+.tr:hover, .ui-menu-item:focus,
+.ui-menu-item:active,
+.ui-menu-item:visited{
+    background: #000000!important;
+}
+*/
