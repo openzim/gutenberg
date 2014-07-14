@@ -7,16 +7,14 @@ WONTFIX:
 
 -- 1am --
 
-* [reg] transparent icon in HTML inline
 * [reg] cleanup python debug list
-* [reg] Fix main/other langs list by numbers
 
 * [kelson] keep sorting icon in hover state when clicked (store in cookie)
 * [ahmad] different bottom padding in home and cover (filters/red -- maybe due to sort)
-* [kelson] shrink a little bit the height of the cover page so it fits on h768 with bars
 * [seb] include fontawesome spinner at start of init() and remove at end of init()
 * [ahmad] Add Gutenberg logo to top left logo
 * [seb] Complete JS translations (Anonymous, Previous/Next, Others..)
 * [ahmad] Improve style for pagination
 * [seb, reg] Change nb of downloads to heart icons
 * [reg] fix the crash that happens when you don't have any zimwriterfs binary
+* [reg] Make Homepage/Cover mobile friendly
