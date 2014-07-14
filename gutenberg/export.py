@@ -25,6 +25,7 @@ from gutenberg.iso639 import language_name
 
 jinja_env = Environment(loader=PackageLoader('gutenberg', 'templates'))
 
+DEBUG_COUNT = []
 
 def book_name_for_fs(book):
     return book.title.strip().replace('/', '-')
@@ -102,6 +103,8 @@ def export_all_books(static_folder,
                        cached_files=cached_files,
                        languages=languages,
                        formats=formats)
+
+    from pprint import pprint as pp ; pp(DEBUG_COUNT)
 
 
 def article_name_for(book, cover=False):
@@ -261,6 +264,8 @@ def update_html_for_static(book, html_content, epub=False):
                     if remove:
                         child.decompose()
                 break
+    else:
+        DEBUG_COUNT.append((book.id, book.title))
 
     # build infobox
     if not epub:

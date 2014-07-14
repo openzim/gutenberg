@@ -44,7 +44,7 @@
           <img data-l10n-id="homepage" alt="Homepage" id="logo2" src="css/logo_2.png" title="Homepage" />
         </a>
         <div class="filter">
-          <select id="language_filter" data-l10n-id="choose-language" placeholder="Choose a language...">
+          <select id="language_filter" data-l10n-id="choose-language" placeholder="Choose a language..."><option value="" label="Any Language">Any Language</option></select>
           <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" />
 	  {% if not show_books %} <button onclick="showBooks()" data-l10n-id="search">Search</button> {% endif %}
         </div>
