@@ -25,6 +25,9 @@ l10n_strings = {
       "search": {
         "textContent": "Search"
       },
+      "author": {
+        "placeholder": "Author"
+      },
       "cover-img": {
         "alt": "Book Cover",
         "title": "Book Cover"
@@ -49,9 +52,6 @@ l10n_strings = {
       },
       "title": {
         "textContent": "Title"
-      },
-      "author": {
-        "textContent": "Author"
       },
       "format": {
         "textContent": "Format"
@@ -137,6 +137,9 @@ l10n_strings = {
       "search": {
         "textContent": "Rechercher"
       },
+      "author": {
+        "placeholder": "Auteur"
+      },
       "cover-img": {
         "title":"Couverture du livre",
         "alt":"Couverture du livre"
@@ -161,9 +164,6 @@ l10n_strings = {
       },
       "title": {
         "textContent": "Titre"
-      },
-      "author": {
-        "textContent": "Auteur"
       },
       "format": {
         "textContent": "Format"

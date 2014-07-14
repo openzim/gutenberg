@@ -117,7 +117,12 @@ function showBooks() {
 			    div = "<div class=\"list-stripe\"></div>"
 			    title = "<span style=\"display: none\">" + full[3] + "</span>";
 			    title += " <span class = \"table-title\">" + full[0] + "</span>"
-			    author = "<span class=\"table-author\">" + full[1] + "</span>";
+			    author = ((full[1]=='Anonymous')?
+                            "<span class=\"table-author\" data-l10n-id=\"author-anonymous\">" + document.webL10n.get('author-anonymous') + "</span>"
+                         :((full[1]=='Various')?
+                            "<span class=\"table-author\" data-l10n-id=\"author-various\">" + document.webL10n.get('author-various') + "</span>"
+                         :
+                            "<span class=\"table-author\">" + full[1] + "</span>"));
 
 			    return div + "<div>" + title + "<br>" + author + "</div";
 			}
@@ -220,12 +225,12 @@ function init() {
 
     if (other_languages_json_data.length) {
         var main_group = $('<optgroup>');
-        main_group.attr('label', "Main languages");
+        main_group.attr('label', document.webL10n.get('main-languages'));
         create_options(main_group, main_languages_json_data);
         language_filter.append(main_group);
 
         var other_group = $('<optgroup>');
-        other_group.attr('label', "Other languages");
+        other_group.attr('label', document.webL10n.get('other-languages'));
         create_options(other_group, other_languages_json_data);
         language_filter.append(other_group);
     } else {

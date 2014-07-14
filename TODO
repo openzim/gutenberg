@@ -4,3 +4,20 @@
 
 WONTFIX:
 - manage the case where a book has multiple language (e.g. 10 books for French): not possible automatically because sometimes there are multiple files one-per-language (e.g. 1000 some in French and some in English even if only French is written in the metadata), sometimes the multiple languages written in the metadata are for books with mixed languages (e.g. 14568 in Middle English enm and English en); even if it should be better to manage these cases, the various cases must be carefully studied and sorted, and probably the books should be manually sorted, or equivalently the metadata should be improved
+
+-- 1am --
+
+* [reg] transparent icon in HTML inline
+* [reg] cleanup python debug list
+* [reg] Fix main/other langs list by numbers
+
+* [kelson] keep sorting icon in hover state when clicked (store in cookie)
+* [ahmad] different bottom padding in home and cover (filters/red -- maybe due to sort)
+* [kelson] shrink a little bit the height of the cover page so it fits on h768 with bars
+* [seb] include fontawesome spinner at start of init() and remove at end of init()
+* [ahmad] Add Gutenberg logo to top left logo
+* [seb] Complete JS translations (Anonymous, Previous/Next, Others..)
+* [ahmad] Improve style for pagination
+* [kelson] Search button on cover is not working anymore.
+* [seb, reg] Change nb of downloads to heart icons
+
