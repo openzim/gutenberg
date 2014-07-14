@@ -22,10 +22,18 @@ from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
                              is_bad_cover)
 from gutenberg.database import Book, Format, BookFormat, Author
 from gutenberg.iso639 import language_name
+from gutenberg.l10n import l10n_strings
 
 jinja_env = Environment(loader=PackageLoader('gutenberg', 'templates'))
 
 DEBUG_COUNT = []
+
+
+def get_default_context():
+    return {
+        'l10n_strings': json.dumps(l10n_strings),
+        'ui_languages': ['en', 'fr']
+    }
 
 def book_name_for_fs(book):
     return book.title.strip().replace('/', '-')
@@ -90,9 +98,10 @@ def export_all_books(static_folder,
 
     # export homepage
     template = jinja_env.get_template('index.html')
-    context = {'show_books': True}
+    context = get_default_context()
+    context.update({'show_books': True})
     with open(os.path.join(static_folder, 'Home.html'), 'w') as f:
-        f.write(template.render(**context))
+        f.write(template.render(**context).encode('utf-8'))
 
     # export to HTML
     cached_files = os.listdir(download_cache)
@@ -289,11 +298,12 @@ def update_html_for_static(book, html_content, epub=False):
 def cover_html_content_for(book):
     cover_img = path("{id}_cover.jpg")
     cover_img = str(cover_img) if cover_img.exists() else None
-    context = {
+    context = get_default_context()
+    context.update({
         'book': book,
         'cover_img': cover_img,
         'formats': main_formats_for(book)
-    }
+    })
     template = jinja_env.get_template('cover_article.html')
     return template.render(**context)
 

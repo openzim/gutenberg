@@ -2,6 +2,7 @@ var sortMethod = "popularity";
 var books_url = "full_by_popularity.js";
 
 function minimizeUI() {
+    $( "#hide-home-about").val( "yes" );
     $( "#home-about" ).slideUp( 300 );
 }
 
@@ -114,11 +115,11 @@ function showBooks() {
 	}
 
 	loadScript( books_url, "books_script", function () {
-	    
+
 	    if ( $('#books_table').attr("filled") ) {
 		$('#books_table').dataTable().fnDestroy();
 	    }
-	    
+
 	    $('#books_table').dataTable( {
 		"searching": false,
 		"ordering":  false,
@@ -144,7 +145,7 @@ function showBooks() {
 			    title = "<span style=\"display: none\">" + full[3] + "</span>";
 			    title += " <span class = \"table-title\">" + full[0] + "</span>"
 			    author = "<span class=\"table-author\">" + full[1] + "</span>";
-			    
+
 			    return div + "<div>" + title + "<br>" + author + "</div";
 			}
 		    },
@@ -154,13 +155,13 @@ function showBooks() {
 			    return "";
 			}
 		    },
-		    
+
 		    {
 			"targets": 2,
 			"render": function ( data, type, full, meta ) {
 			    var html = "";
 			    var urlBase = full[0].replace( "/", "-" );
-			    
+
 			    if (data[0] == 1) {
 				html += "<a href=\"" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-2x\"></i></a>";
 			    }
@@ -175,31 +176,47 @@ function showBooks() {
 		    }
 		]
 	    } );
-	    
+
 	    $('#books_table').on('click', 'tr td:first-child', function () {
 		var id = $('span', this)[0].innerHTML;
 		var titre = $('span.table-title', this)[0].innerHTML;
 		$(location).attr("href", titre.replace( "/", "-" ) + "_cover." + id + ".html" );
 	    } );
-	    $("#books_table_paginate").click( function() { minimizeUI() }); 
+	    $("#books_table_paginate").click( function() { minimizeUI() });
 	    $('#books_table').attr("filled", true);
-	    
+
 	    $('#sort').show();
 	});
     });
 }
 
 function onLocalized() {
-    var l10n = document.webL10n,
-        l10nselect = document.getElementById('l10nselect');
-    l10nselect.value = l10n.getLanguage(); // not working with IE<9
-    l10nselect.onchange = function() {
-        l10n.setLanguage(this.value || this.options[this.selectedIndex].text);
-    };
+    var l10n = document.webL10n;
+    var l10nselect = $("#l10nselect");
+    l10nselect.val(l10n.getLanguage());
+    l10nselect.on('change', function(e) {
+        l10n.setLanguage($(this).val());
+    });
 };
-document.webL10n.ready(onLocalized);
 
 function init() {
+
+    /* Persistence of form values */
+    jQuery('input,select,textarea').persist(
+    {
+            context : 'gutenberg',  // a context or namespace for each field
+            replace : true,         // replace existing field contents if any
+            cookie  : 'gutenberg',  // cookies basename
+            path    : '/',          // cookie path
+            domain  : null,         // cookie domain
+            expires : 1             // cookie expiry (eg 365)
+    }
+    );
+
+    /* Hide home about */
+    if ( $("#hide-home-about").val() ) {
+	$( "#home-about" ).hide();
+    }
 
     /* Sort buttons */
     $( "#sort" ).hide();
@@ -277,16 +294,6 @@ function init() {
     }
     });
 
-    /* Persistence of form values */
-    jQuery('input,select,textarea').persist(
-    {
-            context : 'gutenberg',  // a context or namespace for each field
-            replace : true,         // replace existing field contents if any
-            cookie  : 'gutenberg',  // cookies basename
-            path    : '/',          // cookie path
-            domain  : null,         // cookie domain
-            expires : null          // cookie expiry (eg 365)
-    }
-    );
-
 }
+
+document.webL10n.ready(onLocalized);
