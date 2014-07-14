@@ -35,10 +35,19 @@ def get_default_context():
         'ui_languages': ['en', 'fr']
     }
 
+def fa_for_format(format):
+    return {
+        'html': "",
+        'info': 'fa-info-circle',
+        'epub': 'fa-book',
+        'pdf': 'fa-file-pdf-o',
+    }.get(format, 'fa-file-o')
+
 def book_name_for_fs(book):
     return book.title.strip().replace('/', '-')
 jinja_env.filters['book_name_for_fs'] = book_name_for_fs
 jinja_env.filters['language_name'] = language_name
+jinja_env.filters['fa_for_format'] = fa_for_format
 
 
 def tmpl_path():

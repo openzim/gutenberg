@@ -7,9 +7,7 @@ WONTFIX:
 
 -- 1am --
 
-* [reg] transparent icon in HTML inline
 * [reg] cleanup python debug list
-* [reg] Fix main/other langs list by numbers
 
 * [kelson] keep sorting icon in hover state when clicked (store in cookie)
 * [ahmad] different bottom padding in home and cover (filters/red -- maybe due to sort)
