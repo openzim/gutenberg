@@ -136,15 +136,35 @@ td {
 .ui-menu-item:focus,
 .ui-menu-item:active
 .ui-menu-item:visited {
-    background: #ddd!important;
+    /*background: #ddd!important;*/
+    background: white;
     border: #ffffff;
     height: 30px!important;
 }
 
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus {
+    border: 1px solid #D00000;
+    color: #333;
+    background: #f9f9f9;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+    border: 1px solid #D00000;
+    background: none;
+    color: #333;
+}
 
 .filter {
     float: left;
     margin-left: 20px;
+    margin-top: 1em;
     font-family: Arial,sans-serif;
     color: #000000;
 }
@@ -158,12 +178,12 @@ td {
     line-height: 23px;
 }
 
-.filter > input {
+/*.filter > input {
     float: left;
     margin-top: 5px;
     margin-left: 10px;
     height: 12px;
-}
+}*/
 
 .sort {
     float: right;
@@ -253,15 +273,21 @@ table.display td {
 }
 
 input {
-    width: 15em;
-    padding: 1em 0.625em;
+    /*width: 15em;*/
+    /*padding: 1em 0.625em;*/
     border: 1px solid #d9dbdd;
-    font-size: 1em;
-    outline: none;
+    font-size: 1.5em;
+    padding-left: .3em;
+    /*outline: none;*/
     -webkit-border-radius: 0.3125em;
     -moz-border-radius: 0.3125em;
     border-radius: 0.3125em;
     font-family: 'RobotoLight';
+}
+
+select.filter_ui {
+    font-family: "RobotoLight";
+    font-size: 1.5em;
 }
 
 input:hover,
@@ -440,7 +466,7 @@ table.dataTable.display tbody tr.even:hover {
 }
 
 .fa-3x:hover {
-    color: black;
+    color: #333;
 }
 
 .fa-2x {
@@ -450,7 +476,7 @@ table.dataTable.display tbody tr.even:hover {
 }
 
 .fa-2x:hover {
-    color: black;
+    color: #333;
 }
 
 .fa-6x {
@@ -502,11 +528,25 @@ button {
     width: 10em;
 }
 
-button:hover {
-    background: whitesmoke!important;
+button.search {
+    width: 10em;
+    height: auto;
+    border-radius: 0.3125em;
+    background: none repeat scroll 0% 0% transparent;
+    border: 1px solid #D9DBDD;
+    font-size: 1.5em;
+    font-family: "RobotoLight";
+    cursor: pointer;
+    margin-left: auto;
+    color: white;
+    /*font-weight: bold;*/
 }
 
-.icons-footer {
-    text-align: center;
-    margin-top: 3em;
+/*button:hover {
+    background: whitesmoke!important;
+}*/
+
+button.search:hover {
+    background: white;
+    color: black;
 }
