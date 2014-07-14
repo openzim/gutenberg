@@ -1,5 +1,4 @@
 - Fix download click on the table not working on recent version of FF
-- cleanup header/footer from ePub
 - better switch from cover page to index page
 - include progress bar/waiting visual system during json_data loading
 - remember topmenu visibility over reloads
