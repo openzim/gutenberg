@@ -27,6 +27,7 @@ jinja_env = Environment(loader=PackageLoader('gutenberg', 'templates'))
 def book_name_for_fs(book):
     return book.title.strip().replace('/', '-')
 jinja_env.filters['book_name_for_fs'] = book_name_for_fs
+jinja_env.filters['language_name'] = language_name
 
 
 def tmpl_path():
