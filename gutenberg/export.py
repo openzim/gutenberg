@@ -216,48 +216,51 @@ def update_html_for_static(book, html_content, epub=False):
     ]
 
     body = soup.find('body')
-    for start_of_text, end_of_text in patterns:
-        if not start_of_text in body.text and not end_of_text in body.text:
-            continue
+    is_encapsulated_in_div = sum([1 for e in body.children
+                                  if not isinstance(e, bs4.NavigableString)]) == 1
+    if not is_encapsulated_in_div:
+        for start_of_text, end_of_text in patterns:
+            if not start_of_text in body.text and not end_of_text in body.text:
+                continue
 
-        if start_of_text in body.text and end_of_text in body.text:
-            # logger.debug("FOUND BOTH: {} |*| {}".format(start_of_text, end_of_text))
-            remove = True
-            for child in body.children:
-                if isinstance(child, bs4.NavigableString):
-                    continue
-                if end_of_text in getattr(child, 'text', ''):
-                    remove = True
-                if start_of_text in getattr(child, 'text', ''):
-                    child.decompose()
-                    remove = False
-                if remove:
-                    child.decompose()
-            break
+            if start_of_text in body.text and end_of_text in body.text:
+                # logger.debug("FOUND BOTH: {} |*| {}".format(start_of_text, end_of_text))
+                remove = True
+                for child in body.children:
+                    if isinstance(child, bs4.NavigableString):
+                        continue
+                    if end_of_text in getattr(child, 'text', ''):
+                        remove = True
+                    if start_of_text in getattr(child, 'text', ''):
+                        child.decompose()
+                        remove = False
+                    if remove:
+                        child.decompose()
+                break
 
-        elif start_of_text in body.text:
-            # logger.debug("FOUND START: {}".format(start_of_text))
-            remove = True
-            for child in body.children:
-                if isinstance(child, bs4.NavigableString):
-                    continue
-                if start_of_text in getattr(child, 'text', ''):
-                    child.decompose()
-                    remove = False
-                if remove:
-                    child.decompose()
-            break
-        elif end_of_text in body.text:
-            # logger.debug("FOUND END: {}".format(end_of_text))
-            remove = False
-            for child in body.children:
-                if isinstance(child, bs4.NavigableString):
-                    continue
-                if end_of_text in getattr(child, 'text', ''):
-                    remove = True
-                if remove:
-                    child.decompose()
-            break
+            elif start_of_text in body.text:
+                # logger.debug("FOUND START: {}".format(start_of_text))
+                remove = True
+                for child in body.children:
+                    if isinstance(child, bs4.NavigableString):
+                        continue
+                    if start_of_text in getattr(child, 'text', ''):
+                        child.decompose()
+                        remove = False
+                    if remove:
+                        child.decompose()
+                break
+            elif end_of_text in body.text:
+                # logger.debug("FOUND END: {}".format(end_of_text))
+                remove = False
+                for child in body.children:
+                    if isinstance(child, bs4.NavigableString):
+                        continue
+                    if end_of_text in getattr(child, 'text', ''):
+                        remove = True
+                    if remove:
+                        child.decompose()
+                break
 
     # build infobox
     if not epub:
