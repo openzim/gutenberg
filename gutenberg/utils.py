@@ -178,6 +178,7 @@ def build_pdf(files):
     urls = []
     b_id = str(files[0]['id'])
     u = UrlBuilder()
+    u.with_base(UrlBuilder.BASE_TWO)
     u.with_id(b_id)
 
     if not u.build():
@@ -190,8 +191,9 @@ def build_pdf(files):
 
     url_dash = os.path.join(u.build(), b_id + '-' + 'pdf' + '.pdf')
     url_normal = os.path.join(u.build(), b_id + '.pdf')
+    url_pg = os.path.join(u.build(), 'pg' + b_id + '.pdf')
 
-    urls.extend([url_dash, url_normal])
+    urls.extend([url_dash, url_normal, url_pg])
     return list(set(urls))
 
 

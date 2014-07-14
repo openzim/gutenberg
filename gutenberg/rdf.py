@@ -11,11 +11,8 @@ from path import path
 from bs4 import BeautifulSoup
 
 from gutenberg import logger, XML_PARSER
-from gutenberg.database import Format
-from gutenberg.utils import exec_cmd
 from gutenberg.utils import exec_cmd, download_file
-from gutenberg.database import (db, Author, Format, BookFormat,
-                                License, Book)
+from gutenberg.database import (Author, Format, BookFormat, License, Book)
 
 
 def setup_rdf_folder(rdf_url, rdf_path):
