@@ -502,10 +502,9 @@ dataTables_wrapper
 
 
 .l10nselector{
-    position: fixed;
-    right: 0px;
-    top: 0px;
-    padding: 10px 21px;
+    position: absolute;
+    right: 1em;
+    top: 1em;
 }
 
 button {
