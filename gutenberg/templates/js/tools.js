@@ -112,17 +112,30 @@ function showBooks() {
 	    "data": json_data,
 	    "columns": [
 		{ "title": "Title" },
-		{ "title": "Author" },
+        { "title": "Author" },
 		{ "title": "Format" }
 	    ],
-	    "bAutoWidth": true,
+	    "bAutoWidth": false,
 	    "columnDefs": [
+        { "bVisible": false, "aTargets": [1] },
 		{
 		    "targets": 0,
 		    "render": function ( data, type, full, meta ) {
-			return "<span style=\"display: none\">" + full[3] + "</span><span>" + full[0] + "</span>";
+                div = "<div class=\"list-stripe\"></div>"
+                title = "<span style=\"display: none\">" + full[3] + "</span>";
+                title += " <span class = \"table-title\">" + full[0] + "</span>"
+                author = "<span class=\"table-author\">" + full[1] + "</span>";
+
+			return div + "<div>" + title + "<br>" + author + "</div";
 		    }
-		}, 
+		},
+        {
+            "targets": 1,
+            "render": function ( data, type, full, meta ) {
+            return "";
+            }
+        },
+        
 		{
 		    "targets": 2,
 		    "render": function ( data, type, full, meta ) {
@@ -144,8 +157,8 @@ function showBooks() {
 	    ]
 	} );
 	$('#books_table').on('click', 'tr', function () {
-            var id = $('td', this).children()[0].innerHTML;
-            var titre = $('td', this).children()[1].innerHTML;
+            var id = $('span', this)[0].innerHTML;
+            var titre = $('span.table-title', this)[0].innerHTML;
 	    var url = titre.replace( "/", "-" ) + "_cover." + id + ".html";
 	    $(location).attr("href", url);
 	} );
@@ -162,30 +175,14 @@ function init() {
 
     /* Sort buttons */
     $( "#sort" ).hide();
-
-    $( "#popularity_sort" ).button({
-	icons: { primary: 'sort_popularity_icon' },
-	text: false,
-	label: 'Sort books by popularity'
-    })
     $( "#popularity_sort" ).click(function() {
 	sortMethod = "popularity";
 	showBooks();
-	$( "#popularity_sort" ).addClass('ui-state-focus');
-	$( "#alpha_sort" ).removeClass('ui-state-focus');
     });
-    $( "#popularity_sort" ).addClass('ui-state-focus');
 
-    $( "#alpha_sort" ).button({
-	icons: { primary: 'sort_alpha_icon' },
-	text: false,
-	label: 'Sort books by title'
-    })
     $( "#alpha_sort" ).click(function() {
 	sortMethod = "title";
 	showBooks();
-	$( "#popularity_sort" ).removeClass('ui-state-focus');
-	$( "#alpha_sort" ).addClass('ui-state-focus');
     });
 
     /* Language filter */
