@@ -304,9 +304,9 @@ def update_html_for_static(book, html_content, epub=False):
     return soup.encode()
 
 # 42271
-def cover_html_content_for(book):
-    cover_img = path("{id}_cover.jpg")
-    cover_img = str(cover_img) if cover_img.exists() else None
+def cover_html_content_for(book, static_folder):
+    cover_img = "{id}_cover.jpg".format(id=book.id)
+    cover_img = cover_img if path(os.path.join(static_folder, cover_img)).exists() else None
     translate_author = ' data-l10n-id="author-{id}"'.format(id=book.author.name().lower()) if book.author.name() in ['Anonymous','Various'] else ''
     translate_license = ' data-l10n-id="license-{id}"'.format(id=book.license.slug.lower()) if book.license.slug in ['PD','Copyright'] else ''
     context = get_default_context()
@@ -502,7 +502,7 @@ def export_book_to(book,
     cover_fpath = os.path.join(static_folder,
                                  article_name_for(book=book, cover=True))
     logger.info("\t\tExporting to {}".format(cover_fpath))
-    html = cover_html_content_for(book=book)
+    html = cover_html_content_for(book=book, static_folder=static_folder)
     with open(cover_fpath, 'w') as f:
         f.write(html.encode('utf-8'))
 

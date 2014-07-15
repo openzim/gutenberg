@@ -16,4 +16,3 @@ WONTFIX:
 * [seb] Complete JS translations (Anonymous, Previous/Next, Others..)
 * [seb, reg] Change nb of downloads to heart icons
 * [reg] fix the crash that happens when you don't have any zimwriterfs binary
-* [reg] Fix missing cover picutre on cover page

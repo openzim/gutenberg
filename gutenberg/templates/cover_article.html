@@ -35,13 +35,13 @@
         <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}">
             {% if format == "html" %}
             <i class="fa fa-html5 fa-6x"></i>
-            {% endif %}        
+            {% endif %}
             {% if format == "epub" %}
             <i class="fa fa-book fa-6x"></i>
-            {% endif %}        
+            {% endif %}
             {% if format == "pdf" %}
             <i class="fa fa-file-pdf-o fa-6x"></i>
-            {% endif %}        
+            {% endif %}
         </a>
         {% endfor %}
     </div>
