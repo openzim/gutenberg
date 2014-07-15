@@ -2,7 +2,8 @@ var sortMethod = "popularity";
 var books_url = "full_by_popularity.js";
 
 function minimizeUI() {
-    $( "#hide-home-about").val( "yes" );
+    $( "#hide-home-about" ).val( "true" );
+    $( "#hide-home-about" ).change();
     $( "#home-about" ).slideUp( 300 );
 }
 
@@ -71,7 +72,7 @@ function populateFilters( callback ) {
 		$( "#author_filter" ).val("")
 	    }
 	}
-	
+
 	if ( callback ) {
 	    callback();
 	}
@@ -83,7 +84,7 @@ function showBooks() {
 
     populateFilters( function() {
 
-	if ( $( "#cover" ).length > 0 ) {
+	if ( $( "#is_cover_page" ).length > 0 ) {
 	    $(location).attr("href", "Home.html");
 	}
 
@@ -192,7 +193,7 @@ function init() {
     );
 
     /* Hide home about */
-    if ( $("#hide-home-about").val() ) {
+    if ( $( "#hide-home-about" ).val() == "true" ) {
 	$( "#home-about" ).hide();
     }
 

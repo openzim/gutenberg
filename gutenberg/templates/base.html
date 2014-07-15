@@ -23,7 +23,7 @@
     <script id="authors_script" type="text/javascript"></script>
     <script id="books_script" type="text/javascript"></script>
   </head>
-  <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}">
+  <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}" class="{% if not show_books %}cover{% else %}home{% endif %}">
     <div id="header">
       <div id="top-menu" class="container">
         <a href="Home.html">
@@ -32,6 +32,7 @@
             <p data-l10n-id="sub-title" class="sub-title">The first producer of free ebooks</p>
           </div>
         </a>
+	<input type="hidden" id="hide-home-about" name="hide-home-about" />
         <div class="l10nselector">
           <select id="l10nselect" name="l10nselect" class="filter_ui" title="Interface language" data-l10n-id="ui-language-switcher">
             {% for lang in ui_languages %}
