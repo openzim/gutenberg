@@ -84,11 +84,11 @@ a {
 
 th {
     text-align: left;
-    color: #000000;
+    color: #333;
 }
 
 td {
-    color: #000000;
+    color: #333;
 }
 
 /* Header top-menu */
@@ -166,7 +166,7 @@ td {
     margin-left: 20px;
     margin-top: 1em;
     font-family: Arial,sans-serif;
-    color: #000000;
+    color: #333;
 }
 
 .filter > div {
@@ -191,7 +191,6 @@ td {
     padding-bottom: 12px;
     padding-right: 7px;
     font-family: Arial,sans-serif;
-    color: #000000;
 }
 
 .sort > div {
@@ -256,10 +255,10 @@ table.dataTable.display tbody td {
 /* About */
 
 #home-about {
-    margin: 1.5em 0 1em 0;
+    margin: 1.5em 0 1.5em 0;
     text-align: center;
     font-size: 20px;
-    color: #000000;
+    color: #333;
 }
 
 /* Books */
@@ -274,12 +273,10 @@ table.display td {
 }
 
 input {
-    /*width: 15em;*/
-    /*padding: 1em 0.625em;*/
+    height: 30px;
     border: 1px solid #d9dbdd;
     font-size: 1.5em;
     padding-left: .3em;
-    /*outline: none;*/
     -webkit-border-radius: 0.3125em;
     -moz-border-radius: 0.3125em;
     border-radius: 0.3125em;
@@ -320,7 +317,7 @@ h1 {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
     text-align: center;
-    line-height: 0.5em;
+    line-height: 1em; /*required for mobile*/
 }
 
 h2 {
@@ -576,8 +573,67 @@ button.search:hover {
     }
 }
 
+@media (max-width: 640px) {
+    .sub-title {
+        display: none;
+    }
+    .top-title {
+        font-size: 20px;
+    }
+    .title-div {
+        padding-top: 2px;
+        line-height: 24px;
+    }
+    #top-menu {
+        height: auto;
+    }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button {
+    #home-about {
+        margin: auto;
+    }
+
+    #home-about * {
+        /*margin: auto;
+        line-height: 1em;*/
+    }
+
+    body.home #bottom-menu {
+        padding-top: 1.5em;
+        padding-bottom: 1em;
+        height: auto;
+    }
+
+    body.cover #bottom-menu {
+        padding-top: 1.5em;
+        padding-bottom: 1em;
+        height: auto;
+    }
+
+    body.cover #bottom-menu .filter,
+    body.cover #bottom-menu .sort {
+        display: none;
+    }
+
+    .text.container, .main {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+    }
+    .sort {
+        width: 100%;
+        text-align: center;
+        padding-top: 1em;
+        padding-bottom: .3em;
+        float: none;
+        margin: auto
+    }
+    .sort * {
+        /*color: #333 !important;*/
+        margin: auto;
+    }
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     font-family: "RobotoLight"!important;
     border: 0!important;
 }
@@ -589,4 +645,13 @@ button.search:hover {
 
 .paginate_button.current {
     background: #BABABA!important;
+}
+
+.dataTables_wrapper table thead{
+    display:none!important;
+}
+
+.dataTables_wrapper table {
+    border-bottom: 0!important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
