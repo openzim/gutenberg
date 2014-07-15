@@ -23,6 +23,11 @@ FORMAT_MATRIX = {
     'html': 'text/html'
 }
 
+BAD_BOOKS_FORMATS = {
+    39765: ['pdf'],
+}
+
+
 NB_MAIN_LANGS = 5
 
 

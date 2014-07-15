@@ -13,7 +13,7 @@ from path import path
 
 from gutenberg import logger
 from gutenberg.database import BookFormat, Format
-from gutenberg.export import get_list_of_filtered_books, fname_for
+from gutenberg.export import (get_list_of_filtered_books, fname_for)
 from gutenberg.utils import (get_possible_urls_for_book,
                              download_file, FORMAT_MATRIX)
 

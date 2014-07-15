@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 from gutenberg import logger, XML_PARSER
 from gutenberg.utils import exec_cmd, download_file
 from gutenberg.database import (Author, Format, BookFormat, License, Book)
+from gutenberg.utils import BAD_BOOKS_FORMATS, FORMAT_MATRIX
 
 
 def setup_rdf_folder(rdf_url, rdf_path):
@@ -228,6 +229,16 @@ def save_rdf_in_database(parser):
         pattern = re.sub(r'' + parser.gid, '{id}', file_type)
         pattern = pattern.split('/')[-1]
 
+        bid = int(book_record.id)
+
+        if bid in BAD_BOOKS_FORMATS.keys() \
+            and mime in [FORMAT_MATRIX.get(f)
+                         for f in BAD_BOOKS_FORMATS.get(bid)]:
+            logger.error("\t**** EXCLUDING **** {} for book #{} from list."
+                         .format(mime, bid))
+            continue
+
+
         format_record = Format.get_or_create(
             mime=mime,
             images=file_type.endswith(
@@ -235,7 +246,7 @@ def save_rdf_in_database(parser):
             pattern=pattern)
 
         # Insert book format
-        bookformat_record = BookFormat.create(
+        BookFormat.create(
             book=book_record,  # foreign key
             format=format_record  # foreign key
         )
