@@ -317,7 +317,8 @@ input:focus {
 h1 {
     font-size: 3em;
     font-family: "RobotoThin";
-    margin-top: 1em;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
     text-align: center;
     line-height: 0.5em;
 }
