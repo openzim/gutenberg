@@ -633,7 +633,8 @@ button.search:hover {
     }
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
     font-family: "RobotoLight"!important;
     border: 0!important;
 }
