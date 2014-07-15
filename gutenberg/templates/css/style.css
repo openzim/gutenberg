@@ -314,8 +314,8 @@ input:focus {
 h1 {
     font-size: 3em;
     font-family: "RobotoThin";
-    margin-top: 1.5em;
-    margin-bottom: 1.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
     text-align: center;
     line-height: 1em; /*required for mobile*/
 }
@@ -345,7 +345,6 @@ div.bibrec {
 }
 
 table.bibrec {
-    margin-top: 2em;
     font-size: 1.5em;
     background: #EEEEEE;
     border: 1px solid #BBBBBB;
