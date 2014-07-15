@@ -15,7 +15,7 @@
         <table class="bibrec">
             <tr>
                 <td data-l10n-id="author">Author
-                <p class="info-desc">{{ book.author.name() }}</p>
+                <p class="info-desc"{{ translate_author}}>{{ book.author.name() }}</p>
                 </td>
             </tr>
             <tr>
@@ -24,7 +24,7 @@
                 </td>
             </tr>
                 <td data-l10n-id="license">License
-                <p class="info-desc" {{ translate_license }}>{{ book.license.name }}</p>
+                <p class="info-desc"{{ translate_license }}>{{ book.license.name }}</p>
                 </td>
             </tr>
             <tr>
