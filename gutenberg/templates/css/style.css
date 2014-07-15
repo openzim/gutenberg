@@ -587,14 +587,6 @@ button.search:hover {
         height: auto;
     }
 
-    #home-about {
-        margin: auto;
-    }
-
-    #home-about * {
-        /*margin: auto;
-        line-height: 1em;*/
-    }
 
     body.home #bottom-menu {
         padding-top: 1.5em;
