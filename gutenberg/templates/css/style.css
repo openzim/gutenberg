@@ -511,8 +511,10 @@ dataTables_wrapper
 .dataTables_wrapper
 .dataTables_paginate {
     padding-top: 3em;
+    padding-bottom: 2em;
     width: 100%;
     text-align: center;
+    font-size: 1.2em;
 }
 
 .table-icons {
@@ -573,9 +575,17 @@ button.search:hover {
     }
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
     font-family: "RobotoLight"!important;
     border: 0!important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     color: white !important;
     background: red;
+}
+
+.paginate_button.current {
+    background: #BABABA!important;
 }
