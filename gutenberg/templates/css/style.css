@@ -224,24 +224,6 @@ td {
     left: 12px;
 }
 
-.sort_popularity_icon {
-    display: block;
-    width: 25px;
-    height: 25px;
-    background-image: url(popularity_icon.png) !important;
-}
-
-.sort_alpha_icon {
-    display: block;
-    width: 23px;
-    height: 23px;
-    background-image: url(alpha_icon.png) !important;
-}
-
-.ui-button-icon-only .ui-icon {
-    top: 12px;
-}
-
 table.dataTable.row-border tbody th,
 table.dataTable.row-border tbody td,
 table.dataTable.display tbody th,
@@ -485,6 +467,10 @@ table.dataTable.display tbody tr.even:hover {
     color: #333;
 }
 
+.fa-3x-selected {
+    color: #333;
+}
+
 .fa-2x {
     color: #D00000;
     font-size: 3em!important;
@@ -638,6 +624,14 @@ button.search:hover {
     .sort * {
         /*color: #333 !important;*/
         margin: auto;
+    }
+
+    #cover {
+        float: none;
+    }
+
+    .cover-art {
+        max-width: 100%;
     }
 }
 

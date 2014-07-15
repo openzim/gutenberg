@@ -7,6 +7,11 @@ function minimizeUI() {
     $( "#home-about" ).slideUp( 300 );
 }
 
+function maximizeUI() {
+    $( '#hide-home-about' ).val( '' );
+    $( '#hide-home-about' ).change();
+}
+
 function loadScript(url, nodeId, callback) {
     if (document.getElementById( nodeId ).src == url) {
 	return;
@@ -201,13 +206,29 @@ function init() {
     $( "#sort" ).hide();
     $( "#popularity_sort" ).click(function() {
 	sortMethod = "popularity";
+	$( "#default-sort" ).val( sortMethod );
+	$( "#default-sort" ).change();
+	$( "#popularity_sort" ).addClass( "fa-3x-selected" );
+	$( "#alpha_sort" ).removeClass( "fa-3x-selected" );
+	minimizeUI();
 	showBooks();
     });
 
     $( "#alpha_sort" ).click(function() {
-    sortMethod = "title";
-    showBooks();
+	sortMethod = "title";
+	$( "#default-sort" ).val( sortMethod );
+	$( "#default-sort" ).change();
+	$( "#alpha_sort" ).addClass( "fa-3x-selected" );
+	$( "#popularity_sort" ).removeClass( "fa-3x-selected" );
+	minimizeUI();
+	showBooks();
     });
+
+    if ( $( "#default-sort" ).val() == "popularity" ) {
+	$( "#popularity_sort" ).addClass( "fa-3x-selected" );
+    } else {
+	$( "#alpha_sort" ).addClass( "fa-3x-selected" );
+    }
 
     /* Language filter */
     var language_filter = $("#language_filter");

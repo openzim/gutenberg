@@ -113,6 +113,8 @@ class Book(Model):
     language = CharField(max_length=10)
     downloads = IntegerField(default=0)
 
+    popularity = 0
+
     def __unicode__(self):
         return "{}/{}".format(self.id, self.title)
 
