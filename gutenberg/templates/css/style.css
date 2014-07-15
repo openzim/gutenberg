@@ -274,12 +274,10 @@ table.display td {
 }
 
 input {
-    /*width: 15em;*/
-    /*padding: 1em 0.625em;*/
+    height: 30px;
     border: 1px solid #d9dbdd;
     font-size: 1.5em;
     padding-left: .3em;
-    /*outline: none;*/
     -webkit-border-radius: 0.3125em;
     -moz-border-radius: 0.3125em;
     border-radius: 0.3125em;
@@ -589,4 +587,13 @@ button.search:hover {
 
 .paginate_button.current {
     background: #BABABA!important;
+}
+
+.dataTables_wrapper table thead{
+    display:none!important;
+}
+
+.dataTables_wrapper table {
+    border-bottom: 0!important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
