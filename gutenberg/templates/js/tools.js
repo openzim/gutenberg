@@ -7,6 +7,11 @@ function minimizeUI() {
     $( "#home-about" ).slideUp( 300 );
 }
 
+function maximizeUI() {
+    $( '#hide-home-about' ).val( '' );
+    $( '#hide-home-about' ).change();
+}
+
 function loadScript(url, nodeId, callback) {
     if (document.getElementById( nodeId ).src == url) {
 	return;

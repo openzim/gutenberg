@@ -26,7 +26,7 @@
   <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}" class="{% if not show_books %}cover{% else %}home{% endif %}">
     <div id="header">
       <div id="top-menu" class="container">
-        <a href="Home.html">
+        <a href="Home.html" onclick="maximizeUI()">
           <div class="title-div">
             <p data-l10n-id="top-title" class="top-title">Project Gutenberg Library</p>
             <p data-l10n-id="sub-title" class="sub-title">The first producer of free ebooks</p>
