@@ -649,3 +649,27 @@ button.search:hover {
     border-bottom: 0!important;
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
+
+/* Spinner */
+.spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100% !important; /*change to YOUR page height*/
+    background-color: #FFF;
+    filter:alpha(opacity=70);
+    -moz-opacity:0.7;
+    -khtml-opacity: 0.7;
+    opacity: 0.7;
+    z-index: 998;
+}
+
+.spinner > img{
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
