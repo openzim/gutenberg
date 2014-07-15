@@ -15,7 +15,7 @@ function maximizeUI() {
 
 function loadScript(url, nodeId, callback) {
     if (document.getElementById( nodeId ).src == url) {
-	return;
+    return;
     }
 
     document.getElementById( nodeId ).parentElement.
@@ -51,37 +51,37 @@ function populateFilters( callback ) {
         var ok = false;
         for ( i = 0 ; i < count ; i++ ) {
             if (languages_json_data[i][1] === language_filter_value) {
-		booksUrl = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
+        booksUrl = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
                 ok = true;
                 break;
             };
         };
-	if ( !ok ) {
-	    $( "#language_filter" ).val("")
-	}
+    if ( !ok ) {
+        $( "#language_filter" ).val("")
+    }
     }
 
     var authors_url = language_filter_value ? "authors_lang_" + language_filter_value + ".js" : "authors.js";
     loadScript( authors_url, "authors_script", function () {
-	if ( $( "#author_filter" ).val() ) {
-	    var count = authors_json_data.length;
-	    var author_filter_value = $( "#author_filter" ).val();
-	    var ok = false;
-	    for ( i = 0 ; i < count ; i++ ) {
-		if (authors_json_data[i][0] === author_filter_value) {
-		    booksUrl = "auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
-		    ok = true;
-		    break;
-		};
-	    };
-	    if ( !ok ) {
-		$( "#author_filter" ).val("")
-	    }
-	}
+    if ( $( "#author_filter" ).val() ) {
+        var count = authors_json_data.length;
+        var author_filter_value = $( "#author_filter" ).val();
+        var ok = false;
+        for ( i = 0 ; i < count ; i++ ) {
+        if (authors_json_data[i][0] === author_filter_value) {
+            booksUrl = "auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
+            ok = true;
+            break;
+        };
+        };
+        if ( !ok ) {
+        $( "#author_filter" ).val("")
+        }
+    }
 
-	if ( callback ) {
-	    callback();
-	}
+    if ( callback ) {
+        callback();
+    }
 
     });
 }
@@ -91,99 +91,99 @@ function showBooks() {
     /* Show spinner if loading takes more than 1 second */
     inBooksLoadingLoop = true;
     setTimeout(function() { 
-	if ( inBooksLoadingLoop ) {
-	    $("#spinner").show();
-	}
+    if ( inBooksLoadingLoop ) {
+        $("#spinner").show();
+    }
     }, 1000);
 
     populateFilters( function() {
 
-	if ( $( "#is_cover_page" ).length > 0 ) {
-	    $(location).attr("href", "Home.html");
-	}
+    if ( $( "#is_cover_page" ).length > 0 ) {
+        $(location).attr("href", "Home.html");
+    }
 
-	loadScript( booksUrl, "books_script", function () {
+    loadScript( booksUrl, "books_script", function () {
 
-	    if ( $('#books_table').attr("filled") ) {
-		$('#books_table').dataTable().fnDestroy();
-	    }
+        if ( $('#books_table').attr("filled") ) {
+        $('#books_table').dataTable().fnDestroy();
+        }
 
-	    $('#books_table').dataTable( {
-		"searching": false,
-		"ordering":  false,
-		"deferRender": true,
-		"bDeferRender": true,
-		"ordering": false,
-		"lengthChange": false,
-		"info": false,
-		"data": json_data,
-		"columns": [
-		    { "title": "" },
-		    { "title": "" },
-		    { "title": "" }
-		],
-		"bAutoWidth": false,
-		"columnDefs": [
-		    { "bVisible": false, "aTargets": [1] },
-		    { "sClass": "table-icons", "aTargets": [2] },
-		    {
-			"targets": 0,
-			"render": function ( data, type, full, meta ) {
-			    div = "<div class=\"list-stripe\"></div>"
-			    title = "<span style=\"display: none\">" + full[3] + "</span>";
-			    title += " <span class = \"table-title\">" + full[0] + "</span>"
-			    author = ((full[1]=='Anonymous')?
+        $('#books_table').dataTable( {
+        "searching": false,
+        "ordering":  false,
+        "deferRender": true,
+        "bDeferRender": true,
+        "ordering": false,
+        "lengthChange": false,
+        "info": false,
+        "data": json_data,
+        "columns": [
+            { "title": "" },
+            { "title": "" },
+            { "title": "" }
+        ],
+        "bAutoWidth": false,
+        "columnDefs": [
+            { "bVisible": false, "aTargets": [1] },
+            { "sClass": "table-icons", "aTargets": [2] },
+            {
+            "targets": 0,
+            "render": function ( data, type, full, meta ) {
+                div = "<div class=\"list-stripe\"></div>"
+                title = "<span style=\"display: none\">" + full[3] + "</span>";
+                title += " <span class = \"table-title\">" + full[0] + "</span>"
+                author = ((full[1]=='Anonymous')?
                             "<span class=\"table-author\" data-l10n-id=\"author-anonymous\">" + document.webL10n.get('author-anonymous') + "</span>"
                          :((full[1]=='Various')?
                             "<span class=\"table-author\" data-l10n-id=\"author-various\">" + document.webL10n.get('author-various') + "</span>"
                          :
                             "<span class=\"table-author\">" + full[1] + "</span>"));
 
-			    return div + "<div>" + title + "<br>" + author + "</div";
-			}
-		    },
-		    {
-			"targets": 1,
-			"render": function ( data, type, full, meta ) {
-			    return "";
-			}
-		    },
+                return div + "<div>" + title + "<br>" + author + "</div";
+            }
+            },
+            {
+            "targets": 1,
+            "render": function ( data, type, full, meta ) {
+                return "";
+            }
+            },
 
-		    {
-			"targets": 2,
-			"render": function ( data, type, full, meta ) {
-			    var html = "";
-			    var urlBase = full[0].replace( "/", "-" );
+            {
+            "targets": 2,
+            "render": function ( data, type, full, meta ) {
+                var html = "";
+                var urlBase = full[0].replace( "/", "-" );
 
-			    if (data[0] == 1) {
-				html += "<a title=\"" + full[0]+ ": HTML\" href=\"" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-2x\"></i></a>";
-			    }
-			    if (data[1] == 1) {
-				html += "<a title=\"" + full[0]+ ": EPUB\" href=\"" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-book fa-2x\"></i></a>";
-			    }
-			    if (data[2] == 1) {
-				html += "<a title=\"" + full[0]+ ": PDF\" href=\"" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-2x\"></i></a>";
-			    }
-			    return html;
-			}
-		    }
-		]
-	    } );
+                if (data[0] == 1) {
+                html += "<a title=\"" + full[0]+ ": HTML\" href=\"" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-2x\"></i></a>";
+                }
+                if (data[1] == 1) {
+                html += "<a title=\"" + full[0]+ ": EPUB\" href=\"" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-book fa-2x\"></i></a>";
+                }
+                if (data[2] == 1) {
+                html += "<a title=\"" + full[0]+ ": PDF\" href=\"" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-2x\"></i></a>";
+                }
+                return html;
+            }
+            }
+        ]
+        } );
 
-	    $('#books_table').on('click', 'tr td:first-child', function () {
-		var id = $('span', this)[0].innerHTML;
-		var titre = $('span.table-title', this)[0].innerHTML;
-		$(location).attr("href", titre.replace( "/", "-" ) + "_cover." + id + ".html" );
-	    } );
-	    $("#books_table_paginate").click( function() { minimizeUI() });
-	    $('#books_table').attr("filled", true);
+        $('#books_table').on('click', 'tr td:first-child', function () {
+        var id = $('span', this)[0].innerHTML;
+        var titre = $('span.table-title', this)[0].innerHTML;
+        $(location).attr("href", titre.replace( "/", "-" ) + "_cover." + id + ".html" );
+        } );
+        $("#books_table_paginate").click( function() { minimizeUI() });
+        $('#books_table').attr("filled", true);
 
-	    $('#sort').show();
+        $('#sort').show();
 
-	    /* Hide Spinner */
-	    inBooksLoadingLoop = false;
-	    $("#spinner").hide();
-	});
+        /* Hide Spinner */
+        inBooksLoadingLoop = false;
+        $("#spinner").hide();
+    });
     });
 }
 
@@ -212,35 +212,35 @@ function init() {
 
     /* Hide home about */
     if ( $( "#hide-home-about" ).val() == "true" ) {
-	$( "#home-about" ).hide();
+    $( "#home-about" ).hide();
     }
 
     /* Sort buttons */
     $( "#sort" ).hide();
     $( "#popularity_sort" ).click(function() {
-	sortMethod = "popularity";
-	$( "#default-sort" ).val( sortMethod );
-	$( "#default-sort" ).change();
-	$( "#popularity_sort" ).addClass( "fa-3x-selected" );
-	$( "#alpha_sort" ).removeClass( "fa-3x-selected" );
-	minimizeUI();
-	showBooks();
+    sortMethod = "popularity";
+    $( "#default-sort" ).val( sortMethod );
+    $( "#default-sort" ).change();
+    $( "#popularity_sort" ).addClass( "fa-3x-selected" );
+    $( "#alpha_sort" ).removeClass( "fa-3x-selected" );
+    minimizeUI();
+    showBooks();
     });
 
     $( "#alpha_sort" ).click(function() {
-	sortMethod = "title";
-	$( "#default-sort" ).val( sortMethod );
-	$( "#default-sort" ).change();
-	$( "#alpha_sort" ).addClass( "fa-3x-selected" );
-	$( "#popularity_sort" ).removeClass( "fa-3x-selected" );
-	minimizeUI();
-	showBooks();
+    sortMethod = "title";
+    $( "#default-sort" ).val( sortMethod );
+    $( "#default-sort" ).change();
+    $( "#alpha_sort" ).addClass( "fa-3x-selected" );
+    $( "#popularity_sort" ).removeClass( "fa-3x-selected" );
+    minimizeUI();
+    showBooks();
     });
 
     if ( $( "#default-sort" ).val() == "popularity" ) {
-	$( "#popularity_sort" ).addClass( "fa-3x-selected" );
+    $( "#popularity_sort" ).addClass( "fa-3x-selected" );
     } else {
-	$( "#alpha_sort" ).addClass( "fa-3x-selected" );
+    $( "#alpha_sort" ).addClass( "fa-3x-selected" );
     }
 
     /* Language filter */

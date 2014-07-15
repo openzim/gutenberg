@@ -148,7 +148,7 @@ l10n_strings = {
         "placeholder":"Choisissez une langue..."
       },
       "ui-language-switcher": {
-        "title": "Langue d’interface"
+        "title": "Langue de l’interface"
       },
       "search": {
         "textContent": "Rechercher"
