@@ -247,6 +247,7 @@ table.dataTable.display tbody td {
 
 #content {
     margin-bottom: 15px;
+    margin-top: 20px;
 }
 
 table.display td {
@@ -336,7 +337,7 @@ table.bibrec {
     text-align: left;
     margin: 0 auto;
     max-width: 700px;
-    min-width: 500px;
+    min-width: 700px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
@@ -435,7 +436,7 @@ table.dataTable.display tbody tr.even:hover {
 
 
 .top-title {
-    font-family: "RobotoCondensedRegular";
+    font-family: "RobotoThin";
     font-size: 40px;
     color: white;
 }
@@ -559,6 +560,13 @@ button.search:hover {
     margin-top: 3em;
 }
 
+@media (max-width: 800px) {
+    table.bibrec {
+        max-width: 500px;
+        min-width: 500px;
+    }
+}
+
 /* mobile */
 @media (max-width: 650px) {
     /*No l10n selector*/
@@ -568,6 +576,11 @@ button.search:hover {
 }
 
 @media (max-width: 640px) {
+
+    #content {
+        margin-top: 0px;
+    }
+
     table.bibrec {
         width: 100%;
         min-width: 200px;
@@ -577,7 +590,9 @@ button.search:hover {
         display: none;
     }
     .top-title {
-        font-size: 20px;
+        font-size: 30px;
+        padding: 20px;
+        padding-bottom: 25px;
     }
     .title-div {
         padding-top: 2px;
