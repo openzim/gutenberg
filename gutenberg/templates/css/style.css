@@ -255,7 +255,7 @@ table.display td {
 }
 
 input {
-    height: 30px;
+    /*height: 30px;*/
     border: 1px solid #d9dbdd;
     font-size: 1.5em;
     padding-left: .3em;
@@ -357,7 +357,7 @@ table.bibrec td {
 }
 
 table.bibrec tr:first-child td {
- border-top: 0 !important;   
+ border-top: 0 !important;
 }
 
 
@@ -572,7 +572,7 @@ button.search:hover {
         width: 100%;
         min-width: 200px;
     }
-    
+
     .sub-title {
         display: none;
     }
