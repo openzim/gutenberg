@@ -13,4 +13,3 @@ WONTFIX:
 * [seb] include fontawesome spinner at start of init() and remove at end of init()
 * [ahmad] Add Gutenberg logo to top left logo
 * [seb] Complete JS translations (Anonymous, Previous/Next, Others..)
-* [seb, reg] Change nb of downloads to heart icons
