@@ -29,7 +29,7 @@
             </tr>
             <tr>
                 <td data-l10n-id="popularity">Popularity
-                <p  class="info-desc" data-l10n-id="nb-downloads" data-l10n-args="{ &quot;nb&quot;: &quot;{{ book.downloads }}&quot; }">{{ book.downloads }} download(s) in the last 30 days.</p>
+                <p class="info-desc">{% for n in range(1, 6) %}<i class="fa fa-heart{% if n > book.popularity %}-o{% endif %}"></i> {% endfor %}</p>
                 </td>
             </tr>
         </table>
