@@ -9,7 +9,6 @@ WONTFIX:
 
 * [reg] cleanup python debug list
 
-* [kelson] keep sorting icon in hover state when clicked (store in cookie)
 * [ahmad] different bottom padding in home and cover (filters/red -- maybe due to sort)
 * [seb] include fontawesome spinner at start of init() and remove at end of init()
 * [ahmad] Add Gutenberg logo to top left logo
