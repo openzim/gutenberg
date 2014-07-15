@@ -307,11 +307,15 @@ def update_html_for_static(book, html_content, epub=False):
 def cover_html_content_for(book):
     cover_img = path("{id}_cover.jpg")
     cover_img = str(cover_img) if cover_img.exists() else None
+    translate_author = ' data-l10n-id="author-{id}"'.format(id=book.author.name().lower()) if book.author.name() in ['Anonymous','Various'] else ''
+    translate_license = ' data-l10n-id="license-{id}"'.format(id=book.license.slug.lower()) if book.license.slug in ['PD','Copyright'] else ''
     context = get_default_context()
     context.update({
         'book': book,
         'cover_img': cover_img,
-        'formats': main_formats_for(book)
+        'formats': main_formats_for(book),
+        'translate_author': translate_author,
+        'translate_license': translate_license
     })
     template = jinja_env.get_template('cover_article.html')
     return template.render(**context)

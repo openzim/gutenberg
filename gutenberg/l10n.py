@@ -26,6 +26,7 @@ l10n_strings = {
         "textContent": "Search"
       },
       "author": {
+        "textContent": "Author",
         "placeholder": "Author"
       },
       "cover-img": {
@@ -93,7 +94,16 @@ l10n_strings = {
         "textContent": "Public domain in the USA."
       },
       "nb-downloads": {
-        "textContent": "{nb} download(s) in the last 30 days."
+        "textContent": "{[ plural(nb) ]}"
+      },
+      "nb-downloads[zero]": {
+        "textContent": "0 downloads in the last 30 days."
+      },
+      "nb-downloads[one]": {
+        "textContent": "1 download in the last 30 days."
+      },
+      "nb-downloads[other]": {
+        "textContent": "{{nb}} downloads in the last 30 days."
       },
       "top-title": {
         "textContent": "Project Gutenberg Library"
@@ -138,6 +148,7 @@ l10n_strings = {
         "textContent": "Rechercher"
       },
       "author": {
+        "textContent": "Auteur",
         "placeholder": "Auteur"
       },
       "cover-img": {
@@ -205,7 +216,16 @@ l10n_strings = {
         "textContent": "Domaine public aux États-Unis."
       },
       "nb-downloads": {
-        "textContent": "{nb} téléchargement(s) au cours des 30 derniers jours."
+        "textContent": "{[ plural(nb) ]}"
+      },
+      "nb-downloads[zero]": {
+        "textContent": "0 téléchargement au cours des 30 derniers jours."
+      },
+      "nb-downloads[one]": {
+        "textContent": "1 téléchargement au cours des 30 derniers jours."
+      },
+      "nb-downloads[other]": {
+        "textContent": "{{nb}} téléchargements au cours des 30 derniers jours."
       },
       "top-title": {
         "textContent": "Bibliothèque du projet Gutenberg"
@@ -217,7 +237,7 @@ l10n_strings = {
         "textContent": "Le Projet Gutenberg offre plus de 45 000 ebooks gratuits"
       },
       "about-2": {
-        "textContent": "choisissez parmi les livres epub ou kindle gratuits."
+        "textContent": "Choisissez parmi les livres epub ou kindle gratuits."
       },
       "about-3": {
         "textContent": "Téléchargez-les ou lisez-les en ligne."
