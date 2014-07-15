@@ -71,7 +71,7 @@ function populateFilters( callback ) {
 		$( "#author_filter" ).val("")
 	    }
 	}
-	
+
 	if ( callback ) {
 	    callback();
 	}
