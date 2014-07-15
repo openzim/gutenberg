@@ -1,60 +1,10 @@
-/* Fonts */
 
-@font-face {
-    font-family: 'RobotoLight';
-    src: url('../fonts/Roboto-Light.ttf');
-}
-
-@font-face {
-    font-family: 'RobotoBlack';
-    src: url('../fonts/Roboto-Black.ttf');
-}
-
-@font-face {
-    font-family: 'RobotoBold';
-    src: url('../fonts/Roboto-Bold.ttf');
-}
-
-@font-face {
-    font-family: 'RobotoLight';
-    src: url('../fonts/Roboto-Light.ttf');
-}
-
-@font-face {
-    font-family: 'RobotoMedium';
-    src: url('../fonts/Roboto-Medium.ttf');
-}
-
-@font-face {
-    font-family: 'RobotoRegular';
-    src: url('../fonts/Roboto-Regular.ttf');
-}
-
-@font-face {
-    font-family: 'RobotoCondensedBold';
-    src: url('../fonts/RobotoCondensed-Bold.ttf');
-}
-
-@font-face {
-    font-family: 'RobotoCondensedLight';
-    src: url('../fonts/RobotoCondensed-Light.ttf');
-}
-
-@font-face {
-    font-family: 'RobotoCondensedRegular';
-    src: url('../fonts/RobotoCondensed-Regular.ttf');
-}
-
-@font-face {
-    font-family: 'RobotoThin';
-    src: url('../fonts/Roboto-Thin.ttf');
-}
 /* Global stuff */
-
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6,
-p, blockquote, pre, a, abbr, acronym, address, code, del, dfn,
-em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td {
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, 
+abbr, acronym, address, code, del, dfn, em, img, 
+q, dl, dt, dd, ol, ul, li, fieldset, form, label, 
+legend, table, caption, tbody, tfoot, thead, tr, th, td {
     margin: 0;
     padding: 0;
     border: 0 none;
@@ -113,8 +63,8 @@ td {
 
 #bottom-menu {
     height: 75px;
-    background: #D00000;
     padding-top: 25px;
+    background: #D00000;
 }
 
 #bottom-menu a img {
@@ -134,12 +84,10 @@ td {
 .ui-menu-item:hover,
 .ui-menu-item:link,
 .ui-menu-item:focus,
-.ui-menu-item:active
-.ui-menu-item:visited {
-    /*background: #ddd!important;*/
-    background: white;
-    border: #ffffff;
+.ui-menu-item:active.ui-menu-item:visited {
     height: 30px!important;
+    border: #ffffff;
+    background: white;
 }
 
 .ui-state-hover,
@@ -157,14 +105,14 @@ td {
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
     border: 1px solid #D00000;
-    background: none;
     color: #333;
+    background: none;
 }
 
 .filter {
     float: left;
-    margin-left: 20px;
     margin-top: 1em;
+    margin-left: 20px;
     font-family: Arial,sans-serif;
     color: #333;
 }
@@ -178,18 +126,11 @@ td {
     line-height: 23px;
 }
 
-/*.filter > input {
-    float: left;
-    margin-top: 5px;
-    margin-left: 10px;
-    height: 12px;
-}*/
-
 .sort {
     float: right;
     height: 100%;
-    padding-bottom: 12px;
     padding-right: 7px;
+    padding-bottom: 12px;
     font-family: Arial,sans-serif;
 }
 
@@ -228,10 +169,10 @@ table.dataTable.row-border tbody th,
 table.dataTable.row-border tbody td,
 table.dataTable.display tbody th,
 table.dataTable.display tbody td {
-    line-height: 1.5;
     padding: inherit;
     overflow: hidden; /* this is what fixes the expansion */
     text-overflow: ellipsis; /* not supported in all browsers, but I accepted the tradeoff */
+    line-height: 1.5;
 }
 
 /* About */
@@ -246,8 +187,8 @@ table.dataTable.display tbody td {
 /* Books */
 
 #content {
-    margin-bottom: 15px;
     margin-top: 20px;
+    margin-bottom: 15px;
 }
 
 table.display td {
@@ -256,14 +197,13 @@ table.display td {
 }
 
 input {
-    /*height: 30px;*/
-    border: 1px solid #d9dbdd;
-    font-size: 1.5em;
     padding-left: .3em;
+    border: 1px solid #d9dbdd;
     -webkit-border-radius: 0.3125em;
     -moz-border-radius: 0.3125em;
     border-radius: 0.3125em;
     font-family: 'RobotoLight';
+    font-size: 1.5em;
 }
 
 select.filter_ui {
@@ -285,7 +225,7 @@ input:focus {
 }
 
 .ui-autocomplete {
-    background: #ffffff
+    background: #ffffff;
 }
 
 .ui-autocomplete {
@@ -295,19 +235,19 @@ input:focus {
 /* Cover */
 
 h1 {
-    font-size: 3em;
-    font-family: "RobotoThin";
     margin: auto;
     margin-top: 1.2em;
     margin-bottom: 1.2em;
-    text-align: center;
-    line-height: 1em; /*required for mobile*/
     max-width: 700px;
+    text-align: center;
+    font-family: "RobotoThin";
+    font-size: 3em;
+    line-height: 1em; /*required for mobile*/
 }
 
 h2 {
-    font-size: 2em;
     margin-bottom: 15px;
+    font-size: 2em;
 }
 
 #cover {
@@ -316,7 +256,7 @@ h2 {
 }
 
 #cover img {
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.698);
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.698);
 }
 
 img.cover-art {
@@ -324,63 +264,60 @@ img.cover-art {
 }
 
 div.bibrec {
-    margin: 0 auto;
     width: 100%;
+    margin: 0 auto;
     margin-top: 2.5em;
 }
 
 table.bibrec {
-    font-size: 1.5em;
-    background: white;
-    border-spacing: 0;
-    border-collapse: collapse;
-    text-align: left;
     margin: 0 auto;
     max-width: 700px;
     min-width: 700px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: left;
+    font-size: 1.5em;
+    background: white;
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 table.bibrec th {
-    background: #DDDDDD;
     padding: 12px;
-    font-size: 1.2em;
     font-family: "RobotoLight";
+    font-size: 1.2em;
+    background: #DDDDDD;
 }
-
 
 table.bibrec td {
     padding: 12px;
-    font-size: 1.2em;
-    font-family: "RobotoCondensedBold";
-    border-top: 1px solid #dddddd!important;
     padding-left: 20px;
+    border-top: 1px solid #dddddd!important;
+    font-family: "RobotoCondensedBold";
+    font-size: 1.2em;
 }
 
 table.bibrec tr:first-child td {
- border-top: 0 !important;
+    border-top: 0 !important;
 }
-
 
 div.bibrec img {
     margin: 1em;
 }
 
 .text {
-    padding-left: 5em;
-    padding-right: 5em;
     padding-top: 1em;
+    padding-right: 5em;
+    padding-left: 5em;
 }
 
 .main {
-    padding-left: 5em;
     padding-right: 5em;
+    padding-left: 5em;
 }
 
-
 .bolder {
-    font-family: "RobotoBold";
     margin-top: 10px;
+    font-family: "RobotoBold";
 }
 
 .light {
@@ -389,9 +326,9 @@ div.bibrec img {
 }
 
 .data-table {
+    max-width: 900px!important;
     font-family: "RobotoRegular";
     font-size: 15px;
-    max-width: 900px!important;
 }
 
 tr {
@@ -405,15 +342,15 @@ tr {
 
 .table-author {
     font-family: "RobotoLight";
-    color: rgba(43, 34, 34, 0.88);
+    color: rgba(43,34,34,0.88);
 }
 
 div.list-stripe {
+    float: left;
     width: 10px;
+    margin-right: 20px;
     min-height: 65px;
     background: #D00000;
-    float: left;
-    margin-right: 20px;
 }
 
 tr.odd {
@@ -427,13 +364,12 @@ table.dataTable.display tbody tr.even:hover {
 }
 
 .title-div {
-    padding-top: 43px;
     float: left;
     width: 100%;
+    padding-top: 43px;
     text-align: center;
     line-height: 37px;
 }
-
 
 .top-title {
     font-family: "RobotoThin";
@@ -445,21 +381,20 @@ table.dataTable.display tbody tr.even:hover {
     font-family: "RobotoThin";
     font-size: 19px;
     color: white;
-
 }
 
 .fa-search {
-    font-size: smaller;
-    vertical-align: top;
     padding-top: 2px;
     padding-right: 4px;
+    font-size: smaller;
+    vertical-align: top;
 }
 
 .fa-3x {
     height: inherit;
-    color: white;
     margin-top: 12px;
     padding-right: 20px;
+    color: white;
     cursor: pointer;
     * cursor: hand;
 }
@@ -473,9 +408,9 @@ table.dataTable.display tbody tr.even:hover {
 }
 
 .fa-2x {
-    color: #D00000;
-    font-size: 3em!important;
     padding-right: 10px;
+    font-size: 3em!important;
+    color: #D00000;
 }
 
 .fa-2x:hover {
@@ -483,29 +418,24 @@ table.dataTable.display tbody tr.even:hover {
 }
 
 .fa-6x {
-    color: #D00000;
-    font-size: 5.5em!important;
-    padding: 0px 30px 0px 30px;
     margin-top: 5px;
+    padding: 0 30px 0 30px;
+    font-size: 5.5em!important;
+    color: #D00000;
 }
 
 .fa-6x:hover {
     color: black;
 }
 
-dataTables_wrapper
-.dataTables_length,
-.dataTables_wrapper
-.dataTables_filter,
-.dataTables_wrapper
-.dataTables_info,
-.dataTables_wrapper
-.dataTables_processing,
-.dataTables_wrapper
-.dataTables_paginate {
+dataTables_wrapper.dataTables_length,
+.dataTables_wrapper.dataTables_filter,
+.dataTables_wrapper.dataTables_info,
+.dataTables_wrapper.dataTables_processing,
+.dataTables_wrapper.dataTables_paginate {
+    width: 100%;
     padding-top: 3em;
     padding-bottom: 2em;
-    width: 100%;
     text-align: center;
     font-size: 1.2em;
 }
@@ -515,52 +445,46 @@ dataTables_wrapper
     vertical-align: middle;
 }
 
-
-.l10nselector{
+.l10nselector {
     position: absolute;
-    right: 1em;
     top: 1em;
+    right: 1em;
 }
 
 button {
-    background: none repeat scroll 0% 0% #FFF;
-    border: 1px solid #D9DBDD;
-    margin-left: 20px;
+    width: 10em;
     height: 25px;
     margin-top: 12px;
+    margin-left: 20px;
+    border: 1px solid #D9DBDD;
     border-radius: 0.3125em;
-    width: 10em;
+    background: none repeat scroll 0 0 #FFF;
 }
 
 button.search {
     width: 10em;
     height: auto;
-    border-radius: 0.3125em;
-    background: none repeat scroll 0% 0% transparent;
-    border: 1px solid #D9DBDD;
-    font-size: 1.5em;
-    font-family: "RobotoLight";
-    cursor: pointer;
     margin-left: auto;
+    border: 1px solid #D9DBDD;
+    border-radius: 0.3125em;
+    font-family: "RobotoLight";
+    font-size: 1.5em;
     color: white;
-    /*font-weight: bold;*/
+    background: none repeat scroll 0 0 transparent;
+    cursor: pointer;
 }
 
-/*button:hover {
-    background: whitesmoke!important;
-}*/
-
 button.search:hover {
-    background: white;
     color: black;
+    background: white;
 }
 
 .icons-footer {
-    text-align: center;
     margin-top: 3em;
+    text-align: center;
 }
 
-@media (max-width: 800px) {
+@media(max-width:800px) {
     table.bibrec {
         max-width: 500px;
         min-width: 500px;
@@ -568,17 +492,16 @@ button.search:hover {
 }
 
 /* mobile */
-@media (max-width: 650px) {
-    /*No l10n selector*/
+
+@media(max-width:650px) {
     .l10nselector {
         display: none;
     }
 }
 
-@media (max-width: 640px) {
-
+@media(max-width:640px) {
     #content {
-        margin-top: 0px;
+        margin-top: 0;
     }
 
     table.bibrec {
@@ -589,30 +512,32 @@ button.search:hover {
     .sub-title {
         display: none;
     }
+
     .top-title {
-        font-size: 30px;
         padding: 20px;
         padding-bottom: 25px;
+        font-size: 30px;
     }
+
     .title-div {
         padding-top: 2px;
         line-height: 24px;
     }
+
     #top-menu {
         height: auto;
     }
 
-
     body.home #bottom-menu {
+        height: auto;
         padding-top: 1.5em;
         padding-bottom: 1em;
-        height: auto;
     }
 
     body.cover #bottom-menu {
+        height: auto;
         padding-top: 1.5em;
         padding-bottom: 1em;
-        height: auto;
     }
 
     body.cover #bottom-menu .filter,
@@ -620,21 +545,23 @@ button.search:hover {
         display: none;
     }
 
-    .text.container, .main {
-        padding-left: 0;
-        padding-right: 0;
+    .text.container,
+    .main {
         padding-top: 0;
+        padding-right: 0;
+        padding-left: 0;
     }
+
     .sort {
+        float: none;
         width: 100%;
-        text-align: center;
+        margin: auto;
         padding-top: 1em;
         padding-bottom: .3em;
-        float: none;
-        margin: auto
+        text-align: center;
     }
+
     .sort * {
-        /*color: #333 !important;*/
         margin: auto;
     }
 
@@ -647,10 +574,9 @@ button.search:hover {
     }
 }
 
-
 .dataTables_wrapper .dataTables_paginate .paginate_button {
-    font-family: "RobotoLight"!important;
     border: 0!important;
+    font-family: "RobotoLight"!important;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
@@ -662,8 +588,8 @@ button.search:hover {
     background: #BABABA!important;
 }
 
-.dataTables_wrapper table thead{
-    display:none!important;
+.dataTables_wrapper table thead {
+    display: none!important;
 }
 
 .dataTables_wrapper table {
@@ -672,31 +598,84 @@ button.search:hover {
 }
 
 .info-desc {
+    padding-top: 5px;
     font-family: "RobotoThin";
     font-size: 0.9em;
-    padding-top: 5px;
 }
 
 /* Spinner */
+
 .spinner {
+    z-index: 998;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100% !important; /*change to YOUR page height*/
-    background-color: #FFF;
-    filter:alpha(opacity=70);
-    -moz-opacity:0.7;
-    -khtml-opacity: 0.7;
     opacity: 0.7;
-    z-index: 998;
+    background-color: #FFF;
+    filter: alpha(opacity=70);
+    -moz-opacity: 0.7;
+    -khtml-opacity: 0.7;
 }
 
 .spinner > img {
     position: absolute;
-    margin: auto;
     top: 0;
-    left: 0;
     right: 0;
     bottom: 0;
+    left: 0;
+    margin: auto;
+}
+
+/* Fonts */
+
+@font-face {
+    font-family: 'RobotoLight';
+    src: url('../fonts/Roboto-Light.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoBlack';
+    src: url('../fonts/Roboto-Black.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoBold';
+    src: url('../fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoLight';
+    src: url('../fonts/Roboto-Light.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoMedium';
+    src: url('../fonts/Roboto-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoRegular';
+    src: url('../fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoCondensedBold';
+    src: url('../fonts/RobotoCondensed-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoCondensedLight';
+    src: url('../fonts/RobotoCondensed-Light.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoCondensedRegular';
+    src: url('../fonts/RobotoCondensed-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoThin';
+    src: url('../fonts/Roboto-Thin.ttf');
 }
