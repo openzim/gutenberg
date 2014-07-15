@@ -15,4 +15,3 @@ WONTFIX:
 * [ahmad] Add Gutenberg logo to top left logo
 * [seb] Complete JS translations (Anonymous, Previous/Next, Others..)
 * [seb, reg] Change nb of downloads to heart icons
-* [reg] fix the crash that happens when you don't have any zimwriterfs binary
