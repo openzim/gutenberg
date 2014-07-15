@@ -8,6 +8,5 @@ WONTFIX:
 -- 1am --
 
 * [reg] cleanup python debug list
-* [seb] include fontawesome spinner at start of init() and remove at end of init()
+* include fontawesome spinner at start of init() and remove at end of init()
 * [seb] Complete JS translations (Anonymous, Previous/Next, Others..)
-* [seb, reg] Change nb of downloads to heart icons

@@ -24,6 +24,9 @@
     <script id="books_script" type="text/javascript"></script>
   </head>
   <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}" class="{% if not show_books %}cover{% else %}home{% endif %}">
+    <div id="spinner" class="spinner" style="display:none;" >
+      <img id="img-spinner" src="css/spinner.gif" alt="Loading" />
+    </div>
     <div id="header">
       <div id="top-menu" class="container">
         <a href="Home.html" onclick="maximizeUI()">
@@ -52,7 +55,7 @@
         </div>
 	<input type="hidden" id="default-sort" name="default-sort" value="popularity" />
         <div class="sort" id="sort">
-          <i class="fa fa-heart fa-3x" title="Sort by popularity" id="popularity_sort"></i>
+          <i class="fa fa-heart fa-3x" title="Sort by popularity" id="popularity_sort" /></i>
           <i class="fa fa-sort-alpha-asc fa-3x" title="Sort by title" id="alpha_sort" ></i>
         </div>
       </div>

@@ -256,7 +256,7 @@ table.display td {
 }
 
 input {
-    height: 30px;
+    /*height: 30px;*/
     border: 1px solid #d9dbdd;
     font-size: 1.5em;
     padding-left: .3em;
@@ -358,7 +358,7 @@ table.bibrec td {
 }
 
 table.bibrec tr:first-child td {
- border-top: 0 !important;   
+ border-top: 0 !important;
 }
 
 
@@ -585,7 +585,7 @@ button.search:hover {
         width: 100%;
         min-width: 200px;
     }
-    
+
     .sub-title {
         display: none;
     }
@@ -675,4 +675,28 @@ button.search:hover {
     font-family: "RobotoThin";
     font-size: 0.9em;
     padding-top: 5px;
+}
+
+/* Spinner */
+.spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100% !important; /*change to YOUR page height*/
+    background-color: #FFF;
+    filter:alpha(opacity=70);
+    -moz-opacity:0.7;
+    -khtml-opacity: 0.7;
+    opacity: 0.7;
+    z-index: 998;
+}
+
+.spinner > img {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
