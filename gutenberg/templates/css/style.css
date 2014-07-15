@@ -255,7 +255,7 @@ table.dataTable.display tbody td {
 /* About */
 
 #home-about {
-    margin: 1.5em 0 1em 0;
+    margin: 1.5em 0 1.5em 0;
     text-align: center;
     font-size: 20px;
     color: #333;
@@ -273,12 +273,10 @@ table.display td {
 }
 
 input {
-    /*width: 15em;*/
-    /*padding: 1em 0.625em;*/
+    height: 30px;
     border: 1px solid #d9dbdd;
     font-size: 1.5em;
     padding-left: .3em;
-    /*outline: none;*/
     -webkit-border-radius: 0.3125em;
     -moz-border-radius: 0.3125em;
     border-radius: 0.3125em;
@@ -316,7 +314,8 @@ input:focus {
 h1 {
     font-size: 3em;
     font-family: "RobotoThin";
-    margin-top: 1em;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
     text-align: center;
     line-height: 1em; /*required for mobile*/
 }
@@ -458,6 +457,13 @@ table.dataTable.display tbody tr.even:hover {
 
 }
 
+.fa-search {
+    font-size: smaller;
+    vertical-align: top;
+    padding-top: 2px;
+    padding-right: 4px;
+}
+
 .fa-3x {
     height: inherit;
     color: white;
@@ -503,8 +509,10 @@ dataTables_wrapper
 .dataTables_wrapper
 .dataTables_paginate {
     padding-top: 3em;
+    padding-bottom: 2em;
     width: 100%;
     text-align: center;
+    font-size: 1.2em;
 }
 
 .table-icons {
@@ -628,6 +636,22 @@ button.search:hover {
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     font-family: "RobotoLight"!important;
     border: 0!important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     color: white !important;
     background: red;
+}
+
+.paginate_button.current {
+    background: #BABABA!important;
+}
+
+.dataTables_wrapper table thead{
+    display:none!important;
+}
+
+.dataTables_wrapper table {
+    border-bottom: 0!important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }

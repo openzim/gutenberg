@@ -5,33 +5,33 @@
     {% if book.subtitle %}
         <h2>{{ book.subtitle }}</h2>
     {% endif %}
-    <div id="cover">
     {% if cover_img %}
-            <img data-l10n-id="cover-img" class="cover-art" src="{{ cover_img }}" title="Book Cover" alt="Book Cover" />
-    {% endif %}
+    <div id="cover">
+        <img data-l10n-id="cover-img" class="cover-art" src="{{ cover_img }}" title="Book Cover" alt="Book Cover" />
     </div>
+    {% endif %}
     <div class="bibrec">
         <table class="bibrec">
             <tr>
                 <th data-l10n-id="author">Author</th>
-                <td>{{ book.author.name() }}</td>
+                <td{{ translate_author }}>{{ book.author.name() }}</td>
             </tr>
             <tr>
                 <th data-l10n-id="language">Language</th>
                 <td>{{ book.language|language_name|title }}</td>
             </tr>
             <th data-l10n-id="license">License</th>
-            <td>{{ book.license.name }}</td>
+            <td{{ translate_license }}>{{ book.license.name }}</td>
         </tr>
         <tr>
             <th data-l10n-id="popularity">Popularity</th>
-            <td>{{ book.downloads }} downloads in the last 30 days.</td>
+            <td data-l10n-id="nb-downloads" data-l10n-args="{ &quot;nb&quot;: &quot;{{ book.downloads }}&quot; }">{{ book.downloads }} download(s) in the last 30 days.</td>
         </tr>
     </table>
     {% if formats %}
     <div class="icons-footer">
         {% for format in formats %}
-        <a href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}">
+        <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}">
             {% if format == "html" %}
             <i class="fa fa-html5 fa-6x"></i>
             {% endif %}        
