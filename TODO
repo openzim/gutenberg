@@ -8,9 +8,12 @@ WONTFIX:
 -- 1am --
 
 * [reg] cleanup python debug list
+<<<<<<< HEAD
 
 * [ahmad] different bottom padding in home and cover (filters/red -- maybe due to sort)
-* [seb] include fontawesome spinner at start of init() and remove at end of init()
 * [ahmad] Add Gutenberg logo to top left logo
+=======
+* [seb] include fontawesome spinner at start of init() and remove at end of init()
+>>>>>>> 255780ec5b04d8cc04c29429145a9e9ef3f456ac
 * [seb] Complete JS translations (Anonymous, Previous/Next, Others..)
 * [seb, reg] Change nb of downloads to heart icons

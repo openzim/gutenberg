@@ -94,7 +94,7 @@ td {
 /* Header top-menu */
 
 #top-menu {
-    height: 73px;
+    height: 90px;
     background: #D00000;
 }
 
@@ -587,14 +587,6 @@ button.search:hover {
         height: auto;
     }
 
-    #home-about {
-        margin: auto;
-    }
-
-    #home-about * {
-        /*margin: auto;
-        line-height: 1em;*/
-    }
 
     body.home #bottom-menu {
         padding-top: 1.5em;
@@ -668,4 +660,28 @@ button.search:hover {
     font-family: "RobotoThin";
     font-size: 0.9em;
     padding-top: 5px;
+}
+
+/* Spinner */
+.spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100% !important; /*change to YOUR page height*/
+    background-color: #FFF;
+    filter:alpha(opacity=70);
+    -moz-opacity:0.7;
+    -khtml-opacity: 0.7;
+    opacity: 0.7;
+    z-index: 998;
+}
+
+.spinner > img {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
