@@ -458,6 +458,10 @@ table.dataTable.display tbody tr.even:hover {
     color: #333;
 }
 
+.fa-3x-selected {
+    color: #333;
+}
+
 .fa-2x {
     color: #D00000;
     font-size: 3em!important;

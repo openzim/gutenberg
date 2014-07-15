@@ -50,9 +50,10 @@
           <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" />
 	      {% if not show_books %}<button onclick="showBooks()" class="search" data-l10n-id="search"><i class="fa fa-search fa-1x"></i> Search</button>{% endif %}
         </div>
+	<input type="hidden" id="default-sort" name="default-sort" value="popularity" />
         <div class="sort" id="sort">
-          <i class="fa fa-heart fa-3x" title="Sort by popularity" onclick="minimizeUI()" id="popularity_sort"></i>
-          <i class="fa fa-sort-alpha-asc fa-3x" title="Sort by title" onclick="minimizeUI()" id="alpha_sort" ></i>
+          <i class="fa fa-heart fa-3x" title="Sort by popularity" id="popularity_sort"></i>
+          <i class="fa fa-sort-alpha-asc fa-3x" title="Sort by title" id="alpha_sort" ></i>
         </div>
       </div>
     </div>
