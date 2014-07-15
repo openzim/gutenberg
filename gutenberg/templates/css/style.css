@@ -459,6 +459,13 @@ table.dataTable.display tbody tr.even:hover {
 
 }
 
+.fa-search {
+    font-size: smaller;
+    vertical-align: top;
+    padding-top: 2px;
+    padding-right: 4px;
+}
+
 .fa-3x {
     height: inherit;
     color: white;
