@@ -568,6 +568,11 @@ button.search:hover {
 }
 
 @media (max-width: 640px) {
+    table.bibrec {
+        width: 100%;
+        min-width: 200px;
+    }
+    
     .sub-title {
         display: none;
     }
