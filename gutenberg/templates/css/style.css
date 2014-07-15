@@ -612,6 +612,14 @@ button.search:hover {
         /*color: #333 !important;*/
         margin: auto;
     }
+
+    #cover {
+        float: none;
+    }
+
+    .cover-art {
+        max-width: 100%;
+    }
 }
 
 
