@@ -12,11 +12,11 @@ import requests
 from path import path
 
 from gutenberg import logger
+from gutenberg.urls import get_urls
 from gutenberg.database import BookFormat, Format
 from gutenberg.export import (get_list_of_filtered_books, fname_for)
 from gutenberg.utils import (get_possible_urls_for_book,
                              download_file, FORMAT_MATRIX)
-
 
 def resource_exists(url):
     r = requests.get(url, stream=True)
@@ -170,7 +170,7 @@ def download_all_books(url_mirror, download_cache,
             if bf.downloaded_from and not force:
                 urls = [bf.downloaded_from]
             else:
-                urld = get_possible_urls_for_book(book)
+                urld = get_urls(book)
                 urls = list(reversed(urld.get(FORMAT_MATRIX.get(format))))
 
             import copy
