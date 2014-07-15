@@ -5,6 +5,7 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
+import sys
 
 from docopt import docopt
 
@@ -14,6 +15,7 @@ from gutenberg.rdf import setup_rdf_folder, parse_and_fill
 from gutenberg.download import download_all_books
 from gutenberg.export import export_all_books
 from gutenberg.zim import build_zimfile
+from gutenberg.checkdeps import check_dependencies
 
 
 help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
@@ -37,6 +39,7 @@ help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file
 
+--check                         Check dependencies
 --prepare                       Download & extract rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
@@ -54,6 +57,7 @@ def main(arguments):
     DO_DOWNLOAD = arguments.get('--download', False)
     DO_EXPORT = arguments.get('--export', False)
     DO_ZIM = arguments.get('--zim', False)
+    DO_CHECKDEPS = arguments.get('--check', False)
     COMPLETE_DUMP = arguments.get('--complete', False)
 
     URL_MIRROR = arguments.get('--mirror') or 'http://zimfarm.kiwix.org/gutenberg'
@@ -88,7 +92,14 @@ def main(arguments):
         COMPLETE_DUMP = True
 
     if COMPLETE_DUMP:
-        DO_PREPARE = DO_PARSE = DO_DOWNLOAD = DO_EXPORT = DO_ZIM = True
+        DO_CHECKDEPS = DO_PREPARE = DO_PARSE = \
+            DO_DOWNLOAD = DO_EXPORT = DO_ZIM = True
+
+    if DO_CHECKDEPS:
+        logger.info("CHECKING for dependencies on the system")
+        if not check_dependencies():
+            logger.error("Exiting...")
+            sys.exit(1)
 
     if DO_PREPARE:
         logger.info("PREPARING rdf-files cache from {}".format(RDF_URL))
