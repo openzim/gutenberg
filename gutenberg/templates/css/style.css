@@ -500,6 +500,12 @@ button.search:hover {
 }
 
 @media(max-width:640px) {
+
+    h1 {
+        margin-top: 0.8em;
+        margin-bottom: 0.8em;
+    }
+
     #content {
         margin-top: 0;
     }
@@ -535,9 +541,7 @@ button.search:hover {
     }
 
     body.cover #bottom-menu {
-        height: auto;
-        padding-top: 1.5em;
-        padding-bottom: 1em;
+        padding-top: 1em;
     }
 
     body.cover #bottom-menu .filter,
