@@ -94,7 +94,7 @@ td {
 /* Header top-menu */
 
 #top-menu {
-    height: 73px;
+    height: 90px;
     background: #D00000;
 }
 
@@ -296,10 +296,12 @@ input:focus {
 h1 {
     font-size: 3em;
     font-family: "RobotoThin";
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin: auto;
+    margin-top: 1.2em;
+    margin-bottom: 1.2em;
     text-align: center;
     line-height: 1em; /*required for mobile*/
+    max-width: 700px;
 }
 
 h2 {
@@ -328,29 +330,36 @@ div.bibrec {
 
 table.bibrec {
     font-size: 1.5em;
-    background: #EEEEEE;
-    border: 1px solid #BBBBBB;
+    background: white;
     border-spacing: 0;
     border-collapse: collapse;
     text-align: left;
     margin: 0 auto;
     max-width: 700px;
+    min-width: 500px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 table.bibrec th {
     background: #DDDDDD;
-    border: 1px solid #BBBBBB;
     padding: 12px;
     font-size: 1.2em;
     font-family: "RobotoLight";
 }
 
+
 table.bibrec td {
-    border: 1px solid #BBBBBB;
     padding: 12px;
-    font-size: 1.1em;
-    font-family: "RobotoThin";
+    font-size: 1.2em;
+    font-family: "RobotoCondensedBold";
+    border-top: 1px solid #dddddd!important;
+    padding-left: 20px;
 }
+
+table.bibrec tr:first-child td {
+ border-top: 0 !important;   
+}
+
 
 div.bibrec img {
     margin: 1em;
@@ -559,6 +568,11 @@ button.search:hover {
 }
 
 @media (max-width: 640px) {
+    table.bibrec {
+        width: 100%;
+        min-width: 200px;
+    }
+    
     .sub-title {
         display: none;
     }
@@ -573,14 +587,6 @@ button.search:hover {
         height: auto;
     }
 
-    #home-about {
-        margin: auto;
-    }
-
-    #home-about * {
-        /*margin: auto;
-        line-height: 1em;*/
-    }
 
     body.home #bottom-menu {
         padding-top: 1.5em;
@@ -650,6 +656,12 @@ button.search:hover {
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
+.info-desc {
+    font-family: "RobotoThin";
+    font-size: 0.9em;
+    padding-top: 5px;
+}
+
 /* Spinner */
 .spinner {
     position: absolute;
@@ -665,7 +677,7 @@ button.search:hover {
     z-index: 998;
 }
 
-.spinner > img{
+.spinner > img {
     position: absolute;
     margin: auto;
     top: 0;

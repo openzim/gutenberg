@@ -15,21 +15,21 @@
         <table class="bibrec">
             <tr>
                 <td data-l10n-id="author">Author
-                <p>{{ book.author.name() }}</p>
+                <p class="info-desc">{{ book.author.name() }}</p>
                 </td>
             </tr>
             <tr>
                 <td data-l10n-id="language">Language
-                <p>{{ book.language|language_name|title }}</p>
+                <p class="info-desc">{{ book.language|language_name|title }}</p>
                 </td>
             </tr>
                 <td data-l10n-id="license">License
-                <p{{ translate_license }}>{{ book.license.name }}</p>
+                <p class="info-desc" {{ translate_license }}>{{ book.license.name }}</p>
                 </td>
             </tr>
             <tr>
                 <td data-l10n-id="popularity">Popularity
-                <p data-l10n-id="nb-downloads" data-l10n-args="{ &quot;nb&quot;: &quot;{{ book.downloads }}&quot; }">{{ book.downloads }} download(s) in the last 30 days.</p>
+                <p  class="info-desc" data-l10n-id="nb-downloads" data-l10n-args="{ &quot;nb&quot;: &quot;{{ book.downloads }}&quot; }">{{ book.downloads }} download(s) in the last 30 days.</p>
                 </td>
             </tr>
         </table>

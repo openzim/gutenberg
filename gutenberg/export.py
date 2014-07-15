@@ -28,6 +28,8 @@ jinja_env = Environment(loader=PackageLoader('gutenberg', 'templates'))
 
 DEBUG_COUNT = []
 
+NB_POPULARITY_STARS = 5
+
 
 def get_default_context():
     return {
@@ -112,9 +114,22 @@ def export_all_books(static_folder,
     with open(os.path.join(static_folder, 'Home.html'), 'w') as f:
         f.write(template.render(**context).encode('utf-8'))
 
+    # Compute popularity
+    popbooks = books.order_by(Book.downloads.desc())
+    stars_limits = [0] * NB_POPULARITY_STARS
+    stars = NB_POPULARITY_STARS
+    nb_downloads = popbooks[0].downloads
+    for ibook in range(0,popbooks.count(),1):
+        if ibook > float(NB_POPULARITY_STARS-stars+1)/NB_POPULARITY_STARS*popbooks.count() \
+           and popbooks[ibook].downloads < nb_downloads:
+            stars_limits[stars-1] = nb_downloads
+            stars = stars - 1
+        nb_downloads = popbooks[ibook].downloads
+
     # export to HTML
     cached_files = os.listdir(download_cache)
     for book in books:
+        book.popularity = sum( [ int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS) ] )
         export_book_to(book=book,
                        static_folder=static_folder,
                        download_cache=download_cache,

@@ -1,5 +1,6 @@
 var sortMethod = "popularity";
-var books_url = "full_by_popularity.js";
+var booksUrl = "full_by_popularity.js";
+var inBooksLooadingLoop = false;
 
 function minimizeUI() {
     $( "#hide-home-about" ).val( "true" );
@@ -42,7 +43,7 @@ function loadScript(url, nodeId, callback) {
 }
 
 function populateFilters( callback ) {
-    books_url = "full_by_" + sortMethod + ".js";
+    booksUrl = "full_by_" + sortMethod + ".js";
 
     var language_filter_value = $( "#language_filter" ).val();
     if ( language_filter_value ) {
@@ -50,7 +51,7 @@ function populateFilters( callback ) {
         var ok = false;
         for ( i = 0 ; i < count ; i++ ) {
             if (languages_json_data[i][1] === language_filter_value) {
-		books_url = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
+		booksUrl = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
                 ok = true;
                 break;
             };
@@ -68,7 +69,7 @@ function populateFilters( callback ) {
 	    var ok = false;
 	    for ( i = 0 ; i < count ; i++ ) {
 		if (authors_json_data[i][0] === author_filter_value) {
-		    books_url = "auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
+		    booksUrl = "auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
 		    ok = true;
 		    break;
 		};
@@ -87,13 +88,21 @@ function populateFilters( callback ) {
 
 function showBooks() {
 
+    /* Show spinner if loading takes more than 1 second */
+    inBooksLoadingLoop = true;
+    setTimeout(function() { 
+	if ( inBooksLoadingLoop ) {
+	    $("#spinner").show();
+	}
+    }, 1000);
+
     populateFilters( function() {
 
 	if ( $( "#is_cover_page" ).length > 0 ) {
 	    $(location).attr("href", "Home.html");
 	}
 
-	loadScript( books_url, "books_script", function () {
+	loadScript( booksUrl, "books_script", function () {
 
 	    if ( $('#books_table').attr("filled") ) {
 		$('#books_table').dataTable().fnDestroy();
@@ -170,6 +179,10 @@ function showBooks() {
 	    $('#books_table').attr("filled", true);
 
 	    $('#sort').show();
+
+	    /* Hide Spinner */
+	    inBooksLoadingLoop = false;
+	    $("#spinner").hide();
 	});
     });
 }
