@@ -34,7 +34,7 @@ help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
 -z --zim-file=<file>            Write ZIM into this file path
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
--b --books=<ids>                Execute the processes for specific books,separated by commas
+-b --books=<ids>                Execute the processes for specific books, separated by commas or dashes
 
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file
