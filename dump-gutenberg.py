@@ -25,7 +25,7 @@ help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
 -h --help                       Display this help message
 -k --keep-db                    Do not wipe the DB during parse stage
 
--l --languages=<list>           Comma-separated list of lang codes to filter export to.
+-l --languages=<list>           Comma-separated list of lang codes to filter export to
 -f --formats=<list>             Comma-separated list of formats to filter export to (pdf, epub, all)
 
 -m --mirror=<url>               Use URL as base for all downloads.
