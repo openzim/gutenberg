@@ -1,32 +1,46 @@
-gutenberg
-=========
+# gutenberg
 
-Gutenberg Kiwix Scraper for Lyon Hackathon
+A scraper that downloads the whole repository of [Project Gutenberg](http://www.gutenberg.org).  
+It was created during the Kiwix Hackathon in Lyon, France in May 2014.
 
 
-Setting the environement
-------------------------
+## Setting up the environement
 
-Using virtualenv.
+It's reccommened that you use `virtualenv`.
 
-Setting the system:
-* sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle
-* sudo pip install virtualenvwrapper
-* add in your .bashrc:
+### Install the dependencies
 
-  source /usr/local/bin/virtualenvwrapper.sh
+#### Linux
 
-Setting the environment:
-* git clone git@github.com:kiwix/gutenberg.git
-* cd gutenberg
-* mkvirtualenv gut (or any name you want)
-(and you are in the container created by virtualenv)
+```
+sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle
+sudo pip install virtualenvwrapper
+```
 
-Working in the environment:
-* Activate the environment: workon gut
-* Quit the environment: deactivate
-* Install dependancies in the environment: pip install -r requirements.pip
+#### Mac OS X
 
-OSX Dependencies
-----------------
-brew install advancecomp jpegoptim pngquant p7zip
+```
+sudo easy_install pip
+sudo pip install virtualenvwrapper
+brew install advancecomp jpegoptim pngquant p7zip gifsicle
+```
+
+Finally, Add this to your `.bashrc`:
+
+```
+source /usr/local/bin/virtualenvwrapper.sh
+```
+
+### Set up the project
+
+```
+git clone git@github.com:kiwix/gutenberg.git
+cd gutenberg
+mkvirtualenv gut (or any name you want)
+```
+
+### Working in the environment
+
+* Activate the environment:  `workon gut`
+* Quit the environment: `deactivate`
+* Install the python dependencies: `pip install -r requirements.pip`
