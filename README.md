@@ -96,10 +96,6 @@ You can find the full arguments list below.
 
 ## Screenshots 
 
-#### The Home-Page
-
 ![](http://i.imgur.com/A4NnS2K.png?1)
-
-#### The Cover-Page
 
 ![](http://i.imgur.com/mtZduCM.png?2)
