@@ -63,7 +63,7 @@ You can also include or exclude book formats.
 ```
 ./dump-gutenberg.py -l en,fr -f pdf --books 100-200
 ```
-This will downloadd English and French books that have the Id 100 to 200 in the html(default) and pdf format.
+This will download English and French books that have the Id 100 to 200 in the html(default) and pdf format.
 
 You can find the full arguments list below.
 
