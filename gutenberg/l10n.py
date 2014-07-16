@@ -99,9 +99,6 @@ l10n_strings = {
       "nb-downloads": {
         "textContent": "{[ plural(nb) ]}"
       },
-      "nb-downloads[zero]": {
-        "textContent": "0 downloads in the last 30 days."
-      },
       "nb-downloads[one]": {
         "textContent": "1 download in the last 30 days."
       },
@@ -223,9 +220,6 @@ l10n_strings = {
       },
       "nb-downloads": {
         "textContent": "{[ plural(nb) ]}"
-      },
-      "nb-downloads[zero]": {
-        "textContent": "0 téléchargement au cours des 30 derniers jours."
       },
       "nb-downloads[one]": {
         "textContent": "1 téléchargement au cours des 30 derniers jours."
