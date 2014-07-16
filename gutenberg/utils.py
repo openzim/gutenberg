@@ -25,6 +25,7 @@ FORMAT_MATRIX = {
 
 BAD_BOOKS_FORMATS = {
     39765: ['pdf'],
+    40194: ['pdf'],
 }
 
 

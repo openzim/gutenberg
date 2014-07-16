@@ -1,0 +1,235 @@
+
+/* Main configuration (no less.css !!)
+
+- red color: #D00000
+- text color (gray): #333333;
+- side margins: 1em (desktop);
+*/
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue",Verdana,Helvetica,sans-serif;
+    color: #333333;
+    background: #f9f9f9;
+}
+
+header {
+    box-sizing: border-box;
+    background-color: #D00000;
+    text-align: center;
+    font-family: "RobotoThin";
+    padding: 1em 0;
+    /*font-size: 1em;*/
+    /*line-height: 1em;*/
+}
+
+header, header h1, header h2, header a, header a:hover, header a:visited {
+    color: white;
+}
+
+a {
+    text-decoration: none;
+}
+
+.fa:hover {
+    cursor: pointer;
+    color: #333333;
+}
+
+
+#content .fa {
+    color: #D00000;
+}
+
+/* filters */
+.pure-skin-gutenberg .filter {
+    text-align: left;
+    margin: 0 1em 0 1em;
+    vertical-align: baseline;
+}
+
+.filter select, .filter input.pure-input-rounded, .filter button {
+    width: 97%;
+}
+
+/* Pre content */
+.precontent {
+    margin: 0 1em 0 1em;
+    text-align: center;
+}
+
+.precontent p {
+    font-family: "RobotoThin";
+    font-size: 1.5em;
+}
+
+.precontent strong {
+    font-family: "RobotoBold";
+    font-size: 1em;
+}
+
+/* l10n selector */
+.l10nselector {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+}
+
+
+/* Spinner */
+
+.spinner {
+    z-index: 998;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100% !important; /*change to YOUR page height*/
+    opacity: 0.7;
+    background-color: #FFF;
+    filter: alpha(opacity=70);
+    -moz-opacity: 0.7;
+    -khtml-opacity: 0.7;
+}
+
+.spinner > img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+}
+
+/* TABLE */
+.data-table {
+    max-width: 900px;
+    font-family: "RobotoRegular";
+}
+
+tr {
+    padding: 1em;
+}
+tr:hover {
+    cursor: pointer;
+}
+
+.table-title {
+    font-family: 'RobotoCondensedBold';
+    font-size: 1.4em;
+}
+
+.table-author {
+    font-family: "RobotoLight";
+    color: #333333;
+}
+
+.list-stripe {
+    float: left;
+    width: .5em;
+    margin-right: .5em;
+    min-height: 5em;
+    background-color: #D00000;
+}
+
+tr.odd {
+    background-color: white!important;
+}
+
+table.dataTable.display tbody tr:hover,
+table.dataTable.display tbody tr.odd:hover,
+table.dataTable.display tbody tr.even:hover {
+    background-color: whitesmoke!important;
+}
+
+/* Author input autocomplete */
+.ui-autocomplete {
+    max-height: 7em;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.ui-menu-item,
+.ui-menu-item:hover,
+.ui-menu-item:link,
+.ui-menu-item:focus,
+.ui-menu-item:active.ui-menu-item:visited {
+    height: 2em!important;
+    border: #ffffff;
+    background: white;
+}
+
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus,
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+    border: 0;
+    border-bottom: .1em solid #D00000;
+    color: #D00000;
+    font-weight: bold;
+    background: white;
+}
+
+/* Sort button */
+.sort {
+    text-align: right;
+    color: white;
+}
+
+/* Fonts */
+
+@font-face {
+    font-family: 'RobotoLight';
+    src: url('../fonts/Roboto-Light.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoBlack';
+    src: url('../fonts/Roboto-Black.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoBold';
+    src: url('../fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoLight';
+    src: url('../fonts/Roboto-Light.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoMedium';
+    src: url('../fonts/Roboto-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoRegular';
+    src: url('../fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoCondensedBold';
+    src: url('../fonts/RobotoCondensed-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoCondensedLight';
+    src: url('../fonts/RobotoCondensed-Light.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoCondensedRegular';
+    src: url('../fonts/RobotoCondensed-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'RobotoThin';
+    src: url('../fonts/Roboto-Thin.ttf');
+}
