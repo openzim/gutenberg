@@ -49,6 +49,7 @@ help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
 This script is used to produce a ZIM file (and any intermediate state)
 of Gutenberg repository using a mirror.""")
 
+
 def main(arguments):
 
     # actions constants
@@ -75,7 +76,7 @@ def main(arguments):
                  for x in (arguments.get('--languages') or '').split(',')
                  if x.strip()]
     # special shortcuts for "all"
-    if arguments.get('--formats') in ['all',None]:
+    if arguments.get('--formats') in ['all', None]:
         FORMATS = ['epub', 'pdf']
     else:
         FORMATS = [x.strip().lower()
@@ -97,7 +98,7 @@ def main(arguments):
 
     if DO_CHECKDEPS:
         logger.info("CHECKING for dependencies on the system")
-        if not check_dependencies():
+        if not check_dependencies()[0]:
             logger.error("Exiting...")
             sys.exit(1)
 
@@ -127,6 +128,9 @@ def main(arguments):
                          only_books=BOOKS)
 
     if DO_ZIM:
+        if not check_dependencies()[1]:
+            logger.error("You don't have zimwriterfs installed.")
+            sys.exit(1)
         logger.info("BUILDING ZIM off satic folder {}".format(STATIC_FOLDER))
         build_zimfile(static_folder=STATIC_FOLDER, zim_path=ZIM_FILE,
                       languages=LANGUAGES, formats=FORMATS,
@@ -135,4 +139,3 @@ def main(arguments):
 
 if __name__ == '__main__':
     main(docopt(help, version=0.1))
-

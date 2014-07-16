@@ -37,9 +37,15 @@ def check_dependencies():
     }
 
     all_good = True
+    has_zimwriter = True
     for bin, msg in all_bins.items():
+        if bin == 'zimwriterfs':
+            if not bin_is_present(bin):
+                has_zimwriter = False
+                continue
+
         if not bin_is_present(bin):
             logger.error("\t*{}* binary missing. {}".format(bin, msg))
             all_good = False
 
-    return all_good
+    return all_good, has_zimwriter
