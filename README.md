@@ -4,7 +4,7 @@ A scraper that downloads the whole repository of [Project Gutenberg](http://www.
 It was created during the Kiwix Hackathon in Lyon, France in May 2014.
 
 
-## Setting up the environement
+## Setting up the environment
 
 It's reccommened that you use `virtualenv`.
 
