@@ -84,8 +84,17 @@ def main(arguments):
                    if x.strip()]
 
     try:
-        BOOKS = [int(bid) for bid in BOOKS.split(',')]
-    except:
+        BOOKS = [bid for bid in BOOKS.split(',')]
+        f = lambda x: map(int, [i for i in x.split('-') if i.isdigit()])
+        books = []
+        for i in BOOKS:
+            blst = f(i)
+            if len(blst) > 1:
+                blst = range(blst[0], blst[1]+1)
+            books.extend(blst)
+        BOOKS = list(set(books))
+    except Exception as e:
+        logger.error(e)
         BOOKS = []
 
     # no arguments, default to --complete
