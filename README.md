@@ -1,12 +1,12 @@
 # gutenberg
 
 A scraper that downloads the whole repository of [Project Gutenberg](http://www.gutenberg.org) and puts it into a clean and user friendly format.  
-It was created during the Kiwix Hackathon in Lyon, France in May 2014.
+It was created during the Kiwix Hackathon in Lyon, France in July 2014.
 
 
 ## Setting up the environment
 
-It's reccommened that you use `virtualenv`.
+It's recommended that you use `virtualenv`.
 
 ### Install the dependencies
 
@@ -25,7 +25,9 @@ sudo pip install virtualenvwrapper
 brew install advancecomp jpegoptim pngquant p7zip gifsicle
 ```
 
-Finally, Add this to your `.bashrc`:
+#### Finalize the setup
+
+Finally, add this to your `.bashrc`:
 
 ```
 source /usr/local/bin/virtualenvwrapper.sh
@@ -71,8 +73,8 @@ You can find the full arguments list below.
 -h --help                       Display this help message
 -k --keep-db                    Do not wipe the DB during parse stage
 
--l --languages=<list>           Comma-separated list of lang codes to filter export to
--f --formats=<list>             Comma-separated list of formats to filter export to (pdf, epub, all)
+-l --languages=<list>           Comma-separated list of lang codes to filter export to (preferably ISO 639-1, else ISO 639-3)
+-f --formats=<list>             Comma-separated list of formats to filter export to (epub, html, pdf, all)
 
 -m --mirror=<url>               Use URL as base for all downloads.
 -r --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use extracted folder instead
@@ -80,7 +82,7 @@ You can find the full arguments list below.
 -z --zim-file=<file>            Write ZIM into this file path
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
--b --books=<ids>                Execute the processes for specific books, separated by commas or dashes
+-b --books=<ids>                Execute the processes for specific books, separated by commas, or dashes for intervals
 
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file
