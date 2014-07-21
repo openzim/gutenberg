@@ -21,6 +21,9 @@ def build_zimfile(static_folder, zim_path=None,
     if not languages:
         languages = ['mul']
 
+    languages.sort()
+    formats.sort()
+
     if title is None:
         if len(languages) > 5:
             title = ("Project Gutenberg Library with {formats}"
@@ -44,8 +47,11 @@ def build_zimfile(static_folder, zim_path=None,
                     lang=languages[0],
                     date=datetime.datetime.now().strftime('%m_%Y'))
 
+    languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
+    languages.sort()
+
     context = {
-        'languages': ','.join([ISO_MATRIX.get(lang, lang) for lang in languages]),
+        'languages': ','.join(languages),
         'title': title,
         'description': description,
         'creator': 'gutenberg.org',
