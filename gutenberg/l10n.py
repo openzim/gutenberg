@@ -115,7 +115,7 @@ l10n_strings = {
         "textContent": "Project Gutenberg offers over 45,000 free ebooks"
       },
       "about-2": {
-        "textContent": "choose among free epub books, free kindle books."
+        "textContent": "Choose among free epub books, free kindle books."
       },
       "about-3": {
         "textContent": "Download them or read them online."
