@@ -3,14 +3,14 @@ var booksUrl = "full_by_popularity.js";
 var inBooksLooadingLoop = false;
 
 function minimizeUI() {
-    $( "#hide-home-about" ).val( "true" );
-    $( "#hide-home-about" ).change();
-    $( "#home-about" ).slideUp( 300 );
+    $( "#hide-precontentt" ).val( "true" );
+    $( "#hide-precontent" ).change();
+    $( ".precontent" ).slideUp( 300 );
 }
 
 function maximizeUI() {
-    $( '#hide-home-about' ).val( '' );
-    $( '#hide-home-about' ).change();
+    $( '#hide-precontent' ).val( '' );
+    $( '#hide-precontent' ).change();
 }
 
 function loadScript(url, nodeId, callback) {
@@ -90,7 +90,7 @@ function showBooks() {
 
     /* Show spinner if loading takes more than 1 second */
     inBooksLoadingLoop = true;
-    setTimeout(function() { 
+    setTimeout(function() {
     if ( inBooksLoadingLoop ) {
         $("#spinner").show();
     }
@@ -156,13 +156,13 @@ function showBooks() {
                 var urlBase = full[0].replace( "/", "-" );
 
                 if (data[0] == 1) {
-                html += "<a title=\"" + full[0]+ ": HTML\" href=\"" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-2x\"></i></a>";
+                html += "<a title=\"" + full[0]+ ": HTML\" href=\"" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-3x\"></i></a>";
                 }
                 if (data[1] == 1) {
-                html += "<a title=\"" + full[0]+ ": EPUB\" href=\"" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-book fa-2x\"></i></a>";
+                html += "<a title=\"" + full[0]+ ": EPUB\" href=\"" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-book fa-3x\"></i></a>";
                 }
                 if (data[2] == 1) {
-                html += "<a title=\"" + full[0]+ ": PDF\" href=\"" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-2x\"></i></a>";
+                html += "<a title=\"" + full[0]+ ": PDF\" href=\"" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-3x\"></i></a>";
                 }
                 return html;
             }
@@ -178,7 +178,7 @@ function showBooks() {
         $("#books_table_paginate").click( function() { minimizeUI() });
         $('#books_table').attr("filled", true);
 
-        $('#sort').show();
+        $('.sort').show();
 
         /* Hide Spinner */
         inBooksLoadingLoop = false;
@@ -211,36 +211,36 @@ function init() {
     );
 
     /* Hide home about */
-    if ( $( "#hide-home-about" ).val() == "true" ) {
-    $( "#home-about" ).hide();
+    if ( $( "#hide-precontent" ).val() == "true" ) {
+        $( ".precontent" ).hide();
     }
 
     /* Sort buttons */
-    $( "#sort" ).hide();
+    $( ".sort" ).hide();
     $( "#popularity_sort" ).click(function() {
-    sortMethod = "popularity";
-    $( "#default-sort" ).val( sortMethod );
-    $( "#default-sort" ).change();
-    $( "#popularity_sort" ).addClass( "fa-3x-selected" );
-    $( "#alpha_sort" ).removeClass( "fa-3x-selected" );
-    minimizeUI();
-    showBooks();
+        sortMethod = "popularity";
+        $( "#default-sort" ).val( sortMethod );
+        $( "#default-sort" ).change();
+        $( "#popularity_sort" ).addClass( "fa-selected" );
+        $( "#alpha_sort" ).removeClass( "fa-selected" );
+        minimizeUI();
+        showBooks();
     });
 
     $( "#alpha_sort" ).click(function() {
-    sortMethod = "title";
-    $( "#default-sort" ).val( sortMethod );
-    $( "#default-sort" ).change();
-    $( "#alpha_sort" ).addClass( "fa-3x-selected" );
-    $( "#popularity_sort" ).removeClass( "fa-3x-selected" );
-    minimizeUI();
-    showBooks();
+        sortMethod = "title";
+        $( "#default-sort" ).val( sortMethod );
+        $( "#default-sort" ).change();
+        $( "#alpha_sort" ).addClass( "fa-selected" );
+        $( "#popularity_sort" ).removeClass( "fa-selected" );
+        minimizeUI();
+        showBooks();
     });
 
     if ( $( "#default-sort" ).val() == "popularity" ) {
-    $( "#popularity_sort" ).addClass( "fa-3x-selected" );
+        $( "#popularity_sort" ).addClass( "fa-selected" );
     } else {
-    $( "#alpha_sort" ).addClass( "fa-3x-selected" );
+        $( "#alpha_sort" ).addClass( "fa-selected" );
     }
 
     /* Language filter */

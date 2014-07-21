@@ -7,7 +7,7 @@
         <link rel="shortcut icon" href="favicon.ico" />
         <link rel="stylesheet" href="css/pure-min.css" type="text/css" />
         <link rel="stylesheet" href="css/grids-responsive-min.css" type="text/css" />
-        <link rel="stylesheet" href="css/pure-skin-gutenberg.css" media="screen, projection" type="text/css" />
+        <link rel="stylesheet" href="css/pure-skin-gutenberg.css" type="text/css" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="jquery-ui/jquery-ui.min.css" media="screen, projection" type="text/css" />
         <link rel="stylesheet" type="text/css" href="datatables/media/css/jquery.dataTables.css" />
@@ -32,7 +32,7 @@
     <div id="spinner" class="spinner" style="display:none;" >
         <img id="img-spinner" src="css/spinner.gif" alt="Loading" />
     </div>
-    <input type="hidden" id="hide-home-about" name="hide-home-about" />
+    <input type="hidden" id="hide-precontent" />
     <div class="l10nselector">
         <select id="l10nselect" name="l10nselect" class="filter_ui" title="Interface language" data-l10n-id="ui-language-switcher">
         {% for lang in ui_languages %}
@@ -48,8 +48,8 @@
 
         <form class="pure-form filter">
         <div class="pure-g">
-            <div class="pure-u-1 pure-u-lg-1-5">
-                <select id="language_filter" data-l10n-id="choose-language" class="filter_ui" placeholder="Choose a language..."><option data-l10n-id="any-languages" value="" label="Any languages">Any languages</option></select>
+            <div class="pure-u-1 pure-u-lg-1-5 languages-filter">
+                <select id="language_filter" data-l10n-id="choose-language" class="filter_ui pure-input" placeholder="Choose a language..."><option data-l10n-id="any-languages" value="" label="Any languages">Any languages</option></select>
             </div>
             <div class="pure-u-1 pure-u-lg-1-5">
                 <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded" />
@@ -59,24 +59,16 @@
                 <button onclick="showBooks()" class="search pure-button" data-l10n-id="search"><i class="fa fa-search fa-1x"></i> Search</button>
                 {% endif %}
             </div>
-            <!-- <div class="pure-u-1 pure-u-lg-1-5">
-            </div> -->
             <div class="pure-u-1 pure-u-lg-2-5 sort">
-                <input type="hidden" id="default-sort" name="default-sort" value="popularity" />
-                <i class="fa fa-heart fa-3x" title="Sort by popularity" id="popularity_sort" />&nbsp;</i>
-                <i class="fa fa-sort-alpha-asc fa-3x" title="Sort by title" id="alpha_sort" >&nbsp;</i>
+                <input type="hidden" id="default-sort" value="popularity" />
+                <i class="fa fa-heart fa-2x" title="Sort by popularity" id="popularity_sort" />&nbsp;</i>
+                <i class="fa fa-sort-alpha-asc fa-2x" title="Sort by title" id="alpha_sort" >&nbsp;</i>
             </div>
         </div>
         </form>
 
     </header>
 
-      <!--
-      <div class="sort" id="sort">
-
-      </div>
-    </div>
-  </div> -->
     {% block precontent %}{% endblock %}
     <div id="content" class="main container">
     {% block content %}

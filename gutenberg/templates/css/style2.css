@@ -6,6 +6,11 @@
 - side margins: 1em (desktop);
 */
 
+html {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -22,6 +27,10 @@ header {
     padding: 1em 0;
     /*font-size: 1em;*/
     /*line-height: 1em;*/
+}
+
+header input, header select {
+    font-family: 'RobotoRegular';
 }
 
 header, header h1, header h2, header a, header a:hover, header a:visited {
@@ -103,6 +112,16 @@ a {
 }
 
 /* TABLE */
+table.dataTable.row-border tbody th,
+table.dataTable.row-border tbody td,
+table.dataTable.display tbody th,
+table.dataTable.display tbody td {
+    padding: inherit;
+    overflow: hidden; /* this is what fixes the expansion */
+    text-overflow: ellipsis; /* not supported in all browsers, but I accepted the tradeoff */
+    line-height: 1.5;
+}
+
 .data-table {
     max-width: 900px;
     font-family: "RobotoRegular";
@@ -111,8 +130,13 @@ a {
 tr {
     padding: 1em;
 }
-tr:hover {
+
+tr td:hover {
     cursor: pointer;
+}
+
+tr td.table-icons:hover {
+    cursor: auto;
 }
 
 .table-title {
@@ -141,6 +165,52 @@ table.dataTable.display tbody tr:hover,
 table.dataTable.display tbody tr.odd:hover,
 table.dataTable.display tbody tr.even:hover {
     background-color: whitesmoke!important;
+}
+
+dataTables_wrapper.dataTables_length,
+.dataTables_wrapper.dataTables_filter,
+.dataTables_wrapper.dataTables_info,
+.dataTables_wrapper.dataTables_processing,
+.dataTables_wrapper.dataTables_paginate {
+    width: 100%;
+    padding-top: 3em;
+    padding-bottom: 2em;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.table-icons {
+    text-align: right;
+    vertical-align: middle;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    border: 0!important;
+    font-family: "RobotoLight"!important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    color: white !important;
+    background: red;
+}
+
+.paginate_button.current {
+    background: #BABABA!important;
+}
+
+.dataTables_wrapper table thead {
+    display: none!important;
+}
+
+.dataTables_wrapper table {
+    border-bottom: 0!important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.info-desc {
+    padding-top: 5px;
+    font-family: "RobotoThin";
+    font-size: 0.9em;
 }
 
 /* Author input autocomplete */
@@ -180,6 +250,59 @@ table.dataTable.display tbody tr.even:hover {
 .sort {
     text-align: right;
     color: white;
+}
+
+.sort .fa-selected {
+    color: #333333;
+}
+
+/* mobile */
+
+@media(max-width:650px) {
+    .l10nselector {
+        display: none;
+    }
+}
+
+@media(max-width:640px) {
+
+    header {
+        padding-top: .5em;
+        margin-top: -1em;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    h2 {
+        display: none;
+    }
+
+    header .sort {
+        text-align: center;
+    }
+
+    .precontent strong {
+        font-size: 1em;
+    }
+
+    .precontent p {
+        font-size: 1.2em;
+    }
+
+    .pure-skin-gutenberg .languages-filter {
+        margin-bottom: .5em;
+    }
+
+
+    /*#cover {
+        float: none;
+    }
+
+    .cover-art {
+        max-width: 100%;
+    }*/
 }
 
 /* Fonts */
