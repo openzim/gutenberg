@@ -48,29 +48,36 @@
 
         <form class="pure-form filter">
         <div class="pure-g">
+            {% if languages|length > 1 %}
             <div class="pure-u-1 pure-u-lg-1-5 languages-filter">
                 <select id="language_filter" data-l10n-id="choose-language" class="filter_ui pure-input" placeholder="Choose a language..."><option data-l10n-id="any-languages" value="" label="Any languages">Any languages</option></select>
             </div>
             <div class="pure-u-1 pure-u-lg-1-5">
+            {% else %}
+                <div class="pure-u-1 pure-u-lg-2-5">
+                    <input type="hidden" id="language_filter" value="{{ languages|first }}" />
+            {% endif %}
                 <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded" />
             </div>
-            <div class="pure-u-1 pure-u-lg-1-5">
-                {% if not show_books %}
-                <button onclick="showBooks()" class="search pure-button" data-l10n-id="search"><i class="fa fa-search fa-1x"></i> Search</button>
-                {% endif %}
-            </div>
-            <div class="pure-u-1 pure-u-lg-2-5 sort">
+            {% if show_books %}
+            <div class="pure-u-1 pure-u-lg-3-5 sort">
                 <input type="hidden" id="default-sort" value="popularity" />
                 <i class="fa fa-heart fa-2x" title="Sort by popularity" id="popularity_sort" />&nbsp;</i>
                 <i class="fa fa-sort-alpha-asc fa-2x" title="Sort by title" id="alpha_sort" >&nbsp;</i>
             </div>
+            {% else %}
+            <div class="pure-u-1 pure-u-lg-1-5">
+                <button class="search pure-button" data-l10n-id="search"><i class="fa fa-search fa-1x"></i> Search</button>
+            </div>
+            <div class="pure-u-1 pure-u-lg-2-5"></div>
+            {% endif %}
         </div>
         </form>
 
     </header>
 
     {% block precontent %}{% endblock %}
-    <div id="content" class="main container">
+    <div id="content" class="content">
     {% block content %}
     {% endblock %}
     </div>

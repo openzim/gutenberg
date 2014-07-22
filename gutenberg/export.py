@@ -31,10 +31,11 @@ DEBUG_COUNT = []
 NB_POPULARITY_STARS = 5
 
 
-def get_default_context():
+def get_default_context(books):
     return {
         'l10n_strings': json.dumps(l10n_strings),
-        'ui_languages': ['en', 'fr']
+        'ui_languages': ['en', 'fr'],
+        'languages': get_langs_with_count(books=books),
     }
 
 def fa_for_format(format):
@@ -109,7 +110,7 @@ def export_all_books(static_folder,
 
     # export homepage
     template = jinja_env.get_template('index.html')
-    context = get_default_context()
+    context = get_default_context(books=books)
     context.update({'show_books': True})
     with open(os.path.join(static_folder, 'Home.html'), 'w') as f:
         f.write(template.render(**context).encode('utf-8'))
@@ -135,7 +136,8 @@ def export_all_books(static_folder,
                        download_cache=download_cache,
                        cached_files=cached_files,
                        languages=languages,
-                       formats=formats)
+                       formats=formats,
+                       books=books)
 
     from pprint import pprint as pp ; pp(DEBUG_COUNT)
 
@@ -321,12 +323,12 @@ def update_html_for_static(book, html_content, epub=False):
     return soup.encode()
 
 # 42271
-def cover_html_content_for(book, static_folder):
+def cover_html_content_for(book, static_folder, books):
     cover_img = "{id}_cover.jpg".format(id=book.id)
     cover_img = cover_img if path(os.path.join(static_folder, cover_img)).exists() else None
     translate_author = ' data-l10n-id="author-{id}"'.format(id=book.author.name().lower()) if book.author.name() in ['Anonymous','Various'] else ''
     translate_license = ' data-l10n-id="license-{id}"'.format(id=book.license.slug.lower()) if book.license.slug in ['PD','Copyright'] else ''
-    context = get_default_context()
+    context = get_default_context(books=books)
     context.update({
         'book': book,
         'cover_img': cover_img,
@@ -340,7 +342,7 @@ def cover_html_content_for(book, static_folder):
 
 def export_book_to(book,
                    static_folder, download_cache,
-                   cached_files, languages, formats):
+                   cached_files, languages, formats, books):
     logger.info("\tExporting Book #{id}.".format(id=book.id))
 
     # actual book content, as HTML
@@ -519,7 +521,9 @@ def export_book_to(book,
     cover_fpath = os.path.join(static_folder,
                                  article_name_for(book=book, cover=True))
     logger.info("\t\tExporting to {}".format(cover_fpath))
-    html = cover_html_content_for(book=book, static_folder=static_folder)
+    html = cover_html_content_for(book=book,
+                                  static_folder=static_folder,
+                                  books=books)
     with open(cover_fpath, 'w') as f:
         f.write(html.encode('utf-8'))
 

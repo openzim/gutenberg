@@ -37,6 +37,14 @@ header, header h1, header h2, header a, header a:hover, header a:visited {
     color: white;
 }
 
+header h1 {
+    margin: 0;
+}
+
+header h2 {
+    margin: .1em 0 1em 0;
+}
+
 a {
     text-decoration: none;
 }
@@ -47,7 +55,7 @@ a {
 }
 
 
-#content .fa {
+.content .fa {
     color: #D00000;
 }
 
@@ -84,6 +92,13 @@ a {
     top: 1em;
     right: 1em;
 }
+
+.content {
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 2.5em;
+}
+
 
 
 /* Spinner */
@@ -256,6 +271,129 @@ dataTables_wrapper.dataTables_length,
     color: #333333;
 }
 
+/* cover-only */
+
+body.cover .content {
+    margin-top: 0;
+}
+
+body.cover .content h1 {
+    margin: .5em auto;
+    max-width: 700px;
+    text-align: center;
+    font-family: "RobotoThin";
+    font-size: 2em;
+    line-height: 1em; /*required for mobile*/
+}
+
+body.cover .content h2 {
+    margin-bottom: 1em;
+    font-size: 1.5em;
+}
+
+.content {
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 2.5em;
+}
+
+.cover-image {
+    float: left;
+    margin: 1em;
+}
+
+.cover-image img {
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.698);
+}
+
+.cover-art {
+    max-width: 100%;
+}
+
+.bibrec {
+    margin: 0 auto;
+    min-width: 700px;
+    width: 80%;
+    max-width: 700px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: left;
+    font-size: 1.2em;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.cover-detail {
+    box-sizing: border-box;
+    width: 100%;
+    padding: .5em .2em .5em 1em;
+    border-top: 1px solid #dddddd;
+}
+
+.cover-detail p {
+    margin: 0;
+}
+
+.cover-detail .label {
+    font-family: "RobotoCondensedBold";
+    font-size: 1.4em;
+}
+
+.cover-detail .label-value {
+    font-size: 1em;
+}
+
+.icons-footer {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 4em;
+    padding: 0;
+    margin: 0 auto;
+}
+
+/*div.bibrec {
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 2.5em;
+}
+
+table.bibrec {
+    margin: 0 auto;
+    min-width: 700px;
+    width: 80%;
+    max-width: 700px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: left;
+    font-size: 1.2em;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+table.bibrec th {
+    padding: .5em;
+    font-family: "RobotoLight";
+    font-size: 1em;
+    background: #DDDDDD;
+}
+
+table.bibrec td {
+    padding: .5em;
+    padding-left: 1em;
+    border-top: 1px solid #dddddd!important;
+    font-family: "RobotoCondensedBold";
+    font-size: 1em;
+}
+
+table.bibrec tr:first-child td {
+    border-top: 0 !important;
+}
+
+div.bibrec img {
+    margin: 1em;
+}*/
+
+
 /* mobile */
 
 @media(max-width:650px) {
@@ -291,12 +429,21 @@ dataTables_wrapper.dataTables_length,
         font-size: 1.2em;
     }
 
-    .pure-skin-gutenberg .languages-filter {
+    /*.languages-filter {
         margin-bottom: .5em;
+    }*/
+
+
+    .filter .pure-g .pure-u-1 {
+        margin-bottom: 0.5em;
+    }
+
+    .filter .pure-g .pure-u-1:last-of-type {
+        margin-bottom: 0;
     }
 
 
-    /*#cover {
+    ./*cover-image {
         float: none;
     }
 

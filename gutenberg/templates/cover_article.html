@@ -3,52 +3,51 @@
 {% block content %}
     <h1>{{ book.title }}</h1>
     {% if book.subtitle %}
-        <h2>{{ book.subtitle }}</h2>
+    <h2>{{ book.subtitle }}</h2>
     {% endif %}
-    <input type="hidden" id="is_cover_page" />
     {% if cover_img %}
-    <div id="cover">
+    <div id="cover" class="cover-image">
         <img data-l10n-id="cover-img" class="cover-art" src="{{ cover_img }}" title="Book Cover" alt="Book Cover" />
     </div>
     {% endif %}
     <div class="bibrec">
-        <table class="bibrec">
-            <tr>
-                <td data-l10n-id="author">Author
-                <p class="info-desc"{{ translate_author}}>{{ book.author.name() }}</p>
-                </td>
-            </tr>
-            <tr>
-                <td data-l10n-id="language">Language
-                <p class="info-desc">{{ book.language|language_name|title }}</p>
-                </td>
-            </tr>
-                <td data-l10n-id="license">License
-                <p class="info-desc"{{ translate_license }}>{{ book.license.name }}</p>
-                </td>
-            </tr>
-            <tr>
-                <td data-l10n-id="popularity">Popularity
-                <p class="info-desc">{% for n in range(1, 6) %}<i class="fa fa-heart{% if n > book.popularity %}-o{% endif %}"></i> {% endfor %}</p>
-                </td>
-            </tr>
-        </table>
-    {% if formats %}
-    <div class="icons-footer">
-        {% for format in formats %}
-        <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}">
-            {% if format == "html" %}
-            <i class="fa fa-html5 fa-6x"></i>
-            {% endif %}
-            {% if format == "epub" %}
-            <i class="fa fa-book fa-6x"></i>
-            {% endif %}
-            {% if format == "pdf" %}
-            <i class="fa fa-file-pdf-o fa-6x"></i>
-            {% endif %}
-        </a>
-        {% endfor %}
-    </div>
-    {% endif %}
+        <div class="cover-detail author">
+            <p class="label" data-l10n-id="author">Author</p>
+            <p class="label-value"{{ translate_author}}>{{ book.author.name() }}</p>
+        </div>
+
+        <div class="cover-detail language">
+            <p class="label" data-l10n-id="language">Language</p>
+            <p class="label-value"{{ translate_language}}>{{ book.language|language_name|title }}</p>
+        </div>
+
+        <div class="cover-detail license">
+            <p class="label" data-l10n-id="license">License</p>
+            <p class="label-value"{{ translate_license}}>{{ book.license.name }}</p>
+        </div>
+
+        <div class="cover-detail popularity">
+            <p class="label" data-l10n-id="popularity">Popularity</p>
+            <p class="label-value">{% for n in range(1, 6) %}<i class="fa fa-heart{% if n > book.popularity %}-o{% endif %}"></i> {% endfor %}</p>
+        </div>
+
+
+        {% if formats %}
+        <div class="cover-detail icons-footer">
+            {% for format in formats %}
+            <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs }}.{{ book.id }}.{{ format }}">
+                {% if format == "html" %}
+                <i class="fa fa-html5 fa-6x"></i>
+                {% endif %}
+                {% if format == "epub" %}
+                <i class="fa fa-book fa-6x"></i>
+                {% endif %}
+                {% if format == "pdf" %}
+                <i class="fa fa-file-pdf-o fa-6x"></i>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 {% endblock %}
