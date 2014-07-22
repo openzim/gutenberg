@@ -4,14 +4,17 @@ var booksUrl = "full_by_popularity.js";
 var inBooksLooadingLoop = false;
 
 function minimizeUI() {
-    $( "#hide-precontentt" ).val( "true" );
+    console.log("minimizeUI");
+    $( "#hide-precontent" ).val( "true" );
     $( "#hide-precontent" ).change();
     $( ".precontent" ).slideUp( 300 );
 }
 
 function maximizeUI() {
+    console.log("maximizeUI");
     $( '#hide-precontent' ).val( '' );
     $( '#hide-precontent' ).change();
+    $( ".precontent" ).slideDown( 300 );
 }
 
 function loadScript(url, nodeId, callback) {
@@ -112,7 +115,6 @@ function is_cover_page() {
 function showBooks() {
 
     console.log("showBooks");
-
     /* Show spinner if loading takes more than 1 second */
     inBooksLoadingLoop = true;
     setTimeout(function() {
