@@ -312,7 +312,7 @@ body.cover .content h2 {
 
 .bibrec {
     margin: 0 auto;
-    min-width: 700px;
+    /*min-width: 700px;*/
     width: 80%;
     max-width: 700px;
     border-collapse: collapse;
