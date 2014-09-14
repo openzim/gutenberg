@@ -24,8 +24,6 @@
         <script src="languages.js" type="text/javascript"></script>
         <script src="main_languages.js" type="text/javascript"></script>
         <script src="other_languages.js" type="text/javascript"></script>
-        <script id="authors_script" type="text/javascript"></script>
-        <script id="books_script" type="text/javascript"></script>
     </head>
     <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}" class="pure-skin-gutenberg {% if not show_books %}cover{% else %}home{% endif %}">
     <div id="spinner" class="spinner" style="display:none;" >

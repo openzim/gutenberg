@@ -91,7 +91,7 @@ a {
 /* l10n selector */
 .l10nselector {
     position: absolute;
-    top: 1em;
+    top: 3em;
     right: 1em;
 }
 
@@ -100,8 +100,6 @@ a {
     margin: 0 auto;
     margin-top: 2.5em;
 }
-
-
 
 /* Spinner */
 

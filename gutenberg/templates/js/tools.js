@@ -19,34 +19,36 @@ function maximizeUI() {
 
 function loadScript(url, nodeId, callback) {
     console.log("requesting script for #"+nodeId+" from "+ url);
-    if (document.getElementById( nodeId ).src == url) {
-        return;
+    if (document.getElementById(nodeId)) {
+	if (document.getElementById(nodeId).src == url) {
+	    return;
+	}
+	document.getElementById(nodeId).parentElement.
+	    removeChild(document.getElementById(nodeId));
     }
-
-    document.getElementById( nodeId ).parentElement.
-    removeChild( document.getElementById( nodeId ) );
 
     var script = document.createElement("script");
     script.setAttribute('type', "text/javascript");
     script.setAttribute('id', nodeId);
+//    script.setAttribute('src', url);
+    script.setAttribute('src', '../-/' + url);
 
+    document.getElementsByTagName("head")[0].appendChild(script);
     if (script.readyState) { //IE
-        script.onreadystatechange = function () {
-            if (script.readyState == "loaded" || script.readyState == "complete") {
-                script.onreadystatechange = null;
-                callback();
-            }
-        };
+	script.onreadystatechange = function () {
+	    if (script.readyState == "loaded" || script.readyState == "complete") {
+		script.onreadystatechange = null;
+		callback();
+	    }
+	};
     } else { //Others
-        script.onload = function () {
+	script.onload = function () {
             console.log("calling script callback");
-            callback();
-        };
+	    callback();
+	};
     }
 
-    script.src = url;
     console.log("attaching script");
-
     document.getElementsByTagName("head")[0].appendChild(script);
 }
 
@@ -59,9 +61,9 @@ function populateFilters( callback ) {
     if ( language_filter_value ) {
         var count = languages_json_data.length;
         var ok = false;
-        for ( i = 0 ; i < count ; i++ ) {
+        for ( var i = 0 ; i < count ; i++ ) {
             if (languages_json_data[i][1] === language_filter_value) {
-        booksUrl = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
+		booksUrl = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
                 ok = true;
                 break;
             }
@@ -140,71 +142,73 @@ function showBooks() {
         loadScript( booksUrl, "books_script", function () {
 
             if ( $('#books_table').attr("filled") ) {
-            $('#books_table').dataTable().fnDestroy();
+		$('#books_table').dataTable().fnDestroy();
             }
 
-            $('#books_table').dataTable( {
-            "searching": false,
-            "ordering":  false,
-            "deferRender": true,
-            "bDeferRender": true,
-            "lengthChange": false,
-            "info": false,
-            "data": json_data,
-            "columns": [
-                { "title": "" },
-                { "title": "" },
-                { "title": "" }
-            ],
-            "bAutoWidth": false,
-            "columnDefs": [
-                { "bVisible": false, "aTargets": [1] },
-                { "sClass": "table-icons", "aTargets": [2] },
-                {
-                "targets": 0,
-                "render": function ( data, type, full, meta ) {
-                    div = "<div class=\"list-stripe\"></div>";
-                    title = "<span style=\"display: none\">" + full[3] + "</span>";
-                    title += " <span class = \"table-title\">" + full[0] + "</span>";
-                    author = ((full[1]=='Anonymous')?
-                                "<span class=\"table-author\" data-l10n-id=\"author-anonymous\">" + document.webL10n.get('author-anonymous') + "</span>"
-                             :((full[1]=='Various')?
-                                "<span class=\"table-author\" data-l10n-id=\"author-various\">" + document.webL10n.get('author-various') + "</span>"
-                             :
-                                "<span class=\"table-author\">" + full[1] + "</span>"));
-
+	    $(document).ready(function() {
+		$('#books_table').dataTable( {
+		    "searching": false,
+		    "ordering":  false,
+		    "deferRender": true,
+		    "bDeferRender": true,
+		    "lengthChange": false,
+		    "info": false,
+		    "data": json_data,
+		    "columns": [
+			{ "title": "" },
+			{ "title": "" },
+			{ "title": "" }
+		    ],
+		    "bAutoWidth": false,
+		    "columnDefs": [
+			{ "bVisible": false, "aTargets": [1] },
+			{ "sClass": "table-icons", "aTargets": [2] },
+			{
+			    "targets": 0,
+			    "render": function ( data, type, full, meta ) {
+				div = "<div class=\"list-stripe\"></div>";
+				title = "<span style=\"display: none\">" + full[3] + "</span>";
+				title += " <span class = \"table-title\">" + full[0] + "</span>";
+				author = ((full[1]=='Anonymous')?
+					  "<span class=\"table-author\" data-l10n-id=\"author-anonymous\">" + document.webL10n.get('author-anonymous') + "</span>"
+					  :((full[1]=='Various')?
+					    "<span class=\"table-author\" data-l10n-id=\"author-various\">" + document.webL10n.get('author-various') + "</span>"
+					    :
+					    "<span class=\"table-author\">" + full[1] + "</span>"));
+				
                     return div + "<div>" + title + "<br>" + author + "</div";
-                }
-                },
-                {
-                "targets": 1,
-                "render": function ( data, type, full, meta ) {
-                    return "";
-                }
-                },
+			    }
+			},
+			{
+			    "targets": 1,
+			    "render": function ( data, type, full, meta ) {
+				return "";
+			    }
+			},
 
-                {
-                "targets": 2,
-                "render": function ( data, type, full, meta ) {
-                    var html = "";
-                    var urlBase = full[0].replace( "/", "-" );
-
-                    if (data[0] == 1) {
-                    html += "<a title=\"" + full[0]+ ": HTML\" href=\"" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-3x\"></i></a>";
-                    }
-                    if (data[1] == 1) {
-                    html += "<a title=\"" + full[0]+ ": EPUB\" href=\"" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-book fa-3x\"></i></a>";
-                    }
-                    if (data[2] == 1) {
-                    html += "<a title=\"" + full[0]+ ": PDF\" href=\"" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-3x\"></i></a>";
-                    }
-                    return html;
-                }
-                }
-            ]
-            } );
-
-            $('#books_table').on('click', 'tr td:first-child', function () {
+			{
+			    "targets": 2,
+			    "render": function ( data, type, full, meta ) {
+				var html = "";
+				var urlBase = full[0].replace( "/", "-" );
+				
+				if (data[0] == 1) {
+				    html += "<a title=\"" + full[0]+ ": HTML\" href=\"" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-3x\"></i></a>";
+				}
+				if (data[1] == 1) {
+				    html += "<a title=\"" + full[0]+ ": EPUB\" href=\"" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-book fa-3x\"></i></a>";
+				}
+				if (data[2] == 1) {
+				    html += "<a title=\"" + full[0]+ ": PDF\" href=\"" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-3x\"></i></a>";
+				}
+				return html;
+			    }
+			}
+		    ]
+		} );
+	    } );
+	    
+	    $('#books_table').on('click', 'tr td:first-child', function () {
                 var id = $('span', this)[0].innerHTML;
                 var titre = $('span.table-title', this)[0].innerHTML;
                 $(location).attr("href", titre.replace( "/", "-" ) + "_cover." + id + ".html" );
@@ -245,7 +249,7 @@ function init() {
     jQuery('input,select,textarea').persist(
     {
             context : 'gutenberg',  // a context or namespace for each field
-            replace : true,         // replace existing field contents if any
+            replace : false,         // replace existing field contents if any
             cookie  : 'gutenberg',  // cookies basename
             path    : '/',          // cookie path
             domain  : null,         // cookie domain
@@ -264,37 +268,8 @@ function init() {
         showBooks();
     });
 
-    /* Sort buttons */
-    $( ".sort" ).hide();
-    $( "#popularity_sort" ).click(function() {
-        sortMethod = "popularity";
-        $( "#default-sort" ).val( sortMethod );
-        $( "#default-sort" ).change();
-        $( "#popularity_sort" ).addClass( "fa-selected" );
-        $( "#alpha_sort" ).removeClass( "fa-selected" );
-        minimizeUI();
-        showBooks();
-    });
-
-    $( "#alpha_sort" ).click(function() {
-        sortMethod = "title";
-        $( "#default-sort" ).val( sortMethod );
-        $( "#default-sort" ).change();
-        $( "#alpha_sort" ).addClass( "fa-selected" );
-        $( "#popularity_sort" ).removeClass( "fa-selected" );
-        minimizeUI();
-        showBooks();
-    });
-
-    if ( $( "#default-sort" ).val() == "popularity" ) {
-        $( "#popularity_sort" ).addClass( "fa-selected" );
-    } else {
-        $( "#alpha_sort" ).addClass( "fa-selected" );
-    }
-
-    /* Language filter */
+    /* Language filter, fill language selector with langs from JS file */
     var language_filter = $("#language_filter");
-    // fill language selector with langs from JS file
 
     function create_options(parent, langlist) {
         $(langlist).each(function (index, lang) {
@@ -328,6 +303,34 @@ function init() {
     if ( languages_json_data.length == 1 ) {
         language_filter.val( languages_json_data[0][1] );
         language_filter.hide();
+    }
+
+    /* Sort buttons */
+    $( ".sort" ).hide();
+    $( "#popularity_sort" ).click(function() {
+        sortMethod = "popularity";
+        $( "#default-sort" ).val( sortMethod );
+        $( "#default-sort" ).change();
+        $( "#popularity_sort" ).addClass( "fa-selected" );
+        $( "#alpha_sort" ).removeClass( "fa-selected" );
+        minimizeUI();
+        showBooks();
+    });
+
+    $( "#alpha_sort" ).click(function() {
+        sortMethod = "title";
+        $( "#default-sort" ).val( sortMethod );
+        $( "#default-sort" ).change();
+        $( "#alpha_sort" ).addClass( "fa-selected" );
+        $( "#popularity_sort" ).removeClass( "fa-selected" );
+        minimizeUI();
+        showBooks();
+    });
+
+    if ( $( "#default-sort" ).val() == "popularity" ) {
+        $( "#popularity_sort" ).addClass( "fa-selected" );
+    } else {
+        $( "#alpha_sort" ).addClass( "fa-selected" );
     }
 
     /* Author filter */
