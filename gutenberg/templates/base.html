@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>{% block title %}Project Gutenberg Library{% endblock %}</title>
+        <title {% if show_books %} data-l10n-id="top-title"{% endif %}>{% block title %}Project Gutenberg Library{% endblock %}</title>
         <meta name="description" content="Project Gutenberg Ebooks." />
         <link rel="shortcut icon" href="favicon.ico" />
         <link rel="stylesheet" href="css/pure-min.css" type="text/css" />

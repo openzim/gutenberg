@@ -129,7 +129,7 @@ def main(arguments):
                            only_books=BOOKS)
 
     if DO_EXPORT:
-        logger.info("EXPORTING ebooks to satic folder (and JSON)")
+        logger.info("EXPORTING ebooks to static folder (and JSON)")
         export_all_books(static_folder=STATIC_FOLDER,
                          download_cache=DL_CACHE,
                          languages=LANGUAGES,
@@ -140,7 +140,7 @@ def main(arguments):
         if not check_dependencies()[1]:
             logger.error("You don't have zimwriterfs installed.")
             sys.exit(1)
-        logger.info("BUILDING ZIM off satic folder {}".format(STATIC_FOLDER))
+        logger.info("BUILDING ZIM off static folder {}".format(STATIC_FOLDER))
         build_zimfile(static_folder=STATIC_FOLDER, zim_path=ZIM_FILE,
                       languages=LANGUAGES, formats=FORMATS,
                       only_books=BOOKS,
