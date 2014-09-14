@@ -280,12 +280,12 @@ dataTables_wrapper.dataTables_length,
 
 body.cover .content {
     margin-top: 0;
+    text-align: center;
 }
 
 body.cover .content h1 {
     margin: .5em auto;
     max-width: 700px;
-    text-align: center;
     font-family: "RobotoThin";
     font-size: 2em;
     line-height: 1em; /*required for mobile*/

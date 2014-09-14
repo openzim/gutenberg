@@ -217,6 +217,12 @@ function showBooks() {
             /* Hide Spinner */
             inBooksLoadingLoop = false;
             $("#spinner").hide();
+
+	    /* Translate books table back/next buttons */
+	    $( "#books_table_previous" ).attr( "data-l10n-id", "table-previous" );
+	    $( "#books_table_previous" ).html( document.webL10n.get( "table-previous" ) );
+	    $( "#books_table_next" ).attr( "data-l10n-id", "table-next" );
+	    $( "#books_table_next" ).html( document.webL10n.get( "table-next" ) );
         });
         console.log("after loadScript");
     });

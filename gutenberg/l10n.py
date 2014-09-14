@@ -111,6 +111,12 @@ l10n_strings = {
       "sub-title": {
         "textContent": "The first producer of free ebooks"
       },
+      "table-previous": {
+        "textContent": "Previous"
+      },
+      "table-next": {
+        "textContent": "Next"
+      },
       "about-1": {
         "textContent": "Project Gutenberg offers over 45,000 free ebooks"
       },
@@ -232,6 +238,12 @@ l10n_strings = {
       },
       "sub-title": {
         "textContent": "Premier producteur d’ebooks gratuits"
+      },
+      "table-previous": {
+        "textContent": "Prédédent"
+      },
+      "table-next": {
+        "textContent": "Suivant"
       },
       "about-1": {
         "textContent": "Le Projet Gutenberg offre plus de 45 000 ebooks gratuits"
