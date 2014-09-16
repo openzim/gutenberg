@@ -363,7 +363,11 @@ def export_book_to(book,
         dst = os.path.join(path(static_folder).abspath(), dstfname)
         logger.info("\t\tSymlinking {}".format(dst))
         path(dst).unlink_p()
-        path(src).link(dst) # hard link
+        try:
+            path(src).link(dst)  # hard link
+        except IOError:
+            logger.error("/!\ Unable to symlink missing file {}".format(src))
+            return
 
     def copy_from_cache(fname, dstfname=None):
         src = os.path.join(path(download_cache).abspath(), fname)
@@ -372,7 +376,11 @@ def export_book_to(book,
         dst = os.path.join(path(static_folder).abspath(), dstfname)
         logger.info("\t\tCopying {}".format(dst))
         path(dst).unlink_p()
-        path(src).copy(dst)
+        try:
+            path(src).copy(dst)
+        except IOError:
+            logger.error("/!\ Unable to copy missing file {}".format(src))
+            return
 
     def optimize_image(fpath):
         if path(fpath).ext == '.png':
