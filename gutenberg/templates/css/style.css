@@ -91,9 +91,9 @@ a {
 
 /* l10n selector */
 .l10nselector {
-    position: absolute;
-    top: 3em;
-    right: 1em;
+    position: relative;
+    float: right;
+    margin: 1em;
 }
 
 .content {
