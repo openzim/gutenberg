@@ -59,6 +59,7 @@ a {
 
 .content .fa {
     color: #D00000;
+    cursor: inherit;
 }
 
 /* filters */
