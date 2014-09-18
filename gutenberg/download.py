@@ -17,6 +17,7 @@ from gutenberg.database import BookFormat, Format
 from gutenberg.export import get_list_of_filtered_books, fname_for
 from gutenberg.utils import download_file, FORMAT_MATRIX
 
+
 def resource_exists(url):
     r = requests.get(url, stream=True)
     return r.status_code == requests.codes.ok
@@ -35,22 +36,27 @@ def handle_zipped_epub(zippath,
         return fname == os.path.join("images",
                                      path(fname).splitpath()[-1])
 
-
     zipped_files = []
     # create temp directory to extract to
     tmpd = tempfile.mkdtemp()
-    with zipfile.ZipFile(zippath, 'r') as zf:
-        # check that there is no insecure data (absolute names)
-        if sum([1 for n in zf.namelist()
-                if not is_safe(n)]):
-            path(tmpd).rmtree_p()
-            return False
-        else:
-            # zipped_files = [clfn(fn) for fn in zf.namelist()]
-            zipped_files = zf.namelist()
+    try:
+        with zipfile.ZipFile(zippath, 'r') as zf:
+            # check that there is no insecure data (absolute names)
+            if sum([1 for n in zf.namelist()
+                    if not is_safe(n)]):
+                path(tmpd).rmtree_p()
+                return False
+            else:
+                # zipped_files = [clfn(fn) for fn in zf.namelist()]
+                zipped_files = zf.namelist()
 
-        # extract files from zip
-        zf.extractall(tmpd)
+            # extract files from zip
+            zf.extractall(tmpd)
+    except zipfile.BadZipfile:
+        # file is not a zip file when it should be.
+        # don't process it anymore as we don't know what to do.
+        # could this be due to an incorrect/incomplete download?
+        return
 
     # is there multiple HTML files in ZIP ? (rare)
     mhtml = sum([1 for f in zipped_files
