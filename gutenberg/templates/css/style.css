@@ -255,7 +255,8 @@ dataTables_wrapper.dataTables_length,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
     box-sizing: border-box;
-    border: 0;
+    border: 0px;
+    margin: 0px;
     color: #D00000;
     padding: .2em .6em;
     background: white;
