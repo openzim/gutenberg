@@ -324,8 +324,10 @@ function init() {
 
     if ( $( "#default-sort" ).val() == "popularity" ) {
         $( "#popularity_sort" ).addClass( "fa-selected" );
+        sortMethod = "popularity";
     } else {
         $( "#alpha_sort" ).addClass( "fa-selected" );
+        sortMethod = "title";
     }
 
     /* Author filter */

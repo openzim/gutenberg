@@ -32,6 +32,9 @@ jQuery.fn.persist = function(options) {
 			switch(this.tagName.toLowerCase()) {
 				case  'input':
 					switch($(this).attr('type')) {
+						case 'submit':
+					                // Do nothing
+                  				        break;
 						case 'radio':
 							// if we can replace anything or there are no checked radio buttons
 							if (options['replace']||$(this).parents('form').eq(0).find('input[name="'+name+'"]:checked').size()==0) {
