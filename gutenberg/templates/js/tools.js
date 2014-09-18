@@ -246,16 +246,11 @@ function onLocalized() {
 function init() {
 
     /* Persistence of form values */
-    jQuery('input,select,textarea').persist(
-    {
-            context : 'gutenberg',  // a context or namespace for each field
-            replace : false,         // replace existing field contents if any
-            cookie  : 'gutenberg',  // cookies basename
-            path    : '/',          // cookie path
-            domain  : null,         // cookie domain
-            expires : 1             // cookie expiry (eg 365)
-    }
-    );
+    jQuery('input,select,textarea').persist({
+	context: 'gutenberg', // a context or namespace for each field
+	cookie: 'gutenberg', // cookies basename
+	expires: 1 // cookie expiry (eg 365)
+    });
 
     /* Hide home about */
     if ( $( "#hide-precontent" ).val() == "true" ) {
