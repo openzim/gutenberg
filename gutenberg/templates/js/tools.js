@@ -190,7 +190,7 @@ function showBooks() {
 			    "targets": 2,
 			    "render": function ( data, type, full, meta ) {
 				var html = "";
-				var urlBase = full[0].replace( "/", "-" );
+				var urlBase = encodeURIComponent( full[0].replace( "/", "-" ) );
 				
 				if (data[0] == 1) {
 				    html += "<a title=\"" + full[0]+ ": HTML\" href=\"" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-3x\"></i></a>";
