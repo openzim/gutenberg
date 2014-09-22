@@ -1,16 +1,20 @@
-# gutenberg
+######################################################################
+# Project Gutenberg Offline
+######################################################################
 
-A scraper that downloads the whole repository of [Project Gutenberg](http://www.gutenberg.org) and puts it into the [ZIM file format](https://en.wikipedia.org/wiki/ZIM_(file_format), a clean and user friendly format for storing content for offline usage.  
-It was created during the Kiwix Hackathon in Lyon, France in July 2014.
+A scraper that downloads the whole repository of [Project Gutenberg]
+(http://www.gutenberg.org) and puts it into a localy browsable
+directory and then in a ZIM file (http://www.openzim.org), a clean and
+user friendly format for storing content for offline usage. It was
+created during a Kiwix Hackathon in Lyon, France in July 2014.
 
-
-## Setting up the environment
+## Setting up the environment ########################################
 
 It's recommended that you use `virtualenv`.
 
-### Install the dependencies
+### Install the dependencies #########################################
 
-#### Linux
+#### Linux 
 
 ```
 sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle
@@ -25,7 +29,7 @@ sudo pip install virtualenvwrapper
 brew install advancecomp jpegoptim pngquant p7zip gifsicle
 ```
 
-#### Finalize the setup
+#### Finalize the setup #############################################
 
 Finally, add this to your `.bashrc`:
 
@@ -33,7 +37,7 @@ Finally, add this to your `.bashrc`:
 source /usr/local/bin/virtualenvwrapper.sh
 ```
 
-### Set up the project
+### Set up the project ##############################################
 
 ```
 git clone git@github.com:kiwix/gutenberg.git
@@ -41,7 +45,7 @@ cd gutenberg
 mkvirtualenv gut (or any name you want)
 ```
 
-### Working in the environment
+### Working in the environment ######################################
 
 * Activate the environment:  `workon gut`
 * Quit the environment: `deactivate`
@@ -56,7 +60,7 @@ It will download, process and export the content.
 ./dump-gutenberg.py 
 ```
 
-#### Arguments
+#### Arguments #####################################################
 
 You can also specify parameters to customize the content.   
 Only want books with the Id 100-200? Books only in French? English? Or only those both? No problem!  
@@ -96,7 +100,7 @@ You can find the full arguments list below.
 ```
 
 
-## Screenshots 
+## Screenshots #####################################################
 
 ![](http://i.imgur.com/A4NnS2K.png?1)
 
