@@ -1,6 +1,6 @@
 # gutenberg
 
-A scraper that downloads the whole repository of [Project Gutenberg](http://www.gutenberg.org) and puts it into a clean and user friendly format.  
+A scraper that downloads the whole repository of [Project Gutenberg](http://www.gutenberg.org) and puts it into the [ZIM file format](https://en.wikipedia.org/wiki/ZIM_(file_format), a clean and user friendly format for storing content for offline usage.  
 It was created during the Kiwix Hackathon in Lyon, France in July 2014.
 
 
