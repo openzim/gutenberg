@@ -8,6 +8,7 @@ import os
 import json
 import zipfile
 import tempfile
+import urllib
 
 import bs4
 from bs4 import BeautifulSoup
@@ -38,6 +39,7 @@ def get_default_context(books):
         'languages': get_langs_with_count(books=books),
     }
 
+
 def fa_for_format(format):
     return {
         'html': "",
@@ -46,11 +48,18 @@ def fa_for_format(format):
         'pdf': 'fa-file-pdf-o',
     }.get(format, 'fa-file-o')
 
+
 def book_name_for_fs(book):
     return book.title.strip().replace('/', '-')
+
+
+def urlencode(url):
+    return urllib.quote(url)
+
 jinja_env.filters['book_name_for_fs'] = book_name_for_fs
 jinja_env.filters['language_name'] = language_name
 jinja_env.filters['fa_for_format'] = fa_for_format
+jinja_env.filters['urlencode'] = fa_for_format
 
 
 def tmpl_path():
