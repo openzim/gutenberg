@@ -568,8 +568,16 @@ def export_to_json_helpers(books, static_folder, languages, formats):
 
     avail_langs = get_langs_with_count(books=books)
 
+    all_unique_authors = list(set([book.author.gut_id
+                                   for book in books]))
+
     # language-specific collections
     for lang_name, lang, lang_count in avail_langs:
+        filtered_unique_authors = list(
+            set([book.author.gut_id for book in books.filter(language=lang)]))
+        filtered_out_authors = [x for x in all_unique_authors
+                                if x not in filtered_unique_authors]
+
         # by popularity
         logger.info("\t\tDumping lang_{}_by_popularity.js".format(lang))
         dumpjs([book.to_array()
@@ -583,9 +591,17 @@ def export_to_json_helpers(books, static_folder, languages, formats):
                                  .order_by(Book.title.asc())],
                 'lang_{}_by_title.js'.format(lang))
         # authors for that lang
-        authors = Author.select().where(
-            Author.gut_id << list(set([book.author.gut_id
-                                       for book in books.filter(language=lang)])))
+        # performance trick bellow.
+        # because the following query might raise an exception
+        # due to too much SQL variables, we run it on the shortest
+        # list of authors.
+        # Either gut_id IN authors or gut_id NOT IN non_authors
+        if len(filtered_unique_authors) > len(filtered_out_authors):
+            authors = Author.select().where(
+                ~(Author.gut_id << filtered_out_authors))
+        else:
+            authors = Author.select().where(
+                Author.gut_id << filtered_unique_authors)
         logger.info("\t\tDumping authors_lang_{}.js".format(lang))
         dumpjs([author.to_array()
                 for author in authors.order_by(Author.last_name.asc(),
@@ -593,10 +609,17 @@ def export_to_json_helpers(books, static_folder, languages, formats):
                 'authors_lang_{}.js'.format(lang), 'authors_json_data')
 
     # author specific collections
-    authors = Author.select().where(
-        Author.gut_id << list(set([book.author.gut_id
-                                   for book in books])))
-    for author in authors:
+    #
+    # authors = Author.select().where(
+    #     Author.gut_id << all_unique_authors)
+    # perf trick: loop through the unfiltered list of authors
+    # so that peewee don't complain about a huge IN stmt.
+    # instead pop out author ids as they are processes so we only
+    # work on unique authors.
+    for author in Author.select():
+        if author.gut_id not in all_unique_authors:
+            continue
+        all_unique_authors.remove(author.gut_id)
         # by popularity
         logger.info("\t\tDumping auth_{}_by_popularity.js".format(author.gut_id))
         dumpjs([book.to_array()
