@@ -50,10 +50,12 @@ def fa_for_format(format):
 
 
 def book_name_for_fs(book):
-    return book.title.strip().replace('/', '-').replace('—', '-')[:230]
+    return book.title.strip().replace('/', '-')[:230]
+
 
 def urlencode(url):
-    return urllib.quote(url)
+    return urllib.quote(url.encode('utf-8'))
+
 
 jinja_env.filters['book_name_for_fs'] = book_name_for_fs
 jinja_env.filters['language_name'] = language_name

@@ -190,7 +190,7 @@ function showBooks() {
 			    "targets": 2,
 			    "render": function ( data, type, full, meta ) {
 				var html = "";
-				var urlBase = encodeURIComponent( full[0].replace( "/", "-" ).replace('—', "-").substring(0, 230) );
+				var urlBase = encodeURIComponent( full[0].replace( "/", "-" ).substring(0, 230) );
 
 				if (data[0] == 1) {
 				    html += "<a title=\"" + full[0]+ ": HTML\" href=\"../A/" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-3x\"></i></a>";
@@ -212,7 +212,7 @@ function showBooks() {
 	    $('#books_table').on('click', 'tr td:first-child', function () {
                 var id = $('span', this)[0].innerHTML;
                 var titre = $('span.table-title', this)[0].innerHTML;
-                $(location).attr("href", encodeURIComponent( titre.replace( "/", "-" ).replace('—', "-").substring(0, 230) ) + "_cover." + id + ".html" );
+                $(location).attr("href", encodeURIComponent( titre.replace( "/", "-" ).substring(0, 230) ) + "_cover." + id + ".html" );
             });
             $("#books_table_paginate").click( function() { minimizeUI(); });
             $('#books_table').attr("filled", true);
