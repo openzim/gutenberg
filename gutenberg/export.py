@@ -50,8 +50,7 @@ def fa_for_format(format):
 
 
 def book_name_for_fs(book):
-    return book.title.strip().replace('/', '-')
-
+    return book.title.strip().replace('/', '-').replace('—', '-')[:230]
 
 def urlencode(url):
     return urllib.quote(url)
