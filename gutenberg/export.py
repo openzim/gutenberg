@@ -59,7 +59,7 @@ def urlencode(url):
 jinja_env.filters['book_name_for_fs'] = book_name_for_fs
 jinja_env.filters['language_name'] = language_name
 jinja_env.filters['fa_for_format'] = fa_for_format
-jinja_env.filters['urlencode'] = fa_for_format
+jinja_env.filters['urlencode'] = urlencode
 
 
 def tmpl_path():
