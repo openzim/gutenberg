@@ -96,9 +96,12 @@ def export_all_books(static_folder,
                                  .where(Format.mime == FORMAT_MATRIX.get(fmt))
                                  .count()])
 
-    logger.debug("\tFiltered book collection, PDF: {}".format(nb_by_fmt('pdf')))
-    logger.debug("\tFiltered book collection, ePUB: {}".format(nb_by_fmt('epub')))
-    logger.debug("\tFiltered book collection, HTML: {}".format(nb_by_fmt('html')))
+    logger.debug("\tFiltered book collection, PDF: {}"
+                 .format(nb_by_fmt('pdf')))
+    logger.debug("\tFiltered book collection, ePUB: {}"
+                 .format(nb_by_fmt('epub')))
+    logger.debug("\tFiltered book collection, HTML: {}"
+                 .format(nb_by_fmt('html')))
 
     # export to JSON helpers
     export_to_json_helpers(books=books,
@@ -130,7 +133,7 @@ def export_all_books(static_folder,
     stars_limits = [0] * NB_POPULARITY_STARS
     stars = NB_POPULARITY_STARS
     nb_downloads = popbooks[0].downloads
-    for ibook in range(0,popbooks.count(),1):
+    for ibook in range(0, popbooks.count(), 1):
         if ibook > float(NB_POPULARITY_STARS-stars+1)/NB_POPULARITY_STARS*popbooks.count() \
            and popbooks[ibook].downloads < nb_downloads:
             stars_limits[stars-1] = nb_downloads
@@ -140,7 +143,9 @@ def export_all_books(static_folder,
     # export to HTML
     cached_files = os.listdir(download_cache)
     for book in books:
-        book.popularity = sum( [ int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS) ] )
+        book.popularity = sum(
+            [int(book.downloads >= stars_limits[i])
+             for i in range(NB_POPULARITY_STARS)])
         export_book_to(book=book,
                        static_folder=static_folder,
                        download_cache=download_cache,
@@ -149,19 +154,19 @@ def export_all_books(static_folder,
                        formats=formats,
                        books=books)
 
-    from pprint import pprint as pp ; pp(DEBUG_COUNT)
-
 
 def article_name_for(book, cover=False):
     cover = "_cover" if cover else ""
     title = book_name_for_fs(book)
-    return "{title}{cover}.{id}.html".format(title=title, cover=cover, id=book.id)
+    return "{title}{cover}.{id}.html".format(
+        title=title, cover=cover, id=book.id)
 
 
 def archive_name_for(book, format):
     return "{title}.{id}.{format}".format(
         title=book_name_for_fs(book),
         id=book.id, format=format)
+
 
 def fname_for(book, format):
     return "{id}.{format}".format(id=book.id, format=format)
@@ -189,7 +194,8 @@ def update_html_for_static(book, html_content, epub=False):
     if not epub:
         for img in soup.findAll('img'):
             if 'src' in img.attrs:
-                img.attrs['src'] = img.attrs['src'].replace('images/', '{id}_'.format(id=book.id))
+                img.attrs['src'] = img.attrs['src'].replace(
+                    'images/', '{id}_'.format(id=book.id))
 
     # update all <a> links to internal HTML pages
     # should only apply to relative URLs to HTML files.
@@ -215,7 +221,8 @@ def update_html_for_static(book, html_content, epub=False):
 
     if not epub:
         for link in soup.findAll('a'):
-            new_link = replacablement_link(book=book, url=link.attrs.get('href', ''))
+            new_link = replacablement_link(
+                book=book, url=link.attrs.get('href', ''))
             if new_link is not None:
                 link.attrs['href'] = new_link
 
@@ -264,19 +271,19 @@ def update_html_for_static(book, html_content, epub=False):
     ]
 
     body = soup.find('body')
-    is_encapsulated_in_div = sum([1 for e in body.children
-                                  if not isinstance(e, bs4.NavigableString)]) == 1
+    is_encapsulated_in_div = sum(
+        [1 for e in body.children
+         if not isinstance(e, bs4.NavigableString)]) == 1
 
     if is_encapsulated_in_div and not epub:
         DEBUG_COUNT.append((book.id, book.title))
 
     if not is_encapsulated_in_div:
         for start_of_text, end_of_text in patterns:
-            if not start_of_text in body.text and not end_of_text in body.text:
+            if start_of_text not in body.text and end_of_text not in body.text:
                 continue
 
             if start_of_text in body.text and end_of_text in body.text:
-                # logger.debug("FOUND BOTH: {} |*| {}".format(start_of_text, end_of_text))
                 remove = True
                 for child in body.children:
                     if isinstance(child, bs4.NavigableString):
@@ -323,7 +330,8 @@ def update_html_for_static(book, html_content, epub=False):
 
     # if there is no charset, set it to utf8
     if not epub and not soup.encoding:
-        utf = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
+        utf = '<meta http-equiv="Content-Type" content="text/html;' \
+              ' charset=UTF-8" />'
         # title = soup.find('title')
         # title.insert_before(utf)
         utf = '<head>{}'.format(utf)
@@ -332,12 +340,17 @@ def update_html_for_static(book, html_content, epub=False):
 
     return soup.encode()
 
-# 42271
+
 def cover_html_content_for(book, static_folder, books):
     cover_img = "{id}_cover.jpg".format(id=book.id)
-    cover_img = cover_img if path(os.path.join(static_folder, cover_img)).exists() else None
-    translate_author = ' data-l10n-id="author-{id}"'.format(id=book.author.name().lower()) if book.author.name() in ['Anonymous','Various'] else ''
-    translate_license = ' data-l10n-id="license-{id}"'.format(id=book.license.slug.lower()) if book.license.slug in ['PD','Copyright'] else ''
+    cover_img = cover_img \
+        if path(os.path.join(static_folder, cover_img)).exists() else None
+    translate_author = ' data-l10n-id="author-{id}"' \
+        .format(id=book.author.name().lower()) \
+        if book.author.name() in ['Anonymous', 'Various'] else ''
+    translate_license = ' data-l10n-id="license-{id}"' \
+        .format(id=book.license.slug.lower()) \
+        if book.license.slug in ['PD', 'Copyright'] else ''
     context = get_default_context(books=books)
     context.update({
         'book': book,
@@ -515,7 +528,7 @@ def export_book_to(book,
         if path(fname).ext in ('.html', '.htm'):
             src = os.path.join(path(download_cache).abspath(), fname)
             dst = os.path.join(path(static_folder).abspath(), fname)
-            # article_fpath = os.path.join(static_folder, article_name_for(book))
+
             logger.info("\t\tExporting HTML file to {}".format(dst))
             html = "CAN'T READ FILE"
             with open(src, 'r') as f:
@@ -529,21 +542,38 @@ def export_book_to(book,
 
     # other formats
     for format in formats:
-        if not format in book.formats() or format == 'html':
+        if format not in book.formats() or format == 'html':
             continue
-        logger.info("\t\tCopying format file to {}".format(archive_name_for(book, format)))
+        logger.info("\t\tCopying format file to {}"
+                    .format(archive_name_for(book, format)))
         handle_companion_file(fname_for(book, format),
                               archive_name_for(book, format))
 
     # book presentation article
     cover_fpath = os.path.join(static_folder,
-                                 article_name_for(book=book, cover=True))
+                               article_name_for(book=book, cover=True))
     logger.info("\t\tExporting to {}".format(cover_fpath))
     html = cover_html_content_for(book=book,
                                   static_folder=static_folder,
                                   books=books)
     with open(cover_fpath, 'w') as f:
         f.write(html.encode('utf-8'))
+
+
+def authors_from_ids(idlist):
+    ''' build a list of Author objects based on a list of author.gut_id
+
+        Used to overcome large SELECT IN SQL stmts which peewee complains
+        about. Slower !! '''
+    authors = []
+    for author in Author.select().order_by(Author.last_name.asc(),
+                                           Author.first_names.asc()):
+        if author.gut_id not in idlist:
+            continue
+        if author in authors:
+            continue
+        authors.append(author)
+    return authors
 
 
 def export_to_json_helpers(books, static_folder, languages, formats):
@@ -569,78 +599,61 @@ def export_to_json_helpers(books, static_folder, languages, formats):
 
     avail_langs = get_langs_with_count(books=books)
 
-    all_unique_authors = list(set([book.author.gut_id
-                                   for book in books]))
+    all_filtered_authors = []
 
     # language-specific collections
     for lang_name, lang, lang_count in avail_langs:
-        filtered_unique_authors = list(
+        lang_filtered_authors = list(
             set([book.author.gut_id for book in books.filter(language=lang)]))
-        filtered_out_authors = [x for x in all_unique_authors
-                                if x not in filtered_unique_authors]
+        for aid in lang_filtered_authors:
+            if aid not in all_filtered_authors:
+                all_filtered_authors.append(aid)
 
         # by popularity
         logger.info("\t\tDumping lang_{}_by_popularity.js".format(lang))
-        dumpjs([book.to_array()
-                for book in books.where(Book.language == lang)
-                                 .order_by(Book.downloads.desc())],
-                'lang_{}_by_popularity.js'.format(lang))
+        dumpjs(
+            [book.to_array()
+             for book in books.where(Book.language == lang)
+                              .order_by(Book.downloads.desc())],
+            'lang_{}_by_popularity.js'.format(lang))
         # by title
         logger.info("\t\tDumping lang_{}_by_title.js".format(lang))
-        dumpjs([book.to_array()
-                for book in books.where(Book.language == lang)
-                                 .order_by(Book.title.asc())],
-                'lang_{}_by_title.js'.format(lang))
-        # authors for that lang
-        # performance trick bellow.
-        # because the following query might raise an exception
-        # due to too much SQL variables, we run it on the shortest
-        # list of authors.
-        # Either gut_id IN authors or gut_id NOT IN non_authors
-        if len(filtered_unique_authors) > len(filtered_out_authors):
-            authors = Author.select().where(
-                ~(Author.gut_id << filtered_out_authors))
-        else:
-            authors = Author.select().where(
-                Author.gut_id << filtered_unique_authors)
+        dumpjs(
+            [book.to_array()
+             for book in books.where(Book.language == lang)
+                              .order_by(Book.title.asc())],
+            'lang_{}_by_title.js'.format(lang))
+
+        authors = authors_from_ids(lang_filtered_authors)
         logger.info("\t\tDumping authors_lang_{}.js".format(lang))
-        dumpjs([author.to_array()
-                for author in authors.order_by(Author.last_name.asc(),
-                                               Author.first_names.asc())],
-                'authors_lang_{}.js'.format(lang), 'authors_json_data')
+        dumpjs([author.to_array() for author in authors],
+               'authors_lang_{}.js'.format(lang), 'authors_json_data')
 
     # author specific collections
-    #
-    # authors = Author.select().where(
-    #     Author.gut_id << all_unique_authors)
-    # perf trick: loop through the unfiltered list of authors
-    # so that peewee don't complain about a huge IN stmt.
-    # instead pop out author ids as they are processes so we only
-    # work on unique authors.
-    for author in Author.select():
-        if author.gut_id not in all_unique_authors:
-            continue
-        all_unique_authors.remove(author.gut_id)
+    authors = authors_from_ids(all_filtered_authors)
+    for author in authors:
+
+        # all_filtered_authors.remove(author.gut_id)
         # by popularity
-        logger.info("\t\tDumping auth_{}_by_popularity.js".format(author.gut_id))
-        dumpjs([book.to_array()
-                for book in books.where(Book.author == author)
-                                 .order_by(Book.downloads.desc())],
-                'auth_{}_by_popularity.js'.format(author.gut_id))
+        logger.info(
+            "\t\tDumping auth_{}_by_popularity.js".format(author.gut_id))
+        dumpjs(
+            [book.to_array()
+             for book in books.where(Book.author == author)
+                              .order_by(Book.downloads.desc())],
+            'auth_{}_by_popularity.js'.format(author.gut_id))
         # by title
         logger.info("\t\tDumping auth_{}_by_title.js".format(author.gut_id))
-        dumpjs([book.to_array()
-                for book in books.where(Book.author == author)
-                                 .order_by(Book.title.asc())],
-                'auth_{}_by_title.js'.format(author.gut_id))
+        dumpjs(
+            [book.to_array()
+             for book in books.where(Book.author == author)
+                              .order_by(Book.title.asc())],
+            'auth_{}_by_title.js'.format(author.gut_id))
 
     # authors list sorted by name
     logger.info("\t\tDumping authors.js")
-    dumpjs([author.to_array()
-            for author in authors.order_by(Author.last_name.asc(),
-                                           Author.first_names.asc())],
-                'authors.js', 'authors_json_data')
-
+    dumpjs([author.to_array() for author in authors],
+           'authors.js', 'authors_json_data')
 
     # languages list sorted by code
     logger.info("\t\tDumping languages.js")
