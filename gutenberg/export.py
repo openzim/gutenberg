@@ -271,9 +271,12 @@ def update_html_for_static(book, html_content, epub=False):
     ]
 
     body = soup.find('body')
-    is_encapsulated_in_div = sum(
-        [1 for e in body.children
-         if not isinstance(e, bs4.NavigableString)]) == 1
+    try:
+        is_encapsulated_in_div = sum(
+            [1 for e in body.children
+             if not isinstance(e, bs4.NavigableString)]) == 1
+    except:
+        is_encapsulated_in_div = False
 
     if is_encapsulated_in_div and not epub:
         DEBUG_COUNT.append((book.id, book.title))
