@@ -378,7 +378,10 @@ def export_book_to(book,
     if html:
         article_fpath = os.path.join(static_folder, article_name_for(book))
         logger.info("\t\tExporting to {}".format(article_fpath))
-        new_html = update_html_for_static(book=book, html_content=html)
+        try:
+            new_html = update_html_for_static(book=book, html_content=html)
+        except:
+            new_html = html
         with open(article_fpath, 'w') as f:
             f.write(new_html)
 
