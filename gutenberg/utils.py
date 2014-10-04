@@ -5,6 +5,7 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
+import re
 import hashlib
 from contextlib import contextmanager
 
@@ -42,7 +43,7 @@ def cd(newdir):
 
 
 def exec_cmd(cmd):
-    # logger.debug("** {}".format(cmd))
+    # logger.debug("** {}".format(str(cmd.encode('utf-8'))))
     return envoy.run(str(cmd.encode('utf-8')))
 
 
@@ -117,3 +118,8 @@ def is_bad_cover(fpath):
         return False
 
     return md5sum(fpath) in bad_sums
+
+
+def path_for_cmd(p):
+    return re.sub(r'([\'\"\s])', lambda m: r'\{}'.format(m.group()), p)
+
