@@ -488,15 +488,16 @@ def export_book_to(book,
 
             soup = None
             opff = os.path.join(tmpd, str(book.id), 'content.opf')
-            with open(opff, 'r') as fd:
-                soup = BeautifulSoup(fd.read(), ["lxml", "xml"])
+            if os.path.exists(opff):
+                with open(opff, 'r') as fd:
+                    soup = BeautifulSoup(fd.read(), ["lxml", "xml"])
 
-            for elem in soup.findAll():
-                if getattr(elem, 'attrs', {}).get('href') == 'cover.jpg':
-                    elem.decompose()
+                for elem in soup.findAll():
+                    if getattr(elem, 'attrs', {}).get('href') == 'cover.jpg':
+                        elem.decompose()
 
-            with(open(opff, 'w')) as fd:
-                fd.write(soup.encode())
+                with(open(opff, 'w')) as fd:
+                    fd.write(soup.encode())
 
         with cd(tmpd):
             exec_cmd('zip -q0X "{dst}" mimetype'.format(dst=dst))
