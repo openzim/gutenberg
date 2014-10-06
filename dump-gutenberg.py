@@ -68,7 +68,7 @@ def main(arguments):
     WIPE_DB = not arguments.get('--keep-db') or False
     RDF_URL = arguments.get('--rdf-url') or 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2'
     DL_CACHE = arguments.get('--dl-folder') or os.path.join('dl-cache')
-    BOOKS = arguments.get('--books') or []
+    BOOKS = arguments.get('--books') or ''
     ZTITLE = arguments.get('--zim-title')
     ZDESC = arguments.get('--zim-desc')
 
