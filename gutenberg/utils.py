@@ -121,5 +121,5 @@ def is_bad_cover(fpath):
 
 
 def path_for_cmd(p):
-    return re.sub(r'([\'\"\s])', lambda m: r'\{}'.format(m.group()), p)
+    return re.sub(r'([\'])', lambda m: r'{}'.format(m.group()), p)
 
