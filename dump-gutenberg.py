@@ -8,6 +8,7 @@ import os
 import sys
 
 from docopt import docopt
+from path import path
 
 from gutenberg import logger
 from gutenberg.database import setup_database
@@ -71,6 +72,9 @@ def main(arguments):
     BOOKS = arguments.get('--books') or ''
     ZTITLE = arguments.get('--zim-title')
     ZDESC = arguments.get('--zim-desc')
+
+    # create tmp dir
+    path('tmp').mkdir_p()
 
     LANGUAGES = [x.strip().lower()
                  for x in (arguments.get('--languages') or '').split(',')

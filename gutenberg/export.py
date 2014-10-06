@@ -16,7 +16,7 @@ from path import path
 from jinja2 import Environment, PackageLoader
 
 import gutenberg
-from gutenberg import logger, XML_PARSER
+from gutenberg import logger, XML_PARSER, TMP_FOLDER
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
                              get_list_of_filtered_books, exec_cmd, cd,
                              get_langs_with_count, get_lang_groups,
@@ -437,7 +437,7 @@ def export_book_to(book,
         logger.info("\t\tCreating ePUB at {}".format(dst))
         zipped_files = []
         # create temp directory to extract to
-        tmpd = tempfile.mkdtemp()
+        tmpd = tempfile.mkdtemp(dir=TMP_FOLDER)
         with zipfile.ZipFile(src, 'r') as zf:
             zipped_files = zf.namelist()
             zf.extractall(tmpd)
@@ -520,7 +520,8 @@ def export_book_to(book,
             copy_from_cache(src, dst)
             optimize_image(dst)
         elif path(fname).ext == '.epub':
-            tmp_epub = tempfile.NamedTemporaryFile(suffix='.epub')
+            tmp_epub = tempfile.NamedTemporaryFile(suffix='.epub',
+                                                   dir=TMP_FOLDER)
             tmp_epub.close()
             optimize_epub(src, tmp_epub.name)
             path(tmp_epub.name).move(dst)

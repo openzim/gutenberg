@@ -11,7 +11,7 @@ import zipfile
 import requests
 from path import path
 
-from gutenberg import logger
+from gutenberg import logger, TMP_FOLDER
 from gutenberg.urls import get_urls
 from gutenberg.database import BookFormat, Format
 from gutenberg.export import get_list_of_filtered_books, fname_for
@@ -38,7 +38,7 @@ def handle_zipped_epub(zippath,
 
     zipped_files = []
     # create temp directory to extract to
-    tmpd = tempfile.mkdtemp()
+    tmpd = tempfile.mkdtemp(dir=TMP_FOLDER)
     try:
         with zipfile.ZipFile(zippath, 'r') as zf:
             # check that there is no insecure data (absolute names)

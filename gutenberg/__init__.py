@@ -49,3 +49,5 @@ LOGGING = {
 dictConfig(LOGGING)
 
 logger = logging.getLogger(__name__)
+
+TMP_FOLDER = 'tmp'
