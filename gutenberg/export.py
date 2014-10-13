@@ -526,7 +526,10 @@ def export_book_to(book,
             optimize_epub(src, tmp_epub.name)
             path(tmp_epub.name).move(dst)
         else:
-            # PDF mostly
+            # excludes files created by Windows Explorer
+            if src.endswith('_Thumbs.db'):
+                return
+            # copy otherwise (PDF mostly)
             logger.debug("\t\tshitty ext: {}".format(dst))
             copy_from_cache(src, dst)
 
