@@ -430,8 +430,7 @@ def export_book_to(book,
         exec_cmd(advdef.format(path=fpath))
 
     def optimize_jpeg(fpath):
-        exec_cmd('jpegoptim --strip-all -m50 "{path}"'
-                 .format(path=fpath))
+        exec_cmd('jpegoptim --strip-all -m50 "{path}"'.format(path=fpath))
 
     def optimize_epub(src, dst):
         logger.info("\t\tCreating ePUB at {}".format(dst))
@@ -444,7 +443,7 @@ def export_book_to(book,
 
         remove_cover = False
         for fname in zipped_files:
-            fnp = path_for_cmd(os.path.join(tmpd, fname))
+            fnp = os.path.join(tmpd, fname)
             if path(fname).ext in ('.png', '.jpeg', '.jpg', '.gif'):
 
                 # special case to remove ugly cover
@@ -452,7 +451,7 @@ def export_book_to(book,
                     zipped_files.remove(fname)
                     remove_cover = True
                 else:
-                    optimize_image(fnp)
+                    optimize_image(path_for_cmd(fnp))
 
             if path(fname).ext in ('.htm', '.html'):
                 f = open(fnp, 'r')
@@ -500,9 +499,9 @@ def export_book_to(book,
                     fd.write(soup.encode())
 
         with cd(tmpd):
-            exec_cmd('zip -q0X "{dst}" mimetype'.format(dst=dst))
+            exec_cmd('zip -q0X "{dst}" mimetype'.format(dst=path_for_cmd(dst)))
             exec_cmd('zip -qXr9D "{dst}" {files}'
-                     .format(dst=dst,
+                     .format(dst=path_for_cmd(dst),
                              files=" ".join([f for f in zipped_files
                                              if not f == 'mimetype'])))
 
@@ -512,13 +511,12 @@ def export_book_to(book,
         src = os.path.join(path(download_cache).abspath(), fname)
         if dstfname is None:
             dstfname = fname
-        dst = path_for_cmd(
-            os.path.join(path(static_folder).abspath(), dstfname))
+        dst = os.path.join(path(static_folder).abspath(), dstfname)
 
         # optimization based on mime/extension
         if path(fname).ext in ('.png', '.jpg', '.jpeg', '.gif'):
             copy_from_cache(src, dst)
-            optimize_image(dst)
+            optimize_image(path_for_cmd(dst))
         elif path(fname).ext == '.epub':
             tmp_epub = tempfile.NamedTemporaryFile(suffix='.epub',
                                                    dir=TMP_FOLDER)
