@@ -548,7 +548,11 @@ def export_book_to(book,
                 f.write(new_html)
         else:
             logger.info("\t\tCopying companion file to {}".format(fname))
-            handle_companion_file(fname)
+            try:
+                handle_companion_file(fname)
+            except Exception as e:
+                logger.error("\t\tException while handling companion file: {}"
+                             .format(e))
 
     # other formats
     for format in formats:
@@ -556,8 +560,12 @@ def export_book_to(book,
             continue
         logger.info("\t\tCopying format file to {}"
                     .format(archive_name_for(book, format)))
-        handle_companion_file(fname_for(book, format),
-                              archive_name_for(book, format))
+        try:
+            handle_companion_file(fname_for(book, format),
+                                  archive_name_for(book, format))
+        except Exception as e:
+            logger.error("\t\tException while handling companion file: {}"
+                         .format(e))
 
     # book presentation article
     cover_fpath = os.path.join(static_folder,
