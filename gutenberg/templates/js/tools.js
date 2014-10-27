@@ -208,12 +208,22 @@ function showBooks() {
 		    ]
 		} );
 	    } );
-	    
-	    $('#books_table').on('click', 'tr td:first-child', function () {
+
+	    /* Book list click handlers */
+	    $('#books_table').on('mouseup', 'tr td:first-child', function ( event ) {
                 var id = $('span', this)[0].innerHTML;
                 var titre = $('span.table-title', this)[0].innerHTML;
-                $(location).attr("href", encodeURIComponent( titre.replace( "/", "-" ).substring(0, 230) ) + "_cover." + id + ".html" );
+
+		if ( event.which == 1 ) { /* Left click */
+                    $(location).attr("href", encodeURIComponent( titre.replace( "/", "-" ).substring(0, 230) ) + "_cover." + id + ".html" );
+		} else if ( event.which == 2 ) { /* Middle click */
+		    var href = $(this).attr('data-href');
+		    var link = $('<a href="' + encodeURIComponent( titre.replace( "/", "-" ).substring(0, 230) ) + "_cover." + id + ".html" + '" />');
+		    link.attr('target', '_blank');
+		    window.open(link.attr('href'));
+		}
             });
+
             $("#books_table_paginate").click( function() { minimizeUI(); });
             $('#books_table').attr("filled", true);
 
