@@ -45,7 +45,7 @@ def build_zimfile(static_folder, zim_path=None,
         else:
             zim_path = "gutenberg_{lang}_all_{date}.zim".format(
                     lang=languages[0],
-                    date=datetime.datetime.now().strftime('%m_%Y'))
+                    date=datetime.datetime.now().strftime('%Y-%m'))
 
     languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
     languages.sort()
