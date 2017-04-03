@@ -8,19 +8,24 @@ import os
 import json
 import zipfile
 import tempfile
-import urllib
+try:
+    from urllib import quote  # Python 2.X
+except ImportError:
+    from urllib.parse import quote  # Python 3+
 
+import six
 import bs4
 from bs4 import BeautifulSoup
-from path import path
+from path import Path as path
 from jinja2 import Environment, PackageLoader
+from multiprocessing.dummy import Pool
 
 import gutenberg
 from gutenberg import logger, XML_PARSER, TMP_FOLDER
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
                              get_list_of_filtered_books, exec_cmd, cd,
                              get_langs_with_count, get_lang_groups,
-                             is_bad_cover, path_for_cmd)
+                             is_bad_cover, path_for_cmd, read_file, zip_epub)
 from gutenberg.database import Book, Format, BookFormat, Author
 from gutenberg.iso639 import language_name
 from gutenberg.l10n import l10n_strings
@@ -54,7 +59,7 @@ def book_name_for_fs(book):
 
 
 def urlencode(url):
-    return urllib.quote(url.encode('utf-8'))
+    return quote(url)
 
 
 jinja_env.filters['book_name_for_fs'] = book_name_for_fs
@@ -73,6 +78,7 @@ def get_list_of_all_languages():
 
 def export_all_books(static_folder,
                      download_cache,
+                     concurrency,
                      languages=[],
                      formats=[],
                      only_books=[]):
@@ -126,7 +132,11 @@ def export_all_books(static_folder,
     context = get_default_context(books=books)
     context.update({'show_books': True})
     with open(os.path.join(static_folder, 'Home.html'), 'w') as f:
-        f.write(template.render(**context).encode('utf-8'))
+        rendered = template.render(**context)
+        if six.PY2:
+            f.write(rendered.encode('utf-8'))
+        else:
+            f.write(rendered)
 
     # Compute popularity
     popbooks = books.order_by(Book.downloads.desc())
@@ -146,13 +156,22 @@ def export_all_books(static_folder,
         book.popularity = sum(
             [int(book.downloads >= stars_limits[i])
              for i in range(NB_POPULARITY_STARS)])
-        export_book_to(book=book,
-                       static_folder=static_folder,
-                       download_cache=download_cache,
-                       cached_files=cached_files,
-                       languages=languages,
-                       formats=formats,
-                       books=books)
+        # export_book_to(book=book,
+        #                static_folder=static_folder,
+        #                download_cache=download_cache,
+        #                cached_files=cached_files,
+        #                languages=languages,
+        #                formats=formats,
+        #                books=books)
+
+    dlb = lambda b: export_book_to(b,
+                                   static_folder=static_folder,
+                                   download_cache=download_cache,
+                                   cached_files=cached_files,
+                                   languages=languages,
+                                   formats=formats,
+                                   books=books)
+    Pool(concurrency).map(dlb, books)
 
 
 def article_name_for(book, cover=False):
@@ -182,8 +201,11 @@ def html_content_for(book, static_folder, download_cache):
                     .format(book.id, html_fpath))
         return None
 
-    with open(html_fpath, 'r') as f:
-        return f.read()
+    try:
+        return read_file(html_fpath)
+    except UnicodeDecodeError:
+        logger.error("Unable to read HTML content: {}".format(html_fpath))
+        raise
 
 
 def update_html_for_static(book, html_content, epub=False):
@@ -237,8 +259,10 @@ def update_html_for_static(book, html_content, epub=False):
         ("***START OF THE PROJECT GUTENBERG EBOOK",
          "***END OF THE PROJECT GUTENBERG EBOOK"),
 
-        ("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>",
-         "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>"),
+        ("<><><><><><><><><><><><><><><><><><><><><><><><><><><><>"
+         "<><><><><><>",
+         "<><><><><><><><><><><><><><><><><><><><><><><><><><><><>"
+         "<><><><><><>"),
 
         # ePub only
         ("*** START OF THIS PROJECT GUTENBERG EBOOK",
@@ -260,14 +284,16 @@ def update_html_for_static(book, html_content, epub=False):
         ("Nous remercions la Bibliothèque Nationale de France qui a mis à",
          "End of The Project Gutenberg EBook"),
 
-        ("=========================================================================",
+        ("=========================================================="
+         "===============",
          "——————————————————————————-"),
 
         ("Project Gutenberg Etext", "End of Project Gutenberg Etext"),
 
         ("Text encoding is iso-8859-1", "Fin de Project Gutenberg Etext"),
 
-        ("—————————————————-", "Encode an ISO 8859/1 Etext into LaTeX or HTML"),
+        ("—————————————————-", "Encode an ISO 8859/1 "
+         "Etext into LaTeX or HTML"),
     ]
 
     body = soup.find('body')
@@ -328,7 +354,8 @@ def update_html_for_static(book, html_content, epub=False):
     if not epub:
         infobox = jinja_env.get_template('book_infobox.html')
         infobox_html = infobox.render({'book': book})
-        info_soup = BeautifulSoup(infobox_html)
+        info_soup = BeautifulSoup(infobox_html, ["lxml", "xml"],
+                                  markup_type="html")
         body.insert(0, info_soup.find('div'))
 
     # if there is no charset, set it to utf8
@@ -341,7 +368,7 @@ def update_html_for_static(book, html_content, epub=False):
 
         return soup.encode().replace(str('<head>'), str(utf))
 
-    return soup.encode()
+    return soup
 
 
 def cover_html_content_for(book, static_folder, books):
@@ -383,7 +410,10 @@ def export_book_to(book,
         except:
             new_html = html
         with open(article_fpath, 'w') as f:
-            f.write(new_html)
+            if six.PY2:
+                f.write(new_html.encode())
+            else:
+                f.write(new_html)
 
     def symlink_from_cache(fname, dstfname=None):
         src = os.path.join(path(download_cache).abspath(), fname)
@@ -421,22 +451,21 @@ def export_book_to(book,
         return fpath
 
     def optimize_gif(fpath):
-        exec_cmd('gifsicle -O3 "{path}" -o "{path}"'.format(path=fpath))
+        exec_cmd(['gifsicle', '-O3', path, '-o', path])
 
     def optimize_png(fpath):
-        pngquant = 'pngquant --nofs --force --ext=".png" "{path}"'
-        advdef = 'advdef -z -4 -i 5 "{path}"'
-        exec_cmd(pngquant.format(path=fpath))
-        exec_cmd(advdef.format(path=fpath))
+        exec_cmd(['pngquant', '--nofs', '--force', '--ext=".png"', fpath])
+        exec_cmd(['advdef', '-z', '-4', '-i', '5', fpath])
 
     def optimize_jpeg(fpath):
-        exec_cmd('jpegoptim --strip-all -m50 "{path}"'.format(path=fpath))
+        exec_cmd(['jpegoptim', '--strip-all', '-m50', fpath])
 
     def optimize_epub(src, dst):
-        logger.info("\t\tCreating ePUB at {}".format(dst))
+        logger.info("\t\tCreating ePUB off {} at {}".format(src, dst))
         zipped_files = []
         # create temp directory to extract to
         tmpd = tempfile.mkdtemp(dir=TMP_FOLDER)
+
         with zipfile.ZipFile(src, 'r') as zf:
             zipped_files = zf.namelist()
             zf.extractall(tmpd)
@@ -460,14 +489,17 @@ def export_book_to(book,
                                               epub=True)
                 f.close()
                 with open(fnp, 'w') as f:
-                    f.write(html)
+                    if six.PY2:
+                        f.write(html.encode())
+                    else:
+                        f.write(str(html))
 
             if path(fname).ext == '.ncx':
                 pattern = "*** START: FULL LICENSE ***"
                 f = open(fnp, 'r')
                 ncx = f.read()
                 f.close()
-                soup = BeautifulSoup(ncx, ["lxml", "xml"])
+                soup = BeautifulSoup(ncx, "lxml-xml")
                 for tag in soup.findAll('text'):
                     if pattern in tag.text:
                         s = tag.parent.parent
@@ -477,7 +509,10 @@ def export_book_to(book,
                         s.next_sibling
 
                 with open(fnp, 'w') as f:
-                    f.write(soup.encode())
+                    if six.PY2:
+                        f.write(soup.encode())
+                    else:
+                        f.write(str(soup))
 
         # delete {id}/cover.jpg if exist and update {id}/content.opf
         if remove_cover:
@@ -489,21 +524,23 @@ def export_book_to(book,
             opff = os.path.join(tmpd, str(book.id), 'content.opf')
             if os.path.exists(opff):
                 with open(opff, 'r') as fd:
-                    soup = BeautifulSoup(fd.read(), ["lxml", "xml"])
+                    soup = BeautifulSoup(fd.read(), ["lxml", "xml"],
+                                         markup_type="html")
 
                 for elem in soup.findAll():
                     if getattr(elem, 'attrs', {}).get('href') == 'cover.jpg':
                         elem.decompose()
 
                 with(open(opff, 'w')) as fd:
-                    fd.write(soup.encode())
+                    if six.PY2:
+                        f.write(soup.encode())
+                    else:
+                        f.write(str(soup))
 
-        with cd(tmpd):
-            exec_cmd('zip -q0X "{dst}" mimetype'.format(dst=path_for_cmd(dst)))
-            exec_cmd('zip -qXr9D "{dst}" {files}'
-                     .format(dst=path_for_cmd(dst),
-                             files=" ".join([f for f in zipped_files
-                                             if not f == 'mimetype'])))
+        # bundle epub as zip
+        zip_epub(epub_fpath=dst,
+                 root_folder=tmpd,
+                 fpaths=zipped_files)
 
         path(tmpd).rmtree_p()
 
@@ -545,12 +582,16 @@ def export_book_to(book,
                 html = f.read()
             new_html = update_html_for_static(book=book, html_content=html)
             with open(dst, 'w') as f:
-                f.write(new_html)
+                if six.PY2:
+                    f.write(new_html.encode())
+                else:
+                    f.write(new_html)
         else:
             logger.info("\t\tCopying companion file to {}".format(fname))
             try:
                 handle_companion_file(fname)
             except Exception as e:
+                logger.exception(e)
                 logger.error("\t\tException while handling companion file: {}"
                              .format(e))
 
@@ -564,6 +605,7 @@ def export_book_to(book,
             handle_companion_file(fname_for(book, format),
                                   archive_name_for(book, format))
         except Exception as e:
+            logger.exception(e)
             logger.error("\t\tException while handling companion file: {}"
                          .format(e))
 
@@ -575,7 +617,10 @@ def export_book_to(book,
                                   static_folder=static_folder,
                                   books=books)
     with open(cover_fpath, 'w') as f:
-        f.write(html.encode('utf-8'))
+        if six.PY2:
+            f.write(html.encode('utf-8'))
+        else:
+            f.write(html)
 
 
 def authors_from_ids(idlist):

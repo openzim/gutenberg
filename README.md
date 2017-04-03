@@ -73,7 +73,7 @@ This will download English and French books that have the Id 100 to 200 in the h
 
 You can find the full arguments list below.
 
-```
+``` sh
 -h --help                       Display this help message
 -k --keep-db                    Do not wipe the DB during parse stage
 
@@ -84,9 +84,12 @@ You can find the full arguments list below.
 -r --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use extracted folder instead
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
 -z --zim-file=<file>            Write ZIM into this file path
+-t --zim-title=<title>          Set ZIM title
+-n --zim-desc=<description>     Set ZIM description
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, separated by commas, or dashes for intervals
+-c --concurrency=<nb>           Number of concurrent process for download and parsing tasks
 
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file

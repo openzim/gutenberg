@@ -22,7 +22,9 @@ class License(Model):
         fixtures = [
             {'slug': 'PD', 'name': "Public domain in the USA."},
             {'slug': 'None', 'name': "None"},
-            {'slug': 'Copyright', 'name': "Copyrighted. Read the copyright notice inside this book for details."},
+            {'slug': 'Copyright', 'name': "Copyrighted. Read the copyright "
+                                          "notice inside this book "
+                                          "for details."},
         ]
 
     slug = CharField(max_length=20, primary_key=True)

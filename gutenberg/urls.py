@@ -9,7 +9,7 @@ import os
 
 from collections import defaultdict
 
-from gutenberg.database import Book, BookFormat, Format
+from gutenberg.database import Book, BookFormat
 from gutenberg.utils import FORMAT_MATRIX
 from gutenberg import logger
 
@@ -43,7 +43,7 @@ class UrlBuilder:
         these books do not exist.
 
         """
-        if self.b_id > 10:
+        if int(self.b_id) > 10:
             if self.base == self.BASE_ONE:
                 base_url = os.path.join(
                     os.path.join(*list(str(self.b_id))[:-1]), str(self.b_id))
@@ -82,9 +82,10 @@ def get_urls(book):
 
     # Strip out the encoding of the file
     f = lambda x: x.mime.split(';')[0].strip()
-    available_formats = [{x.pattern.format(id=book.id): {'mime': f(x), 'id': book.id}}
-                         for x in filtered_book
-                         if f(x) in FORMAT_MATRIX.values()]
+    available_formats = [
+        {x.pattern.format(id=book.id): {'mime': f(x), 'id': book.id}}
+        for x in filtered_book
+        if f(x) in FORMAT_MATRIX.values()]
     files = sort_by_mime_type(available_formats)
     return build_urls(files)
 
@@ -153,19 +154,24 @@ def build_pdf(files):
     u.with_base(UrlBuilder.BASE_TWO)
     u.with_id(b_id)
 
+    u1 = UrlBuilder()
+    u1.with_base(UrlBuilder.BASE_ONE)
+    u1.with_id(b_id)
+
     if not u.build():
         return []
 
     for i in files:
-        if not 'images' in i['name']:
+        if 'images' not in i['name']:
             url = os.path.join(u.build(), i['name'])
             urls.append(url)
 
+    url_dash1 = os.path.join(u1.build(), b_id + '-' + 'pdf' + '.pdf')
     url_dash = os.path.join(u.build(), b_id + '-' + 'pdf' + '.pdf')
     url_normal = os.path.join(u.build(), b_id + '.pdf')
     url_pg = os.path.join(u.build(), 'pg' + b_id + '.pdf')
 
-    urls.extend([url_dash, url_normal, url_pg])
+    urls.extend([url_dash, url_normal, url_pg, url_dash1])
     return list(set(urls))
 
 
@@ -177,12 +183,12 @@ def build_html(files):
     b_id = str(files[0]['id'])
     file_names = [i['name'] for i in files]
     u = UrlBuilder()
-    u.with_id(i['id'])
+    u.with_id(b_id)
 
     if not u.build():
         return []
 
-    if all([not '-h.html' in file_names, '-h.zip' in file_names]):
+    if all(['-h.html' not in file_names, '-h.zip' in file_names]):
         for i in files:
             url = os.path.join(u.build(), i['name'])
             urls.append(url)

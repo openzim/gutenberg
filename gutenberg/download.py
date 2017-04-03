@@ -7,9 +7,11 @@ from __future__ import (unicode_literals, absolute_import,
 import os
 import tempfile
 import zipfile
+from pprint import pprint as pp
+from multiprocessing.dummy import Pool
 
 import requests
-from path import path
+from path import Path as path
 
 from gutenberg import logger, TMP_FOLDER
 from gutenberg.urls import get_urls
@@ -77,8 +79,8 @@ def handle_zipped_epub(zippath,
                                        "{bid}.html".format(bid=book.id))
                 else:
                     dst = os.path.join(download_cache,
-                               "{bid}_{fname}".format(bid=book.id,
-                                                      fname=fname))
+                                       "{bid}_{fname}".format(bid=book.id,
+                                                              fname=fname))
             else:
                 dst = os.path.join(download_cache,
                                    "{bid}.html".format(bid=book.id))
@@ -92,16 +94,125 @@ def handle_zipped_epub(zippath,
             import traceback
             print(e)
             print("".join(traceback.format_exc()))
+            raise
             # import ipdb; ipdb.set_trace()
 
     # delete temp directory
     path(tmpd).rmtree_p()
 
 
-def download_all_books(url_mirror, download_cache,
-                       languages=[], formats=[],
-                       only_books=[], force=False):
+def download_book(book, download_cache, languages, formats, force):
+    logger.info("\tDownloading content files for Book #{id}"
+                .format(id=book.id))
 
+    # apply filters
+    if not formats:
+        formats = FORMAT_MATRIX.keys()
+
+    # HTML is our base for ZIM for add it if not present
+    if 'html' not in formats:
+        formats.append('html')
+
+    for format in formats:
+
+        fpath = os.path.join(download_cache, fname_for(book, format))
+
+        # check if already downloaded
+        if path(fpath).exists() and not force:
+            logger.debug("\t\t{fmt} already exists at {path}"
+                         .format(fmt=format, path=fpath))
+            continue
+
+        # retrieve corresponding BookFormat
+        bfs = BookFormat.filter(book=book)
+
+        if format == 'html':
+            patterns = ['mnsrb10h.htm', '8ledo10h.htm', 'tycho10f.htm',
+                        '8ledo10h.zip', 'salme10h.htm', '8nszr10h.htm',
+                        '{id}-h.html', '{id}.html.gen', '{id}-h.htm',
+                        '8regr10h.zip', '{id}.html.noimages',
+                        '8lgme10h.htm', 'tycho10h.htm', 'tycho10h.zip',
+                        '8lgme10h.zip', '8indn10h.zip', '8resp10h.zip',
+                        '20004-h.htm', '8indn10h.htm', '8memo10h.zip',
+                        'fondu10h.zip', '{id}-h.zip', '8mort10h.zip']
+            bfso = bfs
+            bfs = bfs.join(Format).filter(Format.pattern << patterns)
+            if not bfs.count():
+                pp(list([
+                    (b.format.mime, b.format.images, b.format.pattern)
+                    for b in bfs]))
+                pp(list([
+                    (b.format.mime, b.format.images, b.format.pattern)
+                    for b in bfso]))
+                logger.error("html not found")
+                continue
+        else:
+            bfs = bfs.filter(BookFormat.format << Format.filter(
+                mime=FORMAT_MATRIX.get(format)))
+
+        if not bfs.count():
+            logger.debug("[{}] not avail. for #{}# {}"
+                         .format(format, book.id, book.title))
+            continue
+
+        if bfs.count() > 1:
+            try:
+                bf = bfs.join(Format).filter(Format.images).get()
+            except:
+                bf = bfs.get()
+        else:
+            bf = bfs.get()
+
+        logger.debug("[{}] Requesting URLs for #{}# {}"
+                     .format(format, book.id, book.title))
+
+        # retrieve list of URLs for format unless we have it in DB
+        if bf.downloaded_from and not force:
+            urls = [bf.downloaded_from]
+        else:
+            urld = get_urls(book)
+            urls = list(reversed(urld.get(FORMAT_MATRIX.get(format))))
+
+        import copy
+        allurls = copy.copy(urls)
+
+        while(urls):
+            url = urls.pop()
+
+            if not resource_exists(url):
+                continue
+
+            # HTML files are *sometime* available as ZIP files
+            if url.endswith('.zip'):
+                zpath = "{}.zip".format(fpath)
+
+                if not download_file(url, zpath):
+                    logger.error("ZIP file donwload failed: {}"
+                                 .format(zpath))
+                    continue
+
+                # extract zipfile
+                handle_zipped_epub(zippath=zpath, book=book,
+                                   download_cache=download_cache)
+            else:
+                if not download_file(url, fpath):
+                    logger.error("file donwload failed: {}".format(fpath))
+                    continue
+
+            # store working URL in DB
+            bf.downloaded_from = url
+            bf.save()
+
+        if not bf.downloaded_from:
+            logger.error("NO FILE FOR #{}/{}".format(book.id, format))
+            pp(allurls)
+            continue
+
+
+def download_all_books(url_mirror, download_cache, concurrency,
+                       languages=[], formats=[],
+                       only_books=[], force=False,
+                       ):
     available_books = get_list_of_filtered_books(
         languages=languages,
         formats=formats,
@@ -110,104 +221,5 @@ def download_all_books(url_mirror, download_cache,
     # ensure dir exist
     path(download_cache).mkdir_p()
 
-    for book in available_books:
-
-        logger.info("\tDownloading content files for Book #{id}"
-                    .format(id=book.id))
-
-        # apply filters
-        if not formats:
-            formats = FORMAT_MATRIX.keys()
-
-        # HTML is our base for ZIM for add it if not present
-        if not 'html' in formats:
-            formats.append('html')
-
-        for format in formats:
-
-            fpath = os.path.join(download_cache, fname_for(book, format))
-
-            # check if already downloaded
-            if path(fpath).exists() and not force:
-                logger.debug("\t\t{fmt} already exists at {path}"
-                             .format(fmt=format, path=fpath))
-                continue
-
-            # retrieve corresponding BookFormat
-            bfs = BookFormat.filter(book=book)
-
-            if format == 'html':
-                patterns = ['mnsrb10h.htm', '8ledo10h.htm', 'tycho10f.htm',
-                            '8ledo10h.zip', 'salme10h.htm', '8nszr10h.htm',
-                            '{id}-h.html', '{id}.html.gen', '{id}-h.htm',
-                            '8regr10h.zip', '{id}.html.noimages',
-                            '8lgme10h.htm', 'tycho10h.htm', 'tycho10h.zip',
-                            '8lgme10h.zip', '8indn10h.zip', '8resp10h.zip',
-                            '20004-h.htm', '8indn10h.htm', '8memo10h.zip',
-                            'fondu10h.zip', '{id}-h.zip', '8mort10h.zip']
-                bfso = bfs
-                bfs = bfs.join(Format).filter(Format.pattern << patterns)
-                if not bfs.count():
-                    from pprint import pprint as pp ; pp(list([(b.format.mime, b.format.images, b.format.pattern) for b in bfs]))
-                    from pprint import pprint as pp ; pp(list([(b.format.mime, b.format.images, b.format.pattern) for b in bfso]))
-                    logger.error("html not found")
-                    continue
-            else:
-                bfs = bfs.filter(BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get(format)))
-
-            if not bfs.count():
-                logger.debug("[{}] not avail. for #{}# {}"
-                             .format(format, book.id, book.title))
-                continue
-
-            if bfs.count() > 1:
-                try:
-                    bf = bfs.join(Format).filter(Format.images == True).get()
-                except:
-                    bf = bfs.get()
-            else:
-                bf = bfs.get()
-
-            logger.debug("[{}] Requesting URLs for #{}# {}"
-                         .format(format, book.id, book.title))
-
-            # retrieve list of URLs for format unless we have it in DB
-            if bf.downloaded_from and not force:
-                urls = [bf.downloaded_from]
-            else:
-                urld = get_urls(book)
-                urls = list(reversed(urld.get(FORMAT_MATRIX.get(format))))
-
-            import copy
-            allurls = copy.copy(urls)
-
-            while(urls):
-                url = urls.pop()
-
-                if not resource_exists(url):
-                    continue
-
-                # HTML files are *sometime* available as ZIP files
-                if url.endswith('.zip'):
-                    zpath = "{}.zip".format(fpath)
-
-                    if not download_file(url, zpath):
-                        logger.error("ZIP file donwload failed: {}".format(zpath))
-                        continue
-
-                    # extract zipfile
-                    handle_zipped_epub(zippath=zpath, book=book,
-                                       download_cache=download_cache)
-                else:
-                    if not download_file(url, fpath):
-                        logger.error("file donwload failed: {}".format(fpath))
-                        continue
-
-                # store working URL in DB
-                bf.downloaded_from = url
-                bf.save()
-
-            if not bf.downloaded_from:
-                logger.error("NO FILE FOR #{}/{}".format(book.id, format))
-                from pprint import pprint as pp ; pp(allurls)
-                continue
+    dlb = lambda b: download_book(b, download_cache, languages, formats, force)
+    Pool(concurrency).map(dlb, available_books)

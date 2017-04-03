@@ -8,7 +8,7 @@ import os
 import sys
 
 from docopt import docopt
-from path import path
+from path import Path as path
 
 from gutenberg import logger
 from gutenberg.database import setup_database
@@ -20,22 +20,33 @@ from gutenberg.checkdeps import check_dependencies
 
 
 help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
-        """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] [-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
+        """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] """
+        """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
+        """[-t ZIM_TITLE] [-n ZIM_DESC] """
+        """[-p CONCURRENCY] """
         """[--prepare] [--parse] [--download] [--export] [--zim] [--complete]
 
 -h --help                       Display this help message
 -k --keep-db                    Do not wipe the DB during parse stage
 
--l --languages=<list>           Comma-separated list of lang codes to filter export to (preferably ISO 639-1, else ISO 639-3)
--f --formats=<list>             Comma-separated list of formats to filter export to (epub, html, pdf, all)
+-l --languages=<list>           Comma-separated list of lang codes to filter"""
+        """ export to (preferably ISO 639-1, else ISO 639-3)
+-f --formats=<list>             Comma-separated list of formats to filter """
+        """export to (epub, html, pdf, all)
 
 -m --mirror=<url>               Use URL as base for all downloads.
--r --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use extracted folder instead
+-r --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use """
+        """extracted folder instead
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
 -z --zim-file=<file>            Write ZIM into this file path
+-t --zim-title=<title>          Set ZIM title
+-n --zim-desc=<description>     Set ZIM description
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
--b --books=<ids>                Execute the processes for specific books, separated by commas, or dashes for intervals
+-b --books=<ids>                Execute the processes for specific books, """
+        """separated by commas, or dashes for intervals
+-c --concurrency=<nb>           Number of concurrent process for download """
+        """and parsing tasks
 
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file
@@ -44,7 +55,8 @@ help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
 --prepare                       Download & extract rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
---export                        Export downloaded content to zim-friendly static HTML
+--export                        Export downloaded content to zim-friendly """
+        """static HTML
 --zim                           Create a ZIM file
 
 This script is used to produce a ZIM file (and any intermediate state)
@@ -62,16 +74,19 @@ def main(arguments):
     DO_CHECKDEPS = arguments.get('--check', False)
     COMPLETE_DUMP = arguments.get('--complete', False)
 
-    URL_MIRROR = arguments.get('--mirror') or 'http://zimfarm.kiwix.org/gutenberg'
+    URL_MIRROR = arguments.get('--mirror') \
+        or 'http://zimfarm.kiwix.org/gutenberg'
     RDF_FOLDER = arguments.get('--rdf-folder') or os.path.join('rdf-files')
     STATIC_FOLDER = arguments.get('--static-folder') or os.path.join('static')
     ZIM_FILE = arguments.get('--zim-file')
     WIPE_DB = not arguments.get('--keep-db') or False
-    RDF_URL = arguments.get('--rdf-url') or 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2'
+    RDF_URL = arguments.get('--rdf-url') \
+        or 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2'
     DL_CACHE = arguments.get('--dl-folder') or os.path.join('dl-cache')
     BOOKS = arguments.get('--books') or ''
-    ZTITLE = arguments.get('--zim-title')
-    ZDESC = arguments.get('--zim-desc')
+    ZIM_TITLE = arguments.get('--zim-title')
+    ZIM_DESC = arguments.get('--zim-desc')
+    CONCURRENCY = arguments.get('--concurrency') or 16
 
     # create tmp dir
     path('tmp').mkdir_p()
@@ -89,7 +104,7 @@ def main(arguments):
 
     try:
         BOOKS = [bid for bid in BOOKS.split(',')]
-        f = lambda x: map(int, [i for i in x.split('-') if i.isdigit()])
+        f = lambda x: list(map(int, [i for i in x.split('-') if i.isdigit()]))
         books = []
         for i in BOOKS:
             blst = f(i)
@@ -122,12 +137,14 @@ def main(arguments):
     if DO_PARSE:
         logger.info("PARSING rdf-files in {}".format(RDF_FOLDER))
         setup_database(wipe=WIPE_DB)
-        parse_and_fill(rdf_path=RDF_FOLDER, only_books=BOOKS)
+        parse_and_fill(rdf_path=RDF_FOLDER, only_books=BOOKS,
+                       concurrency=CONCURRENCY)
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
         download_all_books(url_mirror=URL_MIRROR,
                            download_cache=DL_CACHE,
+                           concurrency=CONCURRENCY,
                            languages=LANGUAGES,
                            formats=FORMATS,
                            only_books=BOOKS)
@@ -136,6 +153,7 @@ def main(arguments):
         logger.info("EXPORTING ebooks to static folder (and JSON)")
         export_all_books(static_folder=STATIC_FOLDER,
                          download_cache=DL_CACHE,
+                         concurrency=CONCURRENCY,
                          languages=LANGUAGES,
                          formats=FORMATS,
                          only_books=BOOKS)
@@ -148,7 +166,7 @@ def main(arguments):
         build_zimfile(static_folder=STATIC_FOLDER, zim_path=ZIM_FILE,
                       languages=LANGUAGES, formats=FORMATS,
                       only_books=BOOKS,
-                      title=ZTITLE, description=ZDESC)
+                      title=ZIM_TITLE, description=ZIM_DESC)
 
 if __name__ == '__main__':
     main(docopt(help, version=0.1))

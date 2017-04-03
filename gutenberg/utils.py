@@ -7,12 +7,14 @@ from __future__ import (unicode_literals, absolute_import,
 import os
 import re
 import hashlib
+import subprocess
 from contextlib import contextmanager
+import zipfile
 
-import envoy
-from path import path
+import six
+import chardet
+from path import Path as path
 
-from gutenberg import logger
 from gutenberg.iso639 import language_name
 from gutenberg.database import Book, BookFormat, Format
 
@@ -43,8 +45,15 @@ def cd(newdir):
 
 
 def exec_cmd(cmd):
-    # logger.debug("** {}".format(str(cmd.encode('utf-8'))))
-    return envoy.run(str(cmd.encode('utf-8')))
+    if isinstance(cmd, (tuple, list)):
+        args = cmd
+    else:
+        args = cmd.split(' ')
+    print("** {}".format(" ".join(args)))
+    if six.PY3:
+        return subprocess.run(args).returncode
+    else:
+        return subprocess.call(args)
 
 
 def download_file(url, fname):
@@ -53,7 +62,8 @@ def download_file(url, fname):
            "--show-error -C - --url {url}".format(output=output, url=url))
     # logger.debug("--/ {}".format(cmd))
     cmdr = exec_cmd(cmd)
-    return cmdr.status_code == 0
+    return cmdr == 0
+
 
 def main_formats_for(book):
     fmts = [fmt.format.mime
@@ -87,7 +97,7 @@ def get_list_of_filtered_books(languages, formats, only_books=[]):
 def get_langs_with_count(books):
     lang_count = {}
     for book in books:
-        if not book.language in lang_count:
+        if book.language not in lang_count:
             lang_count[book.language] = 0
         lang_count[book.language] += 1
 
@@ -104,6 +114,7 @@ def get_lang_groups(books):
     else:
         return (langs_wt_count[:NB_MAIN_LANGS],
                 sorted(langs_wt_count[NB_MAIN_LANGS:], key=lambda x: x[0]))
+
 
 def md5sum(fpath):
     with open(fpath, 'r') as f:
@@ -123,3 +134,34 @@ def is_bad_cover(fpath):
 def path_for_cmd(p):
     return re.sub(r'([\'\"\ ])', lambda m: r'\{}'.format(m.group()), p)
 
+
+def read_file_as(fpath, encoding='utf-8'):
+    print("opening", fpath, "as", encoding)
+    with open(fpath, 'r', encoding=encoding) as f:
+        return f.read()
+
+
+def guess_file_encoding(fpath):
+    with open(fpath, 'rb') as f:
+        return chardet.detect(f.read()).get('encoding')
+
+
+def read_file(fpath):
+    for encoding in ['utf-8', 'iso-8859-1']:
+        try:
+            return read_file_as(fpath, encoding)
+        except UnicodeDecodeError:
+            continue
+
+    # common encoding failed. try with chardet
+    return read_file_as(fpath, guess_file_encoding(fpath))
+
+
+def zip_epub(epub_fpath, root_folder, fpaths):
+    # with cd(tmpd):
+        # exec_cmd(['zip', '-q0X', dst, 'mimetype'])
+        # exec_cmd(['zip', '-qXr9D', dst] + [czf for czf in zipped_files
+        #                                    if not f == 'mimetype'])
+    with zipfile.ZipFile(epub_fpath, 'w', zipfile.ZIP_DEFLATED) as zf:
+        for fpath in fpaths:
+            zf.write(os.path.join(root_folder, fpath), fpath)

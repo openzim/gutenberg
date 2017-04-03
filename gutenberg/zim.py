@@ -4,8 +4,6 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-import os
-import re
 import datetime
 
 from gutenberg import logger
@@ -41,11 +39,11 @@ def build_zimfile(static_folder, zim_path=None,
     if zim_path is None:
         if len(languages) > 1:
             zim_path = "gutenberg_all_{date}.zim".format(
-                    date=datetime.datetime.now().strftime('%m_%Y'))
+                date=datetime.datetime.now().strftime('%m_%Y'))
         else:
             zim_path = "gutenberg_{lang}_all_{date}.zim".format(
-                    lang=languages[0],
-                    date=datetime.datetime.now().strftime('%Y-%m'))
+                lang=languages[0],
+                date=datetime.datetime.now().strftime('%Y-%m'))
 
     languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
     languages.sort()
@@ -64,14 +62,14 @@ def build_zimfile(static_folder, zim_path=None,
         'zim': zim_path
     }
 
-    cmd = ('zimwriterfs --welcome=\\"{home}\\" --favicon=\\"{favicon}\\" '
-           '--language=\\"{languages}\\" --title=\\"{title}\\" '
-           '--description=\\"{description}\\" '
-           '--creator=\\"{creator}\\" --publisher=\\"{publisher}\\" \\"{static}\\" \\"{zim}\\"'
-           .format(**context))
-
-    logger.debug("\t\t{}".format(re.sub('\\\\"','"',cmd)))
-    if exec_cmd(cmd):
+    cmd = [part.format(**context)
+           for part in ['zimwriterfs', '--welcome="{home}"',
+                        '--favicon="{favicon}"',
+                        '--language="{languages}"', '--title="{title}"',
+                        '--description="{description}"',
+                        '--creator="{creator}"', '--publisher="{publisher}"',
+                        '{static}', '{zim}']]
+    if exec_cmd(cmd) == 0:
         logger.info("Successfuly created ZIM file at {}".format(zim_path))
     else:
         logger.error("Unable to create ZIM file :(")

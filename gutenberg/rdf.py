@@ -6,8 +6,9 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
 import re
+from multiprocessing.dummy import Pool
 
-from path import path
+from path import Path as path
 from bs4 import BeautifulSoup
 
 from gutenberg import logger, XML_PARSER
@@ -47,22 +48,22 @@ def extract_rdf_files(rdf_tarball, rdf_path):
     dest = path(rdf_path)
     dest.mkdir_p()
 
-    cmd = "tar -C {dest} --strip-components 2 -x -f {tarb}".format(
-        dest=rdf_path, tarb=rdf_tarball)
-    exec_cmd(cmd)
+    exec_cmd(['tar', '-C', rdf_path, '--strip-components', '2', '-x',
+              '-f', rdf_tarball])
     return
 
 
-def parse_and_fill(rdf_path, only_books=[]):
+def parse_and_fill(rdf_path, concurrency, only_books=[]):
     logger.info("\tLooping throught RDF files in {}".format(rdf_path))
 
+    fpaths = []
     for root, dirs, files in os.walk(rdf_path):
         if root.endswith('999999'):
             continue
 
         # skip books outside of requsted list
         if len(only_books) and path(root).basename() not in \
-            [str(bid) for bid in only_books]:
+                [str(bid) for bid in only_books]:
             continue
 
         for fname in files:
@@ -72,8 +73,9 @@ def parse_and_fill(rdf_path, only_books=[]):
             if not fname.endswith('.rdf'):
                 continue
 
-            fpath = os.path.join(root, fname)
-            parse_and_process_file(fpath)
+            fpaths.append(os.path.join(root, fname))
+
+    Pool(concurrency).map(parse_and_process_file, fpaths)
 
 
 def parse_and_process_file(rdf_file):
@@ -87,7 +89,8 @@ def parse_and_process_file(rdf_file):
         parser = RdfParser(f.read(), gid).parse()
 
     if parser.license == 'None':
-        logger.info("\tWARN: Unusable book without any information {}".format(gid))
+        logger.info("\tWARN: Unusable book without any information {}"
+                    .format(gid))
     elif parser.title == '':
         logger.info("\tWARN: Unusable book without title {}".format(gid))
     else:
@@ -122,14 +125,17 @@ class RdfParser():
         # the <dcterms:creator> or <marcrel:com> node only return
         # "anonymous" or "unknown". For the case that it's only one word
         # `self.last_name` will be null.
-        # Because of a rare edge case that the field of the parsed author's name
-        # has more than one comma we will join the first name in reverse, starting
+        # Because of a rare edge case that the field of the parsed
+        # author's name
+        # has more than one comma we will join the first name in reverse,
+        # starting
         # with the second item.
         self.author = soup.find('dcterms:creator') or soup.find('marcrel:com')
         if self.author:
             self.author_id = self.author.find('pgterms:agent')
             self.author_id = self.author_id.attrs['rdf:about'].split('/')[-1] \
-                if 'rdf:about' in getattr(self.author_id, 'attrs', '') else None
+                if 'rdf:about' in getattr(self.author_id, 'attrs', '') \
+                else None
 
             if self.author.find('pgterms:name'):
                 self.author_name = self.author.find('pgterms:name')
@@ -167,7 +173,7 @@ class RdfParser():
             if not x.find('rdf:value').text.endswith('application/zip'):
                 k = x.attrs['rdf:about'].split('/')[-1]
                 v = x.find('rdf:value').text
-                self.file_types.update({k:v})
+                self.file_types.update({k: v})
 
         return self
 
@@ -238,11 +244,10 @@ def save_rdf_in_database(parser):
                          .format(mime, bid))
             continue
 
-
         format_record = Format.get_or_create(
             mime=mime,
-            images=file_type.endswith(
-                '.images') or parser.file_types[file_type] == 'application/pdf',
+            images=file_type.endswith('.images')
+            or parser.file_types[file_type] == 'application/pdf',
             pattern=pattern)
 
         # Insert book format
@@ -270,7 +275,6 @@ def get_formatted_number(num):
 
 if __name__ == '__main__':
     # Bacic Test with a sample rdf file
-    import os
     nums = ["{0:0=5d}".format(i) for i in range(21000, 40000)]
     for num in nums:
         print(num)
