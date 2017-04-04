@@ -23,7 +23,7 @@ from multiprocessing.dummy import Pool
 import gutenberg
 from gutenberg import logger, XML_PARSER, TMP_FOLDER
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
-                             get_list_of_filtered_books, exec_cmd, cd,
+                             get_list_of_filtered_books, exec_cmd,
                              get_langs_with_count, get_lang_groups,
                              is_bad_cover, path_for_cmd, read_file, zip_epub)
 from gutenberg.database import Book, Format, BookFormat, Author
@@ -210,7 +210,7 @@ def html_content_for(book, static_folder, download_cache):
 
 def update_html_for_static(book, html_content, epub=False):
 
-    soup = BeautifulSoup(html_content, XML_PARSER)
+    soup = BeautifulSoup(html_content, "lxml-xml")
 
     # update all <img> links from images/xxx.xxx to {id}_xxx.xxx
     if not epub:
@@ -354,8 +354,7 @@ def update_html_for_static(book, html_content, epub=False):
     if not epub:
         infobox = jinja_env.get_template('book_infobox.html')
         infobox_html = infobox.render({'book': book})
-        info_soup = BeautifulSoup(infobox_html, ["lxml", "xml"],
-                                  markup_type="html")
+        info_soup = BeautifulSoup(infobox_html, "lxml-xml")
         body.insert(0, info_soup.find('div'))
 
     # if there is no charset, set it to utf8
@@ -366,7 +365,11 @@ def update_html_for_static(book, html_content, epub=False):
         # title.insert_before(utf)
         utf = '<head>{}'.format(utf)
 
-        return soup.encode().replace(str('<head>'), str(utf))
+        if six.PY2:
+            html = soup.encode()
+        else:
+            html = str(soup)
+        return html.replace(str('<head>'), str(utf))
 
     return soup
 
@@ -404,16 +407,19 @@ def export_book_to(book,
                             download_cache=download_cache)
     if html:
         article_fpath = os.path.join(static_folder, article_name_for(book))
-        logger.info("\t\tExporting to {}".format(article_fpath))
-        try:
-            new_html = update_html_for_static(book=book, html_content=html)
-        except:
-            new_html = html
-        with open(article_fpath, 'w') as f:
-            if six.PY2:
-                f.write(new_html.encode())
-            else:
-                f.write(new_html)
+        if not path(article_fpath).exists():
+            logger.info("\t\tExporting to {}".format(article_fpath))
+            try:
+                new_html = update_html_for_static(book=book, html_content=html)
+            except:
+                new_html = html
+            with open(article_fpath, 'w') as f:
+                if six.PY2:
+                    f.write(new_html.encode())
+                else:
+                    f.write(new_html)
+        else:
+            logger.info("\t\tSkipping HTML article {}".format(article_fpath))
 
     def symlink_from_cache(fname, dstfname=None):
         src = os.path.join(path(download_cache).abspath(), fname)
@@ -483,11 +489,9 @@ def export_book_to(book,
                     optimize_image(path_for_cmd(fnp))
 
             if path(fname).ext in ('.htm', '.html'):
-                f = open(fnp, 'r')
                 html = update_html_for_static(book=book,
-                                              html_content=f.read(),
+                                              html_content=read_file(fnp),
                                               epub=True)
-                f.close()
                 with open(fnp, 'w') as f:
                     if six.PY2:
                         f.write(html.encode())
@@ -496,9 +500,7 @@ def export_book_to(book,
 
             if path(fname).ext == '.ncx':
                 pattern = "*** START: FULL LICENSE ***"
-                f = open(fnp, 'r')
-                ncx = f.read()
-                f.close()
+                ncx = read_file(fnp)
                 soup = BeautifulSoup(ncx, "lxml-xml")
                 for tag in soup.findAll('text'):
                     if pattern in tag.text:
@@ -523,9 +525,7 @@ def export_book_to(book,
             soup = None
             opff = os.path.join(tmpd, str(book.id), 'content.opf')
             if os.path.exists(opff):
-                with open(opff, 'r') as fd:
-                    soup = BeautifulSoup(fd.read(), ["lxml", "xml"],
-                                         markup_type="html")
+                soup = BeautifulSoup(read_file(opff), "lxml-xml")
 
                 for elem in soup.findAll():
                     if getattr(elem, 'attrs', {}).get('href') == 'cover.jpg':
@@ -533,9 +533,9 @@ def export_book_to(book,
 
                 with(open(opff, 'w')) as fd:
                     if six.PY2:
-                        f.write(soup.encode())
+                        fd.write(soup.encode())
                     else:
-                        f.write(str(soup))
+                        fd.write(str(soup))
 
         # bundle epub as zip
         zip_epub(epub_fpath=dst,
@@ -549,6 +549,9 @@ def export_book_to(book,
         if dstfname is None:
             dstfname = fname
         dst = os.path.join(path(static_folder).abspath(), dstfname)
+        if path(dst).exists():
+            logger.debug("\t\tSkipping existing companion {}".format(dstfname))
+            return
 
         # optimization based on mime/extension
         if path(fname).ext in ('.png', '.jpg', '.jpeg', '.gif'):
@@ -576,10 +579,13 @@ def export_book_to(book,
             src = os.path.join(path(download_cache).abspath(), fname)
             dst = os.path.join(path(static_folder).abspath(), fname)
 
+            if path(dst).exists():
+                logger.debug("\t\tSkipping existing HTML {}".format(dst))
+                continue
+
             logger.info("\t\tExporting HTML file to {}".format(dst))
             html = "CAN'T READ FILE"
-            with open(src, 'r') as f:
-                html = f.read()
+            html = read_file(src)
             new_html = update_html_for_static(book=book, html_content=html)
             with open(dst, 'w') as f:
                 if six.PY2:

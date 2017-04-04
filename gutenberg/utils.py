@@ -58,9 +58,8 @@ def exec_cmd(cmd):
 
 def download_file(url, fname):
     output = "--output {}".format(fname) if fname else "--remote-name"
-    cmd = ("curl --fail --insecure --location {output} --silent "
-           "--show-error -C - --url {url}".format(output=output, url=url))
-    # logger.debug("--/ {}".format(cmd))
+    cmd = ['curl', '--fail', '--insecure', '--location', output, '--silent',
+           '--show-error', '-C', '-', '--url', url]
     cmdr = exec_cmd(cmd)
     return cmdr == 0
 
@@ -117,8 +116,7 @@ def get_lang_groups(books):
 
 
 def md5sum(fpath):
-    with open(fpath, 'r') as f:
-        return hashlib.md5(f.read()).hexdigest()
+    return hashlib.md5(read_file(fpath).encode('utf-8')).hexdigest()
 
 
 def is_bad_cover(fpath):
