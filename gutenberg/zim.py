@@ -9,12 +9,18 @@ import datetime
 from gutenberg import logger
 from gutenberg.utils import exec_cmd
 from gutenberg.iso639 import ISO_MATRIX
+from gutenberg.export import export_skeleton
 
 
 def build_zimfile(static_folder, zim_path=None,
                   languages=[], formats=[],
                   title=None, description=None,
                   only_books=[]):
+
+    # revert HTML/JS/CSS to zim-compatible versions
+    export_skeleton(static_folder=static_folder, dev_mode=False,
+                    languages=languages, formats=formats,
+                    only_books=only_books)
 
     if not languages:
         languages = ['mul']

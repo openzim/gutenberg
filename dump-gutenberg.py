@@ -14,7 +14,7 @@ from gutenberg import logger
 from gutenberg.database import setup_database
 from gutenberg.rdf import setup_rdf_folder, parse_and_fill
 from gutenberg.download import download_all_books
-from gutenberg.export import export_all_books
+from gutenberg.export import export_all_books, export_skeleton
 from gutenberg.zim import build_zimfile
 from gutenberg.checkdeps import check_dependencies
 
@@ -24,7 +24,8 @@ help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
         """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
         """[-t ZIM_TITLE] [-n ZIM_DESC] """
         """[-p CONCURRENCY] """
-        """[--prepare] [--parse] [--download] [--export] [--zim] [--complete]
+        """[--prepare] [--parse] [--download] [--export] [--dev] """
+        """[--zim] [--complete]
 
 -h --help                       Display this help message
 -k --keep-db                    Do not wipe the DB during parse stage
@@ -57,6 +58,8 @@ help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
 --download                      Download ebooks based on filters
 --export                        Export downloaded content to zim-friendly """
         """static HTML
+--dev                           Exports *just* Home+JS+CSS files """
+        """(overwritten by --zim step)
 --zim                           Create a ZIM file
 
 This script is used to produce a ZIM file (and any intermediate state)
@@ -70,6 +73,7 @@ def main(arguments):
     DO_PARSE = arguments.get('--parse', False)
     DO_DOWNLOAD = arguments.get('--download', False)
     DO_EXPORT = arguments.get('--export', False)
+    DO_DEV = arguments.get('--dev', False)
     DO_ZIM = arguments.get('--zim', False)
     DO_CHECKDEPS = arguments.get('--check', False)
     COMPLETE_DUMP = arguments.get('--complete', False)
@@ -117,7 +121,7 @@ def main(arguments):
         BOOKS = []
 
     # no arguments, default to --complete
-    if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM):
+    if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM + DO_DEV):
         COMPLETE_DUMP = True
 
     if COMPLETE_DUMP:
@@ -157,6 +161,14 @@ def main(arguments):
                          languages=LANGUAGES,
                          formats=FORMATS,
                          only_books=BOOKS)
+
+    if DO_DEV:
+        logger.info("EXPORTING HTML/JS/CSS to static folder")
+        export_skeleton(static_folder=STATIC_FOLDER,
+                        dev_mode=True,
+                        languages=LANGUAGES,
+                        formats=FORMATS,
+                        only_books=BOOKS)
 
     if DO_ZIM:
         if not check_dependencies()[1]:

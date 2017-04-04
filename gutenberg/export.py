@@ -76,6 +76,41 @@ def get_list_of_all_languages():
     return list(set(list([b.language for b in Book.select(Book.language)])))
 
 
+def export_skeleton(static_folder, dev_mode=False,
+                    languages=[], formats=[], only_books=[]):
+
+    # ensure dir exist
+    path(static_folder).mkdir_p()
+
+    books = get_list_of_filtered_books(languages=languages,
+                                       formats=formats,
+                                       only_books=only_books)
+
+    # copy CSS/JS/* to static_folder
+    src_folder = tmpl_path()
+    for fname in ('css', 'js', 'jquery', 'favicon.ico', 'favicon.png',
+                  'jquery-ui', 'datatables', 'fonts', 'l10n'):
+        src = os.path.join(src_folder, fname)
+        dst = os.path.join(static_folder, fname)
+        if not path(fname).ext:
+            path(dst).rmtree_p()
+            path(src).copytree(dst)
+        else:
+            path(src).copyfile(dst)
+
+    # export homepage
+    context = get_default_context(books=books)
+    context.update({'show_books': True, 'dev_mode': dev_mode})
+    for tpl_path in ('Home.html', 'js/tools.js'):
+        with open(os.path.join(static_folder, tpl_path), 'w') as f:
+            template = jinja_env.get_template(tpl_path)
+            rendered = template.render(**context)
+            if six.PY2:
+                f.write(rendered.encode('utf-8'))
+            else:
+                f.write(rendered)
+
+
 def export_all_books(static_folder,
                      download_cache,
                      concurrency,
@@ -115,28 +150,10 @@ def export_all_books(static_folder,
                            languages=languages,
                            formats=formats)
 
-    # copy CSS/JS/* to static_folder
-    src_folder = tmpl_path()
-    for fname in ('css', 'js', 'jquery', 'favicon.ico', 'favicon.png',
-                  'jquery-ui', 'datatables', 'fonts', 'l10n'):
-        src = os.path.join(src_folder, fname)
-        dst = os.path.join(static_folder, fname)
-        if not path(fname).ext:
-            path(dst).rmtree_p()
-            path(src).copytree(dst)
-        else:
-            path(src).copyfile(dst)
-
-    # export homepage
-    template = jinja_env.get_template('index.html')
-    context = get_default_context(books=books)
-    context.update({'show_books': True})
-    with open(os.path.join(static_folder, 'Home.html'), 'w') as f:
-        rendered = template.render(**context)
-        if six.PY2:
-            f.write(rendered.encode('utf-8'))
-        else:
-            f.write(rendered)
+    # export HTML index and other static files
+    export_skeleton(static_folder=static_folder, dev_mode=False,
+                    languages=languages, formats=formats,
+                    only_books=only_books)
 
     # Compute popularity
     popbooks = books.order_by(Book.downloads.desc())
@@ -156,13 +173,6 @@ def export_all_books(static_folder,
         book.popularity = sum(
             [int(book.downloads >= stars_limits[i])
              for i in range(NB_POPULARITY_STARS)])
-        # export_book_to(book=book,
-        #                static_folder=static_folder,
-        #                download_cache=download_cache,
-        #                cached_files=cached_files,
-        #                languages=languages,
-        #                formats=formats,
-        #                books=books)
 
     dlb = lambda b: export_book_to(b,
                                    static_folder=static_folder,
