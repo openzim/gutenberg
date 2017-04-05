@@ -745,6 +745,23 @@ def export_to_json_helpers(books, static_folder, languages, formats):
              for book in books.where(Book.author == author)
                               .order_by(Book.title.asc())],
             'auth_{}_by_title.js'.format(author.gut_id))
+        # by language
+        for lang_name, lang, lang_count in avail_langs:
+            logger.info("\t\tDumping auth_{}_by_lang_{}.js"
+                        .format(author.gut_id, lang))
+            dumpjs(
+                [book.to_array()
+                 for book in books.where(Book.language == lang)
+                                  .where(Book.author == author)
+                                  .order_by(Book.downloads.desc())],
+                'auth_{}_lang_{}_by_popularity.js'.format(author.gut_id, lang))
+
+            dumpjs(
+                [book.to_array()
+                 for book in books.where(Book.language == lang)
+                                  .where(Book.author == author)
+                                  .order_by(Book.title.asc())],
+                'auth_{}_lang_{}_by_title.js'.format(author.gut_id, lang))
 
     # authors list sorted by name
     logger.info("\t\tDumping authors.js")

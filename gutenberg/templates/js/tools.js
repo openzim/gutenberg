@@ -54,57 +54,63 @@ function loadScript(url, nodeId, callback) {
 function populateFilters( callback ) {
     console.log("populateFilters");
 
-    booksUrl = "full_by_" + sortMethod + ".js";
-
     var language_filter_value = $( "#language_filter" ).val();
+    var lang_id = null;
     if ( language_filter_value ) {
         var count = languages_json_data.length;
-        var ok = false;
         for ( var i = 0 ; i < count ; i++ ) {
             if (languages_json_data[i][1] === language_filter_value) {
-		booksUrl = "lang_" + languages_json_data[i][1] + "_by_" + sortMethod + ".js";
-                ok = true;
+            	lang_id = languages_json_data[i][1];
                 break;
             }
         }
-        if ( !ok ) {
-            $( "#language_filter" ).val("");
-        }
-    }
+    } else
+    	language_filter_value = null;
+    $( "#language_filter" ).val(lang_id);
 
-    console.log("languages populated");
+    // console.log("languages populated");
 
     var authors_url = language_filter_value ? "authors_lang_" + language_filter_value + ".js" : "authors.js";
     loadScript( authors_url, "authors_script", function () {
-        console.log("-- authors 1");
-        console.log(authors_json_data);
-        if ( $( "#author_filter" ).val() ) {
-            console.log("-- authors 2");
+        var author_filter_value = $( "#author_filter" ).val();
+        var author_id = null;
+        if ( author_filter_value ) {
             var count = authors_json_data.length;
-            console.log("count: " + count);
-            var author_filter_value = $( "#author_filter" ).val();
-            var ok = false;
             for ( i = 0 ; i < count ; i++ ) {
                 if (authors_json_data[i][0] === author_filter_value) {
-                    booksUrl = "auth_" + authors_json_data[i][1] + "_by_" + sortMethod + ".js";
-                    ok = true;
+                	author_id = authors_json_data[i][1];
                     break;
                 }
             }
-            console.log("-- authors 3");
-            if ( !ok ) {
-                $( "#author_filter" ).val("");
-            }
-            console.log("-- authors 4");
-        }
+        } else
+        	author_filter_value = null;
 
-        console.log("authors populated");
+        // console.log("authors populated");
+
+        // figure out what to request now (lang_id, author_id, sortMethod)
+        if (language_filter_value && author_filter_value) {
+        	// we want a reduce of both
+        	booksUrl = "auth_" + author_id + "_lang_" + lang_id + "_by_" + sortMethod;
+        } else if (author_filter_value) {
+        	// only books by this author
+        	booksUrl = "auth_" + author_id + "_by_" + sortMethod;
+        } else if (language_filter_value) {
+        	// all books in this language
+        	booksUrl = "lang_" + lang_id + "_by_" + sortMethod;
+        } else {
+        	// all books, no reduce
+        	 booksUrl = "full_by_" + sortMethod;
+        }
+        booksUrl += ".js"
+
+        // console.debug("FILTER: " + "lang: " + language_filter_value + " auth: " + author_filter_value + " sort: " + sortMethod);
+        // console.debug(booksUrl);
 
         if ( callback ) {
-            console.log("calling callback");
+            // console.debug("calling callback");
             callback();
         } else {
-            console.log("no callback");
+            // console.debug("no callback");
         }
     });
 }
@@ -241,7 +247,6 @@ function showBooks() {
         console.log("after loadScript");
     });
     console.log("after populateFilters");
-
 }
 
 function onLocalized() {
@@ -256,11 +261,13 @@ function onLocalized() {
 function init() {
 
     /* Persistence of form values */
-    jQuery('input,select,textarea').persist({
-	context: 'gutenberg', // a context or namespace for each field
-	cookie: 'gutenberg', // cookies basename
-	expires: 1 // cookie expiry (eg 365)
-    });
+    var persist_options = {
+		context: 'gutenberg', // a context or namespace for each field
+		cookie: 'gutenberg', // cookies basename
+		expires: 1, // cookie expiry (eg 365)
+		replace: true,
+    };
+    jQuery('input,select,textarea').persist(persist_options);
 
     /* Hide home about */
     if ( $( "#hide-precontent" ).val() == "true" ) {
@@ -306,8 +313,16 @@ function init() {
         showBooks();
     });
     if ( languages_json_data.length == 1 ) {
+    	// console.debug("ONLY ONE language");
+    	// console.debug(languages_json_data);
         language_filter.val( languages_json_data[0][1] );
         language_filter.hide();
+    } else {
+    	// is there a persisted value?
+    	var plang = jQuery.persistedValue("language_filter", persist_options);
+    	if ((plang) && !(language_filter.val())) {
+    		language_filter.val(plang);
+    	}
     }
 
     /* Sort buttons */
@@ -365,6 +380,29 @@ function init() {
         showBooks();
     }
     });
+
+    // author filter UI (X to remove entry)
+    function tog(v){return v?'addClass':'removeClass';} 
+    function activate_field(selector) {
+    	var e = jQuery.Event("keypress");
+		e.which = 13; // enter
+		e.keyCode = 13;
+		$(selector).trigger(e);
+    }
+	$(document).on('input', '.clearable', function(){
+	    $(this)[tog(this.value)]('x');
+	}).on('mousemove', '.x', function( e ){
+	    $(this)[tog(this.offsetWidth-18 < e.clientX-this.getBoundingClientRect().left)]('onX');
+	}).on('touchstart click', '.onX', function( ev ){
+	    ev.preventDefault();
+	    $(this).removeClass('x onX').val('').change();
+	    activate_field($(this));
+	});
+
+	// enable clearable if persisted value
+	if ($( "#author_filter" ).val()) {
+		$('#author_filter').addClass('x onX');
+	}
 
 }
 

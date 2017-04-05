@@ -30,7 +30,7 @@ l10n_strings = {
             },
             "author": {
                 "textContent": "Author",
-                "placeholder": "Author"
+                "placeholder": "List books of a single Author"
             },
             "cover-img": {
                 "alt": "Book Cover",
@@ -76,7 +76,7 @@ l10n_strings = {
                 "textContent": "Language"
             },
             "any-languages": {
-                "textContent": "Any languages"
+                "textContent": "Choose the Catalog"
             },
             "main-languages": {
                 "textContent": "Main languages"
@@ -163,7 +163,7 @@ l10n_strings = {
             },
             "author": {
                 "textContent": "Auteur",
-                "placeholder": "Auteur"
+                "placeholder": "Voir les livres d'un seul auteur"
             },
             "cover-img": {
                 "title": "Couverture du livre",
@@ -209,7 +209,7 @@ l10n_strings = {
                 "textContent": "Langue"
             },
             "any-languages": {
-                "textContent": "Toutes les langues"
+                "textContent": "Choisir le catalogue"
             },
             "main-languages": {
                 "textContent": "Langues principales"

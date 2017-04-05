@@ -485,3 +485,14 @@ body.cover .content h2 {
     font-family: 'RobotoThin';
     src: url('../fonts/Roboto-Thin.ttf');
 }
+
+#author_filter.clearable{
+  background: #fff url(data:image/gif;base64,R0lGODlhBwAHAIAAAP///5KSkiH5BAAAAAAALAAAAAAHAAcAAAIMTICmsGrIXnLxuDMLADs=) no-repeat right -1em center;
+  /*border: 1px solid #999;
+  padding: 3px 18px 3px 4px;      Use the same right padding (18) in jQ! 
+  border-radius: 3px;*/
+  transition: background 0.4s;
+}
+#author_filter.clearable.x  { background-position: right 1em center; } /* (jQ) Show icon */
+#author_filter.clearable.onX{ cursor: pointer; }              /* (jQ) hover cursor style */
+#author_filter.clearable::-ms-clear {display: none; width:0; height:0;} /* Remove IE default X */
