@@ -46,18 +46,18 @@
         <form class="pure-form filter">
         <div class="pure-g">
             {% if languages|length > 1 %}
-            <div class="pure-u-1 pure-u-md-1-5 languages-filter">
+            <div class="pure-u-1 pure-u-sm-1-5 pure-u-md-1-5 languages-filter">
                 <select id="language_filter" data-l10n-id="choose-language" class="filter_ui pure-input" placeholder="Choose a language..."><option data-l10n-id="any-languages" value="" label="Any languages">Any languages</option></select>
             </div>
-            <div class="pure-u-1 pure-u-md-1-5">
+            <div class="pure-u-1 pure-u-md-1-5 pure-u-sm-1-5">
             {% else %}
-                <div class="pure-u-1 pure-u-md-2-5">
+                <div class="pure-u-1 pure-u-sm-2-5 pure-u-md-2-5">
                     <input type="hidden" id="language_filter" value="{{ languages|first }}" />
             {% endif %}
                 <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded" />
             </div>
             {% if show_books %}
-            <div class="pure-u-1 pure-u-md-3-5 sort">
+            <div class="pure-u-1 pure-u-sm-3-5 pure-u-md-3-5 sort">
 		<input type="hidden" id="default-sort" name="default-sort" value="popularity" />
                 <i class="fa fa-heart fa-2x" title="Sort by popularity" id="popularity_sort" />&nbsp;</i>
                 <i class="fa fa-sort-alpha-asc fa-2x" title="Sort by title" id="alpha_sort" >&nbsp;</i>
