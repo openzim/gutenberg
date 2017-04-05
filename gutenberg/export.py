@@ -101,7 +101,7 @@ def export_skeleton(static_folder, dev_mode=False,
     # export homepage
     context = get_default_context(books=books)
     context.update({'show_books': True, 'dev_mode': dev_mode})
-    for tpl_path in ('Home.html', 'js/tools.js'):
+    for tpl_path in ('Home.html', 'js/tools.js', 'js/l10n.js'):
         with open(os.path.join(static_folder, tpl_path), 'w') as f:
             template = jinja_env.get_template(tpl_path)
             rendered = template.render(**context)
@@ -116,7 +116,8 @@ def export_all_books(static_folder,
                      concurrency,
                      languages=[],
                      formats=[],
-                     only_books=[]):
+                     only_books=[],
+                     force=False):
 
     # ensure dir exist
     path(static_folder).mkdir_p()
@@ -220,7 +221,7 @@ def html_content_for(book, static_folder, download_cache):
 
 def update_html_for_static(book, html_content, epub=False):
 
-    soup = BeautifulSoup(html_content, "lxml-xml")
+    soup = BeautifulSoup(html_content, "lxml-html")
 
     # update all <img> links from images/xxx.xxx to {id}_xxx.xxx
     if not epub:
@@ -364,7 +365,7 @@ def update_html_for_static(book, html_content, epub=False):
     if not epub:
         infobox = jinja_env.get_template('book_infobox.html')
         infobox_html = infobox.render({'book': book})
-        info_soup = BeautifulSoup(infobox_html, "lxml-xml")
+        info_soup = BeautifulSoup(infobox_html, "lxml-html")
         body.insert(0, info_soup.find('div'))
 
     # if there is no charset, set it to utf8
@@ -408,7 +409,7 @@ def cover_html_content_for(book, static_folder, books):
 
 def export_book_to(book,
                    static_folder, download_cache,
-                   cached_files, languages, formats, books):
+                   cached_files, languages, formats, books, force=False):
     logger.info("\tExporting Book #{id}.".format(id=book.id))
 
     # actual book content, as HTML
@@ -417,7 +418,7 @@ def export_book_to(book,
                             download_cache=download_cache)
     if html:
         article_fpath = os.path.join(static_folder, article_name_for(book))
-        if not path(article_fpath).exists():
+        if not path(article_fpath).exists() or force:
             logger.info("\t\tExporting to {}".format(article_fpath))
             try:
                 new_html = update_html_for_static(book=book, html_content=html)
@@ -554,12 +555,12 @@ def export_book_to(book,
 
         path(tmpd).rmtree_p()
 
-    def handle_companion_file(fname, dstfname=None, book=None):
+    def handle_companion_file(fname, dstfname=None, book=None, force=False):
         src = os.path.join(path(download_cache).abspath(), fname)
         if dstfname is None:
             dstfname = fname
         dst = os.path.join(path(static_folder).abspath(), dstfname)
-        if path(dst).exists():
+        if path(dst).exists() and not force:
             logger.debug("\t\tSkipping existing companion {}".format(dstfname))
             return
 
@@ -589,7 +590,7 @@ def export_book_to(book,
             src = os.path.join(path(download_cache).abspath(), fname)
             dst = os.path.join(path(static_folder).abspath(), fname)
 
-            if path(dst).exists():
+            if path(dst).exists() and not force:
                 logger.debug("\t\tSkipping existing HTML {}".format(dst))
                 continue
 
@@ -605,7 +606,7 @@ def export_book_to(book,
         else:
             logger.info("\t\tCopying companion file to {}".format(fname))
             try:
-                handle_companion_file(fname)
+                handle_companion_file(fname, force=force)
             except Exception as e:
                 logger.exception(e)
                 logger.error("\t\tException while handling companion file: {}"
@@ -619,7 +620,8 @@ def export_book_to(book,
                     .format(archive_name_for(book, format)))
         try:
             handle_companion_file(fname_for(book, format),
-                                  archive_name_for(book, format))
+                                  archive_name_for(book, format),
+                                  force=force)
         except Exception as e:
             logger.exception(e)
             logger.error("\t\tException while handling companion file: {}"

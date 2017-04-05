@@ -19,7 +19,7 @@ from gutenberg.zim import build_zimfile
 from gutenberg.checkdeps import check_dependencies
 
 
-help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
+help = ("""Usage: dump-gutenberg.py [-k] [-F] [-l LANGS] [-f FORMATS] """
         """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] """
         """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
         """[-t ZIM_TITLE] [-n ZIM_DESC] """
@@ -29,6 +29,7 @@ help = ("""Usage: dump-gutenberg.py [-k] [-l LANGS] [-f FORMATS] """
 
 -h --help                       Display this help message
 -k --keep-db                    Do not wipe the DB during parse stage
+-F --force                      Redo step even if target already exist
 
 -l --languages=<list>           Comma-separated list of lang codes to filter"""
         """ export to (preferably ISO 639-1, else ISO 639-3)
@@ -91,6 +92,7 @@ def main(arguments):
     ZIM_TITLE = arguments.get('--zim-title')
     ZIM_DESC = arguments.get('--zim-desc')
     CONCURRENCY = arguments.get('--concurrency') or 16
+    FORCE = arguments.get('--force', False)
 
     # create tmp dir
     path('tmp').mkdir_p()
@@ -151,7 +153,8 @@ def main(arguments):
                            concurrency=CONCURRENCY,
                            languages=LANGUAGES,
                            formats=FORMATS,
-                           only_books=BOOKS)
+                           only_books=BOOKS,
+                           force=FORCE)
 
     if DO_EXPORT:
         logger.info("EXPORTING ebooks to static folder (and JSON)")
@@ -160,7 +163,8 @@ def main(arguments):
                          concurrency=CONCURRENCY,
                          languages=LANGUAGES,
                          formats=FORMATS,
-                         only_books=BOOKS)
+                         only_books=BOOKS,
+                         force=FORCE)
 
     if DO_DEV:
         logger.info("EXPORTING HTML/JS/CSS to static folder")
@@ -178,7 +182,8 @@ def main(arguments):
         build_zimfile(static_folder=STATIC_FOLDER, zim_path=ZIM_FILE,
                       languages=LANGUAGES, formats=FORMATS,
                       only_books=BOOKS,
-                      title=ZIM_TITLE, description=ZIM_DESC)
+                      title=ZIM_TITLE, description=ZIM_DESC,
+                      force=FORCE)
 
 if __name__ == '__main__':
     main(docopt(help, version=0.1))
