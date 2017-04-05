@@ -57,9 +57,12 @@ def exec_cmd(cmd):
 
 
 def download_file(url, fname):
-    output = "--output {}".format(fname) if fname else "--remote-name"
-    cmd = ['curl', '--fail', '--insecure', '--location', output, '--silent',
+    cmd = ['curl', '--fail', '--insecure', '--location', '--silent',
            '--show-error', '-C', '-', '--url', url]
+    if fname:
+        cmd += ['--output', fname]
+    else:
+        cmd += ['--remote-name']
     cmdr = exec_cmd(cmd)
     return cmdr == 0
 
