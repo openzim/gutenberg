@@ -8,12 +8,10 @@ import os
 import json
 import zipfile
 import tempfile
-try:
-    from urllib import quote  # Python 2.X
-except ImportError:
-    from urllib.parse import quote  # Python 3+
+import urllib
 
 import six
+from six import text_type
 import bs4
 from bs4 import BeautifulSoup
 from path import Path as path
@@ -21,7 +19,7 @@ from jinja2 import Environment, PackageLoader
 from multiprocessing.dummy import Pool
 
 import gutenberg
-from gutenberg import logger, XML_PARSER, TMP_FOLDER
+from gutenberg import logger, TMP_FOLDER
 from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
                              get_list_of_filtered_books, exec_cmd,
                              get_langs_with_count, get_lang_groups,
@@ -32,8 +30,8 @@ from gutenberg.l10n import l10n_strings
 
 jinja_env = Environment(loader=PackageLoader('gutenberg', 'templates'))
 
+UTF8 = 'utf-8'
 DEBUG_COUNT = []
-
 NB_POPULARITY_STARS = 5
 
 
@@ -58,11 +56,28 @@ def book_name_for_fs(book):
     return book.title.strip().replace('/', '-')[:230]
 
 
+def zim_link_prefix(format):
+    return "../{}/".format({'html': 'A', 'epub': 'I', 'pdf': 'I'}.get(format))
+
+
 def urlencode(url):
-    return quote(url)
+    if six.PY2:
+        return urllib.quote(url.encode(UTF8))
+    else:
+        return urllib.parse.quote(url)
+
+
+def save_bs_output(soup, fpath, encoding=UTF8):
+    if six.PY2:
+        with open(fpath, 'w') as f:
+            f.write(soup.encode(encoding))
+    else:
+        with open(fpath, 'w', encoding=encoding) as f:
+            f.write(str(soup))
 
 
 jinja_env.filters['book_name_for_fs'] = book_name_for_fs
+jinja_env.filters['zim_link_prefix'] = zim_link_prefix
 jinja_env.filters['language_name'] = language_name
 jinja_env.filters['fa_for_format'] = fa_for_format
 jinja_env.filters['urlencode'] = urlencode
@@ -102,13 +117,9 @@ def export_skeleton(static_folder, dev_mode=False,
     context = get_default_context(books=books)
     context.update({'show_books': True, 'dev_mode': dev_mode})
     for tpl_path in ('Home.html', 'js/tools.js', 'js/l10n.js'):
-        with open(os.path.join(static_folder, tpl_path), 'w') as f:
-            template = jinja_env.get_template(tpl_path)
-            rendered = template.render(**context)
-            if six.PY2:
-                f.write(rendered.encode('utf-8'))
-            else:
-                f.write(rendered)
+        template = jinja_env.get_template(tpl_path)
+        rendered = template.render(**context)
+        save_bs_output(rendered, os.path.join(static_folder, tpl_path), UTF8)
 
 
 def export_all_books(static_folder,
@@ -181,7 +192,8 @@ def export_all_books(static_folder,
                                    cached_files=cached_files,
                                    languages=languages,
                                    formats=formats,
-                                   books=books)
+                                   books=books,
+                                   force=force)
     Pool(concurrency).map(dlb, books)
 
 
@@ -220,8 +232,26 @@ def html_content_for(book, static_folder, download_cache):
 
 
 def update_html_for_static(book, html_content, epub=False):
+    soup = BeautifulSoup(html_content, 'lxml-html')
 
-    soup = BeautifulSoup(html_content, "lxml-html")
+    # remove encoding as we're saving to UTF8 anyway
+    encoding_specified = False
+    for meta in soup.findAll('meta'):
+        if 'charset' in meta.attrs:
+            encoding_specified = True
+            # logger.debug("found <meta> tag with charset `{}`"
+            #              .format(meta.attrs.get('charset')))
+            del(meta.attrs['charset'])
+        elif 'content' in meta.attrs \
+                and 'charset=' in meta.attrs.get('content'):
+            encoding_specified = True
+            ctype, ccharset = meta.attrs.get('content').split(';', 1)
+            # logger.debug("found <meta> tag with content;charset `{}`"
+            #              .format(meta.attrs.get('content')))
+            meta.attrs['content'] = ctype
+    if encoding_specified:
+        # logger.debug("charset was found and removed")
+        pass
 
     # update all <img> links from images/xxx.xxx to {id}_xxx.xxx
     if not epub:
@@ -365,22 +395,24 @@ def update_html_for_static(book, html_content, epub=False):
     if not epub:
         infobox = jinja_env.get_template('book_infobox.html')
         infobox_html = infobox.render({'book': book})
-        info_soup = BeautifulSoup(infobox_html, "lxml-html")
+        info_soup = BeautifulSoup(infobox_html, 'lxml-html')
         body.insert(0, info_soup.find('div'))
 
     # if there is no charset, set it to utf8
-    if not epub and not soup.encoding:
-        utf = '<meta http-equiv="Content-Type" content="text/html;' \
-              ' charset=UTF-8" />'
-        # title = soup.find('title')
-        # title.insert_before(utf)
-        utf = '<head>{}'.format(utf)
-
-        if six.PY2:
-            html = soup.encode()
+    if not epub:
+        meta = BeautifulSoup('<meta http-equiv="Content-Type" '
+                             'content="text/html; charset=UTF-8" />',
+                             'lxml-html')
+        head = soup.find('head')
+        html = soup.find('html')
+        if head:
+            head.insert(0, meta.head.contents[0])
+        elif html:
+            html.insert(0, meta.head)
         else:
-            html = str(soup)
-        return html.replace(str('<head>'), str(utf))
+            soup.insert(0, meta.head)
+
+        return html
 
     return soup
 
@@ -413,9 +445,9 @@ def export_book_to(book,
     logger.info("\tExporting Book #{id}.".format(id=book.id))
 
     # actual book content, as HTML
-    html = html_content_for(book=book,
-                            static_folder=static_folder,
-                            download_cache=download_cache)
+    html, encoding = html_content_for(book=book,
+                                      static_folder=static_folder,
+                                      download_cache=download_cache)
     if html:
         article_fpath = os.path.join(static_folder, article_name_for(book))
         if not path(article_fpath).exists() or force:
@@ -423,12 +455,9 @@ def export_book_to(book,
             try:
                 new_html = update_html_for_static(book=book, html_content=html)
             except:
+                raise
                 new_html = html
-            with open(article_fpath, 'w') as f:
-                if six.PY2:
-                    f.write(new_html.encode())
-                else:
-                    f.write(new_html)
+            save_bs_output(new_html, article_fpath, UTF8)
         else:
             logger.info("\t\tSkipping HTML article {}".format(article_fpath))
 
@@ -500,19 +529,16 @@ def export_book_to(book,
                     optimize_image(path_for_cmd(fnp))
 
             if path(fname).ext in ('.htm', '.html'):
+                html_content, html_encoding = read_file(fnp)
                 html = update_html_for_static(book=book,
-                                              html_content=read_file(fnp),
+                                              html_content=html_content,
                                               epub=True)
-                with open(fnp, 'w') as f:
-                    if six.PY2:
-                        f.write(html.encode())
-                    else:
-                        f.write(str(html))
+                save_bs_output(html, fnp, UTF8)
 
             if path(fname).ext == '.ncx':
                 pattern = "*** START: FULL LICENSE ***"
-                ncx = read_file(fnp)
-                soup = BeautifulSoup(ncx, "lxml-xml")
+                ncx, ncx_encoding = read_file(fnp)
+                soup = BeautifulSoup(ncx, 'lxml-xml')
                 for tag in soup.findAll('text'):
                     if pattern in tag.text:
                         s = tag.parent.parent
@@ -521,32 +547,26 @@ def export_book_to(book,
                             s.decompose()
                         s.next_sibling
 
-                with open(fnp, 'w') as f:
-                    if six.PY2:
-                        f.write(soup.encode())
-                    else:
-                        f.write(str(soup))
+                save_bs_output(soup, fnp, UTF8)
 
         # delete {id}/cover.jpg if exist and update {id}/content.opf
         if remove_cover:
 
             # remove cover
-            path(os.path.join(tmpd, str(book.id), 'cover.jpg')).unlink_p()
+            path(
+                os.path.join(tmpd, text_type(book.id), 'cover.jpg')).unlink_p()
 
             soup = None
-            opff = os.path.join(tmpd, str(book.id), 'content.opf')
+            opff = os.path.join(tmpd, text_type(book.id), 'content.opf')
             if os.path.exists(opff):
-                soup = BeautifulSoup(read_file(opff), "lxml-xml")
+                opff_content, opff_encoding = read_file(opff)
+                soup = BeautifulSoup(opff_content, 'lxml-xml')
 
                 for elem in soup.findAll():
                     if getattr(elem, 'attrs', {}).get('href') == 'cover.jpg':
                         elem.decompose()
 
-                with(open(opff, 'w')) as fd:
-                    if six.PY2:
-                        fd.write(soup.encode())
-                    else:
-                        fd.write(str(soup))
+                save_bs_output(soup, opff, UTF8)
 
         # bundle epub as zip
         zip_epub(epub_fpath=dst,
@@ -595,14 +615,9 @@ def export_book_to(book,
                 continue
 
             logger.info("\t\tExporting HTML file to {}".format(dst))
-            html = "CAN'T READ FILE"
-            html = read_file(src)
+            html, encoding = read_file(src)
             new_html = update_html_for_static(book=book, html_content=html)
-            with open(dst, 'w') as f:
-                if six.PY2:
-                    f.write(new_html.encode())
-                else:
-                    f.write(new_html)
+            save_bs_output(new_html, dst, UTF8)
         else:
             logger.info("\t\tCopying companion file to {}".format(fname))
             try:
@@ -636,7 +651,7 @@ def export_book_to(book,
                                   books=books)
     with open(cover_fpath, 'w') as f:
         if six.PY2:
-            f.write(html.encode('utf-8'))
+            f.write(html.encode(UTF8))
         else:
             f.write(html)
 

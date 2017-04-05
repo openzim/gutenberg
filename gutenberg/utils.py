@@ -137,9 +137,13 @@ def path_for_cmd(p):
 
 
 def read_file_as(fpath, encoding='utf-8'):
-    print("opening", fpath, "as", encoding)
-    with open(fpath, 'r', encoding=encoding) as f:
-        return f.read()
+    # logger.debug("opening `{}` as `{}`".format(fpath, encoding))
+    if six.PY2:
+        with open(fpath, 'r') as f:
+            return f.read().decode(encoding)
+    else:
+        with open(fpath, 'r', encoding=encoding) as f:
+            return f.read()
 
 
 def guess_file_encoding(fpath):
@@ -150,12 +154,13 @@ def guess_file_encoding(fpath):
 def read_file(fpath):
     for encoding in ['utf-8', 'iso-8859-1']:
         try:
-            return read_file_as(fpath, encoding)
+            return read_file_as(fpath, encoding), encoding
         except UnicodeDecodeError:
             continue
 
     # common encoding failed. try with chardet
-    return read_file_as(fpath, guess_file_encoding(fpath))
+    encoding = guess_file_encoding(fpath)
+    return read_file_as(fpath, encoding), encoding
 
 
 def zip_epub(epub_fpath, root_folder, fpaths):
