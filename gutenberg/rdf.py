@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 from gutenberg import logger, XML_PARSER
 from gutenberg.utils import exec_cmd, download_file
 from gutenberg.database import (Author, Format, BookFormat, License, Book)
-from gutenberg.utils import BAD_BOOKS_FORMATS, FORMAT_MATRIX
+from gutenberg.utils import BAD_BOOKS_FORMATS, FORMAT_MATRIX, normalize
 
 
 def setup_rdf_folder(rdf_url, rdf_path):
@@ -184,22 +184,23 @@ def save_rdf_in_database(parser):
     if parser.author_id:
         try:
             author_record = Author.get(gut_id=parser.author_id)
+        except:
+            author_record = Author.create(
+                gut_id=parser.author_id,
+                last_name=normalize(parser.last_name),
+                first_names=normalize(parser.first_name),
+                birth_year=parser.birth_year,
+                death_year=parser.death_year)
+        else:
             if parser.last_name:
-                author_record.last_name
+                author_record.last_name = normalize(parser.last_name)
             if parser.first_name:
-                author_record.first_names = parser.first_name
+                author_record.first_names = normalize(parser.first_name)
             if parser.birth_year:
                 author_record.birth_year = parser.birth_year
             if parser.death_year:
                 author_record.death_year = parser.death_year
             author_record.save()
-        except:
-            author_record = Author.create(
-                gut_id=parser.author_id,
-                last_name=parser.last_name,
-                first_names=parser.first_name,
-                birth_year=parser.birth_year,
-                death_year=parser.death_year)
     else:
         # No author, set Anonymous
         author_record = Author.get(gut_id='216')
@@ -212,18 +213,26 @@ def save_rdf_in_database(parser):
 
     # Insert book
 
-    book_record, _ = Book.get_or_create(
-        id=parser.gid,
-        title=parser.title.strip(),
-        subtitle=parser.subtitle.strip(),
-        author=author_record,  # foreign key
-    )
-
-    book_record.update(
-        license=license_record,  # foreign key
-        language=parser.language.strip(),
-        downloads=parser.downloads
-    )
+    try:
+        book_record = Book.get(id=parser.gid)
+    except Book.DoesNotExist:
+        book_record = Book.create(
+            id=parser.gid,
+            title=normalize(parser.title.strip()),
+            subtitle=normalize(parser.subtitle.strip()),
+            author=author_record,  # foreign key
+            license=license_record,  # foreign key
+            language=parser.language.strip(),
+            downloads=parser.downloads
+        )
+    else:
+        book_record.title = normalize(parser.title.strip())
+        book_record.subtitle = normalize(parser.subtitle.strip())
+        book_record.author = author_record  # foreign key
+        book_record.license = license_record  # foreign key
+        book_record.language = parser.language.strip()
+        book_record.downloads = parser.downloads
+        book_record.save()
 
     # Insert formats
     for file_type in parser.file_types:

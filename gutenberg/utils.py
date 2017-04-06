@@ -11,6 +11,7 @@ import subprocess
 from contextlib import contextmanager
 import zipfile
 import collections
+import unicodedata
 
 import six
 import chardet
@@ -33,6 +34,10 @@ BAD_BOOKS_FORMATS = {
 
 
 NB_MAIN_LANGS = 5
+
+
+def normalize(text=None):
+    return None if text is None else unicodedata.normalize('NFC', text)
 
 
 @contextmanager
