@@ -71,6 +71,9 @@ class Author(Model):
     def __unicode__(self):
         return self.name()
 
+    def fname(self):
+        return "{name}.{id}".format(name=self.name(), id=self.gut_id)
+
     def name(self):
         if not self.first_names and not self.last_name:
             return "Anonymous"

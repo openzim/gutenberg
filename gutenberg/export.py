@@ -448,6 +448,23 @@ def cover_html_content_for(book, static_folder, books):
     return template.render(**context)
 
 
+def author_html_content_for(author, static_folder, books):
+    context = get_default_context(books=books)
+    context.update({'author': author})
+    template = jinja_env.get_template('author.html')
+    return template.render(**context)
+
+
+def save_author_file(author, static_folder, books, force=False):
+    fpath = os.path.join(static_folder, "{}.html".format(author.fname()))
+    if path(fpath).exists() and not force:
+        logger.debug("\t\tSkipping author file {}".format(fpath))
+        return
+    logger.debug("\t\tSaving author file {}".format(fpath))
+    with open(fpath, 'w') as f:
+        f.write(author_html_content_for(author, static_folder, books))
+
+
 def export_book_to(book,
                    static_folder, download_cache,
                    cached_files, languages, formats, books, force=False):
@@ -771,6 +788,9 @@ def export_to_json_helpers(books, static_folder, languages, formats):
                                   .where(Book.author == author)
                                   .order_by(Book.title.asc())],
                 'auth_{}_lang_{}_by_title.js'.format(author.gut_id, lang))
+
+        # author HTML redirect file
+        save_author_file(author, static_folder, books, force=True)
 
     # authors list sorted by name
     logger.info("\t\tDumping authors.js")
