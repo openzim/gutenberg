@@ -10,6 +10,7 @@ import hashlib
 import subprocess
 from contextlib import contextmanager
 import zipfile
+import collections
 
 import six
 import chardet
@@ -19,11 +20,11 @@ from gutenberg.iso639 import language_name
 from gutenberg.database import Book, BookFormat, Format
 
 
-FORMAT_MATRIX = {
-    'epub': 'application/epub+zip',
-    'pdf': 'application/pdf',
-    'html': 'text/html'
-}
+FORMAT_MATRIX = collections.OrderedDict([
+    ('html', 'text/html'),
+    ('epub', 'application/epub+zip'),
+    ('pdf', 'application/pdf'),
+])
 
 BAD_BOOKS_FORMATS = {
     39765: ['pdf'],
