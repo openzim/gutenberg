@@ -172,6 +172,10 @@ tr td.table-icons:hover {
     background-color: #D00000;
 }
 
+.home-icon {
+	padding-right: .5em;
+}
+
 tr.odd {
     background-color: white!important;
 }
