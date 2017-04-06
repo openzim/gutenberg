@@ -17,6 +17,7 @@ import six
 import chardet
 from path import Path as path
 
+from gutenberg import logger
 from gutenberg.iso639 import language_name
 from gutenberg.database import Book, BookFormat, Format
 
@@ -55,7 +56,7 @@ def exec_cmd(cmd):
         args = cmd
     else:
         args = cmd.split(' ')
-    print("** {}".format(" ".join(args)))
+    logger.debug(" ".join(args))
     if six.PY3:
         return subprocess.run(args).returncode
     else:
@@ -170,10 +171,6 @@ def read_file(fpath):
 
 
 def zip_epub(epub_fpath, root_folder, fpaths):
-    # with cd(tmpd):
-        # exec_cmd(['zip', '-q0X', dst, 'mimetype'])
-        # exec_cmd(['zip', '-qXr9D', dst] + [czf for czf in zipped_files
-        #                                    if not f == 'mimetype'])
     with zipfile.ZipFile(epub_fpath, 'w', zipfile.ZIP_DEFLATED) as zf:
         for fpath in fpaths:
             zf.write(os.path.join(root_folder, fpath), fpath)
