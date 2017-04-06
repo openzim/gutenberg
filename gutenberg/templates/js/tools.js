@@ -258,7 +258,7 @@ function showBooks() {
 								    html += "<a title=\"" + full[0]+ ": HTML\" href=\"../A/" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-3x\"></i></a>";
 								}
 								if (data[1] == 1) {
-								    html += "<a title=\"" + full[0]+ ": EPUB\" href=\"../I/" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-book fa-3x\"></i></a>";
+								    html += "<a title=\"" + full[0]+ ": EPUB\" href=\"../I/" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-download fa-3x\"></i></a>";
 								}
 								if (data[2] == 1) {
 								    html += "<a title=\"" + full[0]+ ": PDF\" href=\"../I/" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-3x\"></i></a>";
