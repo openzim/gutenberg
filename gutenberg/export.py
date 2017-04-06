@@ -47,7 +47,7 @@ def fa_for_format(format):
     return {
         'html': "",
         'info': 'fa-info-circle',
-        'epub': 'fa-book',
+        'epub': 'fa-download',
         'pdf': 'fa-file-pdf-o',
     }.get(format, 'fa-file-o')
 
