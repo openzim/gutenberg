@@ -317,6 +317,14 @@ body.cover .content h2 {
     max-width: 100%;
 }
 
+.cover-detail.author a {
+	color: #D00000;
+}
+
+.cover-detail.author a:hover {
+	text-decoration: underline;
+}
+
 .bibrec {
     margin: 0 auto;
     width: 80%;

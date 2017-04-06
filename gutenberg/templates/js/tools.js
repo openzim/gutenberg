@@ -48,6 +48,12 @@ function onTablePageChange(e, settings, table) {
 	// console.debug(info);
 }
 
+function goToAuthor(name) {
+	$( "#author_filter" ).val(name);
+	$( "#author_filter" ).change();
+	showBooks();
+}
+
 function minimizeUI() {
     console.log("minimizeUI");
     $( "#hide-precontent" ).val( "true" );
