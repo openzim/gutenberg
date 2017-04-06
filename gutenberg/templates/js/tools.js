@@ -82,19 +82,24 @@ function populateFilters( callback ) {
                     break;
                 }
             }
+            if (author_id === null && author_filter_value) {
+            	// lang and author not matching but content in field: clear
+            	$( "#author_filter" ).val("");
+            	$('.clearable').trigger("input");
+            }
         } else
         	author_filter_value = null;
 
         // console.log("authors populated");
 
         // figure out what to request now (lang_id, author_id, sortMethod)
-        if (language_filter_value && author_filter_value) {
+        if (lang_id && author_id) {
         	// we want a reduce of both
         	booksUrl = "auth_" + author_id + "_lang_" + lang_id + "_by_" + sortMethod;
-        } else if (author_filter_value) {
+        } else if (author_id) {
         	// only books by this author
         	booksUrl = "auth_" + author_id + "_by_" + sortMethod;
-        } else if (language_filter_value) {
+        } else if (lang_id) {
         	// all books in this language
         	booksUrl = "lang_" + lang_id + "_by_" + sortMethod;
         } else {
@@ -103,7 +108,7 @@ function populateFilters( callback ) {
         }
         booksUrl += ".js"
 
-        // console.debug("FILTER: " + "lang: " + language_filter_value + " auth: " + author_filter_value + " sort: " + sortMethod);
+        // console.debug("FILTER: " + "lang: " + lang_id + " auth: " + author_id + " sort: " + sortMethod);
         // console.debug(booksUrl);
 
         if ( callback ) {
