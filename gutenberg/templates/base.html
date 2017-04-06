@@ -32,7 +32,7 @@
     <input type="hidden" id="hide-precontent" />
     <input type="hidden" id="page_record" name="page_record" />
     <div class="l10nselector">
-        <select id="l10nselect" name="l10nselect" class="filter_ui" title="Interface language" data-l10n-id="ui-language-switcher">
+        <select id="l10nselect" name="l10nselect" class="filter_ui" title="Interface language" data-l10n-id="ui-language-switcher" {% if ui_languages|length < 2 %}style="display:none;"{% endif %}>
         {% for lang in ui_languages %}
             <option value="{{ lang }}" label="{{ lang|language_name }}">{{ lang|language_name }}</option>
         {% endfor %}
@@ -44,7 +44,7 @@
             <h2><a href="Home.html" data-l10n-id="sub-title">The first producer of free ebooks</a></h2>
         </div>
 
-        <form class="pure-form filter">
+        <div class="pure-form filter">
         <div class="pure-g">
             {% if languages|length > 1 %}
             <div class="pure-u-1 pure-u-sm-1-5 pure-u-md-1-5 languages-filter">
@@ -70,7 +70,7 @@
             <!-- <div class="pure-u-1 pure-u-md-2-5"></div> -->
             {% endif %}
         </div>
-        </form>
+        </div>
 
     </header>
 

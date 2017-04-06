@@ -33,6 +33,9 @@ With some changes to keep the language in a cookie with jQuery.cookie:
 function getLanguageFromBrowser() {
 	var default_lang = 'en';
 	var available_languages = [{% for lang in ui_languages %}'{{ lang }}',{% endfor %}];
+	// single language
+	if (available_languages.length == 1)
+		return available_languages[0];
 	// console.debug("available_languages: " + available_languages);
 	var languages = window.navigator.languages;
 	if (!languages || languages.length == 0) {

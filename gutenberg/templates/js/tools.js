@@ -439,26 +439,27 @@ function init() {
 
     /* Author filter */
     $( "#author_filter" ).autocomplete({
-    source: function ( request, response ) {
+	    source: function ( request, response ) {
             var results = [];
-        var pattern = new RegExp(request.term, "i");
-        var count = authors_json_data.length;
-        var i = 0;
-        while (i < count && results.length < 100) {
-        if ( authors_json_data[i][0].match(pattern) ) {
-            results.push( authors_json_data[i][0] );
-        }
-        i++;
-        }
-        response( results );
+	        var pattern = new RegExp(request.term, "i");
+	        var count = authors_json_data.length;
+	        var i = 0;
+	        while (i < count && results.length < 100) {
+		        if ( authors_json_data[i][0].match(pattern) ) {
+		            results.push( authors_json_data[i][0] );
+		        }
+		        i++;
+	        }
+	        response( results );
         },
-    select: function ( event, ui ) {
-        minimizeUI();
-        showBooks();
+	    select: function ( event, ui ) {
+	        minimizeUI();
+	        showBooks();
         }
     });
     $( "#author_filter" ).keypress( function( event ) {
     if( event.which == 13 ) {
+    	$.persistValue("author_filter", $(this).val(), persist_options);
         showBooks();
     }
     });

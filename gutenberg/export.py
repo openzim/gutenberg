@@ -35,10 +35,19 @@ DEBUG_COUNT = []
 NB_POPULARITY_STARS = 5
 
 
+def get_ui_languages_for(books):
+    ui_languages = ['en', 'fr']
+    languages = get_langs_with_count(books=books)
+    if len(languages) == 1 and languages[-1][1] in ui_languages:
+        return [languages[-1][1]]
+    return ui_languages
+
+
 def get_default_context(books):
+
     return {
         'l10n_strings': json.dumps(l10n_strings),
-        'ui_languages': ['en', 'fr'],
+        'ui_languages': get_ui_languages_for(books),
         'languages': get_langs_with_count(books=books),
     }
 
