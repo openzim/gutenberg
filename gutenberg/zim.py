@@ -6,6 +6,8 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import datetime
 
+from path import Path as path
+
 from gutenberg import logger
 from gutenberg.utils import exec_cmd
 from gutenberg.iso639 import ISO_MATRIX
@@ -15,7 +17,7 @@ from gutenberg.export import export_skeleton
 def build_zimfile(static_folder, zim_path=None,
                   languages=[], formats=[],
                   title=None, description=None,
-                  only_books=[]):
+                  only_books=[], force=False):
 
     # revert HTML/JS/CSS to zim-compatible versions
     export_skeleton(static_folder=static_folder, dev_mode=False,
@@ -51,6 +53,10 @@ def build_zimfile(static_folder, zim_path=None,
                 lang=languages[0],
                 date=datetime.datetime.now().strftime('%Y-%m'))
 
+    if path(zim_path).exists() and not force:
+        logger.info("ZIM file `{}` already exist.".format(zim_path))
+        return
+
     languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
     languages.sort()
 
@@ -69,11 +75,11 @@ def build_zimfile(static_folder, zim_path=None,
     }
 
     cmd = [part.format(**context)
-           for part in ['zimwriterfs', '--welcome="{home}"',
-                        '--favicon="{favicon}"',
-                        '--language="{languages}"', '--title="{title}"',
-                        '--description="{description}"',
-                        '--creator="{creator}"', '--publisher="{publisher}"',
+           for part in ['zimwriterfs', '--welcome={home}',
+                        '--favicon={favicon}',
+                        '--language={languages}', '--title={title}',
+                        '--description={description}',
+                        '--creator={creator}', '--publisher={publisher}',
                         '{static}', '{zim}']]
     if exec_cmd(cmd) == 0:
         logger.info("Successfuly created ZIM file at {}".format(zim_path))
