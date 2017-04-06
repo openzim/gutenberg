@@ -109,7 +109,7 @@ class RdfParser():
         self.last_name = None
 
     def parse(self):
-        soup = BeautifulSoup(self.rdf_data, XML_PARSER, from_encoding='utf-8')
+        soup = BeautifulSoup(self.rdf_data, XML_PARSER)
 
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.
@@ -211,11 +211,15 @@ def save_rdf_in_database(parser):
         license_record = None
 
     # Insert book
-    book_record = Book.create(
+
+    book_record, _ = Book.get_or_create(
         id=parser.gid,
         title=parser.title.strip(),
         subtitle=parser.subtitle.strip(),
         author=author_record,  # foreign key
+    )
+
+    book_record.update(
         license=license_record,  # foreign key
         language=parser.language.strip(),
         downloads=parser.downloads
@@ -244,14 +248,14 @@ def save_rdf_in_database(parser):
                          .format(mime, bid))
             continue
 
-        format_record = Format.get_or_create(
+        format_record, _ = Format.get_or_create(
             mime=mime,
             images=file_type.endswith('.images')
             or parser.file_types[file_type] == 'application/pdf',
             pattern=pattern)
 
         # Insert book format
-        BookFormat.create(
+        BookFormat.get_or_create(
             book=book_record,  # foreign key
             format=format_record  # foreign key
         )
