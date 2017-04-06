@@ -318,10 +318,15 @@ function showBooks() {
 function onLocalized() {
     var l10n = document.webL10n;
     var l10nselect = $("#l10nselect");
-    l10nselect.val(l10n.getLanguage());
     l10nselect.on('change', function(e) {
         l10n.setLanguage($(this).val());
     });
+    var detectedLang = l10n.getLanguage();
+    if (l10nselect.val() && l10nselect.val() != detectedLang) {
+    	// we have a different persisted language
+    	console.debug("persisted lang " + l10nselect.val() +" !+ browser lang " + detectedLang);
+    	l10nselect.change();
+    }
 }
 
 function init() {

@@ -30,6 +30,30 @@ With some changes to keep the language in a cookie with jQuery.cookie:
                       }
  */
 
+function getLanguageFromBrowser() {
+	var default_lang = 'en';
+	var available_languages = [{% for lang in ui_languages %}'{{ lang }}',{% endfor %}];
+	// console.debug("available_languages: " + available_languages);
+	var languages = window.navigator.languages;
+	if (!languages || languages.length == 0) {
+		languages = Array((navigator.language || navigator.browserLanguage));
+	}
+	var selected_lang = default_lang;
+	$.each(languages, function(index, elem) {
+		var lang = elem.split('-')[0].split('_')[0];
+		if (available_languages.indexOf(lang) != -1) {
+			console.debug("found matching lang: " + lang);
+			selected_lang = lang;
+			return false;
+		} else {
+			console.debug("unsupported lang: " + lang);
+		}
+	});
+	console.debug("setting lang to " + selected_lang);
+	return selected_lang;
+}
+
+
 /*jshint browser: true, devel: true, es5: true, globalstrict: true */
 'use strict';
 
@@ -980,12 +1004,13 @@ document.webL10n = (function(window, document, undefined) {
   function l10nStartup() {
     gReadyState = 'interactive';
 
-    // most browsers expose the UI language as `navigator.language'
-    // but IE uses `navigator.userLanguage' instead
-    var userLocale = $.cookie('language') || navigator.language || navigator.userLanguage;
-    if (userLocale.indexOf('-') != -1) {
-        userLocale = userLocale.split('-')[0];
-    }
+    userLocale = getLanguageFromBrowser();
+    // // most browsers expose the UI language as `navigator.language'
+    // // but IE uses `navigator.userLanguage' instead
+    // var userLocale = $.cookie('language') || navigator.language || navigator.userLanguage;
+    // if (userLocale.indexOf('-') != -1) {
+    //     userLocale = userLocale.split('-')[0];
+    // }
     consoleLog('loading [' + userLocale + '] resources, ' +
         (gAsyncResourceLoading ? 'asynchronously.' : 'synchronously.'));
 
