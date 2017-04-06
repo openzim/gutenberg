@@ -78,7 +78,7 @@ document.webL10n = (function(window, document, undefined) {
    * content until the `localized' event happens.
    */
 
-  var gAsyncResourceLoading = true; // read-only
+  var gAsyncResourceLoading = false; // read-only
 
 
   /**

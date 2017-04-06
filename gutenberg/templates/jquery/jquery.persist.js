@@ -205,7 +205,7 @@ jQuery.persistInit = function(options) {
 }
 
 jQuery.persist = {
-	debug	: false,
+	debug	: true,
 	defaults: {
 		context 	: 'def',		// a context or namespace for each field
 		replace		: true,			// replace existing field contents if any

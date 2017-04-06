@@ -3,7 +3,13 @@ var sortMethod = "popularity";
 var booksUrl = "full_by_popularity.js";
 var inBooksLooadingLoop = false;
 var booksTable = null;
-
+var persist_options = {
+	context: 'gutenberg', // a context or namespace for each field
+	cookie: 'gutenberg', // cookies basename
+	expires: 1, // cookie expiry (eg 365)
+	replace: true,
+	debug: true,
+};
 
 function queryParams(key) {
 	var qd = {};
@@ -258,16 +264,17 @@ function showBooks() {
 						    "targets": 2,
 						    "render": function ( data, type, full, meta ) {
 								var html = "";
-								var urlBase = encodeURIComponent( full[0].replace( "/", "-" ).substring(0, 230) );
+								var urlBase = full[0].replace( "/", "-" ).substring(0, 230) + "." + full[3];
+								urlBase = encodeURIComponent(urlBase);
 
 								if (data[0] == 1) {
-								    html += "<a class=\"home-icon\" title=\"" + full[0]+ ": HTML\" href=\"../A/" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-3x\"></i></a>";
+								    html += "<a class=\"home-icon\" title=\"" + full[0]+ ": HTML\" href=\"../A/" + urlBase + ".html\"><i class=\"fa fa-html5 fa-3x\"></i></a>";
 								}
 								if (data[1] == 1) {
-								    html += "<a class=\"home-icon\" title=\"" + full[0]+ ": EPUB\" href=\"../I/" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-download fa-3x\"></i></a>";
+								    html += "<a class=\"home-icon\" title=\"" + full[0]+ ": EPUB\" href=\"../I/" + urlBase + ".epub\"><i class=\"fa fa-download fa-3x\"></i></a>";
 								}
 								if (data[2] == 1) {
-								    html += "<a class=\"home-icon\" title=\"" + full[0]+ ": PDF\" href=\"../I/" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-3x\"></i></a>";
+								    html += "<a class=\"home-icon\" title=\"" + full[0]+ ": PDF\" href=\"../I/" + urlBase + ".pdf\"><i class=\"fa fa-file-pdf-o fa-3x\"></i></a>";
 								}
 
 								return html;
@@ -318,27 +325,31 @@ function showBooks() {
 function onLocalized() {
     var l10n = document.webL10n;
     var l10nselect = $("#l10nselect");
+    
+    var detectedLang = l10n.getLanguage();
+    console.debug("detected language: " + detectedLang);
+    var persistedLang = jQuery.persistedValue("l10nselect", persist_options);
+    console.debug("persisted language: " + persistedLang);
+    if (persistedLang && persistedLang != detectedLang) {
+    	// we have a different persisted language
+    	// console.debug("persisted lang " + persistedLang +" != browser lang " + detectedLang);
+    	l10nselect.val(persistedLang);
+    	l10n.setLanguage(persistedLang);
+    } else {
+    	// console.debug("no persisted lang or equal to browser, updating select");
+    	l10nselect.val(detectedLang);
+    }
     l10nselect.on('change', function(e) {
+    	// console.debug("on change, setting lang " + $(this).val());
+    	$.persistValue("l10nselect", $(this).val(), persist_options);
         l10n.setLanguage($(this).val());
     });
-    var detectedLang = l10n.getLanguage();
-    if (l10nselect.val() && l10nselect.val() != detectedLang) {
-    	// we have a different persisted language
-    	console.debug("persisted lang " + l10nselect.val() +" !+ browser lang " + detectedLang);
-    	l10nselect.change();
-    }
 }
 
 function init() {
 
     /* Persistence of form values */
-    var persist_options = {
-		context: 'gutenberg', // a context or namespace for each field
-		cookie: 'gutenberg', // cookies basename
-		expires: 1, // cookie expiry (eg 365)
-		replace: true,
-    };
-    jQuery('input,select,textarea').persist(persist_options);
+    $("input,select,textarea").persist(persist_options);
 
     /* Hide home about */
     if ( $( "#hide-precontent" ).val() == "true" ) {
