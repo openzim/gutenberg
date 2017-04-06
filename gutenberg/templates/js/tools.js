@@ -2,6 +2,51 @@
 var sortMethod = "popularity";
 var booksUrl = "full_by_popularity.js";
 var inBooksLooadingLoop = false;
+var booksTable = null;
+
+
+function queryParams(key) {
+	var qd = {};
+	if (location.search) location.search.substr(1).split("&").forEach(function(item) {var s = item.split("="), k = s[0], v = s[1] && decodeURIComponent(s[1]); (qd[k] = qd[k] || []).push(v)})
+	if (key == undefined)
+		return qd;
+	else
+		return qd[key];
+}
+
+function getPersistedPage() {
+	var pp = $('#page_record').val();
+	try {
+		return parseInt(pp);
+	} catch (e) {
+		if (pp) {
+			console.log(e);
+			console.warn("Unable to work with persisted page `" + pp + "`");
+		}
+		return 0;
+	}
+}
+
+function getRequestedPage() {
+	var qp = queryParams('page');
+	try {
+		return parseInt(qp) - 1;
+	} catch (e) {
+		if (qp) {
+			console.log(e);
+			console.warn("Unable to work with requested page `" + qp + "`");
+		}
+		return 0;
+	}
+}
+
+function onTablePageChange(e, settings, table) {
+	// record global ref to table
+	if (table)
+		booksTable = table;
+	$('#page_record').val(booksTable.api().page());
+	// console.debug(info);
+}
 
 function minimizeUI() {
     console.log("minimizeUI");
@@ -42,7 +87,7 @@ function loadScript(url, nodeId, callback) {
 	};
     } else { //Others
 	script.onload = function () {
-            console.log("calling script callback");
+        console.log("calling script callback");
 	    callback();
 	};
     }
@@ -151,105 +196,115 @@ function showBooks() {
 
         loadScript( booksUrl, "books_script", function () {
 
-            if ( $('#books_table').attr("filled") ) {
-		$('#books_table').dataTable().fnDestroy();
+        	if ( $('#books_table').attr("filled") ) {
+				booksTable.fnDestroy();
             }
 
-	    $(document).ready(function() {
-		$('#books_table').dataTable( {
-		    "searching": false,
-		    "ordering":  false,
-		    "deferRender": true,
-		    "bDeferRender": true,
-		    "lengthChange": false,
-		    "info": false,
-		    "data": json_data,
-		    "columns": [
-			{ "title": "" },
-			{ "title": "" },
-			{ "title": "" }
-		    ],
-		    "bAutoWidth": false,
-		    "columnDefs": [
-			{ "bVisible": false, "aTargets": [1] },
-			{ "sClass": "table-icons", "aTargets": [2] },
-			{
-			    "targets": 0,
-			    "render": function ( data, type, full, meta ) {
-				div = "<div class=\"list-stripe\"></div>";
-				title = "<span style=\"display: none\">" + full[3] + "</span>";
-				title += " <span class = \"table-title\">" + full[0] + "</span>";
-				author = ((full[1]=='Anonymous')?
-					  "<span class=\"table-author\" data-l10n-id=\"author-anonymous\">" + document.webL10n.get('author-anonymous') + "</span>"
-					  :((full[1]=='Various')?
-					    "<span class=\"table-author\" data-l10n-id=\"author-various\">" + document.webL10n.get('author-various') + "</span>"
-					    :
-					    "<span class=\"table-author\">" + full[1] + "</span>"));
-				
-                    return div + "<div>" + title + "<br>" + author + "</div";
-			    }
-			},
-			{
-			    "targets": 1,
-			    "render": function ( data, type, full, meta ) {
-				return "";
-			    }
-			},
+		    $(document).ready(function() {
+				booksTable = $('#books_table').dataTable( {
+					"initComplete": function (settings, json) {
+		        		var requestedPage = getPersistedPage();
+						if (requestedPage) {
+							this.api().page(requestedPage).draw(false);
+							// fire event as not registered/ready yet
+							onTablePageChange(null, null, this);
+						}
+				    },
+				    "searching": false,
+				    "ordering":  false,
+				    "deferRender": true,
+				    "bDeferRender": true,
+				    "lengthChange": false,
+				    "info": false,
+				    "data": json_data,
+				    "columns": [
+						{ "title": "" },
+						{ "title": "" },
+						{ "title": "" }
+				    ],
+				    "bAutoWidth": false,
+				    "columnDefs": [
+						{ "bVisible": false, "aTargets": [1] },
+						{ "sClass": "table-icons", "aTargets": [2] },
+						{
+						    "targets": 0,
+						    "render": function ( data, type, full, meta ) {
+							div = "<div class=\"list-stripe\"></div>";
+							title = "<span style=\"display: none\">" + full[3] + "</span>";
+							title += " <span class = \"table-title\">" + full[0] + "</span>";
+							author = ((full[1]=='Anonymous')?
+								  "<span class=\"table-author\" data-l10n-id=\"author-anonymous\">" + document.webL10n.get('author-anonymous') + "</span>"
+								  :((full[1]=='Various')?
+								    "<span class=\"table-author\" data-l10n-id=\"author-various\">" + document.webL10n.get('author-various') + "</span>"
+								    :
+								    "<span class=\"table-author\">" + full[1] + "</span>"));
+							
+			                    return div + "<div>" + title + "<br>" + author + "</div";
+						    }
+						},
+						{
+						    "targets": 1,
+						    "render": function ( data, type, full, meta ) {
+							return "";
+						    }
+						},
+						{
+						    "targets": 2,
+						    "render": function ( data, type, full, meta ) {
+								var html = "";
+								var urlBase = encodeURIComponent( full[0].replace( "/", "-" ).substring(0, 230) );
 
-			{
-			    "targets": 2,
-			    "render": function ( data, type, full, meta ) {
-				var html = "";
-				var urlBase = encodeURIComponent( full[0].replace( "/", "-" ).substring(0, 230) );
+								if (data[0] == 1) {
+								    html += "<a title=\"" + full[0]+ ": HTML\" href=\"../A/" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-3x\"></i></a>";
+								}
+								if (data[1] == 1) {
+								    html += "<a title=\"" + full[0]+ ": EPUB\" href=\"../I/" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-book fa-3x\"></i></a>";
+								}
+								if (data[2] == 1) {
+								    html += "<a title=\"" + full[0]+ ": PDF\" href=\"../I/" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-3x\"></i></a>";
+								}
 
-				if (data[0] == 1) {
-				    html += "<a title=\"" + full[0]+ ": HTML\" href=\"../A/" + urlBase + "." + full[3] + ".html\"><i class=\"fa fa-html5 fa-3x\"></i></a>";
-				}
-				if (data[1] == 1) {
-				    html += "<a title=\"" + full[0]+ ": EPUB\" href=\"../I/" + urlBase + "." + full[3] + ".epub\"><i class=\"fa fa-book fa-3x\"></i></a>";
-				}
-				if (data[2] == 1) {
-				    html += "<a title=\"" + full[0]+ ": PDF\" href=\"../I/" + urlBase + "." + full[3] + ".pdf\"><i class=\"fa fa-file-pdf-o fa-3x\"></i></a>";
-				}
+								return html;
+						    }
+						}
+					],
+				} );
+				$("#books_table").on( 'page.dt', onTablePageChange );					
+			} );
+			
 
-				return html;
-			    }
+		    /* Book list click handlers */
+		    $('#books_table').on('mouseup', 'tr td:first-child', function ( event ) {
+	                var id = $('span', this)[0].innerHTML;
+	                var titre = $('span.table-title', this)[0].innerHTML;
+
+			if ( event.which == 1 ) { /* Left click */
+	                    $(location).attr("href", encodeURIComponent( titre.replace( "/", "-" ).substring(0, 230) ) + "_cover." + id + ".html" );
+			} else if ( event.which == 2 ) { /* Middle click */
+			    var href = $(this).attr('data-href');
+			    var link = $('<a href="' + encodeURIComponent( titre.replace( "/", "-" ).substring(0, 230) ) + "_cover." + id + ".html" + '" />');
+			    link.attr('target', '_blank');
+			    window.open(link.attr('href'));
 			}
-		    ]
-		} );
-	    } );
+	            });
 
-	    /* Book list click handlers */
-	    $('#books_table').on('mouseup', 'tr td:first-child', function ( event ) {
-                var id = $('span', this)[0].innerHTML;
-                var titre = $('span.table-title', this)[0].innerHTML;
+	            $("#books_table_paginate").click( function() { minimizeUI(); });
+	            $('#books_table').attr("filled", true);
 
-		if ( event.which == 1 ) { /* Left click */
-                    $(location).attr("href", encodeURIComponent( titre.replace( "/", "-" ).substring(0, 230) ) + "_cover." + id + ".html" );
-		} else if ( event.which == 2 ) { /* Middle click */
-		    var href = $(this).attr('data-href');
-		    var link = $('<a href="' + encodeURIComponent( titre.replace( "/", "-" ).substring(0, 230) ) + "_cover." + id + ".html" + '" />');
-		    link.attr('target', '_blank');
-		    window.open(link.attr('href'));
-		}
-            });
+	            $('.sort').show();
 
-            $("#books_table_paginate").click( function() { minimizeUI(); });
-            $('#books_table').attr("filled", true);
+	            /* Hide Spinner */
+	            inBooksLoadingLoop = false;
+	            $("#spinner").hide();
 
-            $('.sort').show();
+		    /* Translate books table back/next buttons */
+		    $( "#books_table_previous" ).attr( "data-l10n-id", "table-previous" );
+		    $( "#books_table_previous" ).html( document.webL10n.get( "table-previous" ) );
+		    $( "#books_table_next" ).attr( "data-l10n-id", "table-next" );
+		    $( "#books_table_next" ).html( document.webL10n.get( "table-next" ) );
+	        });
+	        console.log("after loadScript");
 
-            /* Hide Spinner */
-            inBooksLoadingLoop = false;
-            $("#spinner").hide();
-
-	    /* Translate books table back/next buttons */
-	    $( "#books_table_previous" ).attr( "data-l10n-id", "table-previous" );
-	    $( "#books_table_previous" ).html( document.webL10n.get( "table-previous" ) );
-	    $( "#books_table_next" ).attr( "data-l10n-id", "table-next" );
-	    $( "#books_table_next" ).html( document.webL10n.get( "table-next" ) );
-        });
-        console.log("after loadScript");
     });
     console.log("after populateFilters");
 }
