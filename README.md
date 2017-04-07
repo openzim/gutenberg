@@ -1,66 +1,56 @@
-######################################################################
 # Project Gutenberg Offline
-######################################################################
 
 A scraper that downloads the whole repository of [Project Gutenberg]
-(http://www.gutenberg.org) and puts it into a localy browsable
+(http://www.gutenberg.org) and puts it into a locally browsable
 directory and then in a ZIM file (http://www.openzim.org), a clean and
 user friendly format for storing content for offline usage. It was
 created during a Kiwix Hackathon in Lyon, France in July 2014.
 
-## Setting up the environment ########################################
+## Setting up the environment
 
-It's recommended that you use `virtualenv`.
+It's recommended that you use `virtualenv`. `py2.7.x` and `py3.6+` are supported.
 
-### Install the dependencies #########################################
+### Install the dependencies
 
 #### Linux 
 
 ```
 sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle
-sudo pip install virtualenvwrapper
+sudo pip install virtualenv
 ```
 
 #### Mac OS X
 
 ```
 sudo easy_install pip
-sudo pip install virtualenvwrapper
+sudo pip install virtualenv
 brew install advancecomp jpegoptim pngquant p7zip gifsicle
 ```
 
-#### Finalize the setup #############################################
-
-Finally, add this to your `.bashrc`:
-
-```
-source /usr/local/bin/virtualenvwrapper.sh
-```
-
-### Set up the project ##############################################
+### Set up the project
 
 ```
 git clone git@github.com:kiwix/gutenberg.git
 cd gutenberg
-mkvirtualenv gut (or any name you want)
+virtualenv gut-env (or any name you want)
+./gut-env/bin/pip install -r requirements.pip
 ```
 
-### Working in the environment ######################################
+### Working in the environment
 
-* Activate the environment:  `workon gut`
+* Activate the environment:  `source gut-env/bin/activate`
 * Quit the environment: `deactivate`
-* Install the python dependencies: `pip install -r requirements.pip`
 
 ## Getting started
 
-After setting up the whole enviroment you can just run the main script `dump-gutenberg.py`.   
+After setting up the whole environment you can just run the main script `dump-gutenberg.py`.   
 It will download, process and export the content.
 
 ```
 ./dump-gutenberg.py 
 ```
 
-#### Arguments #####################################################
+#### Arguments
 
 You can also specify parameters to customize the content.   
 Only want books with the Id 100-200? Books only in French? English? Or only those both? No problem!  
@@ -75,7 +65,8 @@ You can find the full arguments list below.
 
 ``` sh
 -h --help                       Display this help message
--k --keep-db                    Do not wipe the DB during parse stage
+-y --wipe-db                    Do not wipe the DB during parse stage
+-F --force                      Redo step even if target already exist
 
 -l --languages=<list>           Comma-separated list of lang codes to filter export to (preferably ISO 639-1, else ISO 639-3)
 -f --formats=<list>             Comma-separated list of formats to filter export to (epub, html, pdf, all)
@@ -99,11 +90,12 @@ You can find the full arguments list below.
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
 --export                        Export downloaded content to zim-friendly static HTML
+--dev                           Exports *just* Home+JS+CSS files (overwritten by --zim step)
 --zim                           Create a ZIM file
 ```
 
 
-## Screenshots #####################################################
+## Screenshots
 
 ![](http://i.imgur.com/A4NnS2K.png?1)
 

@@ -15,7 +15,16 @@ db = SqliteDatabase('gutenberg.db')
 db.connect()
 
 
-class License(Model):
+class BaseModel(Model):
+    @classmethod
+    def get_or_none(cls, *query, **kwargs):
+        try:
+            return cls.get(*query)
+        except cls.DoesNotExist:
+            return None
+
+
+class License(BaseModel):
 
     class Meta:
         database = db
@@ -34,7 +43,7 @@ class License(Model):
         return self.name
 
 
-class Format(Model):
+class Format(BaseModel):
 
     class Meta:
         database = db
@@ -47,7 +56,7 @@ class Format(Model):
         return self.mime
 
 
-class Author(Model):
+class Author(BaseModel):
 
     class Meta:
         database = db
@@ -105,7 +114,7 @@ class Author(Model):
         ]
 
 
-class Book(Model):
+class Book(BaseModel):
 
     class Meta:
         database = db
@@ -152,7 +161,7 @@ class Book(Model):
         return main_formats_for(self)
 
 
-class BookFormat(Model):
+class BookFormat(BaseModel):
 
     class Meta:
         database = db

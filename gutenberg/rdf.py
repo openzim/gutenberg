@@ -17,11 +17,11 @@ from gutenberg.database import (Author, Format, BookFormat, License, Book)
 from gutenberg.utils import BAD_BOOKS_FORMATS, FORMAT_MATRIX, normalize
 
 
-def setup_rdf_folder(rdf_url, rdf_path):
+def setup_rdf_folder(rdf_url, rdf_path, force=False):
     """ Download and Extract rdf-files """
 
     rdf_tarball = download_rdf_file(rdf_url)
-    extract_rdf_files(rdf_tarball, rdf_path)
+    extract_rdf_files(rdf_tarball, rdf_path, force=force)
 
 
 def download_rdf_file(rdf_url):
@@ -37,8 +37,8 @@ def download_rdf_file(rdf_url):
     return fname
 
 
-def extract_rdf_files(rdf_tarball, rdf_path):
-    if path(rdf_path).exists():
+def extract_rdf_files(rdf_tarball, rdf_path, force=False):
+    if path(rdf_path).exists() and not force:
         logger.info("\tRDF-files folder already exists in {}".format(rdf_path))
         return
 
@@ -53,7 +53,7 @@ def extract_rdf_files(rdf_tarball, rdf_path):
     return
 
 
-def parse_and_fill(rdf_path, concurrency, only_books=[]):
+def parse_and_fill(rdf_path, concurrency, only_books=[], force=False):
     logger.info("\tLooping throught RDF files in {}".format(rdf_path))
 
     fpaths = []
@@ -75,16 +75,20 @@ def parse_and_fill(rdf_path, concurrency, only_books=[]):
 
             fpaths.append(os.path.join(root, fname))
 
-    Pool(concurrency).map(parse_and_process_file, fpaths)
+    ppf = lambda x: parse_and_process_file(x, force)
+    Pool(concurrency).map(ppf, fpaths)
 
 
-def parse_and_process_file(rdf_file):
-    logger.info("\tParsing file {}".format(rdf_file))
+def parse_and_process_file(rdf_file, force=False):
     if not path(rdf_file).exists():
         raise ValueError(rdf_file)
 
     gid = re.match(r'.*/pg([0-9]+).rdf', rdf_file).groups()[0]
+    if Book.get_or_none(id=gid) and not force:
+        logger.info("Skipping existing {}".format(rdf_file))
+        return
 
+    logger.info("\tParsing file {}".format(rdf_file))
     with open(rdf_file, 'r') as f:
         parser = RdfParser(f.read(), gid).parse()
 

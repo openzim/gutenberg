@@ -19,7 +19,7 @@ from gutenberg.zim import build_zimfile
 from gutenberg.checkdeps import check_dependencies
 
 
-help = ("""Usage: dump-gutenberg.py [-k] [-F] [-l LANGS] [-f FORMATS] """
+help = ("""Usage: dump-gutenberg.py [-y] [-F] [-l LANGS] [-f FORMATS] """
         """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] """
         """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
         """[-t ZIM_TITLE] [-n ZIM_DESC] """
@@ -28,7 +28,7 @@ help = ("""Usage: dump-gutenberg.py [-k] [-F] [-l LANGS] [-f FORMATS] """
         """[--zim] [--complete]
 
 -h --help                       Display this help message
--k --keep-db                    Do not wipe the DB during parse stage
+-y --wipe-db                    Do not wipe the DB during parse stage
 -F --force                      Redo step even if target already exist
 
 -l --languages=<list>           Comma-separated list of lang codes to filter"""
@@ -84,7 +84,7 @@ def main(arguments):
     RDF_FOLDER = arguments.get('--rdf-folder') or os.path.join('rdf-files')
     STATIC_FOLDER = arguments.get('--static-folder') or os.path.join('static')
     ZIM_FILE = arguments.get('--zim-file')
-    WIPE_DB = not arguments.get('--keep-db') or False
+    WIPE_DB = arguments.get('--wipe-db') or False
     RDF_URL = arguments.get('--rdf-url') \
         or 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2'
     DL_CACHE = arguments.get('--dl-folder') or os.path.join('dl-cache')
@@ -138,13 +138,16 @@ def main(arguments):
 
     if DO_PREPARE:
         logger.info("PREPARING rdf-files cache from {}".format(RDF_URL))
-        setup_rdf_folder(rdf_url=RDF_URL, rdf_path=RDF_FOLDER)
+        setup_rdf_folder(rdf_url=RDF_URL, rdf_path=RDF_FOLDER, force=FORCE)
+
+    if WIPE_DB:
+        logger.info("RESETING DATABASE" if WIPE_DB else "SETTING UP DATABASE")
+        setup_database(wipe=WIPE_DB)
 
     if DO_PARSE:
         logger.info("PARSING rdf-files in {}".format(RDF_FOLDER))
-        setup_database(wipe=WIPE_DB)
         parse_and_fill(rdf_path=RDF_FOLDER, only_books=BOOKS,
-                       concurrency=CONCURRENCY)
+                       concurrency=CONCURRENCY, force=FORCE)
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
