@@ -18,17 +18,18 @@ from path import Path as path
 from jinja2 import Environment, PackageLoader
 from multiprocessing.dummy import Pool
 
-import gutenberg
-from gutenberg import logger, TMP_FOLDER
-from gutenberg.utils import (FORMAT_MATRIX, main_formats_for,
-                             get_list_of_filtered_books, exec_cmd,
-                             get_langs_with_count, get_lang_groups,
-                             is_bad_cover, path_for_cmd, read_file, zip_epub)
-from gutenberg.database import Book, Format, BookFormat, Author
-from gutenberg.iso639 import language_name
-from gutenberg.l10n import l10n_strings
+import gutenbergtozim
+from gutenbergtozim import logger, TMP_FOLDER
+from gutenbergtozim.utils import (FORMAT_MATRIX, main_formats_for,
+                                  get_list_of_filtered_books, exec_cmd,
+                                  get_langs_with_count, get_lang_groups,
+                                  is_bad_cover, path_for_cmd, read_file,
+                                  zip_epub, critical_error)
+from gutenbergtozim.database import Book, Format, BookFormat, Author
+from gutenbergtozim.iso639 import language_name
+from gutenbergtozim.l10n import l10n_strings
 
-jinja_env = Environment(loader=PackageLoader('gutenberg', 'templates'))
+jinja_env = Environment(loader=PackageLoader('gutenbergtozim', 'templates'))
 
 UTF8 = 'utf-8'
 DEBUG_COUNT = []
@@ -93,7 +94,7 @@ jinja_env.filters['urlencode'] = urlencode
 
 
 def tmpl_path():
-    return os.path.join(path(gutenberg.__file__).parent, 'templates')
+    return os.path.join(path(gutenbergtozim.__file__).parent, 'templates')
 
 
 def get_list_of_all_languages():
@@ -145,6 +146,10 @@ def export_all_books(static_folder,
     books = get_list_of_filtered_books(languages=languages,
                                        formats=formats,
                                        only_books=only_books)
+
+    if not len(get_langs_with_count(books=books)):
+        critical_error("Unable to proceed. Combination of lamguages, "
+                       "books and formats has no result.")
 
     sz = len(list(books))
     logger.debug("\tFiltered book collection size: {}".format(sz))

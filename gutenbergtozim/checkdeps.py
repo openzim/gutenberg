@@ -6,7 +6,7 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import subprocess
 
-from gutenberg import logger
+from gutenbergtozim import logger
 
 
 def check_dependencies():

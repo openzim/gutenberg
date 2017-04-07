@@ -11,10 +11,10 @@ from multiprocessing.dummy import Pool
 from path import Path as path
 from bs4 import BeautifulSoup
 
-from gutenberg import logger, XML_PARSER
-from gutenberg.utils import exec_cmd, download_file
-from gutenberg.database import (Author, Format, BookFormat, License, Book)
-from gutenberg.utils import BAD_BOOKS_FORMATS, FORMAT_MATRIX, normalize
+from gutenbergtozim import logger
+from gutenbergtozim.utils import exec_cmd, download_file
+from gutenbergtozim.database import (Author, Format, BookFormat, License, Book)
+from gutenbergtozim.utils import BAD_BOOKS_FORMATS, FORMAT_MATRIX, normalize
 
 
 def setup_rdf_folder(rdf_url, rdf_path, force=False):
@@ -113,7 +113,7 @@ class RdfParser():
         self.last_name = None
 
     def parse(self):
-        soup = BeautifulSoup(self.rdf_data, XML_PARSER)
+        soup = BeautifulSoup(self.rdf_data, "lxml")
 
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.

@@ -10,13 +10,13 @@ import sys
 from docopt import docopt
 from path import Path as path
 
-from gutenberg import logger
-from gutenberg.database import setup_database
-from gutenberg.rdf import setup_rdf_folder, parse_and_fill
-from gutenberg.download import download_all_books
-from gutenberg.export import export_all_books, export_skeleton
-from gutenberg.zim import build_zimfile
-from gutenberg.checkdeps import check_dependencies
+from gutenbergtozim import logger
+from gutenbergtozim.database import setup_database
+from gutenbergtozim.rdf import setup_rdf_folder, parse_and_fill
+from gutenbergtozim.download import download_all_books
+from gutenbergtozim.export import export_all_books, export_skeleton
+from gutenbergtozim.zim import build_zimfile
+from gutenbergtozim.checkdeps import check_dependencies
 
 
 help = ("""Usage: dump-gutenberg.py [-y] [-F] [-l LANGS] [-f FORMATS] """

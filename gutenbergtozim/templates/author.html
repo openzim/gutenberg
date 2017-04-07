@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ author.name() }}{% endblock %}
+{% block content %}
+<table class="data-table display" cellpadding="0" cellspacing="0" border="0" id="books_table"></table>
+<script type="text/javascript">
+$( "#author_filter" ).val("{{ author.name() }}");
+$( "#author_filter" ).change();
+$.persistValue("author_filter", $( "#author_filter" ).val(), persist_options);
+showBooks();
+</script>
+{% endblock %}

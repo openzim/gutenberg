@@ -5,6 +5,7 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
+import sys
 import re
 import hashlib
 import subprocess
@@ -17,9 +18,9 @@ import six
 import chardet
 from path import Path as path
 
-from gutenberg import logger
-from gutenberg.iso639 import language_name
-from gutenberg.database import Book, BookFormat, Format
+from gutenbergtozim import logger
+from gutenbergtozim.iso639 import language_name
+from gutenbergtozim.database import Book, BookFormat, Format
 
 
 FORMAT_MATRIX = collections.OrderedDict([
@@ -35,6 +36,11 @@ BAD_BOOKS_FORMATS = {
 
 
 NB_MAIN_LANGS = 5
+
+
+def critical_error(message):
+    logger.critical("ERROR: {}".format(message))
+    sys.exit(1)
 
 
 def normalize(text=None):
@@ -94,7 +100,7 @@ def get_list_of_filtered_books(languages, formats, only_books=[]):
         qs = Book.select()
 
     if len(only_books):
-        print(only_books)
+        # print(only_books)
         qs = qs.where(Book.id << only_books)
 
     if len(languages):

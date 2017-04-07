@@ -9,9 +9,9 @@ import os
 
 from collections import defaultdict
 
-from gutenberg.database import Book, BookFormat
-from gutenberg.utils import FORMAT_MATRIX
-from gutenberg import logger
+from gutenbergtozim.database import Book, BookFormat
+from gutenbergtozim.utils import FORMAT_MATRIX
+from gutenbergtozim import logger
 
 
 class UrlBuilder:

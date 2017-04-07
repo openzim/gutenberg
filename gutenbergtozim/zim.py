@@ -8,10 +8,10 @@ import datetime
 
 from path import Path as path
 
-from gutenberg import logger
-from gutenberg.utils import exec_cmd
-from gutenberg.iso639 import ISO_MATRIX
-from gutenberg.export import export_skeleton
+from gutenbergtozim import logger
+from gutenbergtozim.utils import exec_cmd
+from gutenbergtozim.iso639 import ISO_MATRIX
+from gutenbergtozim.export import export_skeleton
 
 
 def build_zimfile(static_folder, zim_path=None,

@@ -13,11 +13,11 @@ from multiprocessing.dummy import Pool
 import requests
 from path import Path as path
 
-from gutenberg import logger, TMP_FOLDER
-from gutenberg.urls import get_urls
-from gutenberg.database import BookFormat, Format
-from gutenberg.export import get_list_of_filtered_books, fname_for
-from gutenberg.utils import download_file, FORMAT_MATRIX
+from gutenbergtozim import logger, TMP_FOLDER
+from gutenbergtozim.urls import get_urls
+from gutenbergtozim.database import BookFormat, Format
+from gutenbergtozim.export import get_list_of_filtered_books, fname_for
+from gutenbergtozim.utils import download_file, FORMAT_MATRIX
 
 
 def resource_exists(url):

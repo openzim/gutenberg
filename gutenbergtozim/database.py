@@ -9,7 +9,7 @@ from peewee import (Model, SqliteDatabase,
                     CharField, BooleanField,
                     IntegerField, ForeignKeyField)
 
-from gutenberg import logger
+from gutenbergtozim import logger
 
 db = SqliteDatabase('gutenberg.db')
 db.connect()
@@ -157,7 +157,7 @@ class Book(BaseModel):
         ]
 
     def formats(self):
-        from gutenberg.utils import main_formats_for
+        from gutenbergtozim.utils import main_formats_for
         return main_formats_for(self)
 
 

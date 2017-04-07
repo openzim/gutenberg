@@ -43,11 +43,11 @@ virtualenv gut-env (or any name you want)
 
 ## Getting started
 
-After setting up the whole environment you can just run the main script `dump-gutenberg.py`.   
+After setting up the whole environment you can just run the main script `gutenberg2zim`.   
 It will download, process and export the content.
 
 ```
-./dump-gutenberg.py 
+./gutenberg2zim
 ```
 
 #### Arguments
@@ -57,7 +57,7 @@ Only want books with the Id 100-200? Books only in French? English? Or only thos
 You can also include or exclude book formats.
 
 ```
-./dump-gutenberg.py -l en,fr -f pdf --books 100-200
+./gutenberg2zim -l en,fr -f pdf --books 100-200
 ```
 This will download English and French books that have the Id 100 to 200 in the html (default) and pdf format.
 
