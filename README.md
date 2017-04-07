@@ -1,5 +1,7 @@
 # Project Gutenberg Offline
 
+[![](https://img.shields.io/pypi/v/gutenberg2zim.svg)](https://pypi.python.org/pypi/gutenberg2zim)
+
 A scraper that downloads the whole repository of [Project Gutenberg]
 (http://www.gutenberg.org) and puts it into a locally browsable
 directory and then in a ZIM file (http://www.openzim.org), a clean and
