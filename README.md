@@ -17,7 +17,7 @@ It's recommended that you use `virtualenv`. `py2.7.x` and `py3.6+` are supported
 #### Linux 
 
 ```
-sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle
+sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle curl zip
 sudo pip install virtualenv
 ```
 
