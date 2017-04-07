@@ -16,12 +16,12 @@ with open('requirements.pip', 'r') as f:
 
 setup(
     name='gutenberg2zim',
-    version="1.0.2",
+    version="1.0.3",
     description=__doc__,
     long_description=readme,
     author="Kiwix",
     author_email="reg@kiwix.org",
-    url='http://github.com/kiwix/gutenberg',
+    url='http://github.com/openzim/gutenberg',
     keywords="gutenberg zim kiwix openzim offline",
     license="GPL-3.0",
     packages=find_packages('.'),
