@@ -84,9 +84,6 @@ def parse_and_process_file(rdf_file, force=False):
         raise ValueError(rdf_file)
 
     gid = re.match(r'.*/pg([0-9]+).rdf', rdf_file).groups()[0]
-    if Book.get_or_none(id=gid) and not force:
-        logger.info("Skipping existing {}".format(rdf_file))
-        return
 
     logger.info("\tParsing file {}".format(rdf_file))
     with open(rdf_file, 'r') as f:
