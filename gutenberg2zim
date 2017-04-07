@@ -142,7 +142,7 @@ def main(arguments):
 
     if WIPE_DB:
         logger.info("RESETING DATABASE" if WIPE_DB else "SETTING UP DATABASE")
-        setup_database(wipe=WIPE_DB)
+    setup_database(wipe=WIPE_DB)
 
     if DO_PARSE:
         logger.info("PARSING rdf-files in {}".format(RDF_FOLDER))
