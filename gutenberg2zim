@@ -19,7 +19,7 @@ from gutenbergtozim.zim import build_zimfile
 from gutenbergtozim.checkdeps import check_dependencies
 
 
-help = ("""Usage: dump-gutenberg.py [-y] [-F] [-l LANGS] [-f FORMATS] """
+help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
         """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] """
         """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
         """[-t ZIM_TITLE] [-n ZIM_DESC] """
