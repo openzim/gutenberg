@@ -78,7 +78,7 @@ def parse_and_fill(rdf_path, concurrency, only_books=[], force=False):
     # ppf = lambda x: parse_and_process_file(x, force)
     # Pool(concurrency).map(ppf, fpaths)
     for fpath in fpaths:
-        parse_and_process_file(fpaths, force)
+        parse_and_process_file(fpath, force)
 
 
 def parse_and_process_file(rdf_file, force=False):
