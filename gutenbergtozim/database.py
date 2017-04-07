@@ -5,21 +5,29 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
-from peewee import (Model, SqliteDatabase,
+from peewee import (Model,  # SqliteDatabase,
                     CharField, BooleanField,
                     IntegerField, ForeignKeyField)
+from playhouse.apsw_ext import APSWDatabase
 
 from gutenbergtozim import logger
 
-db = SqliteDatabase('gutenberg.db')
+# db = SqliteDatabase('gutenberg.db')
+timeout = 1000 * 60 * 5 * 16
+db = APSWDatabase('gutenberg.db', pragmas=(
+    ('journal_mode', 'WAL'),
+    ('cache_size', 10000),
+    ('mmap_size', 1024 * 1024 * 32)),
+    timeout=timeout)
 db.connect()
+db.execute_sql("PRAGMA journal_mode=WAL;")
 
 
 class BaseModel(Model):
     @classmethod
     def get_or_none(cls, *query, **kwargs):
         try:
-            return cls.get(*query)
+            return cls.get(*query, **kwargs)
         except cls.DoesNotExist:
             return None
 

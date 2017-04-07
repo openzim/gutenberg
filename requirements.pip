@@ -9,3 +9,4 @@ Babel==2.4.0
 lxml==3.7.3
 docopt==0.6.2
 chardet==2.3.0
+apsw==3.9.2.post1

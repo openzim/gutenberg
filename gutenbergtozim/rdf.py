@@ -75,10 +75,11 @@ def parse_and_fill(rdf_path, concurrency, only_books=[], force=False):
 
             fpaths.append(os.path.join(root, fname))
 
-    # ppf = lambda x: parse_and_process_file(x, force)
-    # Pool(concurrency).map(ppf, fpaths)
-    for fpath in fpaths:
-        parse_and_process_file(fpath, force)
+    fpaths = sorted(fpaths, key=lambda f:
+                    int(re.match(r'.*/pg([0-9]+).rdf', f).groups()[0]))
+
+    ppf = lambda x: parse_and_process_file(x, force)
+    Pool(concurrency).map(ppf, fpaths)
 
 
 def parse_and_process_file(rdf_file, force=False):
@@ -86,6 +87,10 @@ def parse_and_process_file(rdf_file, force=False):
         raise ValueError(rdf_file)
 
     gid = re.match(r'.*/pg([0-9]+).rdf', rdf_file).groups()[0]
+
+    if Book.get_or_none(id=int(gid)):
+        logger.info("\tSkipping already parsed file {}".format(rdf_file))
+        return
 
     logger.info("\tParsing file {}".format(rdf_file))
     with open(rdf_file, 'r') as f:
