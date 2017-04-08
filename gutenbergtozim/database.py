@@ -92,16 +92,18 @@ class Author(BaseModel):
         return "{name}.{id}".format(name=self.name(), id=self.gut_id)
 
     def name(self):
+        def sanitize(text):
+            return text.strip().replace('/', '-')[:230]
         if not self.first_names and not self.last_name:
-            return "Anonymous"
+            return sanitize("Anonymous")
 
         if not self.first_names:
-            return self.last_name
+            return sanitize(self.last_name)
 
         if not self.last_name:
-            return self.first_names
+            return sanitize(self.first_names)
 
-        return "{f} {l}".format(l=self.last_name, f=self.first_names)
+        return sanitize("{f} {l}".format(l=self.last_name, f=self.first_names))
 
     def to_dict(self):
         return {'label': self.name(),

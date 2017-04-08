@@ -22,7 +22,7 @@ from gutenbergtozim import logger
 from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.database import Book, BookFormat, Format
 
-
+UTF8 = 'utf-8'
 FORMAT_MATRIX = collections.OrderedDict([
     ('html', 'text/html'),
     ('epub', 'application/epub+zip'),
@@ -174,6 +174,15 @@ def read_file(fpath):
     # common encoding failed. try with chardet
     encoding = guess_file_encoding(fpath)
     return read_file_as(fpath, encoding), encoding
+
+
+def save_file(content, fpath, encoding=UTF8):
+    if six.PY2:
+        with open(fpath, 'w') as f:
+            f.write(content.encode(encoding))
+    else:
+        with open(fpath, 'w', encoding=encoding) as f:
+            f.write(content)
 
 
 def zip_epub(epub_fpath, root_folder, fpaths):

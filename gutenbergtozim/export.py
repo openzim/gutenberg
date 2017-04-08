@@ -24,14 +24,13 @@ from gutenbergtozim.utils import (FORMAT_MATRIX, main_formats_for,
                                   get_list_of_filtered_books, exec_cmd,
                                   get_langs_with_count, get_lang_groups,
                                   is_bad_cover, path_for_cmd, read_file,
-                                  zip_epub, critical_error)
+                                  zip_epub, critical_error, save_file, UTF8)
 from gutenbergtozim.database import Book, Format, BookFormat, Author
 from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.l10n import l10n_strings
 
 jinja_env = Environment(loader=PackageLoader('gutenbergtozim', 'templates'))
 
-UTF8 = 'utf-8'
 DEBUG_COUNT = []
 NB_POPULARITY_STARS = 5
 
@@ -78,12 +77,7 @@ def urlencode(url):
 
 
 def save_bs_output(soup, fpath, encoding=UTF8):
-    if six.PY2:
-        with open(fpath, 'w') as f:
-            f.write(soup.encode(encoding))
-    else:
-        with open(fpath, 'w', encoding=encoding) as f:
-            f.write(str(soup))
+    save_file(soup if six.PY2 else str(soup), fpath, encoding)
 
 
 jinja_env.filters['book_name_for_fs'] = book_name_for_fs
@@ -466,8 +460,8 @@ def save_author_file(author, static_folder, books, force=False):
         logger.debug("\t\tSkipping author file {}".format(fpath))
         return
     logger.debug("\t\tSaving author file {}".format(fpath))
-    with open(fpath, 'w') as f:
-        f.write(author_html_content_for(author, static_folder, books))
+    save_file(
+        author_html_content_for(author, static_folder, books), fpath, UTF8)
 
 
 def export_book_to(book,
