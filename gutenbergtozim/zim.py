@@ -17,7 +17,8 @@ from gutenbergtozim.export import export_skeleton
 def build_zimfile(static_folder, zim_path=None,
                   languages=[], formats=[],
                   title=None, description=None,
-                  only_books=[], force=False):
+                  only_books=[],
+                  create_index=True, force=False):
 
     # revert HTML/JS/CSS to zim-compatible versions
     export_skeleton(static_folder=static_folder, dev_mode=False,
@@ -81,6 +82,8 @@ def build_zimfile(static_folder, zim_path=None,
                         '--description={description}',
                         '--creator={creator}', '--publisher={publisher}',
                         '{static}', '{zim}']]
+    if create_index:
+            cmd.insert(1, '--withFullTextIndex')
     if exec_cmd(cmd) == 0:
         logger.info("Successfuly created ZIM file at {}".format(zim_path))
     else:

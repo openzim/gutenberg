@@ -23,7 +23,7 @@ help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
         """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] """
         """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
         """[-t ZIM_TITLE] [-n ZIM_DESC] """
-        """[-p CONCURRENCY] """
+        """[-p CONCURRENCY] [--no-index] """
         """[--prepare] [--parse] [--download] [--export] [--dev] """
         """[--zim] [--complete]
 
@@ -52,6 +52,7 @@ help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
 
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file
+--no-index                      Do NOT create full-text index within ZIM file
 
 --check                         Check dependencies
 --prepare                       Download & extract rdf-files.tar.bz2
@@ -93,6 +94,7 @@ def main(arguments):
     ZIM_DESC = arguments.get('--zim-desc')
     CONCURRENCY = arguments.get('--concurrency') or 16
     FORCE = arguments.get('--force', False)
+    NO_INDEX = arguments.get('--no-index', False)
 
     # create tmp dir
     path('tmp').mkdir_p()
@@ -186,6 +188,7 @@ def main(arguments):
                       languages=LANGUAGES, formats=FORMATS,
                       only_books=BOOKS,
                       title=ZIM_TITLE, description=ZIM_DESC,
+                      create_index=not NO_INDEX,
                       force=FORCE)
 
 if __name__ == '__main__':
