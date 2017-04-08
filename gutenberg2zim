@@ -93,8 +93,8 @@ def main(arguments):
     BOOKS = arguments.get('--books') or ''
     ZIM_TITLE = arguments.get('--zim-title')
     ZIM_DESC = arguments.get('--zim-desc')
-    CONCURRENCY = arguments.get('--concurrency') or 16
-    DL_CONCURRENCY = arguments.get('--dlc') or CONCURRENCY
+    CONCURRENCY = int(arguments.get('--concurrency', 16))
+    DL_CONCURRENCY = int(arguments.get('--dlc', CONCURRENCY))
     FORCE = arguments.get('--force', False)
     NO_INDEX = arguments.get('--no-index', False)
 
