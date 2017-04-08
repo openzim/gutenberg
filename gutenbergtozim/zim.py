@@ -9,7 +9,7 @@ import datetime
 from path import Path as path
 
 from gutenbergtozim import logger
-from gutenbergtozim.utils import exec_cmd
+from gutenbergtozim.utils import exec_cmd, get_project_id
 from gutenbergtozim.iso639 import ISO_MATRIX
 from gutenbergtozim.export import export_skeleton
 
@@ -45,14 +45,10 @@ def build_zimfile(static_folder, zim_path=None,
     if description is None:
         description = "The first producer of free ebooks"
 
+    project_id = get_project_id(languages, formats, only_books)
+
     if zim_path is None:
-        if len(languages) > 1:
-            zim_path = "gutenberg_all_{date}.zim".format(
-                date=datetime.datetime.now().strftime('%m_%Y'))
-        else:
-            zim_path = "gutenberg_{lang}_all_{date}.zim".format(
-                lang=languages[0],
-                date=datetime.datetime.now().strftime('%Y-%m'))
+        zim_path = "{}.zim".format(project_id)
 
     if path(zim_path).exists() and not force:
         logger.info("ZIM file `{}` already exist.".format(zim_path))
@@ -61,27 +57,17 @@ def build_zimfile(static_folder, zim_path=None,
     languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
     languages.sort()
 
-    context = {
-        'languages': ','.join(languages),
-        'title': title,
-        'description': description,
-        'creator': 'gutenberg.org',
-        'publisher': 'Kiwix',
+    cmd = ['zimwriterfs',
+           '--welcome', "Home.html",
+           '--favicon', "favicon.png",
+           '--language', ','.join(languages),
+           '--name', project_id,
+           '--title', title,
+           '--description', description,
+           '--creator', "gutenberg.org",
+           '--publisher', "Kiwix",
+           static_folder, zim_path]
 
-        'home': 'Home.html',
-        'favicon': 'favicon.png',
-
-        'static': static_folder,
-        'zim': zim_path
-    }
-
-    cmd = [part.format(**context)
-           for part in ['zimwriterfs', '--welcome={home}',
-                        '--favicon={favicon}',
-                        '--language={languages}', '--title={title}',
-                        '--description={description}',
-                        '--creator={creator}', '--publisher={publisher}',
-                        '{static}', '{zim}']]
     if create_index:
             cmd.insert(1, '--withFullTextIndex')
     if exec_cmd(cmd) == 0:

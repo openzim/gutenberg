@@ -5,7 +5,7 @@ var inBooksLooadingLoop = false;
 var booksTable = null;
 var persist_options = {
 	context: 'gutenberg', // a context or namespace for each field
-	cookie: 'gutenberg', // cookies basename
+	cookie: '{{ project_id }}', // cookies basename
 	expires: 1, // cookie expiry (eg 365)
 	replace: true,
 	debug: true,

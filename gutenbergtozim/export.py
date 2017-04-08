@@ -24,7 +24,8 @@ from gutenbergtozim.utils import (FORMAT_MATRIX, main_formats_for,
                                   get_list_of_filtered_books, exec_cmd,
                                   get_langs_with_count, get_lang_groups,
                                   is_bad_cover, read_file,
-                                  zip_epub, critical_error, save_file, UTF8)
+                                  zip_epub, critical_error, save_file, UTF8,
+                                  get_project_id)
 from gutenbergtozim.database import Book, Format, BookFormat, Author
 from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.l10n import l10n_strings
@@ -43,12 +44,13 @@ def get_ui_languages_for(books):
     return ui_languages
 
 
-def get_default_context(books):
+def get_default_context(project_id, books):
 
     return {
         'l10n_strings': json.dumps(l10n_strings),
         'ui_languages': get_ui_languages_for(books),
         'languages': get_langs_with_count(books=books),
+        'project_id':  project_id,
     }
 
 
@@ -101,6 +103,9 @@ def export_skeleton(static_folder, dev_mode=False,
     # ensure dir exist
     path(static_folder).mkdir_p()
 
+    project_id = get_project_id(languages=languages,
+                                formats=formats, only_books=only_books)
+
     books = get_list_of_filtered_books(languages=languages,
                                        formats=formats,
                                        only_books=only_books)
@@ -118,7 +123,7 @@ def export_skeleton(static_folder, dev_mode=False,
             path(src).copyfile(dst)
 
     # export homepage
-    context = get_default_context(books=books)
+    context = get_default_context(project_id, books=books)
     context.update({'show_books': True, 'dev_mode': dev_mode})
     for tpl_path in ('Home.html', 'js/tools.js', 'js/l10n.js'):
         template = jinja_env.get_template(tpl_path)
@@ -133,6 +138,9 @@ def export_all_books(static_folder,
                      formats=[],
                      only_books=[],
                      force=False):
+
+    project_id = get_project_id(languages=languages, formats=formats,
+                                only_books=only_books)
 
     # ensure dir exist
     path(static_folder).mkdir_p()
@@ -168,7 +176,8 @@ def export_all_books(static_folder,
     export_to_json_helpers(books=books,
                            static_folder=static_folder,
                            languages=languages,
-                           formats=formats)
+                           formats=formats,
+                           project_id=project_id)
 
     # export HTML index and other static files
     export_skeleton(static_folder=static_folder, dev_mode=False,
@@ -202,6 +211,7 @@ def export_all_books(static_folder,
                                    languages=languages,
                                    formats=formats,
                                    books=books,
+                                   project_id=project_id,
                                    force=force)
     Pool(concurrency).map(dlb, books)
 
@@ -430,7 +440,7 @@ def update_html_for_static(book, html_content, epub=False):
     return soup
 
 
-def cover_html_content_for(book, static_folder, books):
+def cover_html_content_for(book, static_folder, books, project_id):
     cover_img = "{id}_cover.jpg".format(id=book.id)
     cover_img = cover_img \
         if path(os.path.join(static_folder, cover_img)).exists() else None
@@ -440,7 +450,7 @@ def cover_html_content_for(book, static_folder, books):
     translate_license = ' data-l10n-id="license-{id}"' \
         .format(id=book.license.slug.lower()) \
         if book.license.slug in ['PD', 'Copyright'] else ''
-    context = get_default_context(books=books)
+    context = get_default_context(project_id=project_id, books=books)
     context.update({
         'book': book,
         'cover_img': cover_img,
@@ -452,26 +462,28 @@ def cover_html_content_for(book, static_folder, books):
     return template.render(**context)
 
 
-def author_html_content_for(author, static_folder, books):
-    context = get_default_context(books=books)
+def author_html_content_for(author, static_folder, books, project_id):
+    context = get_default_context(project_id=project_id, books=books)
     context.update({'author': author})
     template = jinja_env.get_template('author.html')
     return template.render(**context)
 
 
-def save_author_file(author, static_folder, books, force=False):
+def save_author_file(author, static_folder, books, project_id, force=False):
     fpath = os.path.join(static_folder, "{}.html".format(author.fname()))
     if path(fpath).exists() and not force:
         logger.debug("\t\tSkipping author file {}".format(fpath))
         return
     logger.debug("\t\tSaving author file {}".format(fpath))
     save_file(
-        author_html_content_for(author, static_folder, books), fpath, UTF8)
+        author_html_content_for(author, static_folder, books, project_id),
+        fpath, UTF8)
 
 
 def export_book_to(book,
                    static_folder, download_cache,
-                   cached_files, languages, formats, books, force=False):
+                   cached_files, languages, formats, books,
+                   project_id, force=False):
     logger.info("\tExporting Book #{id}.".format(id=book.id))
 
     # actual book content, as HTML
@@ -695,7 +707,7 @@ def export_book_to(book,
         logger.info("\t\tExporting to {}".format(cover_fpath))
         html = cover_html_content_for(book=book,
                                       static_folder=static_folder,
-                                      books=books)
+                                      books=books, project_id=project_id)
         with open(cover_fpath, 'w') as f:
             if six.PY2:
                 f.write(html.encode(UTF8))
@@ -721,7 +733,8 @@ def authors_from_ids(idlist):
     return authors
 
 
-def export_to_json_helpers(books, static_folder, languages, formats):
+def export_to_json_helpers(books, static_folder, languages,
+                           formats, project_id):
 
     def dumpjs(col, fn, var='json_data'):
         with open(os.path.join(static_folder, fn), 'w') as f:
@@ -813,7 +826,7 @@ def export_to_json_helpers(books, static_folder, languages, formats):
                 'auth_{}_lang_{}_by_title.js'.format(author.gut_id, lang))
 
         # author HTML redirect file
-        save_author_file(author, static_folder, books, force=True)
+        save_author_file(author, static_folder, books, project_id, force=True)
 
     # authors list sorted by name
     logger.info("\t\tDumping authors.js")

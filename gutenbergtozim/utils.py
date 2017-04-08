@@ -6,13 +6,12 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
 import sys
-import re
 import hashlib
 import subprocess
-from contextlib import contextmanager
 import zipfile
 import collections
 import unicodedata
+import datetime
 
 import six
 import chardet
@@ -47,14 +46,14 @@ def normalize(text=None):
     return None if text is None else unicodedata.normalize('NFC', text)
 
 
-@contextmanager
-def cd(newdir):
-    prevdir = os.getcwd()
-    os.chdir(newdir)
-    try:
-        yield
-    finally:
-        os.chdir(prevdir)
+def get_project_id(languages=[], formats=[], only_books=[]):
+
+    parts = ['gutenberg']
+    parts.append("-".join(languages))
+    parts.append("-".join(formats))
+    parts.append("selection" if only_books else "all")
+    parts.append(datetime.datetime.now().strftime('%Y-%m'))
+    return "_".join(parts)
 
 
 def exec_cmd(cmd):
