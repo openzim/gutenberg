@@ -132,7 +132,7 @@ def get_lang_groups(books):
 
 
 def md5sum(fpath):
-    return hashlib.md5(read_file(fpath).encode('utf-8')).hexdigest()
+    return hashlib.md5(read_file(fpath)[0].encode('utf-8')).hexdigest()
 
 
 def is_bad_cover(fpath):

@@ -145,8 +145,8 @@ def export_all_books(static_folder,
         critical_error("Unable to proceed. Combination of lamguages, "
                        "books and formats has no result.")
 
-    sz = len(list(books))
-    logger.debug("\tFiltered book collection size: {}".format(sz))
+    # sz = len(list(books))
+    # logger.debug("\tFiltered book collection size: {}".format(sz))
 
     def nb_by_fmt(fmt):
         return sum([1 for book in books
@@ -189,6 +189,7 @@ def export_all_books(static_folder,
 
     # export to HTML
     cached_files = os.listdir(download_cache)
+
     for book in books:
         book.popularity = sum(
             [int(book.downloads >= stars_limits[i])
@@ -230,7 +231,7 @@ def html_content_for(book, static_folder, download_cache):
     if not path(html_fpath).exists():
         logger.warn("Missing HTML content for #{} at {}"
                     .format(book.id, html_fpath))
-        return None
+        return None, None
 
     try:
         return read_file(html_fpath)
@@ -611,9 +612,12 @@ def export_book_to(book,
 
         # optimization based on mime/extension
         if path(fname).ext in ('.png', '.jpg', '.jpeg', '.gif'):
+            logger.info("\t\tCopying and optimizing image companion {}"
+                        .format(fname))
             copy_from_cache(src, dst)
             optimize_image(path_for_cmd(dst))
         elif path(fname).ext == '.epub':
+            logger.info("\t\tCreating optimized EPUB file {}".format(fname))
             tmp_epub = tempfile.NamedTemporaryFile(suffix='.epub',
                                                    dir=TMP_FOLDER)
             tmp_epub.close()
@@ -625,6 +629,7 @@ def export_book_to(book,
                 return
             # copy otherwise (PDF mostly)
             logger.debug("\t\tshitty ext: {}".format(dst))
+            logger.info("\t\tCopying companion file to {}".format(fname))
             copy_from_cache(src, dst)
 
     # associated files (images, etc)
@@ -644,7 +649,6 @@ def export_book_to(book,
             new_html = update_html_for_static(book=book, html_content=html)
             save_bs_output(new_html, dst, UTF8)
         else:
-            logger.info("\t\tCopying companion file to {}".format(fname))
             try:
                 handle_companion_file(fname, force=force)
             except Exception as e:
@@ -656,8 +660,6 @@ def export_book_to(book,
     for format in formats:
         if format not in book.formats() or format == 'html':
             continue
-        logger.info("\t\tCopying format file to {}"
-                    .format(archive_name_for(book, format)))
         try:
             handle_companion_file(fname_for(book, format),
                                   archive_name_for(book, format),
@@ -670,15 +672,18 @@ def export_book_to(book,
     # book presentation article
     cover_fpath = os.path.join(static_folder,
                                article_name_for(book=book, cover=True))
-    logger.info("\t\tExporting to {}".format(cover_fpath))
-    html = cover_html_content_for(book=book,
-                                  static_folder=static_folder,
-                                  books=books)
-    with open(cover_fpath, 'w') as f:
-        if six.PY2:
-            f.write(html.encode(UTF8))
-        else:
-            f.write(html)
+    if not path(cover_fpath).exists() or force:
+        logger.info("\t\tExporting to {}".format(cover_fpath))
+        html = cover_html_content_for(book=book,
+                                      static_folder=static_folder,
+                                      books=books)
+        with open(cover_fpath, 'w') as f:
+            if six.PY2:
+                f.write(html.encode(UTF8))
+            else:
+                f.write(html)
+    else:
+        logger.info("\t\tSkipping cover {}".format(cover_fpath))
 
 
 def authors_from_ids(idlist):
