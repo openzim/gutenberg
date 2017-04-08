@@ -23,7 +23,7 @@ help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
         """[-r RDF_FOLDER] [-m URL_MIRROR] [-d CACHE_PATH] [-e STATIC_PATH] """
         """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
         """[-t ZIM_TITLE] [-n ZIM_DESC] """
-        """[-p CONCURRENCY] [--no-index] """
+        """[-p CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
         """[--prepare] [--parse] [--download] [--export] [--dev] """
         """[--zim] [--complete]
 
@@ -49,6 +49,7 @@ help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
         """separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for download """
         """and parsing tasks
+--dlc=<nb>                      Number of concurrent *download* process for download (overwrites --concurrency). if server blocks high rate requests
 
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file
@@ -93,6 +94,7 @@ def main(arguments):
     ZIM_TITLE = arguments.get('--zim-title')
     ZIM_DESC = arguments.get('--zim-desc')
     CONCURRENCY = arguments.get('--concurrency') or 16
+    DL_CONCURRENCY = arguments.get('--dlc') or CONCURRENCY
     FORCE = arguments.get('--force', False)
     NO_INDEX = arguments.get('--no-index', False)
 
@@ -155,7 +157,7 @@ def main(arguments):
         logger.info("DOWNLOADING ebooks from mirror using filters")
         download_all_books(url_mirror=URL_MIRROR,
                            download_cache=DL_CACHE,
-                           concurrency=CONCURRENCY,
+                           concurrency=DL_CONCURRENCY,
                            languages=LANGUAGES,
                            formats=FORMATS,
                            only_books=BOOKS,

@@ -21,7 +21,7 @@ from gutenbergtozim.utils import download_file, FORMAT_MATRIX
 
 
 def resource_exists(url):
-    r = requests.get(url, stream=True)
+    r = requests.get(url, stream=True, timeout=20)  # in seconds
     return r.status_code == requests.codes.ok
 
 
@@ -211,8 +211,7 @@ def download_book(book, download_cache, languages, formats, force):
 
 def download_all_books(url_mirror, download_cache, concurrency,
                        languages=[], formats=[],
-                       only_books=[], force=False,
-                       ):
+                       only_books=[], force=False):
     available_books = get_list_of_filtered_books(
         languages=languages,
         formats=formats,
