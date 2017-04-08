@@ -145,10 +145,6 @@ def is_bad_cover(fpath):
     return md5sum(fpath) in bad_sums
 
 
-def path_for_cmd(p):
-    return re.sub(r'([\'\"\ ])', lambda m: r'\{}'.format(m.group()), p)
-
-
 def read_file_as(fpath, encoding='utf-8'):
     # logger.debug("opening `{}` as `{}`".format(fpath, encoding))
     if six.PY2:

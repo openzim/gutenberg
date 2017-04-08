@@ -23,7 +23,7 @@ from gutenbergtozim import logger, TMP_FOLDER
 from gutenbergtozim.utils import (FORMAT_MATRIX, main_formats_for,
                                   get_list_of_filtered_books, exec_cmd,
                                   get_langs_with_count, get_lang_groups,
-                                  is_bad_cover, path_for_cmd, read_file,
+                                  is_bad_cover, read_file,
                                   zip_epub, critical_error, save_file, UTF8)
 from gutenbergtozim.database import Book, Format, BookFormat, Author
 from gutenbergtozim.iso639 import language_name
@@ -517,24 +517,30 @@ def export_book_to(book,
             logger.error("/!\ Unable to copy missing file {}".format(src))
             return
 
-    def optimize_image(fpath):
-        if path(fpath).ext == '.png':
-            return optimize_png(fpath)
-        if path(fpath).ext in ('.jpg', '.jpeg'):
-            return optimize_jpeg(fpath)
-        if path(fpath).ext == '.gif':
-            return optimize_gif(fpath)
-        return fpath
+    def optimize_image(src, dst, force=False):
+        if path(dst).exists() and not force:
+            logger.info("\tSkipping image optimization for {}".format(dst))
+            return dst
+        logger.info("\tOptimizing image {}".format(dst))
+        if path(src).ext == '.png':
+            return optimize_png(src, dst)
+        if path(src).ext in ('.jpg', '.jpeg'):
+            return optimize_jpeg(src, dst)
+        if path(src).ext == '.gif':
+            return optimize_gif(src, dst)
+        return dst
 
-    def optimize_gif(fpath):
-        exec_cmd(['gifsicle', '-O3', fpath, '-o', fpath])
+    def optimize_gif(src, dst):
+        exec_cmd(['gifsicle', '-O3', src, '-o', dst])
 
-    def optimize_png(fpath):
-        exec_cmd(['pngquant', '--nofs', '--force', '--ext=".png"', fpath])
-        exec_cmd(['advdef', '-z', '-4', '-i', '5', fpath])
+    def optimize_png(src, dst):
+        exec_cmd(['pngquant', '--nofs', '--force',
+                  '--output', dst, src])
+        exec_cmd(['advdef', '-z', '-4', '-i', '5', dst])
 
-    def optimize_jpeg(fpath):
-        exec_cmd(['jpegoptim', '--strip-all', '-m50', fpath])
+    def optimize_jpeg(src, dst):
+        copy_from_cache(src, dst)
+        exec_cmd(['jpegoptim', '--strip-all', '-m50', dst])
 
     def optimize_epub(src, dst):
         logger.info("\t\tCreating ePUB off {} at {}".format(src, dst))
@@ -556,7 +562,7 @@ def export_book_to(book,
                     zipped_files.remove(fname)
                     remove_cover = True
                 else:
-                    optimize_image(path_for_cmd(fnp))
+                    optimize_image(fnp, fnp)
 
             if path(fname).ext in ('.htm', '.html'):
                 html_content, html_encoding = read_file(fnp)
@@ -620,8 +626,8 @@ def export_book_to(book,
         if ext in ('.png', '.jpg', '.jpeg', '.gif'):
             logger.info("\t\tCopying and optimizing image companion {}"
                         .format(fname))
-            copy_from_cache(src, dst)
-            optimize_image(path_for_cmd(dst))
+            # copy_from_cache(src, dst)
+            optimize_image(src, dst)
         elif ext == '.epub':
             logger.info("\t\tCreating optimized EPUB file {}".format(fname))
             tmp_epub = tempfile.NamedTemporaryFile(suffix='.epub',
