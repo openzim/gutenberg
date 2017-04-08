@@ -253,8 +253,12 @@ def update_html_for_static(book, html_content, epub=False):
             del(meta.attrs['charset'])
         elif 'content' in meta.attrs \
                 and 'charset=' in meta.attrs.get('content'):
-            encoding_specified = True
-            ctype, ccharset = meta.attrs.get('content').split(';', 1)
+            try:
+                ctype, ccharset = meta.attrs.get('content').split(';', 1)
+            except:
+                continue
+            else:
+                encoding_specified = True
             # logger.debug("found <meta> tag with content;charset `{}`"
             #              .format(meta.attrs.get('content')))
             meta.attrs['content'] = ctype
@@ -523,7 +527,7 @@ def export_book_to(book,
         return fpath
 
     def optimize_gif(fpath):
-        exec_cmd(['gifsicle', '-O3', path, '-o', path])
+        exec_cmd(['gifsicle', '-O3', fpath, '-o', fpath])
 
     def optimize_png(fpath):
         exec_cmd(['pngquant', '--nofs', '--force', '--ext=".png"', fpath])
@@ -601,7 +605,9 @@ def export_book_to(book,
 
         path(tmpd).rmtree_p()
 
-    def handle_companion_file(fname, dstfname=None, book=None, force=False):
+    def handle_companion_file(fname, dstfname=None, book=None,
+                              force=False, as_ext=None):
+        ext = path(fname).ext if as_ext is None else as_ext
         src = os.path.join(path(download_cache).abspath(), fname)
         if dstfname is None:
             dstfname = fname
@@ -611,18 +617,25 @@ def export_book_to(book,
             return
 
         # optimization based on mime/extension
-        if path(fname).ext in ('.png', '.jpg', '.jpeg', '.gif'):
+        if ext in ('.png', '.jpg', '.jpeg', '.gif'):
             logger.info("\t\tCopying and optimizing image companion {}"
                         .format(fname))
             copy_from_cache(src, dst)
             optimize_image(path_for_cmd(dst))
-        elif path(fname).ext == '.epub':
+        elif ext == '.epub':
             logger.info("\t\tCreating optimized EPUB file {}".format(fname))
             tmp_epub = tempfile.NamedTemporaryFile(suffix='.epub',
                                                    dir=TMP_FOLDER)
             tmp_epub.close()
-            optimize_epub(src, tmp_epub.name)
-            path(tmp_epub.name).move(dst)
+            try:
+                optimize_epub(src, tmp_epub.name)
+            except zipfile.BadZipFile:
+                logger.warn("\t\tBad zip file. "
+                            "Copying as it might be working{}".format(fname))
+                handle_companion_file(fname, dstfname, book, force,
+                                      as_ext='zip')
+            else:
+                path(tmp_epub.name).move(dst)
         else:
             # excludes files created by Windows Explorer
             if src.endswith('_Thumbs.db'):
