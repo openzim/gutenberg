@@ -36,7 +36,6 @@ help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
 -f --formats=<list>             Comma-separated list of formats to filter """
         """export to (epub, html, pdf, all)
 
--m --mirror=<url>               Use URL as base for all downloads.
 -r --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use """
         """extracted folder instead
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
@@ -49,7 +48,9 @@ help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
         """separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for download """
         """and parsing tasks
---dlc=<nb>                      Number of concurrent *download* process for download (overwrites --concurrency). if server blocks high rate requests
+--dlc=<nb>                      Number of concurrent *download* process for """
+        """download (overwrites --concurrency). """
+        """if server blocks high rate requests
 
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file
@@ -81,8 +82,6 @@ def main(arguments):
     DO_CHECKDEPS = arguments.get('--check', False)
     COMPLETE_DUMP = arguments.get('--complete', False)
 
-    URL_MIRROR = arguments.get('--mirror') \
-        or 'http://zimfarm.kiwix.org/gutenberg'
     RDF_FOLDER = arguments.get('--rdf-folder') or os.path.join('rdf-files')
     STATIC_FOLDER = arguments.get('--static-folder') or os.path.join('static')
     ZIM_FILE = arguments.get('--zim-file')
@@ -155,8 +154,7 @@ def main(arguments):
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
-        download_all_books(url_mirror=URL_MIRROR,
-                           download_cache=DL_CACHE,
+        download_all_books(download_cache=DL_CACHE,
                            concurrency=DL_CONCURRENCY,
                            languages=LANGUAGES,
                            formats=FORMATS,

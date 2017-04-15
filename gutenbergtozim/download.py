@@ -209,7 +209,7 @@ def download_book(book, download_cache, languages, formats, force):
             continue
 
 
-def download_all_books(url_mirror, download_cache, concurrency,
+def download_all_books(download_cache, concurrency,
                        languages=[], formats=[],
                        only_books=[], force=False):
     available_books = get_list_of_filtered_books(
