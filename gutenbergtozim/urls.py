@@ -6,12 +6,23 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
 import os
+import itertools
 
 from collections import defaultdict
 
 from gutenbergtozim.database import Book, BookFormat
 from gutenbergtozim.utils import FORMAT_MATRIX
 from gutenbergtozim import logger
+
+MIRRORS = [
+    'http://www.mirrorservice.org/sites/ftp.ibiblio.org/pub'
+    '/docs/books/gutenberg',
+    'http://eremita.di.uminho.pt/gutenberg',
+    'http://mirror.its.dal.ca/gutenberg',
+    'http://gutenberg.mirrors.tds.net/pub/gutenberg.org',
+    'http://mirrors.xmission.com/gutenberg',
+    'http://gutenberg.readingroo.ms',
+    ]
 
 
 class UrlBuilder:
@@ -24,9 +35,12 @@ class UrlBuilder:
         >>> builder.with_base(UrlBuilder.BASE_{ONE|TWO|THREE})
         >>> url = builder.build()
     """
-    BASE_ONE = 'http://gutenberg.readingroo.ms/'
-    BASE_TWO = 'http://gutenberg.readingroo.ms/cache/generated/'
-    BASE_THREE = 'http://gutenberg.readingroo.ms/etext'
+
+    mirrors = itertools.cycle(MIRRORS)
+
+    BASE_ONE = '/'
+    BASE_TWO = '/cache/generated/'
+    BASE_THREE = '/etext'
 
     def __init__(self):
         self.base = self.BASE_ONE
@@ -58,7 +72,7 @@ class UrlBuilder:
                 with an ID of {ID <= 10} is not implemented')
             return None
 
-        return url
+        return "{mirror}{path}".format(mirror=next(self.mirrors), path=url)
 
     def with_base(self, base):
         self.base = base
