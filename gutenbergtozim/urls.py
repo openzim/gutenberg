@@ -14,15 +14,8 @@ from gutenbergtozim.database import Book, BookFormat
 from gutenbergtozim.utils import FORMAT_MATRIX
 from gutenbergtozim import logger
 
-MIRRORS = [
-    'http://www.mirrorservice.org/sites/ftp.ibiblio.org/pub'
-    '/docs/books/gutenberg',
-    'http://eremita.di.uminho.pt/gutenberg',
-    'http://mirror.its.dal.ca/gutenberg',
-    'http://gutenberg.mirrors.tds.net/pub/gutenberg.org',
-    'http://mirrors.xmission.com/gutenberg',
-    'http://gutenberg.readingroo.ms',
-    ]
+MIRRORS = ['http://mirror.its.dal.ca/gutenberg',
+           'http://gutenberg.readingroo.ms', ]
 
 
 class UrlBuilder:
@@ -185,7 +178,7 @@ def build_pdf(files):
     url_normal = os.path.join(u.build(), b_id + '.pdf')
     url_pg = os.path.join(u.build(), 'pg' + b_id + '.pdf')
 
-    urls.extend([url_dash, url_normal, url_pg, url_dash1])
+    urls.extend([url_dash1, url_dash, url_normal, url_pg])
     return list(set(urls))
 
 
@@ -227,7 +220,7 @@ def build_html(files):
     for i in etext_names:
         etext_urls.append(os.path.join(u.build() + i, file_name))
 
-    urls.extend([url_zip, url_htm, url_html, html_utf8])
+    urls.extend([url_zip, html_utf8, url_htm, url_html])
     urls.extend(etext_urls)
     return list(set(urls))
 
