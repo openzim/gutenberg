@@ -24,9 +24,9 @@ class UrlBuilder:
         >>> builder.with_base(UrlBuilder.BASE_{ONE|TWO|THREE})
         >>> url = builder.build()
     """
-    BASE_ONE = 'http://gutenberg.readingroo.ms/'
-    BASE_TWO = 'http://gutenberg.readingroo.ms/cache/generated/'
-    BASE_THREE = 'http://gutenberg.readingroo.ms/etext'
+    BASE_ONE = 'http://aleph.gutenberg.org/'
+    BASE_TWO = 'http://aleph.gutenberg.org/cache/epub/'
+    BASE_THREE = 'http://aleph.gutenberg.org/etext'
 
     def __init__(self):
         self.base = self.BASE_ONE
