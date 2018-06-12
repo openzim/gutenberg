@@ -7,7 +7,7 @@ from __future__ import (unicode_literals, absolute_import,
 
 from peewee import (Model,  # SqliteDatabase,
                     CharField, BooleanField,
-                    IntegerField, ForeignKeyField)
+                    IntegerField, ForeignKeyField, TextField)
 from playhouse.apsw_ext import APSWDatabase
 
 from gutenbergtozim import logger
@@ -183,6 +183,15 @@ class BookFormat(BaseModel):
     def __unicode__(self):
         return "[{}] {}".format(self.format, self.book.title)
 
+class Url(BaseModel):
+
+    class Meta:
+        database = db
+
+    url = TextField()
+
+    def __unicode__(self):
+        return self.url
 
 def load_fixtures(model):
     logger.info("Loading fixtures for {}".format(model._meta.name))
@@ -195,7 +204,7 @@ def load_fixtures(model):
 def setup_database(wipe=False):
     logger.info("Setting up the database")
 
-    for model in (License, Format, Author, Book, BookFormat):
+    for model in (License, Format, Author, Book, BookFormat, Url):
         if wipe:
             model.drop_table(fail_silently=True)
         if not model.table_exists():

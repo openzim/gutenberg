@@ -15,6 +15,7 @@ from gutenbergtozim.database import setup_database
 from gutenbergtozim.rdf import setup_rdf_folder, parse_and_fill
 from gutenbergtozim.download import download_all_books
 from gutenbergtozim.export import export_all_books, export_skeleton
+from gutenbergtozim.urls import setup_urls
 from gutenbergtozim.zim import build_zimfile
 from gutenbergtozim.checkdeps import check_dependencies
 
@@ -151,6 +152,8 @@ def main(arguments):
         logger.info("PARSING rdf-files in {}".format(RDF_FOLDER))
         parse_and_fill(rdf_path=RDF_FOLDER, only_books=BOOKS,
                        concurrency=CONCURRENCY, force=FORCE)
+        logger.info("Add possible url to db")
+        setup_urls()
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
