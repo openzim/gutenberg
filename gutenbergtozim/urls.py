@@ -9,10 +9,11 @@ import os
 
 from collections import defaultdict
 
-from gutenbergtozim.database import Book, BookFormat
-from gutenbergtozim.utils import FORMAT_MATRIX
+from gutenbergtozim.database import Book, BookFormat, Url
+from gutenbergtozim.utils import FORMAT_MATRIX, exec_cmd
 from gutenbergtozim import logger
 
+from playhouse.csv_loader import *
 
 class UrlBuilder:
 
@@ -24,6 +25,8 @@ class UrlBuilder:
         >>> builder.with_base(UrlBuilder.BASE_{ONE|TWO|THREE})
         >>> url = builder.build()
     """
+    SERVER_NAME = "aleph_gutenberg_org"
+    RSYNC = "rsync://aleph.gutenberg.org/gutenberg/"
     BASE_ONE = 'http://aleph.gutenberg.org/'
     BASE_TWO = 'http://aleph.gutenberg.org/cache/epub/'
     BASE_THREE = 'http://aleph.gutenberg.org/etext'
@@ -112,10 +115,14 @@ def build_urls(files):
 
     for i in mapping:
         if i in files:
-            files[i] = mapping[i](files[i])
+            possible_url = mapping[i](files[i])
+            filtre = [u for u in possible_url if Url.get_or_none(url=u) ]
+            if len(filtre) == 0 and len(possible_url) != 0:
+                files[i] = possible_url
+            else:
+                files[i] = filtre
 
     return files
-
 
 def index_of_substring(lst, substrings):
     for i, s in enumerate(lst):
@@ -216,6 +223,17 @@ def build_html(files):
     urls.extend([url_zip, url_htm, url_html, html_utf8])
     urls.extend(etext_urls)
     return list(set(urls))
+
+def setup_urls():
+    file_with_url = os.path.join("tmp","file_on_{}".format(UrlBuilder.SERVER_NAME))
+    cmd = ["bash",  "-c", "rsync -a --list-only {} > {}".format(UrlBuilder.RSYNC,file_with_url) ]
+    exec_cmd(cmd)
+
+    cmd = ["sed" , "-i", "s#.* \(.*\)$#{}\\1#".format(UrlBuilder.BASE_ONE), file_with_url ]
+    exec_cmd(cmd)
+
+    field_names = [ 'url' ]
+    load_csv(Url, file_with_url, field_names = field_names)
 
 
 if __name__ == '__main__':
