@@ -11,6 +11,9 @@ RUN apt-get install -y p7zip-full
 RUN apt-get install -y python-pillow
 RUN apt-get install -y curl
 RUN apt-get install -y zip
+RUN apt-get install -y bash
+RUN apt-get install -y sed
+RUN apt-get install -y rsync
 
 # Install jpegoptim
 RUN apt-get install -y libjpeg-dev
