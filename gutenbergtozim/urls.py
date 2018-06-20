@@ -13,6 +13,7 @@ from gutenbergtozim.database import Book, BookFormat, Url
 from gutenbergtozim.utils import FORMAT_MATRIX, exec_cmd
 from gutenbergtozim import logger
 
+import urlparse
 from playhouse.csv_loader import *
 
 class UrlBuilder:
@@ -116,7 +117,7 @@ def build_urls(files):
     for i in mapping:
         if i in files:
             possible_url = mapping[i](files[i])
-            filtre = [u for u in possible_url if Url.get_or_none(url=u) ]
+            filtre = [u for u in possible_url if Url.get_or_none(url=urlparse.urlparse(u).path[1:]) ]
             if len(filtre) == 0 and len(possible_url) != 0:
                 files[i] = possible_url
             else:
@@ -225,11 +226,11 @@ def build_html(files):
     return list(set(urls))
 
 def setup_urls():
+
     file_with_url = os.path.join("tmp","file_on_{}".format(UrlBuilder.SERVER_NAME))
     cmd = ["bash",  "-c", "rsync -a --list-only {} > {}".format(UrlBuilder.RSYNC,file_with_url) ]
     exec_cmd(cmd)
-
-    cmd = ["sed" , "-i", "s#.* \(.*\)$#{}\\1#".format(UrlBuilder.BASE_ONE), file_with_url ]
+    cmd = ["sed" , "-i", "s#.* \(.*\)$#\\1#", file_with_url ]
     exec_cmd(cmd)
 
     field_names = [ 'url' ]
