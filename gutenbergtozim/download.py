@@ -70,32 +70,33 @@ def handle_zipped_epub(zippath,
             continue
 
         src = os.path.join(tmpd, fname)
-        fname = path(fname).basename()
+        if os.path.exists(src):
+            fname = path(fname).basename()
 
-        if fname.endswith('.html') or fname.endswith('.htm'):
-            if mhtml:
-                if fname.startswith("{}-h.".format(book.id)):
-                    dst = os.path.join(download_cache,
-                                       "{bid}.html".format(bid=book.id))
+            if fname.endswith('.html') or fname.endswith('.htm'):
+                if mhtml:
+                    if fname.startswith("{}-h.".format(book.id)):
+                        dst = os.path.join(download_cache,
+                                        "{bid}.html".format(bid=book.id))
+                    else:
+                        dst = os.path.join(download_cache,
+                                        "{bid}_{fname}".format(bid=book.id,
+                                                                fname=fname))
                 else:
                     dst = os.path.join(download_cache,
-                                       "{bid}_{fname}".format(bid=book.id,
-                                                              fname=fname))
+                                    "{bid}.html".format(bid=book.id))
             else:
                 dst = os.path.join(download_cache,
-                                   "{bid}.html".format(bid=book.id))
-        else:
-            dst = os.path.join(download_cache,
-                               "{bid}_{fname}".format(bid=book.id,
-                                                      fname=fname))
-        try:
-            path(src).move(dst)
-        except Exception as e:
-            import traceback
-            print(e)
-            print("".join(traceback.format_exc()))
-            raise
-            # import ipdb; ipdb.set_trace()
+                                "{bid}_{fname}".format(bid=book.id,
+                                                        fname=fname))
+            try:
+                path(src).move(dst)
+            except Exception as e:
+                import traceback
+                print(e)
+                print("".join(traceback.format_exc()))
+                raise
+                # import ipdb; ipdb.set_trace()
 
     # delete temp directory
     path(tmpd).rmtree_p()
@@ -152,7 +153,7 @@ def download_book(book, download_cache, languages, formats, force):
 
         if not bfs.count():
             logger.debug("[{}] not avail. for #{}# {}"
-                         .format(format, book.id, book.title))
+                         .format(format, book.id, book.title).encode("utf-8"))
             continue
 
         if bfs.count() > 1:
@@ -164,7 +165,7 @@ def download_book(book, download_cache, languages, formats, force):
             bf = bfs.get()
 
         logger.debug("[{}] Requesting URLs for #{}# {}"
-                     .format(format, book.id, book.title))
+                     .format(format, book.id, book.title).encode("utf-8"))
 
         # retrieve list of URLs for format unless we have it in DB
         if bf.downloaded_from and not force:
@@ -179,8 +180,9 @@ def download_book(book, download_cache, languages, formats, force):
         while(urls):
             url = urls.pop()
 
-            if not resource_exists(url):
-                continue
+            if len(urls) != 1:
+                if not resource_exists(url):
+                    continue
 
             # HTML files are *sometime* available as ZIP files
             if url.endswith('.zip'):

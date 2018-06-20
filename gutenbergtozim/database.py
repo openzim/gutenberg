@@ -188,7 +188,7 @@ class Url(BaseModel):
     class Meta:
         database = db
 
-    url = TextField()
+    url = TextField(index=True)
 
     def __unicode__(self):
         return self.url
