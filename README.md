@@ -83,6 +83,12 @@ You can find the full arguments list below.
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for download and parsing tasks
+--dlc=<nb>                      Number of concurrent *download* process for download (overwrites --concurrency). if server blocks high rate requests
+--one-language-one-zim          When more than 1 language, do one zim for each   language (and one with all)
+-x --zim-title=<title>          Custom title for the ZIM file
+-q --zim-desc=<desc>            Custom description for the ZIM file
+--no-index                      Do NOT create full-text index within ZIM file
+
 
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file
