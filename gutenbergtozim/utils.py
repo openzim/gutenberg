@@ -184,3 +184,7 @@ def zip_epub(epub_fpath, root_folder, fpaths):
     with zipfile.ZipFile(epub_fpath, 'w', zipfile.ZIP_DEFLATED) as zf:
         for fpath in fpaths:
             zf.write(os.path.join(root_folder, fpath), fpath)
+def ensure_unicode(v):
+    if isinstance(v, str):
+        v = v.decode('utf8')
+    return unicode(v)

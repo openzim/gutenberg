@@ -17,7 +17,7 @@ from gutenbergtozim import logger, TMP_FOLDER
 from gutenbergtozim.urls import get_urls
 from gutenbergtozim.database import BookFormat, Format
 from gutenbergtozim.export import get_list_of_filtered_books, fname_for
-from gutenbergtozim.utils import download_file, FORMAT_MATRIX
+from gutenbergtozim.utils import download_file, FORMAT_MATRIX, ensure_unicode
 
 
 def resource_exists(url):
@@ -32,7 +32,7 @@ def handle_zipped_epub(zippath,
     clfn = lambda fn: os.path.join(*os.path.split(fn)[1:])
 
     def is_safe(fname):
-        fname = clfn(fname)
+        fname = ensure_unicode(clfn(fname))
         if path(fname).basename() == fname:
             return True
         return fname == os.path.join("images",
@@ -45,7 +45,7 @@ def handle_zipped_epub(zippath,
         with zipfile.ZipFile(zippath, 'r') as zf:
             # check that there is no insecure data (absolute names)
             if sum([1 for n in zf.namelist()
-                    if not is_safe(n)]):
+                    if not is_safe(ensure_unicode(n))]):
                 path(tmpd).rmtree_p()
                 return False
             else:
