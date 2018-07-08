@@ -180,7 +180,7 @@ def download_book(book, download_cache, languages, formats, force):
         while(urls):
             url = urls.pop()
 
-            if len(urls) != 1:
+            if len(allurls) != 1:
                 if not resource_exists(url):
                     continue
 
