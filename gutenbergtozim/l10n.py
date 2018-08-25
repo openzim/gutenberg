@@ -119,7 +119,7 @@ l10n_strings = {
             },
             "about-1": {
                 "textContent": "Project Gutenberg offers over "
-                               "45,000 free ebooks"
+                               "60,000 free ebooks"
             },
             "about-2": {
                 "textContent": "Choose among free epub books, "
@@ -254,7 +254,7 @@ l10n_strings = {
             },
             "about-1": {
                 "textContent": "Le Projet Gutenberg offre plus de "
-                               "45 000 ebooks gratuits"
+                               "60 000 ebooks gratuits"
             },
             "about-2": {
                 "textContent": "Choisissez parmi les livres epub ou "
