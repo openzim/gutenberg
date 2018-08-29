@@ -113,7 +113,7 @@ def export_skeleton(static_folder, dev_mode=False,
     # copy CSS/JS/* to static_folder
     src_folder = tmpl_path()
     for fname in ('css', 'js', 'jquery', 'favicon.ico', 'favicon.png',
-                  'jquery-ui', 'datatables', 'fonts', 'l10n'):
+                  'jquery-ui', 'datatables', 'fonts'):
         src = os.path.join(src_folder, fname)
         dst = os.path.join(static_folder, fname)
         if not path(fname).ext:

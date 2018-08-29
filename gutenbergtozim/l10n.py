@@ -275,7 +275,145 @@ l10n_strings = {
             "about-6": {
                 "textContent": "Nous les numérisons et les relisons "
                                "soigneusement avec l’aide de milliers "
-                               "de volontaires."}
+                               "de volontaires."
             }
+        },
+        "de" : {
+            "isocode": {
+                "textContent": "de"
+            },
+            "autonym": {
+                "textContent": "Deutsch"
+            },
+            "homepage": {
+                "alt": "Homepage",
+                "title": "Homepage"
+            },
+            "choose-language": {
+                "placeholder": "Sprache auswählen..."
+            },
+            "ui-language-switcher": {
+                "title": "Interface language",
+                "TODO": 1
+            },
+            "search": {
+                "textContent": "Suchen"
+            },
+            "author": {
+                "textContent": "Autor",
+                "placeholder": "List books of a single Author",
+                "TODO": 1
+            },
+            "cover-img": {
+                "alt": "Einband",
+                "title": "Einband"
+            },
+            "cover": {
+                "textContent": "(Einband)"
+            },
+            "filter": {
+                "textContent": "Filter:"
+            },
+            "popularity": {
+                "textContent": "Beliebtheit"
+            },
+            "sort": {
+                "textContent": "Sortieren:"
+            },
+            "sort-popularity": {
+                "textContent": "Sortiere Bücher nach Beliebtheit"
+            },
+            "sort-title": {
+                "textContent": "Sortiere Bücher nach Titel"
+            },
+            "title": {
+                "textContent": "Titel"
+            },
+            "format": {
+                "textContent": "Format"
+            },
+            "loading": {
+                "textContent": "Lade..."
+            },
+            "no-data": {
+                "textContent": "Keine Daten zum Anzeigen"
+            },
+            "prev": {
+                "textContent": "Zurück"
+            },
+            "next": {
+                "textContent": "Weiter"
+            },
+            "language": {
+                "textContent": "Sprache"
+            },
+            "any-languages": {
+                "textContent": "Choose the Catalog",
+                "TODO": 1
+            },
+            "main-languages": {
+                "textContent": "Main languages",
+                "TODO": 1
+            },
+            "other-languages": {
+                "textContent": "Other languages",
+                "TODO": 1
+            },
+            "author-anonymous": {
+                "textContent": "Anonym"
+            },
+            "author-various": {
+                "textContent": "Diverse"
+            },
+            "license": {
+                "textContent": "Lizenz"
+            },
+            "license-pd": {
+                "textContent": "Public domain in den USA."
+            },
+            "nb-downloads": {
+                "textContent": "{[ plural(nb) ]}"
+            },
+            "nb-downloads[one]": {
+                "textContent": "download in den letzten 30 Tagen."
+            },
+            "nb-downloads[other]": {
+                "textContent": "{{nb}} downloads in den letzten 30 Tagen."
+            },
+            "top-title": {
+                "textContent": "Projekt Gutenberg"
+            },
+            "sub-title": {
+                "textContent": "Der erste Produzent freier Ebooks"
+            },
+            "table-previous": {
+                "textContent": "Zurück"
+            },
+            "table-next": {
+                "textContent": "Weiter"
+            },
+            "about-1": {
+                "textContent": "Projekt Gutenberg bietet mehr "
+                               "als 60,000 freie Ebooks"
+            },
+            "about-2": {
+                "textContent": "Aus freien Büchern auswählen."
+            },
+            "about-3": {
+                "textContent": "Lade sie herunter oder lies online."
+            },
+            "about-4": {
+                "textContent": "Wir haben hochwertige Ebooks"
+            },
+            "about-5": {
+                "textContent": "Alle unsere Ebooks waren vorher "
+                               "gemeinnützig veröffentlicht."
+            },
+            "about-6": {
+                "textContent": "Wir digitalisierten und prüften sie "
+                               "sorgfältig mit der Hilfe von "
+                               "tausenden Freiwilligen."
+            }
+        }
     }
 }
