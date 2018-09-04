@@ -293,16 +293,14 @@ l10n_strings = {
                 "placeholder": "Sprache auswählen..."
             },
             "ui-language-switcher": {
-                "title": "Interface language",
-                "TODO": 1
+                "title": "Sprache der Oberfläche"
             },
             "search": {
                 "textContent": "Suchen"
             },
             "author": {
                 "textContent": "Autor",
-                "placeholder": "List books of a single Author",
-                "TODO": 1
+                "placeholder": "Bücherliste eines einzelnen Autors"
             },
             "cover-img": {
                 "alt": "Einband",
@@ -348,16 +346,13 @@ l10n_strings = {
                 "textContent": "Sprache"
             },
             "any-languages": {
-                "textContent": "Choose the Catalog",
-                "TODO": 1
+                "textContent": "Katalog wählen"
             },
             "main-languages": {
-                "textContent": "Main languages",
-                "TODO": 1
+                "textContent": "Hauptsprachen"
             },
             "other-languages": {
-                "textContent": "Other languages",
-                "TODO": 1
+                "textContent": "Andere Sprachen"
             },
             "author-anonymous": {
                 "textContent": "Anonym"
