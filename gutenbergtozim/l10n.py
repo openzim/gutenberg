@@ -542,7 +542,7 @@ l10n_strings = {
                                "diligentemente con l'aiuto di "
                                "migliaia di volontari."
             }
-        }
+        },
         "ar": {
             "isocode": {
                 "textContent": "ar"
