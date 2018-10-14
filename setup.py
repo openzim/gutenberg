@@ -16,7 +16,7 @@ with open('requirements.pip', 'r') as f:
 
 setup(
     name='gutenberg2zim',
-    version="1.1.1",
+    version="1.1.2",
     description=__doc__,
     long_description=readme,
     author="Kiwix",
