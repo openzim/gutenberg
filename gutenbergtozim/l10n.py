@@ -565,7 +565,7 @@ l10n_strings = {
             },
             "author": {
                 "textContent": "المؤلف",
-                "placeholder": "جدولة كتب أحد المؤلفين
+                "placeholder": "جدولة كتب أحد المؤلفين"
             },
             "cover-img": {
                 "alt": "غلاف الكتاب",
