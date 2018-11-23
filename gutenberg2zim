@@ -147,7 +147,8 @@ def main(arguments):
         setup_rdf_folder(rdf_url=RDF_URL, rdf_path=RDF_FOLDER, force=FORCE)
 
     if WIPE_DB:
-        logger.info("RESETING DATABASE" if WIPE_DB else "SETTING UP DATABASE")
+        logger.info("RESETING DATABASE IF EXISTS")
+    logger.info("SETTING UP DATABASE")
     setup_database(wipe=WIPE_DB)
 
     if DO_PARSE:
