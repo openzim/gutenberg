@@ -809,5 +809,138 @@ l10n_strings = {
                                "van duizenden vrijwilligers."
             }
         },
+        "es": {
+            "isocode": {
+                "textContent": "es"
+            },
+            "autonym": {
+                "textContent": "Spanish"
+            },
+            "homepage": {
+                "alt": "Inicio",
+                "title": "Inicio"
+            },
+            "choose-language": {
+                "placeholder": "Elija un idioma..."
+            },
+            "ui-language-switcher": {
+                "title": "Idioma de la interfaz"
+            },
+            "search": {
+                "textContent": "Buscar"
+            },
+            "author": {
+                "textContent": "Autor",
+                "placeholder": "Lista de libros de un autor"
+            },
+            "cover-img": {
+                "alt": "Portada del libro",
+                "title": "Portada del libro"
+            },
+            "cover": {
+                "textContent": "(portada)"
+            },
+            "filter": {
+                "textContent": "Filtro:"
+            },
+            "popularity": {
+                "textContent": "Popularidad"
+            },
+            "sort": {
+                "textContent": "Ordenar:"
+            },
+            "sort-popularity": {
+                "textContent": "Ordenar libros por popularidad"
+            },
+            "sort-title": {
+                "textContent": "Ordenar libros por título"
+            },
+            "title": {
+                "textContent": "Título"
+            },
+            "format": {
+                "textContent": "Formato"
+            },
+            "loading": {
+                "textContent": "Cargando..."
+            },
+            "no-data": {
+                "textContent": "No hay datos disponibles en la tabla"
+            },
+            "prev": {
+                "textContent": "Anterior"
+            },
+            "next": {
+                "textContent": "Siguiente"
+            },
+            "language": {
+                "textContent": "Idioma"
+            },
+            "any-languages": {
+                "textContent": "Elija en el catálogo"
+            },
+            "main-languages": {
+                "textContent": "Idiomas principales"
+            },
+            "other-languages": {
+                "textContent": "Otros idiomas"
+            },
+            "author-anonymous": {
+                "textContent": "Anónimo"
+            },
+            "author-various": {
+                "textContent": "Varios"
+            },
+            "license": {
+                "textContent": "Licencia"
+            },
+            "license-pd": {
+                "textContent": "De dominio público en EEUU."
+            },
+            "nb-downloads": {
+                "textContent": "{[ plural(nb) ]}"
+            },
+            "nb-downloads[one]": {
+                "textContent": "Una descarga en los últimos 30 días."
+            },
+            "nb-downloads[other]": {
+                "textContent": "{{nb}} descargas en los últimos 30 días."
+            },
+            "top-title": {
+                "textContent": "Librería del Proyecto Gutenberg"
+            },
+            "sub-title": {
+                "textContent": "El primer editor de ebooks libres"
+            },
+            "table-previous": {
+                "textContent": "Anterior"
+            },
+            "table-next": {
+                "textContent": "Siguiente"
+            },
+            "about-1": {
+                "textContent": "El Proyecto Gutenberg ofrece más de"
+                               "60,000 ebooks libres"
+            },
+            "about-2": {
+                "textContent": "Elija entre ebooks epub libres y"
+                               "ebooks kindle libres."
+            },
+            "about-3": {
+                "textContent": "Descárgalos o léelos online."
+            },
+            "about-4": {
+                "textContent": "Tenemos ebooks de gran calidad"
+            },
+            "about-5": {
+                "textContent": "Todos nuestros ebooks han sido publicados"
+                               "antes por editoriales de prestigio."
+            },
+            "about-6": {
+                "textContent": "Los digitalizamos y comprobamos"
+                               "cuidadosamente con la ayuda "
+                               "de miles de voluntarios."
+            }
+        },
     }
 }
