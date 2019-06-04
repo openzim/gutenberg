@@ -54,7 +54,7 @@ help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
         """download (overwrites --concurrency). """
         """if server blocks high rate requests
 --one-language-one-zim          When more than 1 language, do one zim for each """
-	"""  language (and one with all)
+    """  language (and one with all)
 -x --zim-title=<title>          Custom title for the ZIM file
 -q --zim-desc=<desc>            Custom description for the ZIM file
 --no-index                      Do NOT create full-text index within ZIM file
@@ -116,12 +116,14 @@ def main(arguments):
 
     try:
         BOOKS = [bid for bid in BOOKS.split(',')]
-        f = lambda x: list(map(int, [i for i in x.split('-') if i.isdigit()]))
+
+        def f(x):
+            return list(map(int, [i for i in x.split('-') if i.isdigit()]))
         books = []
         for i in BOOKS:
             blst = f(i)
             if len(blst) > 1:
-                blst = range(blst[0], blst[1]+1)
+                blst = range(blst[0], blst[1] + 1)
             books.extend(blst)
         BOOKS = list(set(books))
     except Exception as e:
@@ -167,49 +169,50 @@ def main(arguments):
                            only_books=BOOKS,
                            force=FORCE)
     if ONE_LANG_ONE_ZIM:
-	if LANGUAGES == []:
-		zims = []
-		from gutenbergtozim.database import Book
-		for book in Book.select(Book.language).distinct():
-			zims.append([book.language])
-		zims.append([])
-	else:
-		zims=[ [l] for l in LANGUAGES] + [ LANGUAGES ]
+        if LANGUAGES == []:
+            zims = []
+            from gutenbergtozim.database import Book
+            for book in Book.select(Book.language).distinct():
+                zims.append([book.language])
+            zims.append([])
+        else:
+            zims = [[l] for l in LANGUAGES] + [LANGUAGES]
     else:
-	zims = [ LANGUAGES ]
+        zims = [LANGUAGES]
 
-    for zim_lang in zims:
+        for zim_lang in zims:
 
-	    if DO_EXPORT:
-		logger.info("EXPORTING ebooks to static folder (and JSON)")
-		export_all_books(static_folder=STATIC_FOLDER,
-				 download_cache=DL_CACHE,
-				 concurrency=CONCURRENCY,
-				 languages=zim_lang,
-				 formats=FORMATS,
-				 only_books=BOOKS,
-				 force=FORCE)
+            if DO_EXPORT:
+                logger.info("EXPORTING ebooks to static folder (and JSON)")
+                export_all_books(static_folder=STATIC_FOLDER,
+                                 download_cache=DL_CACHE,
+                                 concurrency=CONCURRENCY,
+                                 languages=zim_lang,
+                                 formats=FORMATS,
+                                 only_books=BOOKS,
+                                 force=FORCE)
 
-	    if DO_DEV:
-		logger.info("EXPORTING HTML/JS/CSS to static folder")
-		export_skeleton(static_folder=STATIC_FOLDER,
-				dev_mode=True,
-				languages=zim_lang,
-				formats=FORMATS,
-				only_books=BOOKS)
+            if DO_DEV:
+                logger.info("EXPORTING HTML/JS/CSS to static folder")
+                export_skeleton(static_folder=STATIC_FOLDER,
+                                dev_mode=True,
+                                languages=zim_lang,
+                                formats=FORMATS,
+                                only_books=BOOKS)
 
-	    if DO_ZIM:
-		if not check_dependencies()[1]:
-		    logger.error("You don't have zimwriterfs installed.")
-		    sys.exit(1)
-		logger.info("BUILDING ZIM off static folder {}".format(STATIC_FOLDER))
-		build_zimfile(static_folder=STATIC_FOLDER, zim_path=ZIM_FILE,
-			      languages=zim_lang, formats=FORMATS,
-			      only_books=BOOKS,
-			      title=ZIM_TITLE, description=ZIM_DESC,
-			      create_index=not NO_INDEX,
-			      force=FORCE)
-		shutil.rmtree(STATIC_FOLDER)
+            if DO_ZIM:
+                if not check_dependencies()[1]:
+                    logger.error("You don't have zimwriterfs installed.")
+                    sys.exit(1)
+                logger.info("BUILDING ZIM off static folder {}".format(STATIC_FOLDER))
+                build_zimfile(static_folder=STATIC_FOLDER, zim_path=ZIM_FILE,
+                              languages=zim_lang, formats=FORMATS,
+                              only_books=BOOKS,
+                              title=ZIM_TITLE, description=ZIM_DESC,
+                              create_index=not NO_INDEX,
+                              force=FORCE)
+                shutil.rmtree(STATIC_FOLDER)
+
 
 if __name__ == '__main__':
     main(docopt(help, version=0.1))

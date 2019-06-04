@@ -13,7 +13,10 @@ from gutenbergtozim.database import Book, BookFormat, Url
 from gutenbergtozim.utils import FORMAT_MATRIX, exec_cmd
 from gutenbergtozim import logger
 
-import urlparse
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
 from playhouse.csv_loader import *
 
 class UrlBuilder:
