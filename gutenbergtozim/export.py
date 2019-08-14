@@ -37,7 +37,7 @@ NB_POPULARITY_STARS = 5
 
 
 def get_ui_languages_for(books):
-    ui_languages = ['en', 'fr', 'de','it', 'ar', 'nl', 'es']
+    ui_languages = ['en', 'fr', 'de', 'it', 'ar', 'nl', 'es']
     languages = get_langs_with_count(books=books)
     if len(languages) == 1 and languages[-1][1] in ui_languages:
         return [languages[-1][1]]
@@ -50,7 +50,7 @@ def get_default_context(project_id, books):
         'l10n_strings': json.dumps(l10n_strings),
         'ui_languages': get_ui_languages_for(books),
         'languages': get_langs_with_count(books=books),
-        'project_id':  project_id,
+        'project_id': project_id,
     }
 
 
@@ -191,9 +191,9 @@ def export_all_books(static_folder,
     stars = NB_POPULARITY_STARS
     nb_downloads = popbooks[0].downloads
     for ibook in range(0, popbooks.count(), 1):
-        if ibook > float(NB_POPULARITY_STARS-stars+1)/NB_POPULARITY_STARS*popbooks_count \
+        if ibook > float(NB_POPULARITY_STARS - stars + 1) / NB_POPULARITY_STARS * popbooks_count \
            and popbooks[ibook].downloads < nb_downloads:
-            stars_limits[stars-1] = nb_downloads
+            stars_limits[stars - 1] = nb_downloads
             stars = stars - 1
         nb_downloads = popbooks[ibook].downloads
 
@@ -205,15 +205,16 @@ def export_all_books(static_folder,
             [int(book.downloads >= stars_limits[i])
              for i in range(NB_POPULARITY_STARS)])
 
-    dlb = lambda b: export_book_to(b,
-                                   static_folder=static_folder,
-                                   download_cache=download_cache,
-                                   cached_files=cached_files,
-                                   languages=languages,
-                                   formats=formats,
-                                   books=books,
-                                   project_id=project_id,
-                                   force=force)
+    def dlb(b):
+        return export_book_to(b,
+                              static_folder=static_folder,
+                              download_cache=download_cache,
+                              cached_files=cached_files,
+                              languages=languages,
+                              formats=formats,
+                              books=books,
+                              project_id=project_id,
+                              force=force)
     Pool(concurrency).map(dlb, books)
 
 
@@ -266,7 +267,7 @@ def update_html_for_static(book, html_content, epub=False):
                 and 'charset=' in meta.attrs.get('content'):
             try:
                 ctype, ccharset = meta.attrs.get('content').split(';', 1)
-            except:
+            except Exception:
                 continue
             else:
                 encoding_specified = True
@@ -366,7 +367,7 @@ def update_html_for_static(book, html_content, epub=False):
         is_encapsulated_in_div = sum(
             [1 for e in body.children
              if not isinstance(e, bs4.NavigableString)]) == 1
-    except:
+    except Exception:
         is_encapsulated_in_div = False
 
     if is_encapsulated_in_div and not epub:
@@ -497,7 +498,7 @@ def export_book_to(book,
             logger.info("\t\tExporting to {}".format(article_fpath))
             try:
                 new_html = update_html_for_static(book=book, html_content=html)
-            except:
+            except Exception:
                 raise
                 new_html = html
             save_bs_output(new_html, article_fpath, UTF8)
@@ -514,7 +515,7 @@ def export_book_to(book,
         try:
             path(src).link(dst)  # hard link
         except IOError:
-            logger.error("/!\ Unable to symlink missing file {}".format(src))
+            logger.error("/!\\ Unable to symlink missing file {}".format(src))
             return
 
     def copy_from_cache(fname, dstfname=None):
@@ -527,7 +528,7 @@ def export_book_to(book,
         try:
             path(src).copy(dst)
         except IOError:
-            logger.error("/!\ Unable to copy missing file {}".format(src))
+            logger.error("/!\\ Unable to copy missing file {}".format(src))
             return
 
     def optimize_image(src, dst, force=False):

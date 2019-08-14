@@ -11,7 +11,7 @@ import babel
 def language_name(code):
     try:
         return babel.Locale(code).get_language_name(code).title()
-    except:
+    except Exception:
         return other_language_names.get(code, code)
 
 

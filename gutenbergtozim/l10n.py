@@ -278,7 +278,7 @@ l10n_strings = {
                                "de volontaires."
             }
         },
-        "de" : {
+        "de": {
             "isocode": {
                 "textContent": "de"
             },
@@ -410,7 +410,7 @@ l10n_strings = {
                                "tausenden Freiwilligen."
             }
         },
-         "it": {
+        "it": {
             "isocode": {
                 "textContent": "it"
             },

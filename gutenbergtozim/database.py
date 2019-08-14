@@ -103,7 +103,7 @@ class Author(BaseModel):
         if not self.last_name:
             return sanitize(self.first_names)
 
-        return sanitize("{f} {l}".format(l=self.last_name, f=self.first_names))
+        return sanitize("{fn} {ln}".format(ln=self.last_name, fn=self.first_names))
 
     def to_dict(self):
         return {'label': self.name(),

@@ -4,7 +4,6 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-import datetime
 
 from path import Path as path
 
@@ -69,7 +68,7 @@ def build_zimfile(static_folder, zim_path=None,
            static_folder, zim_path]
 
     if create_index:
-            cmd.insert(1, '--withFullTextIndex')
+        cmd.insert(1, '--withFullTextIndex')
     if exec_cmd(cmd) == 0:
         logger.info("Successfuly created ZIM file at {}".format(zim_path))
     else:

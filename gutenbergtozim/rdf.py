@@ -78,7 +78,8 @@ def parse_and_fill(rdf_path, concurrency, only_books=[], force=False):
     fpaths = sorted(fpaths, key=lambda f:
                     int(re.match(r'.*/pg([0-9]+).rdf', f).groups()[0]))
 
-    ppf = lambda x: parse_and_process_file(x, force)
+    def ppf(x):
+        return parse_and_process_file(x, force)
     Pool(concurrency).map(ppf, fpaths)
 
 
@@ -192,7 +193,7 @@ def save_rdf_in_database(parser):
     if parser.author_id:
         try:
             author_record = Author.get(gut_id=parser.author_id)
-        except:
+        except Exception:
             author_record = Author.create(
                 gut_id=parser.author_id,
                 last_name=normalize(parser.last_name),
@@ -216,7 +217,7 @@ def save_rdf_in_database(parser):
     # Get license
     try:
         license_record = License.get(name=parser.license)
-    except:
+    except Exception:
         license_record = None
 
     # Insert book

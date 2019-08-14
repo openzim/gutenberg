@@ -29,7 +29,8 @@ def handle_zipped_epub(zippath,
                        book,
                        download_cache):
 
-    clfn = lambda fn: os.path.join(*os.path.split(fn)[1:])
+    def clfn(fn):
+        return os.path.join(*os.path.split(fn)[1:])
 
     def is_safe(fname):
         fname = ensure_unicode(clfn(fname))
@@ -77,18 +78,18 @@ def handle_zipped_epub(zippath,
                 if mhtml:
                     if fname.startswith("{}-h.".format(book.id)):
                         dst = os.path.join(download_cache,
-                                        "{bid}.html".format(bid=book.id))
+                                           "{bid}.html".format(bid=book.id))
                     else:
                         dst = os.path.join(download_cache,
-                                        "{bid}_{fname}".format(bid=book.id,
-                                                                fname=fname))
+                                           "{bid}_{fname}".format(bid=book.id,
+                                                                  fname=fname))
                 else:
                     dst = os.path.join(download_cache,
-                                    "{bid}.html".format(bid=book.id))
+                                       "{bid}.html".format(bid=book.id))
             else:
                 dst = os.path.join(download_cache,
-                                "{bid}_{fname}".format(bid=book.id,
-                                                        fname=fname))
+                                   "{bid}_{fname}".format(bid=book.id,
+                                                          fname=fname))
             try:
                 path(src).move(dst)
             except Exception as e:
@@ -159,7 +160,7 @@ def download_book(book, download_cache, languages, formats, force):
         if bfs.count() > 1:
             try:
                 bf = bfs.join(Format).filter(Format.images).get()
-            except:
+            except Exception:
                 bf = bfs.get()
         else:
             bf = bfs.get()
@@ -222,5 +223,6 @@ def download_all_books(download_cache, concurrency,
     # ensure dir exist
     path(download_cache).mkdir_p()
 
-    dlb = lambda b: download_book(b, download_cache, languages, formats, force)
+    def dlb(b):
+        return download_book(b, download_cache, languages, formats, force)
     Pool(concurrency).map(dlb, available_books)

@@ -17,7 +17,7 @@ try:
     import urlparse
 except ImportError:
     import urllib.parse as urlparse
-from playhouse.csv_loader import *
+from playhouse.csv_loader import load_csv
 
 class UrlBuilder:
 
@@ -88,7 +88,8 @@ def get_urls(book):
                      BookFormat.select().where(BookFormat.book == book)]
 
     # Strip out the encoding of the file
-    f = lambda x: x.mime.split(';')[0].strip()
+    def f(x):
+        return x.mime.split(';')[0].strip()
     available_formats = [
         {x.pattern.format(id=book.id): {'mime': f(x), 'id': book.id}}
         for x in filtered_book
@@ -120,7 +121,7 @@ def build_urls(files):
     for i in mapping:
         if i in files:
             possible_url = mapping[i](files[i])
-            filtre = [u for u in possible_url if Url.get_or_none(url=urlparse.urlparse(u).path[1:]) ]
+            filtre = [u for u in possible_url if Url.get_or_none(url=urlparse.urlparse(u).path[1:])]
             if len(filtre) == 0 and len(possible_url) != 0:
                 files[i] = possible_url
             else:
@@ -230,14 +231,14 @@ def build_html(files):
 
 def setup_urls():
 
-    file_with_url = os.path.join("tmp","file_on_{}".format(UrlBuilder.SERVER_NAME))
-    cmd = ["bash",  "-c", "rsync -a --list-only {} > {}".format(UrlBuilder.RSYNC,file_with_url) ]
+    file_with_url = os.path.join("tmp", "file_on_{}".format(UrlBuilder.SERVER_NAME))
+    cmd = ["bash", "-c", "rsync -a --list-only {} > {}".format(UrlBuilder.RSYNC, file_with_url)]
     exec_cmd(cmd)
-    cmd = ["sed" , "-i", "s#.* \(.*\)$#\\1#", file_with_url ]
+    cmd = ["sed", "-i", r"s#.* \(.*\)$#\\1#", file_with_url]
     exec_cmd(cmd)
 
-    field_names = [ 'url' ]
-    load_csv(Url, file_with_url, field_names = field_names)
+    field_names = ['url']
+    load_csv(Url, file_with_url, field_names=field_names)
 
 
 if __name__ == '__main__':
