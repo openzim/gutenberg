@@ -1,0 +1,4 @@
+include LICENSE.txt
+include pypi-readme.rst
+include requirements.pip
+recursive-include gutenbergtozim/templates *

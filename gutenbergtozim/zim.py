@@ -4,16 +4,17 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
+import six
 
 from path import Path as path
 
-from gutenbergtozim import logger
-from gutenbergtozim.utils import exec_cmd, get_project_id
+from gutenbergtozim import logger, VERSION
+from gutenbergtozim.utils import exec_cmd, get_project_id, FORMAT_MATRIX
 from gutenbergtozim.iso639 import ISO_MATRIX
 from gutenbergtozim.export import export_skeleton
 
 
-def build_zimfile(static_folder, zim_path=None,
+def build_zimfile(static_folder, output_folder, zim_name=None,
                   languages=[], formats=[],
                   title=None, description=None,
                   only_books=[],
@@ -32,12 +33,12 @@ def build_zimfile(static_folder, zim_path=None,
 
     if title is None:
         if len(languages) > 5:
-            title = ("Project Gutenberg Library with {formats}"
-                     .format(formats=",".join(formats)))
+            title = "Project Gutenberg Library"
         else:
-            title = ("Project Gutenberg Library ({langs}) with {formats}"
-                     .format(langs=",".join(languages),
-                             formats=",".join(formats)))
+            title = "Project Gutenberg Library ({langs})".format(langs=",".join(languages))
+
+        if len(formats) < len(FORMAT_MATRIX):
+            title += " with {formats}".format(formats=",".join(formats))
 
     logger.info("\tWritting ZIM for {}".format(title))
 
@@ -46,11 +47,12 @@ def build_zimfile(static_folder, zim_path=None,
 
     project_id = get_project_id(languages, formats, only_books)
 
-    if zim_path is None:
-        zim_path = "{}.zim".format(project_id)
+    if zim_name is None:
+        zim_name = "{}.zim".format(project_id)
+    zim_path = output_folder.joinpath(zim_name)
 
-    if path(zim_path).exists() and not force:
-        logger.info("ZIM file `{}` already exist.".format(zim_path))
+    if path(zim_name).exists() and not force:
+        logger.info("ZIM file `{}` already exist.".format(zim_name))
         return
 
     languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
@@ -64,8 +66,10 @@ def build_zimfile(static_folder, zim_path=None,
            '--title', title,
            '--description', description,
            '--creator', "gutenberg.org",
+           '--tags', 'gutenberg',
            '--publisher', "Kiwix",
-           static_folder, zim_path]
+           '--scraper', 'gutengergtozim-{v}'.format(v=VERSION),
+           static_folder, six.text_type(zim_path)]
 
     if create_index:
         cmd.insert(1, '--withFullTextIndex')

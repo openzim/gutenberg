@@ -35,9 +35,19 @@ RUN tar xvf gifsicle-1.88.tar.gz
 RUN cd gifsicle-1.88 && ./configure
 RUN cd gifsicle-1.88 && make all install
 
-# Install sotoki
+# Install gutenberg (from source)
 RUN locale-gen "en_US.UTF-8"
-RUN pip install gutenberg2zim
+COPY requirements.pip /src/
+RUN python -m pip install -r /src/requirements.pip
+COPY LICENSE.txt /src/
+COPY pypi-readme.rst /src/
+COPY languages_06_2018 /src/
+COPY MANIFEST.in /src/
+COPY setup.py /src/
+COPY gutenberg2zim /src/
+COPY gutenbergtozim /src/gutenbergtozim
+WORKDIR /src/
+RUN python ./setup.py install
 
 # Boot commands
 CMD gutenberg2zim --help ; /bin/bash

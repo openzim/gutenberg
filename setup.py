@@ -8,6 +8,8 @@ from codecs import open
 
 from setuptools import setup, find_packages
 
+from gutenbergtozim import VERSION
+
 with open('pypi-readme.rst', 'r', 'utf-8') as f:
     readme = f.read()
 
@@ -16,7 +18,7 @@ with open('requirements.pip', 'r') as f:
 
 setup(
     name='gutenberg2zim',
-    version="1.1.2.b",
+    version=VERSION,
     description=__doc__,
     long_description=readme,
     author="Kiwix",

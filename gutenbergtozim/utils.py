@@ -50,7 +50,8 @@ def get_project_id(languages=[], formats=[], only_books=[]):
 
     parts = ['gutenberg']
     parts.append("-".join(languages))
-    parts.append("-".join(formats))
+    if len(formats) < len(FORMAT_MATRIX):
+        parts.append("-".join(formats))
     parts.append("selection" if only_books else "all")
     parts.append(datetime.datetime.now().strftime('%Y-%m'))
     return "_".join(parts)
