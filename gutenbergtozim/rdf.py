@@ -8,6 +8,7 @@ import os
 import re
 from multiprocessing.dummy import Pool
 
+import peewee
 from path import Path as path
 from bs4 import BeautifulSoup
 
@@ -194,12 +195,16 @@ def save_rdf_in_database(parser):
         try:
             author_record = Author.get(gut_id=parser.author_id)
         except Exception:
-            author_record = Author.create(
-                gut_id=parser.author_id,
-                last_name=normalize(parser.last_name),
-                first_names=normalize(parser.first_name),
-                birth_year=parser.birth_year,
-                death_year=parser.death_year)
+            try:
+                author_record = Author.create(
+                    gut_id=parser.author_id,
+                    last_name=normalize(parser.last_name),
+                    first_names=normalize(parser.first_name),
+                    birth_year=parser.birth_year,
+                    death_year=parser.death_year)
+            # concurrent workers might colide here so we retry once on IntegrityError
+            except peewee.IntegrityError:
+                author_record = Author.get(gut_id=parser.author_id)
         else:
             if parser.last_name:
                 author_record.last_name = normalize(parser.last_name)
