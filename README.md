@@ -1,12 +1,14 @@
-# Project Gutenberg Offline
+# Gutenberg Offline
+
+A scraper that downloads the whole repository of [Project
+Gutenberg](https://www.gutenberg.org) and puts it into a locally
+browsable directory and then in a [ZIM](https://openzim.org) file, a
+clean and user friendly format for storing content for offline usage.
 
 [![](https://img.shields.io/pypi/v/gutenberg2zim.svg)](https://pypi.python.org/pypi/gutenberg2zim)
-
-A scraper that downloads the whole repository of [Project Gutenberg]
-(http://www.gutenberg.org) and puts it into a locally browsable
-directory and then in a ZIM file (http://www.openzim.org), a clean and
-user friendly format for storing content for offline usage. It was
-created during a Kiwix Hackathon in Lyon, France in July 2014.
+[![Docker Build Status](https://img.shields.io/docker/build/openzim/gutenberg)](https://hub.docker.com/r/openzim/gutenberg)
+[![CodeFactor](https://www.codefactor.io/repository/github/openzim/gutenberg/badge)](https://www.codefactor.io/repository/github/openzim/gutenberg)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## Setting up the environment
 
@@ -14,16 +16,16 @@ It's recommended that you use `virtualenv`. `py2.7.x` and `py3.6+` are supported
 
 ### Install the dependencies
 
-#### Linux 
+#### GNU/Linux
 
-```
+```bash
 sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle curl zip
 sudo pip install virtualenv
 ```
 
-#### Mac OS X
+#### macOS
 
-```
+```bash
 sudo easy_install pip
 sudo pip install virtualenv
 brew install advancecomp jpegoptim pngquant p7zip gifsicle
@@ -31,7 +33,7 @@ brew install advancecomp jpegoptim pngquant p7zip gifsicle
 
 ### Set up the project
 
-```
+```bash
 git clone git@github.com:kiwix/gutenberg.git
 cd gutenberg
 virtualenv gut-env (or any name you want)
@@ -45,27 +47,25 @@ virtualenv gut-env (or any name you want)
 
 ## Getting started
 
-After setting up the whole environment you can just run the main script `gutenberg2zim`.   
+After setting up the whole environment you can just run the main script `gutenberg2zim`.
 It will download, process and export the content.
-
-```
+```bash
 ./gutenberg2zim
 ```
 
 #### Arguments
 
-You can also specify parameters to customize the content.   
-Only want books with the Id 100-200? Books only in French? English? Or only those both? No problem!  
+You can also specify parameters to customize the content.
+Only want books with the Id 100-200? Books only in French? English? Or only those both? No problem!
 You can also include or exclude book formats.
-
-```
+```bash
 ./gutenberg2zim -l en,fr -f pdf --books 100-200
 ```
+
 This will download English and French books that have the Id 100 to 200 in the html (default) and pdf format.
 
 You can find the full arguments list below.
-
-``` sh
+```bash
 -h --help                       Display this help message
 -y --wipe-db                    Do not wipe the DB during parse stage
 -F --force                      Redo step even if target already exist
@@ -102,9 +102,12 @@ You can find the full arguments list below.
 --zim                           Create a ZIM file
 ```
 
-
 ## Screenshots
 
-![](http://i.imgur.com/A4NnS2K.png?1)
+![](https://raw.githubusercontent.com/openzim/gutenberg/master/pictures/screenshot_1.png)
+![](https://raw.githubusercontent.com/openzim/gutenberg/master/pictures/screenshot_1.png)
 
-![](http://i.imgur.com/mtZduCM.png?2)
+## License
+
+[GPLv3](https://www.gnu.org/licenses/gpl-3.0) or later, see
+[LICENSE](LICENSE) for more details.
