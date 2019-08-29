@@ -1,10 +1,9 @@
-# Project Gutenberg Offline
+# Gutenberg Offline
 
-A scraper that downloads the whole repository of [Project Gutenberg]
-(http://www.gutenberg.org) and puts it into a locally browsable
-directory and then in a ZIM file (http://www.openzim.org), a clean and
-user friendly format for storing content for offline usage. It was
-created during a Kiwix Hackathon in Lyon, France in July 2014.
+A scraper that downloads the whole repository of [Project
+Gutenberg](https://www.gutenberg.org) and puts it into a locally
+browsable directory and then in a [ZIM](https://openzim.org) file, a
+clean and user friendly format for storing content for offline usage.
 
 [![](https://img.shields.io/pypi/v/gutenberg2zim.svg)](https://pypi.python.org/pypi/gutenberg2zim)
 [![Docker Build Status](https://img.shields.io/docker/build/openzim/gutenberg)](https://hub.docker.com/r/openzim/gutenberg)
