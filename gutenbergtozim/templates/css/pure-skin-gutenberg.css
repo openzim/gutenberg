@@ -535,11 +535,11 @@ Forms Core
 }
 .pure-skin-gutenberg .pure-form .pure-group input:first-child {
     top: 1px;
-    border-radius: 4px 4px 0px 0px;
+    border-radius: 4px 4px 0 0;
 }
 .pure-skin-gutenberg .pure-form .pure-group input:last-child {
     top: -2px;
-    border-radius: 0px 0px 4px 4px;
+    border-radius: 0 0 4px 4px;
 }
 .pure-skin-gutenberg .pure-form .pure-group button {
     margin: 0.35em 0;
@@ -845,10 +845,10 @@ margin: 7px 2px;
     /*color: #C0C1C3; allow .pure-button to color text*/
 }
 .pure-skin-gutenberg .pure-paginator .prev {
-    border-radius: 4px 0px 0px 4px;
+    border-radius: 4px 0 0 4px;
 }
 .pure-skin-gutenberg .pure-paginator .next {
-    border-radius: 0px 4px 4px 0px;
+    border-radius: 0 4px 4px 0;
 }
 /* end from PURE menu-paginator.css ******************************/
 /* from PURE menu.css *******************************************/
