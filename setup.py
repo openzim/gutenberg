@@ -30,7 +30,7 @@ setup(
     zip_safe=False,
     platforms='any',
     include_package_data=True,
-    data_files=['pypi-readme.rst', 'LICENSE.txt', 'requirements.pip'],
+    data_files=['pypi-readme.rst', 'LICENSE', 'requirements.pip'],
     package_dir={'gutenberg': 'gutenberg'},
     install_requires=requirements,
     scripts=['gutenberg2zim'],

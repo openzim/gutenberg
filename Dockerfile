@@ -28,7 +28,7 @@ RUN cd gifsicle-1.88 && make all install
 RUN locale-gen "en_US.UTF-8"
 COPY requirements.pip /src/
 RUN python -m pip install -r /src/requirements.pip
-COPY LICENSE.txt /src/
+COPY LICENSE /src/
 COPY pypi-readme.rst /src/
 COPY languages_06_2018 /src/
 COPY MANIFEST.in /src/
