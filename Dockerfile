@@ -2,7 +2,7 @@ FROM openzim/zimwriterfs:1.3.5
 
 # Install necessary packages
 RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends advancecomp python-pip python-dev python-setuptools libxml2-dev libxslt-dev p7zip-full python-pillow curl zip bash sed rsync libjpeg-dev libpng-dev && \
+    apt-get install -y --no-install-recommends advancecomp python3-pip python3-dev python3-setuptools libxml2-dev libxslt-dev p7zip-full python3-pillow curl zip bash sed rsync libjpeg-dev libpng-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -27,7 +27,7 @@ RUN cd gifsicle-1.88 && make all install
 # Install gutenberg (from source)
 RUN locale-gen "en_US.UTF-8"
 COPY requirements.pip /src/
-RUN python -m pip install -r /src/requirements.pip
+RUN python3 -m pip install -r /src/requirements.pip
 COPY LICENSE /src/
 COPY pypi-readme.rst /src/
 COPY languages_06_2018 /src/
@@ -36,7 +36,7 @@ COPY setup.py /src/
 COPY gutenberg2zim /src/
 COPY gutenbergtozim /src/gutenbergtozim
 WORKDIR /src/
-RUN python ./setup.py install
+RUN python3 ./setup.py install
 
 # Boot commands
 CMD gutenberg2zim --help ; /bin/bash
