@@ -6,6 +6,7 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
 import os
+import platform
 
 from collections import defaultdict
 
@@ -234,7 +235,8 @@ def setup_urls():
     file_with_url = os.path.join("tmp", "file_on_{}".format(UrlBuilder.SERVER_NAME))
     cmd = ["bash", "-c", "rsync -a --list-only {} > {}".format(UrlBuilder.RSYNC, file_with_url)]
     exec_cmd(cmd)
-    cmd = ["sed", "-i", r"s#.* \(.*\)$#\\1#", file_with_url]
+    in_place_opt = ["-i", ".bak"] if platform.system() == "Darwin" else ["-i"]
+    cmd = ["sed"] + in_place_opt + [r"s#.* \(.*\)$#\\1#", file_with_url]
     exec_cmd(cmd)
 
     field_names = ['url']

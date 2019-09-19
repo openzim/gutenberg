@@ -188,6 +188,6 @@ def zip_epub(epub_fpath, root_folder, fpaths):
 
 
 def ensure_unicode(v):
-    if isinstance(v, str):
+    if six.PY2 and isinstance(v, str):
         v = v.decode('utf8')
     return six.text_type(v)
