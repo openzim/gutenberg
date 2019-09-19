@@ -46,4 +46,4 @@ logger = logging.getLogger(__name__)
 
 TMP_FOLDER = 'tmp'
 
-VERSION = "1.1.3.0"
+VERSION = "1.1.4"
