@@ -173,7 +173,7 @@ tr td.table-icons:hover {
 }
 
 .home-icon {
-	padding-right: .5em;
+    padding-right: .5em;
 }
 
 tr.odd {
@@ -322,11 +322,11 @@ body.cover .content h2 {
 }
 
 .cover-detail.author a {
-	color: #D00000;
+    color: #D00000;
 }
 
 .cover-detail.author a:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 .bibrec {
@@ -508,3 +508,31 @@ body.cover .content h2 {
 #author_filter.clearable.x  { background-position: right 1em center; } /* (jQ) Show icon */
 #author_filter.clearable.onX{ cursor: pointer; }              /* (jQ) hover cursor style */
 #author_filter.clearable::-ms-clear {display: none; width:0; height:0;} /* Remove IE default X */
+
+@media (max-width: 800px) {
+    .fa-download {
+        display: none;
+    }
+    a.home-icon {
+        display: none;
+    }
+    a.home-icon:first-of-type {
+        display: inline;
+    }
+    .home-icon {
+        padding: 0;
+        margin: 0;
+    }
+    td {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+@media (max-width: 400px) {
+    i.fa-3x {
+        font-size: 2em;
+    }
+}
+
+
