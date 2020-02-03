@@ -136,11 +136,12 @@ class Book(BaseModel):
     license = ForeignKeyField(License, related_name='books')
     language = CharField(max_length=10)
     downloads = IntegerField(default=0)
-
+    bookshelf = CharField(max_length=500, null=True)
+    
     popularity = 0
 
     def __unicode__(self):
-        return "{}/{}".format(self.id, self.title)
+        return "{}/{}/{}".format(self.id, self.title,self.bookshelf)
 
     def to_dict(self):
         return {'title': self.title,
@@ -148,7 +149,8 @@ class Book(BaseModel):
                 'author': self.author.name(),
                 'license': self.license,
                 'language': self.language,
-                'downloads': self.downloads}
+                'downloads': self.downloads,
+                'bookshelf': self.bookshelf}
 
     def to_array(self):
         fmts = self.formats()
@@ -163,7 +165,8 @@ class Book(BaseModel):
                 html=int('html' in fmts),
                 epub=int('epub' in fmts),
                 pdf=int('pdf' in fmts)),
-            self.id
+            self.id,
+            self.bookshelf
         ]
 
     def formats(self):

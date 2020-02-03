@@ -55,7 +55,14 @@
                 <div class="pure-u-1 pure-u-sm-2-5 pure-u-md-2-5">
                     <input type="hidden" id="language_filter" value="{{ languages[0][1] }}" />
             {% endif %}
-                <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded clearable" />
+                <div class="filter-container">
+                    <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded clearable" />
+                    <input type="text" name="title_filter" id="title_filter" data-l10n-id="title" placeholder="Find a book by title" class="pure-input-rounded clearable" />
+                </div>
+                    <div>
+                        <a href="bookshelf_home.html">Bookshelves</a>
+                        <a href="Home.html">Home</a>
+                    </div>
             </div>
             {% if show_books %}
             <div class="pure-u-1 pure-u-sm-3-5 pure-u-md-3-5 sort">

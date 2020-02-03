@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Bookshelves{% endblock %}
+{% block content %}
+<ul id="bookshelves">
+    {% for bookshelf in bookshelves %}
+        <li><a href="{{ bookshelf  }}"> {{ bookshelf }} </a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

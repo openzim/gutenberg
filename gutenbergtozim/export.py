@@ -735,6 +735,13 @@ def authors_from_ids(idlist):
     return authors
 
 
+# Returns the list of all Bookshelves 
+# Ex: [None, u'Adventure', u"Children's Literature", u'Christianity', 
+# u'Detective Fiction', u'Gothic Fiction', u'Harvard Classics', u'Historical Fiction', 
+# u'Mathematics', u'Plays', u'School Stories', u'Science Fiction']
+def bookshelf_list():
+    return [bookshelf.bookshelf for bookshelf in Book.select().order_by(Book.bookshelf.asc()).group_by(Book.bookshelf)]
+
 def export_to_json_helpers(books, static_folder, languages,
                            formats, project_id):
 
@@ -788,6 +795,59 @@ def export_to_json_helpers(books, static_folder, languages,
         logger.info("\t\tDumping authors_lang_{}.js".format(lang))
         dumpjs([author.to_array() for author in authors],
                'authors_lang_{}.js'.format(lang), 'authors_json_data')
+
+
+    bookshelves = bookshelf_list()
+    for bookshelf in bookshelves:
+        #exclude the books with no bookshelf data
+        if bookshelf == None:
+            continue
+        # dumpjs for bookshelf by popularity
+        # this will allow the popularity button to use this js on the
+        # particular bookshelf page
+        logger.info('\t\tDumping bookshelf_{}_by_popularity.js'.format(bookshelf))
+        dumpjs(
+            [book.to_array()
+            for book in Book.select().where(Book.bookshelf == bookshelf)
+                             .order_by(Book.downloads.desc())],
+                             'bookshelf_{}_by_popularity.js'.format(bookshelf))
+
+        # by title
+        logger.info('\t\tDumping bookshelf_{}_by_title.js'.format(bookshelf))
+        dumpjs(
+            [book.to_array()
+            for book in Book.select().where(Book.bookshelf== bookshelf)
+                            .order_by(Book.title.asc())],
+                            'bookshelf_{}_by_title.js'.format(bookshelf))
+        # by language
+        for lang_name, lang, lang_count in avail_langs:
+            logger.info("\t\tDumping bookshelf_{}_by_lang_{}.js"
+                        .format(bookshelf, lang))
+            dumpjs(
+                [book.to_array()
+                 for book in Book.select().where(Book.language == lang)
+                                  .where(Book.bookshelf == bookshelf)
+                                  .order_by(Book.downloads.desc())],
+                'bookshelf_{}_lang_{}_by_popularity.js'.format(bookshelf, lang))
+
+            dumpjs(
+                [book.to_array()
+                 for book in Book.select().where(Book.language == lang)
+                                  .where(Book.bookshelf == bookshelf)
+                                  .order_by(Book.title.asc())],
+                'bookshelf_{}_lang_{}_by_title.js'.format(bookshelf, lang))
+    # Create the bookshelf home page
+    context = get_default_context(project_id=project_id, books=books)
+    context.update({'bookshelves':bookshelves})
+    template = jinja_env.get_template('bookshelf_home.html')
+    rendered = template.render(**context)
+    save_bs_output(rendered, os.path.join(static_folder, 'bookshelf_home.html'), UTF8)
+
+    # Won't need this if you do the templating for bookshelf_home here
+    # bookshelf list sorted by name
+    #logger.info("\t\tDumping bookshelves.js")
+    #dumpjs(bookshelves,
+    #       'bookshelves.js', 'bookshelves_json_data')
 
     # author specific collections
     authors = authors_from_ids(all_filtered_authors)

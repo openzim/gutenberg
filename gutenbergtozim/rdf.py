@@ -118,6 +118,8 @@ class RdfParser():
         self.first_name = None
         self.last_name = None
 
+        self.bookshelf = None
+
     def parse(self):
         soup = BeautifulSoup(self.rdf_data, "lxml")
 
@@ -129,6 +131,12 @@ class RdfParser():
         self.title = self.title.split('\n')[0]
         self.subtitle = ' '.join(self.title.split('\n')[1:])
         self.author_id = None
+
+
+        #Parsing for the bookshelf name
+        self.bookshelf = soup.find('pgterms:bookshelf')
+        if self.bookshelf:
+            self.bookshelf = self.bookshelf.find('rdf:value').text
 
         # Parsing the name of the Author. Sometimes it's the name of
         # an organization or the name is not known and therefore
@@ -237,7 +245,8 @@ def save_rdf_in_database(parser):
             author=author_record,  # foreign key
             license=license_record,  # foreign key
             language=parser.language.strip(),
-            downloads=parser.downloads
+            downloads=parser.downloads,
+            bookshelf=parser.bookshelf
         )
     else:
         book_record.title = normalize(parser.title.strip())
