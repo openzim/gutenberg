@@ -30,6 +30,8 @@ from gutenbergtozim.database import Book, Format, BookFormat, Author
 from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.l10n import l10n_strings
 
+from itertools import groupby
+
 jinja_env = Environment(loader=PackageLoader('gutenbergtozim', 'templates'))
 
 DEBUG_COUNT = []
@@ -797,6 +799,35 @@ def export_to_json_helpers(books, static_folder, languages,
                'authors_lang_{}.js'.format(lang), 'authors_json_data')
 
 
+    # TODO refactor so author and bookshelves call the same function
+    # TODO make separate Bookshelves by language
+    # Bookshelf specific collections
+    # bookshelves = bookshelf_list()
+    # all_bookshelves = []
+    # for bookshelf in bookshelves:
+    #     if bookshelf == None:
+    #         continue
+    #     bookshelf_object = {}
+    #     bookshelf_object["name"] = bookshelf
+    #     bookshelf_object["by_popularity"] = [
+    #         book.to_array()
+    #         for book in Book.select().where(Book.bookshelf == bookshelf)
+    #             .order_by(Book.downloads.desc())
+    #     ]
+    #     bookshelf_object["by_title"] = [
+    #         book.to_array()
+    #         for book in Book.select().where(Book.bookshelf == bookshelf)
+    #             .order_by(Book.title.asc())
+    #     ]
+    #     all_bookshelves += [bookshelf_object]
+    # logger.info('\t\tDumping bookshelves.js')
+    # dumpjs(all_bookshelves, 'bookshelves.js', 'bookshelves_json_data')
+    # context = get_default_context(project_id=project_id, books=books)
+    # context.update({'bookshelves':all_bookshelves})
+    # template = jinja_env.get_template('bookshelf_home.html')
+    # rendered = template.render(**context)
+    # save_bs_output(rendered, os.path.join(static_folder, 'bookshelf_home.html'), UTF8)
+
     bookshelves = bookshelf_list()
     for bookshelf in bookshelves:
         #exclude the books with no bookshelf data
@@ -838,7 +869,14 @@ def export_to_json_helpers(books, static_folder, languages,
                 'bookshelf_{}_lang_{}_by_title.js'.format(bookshelf, lang))
     # Create the bookshelf home page
     context = get_default_context(project_id=project_id, books=books)
+    # bookshelves are now grouped by first letter in a 2d array
+    bookshelves = [i for i in bookshelves if i]
+    bookshelves = [list(g) for k, g in groupby(bookshelves, key=lambda x: x[0])]
+    headers = []
+    for array in bookshelves:
+        headers.append(array[0][0])
     context.update({'bookshelves':bookshelves})
+    context.update({'headers':headers})
     template = jinja_env.get_template('bookshelf_home.html')
     rendered = template.render(**context)
     save_bs_output(rendered, os.path.join(static_folder, 'bookshelf_home.html'), UTF8)
