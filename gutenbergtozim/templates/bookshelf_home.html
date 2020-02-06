@@ -2,8 +2,12 @@
 {% block title %}Bookshelves{% endblock %}
 {% block content %}
 <ul id="bookshelves">
-    {% for bookshelf in bookshelves %}
-        <li><a href="{{ bookshelf  }}"> {{ bookshelf }} </a></li>
+    {% for header in bookshelves %}
+    <ul id="{{header}}">
+        {% for bookshelf in header %}        
+            <li><a href="{{ bookshelf }}.html"> {{ bookshelf }} </a></li>
+        {% endfor %}
+    </ul>
     {% endfor %}
 </ul>
 

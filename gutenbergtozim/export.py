@@ -880,6 +880,16 @@ def export_to_json_helpers(books, static_folder, languages,
     template = jinja_env.get_template('bookshelf_home.html')
     rendered = template.render(**context)
     save_bs_output(rendered, os.path.join(static_folder, 'bookshelf_home.html'), UTF8)
+    
+    # add individual bookshelf pages
+    for header in bookshelves:
+        for bookshelf in header:
+            context["bookshelf"] = bookshelf
+            template = jinja_env.get_template('bookshelf.html')
+            rendered = template.render(**context)
+            savepath = os.path.join(static_folder, "{}.html".format(bookshelf))
+            logger.info("Saving {} to {}".format(bookshelf, savepath))
+            save_bs_output(rendered, savepath, UTF8)
 
     # Won't need this if you do the templating for bookshelf_home here
     # bookshelf list sorted by name
