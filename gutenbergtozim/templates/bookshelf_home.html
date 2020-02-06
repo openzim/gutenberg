@@ -1,10 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Bookshelves{% endblock %}
 {% block content %}
-<ul id="bookshelves">
-    {% for bookshelf in bookshelves %}
-        <li><a href="{{ bookshelf  }}"> {{ bookshelf }} </a></li>
-    {% endfor %}
-</ul>
+<h1>Bookshelves (A-Z)</h1>
+<main class="bookshelves">
+    <dl class="bookshelves__list">
+        {% for i in range(bookshelves|length) %}
+            <dd class="bookshelves__list--header">{{headers[i]}}</dd>
+            {% for bookshelf in bookshelves[i] %}
+            <dt class="bookshelves__list--bookshelf"><a href="{{ bookshelf }}.html"> {{ bookshelf }} </a></dt>
+            {% endfor %}
+        {% endfor %}
+    </dl>
+</main>
+
 
 {% endblock %}
