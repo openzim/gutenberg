@@ -798,36 +798,6 @@ def export_to_json_helpers(books, static_folder, languages,
         dumpjs([author.to_array() for author in authors],
                'authors_lang_{}.js'.format(lang), 'authors_json_data')
 
-
-    # TODO refactor so author and bookshelves call the same function
-    # TODO make separate Bookshelves by language
-    # Bookshelf specific collections
-    # bookshelves = bookshelf_list()
-    # all_bookshelves = []
-    # for bookshelf in bookshelves:
-    #     if bookshelf == None:
-    #         continue
-    #     bookshelf_object = {}
-    #     bookshelf_object["name"] = bookshelf
-    #     bookshelf_object["by_popularity"] = [
-    #         book.to_array()
-    #         for book in Book.select().where(Book.bookshelf == bookshelf)
-    #             .order_by(Book.downloads.desc())
-    #     ]
-    #     bookshelf_object["by_title"] = [
-    #         book.to_array()
-    #         for book in Book.select().where(Book.bookshelf == bookshelf)
-    #             .order_by(Book.title.asc())
-    #     ]
-    #     all_bookshelves += [bookshelf_object]
-    # logger.info('\t\tDumping bookshelves.js')
-    # dumpjs(all_bookshelves, 'bookshelves.js', 'bookshelves_json_data')
-    # context = get_default_context(project_id=project_id, books=books)
-    # context.update({'bookshelves':all_bookshelves})
-    # template = jinja_env.get_template('bookshelf_home.html')
-    # rendered = template.render(**context)
-    # save_bs_output(rendered, os.path.join(static_folder, 'bookshelf_home.html'), UTF8)
-
     bookshelves = bookshelf_list()
     for bookshelf in bookshelves:
         #exclude the books with no bookshelf data
