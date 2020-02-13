@@ -132,7 +132,6 @@ def export_skeleton(static_folder, dev_mode=False,
         rendered = template.render(**context)
         save_bs_output(rendered, os.path.join(static_folder, tpl_path), UTF8)
 
-
 def export_all_books(static_folder,
                      download_cache,
                      concurrency,
@@ -858,7 +857,7 @@ def export_to_json_helpers(books, static_folder, languages,
             template = jinja_env.get_template('bookshelf.html')
             rendered = template.render(**context)
             savepath = os.path.join(static_folder, "{}.html".format(bookshelf))
-            logger.info("Saving {} to {}".format(bookshelf, savepath))
+            # logger.info("Saving {} to {}".format(bookshelf, savepath))
             save_bs_output(rendered, savepath, UTF8)
 
     # Won't need this if you do the templating for bookshelf_home here

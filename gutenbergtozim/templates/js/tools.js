@@ -669,6 +669,7 @@ function init() {
     },
     select: function(event, ui) {
       minimizeUI();
+      $.persistValue('author_filter', $(this).val(), persist_options);
       showBooks();
     }
 	});
