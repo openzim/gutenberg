@@ -214,7 +214,7 @@ def download_book(book, download_cache, languages, formats, force):
 
 
 def download_covers(book,download_cache):
-    cover = '{}_cover'.format(book.id)
+    cover = '{}_cover.jpg'.format(book.id)
     fpath = os.path.join(download_cache, cover)
     has_cover = Book.select(Book.cover_page).where( Book.id == book.id)
     if has_cover:
