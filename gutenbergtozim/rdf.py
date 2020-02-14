@@ -119,6 +119,7 @@ class RdfParser():
         self.last_name = None
 
         self.bookshelf = None
+        self.cover_image = 0
 
     def parse(self):
         soup = BeautifulSoup(self.rdf_data, "lxml")
@@ -137,6 +138,11 @@ class RdfParser():
         self.bookshelf = soup.find('pgterms:bookshelf')
         if self.bookshelf:
             self.bookshelf = self.bookshelf.find('rdf:value').text
+
+        #Search rdf to see if the image exists at the hard link 
+        #https://www.gutenberg.ord/cache/epub/id/pg{id}.cover.medium.jpg
+        if soup.find('cover.medium.jpg'):
+            self.cover_image = 1        
 
         # Parsing the name of the Author. Sometimes it's the name of
         # an organization or the name is not known and therefore
@@ -246,7 +252,8 @@ def save_rdf_in_database(parser):
             license=license_record,  # foreign key
             language=parser.language.strip(),
             downloads=parser.downloads,
-            bookshelf=parser.bookshelf
+            bookshelf=parser.bookshelf,
+            cover_image=parser.cover_image
         )
     else:
         book_record.title = normalize(parser.title.strip())

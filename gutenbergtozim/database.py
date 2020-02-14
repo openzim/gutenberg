@@ -137,6 +137,7 @@ class Book(BaseModel):
     language = CharField(max_length=10)
     downloads = IntegerField(default=0)
     bookshelf = CharField(max_length=500, null=True)
+    cover_page = IntegerField(default=0)
     
     popularity = 0
 
@@ -150,7 +151,8 @@ class Book(BaseModel):
                 'license': self.license,
                 'language': self.language,
                 'downloads': self.downloads,
-                'bookshelf': self.bookshelf}
+                'bookshelf': self.bookshelf,
+                'cover_page': self.cover_page}
 
     def to_array(self):
         fmts = self.formats()
