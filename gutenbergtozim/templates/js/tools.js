@@ -366,6 +366,178 @@ function showBooks() {
   console.log('after populateFilters');
 }
 
+function showBookshelf(bookshelfURL) {
+  console.log('showBookshelf');
+  /* Show spinner if loading takes more than 1 second */
+  inBooksLoadingLoop = true;
+  setTimeout(function() {
+    if (inBooksLoadingLoop) {
+      $('#spinner').show();
+    }
+  }, 1000);
+
+  populateFilters(function() {
+    console.log('populateFilters callback');
+
+    // redirect to home page
+    // if (is_cover_page()) {
+    //   console.log('Cover page, redirecting');
+    //   $(location).attr('href', 'Home.html');
+    // } else {
+    //   console.log('NOT COVER PAGE');
+    // }
+
+    console.log('before loadScript');
+    const scriptURL = `bookshelf_${bookshelfURL}_${booksUrl}`;
+    // const scriptURL = "bookshelf_Adventure_lang_en_by_popularity.js"
+    console.log("loading bookshelf:", scriptURL);
+    loadScript(scriptURL, 'books_script', function() {
+      if ($('#books_table').attr('filled')) {
+        booksTable.fnDestroy();
+      }
+
+      $(document).ready(function() {
+        booksTable = $('#books_table').dataTable({
+          initComplete: function(settings, json) {
+            var requestedPage = getPersistedPage();
+            if (requestedPage) {
+              this.api()
+                .page(requestedPage)
+                .draw(false);
+              // fire event as not registered/ready yet
+              onTablePageChange(null, null, this);
+            }
+          },
+          searching: false,
+          ordering: false,
+          deferRender: true,
+          bDeferRender: true,
+          lengthChange: false,
+          info: false,
+          data: json_data,
+          columns: [{ title: '' }, { title: '' }, { title: '' }],
+          bAutoWidth: false,
+          columnDefs: [
+            { bVisible: false, aTargets: [1] },
+            { sClass: 'table-icons', aTargets: [2] },
+            {
+              targets: 0,
+              render: function(data, type, full, meta) {
+                div = '<div class="list-stripe"></div>';
+                title = '<span style="display: none">' + full[3] + '</span>';
+                title += ' <span class = "table-title">' + full[0] + '</span>';
+                author =
+                  full[1] == 'Anonymous'
+                    ? '<span class="table-author" data-l10n-id="author-anonymous">' +
+                      document.webL10n.get('author-anonymous') +
+                      '</span>'
+                    : full[1] == 'Various'
+                    ? '<span class="table-author" data-l10n-id="author-various">' +
+                      document.webL10n.get('author-various') +
+                      '</span>'
+                    : '<span class="table-author">' + full[1] + '</span>';
+
+                return div + '<div>' + title + '<br>' + author + '</div';
+              }
+            },
+            {
+              targets: 1,
+              render: function(data, type, full, meta) {
+                return '';
+              }
+            },
+            {
+              targets: 2,
+              render: function(data, type, full, meta) {
+                var html = '';
+                var urlBase =
+                  full[0].replace('/', '-').substring(0, 230) + '.' + full[3];
+                urlBase = encodeURIComponent(urlBase);
+
+                if (data[0] == 1) {
+                  html +=
+                    '<a class="home-icon" title="' +
+                    full[0] +
+                    ': HTML" href="../A/' +
+                    urlBase +
+                    '.html"><i class="fa fa-html5 fa-3x"></i></a>';
+                }
+                if (data[1] == 1) {
+                  html +=
+                    '<a class="home-icon" title="' +
+                    full[0] +
+                    ': EPUB" href="../I/' +
+                    urlBase +
+                    '.epub"><i class="fa fa-download fa-3x"></i></a>';
+                }
+                if (data[2] == 1) {
+                  html +=
+                    '<a class="home-icon" title="' +
+                    full[0] +
+                    ': PDF" href="../I/' +
+                    urlBase +
+                    '.pdf"><i class="fa fa-file-pdf-o fa-3x"></i></a>';
+                }
+
+                return html;
+              }
+            }
+          ]
+        });
+        $('#books_table').on('page.dt', onTablePageChange);
+      });
+
+      /* Book list click handlers */
+      $('#books_table').on('mouseup', 'tr td:first-child', function(event) {
+        var id = $('span', this)[0].innerHTML;
+        var titre = $('span.table-title', this)[0].innerHTML;
+
+        if (event.which == 1) {
+          /* Left click */
+          $(location).attr(
+            'href',
+            encodeURIComponent(titre.replace('/', '-').substring(0, 230)) +
+              '_cover.' +
+              id +
+              '.html'
+          );
+        } else if (event.which == 2) {
+          /* Middle click */
+          var href = $(this).attr('data-href');
+          var link = $(
+            '<a href="' +
+              encodeURIComponent(titre.replace('/', '-').substring(0, 230)) +
+              '_cover.' +
+              id +
+              '.html' +
+              '" />'
+          );
+          link.attr('target', '_blank');
+          window.open(link.attr('href'));
+        }
+      });
+
+      $('#books_table_paginate').click(function() {
+        minimizeUI();
+      });
+      $('#books_table').attr('filled', true);
+
+      $('.sort').show();
+
+      /* Hide Spinner */
+      inBooksLoadingLoop = false;
+      $('#spinner').hide();
+
+      /* Translate books table back/next buttons */
+      $('#books_table_previous').attr('data-l10n-id', 'table-previous');
+      $('#books_table_previous').html(document.webL10n.get('table-previous'));
+      $('#books_table_next').attr('data-l10n-id', 'table-next');
+      $('#books_table_next').html(document.webL10n.get('table-next'));
+    });
+    console.log('after loadScript');
+  });
+  console.log('after populateFilters');
+}
 function onLocalized() {
   var l10n = document.webL10n;
   var l10nselect = $('#l10nselect');
@@ -497,6 +669,7 @@ function init() {
     },
     select: function(event, ui) {
       minimizeUI();
+      $.persistValue('author_filter', ui.item.value, persist_options);
       showBooks();
     }
 	});

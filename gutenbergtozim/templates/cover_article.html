@@ -8,16 +8,16 @@
     <div class="pure-g cover-content">
 
         {% if cover_img %}
-        <div class="pure-u-1 pure-u-md-1-2 cover-image">
+        <div class="cover-image">
             <img data-l10n-id="cover-img" class="cover-art" src="{{ cover_img }}" title="Book Cover" alt="Book Cover" />
         </div>
-        <div class="pure-u-1 pure-u-md-1-2 bibrec sidedimg">
+        <!-- <div class="pure-u-1 pure-u-md-1-2 bibrec sidedimg">
         {% else %}
-        <div class="pure-u-1 bibrec">
+        <div class="pure-u-1 bibrec"> -->
         {% endif %}
         <!-- <div class="bibrec"> -->
             <div class="cover-detail author">
-                <p class="label" data-l10n-id="author">Author</p>
+                <p class="label" data-l10n-id="author">Authoxr</p>
                 <p class="label-value"{{ translate_author}}><a href='javascript:goToAuthor("{{ book.author.name() }}");'>{{ book.author.name() }}</a></p>
             </div>
 

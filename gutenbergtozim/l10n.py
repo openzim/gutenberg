@@ -30,7 +30,11 @@ l10n_strings = {
             },
             "author": {
                 "textContent": "Author",
-                "placeholder": "List books of a single Author"
+                "placeholder": "Search by author name"
+            },
+            "title": {
+                "textContext": "Title",
+                "placeholder": "Search by title"
             },
             "cover-img": {
                 "alt": "Book Cover",

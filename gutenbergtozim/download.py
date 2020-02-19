@@ -15,10 +15,11 @@ from path import Path as path
 
 from gutenbergtozim import logger, TMP_FOLDER
 from gutenbergtozim.urls import get_urls
-from gutenbergtozim.database import BookFormat, Format
+from gutenbergtozim.database import BookFormat, Format, Book
 from gutenbergtozim.export import get_list_of_filtered_books, fname_for
 from gutenbergtozim.utils import download_file, FORMAT_MATRIX, ensure_unicode
 
+IMAGE_BASE = 'http://aleph.gutenberg.org/cache/epub/'
 
 def resource_exists(url):
     r = requests.get(url, stream=True, timeout=20)  # in seconds
@@ -212,6 +213,19 @@ def download_book(book, download_cache, languages, formats, force):
             continue
 
 
+def download_covers(book,download_cache):
+    cover = '{}_cover.jpg'.format(book.id)
+    fpath = os.path.join(download_cache, cover)
+    has_cover = Book.select(Book.cover_page).where( Book.id == book.id)
+    if has_cover:
+        title = '{}{}/pg{}.cover.medium.jpg'.format(IMAGE_BASE,book.id,book.id)
+        logger.debug('Downloading {}'.format(title))
+        download_file(title,fpath)
+    else:
+        logger.debug('No Book Cover found for Book #{}'.format(book.id))
+    return True
+
+
 def download_all_books(download_cache, concurrency,
                        languages=[], formats=[],
                        only_books=[], force=False):
@@ -225,4 +239,7 @@ def download_all_books(download_cache, concurrency,
 
     def dlb(b):
         return download_book(b, download_cache, languages, formats, force)
+    def dlb_covers(b):
+        return download_covers(b,download_cache)
     Pool(concurrency).map(dlb, available_books)
+    Pool(concurrency).map(dlb_covers,available_books)
