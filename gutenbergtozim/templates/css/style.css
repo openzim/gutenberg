@@ -239,6 +239,22 @@ dataTables_wrapper.dataTables_length,
     overflow-y: auto;
 }
 
+.nav-link {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.filter-container {
+    width: 100%;
+    display: block;
+    margin: auto;
+}
+
+.filter-container .pure-input-rounded {
+    margin-bottom: 0.5em !important;
+    display: inherit !important;
+}
+
 /*.ui-menu-item,
 .ui-menu-item:hover,
 .ui-menu-item:link,
@@ -527,7 +543,25 @@ body.cover .content h2 {
 #author_filter.clearable.onX{ cursor: pointer; }              /* (jQ) hover cursor style */
 #author_filter.clearable::-ms-clear {display: none; width:0; height:0;} /* Remove IE default X */
 
+#title_filter.clearable{
+    background: #fff url(data:image/gif;base64,R0lGODlhBwAHAIAAAP///5KSkiH5BAAAAAAALAAAAAAHAAcAAAIMTICmsGrIXnLxuDMLADs=) no-repeat right -1em center;
+    /*border: 1px solid #999;
+    padding: 3px 18px 3px 4px;      Use the same right padding (18) in jQ! 
+    border-radius: 3px;*/
+    transition: background 0.4s;
+  }
+#title_filter.clearable.x  { background-position: right 1em center; } /* (jQ) Show icon */
+#title_filter.clearable.onX{ cursor: pointer; }              /* (jQ) hover cursor style */
+#title_filter.clearable::-ms-clear {display: none; width:0; height:0;} /* Remove IE default X */
+
+/* @media (max-width: 1400px) {
+
+} */
+
 @media (max-width: 800px) {
+    .nav-link {
+        text-align: center;
+    }
     .fa-download {
         display: none;
     }
