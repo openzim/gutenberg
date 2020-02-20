@@ -836,16 +836,13 @@ def export_to_json_helpers(books, static_folder, languages,
                                   .where(Book.bookshelf == bookshelf)
                                   .order_by(Book.title.asc())],
                 'bookshelf_{}_lang_{}_by_title.js'.format(bookshelf, lang))
+    
+    logger.info("\t\tDumping bookshelves.js")
+    dumpjs(bookshelves,
+           'bookshelves.js', 'bookshelves_json_data')
+
     # Create the bookshelf home page
     context = get_default_context(project_id=project_id, books=books)
-    # bookshelves are now grouped by first letter in a 2d array
-    bookshelves = [i for i in bookshelves if i]
-    bookshelves = [list(g) for k, g in groupby(bookshelves, key=lambda x: x[0])]
-    headers = []
-    for array in bookshelves:
-        headers.append(array[0][0])
-    context.update({'bookshelves':bookshelves})
-    context.update({'headers':headers})
     template = jinja_env.get_template('bookshelf_home.html')
     rendered = template.render(**context)
     save_bs_output(rendered, os.path.join(static_folder, 'bookshelf_home.html'), UTF8)
