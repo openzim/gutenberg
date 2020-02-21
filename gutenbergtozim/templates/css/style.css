@@ -413,6 +413,9 @@ body.cover .content h2 {
 
 .book-cover-pre {
     height: 70px;
+    width: 50px;
+    margin-right: 5px;
+    margin-top: 5px;
 }
 
 /* mobile */

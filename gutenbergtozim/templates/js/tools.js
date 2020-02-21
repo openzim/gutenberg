@@ -250,7 +250,7 @@ function showBooks() {
             {
               targets: 0,
               render: function(data, type, full, meta) {
-                img = '<img class="book-cover-pre" src="' + full[3] + '_cover.jpg' + '">' 
+                img = '<img class="pure-u-1-8 book-cover-pre" src="' + full[3] + '_cover.jpg' + '">' 
                 div = '<div class="list-stripe"></div>';
                 title = '<span style="display: none">' + full[3] + '</span>';
                 title += ' <span class = "table-title">' + full[0] + '</span>';
@@ -264,8 +264,9 @@ function showBooks() {
                       document.webL10n.get('author-various') +
                       '</span>'
                     : '<span class="table-author">' + full[1] + '</span>';
-
-                return div + '<div>' + img + title + '<br>' + author + '</div';
+                infoContainer = '<div class="pure-u-7-8">' + title + '<br>' + author + '</div>';
+                innerGrid = '<div class="pure-g">' + img + infoContainer + '</div>';
+                return div + '<div>' + innerGrid + '</div';
               }
             },
             {
