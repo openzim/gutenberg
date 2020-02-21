@@ -25,7 +25,7 @@
         <script src="main_languages.js" type="text/javascript"></script>
         <script src="other_languages.js" type="text/javascript"></script>
     </head>
-    <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}" class="pure-skin-gutenberg {% if not show_books %}cover{% else %}home{% endif %}">
+    <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}" class="pure-skin-gutenberg {% if not (show_books or show_bookshelf) %}cover{% else %}home{% endif %}">
     <div id="spinner" class="spinner" style="display:none;" >
         <img id="img-spinner" src="css/spinner.gif" alt="Loading" />
     </div>
@@ -52,17 +52,18 @@
             </div>
             <div class="pure-u-1 pure-u-md-1-5 pure-u-sm-1-5">
             {% else %}
-                <div class="pure-u-1 pure-u-sm-2-5 pure-u-md-2-5">
-                    <input type="hidden" id="language_filter" value="{{ languages[0][1] }}" />
+            <div class="pure-u-1 pure-u-sm-2-5 pure-u-md-2-5">
+                <input type="hidden" id="language_filter" value="{{ languages[0][1] }}" />
             {% endif %}
-                <div class="filter-container">
-                    <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded clearable" />
-                    <input type="text" name="title_filter" id="title_filter" data-l10n-id="title" placeholder="Find a book by title" class="pure-input-rounded clearable" />
-                </div>
-                    <div>
-                        <a href="bookshelf_home.html">Bookshelves</a>
-                        <a href="Home.html">Home</a>
-                    </div>
+                <section class="filter-container">
+                        <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded clearable" />
+                        <input type="text" name="title_filter" id="title_filter" data-l10n-id="title" placeholder="Search by title" class="pure-input-rounded clearable" />
+                        {% if (show_books or show_bookshelf) %}
+                        <a class="nav-link" href="bookshelf_home.html">Browse by Bookshelf</a>
+                        {% else %}
+                        <a class="nav-link" href="Home.html">Go Home</a>
+                        {% endif %}
+                </section>
             </div>
             {% if show_books %}
             <div class="pure-u-1 pure-u-sm-3-5 pure-u-md-3-5 sort">
@@ -70,11 +71,6 @@
                 <i class="fa fa-heart fa-2x" title="Sort by popularity" id="popularity_sort" />&nbsp;</i>
                 <i class="fa fa-sort-alpha-asc fa-2x" title="Sort by title" id="alpha_sort" >&nbsp;</i>
             </div>
-            {% else %}
-            <div class="pure-u-1 pure-u-md-1-5">
-                <button class="search pure-button" data-l10n-id="search"><i class="fa fa-search fa-1x"></i> Search</button>
-            </div>
-            <!-- <div class="pure-u-1 pure-u-md-2-5"></div> -->
             {% endif %}
         </div>
         </div>
