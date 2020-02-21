@@ -411,6 +411,10 @@ body.cover .content h2 {
     text-align: center;
 }
 
+.book-cover-pre {
+    height: 70px;
+}
+
 /* mobile */
 
 @media(max-width:768px) {

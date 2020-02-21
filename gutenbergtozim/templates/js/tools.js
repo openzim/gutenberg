@@ -250,6 +250,7 @@ function showBooks() {
             {
               targets: 0,
               render: function(data, type, full, meta) {
+                img = '<img class="book-cover-pre" src="' + full[3] + '_cover.jpg' + '">' 
                 div = '<div class="list-stripe"></div>';
                 title = '<span style="display: none">' + full[3] + '</span>';
                 title += ' <span class = "table-title">' + full[0] + '</span>';
@@ -264,7 +265,7 @@ function showBooks() {
                       '</span>'
                     : '<span class="table-author">' + full[1] + '</span>';
 
-                return div + '<div>' + title + '<br>' + author + '</div';
+                return div + '<div>' + img + title + '<br>' + author + '</div';
               }
             },
             {
