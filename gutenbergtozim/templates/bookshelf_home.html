@@ -3,15 +3,12 @@
 {% block content %}
 <h1>Bookshelves (A-Z)</h1>
 <main class="bookshelves">
-    <dl class="bookshelves__list">
-        {% for i in range(bookshelves|length) %}
-            <dd class="bookshelves__list--header">{{headers[i]}}</dd>
-            {% for bookshelf in bookshelves[i] %}
-            <dt class="bookshelves__list--bookshelf"><a href="{{ bookshelf }}.html"> {{ bookshelf }} </a></dt>
-            {% endfor %}
-        {% endfor %}
-    </dl>
-</main>
+   <div id = "bookshelvesDisplay">
 
+   </div>
+</main>
+<script type="text/javascript">
+    showBookshelfSearchResults("");
+</script>
 
 {% endblock %}
