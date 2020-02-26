@@ -25,7 +25,7 @@
         <script src="main_languages.js" type="text/javascript"></script>
         <script src="other_languages.js" type="text/javascript"></script>
     </head>
-    <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}" class="pure-skin-gutenberg {% if not show_books %}cover{% else %}home{% endif %}">
+    <body onload="init(); {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %}" class="pure-skin-gutenberg {%if bookshelf_home%}bookshelf_home{%endif%}  {%if individual_book_shelf%}individual_book_shelf{%endif%}  {% if not show_books %}cover{% else %}home{% endif %}">
     <div id="spinner" class="spinner" style="display:none;" >
         <img id="img-spinner" src="css/spinner.gif" alt="Loading" />
     </div>
@@ -62,7 +62,7 @@
                         <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded clearable" />
                         <input type="text" name="title_filter" id="title_filter" data-l10n-id="title" placeholder="Search by title" class="pure-input-rounded clearable" />
                         {% endif %}
-                        {% if show_books %}
+                        {% if show_books or individual_book_shelf %}
                         <a class="nav-link" href="bookshelf_home.html">Browse by Bookshelf</a>
                         {% else %}
                         <a class="nav-link" href="Home.html">Go Home</a>

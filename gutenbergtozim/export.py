@@ -853,6 +853,7 @@ def export_to_json_helpers(books, static_folder, languages,
         if bookshelf is None:
             continue
         context["bookshelf"] = bookshelf
+        context.update({'bookshelf_home':False, 'individual_book_shelf':True})
         template = jinja_env.get_template('bookshelf.html')
         rendered = template.render(**context)
         savepath = os.path.join(static_folder, "{}.html".format(bookshelf))

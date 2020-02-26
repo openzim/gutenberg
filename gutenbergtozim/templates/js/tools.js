@@ -197,7 +197,9 @@ function populateFilters(callback) {
 function is_cover_page() {
   return $('body').hasClass('cover');
 }
-
+function is_bookshelf_page() {
+  return $('body').hasClass('individual_book_shelf');
+}
 function showBooks() {
   console.log('showBooks');
   /* Show spinner if loading takes more than 1 second */
