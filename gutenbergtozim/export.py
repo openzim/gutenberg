@@ -836,30 +836,29 @@ def export_to_json_helpers(books, static_folder, languages,
                                   .where(Book.bookshelf == bookshelf)
                                   .order_by(Book.title.asc())],
                 'bookshelf_{}_lang_{}_by_title.js'.format(bookshelf, lang))
+    
+    logger.info("\t\tDumping bookshelves.js")
+    dumpjs(bookshelves,
+           'bookshelves.js', 'bookshelves_json_data')
+
     # Create the bookshelf home page
     context = get_default_context(project_id=project_id, books=books)
-    # bookshelves are now grouped by first letter in a 2d array
-    bookshelves = [i for i in bookshelves if i]
-    bookshelves = [list(g) for k, g in groupby(bookshelves, key=lambda x: x[0])]
-    headers = []
-    for array in bookshelves:
-        headers.append(array[0][0])
-    context.update({'bookshelves':bookshelves})
-    context.update({'headers':headers})
+    context.update({'bookshelf_home': True})
     template = jinja_env.get_template('bookshelf_home.html')
     rendered = template.render(**context)
     save_bs_output(rendered, os.path.join(static_folder, 'bookshelf_home.html'), UTF8)
     
     # add individual bookshelf pages
-    for header in bookshelves:
-        for bookshelf in header:
-            context["bookshelf"] = bookshelf
-            context["show_bookshelf"] = True
-            template = jinja_env.get_template('bookshelf.html')
-            rendered = template.render(**context)
-            savepath = os.path.join(static_folder, "{}.html".format(bookshelf))
+    for bookshelf in bookshelves:
+        if bookshelf is None:
+            continue
+        context["bookshelf"] = bookshelf
+        context.update({'bookshelf_home':False, 'individual_book_shelf':True})
+        template = jinja_env.get_template('bookshelf.html')
+        rendered = template.render(**context)
+        savepath = os.path.join(static_folder, "{}.html".format(bookshelf))
             # logger.info("Saving {} to {}".format(bookshelf, savepath))
-            save_bs_output(rendered, savepath, UTF8)
+        save_bs_output(rendered, savepath, UTF8)
 
     # Won't need this if you do the templating for bookshelf_home here
     # bookshelf list sorted by name

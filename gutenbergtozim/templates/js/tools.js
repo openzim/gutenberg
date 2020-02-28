@@ -1,8 +1,10 @@
 var sortMethod = 'popularity';
 var booksUrl = 'full_by_popularity.js';
+var bookshelves = 'bookshelves.js';
 var inBooksLooadingLoop = false;
 var booksTable = null;
 var title_dict = null;
+var globalShelvesTable = null;
 var persist_options = {
   context: 'gutenberg', // a context or namespace for each field
   cookie: '{{ project_id }}', // cookies basename
@@ -195,7 +197,9 @@ function populateFilters(callback) {
 function is_cover_page() {
   return $('body').hasClass('cover');
 }
-
+function is_bookshelf_page() {
+  return $('body').hasClass('individual_book_shelf');
+}
 function showBooks() {
   console.log('showBooks');
   /* Show spinner if loading takes more than 1 second */
@@ -710,11 +714,18 @@ function init() {
 
      
     }
-	});
+  });
+  
   $('#author_filter').keypress(function(event) {
     if (event.which == 13) {
       $.persistValue('author_filter', $(this).val(), persist_options);
       showBooks();
+    }
+  });
+  $('#bookshelf_filter').keypress(function(event) {
+    if (event.which == 13) {
+      $.persistValue('author_filter', $(this).val(), persist_options);
+      showBookshelfSearchResults($(this).val());
     }
   });
 
@@ -773,5 +784,55 @@ function init() {
     console.log('not filled')
   }
 }
+function showBookshelfSearchResults(value){
+  loadScript(bookshelves, 'find_bookshelves', function() {
+    let pattern = new RegExp(value, 'i');
+    if(globalShelvesTable!=null){
+      globalShelvesTable.destroy();
+      $('#bookShelfTable').remove();
+    }
+    let table = "<table id = \"bookShelfTable\" class=\"display\" style=\"width:100%\"><thead><tr><th>Bookshelves</th></tr></thead><tbody>";
+    for (let i = 0; i< bookshelves_json_data.length; ++i){
+      if(bookshelves_json_data[i]==null){
+        continue;
+      }
+     
+      if(bookshelves_json_data[i].match(pattern)){
+        table+="<tr><td>"+bookshelves_json_data[i]+"</td></tr>";
+      }
+    }
+    table+="</tbody></table>";
+    $("#bookshelvesDisplay").append($(table));
+    globalShelvesTable =  $('#bookShelfTable').DataTable(
+      {
+        searching : false,
+        info: false,
+        destroy:true,
+        columnDefs: [
+          {
+              targets: -1,
+              className: 'dt-body-left'
+          }
+        ]
+      }
+    );
+    
+    $('#bookShelfTable tbody').on('click', 'tr',function() {
+      let data = globalShelvesTable.row( this ).data();
+      console.log(data);
+      $(location).attr('href', data[0]+'.html');
+      
+    });
+  });
+  
+}
+$("#bookshelf_filter").keypress(function(event){
+  if (event.which == 13) {
+    showBookshelfSearchResults($(this).val());
+  }
+});
+
+
+
 
 document.webL10n.ready(onLocalized);
