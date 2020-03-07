@@ -775,11 +775,15 @@ function init() {
   // enable clearable if persisted value
   if ($('#author_filter').val()) {
     $('#author_filter').addClass('x onX');
-    console.log('filled');
+    console.log('author filter filled');
 	}
 	if ($('#title_filter').val()) {
     $('#title_filter').addClass('x onX');
-    console.log('filled')
+    console.log('title filter filled')
+  }
+  if ($('#bookshelf_filter').val()) {
+    $('#bookshelf_filter').addClass('x onX');
+    console.log('title filter filled')
   }else{
     console.log('not filled')
   }
