@@ -43,7 +43,7 @@ header h1 {
 }
 
 header h2 {
-    margin: .1em 0 1em 0;
+    margin: .1em 0 1em;
 }
 
 a {
@@ -64,7 +64,7 @@ a {
 /* filters */
 .pure-skin-gutenberg .filter {
     text-align: left;
-    margin: 0 1em 0 1em;
+    margin: 0 1em;
     vertical-align: baseline;
 }
 
@@ -74,7 +74,7 @@ a {
 
 /* Pre content */
 .precontent {
-    margin: 0 1em 0 1em;
+    margin: 0 1em;
     text-align: center;
 }
 
@@ -92,7 +92,7 @@ a {
 .l10nselector {
     position: relative;
     float: right;
-    margin: 1em 1em 2em 1em;
+    margin: 1em 1em 2em;
 }
 
 .content {
@@ -157,6 +157,7 @@ tr td.table-icons:hover {
 .table-title {
     font-family: 'RobotoCondensedBold';
     font-size: 1.4em;
+    text-align: center;
 }
 
 .table-author {
@@ -314,12 +315,6 @@ body.cover .content h2 {
     font-size: 1.5em;
 }
 
-.content {
-    width: 100%;
-    margin: 0 auto;
-    margin-top: 2.5em;
-}
-
 .cover-image {
     /*float: left;*/
     /*margin: 1em;*/
@@ -408,10 +403,6 @@ body.cover .content h2 {
 }
 
 .bookshelves__list--bookshelf {
-    text-align: center;
-}
-
-.table-title {
     text-align: center;
 }
 
@@ -550,7 +541,7 @@ body.cover .content h2 {
 #author_filter.clearable{
   background: #fff url(data:image/gif;base64,R0lGODlhBwAHAIAAAP///5KSkiH5BAAAAAAALAAAAAAHAAcAAAIMTICmsGrIXnLxuDMLADs=) no-repeat right -1em center;
   /*border: 1px solid #999;
-  padding: 3px 18px 3px 4px;      Use the same right padding (18) in jQ! 
+  padding: 3px 18px 3px 4px;      Use the same right padding (18) in jQ!
   border-radius: 3px;*/
   transition: background 0.4s;
 }
@@ -561,7 +552,7 @@ body.cover .content h2 {
 #title_filter.clearable{
     background: #fff url(data:image/gif;base64,R0lGODlhBwAHAIAAAP///5KSkiH5BAAAAAAALAAAAAAHAAcAAAIMTICmsGrIXnLxuDMLADs=) no-repeat right -1em center;
     /*border: 1px solid #999;
-    padding: 3px 18px 3px 4px;      Use the same right padding (18) in jQ! 
+    padding: 3px 18px 3px 4px;      Use the same right padding (18) in jQ!
     border-radius: 3px;*/
     transition: background 0.4s;
   }
@@ -572,7 +563,7 @@ body.cover .content h2 {
 #bookshelf_filter.clearable{
     background: #fff url(data:image/gif;base64,R0lGODlhBwAHAIAAAP///5KSkiH5BAAAAAAALAAAAAAHAAcAAAIMTICmsGrIXnLxuDMLADs=) no-repeat right -1em center;
     /*border: 1px solid #999;
-    padding: 3px 18px 3px 4px;      Use the same right padding (18) in jQ! 
+    padding: 3px 18px 3px 4px;      Use the same right padding (18) in jQ!
     border-radius: 3px;*/
     transition: background 0.4s;
   }

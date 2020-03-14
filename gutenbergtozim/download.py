@@ -50,9 +50,8 @@ def handle_zipped_epub(zippath,
                     if not is_safe(ensure_unicode(n))]):
                 path(tmpd).rmtree_p()
                 return False
-            else:
-                # zipped_files = [clfn(fn) for fn in zf.namelist()]
-                zipped_files = zf.namelist()
+            # zipped_files = [clfn(fn) for fn in zf.namelist()]
+            zipped_files = zf.namelist()
 
             # extract files from zip
             zf.extractall(tmpd)

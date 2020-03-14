@@ -58,9 +58,6 @@ l10n_strings = {
             "sort-title": {
                 "textContent": "Sort books by title"
             },
-            "title": {
-                "textContent": "Title"
-            },
             "format": {
                 "textContent": "Format"
             },

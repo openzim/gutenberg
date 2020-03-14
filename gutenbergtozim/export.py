@@ -800,7 +800,7 @@ def export_to_json_helpers(books, static_folder, languages,
     bookshelves = bookshelf_list()
     for bookshelf in bookshelves:
         #exclude the books with no bookshelf data
-        if bookshelf == None:
+        if bookshelf is None:
             continue
         # dumpjs for bookshelf by popularity
         # this will allow the popularity button to use this js on the
@@ -860,11 +860,6 @@ def export_to_json_helpers(books, static_folder, languages,
             # logger.info("Saving {} to {}".format(bookshelf, savepath))
         save_bs_output(rendered, savepath, UTF8)
 
-    # Won't need this if you do the templating for bookshelf_home here
-    # bookshelf list sorted by name
-    #logger.info("\t\tDumping bookshelves.js")
-    #dumpjs(bookshelves,
-    #       'bookshelves.js', 'bookshelves_json_data')
 
     # author specific collections
     authors = authors_from_ids(all_filtered_authors)
