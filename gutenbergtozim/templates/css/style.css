@@ -275,8 +275,8 @@ dataTables_wrapper.dataTables_length,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
     box-sizing: border-box;
-    border: 0px;
-    margin: 0px;
+    border: 0;
+    margin: 0;
     color: #D00000;
     padding: .2em .6em;
     background: white;
@@ -394,7 +394,7 @@ body.cover .content h2 {
 }
 
 .bookshelves__list {
-    margin: 10px 0px;
+    margin: 10px 0;
 }
 
 .bookshelves__list--header {
