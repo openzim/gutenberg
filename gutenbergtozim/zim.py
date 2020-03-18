@@ -18,12 +18,14 @@ def build_zimfile(static_folder, output_folder, zim_name=None,
                   languages=[], formats=[],
                   title=None, description=None,
                   only_books=[],
-                  create_index=True, force=False):
+                  create_index=True, force=False, 
+                  title_search=False, add_bookshelves=False):
 
     # revert HTML/JS/CSS to zim-compatible versions
     export_skeleton(static_folder=static_folder, dev_mode=False,
                     languages=languages, formats=formats,
-                    only_books=only_books)
+                    only_books=only_books, 
+                    title_search=title_search, add_bookshelves=add_bookshelves)
 
     if not languages:
         languages = ['mul']
