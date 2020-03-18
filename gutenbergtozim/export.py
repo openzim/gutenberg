@@ -99,8 +99,9 @@ def get_list_of_all_languages():
     return list(set(list([b.language for b in Book.select(Book.language)])))
 
 
-def export_skeleton(static_folder, dev_mode=False,
-                    languages=[], formats=[], only_books=[]):
+def export_skeleton(static_folder=None, dev_mode=False,
+                    languages=[], formats=[], only_books=[], 
+                    title_search=False, add_bookshelves=False):
 
     # ensure dir exist
     path(static_folder).mkdir_p()
@@ -126,19 +127,21 @@ def export_skeleton(static_folder, dev_mode=False,
 
     # export homepage
     context = get_default_context(project_id, books=books)
-    context.update({'show_books': True, 'dev_mode': dev_mode})
+    context.update({'show_books': True, 'dev_mode': dev_mode, 'title_search':title_search, 'add_bookshelves':add_bookshelves})
     for tpl_path in ('Home.html', 'js/tools.js', 'js/l10n.js'):
         template = jinja_env.get_template(tpl_path)
         rendered = template.render(**context)
         save_bs_output(rendered, os.path.join(static_folder, tpl_path), UTF8)
 
-def export_all_books(static_folder,
-                     download_cache,
-                     concurrency,
+def export_all_books(static_folder=None,
+                     download_cache=None,
+                     concurrency=None,
                      languages=[],
                      formats=[],
                      only_books=[],
-                     force=False):
+                     force=False,
+                     title_search=False,
+                     add_bookshelves=False):
 
     project_id = get_project_id(languages=languages, formats=formats,
                                 only_books=only_books)
@@ -183,7 +186,9 @@ def export_all_books(static_folder,
     # export HTML index and other static files
     export_skeleton(static_folder=static_folder, dev_mode=False,
                     languages=languages, formats=formats,
-                    only_books=only_books)
+                    only_books=only_books, 
+                    title_search=title_search,
+                    add_bookshelves=add_bookshelves)
 
     # Compute popularity
     popbooks = books.order_by(Book.downloads.desc())

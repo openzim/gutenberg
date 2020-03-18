@@ -61,7 +61,10 @@
                         <input type="text" name="bookshelf_filter" id="bookshelf_filter" data-l10n-id="bookshelf" placeholder="Bookshelf Search" class="pure-input-rounded clearable" />
                         {% else %}
                         <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded clearable" />
+                        
+                        {% if title_search %}
                         <input type="text" name="title_filter" id="title_filter" data-l10n-id="title" placeholder="Search by title" class="pure-input-rounded clearable" />
+                        {% endif %}
 
                         {% endif %}
                         {% if show_books or individual_book_shelf %}
