@@ -221,7 +221,9 @@ def main(arguments):
                           only_books=BOOKS,
                           title=ZIM_TITLE, description=ZIM_DESC,
                           create_index=not NO_INDEX,
-                          force=FORCE)
+                          force=FORCE,
+                          title_search=TITLE_SEARCH,
+                          add_bookshelves=BOOKSHELVES)
             shutil.rmtree(STATIC_FOLDER)
 
 
