@@ -99,8 +99,9 @@ def get_list_of_all_languages():
     return list(set(list([b.language for b in Book.select(Book.language)])))
 
 
-def export_skeleton(static_folder, dev_mode=False,
-                    languages=[], formats=[], only_books=[]):
+def export_skeleton(static_folder=None, dev_mode=False,
+                    languages=[], formats=[], only_books=[], 
+                    title_search=False, add_bookshelves=False):
 
     # ensure dir exist
     path(static_folder).mkdir_p()
@@ -126,19 +127,21 @@ def export_skeleton(static_folder, dev_mode=False,
 
     # export homepage
     context = get_default_context(project_id, books=books)
-    context.update({'show_books': True, 'dev_mode': dev_mode})
+    context.update({'show_books': True, 'dev_mode': dev_mode, 'title_search':title_search, 'add_bookshelves':add_bookshelves})
     for tpl_path in ('Home.html', 'js/tools.js', 'js/l10n.js'):
         template = jinja_env.get_template(tpl_path)
         rendered = template.render(**context)
         save_bs_output(rendered, os.path.join(static_folder, tpl_path), UTF8)
 
-def export_all_books(static_folder,
-                     download_cache,
-                     concurrency,
+def export_all_books(static_folder=None,
+                     download_cache=None,
+                     concurrency=None,
                      languages=[],
                      formats=[],
                      only_books=[],
-                     force=False):
+                     force=False,
+                     title_search=False,
+                     add_bookshelves=False):
 
     project_id = get_project_id(languages=languages, formats=formats,
                                 only_books=only_books)
@@ -178,12 +181,16 @@ def export_all_books(static_folder,
                            static_folder=static_folder,
                            languages=languages,
                            formats=formats,
-                           project_id=project_id)
+                           project_id=project_id,
+                           title_search=title_search,
+                           add_bookshelves=add_bookshelves)
 
     # export HTML index and other static files
     export_skeleton(static_folder=static_folder, dev_mode=False,
                     languages=languages, formats=formats,
-                    only_books=only_books)
+                    only_books=only_books, 
+                    title_search=title_search,
+                    add_bookshelves=add_bookshelves)
 
     # Compute popularity
     popbooks = books.order_by(Book.downloads.desc())
@@ -215,7 +222,9 @@ def export_all_books(static_folder,
                               formats=formats,
                               books=books,
                               project_id=project_id,
-                              force=force)
+                              force=force,
+                              title_search=title_search,
+                              add_bookshelves=add_bookshelves)
     Pool(concurrency).map(dlb, books)
 
 
@@ -443,7 +452,7 @@ def update_html_for_static(book, html_content, epub=False):
     return soup
 
 
-def cover_html_content_for(book, static_folder, books, project_id):
+def cover_html_content_for(book, static_folder, books, project_id, title_search, add_bookshelves):
     cover_img = "{id}_cover.jpg".format(id=book.id)
     cover_img = cover_img \
         if path(os.path.join(static_folder, cover_img)).exists() else None
@@ -459,7 +468,9 @@ def cover_html_content_for(book, static_folder, books, project_id):
         'cover_img': cover_img,
         'formats': main_formats_for(book),
         'translate_author': translate_author,
-        'translate_license': translate_license
+        'translate_license': translate_license,
+        'title_search':title_search,
+        'add_bookshelves':add_bookshelves
     })
     template = jinja_env.get_template('cover_article.html')
     return template.render(**context)
@@ -486,7 +497,8 @@ def save_author_file(author, static_folder, books, project_id, force=False):
 def export_book_to(book,
                    static_folder, download_cache,
                    cached_files, languages, formats, books,
-                   project_id, force=False):
+                   project_id, force=False, 
+                   title_search=False, add_bookshelves=False):
     logger.info("\tExporting Book #{id}.".format(id=book.id))
 
     # actual book content, as HTML
@@ -710,7 +722,8 @@ def export_book_to(book,
         logger.info("\t\tExporting to {}".format(cover_fpath))
         html = cover_html_content_for(book=book,
                                       static_folder=static_folder,
-                                      books=books, project_id=project_id)
+                                      books=books, project_id=project_id,
+                                      title_search=title_search, add_bookshelves=add_bookshelves)
         with open(cover_fpath, 'w') as f:
             if six.PY2:
                 f.write(html.encode(UTF8))
@@ -744,7 +757,7 @@ def bookshelf_list():
     return [bookshelf.bookshelf for bookshelf in Book.select().order_by(Book.bookshelf.asc()).group_by(Book.bookshelf)]
 
 def export_to_json_helpers(books, static_folder, languages,
-                           formats, project_id):
+                           formats, project_id, title_search, add_bookshelves):
 
     def dumpjs(col, fn, var='json_data'):
         with open(os.path.join(static_folder, fn), 'w') as f:
@@ -797,68 +810,70 @@ def export_to_json_helpers(books, static_folder, languages,
         dumpjs([author.to_array() for author in authors],
                'authors_lang_{}.js'.format(lang), 'authors_json_data')
 
-    bookshelves = bookshelf_list()
-    for bookshelf in bookshelves:
-        #exclude the books with no bookshelf data
-        if bookshelf is None:
-            continue
-        # dumpjs for bookshelf by popularity
-        # this will allow the popularity button to use this js on the
-        # particular bookshelf page
-        logger.info('\t\tDumping bookshelf_{}_by_popularity.js'.format(bookshelf))
-        dumpjs(
-            [book.to_array()
-            for book in Book.select().where(Book.bookshelf == bookshelf)
-                             .order_by(Book.downloads.desc())],
-                             'bookshelf_{}_by_popularity.js'.format(bookshelf))
 
-        # by title
-        logger.info('\t\tDumping bookshelf_{}_by_title.js'.format(bookshelf))
-        dumpjs(
-            [book.to_array()
-            for book in Book.select().where(Book.bookshelf== bookshelf)
-                            .order_by(Book.title.asc())],
-                            'bookshelf_{}_by_title.js'.format(bookshelf))
-        # by language
-        for lang_name, lang, lang_count in avail_langs:
-            logger.info("\t\tDumping bookshelf_{}_by_lang_{}.js"
-                        .format(bookshelf, lang))
+    if add_bookshelves:
+        bookshelves = bookshelf_list()
+        for bookshelf in bookshelves:
+            #exclude the books with no bookshelf data
+            if bookshelf is None:
+                continue
+            # dumpjs for bookshelf by popularity
+            # this will allow the popularity button to use this js on the
+            # particular bookshelf page
+            logger.info('\t\tDumping bookshelf_{}_by_popularity.js'.format(bookshelf))
             dumpjs(
                 [book.to_array()
-                 for book in Book.select().where(Book.language == lang)
-                                  .where(Book.bookshelf == bookshelf)
-                                  .order_by(Book.downloads.desc())],
-                'bookshelf_{}_lang_{}_by_popularity.js'.format(bookshelf, lang))
+                for book in Book.select().where(Book.bookshelf == bookshelf)
+                                .order_by(Book.downloads.desc())],
+                                'bookshelf_{}_by_popularity.js'.format(bookshelf))
 
+            # by title
+            logger.info('\t\tDumping bookshelf_{}_by_title.js'.format(bookshelf))
             dumpjs(
                 [book.to_array()
-                 for book in Book.select().where(Book.language == lang)
-                                  .where(Book.bookshelf == bookshelf)
-                                  .order_by(Book.title.asc())],
-                'bookshelf_{}_lang_{}_by_title.js'.format(bookshelf, lang))
-    
-    logger.info("\t\tDumping bookshelves.js")
-    dumpjs(bookshelves,
-           'bookshelves.js', 'bookshelves_json_data')
+                for book in Book.select().where(Book.bookshelf== bookshelf)
+                                .order_by(Book.title.asc())],
+                                'bookshelf_{}_by_title.js'.format(bookshelf))
+            # by language
+            for lang_name, lang, lang_count in avail_langs:
+                logger.info("\t\tDumping bookshelf_{}_by_lang_{}.js"
+                            .format(bookshelf, lang))
+                dumpjs(
+                    [book.to_array()
+                    for book in Book.select().where(Book.language == lang)
+                                    .where(Book.bookshelf == bookshelf)
+                                    .order_by(Book.downloads.desc())],
+                    'bookshelf_{}_lang_{}_by_popularity.js'.format(bookshelf, lang))
 
-    # Create the bookshelf home page
-    context = get_default_context(project_id=project_id, books=books)
-    context.update({'bookshelf_home': True})
-    template = jinja_env.get_template('bookshelf_home.html')
-    rendered = template.render(**context)
-    save_bs_output(rendered, os.path.join(static_folder, 'bookshelf_home.html'), UTF8)
-    
-    # add individual bookshelf pages
-    for bookshelf in bookshelves:
-        if bookshelf is None:
-            continue
-        context["bookshelf"] = bookshelf
-        context.update({'bookshelf_home':False, 'individual_book_shelf':True})
-        template = jinja_env.get_template('bookshelf.html')
+                dumpjs(
+                    [book.to_array()
+                    for book in Book.select().where(Book.language == lang)
+                                    .where(Book.bookshelf == bookshelf)
+                                    .order_by(Book.title.asc())],
+                    'bookshelf_{}_lang_{}_by_title.js'.format(bookshelf, lang))
+        
+        logger.info("\t\tDumping bookshelves.js")
+        dumpjs(bookshelves,
+            'bookshelves.js', 'bookshelves_json_data')
+
+        # Create the bookshelf home page
+        context = get_default_context(project_id=project_id, books=books)
+        context.update({'bookshelf_home': True})
+        template = jinja_env.get_template('bookshelf_home.html')
         rendered = template.render(**context)
-        savepath = os.path.join(static_folder, "{}.html".format(bookshelf))
-            # logger.info("Saving {} to {}".format(bookshelf, savepath))
-        save_bs_output(rendered, savepath, UTF8)
+        save_bs_output(rendered, os.path.join(static_folder, 'bookshelf_home.html'), UTF8)
+        
+        # add individual bookshelf pages
+        for bookshelf in bookshelves:
+            if bookshelf is None:
+                continue
+            context["bookshelf"] = bookshelf
+            context.update({'bookshelf_home':False, 'individual_book_shelf':True, 'no_filters':True})
+            template = jinja_env.get_template('bookshelf.html')
+            rendered = template.render(**context)
+            savepath = os.path.join(static_folder, "{}.html".format(bookshelf))
+                # logger.info("Saving {} to {}".format(bookshelf, savepath))
+            save_bs_output(rendered, savepath, UTF8)
 
 
     # author specific collections

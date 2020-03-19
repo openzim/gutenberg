@@ -57,18 +57,27 @@
                 <input type="hidden" id="language_filter" value="{{ languages[0][1] }}" />
             {% endif %}
                 <section class="filter-container">
+                        {% if not no_filters %}
+                        
                         {% if bookshelf_home %}
                         <input type="text" name="bookshelf_filter" id="bookshelf_filter" data-l10n-id="bookshelf" placeholder="Bookshelf Search" class="pure-input-rounded clearable" />
                         {% else %}
                         <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded clearable" />
+                        
+                        {% if title_search %}
                         <input type="text" name="title_filter" id="title_filter" data-l10n-id="title" placeholder="Search by title" class="pure-input-rounded clearable" />
+                        {% endif %}
 
                         {% endif %}
+                        {% endif %}
+                        
+                        {%if not add_bookshelf %}
                         {% if show_books or individual_book_shelf %}
                         <a class="nav-link" href="bookshelf_home.html">Browse by Bookshelf</a>
                         {% else %}
                         <a class="nav-link" href="Home.html">Go Home</a>
                         {% endif %}
+                        {%endif%}
                 </section>
             </div>
             {% if show_books %}

@@ -27,7 +27,9 @@ help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
         """[-t ZIM_TITLE] [-n ZIM_DESC] """
         """[-p CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
         """[--prepare] [--parse] [--download] [--export] [--dev] """
-        """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER]
+        """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
+        """[--title-search] [--bookshelves] """
+        """
 
 -h --help                       Display this help message
 -y --wipe-db                    Empty cached book metadata
@@ -65,6 +67,8 @@ help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
 --dev                           Exports *just* Home+JS+CSS files """
         """(overwritten by --zim step)
 --zim                           Create a ZIM file
+--title-search                  Add title search parameter
+--bookshelves                   Add bookshelves 
 
 This script is used to produce a ZIM file (and any intermediate state)
 of Gutenberg repository using a mirror.""")
@@ -97,6 +101,8 @@ def main(arguments):
     DL_CONCURRENCY = int(arguments.get('--dlc') or CONCURRENCY)
     FORCE = arguments.get('--force', False)
     NO_INDEX = arguments.get('--no-index', False)
+    TITLE_SEARCH = arguments.get('--title-search',False)
+    BOOKSHELVES = arguments.get('--bookshelves',False)
 
     # create tmp dir
     path('tmp').mkdir_p()
@@ -188,7 +194,9 @@ def main(arguments):
                              languages=zim_lang,
                              formats=FORMATS,
                              only_books=BOOKS,
-                             force=FORCE)
+                             force=FORCE,
+                             title_search=TITLE_SEARCH,
+                             add_bookshelves=BOOKSHELVES)
 
         if DO_DEV:
             logger.info("EXPORTING HTML/JS/CSS to static folder")
@@ -196,7 +204,9 @@ def main(arguments):
                             dev_mode=True,
                             languages=zim_lang,
                             formats=FORMATS,
-                            only_books=BOOKS)
+                            only_books=BOOKS,
+                            title_search=TITLE_SEARCH,
+                            add_bookshelves=BOOKSHELVES)
 
         if DO_ZIM:
 
@@ -211,7 +221,9 @@ def main(arguments):
                           only_books=BOOKS,
                           title=ZIM_TITLE, description=ZIM_DESC,
                           create_index=not NO_INDEX,
-                          force=FORCE)
+                          force=FORCE,
+                          title_search=TITLE_SEARCH,
+                          add_bookshelves=BOOKSHELVES)
             shutil.rmtree(STATIC_FOLDER)
 
 
