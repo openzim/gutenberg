@@ -756,6 +756,9 @@ def authors_from_ids(idlist):
 def bookshelf_list():
     return [bookshelf.bookshelf for bookshelf in Book.select().order_by(Book.bookshelf.asc()).group_by(Book.bookshelf)]
 
+def bookshelf_list_language(lang):
+    return [bookshelf.bookshelf for bookshelf in Book.select().where(Book.language == lang).order_by(Book.bookshelf.asc()).group_by(Book.bookshelf)]
+
 def export_to_json_helpers(books, static_folder, languages,
                            formats, project_id, title_search, add_bookshelves):
 
@@ -851,7 +854,16 @@ def export_to_json_helpers(books, static_folder, languages,
                                     .where(Book.bookshelf == bookshelf)
                                     .order_by(Book.title.asc())],
                     'bookshelf_{}_lang_{}_by_title.js'.format(bookshelf, lang))
-        
+
+        # dump all bookshelves from any given language 
+        for lang_name, lang, lang_count in avail_langs:
+            logger.info("\t\tDumping bookshelves_lang_{}.js"
+                            .format(lang))
+            temp = bookshelf_list_language(lang)
+            dumpjs(
+                    temp,
+                    'bookshelves_lang_{}.js'.format(lang))
+
         logger.info("\t\tDumping bookshelves.js")
         dumpjs(bookshelves,
             'bookshelves.js', 'bookshelves_json_data')
