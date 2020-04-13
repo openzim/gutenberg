@@ -396,7 +396,7 @@ function showBookshelf(bookshelfURL) {
     // }
 
     console.log('before loadScript');
-    const scriptURL = `bookshelf_${bookshelfURL}_lang_en_by_popularity.js`;
+    const scriptURL = `bookshelf_${bookshelfURL}_by_title.js`;
     // const scriptURL = "bookshelf_Adventure_lang_en_by_popularity.js"
     console.log("loading bookshelf:", scriptURL);
     loadScript(scriptURL, 'books_script', function () {
@@ -805,13 +805,13 @@ function init() {
 function showBookshelfSearchResults(value) {
  
   let lang_id= $( "#language_filter" ).val();
-  console.log(lang_id+" hereeee");
+  console.log(lang_id+" for bookshelfresults");
   if(lang_id===""){
     bookshelves = "bookshelves.js";
   }else{
     bookshelves = "bookshelves_lang_"+lang_id+".js";
   }
-  console.log(bookshelves+" hereeee2");
+  console.log(bookshelves+" file");
   loadScript(bookshelves, 'find_bookshelves_'+lang_id, function () {
     let pattern = new RegExp(value, 'i');
     if(lang_id!==""){
