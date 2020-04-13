@@ -163,22 +163,25 @@ function populateFilters( callback ) {
         // figure out what to request now (lang_id, author_id, sortMethod)
         if (lang_id && author_id) {
         	// we want a reduce of both
-        	booksUrl = "auth_" + author_id + "_lang_" + lang_id + "_by_" + sortMethod;
+          booksUrl = "auth_" + author_id + "_lang_" + lang_id + "_by_" + sortMethod;
+          bookshelves = "bookshelves_lang_"+lang_id;
         } else if (author_id) {
         	// only books by this author
         	booksUrl = "auth_" + author_id + "_by_" + sortMethod;
         } else if (lang_id) {
         	// all books in this language
-        	booksUrl = "lang_" + lang_id + "_by_" + sortMethod;
+          booksUrl = "lang_" + lang_id + "_by_" + sortMethod;
+          bookshelves = "bookshelves_lang_"+lang_id;
         } else {
         	// all books, no reduce
-        	 booksUrl = "full_by_" + sortMethod;
+           booksUrl = "full_by_" + sortMethod;
+           bookshelves = "bookshelves";
         }
-        booksUrl += ".js"
-
+        booksUrl += ".js";
+        bookshelves+=".js";
         // console.debug("FILTER: " + "lang: " + lang_id + " auth: " + author_id + " sort: " + sortMethod);
         // console.debug(booksUrl);
-
+        console.log(bookshelves);
         if ( callback ) {
             // console.debug("calling callback");
             callback();
@@ -194,6 +197,9 @@ function is_cover_page() {
 
 function is_bookshelf_page() {
   return $('body').hasClass('individual_book_shelf');
+}
+function is_bookshelves_page(){
+  return $("#bookshelvesDisplay").length!=0;
 }
 function showBooks() {
   console.log('showBooks');
@@ -390,7 +396,7 @@ function showBookshelf(bookshelfURL) {
     // }
 
     console.log('before loadScript');
-    const scriptURL = `bookshelf_${bookshelfURL}_${booksUrl}`;
+    const scriptURL = `bookshelf_${bookshelfURL}_lang_en_by_popularity.js`;
     // const scriptURL = "bookshelf_Adventure_lang_en_by_popularity.js"
     console.log("loading bookshelf:", scriptURL);
     loadScript(scriptURL, 'books_script', function () {
@@ -592,6 +598,9 @@ function init() {
       var opt = $('<option />');
       opt.val(lang[1]);
       var txt = lang[0] + ' (' + lang[2] + ')';
+      if(is_bookshelves_page()){
+        txt = lang[0];
+      }
       opt.text(txt);
       opt.attr('label', txt);
       parent.append(opt);
@@ -614,7 +623,11 @@ function init() {
 
   language_filter.on('change', function (e) {
     minimizeUI();
-    showBooks();
+    if(globalShelvesTable==null){
+      showBooks();
+    }else{
+      showBookshelfSearchResults("");
+    }
   });
   if (languages_json_data.length == 1) {
     // console.debug("ONLY ONE language");
@@ -790,13 +803,27 @@ function init() {
   }
 }
 function showBookshelfSearchResults(value) {
-  loadScript(bookshelves, 'find_bookshelves', function () {
+ 
+  let lang_id= $( "#language_filter" ).val();
+  console.log(lang_id+" hereeee");
+  if(lang_id===""){
+    bookshelves = "bookshelves.js";
+  }else{
+    bookshelves = "bookshelves_lang_"+lang_id+".js";
+  }
+  console.log(bookshelves+" hereeee2");
+  loadScript(bookshelves, 'find_bookshelves_'+lang_id, function () {
     let pattern = new RegExp(value, 'i');
+    if(lang_id!==""){
+      bookshelves_json_data = json_data;
+    }
     if (globalShelvesTable != null) {
       globalShelvesTable.destroy();
       $('#bookShelfTable').remove();
     }
     let table = "<table id = \"bookShelfTable\" class=\"display\" style=\"width:100%\"><thead><tr><th>Bookshelves</th></tr></thead><tbody>";
+    // console.log(bookshelves_lang_en_json_data);
+    // bookshelves_json_data = json_data;
     for (let i = 0; i < bookshelves_json_data.length; ++i) {
       if (bookshelves_json_data[i] == null) {
         continue;
@@ -828,6 +855,10 @@ function showBookshelfSearchResults(value) {
       $(location).attr('href', data[0] + '.html');
 
     });
+    $('#bookShelfTable_previous').attr('data-l10n-id', 'table-previous');
+  $('#bookShelfTable_previous').html(document.webL10n.get('table-previous'));
+  $('#bookShelfTable_next').attr('data-l10n-id', 'table-next');
+  $('#bookShelfTable_next').html(document.webL10n.get('table-next'));
   });
 
 }

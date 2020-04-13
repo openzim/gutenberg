@@ -140,6 +140,9 @@ l10n_strings = {
                 "textContent": "We digitized and diligently "
                                "proofread them with the help of "
                                "thousands of volunteers."
+            },
+            "bookshelves_title":{
+                "textContent":"Bookshelves (A-Z)"
             }
         },
         "fr": {
@@ -277,6 +280,9 @@ l10n_strings = {
                 "textContent": "Nous les numérisons et les relisons "
                                "soigneusement avec l’aide de milliers "
                                "de volontaires."
+            },
+            "bookshelves_title":{
+                "textContent":"Étagères (A-Z)"
             }
         },
         "de": {
@@ -409,6 +415,9 @@ l10n_strings = {
                 "textContent": "Wir digitalisierten und prüften sie "
                                "sorgfältig mit der Hilfe von "
                                "tausenden Freiwilligen."
+            },
+            "bookshelves_title":{
+                "textContent":"Bücherregale (A-Z)"
             }
         },
         "it": {
@@ -542,6 +551,9 @@ l10n_strings = {
                 "textContent": "Li abbiamo digitalizzati e verificati "
                                "diligentemente con l'aiuto di "
                                "migliaia di volontari."
+            },
+            "bookshelves_title":{
+                "textContent":"Scaffali per libri (A-Z)"
             }
         },
         "ar": {
@@ -675,6 +687,9 @@ l10n_strings = {
                 "textContent": "لقد رقمناهم و قرأناهم "
                                "بجد و ذلك بمساعدة من "
                                "الآلاف من المتطوعين."
+            },
+            "bookshelves_title":{
+                "textContent":"أرفف الكتب (أ-ي)"
             }
         },
         "nl": {
@@ -808,6 +823,9 @@ l10n_strings = {
                 "textContent": "We hebben ze gedigitaliseerd en "
                                "zorgvuldig gecorrigeerd met behulp "
                                "van duizenden vrijwilligers."
+            },
+            "bookshelves_title":{
+                "textContent":"Boekenplanken (A-Z)"
             }
         },
         "es": {
@@ -941,6 +959,9 @@ l10n_strings = {
                 "textContent": "Los digitalizamos y comprobamos"
                                "cuidadosamente con la ayuda "
                                "de miles de voluntarios."
+            },
+            "bookshelves_title":{
+                "textContent":"Estantes (A-Z)"
             }
         },
     }
