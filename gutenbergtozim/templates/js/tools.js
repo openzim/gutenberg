@@ -629,7 +629,7 @@ function init() {
       showBookshelfSearchResults("");
     }
   });
-  if (languages_json_data.length == 1) {
+  if (languages_json_data.length == 1 || is_bookshelf_page()) {
     // console.debug("ONLY ONE language");
     // console.debug(languages_json_data);
     language_filter.val(languages_json_data[0][1]);
