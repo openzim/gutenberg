@@ -93,9 +93,7 @@ function loadScript(url, nodeId, callback) {
   var script = document.createElement("script");
   script.setAttribute('type', "text/javascript");
   script.setAttribute('id', nodeId);
-  /* beautify ignore:start */
-  script.setAttribute('src', {% if not dev_mode %}'../-/' + {% endif %}url);
-  /* beautify ignore:end */
+  script.setAttribute('src', {% if not dev_mode %} '../-/' + {% endif %}url);
   document.getElementsByTagName("head")[0].appendChild(script);
   if (script.readyState) {
     //IE
