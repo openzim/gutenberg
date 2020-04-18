@@ -199,7 +199,7 @@ function is_bookshelf_page() {
   return $('body').hasClass('individual_book_shelf');
 }
 function is_bookshelves_page(){
-  return $("#bookshelvesDisplay").length!=0;
+  return $('#bookshelvesDisplay').length!=0;
 }
 function showBooks() {
   console.log('showBooks');
@@ -821,7 +821,7 @@ function showBookshelfSearchResults(value) {
       globalShelvesTable.destroy();
       $('#bookShelfTable').remove();
     }
-    let table = "<table id = \"bookShelfTable\" class=\"display\" style=\"width:100%\"><thead><tr><th>Bookshelves</th></tr></thead><tbody>";
+    let table = "<table id = \"bookShelfTable\" class=\" display  no-footer\" role = 'grid' filled ='true' ><thead><tr><th>Bookshelves</th></tr></thead><tbody>";
     // console.log(bookshelves_lang_en_json_data);
     // bookshelves_json_data = json_data;
     for (let i = 0; i < bookshelves_json_data.length; ++i) {
@@ -830,7 +830,9 @@ function showBookshelfSearchResults(value) {
       }
 
       if (bookshelves_json_data[i].match(pattern)) {
-        table += "<tr><td>" + bookshelves_json_data[i] + "</td></tr>";
+        table += '<tr  ><td><div class="list-stripe"></div><div class = "pure-g"><div class = "pure-u-7-8"> <span class="table-title">' 
+        + bookshelves_json_data[i] 
+        + '</span></div></div></td></tr>';
       }
     }
     table += "</tbody></table>";
@@ -840,6 +842,7 @@ function showBookshelfSearchResults(value) {
         searching: false,
         info: false,
         destroy: true,
+        stripeClasses:[],
         columnDefs: [
           {
             targets: -1,
@@ -850,9 +853,9 @@ function showBookshelfSearchResults(value) {
     );
 
     $('#bookShelfTable tbody').on('click', 'tr', function () {
-      let data = globalShelvesTable.row(this).data();
+      let data = $('span',this)[0].innerHTML;
       console.log(data);
-      $(location).attr('href', data[0] + '.html');
+      $(location).attr('href', data + '.html');
 
     });
     $('#bookShelfTable_previous').attr('data-l10n-id', 'table-previous');
@@ -862,7 +865,7 @@ function showBookshelfSearchResults(value) {
   });
 
 }
-$("#bookshelf_filter").keypress(function (event) {
+$('#bookshelf_filter').keypress(function (event) {
   if (event.which == 13) {
     showBookshelfSearchResults($(this).val());
   }

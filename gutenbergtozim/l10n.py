@@ -143,6 +143,15 @@ l10n_strings = {
             },
             "bookshelves_title":{
                 "textContent":"Bookshelves (A-Z)"
+            },
+            "bookshelf_link":{
+                "textContent": "Browse by Bookshelf"
+            },
+            "home_link":{
+                "textContent": "Go Home"
+            },
+            "bookshelf": {
+                "placeholder": "Bookshelf Search"
             }
         },
         "fr": {
@@ -192,7 +201,8 @@ l10n_strings = {
                 "textContent": "Trier les livres par titre"
             },
             "title": {
-                "textContent": "Titre"
+                "textContent": "Titre",
+                "placeholder": "Rechercher des livres par titre "
             },
             "format": {
                 "textContent": "Format"
@@ -283,6 +293,15 @@ l10n_strings = {
             },
             "bookshelves_title":{
                 "textContent":"Étagères (A-Z)"
+            },
+            "bookshelf_link":{
+                "textContent": "Parcourir par étagère"
+            },
+            "home_link":{
+                "textContent": "Rentrer chez soi"
+            },
+            "bookshelf": {
+                "placeholder": "Recherche de bibliothèque"
             }
         },
         "de": {
@@ -332,7 +351,8 @@ l10n_strings = {
                 "textContent": "Sortiere Bücher nach Titel"
             },
             "title": {
-                "textContent": "Titel"
+                "textContent": "Titel",
+                "placeholder": "Suche nach Büchern nach Titel"
             },
             "format": {
                 "textContent": "Format"
@@ -418,6 +438,15 @@ l10n_strings = {
             },
             "bookshelves_title":{
                 "textContent":"Bücherregale (A-Z)"
+            },
+            "bookshelf_link":{
+                "textContent": "Durchsuchen Sie das Bücherregal"
+            },
+            "home_link":{
+                "textContent": "Nach Hause gehen"
+            },
+            "bookshelf": {
+                "placeholder": "Bücherregalsuche"
             }
         },
         "it": {
@@ -467,7 +496,8 @@ l10n_strings = {
                 "textContent": "Ordina libri per titolo"
             },
             "title": {
-                "textContent": "Titolo"
+                "textContent": "Titolo",
+                "placeholder": "Cerca libri per titolo"
             },
             "format": {
                 "textContent": "Formato"
@@ -554,6 +584,15 @@ l10n_strings = {
             },
             "bookshelves_title":{
                 "textContent":"Scaffali per libri (A-Z)"
+            },
+            "bookshelf_link":{
+                "textContent": "Sfoglia per libreria"
+            },
+            "home_link":{
+                "textContent": "Andare a casa"
+            },
+            "bookshelf": {
+                "placeholder": "Ricerca in libreria"
             }
         },
         "ar": {
@@ -603,7 +642,8 @@ l10n_strings = {
                 "textContent": "رتب الكتب بحسب العنوان"
             },
             "title": {
-                "textContent": "العنوان"
+                "textContent": "العنوان",
+                "placeholder": "ابحث عن الكتب حسب العنوان"
             },
             "format": {
                 "textContent": "الصيغة"
@@ -690,6 +730,15 @@ l10n_strings = {
             },
             "bookshelves_title":{
                 "textContent":"أرفف الكتب (أ-ي)"
+            },
+            "bookshelf_link":{
+                "textContent": "تصفح حسب رف الكتب"
+            },
+            "home_link":{
+                "textContent": "اذهب للمنزل"
+            },
+            "bookshelf": {
+                "placeholder": "بحث رف الكتب"
             }
         },
         "nl": {
@@ -739,7 +788,8 @@ l10n_strings = {
                 "textContent": "Sorteer boeken op titel"
             },
             "title": {
-                "textContent": "Titel"
+                "textContent": "Titel",
+                "placeholder": "Zoek boeken op titel"
             },
             "format": {
                 "textContent": "Formaat"
@@ -826,6 +876,15 @@ l10n_strings = {
             },
             "bookshelves_title":{
                 "textContent":"Boekenplanken (A-Z)"
+            },
+            "bookshelf_link":{
+                "textContent": "Bladeren op boekenplank"
+            },
+            "home_link":{
+                "textContent": "Ga naar huis"
+            },
+            "bookshelf": {
+                "placeholder": "Boekenplank zoeken"
             }
         },
         "es": {
@@ -875,7 +934,8 @@ l10n_strings = {
                 "textContent": "Ordenar libros por título"
             },
             "title": {
-                "textContent": "Título"
+                "textContent": "Título",
+                "placeholder": "Buscar libros por título"
             },
             "format": {
                 "textContent": "Formato"
@@ -962,6 +1022,15 @@ l10n_strings = {
             },
             "bookshelves_title":{
                 "textContent":"Estantes (A-Z)"
+            },
+            "bookshelf_link":{
+                "textContent": "Buscar por estantería"
+            },
+            "home_link":{
+                "textContent": "Vete a casa"
+            },
+            "bookshelf": {
+                "placeholder": "Búsqueda de estantería"
             }
         },
     }
