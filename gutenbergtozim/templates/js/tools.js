@@ -340,12 +340,12 @@ function showBooks() {
       /* Middle click */
       var href = $(this).attr("data-href");
       var link = $(
-        "<a href="" +
+        "<a href='" +
         encodeURIComponent(titre.replace("/", "-").substring(0, 230)) +
         "_cover." +
         id +
         ".html" +
-        "" />"
+        "' />"
       );
       link.attr("target", "_blank");
       window.open(link.attr("href"));
@@ -516,12 +516,12 @@ function showBookshelf(bookshelfURL) {
           /* Middle click */
           var href = $(this).attr("data-href");
           var link = $(
-            "<a href="" +
+            "<a href='" +
             encodeURIComponent(titre.replace("/", "-").substring(0, 230)) +
             "_cover." +
             id +
             ".html" +
-            "" />"
+            "' />"
           );
           link.attr("target", "_blank");
           window.open(link.attr("href"));
