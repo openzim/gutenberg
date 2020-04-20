@@ -396,7 +396,14 @@ function showBookshelf(bookshelfURL) {
     // }
 
     console.log("before loadScript");
-    const scriptURL = `bookshelf_${bookshelfURL}_by_title.js`;
+    bookshelfURL = jQuery.trim(bookshelfURL);
+    let scriptURL = `bookshelf_${bookshelfURL}_by_title.js`;
+    const lang_id = $( "#language_filter" ).val();
+    $( "#language_filter" ).hide();
+    console.log(`lang_id === ${lang_id}`);
+    if(lang_id!==''){
+      scriptURL = `bookshelf_${bookshelfURL}_lang_${lang_id}_by_title.js`;
+    }
     // const scriptURL = "bookshelf_Adventure_lang_en_by_popularity.js"
     console.log("loading bookshelf:", scriptURL);
     loadScript(scriptURL, "books_script", function () {
@@ -629,7 +636,7 @@ function init() {
       showBookshelfSearchResults("");
     }
   });
-  if (languages_json_data.length == 1 || is_bookshelf_page()) {
+  if (languages_json_data.length == 1 ) {
     // console.debug("ONLY ONE language");
     // console.debug(languages_json_data);
     language_filter.val(languages_json_data[0][1]);
