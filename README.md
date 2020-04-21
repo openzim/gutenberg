@@ -48,7 +48,7 @@ virtualenv gut-env (or any name you want)
 ## Getting started
 
 After setting up the whole environment you can just run the main script `gutenberg2zim`.
-It will download, process and export the content.
+It will download, process and export the content. 
 ```bash
 ./gutenberg2zim
 ```
@@ -57,9 +57,10 @@ It will download, process and export the content.
 
 You can also specify parameters to customize the content.
 Only want books with the Id 100-200? Books only in French? English? Or only those both? No problem!
-You can also include or exclude book formats.
+You can also include or exclude book formats. You can add bookshelves and the option to search books by title to 
+enrich your user experince. 
 ```bash
-./gutenberg2zim -l en,fr -f pdf --books 100-200
+./gutenberg2zim -l en,fr -f pdf --books 100-200 --bookshelves --title-search
 ```
 
 This will download English and French books that have the Id 100 to 200 in the html (default) and pdf format.
@@ -100,6 +101,8 @@ You can find the full arguments list below.
 --export                        Export downloaded content to zim-friendly static HTML
 --dev                           Exports *just* Home+JS+CSS files (overwritten by --zim step)
 --zim                           Create a ZIM file
+--title-search                  Add title search parameter
+--bookshelves                   Add bookshelves 
 ```
 
 ## Screenshots
