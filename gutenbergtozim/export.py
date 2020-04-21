@@ -753,11 +753,11 @@ def authors_from_ids(idlist):
 # Ex: [None, u'Adventure', u"Children's Literature", u'Christianity', 
 # u'Detective Fiction', u'Gothic Fiction', u'Harvard Classics', u'Historical Fiction', 
 # u'Mathematics', u'Plays', u'School Stories', u'Science Fiction']
-def bookshelf_list():
-    return [bookshelf.bookshelf for bookshelf in Book.select().order_by(Book.bookshelf.asc()).group_by(Book.bookshelf)]
+def bookshelf_list(books):
+    return [bookshelf.bookshelf for bookshelf in books.select().order_by(Book.bookshelf.asc()).group_by(Book.bookshelf)]
 
-def bookshelf_list_language(lang):
-    return [bookshelf.bookshelf for bookshelf in Book.select().where(Book.language == lang).order_by(Book.bookshelf.asc()).group_by(Book.bookshelf)]
+def bookshelf_list_language(books,lang):
+    return [bookshelf.bookshelf for bookshelf in books.select().where(Book.language == lang).order_by(Book.bookshelf.asc()).group_by(Book.bookshelf)]
 
 def export_to_json_helpers(books, static_folder, languages,
                            formats, project_id, title_search, add_bookshelves):
@@ -815,7 +815,7 @@ def export_to_json_helpers(books, static_folder, languages,
 
 
     if add_bookshelves:
-        bookshelves = bookshelf_list()
+        bookshelves = bookshelf_list(books)
         for bookshelf in bookshelves:
             #exclude the books with no bookshelf data
             if bookshelf is None:
@@ -826,7 +826,7 @@ def export_to_json_helpers(books, static_folder, languages,
             logger.info('\t\tDumping bookshelf_{}_by_popularity.js'.format(bookshelf))
             dumpjs(
                 [book.to_array()
-                for book in Book.select().where(Book.bookshelf == bookshelf)
+                for book in books.select().where(Book.bookshelf == bookshelf)
                                 .order_by(Book.downloads.desc())],
                                 'bookshelf_{}_by_popularity.js'.format(bookshelf))
 
@@ -834,7 +834,7 @@ def export_to_json_helpers(books, static_folder, languages,
             logger.info('\t\tDumping bookshelf_{}_by_title.js'.format(bookshelf))
             dumpjs(
                 [book.to_array()
-                for book in Book.select().where(Book.bookshelf== bookshelf)
+                for book in books.select().where(Book.bookshelf== bookshelf)
                                 .order_by(Book.title.asc())],
                                 'bookshelf_{}_by_title.js'.format(bookshelf))
             # by language
@@ -843,14 +843,14 @@ def export_to_json_helpers(books, static_folder, languages,
                             .format(bookshelf, lang))
                 dumpjs(
                     [book.to_array()
-                    for book in Book.select().where(Book.language == lang)
+                    for book in books.select().where(Book.language == lang)
                                     .where(Book.bookshelf == bookshelf)
                                     .order_by(Book.downloads.desc())],
                     'bookshelf_{}_lang_{}_by_popularity.js'.format(bookshelf, lang))
 
                 dumpjs(
                     [book.to_array()
-                    for book in Book.select().where(Book.language == lang)
+                    for book in books.select().where(Book.language == lang)
                                     .where(Book.bookshelf == bookshelf)
                                     .order_by(Book.title.asc())],
                     'bookshelf_{}_lang_{}_by_title.js'.format(bookshelf, lang))
@@ -859,7 +859,7 @@ def export_to_json_helpers(books, static_folder, languages,
         for lang_name, lang, lang_count in avail_langs:
             logger.info("\t\tDumping bookshelves_lang_{}.js"
                             .format(lang))
-            temp = bookshelf_list_language(lang)
+            temp = bookshelf_list_language(books,lang)
             dumpjs(
                     temp,
                     'bookshelves_lang_{}.js'.format(lang))
