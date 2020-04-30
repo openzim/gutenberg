@@ -23,5 +23,5 @@
     "comma_first": false,
     "operator_position": "before-newline",
     "indent_empty_lines": false,
-    "templating": ["auto"]
+    "templating": ["django"]
 }
