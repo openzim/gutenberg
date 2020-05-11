@@ -31,29 +31,29 @@ With some changes to keep the language in a cookie with jQuery.cookie:
  */
 
 function getLanguageFromBrowser() {
-	var default_lang = 'en';
-	var available_languages = [{% for lang in ui_languages %}'{{ lang }}',{% endfor %}];
-	// single language
-	if (available_languages.length == 1)
-		return available_languages[0];
-	// console.debug("available_languages: " + available_languages);
-	var languages = window.navigator.languages;
-	if (!languages || languages.length == 0) {
-		languages = Array((navigator.language || navigator.browserLanguage));
-	}
-	var selected_lang = default_lang;
-	$.each(languages, function(index, elem) {
-		var lang = elem.split('-')[0].split('_')[0];
-		if (available_languages.indexOf(lang) != -1) {
-			console.debug("found matching lang: " + lang);
-			selected_lang = lang;
-			return false;
-		} else {
-			console.debug("unsupported lang: " + lang);
-		}
-	});
-	console.debug("setting lang to " + selected_lang);
-	return selected_lang;
+  var default_lang = 'en';
+  var available_languages = [{% for lang in ui_languages %} '{{ lang }}', {% endfor %}];
+  // single language
+  if (available_languages.length == 1)
+    return available_languages[0];
+  // console.debug("available_languages: " + available_languages);
+  var languages = window.navigator.languages;
+  if (!languages || languages.length == 0) {
+    languages = Array((navigator.language || navigator.browserLanguage));
+  }
+  var selected_lang = default_lang;
+  $.each(languages, function(index, elem) {
+    var lang = elem.split('-')[0].split('_')[0];
+    if (available_languages.indexOf(lang) != -1) {
+      console.debug("found matching lang: " + lang);
+      selected_lang = lang;
+      return false;
+    } else {
+      console.debug("unsupported lang: " + lang);
+    }
+  });
+  console.debug("setting lang to " + selected_lang);
+  return selected_lang;
 }
 
 
@@ -142,7 +142,10 @@ document.webL10n = (function(window, document, undefined) {
         consoleWarn('could not parse arguments for #' + l10nId);
       }
     }
-    return { id: l10nId, args: args };
+    return {
+      id: l10nId,
+      args: args
+    };
   }
 
   function fireL10nReadyEvent(lang) {
@@ -216,15 +219,15 @@ document.webL10n = (function(window, document, undefined) {
       if (text.lastIndexOf('\\') < 0)
         return text;
       return text.replace(/\\\\/g, '\\')
-                 .replace(/\\n/g, '\n')
-                 .replace(/\\r/g, '\r')
-                 .replace(/\\t/g, '\t')
-                 .replace(/\\b/g, '\b')
-                 .replace(/\\f/g, '\f')
-                 .replace(/\\{/g, '{')
-                 .replace(/\\}/g, '}')
-                 .replace(/\\"/g, '"')
-                 .replace(/\\'/g, "'");
+        .replace(/\\n/g, '\n')
+        .replace(/\\r/g, '\r')
+        .replace(/\\t/g, '\t')
+        .replace(/\\b/g, '\b')
+        .replace(/\\f/g, '\f')
+        .replace(/\\{/g, '{')
+        .replace(/\\}/g, '}')
+        .replace(/\\"/g, '"')
+        .replace(/\\'/g, "'");
     }
 
     // parse *.properties text data into an l10n dictionary
@@ -259,7 +262,7 @@ document.webL10n = (function(window, document, undefined) {
               match = reSection.exec(line);
               currentLang = match[1];
               skipLang = (currentLang !== '*') &&
-                  (currentLang !== lang) && (currentLang !== genericLang);
+                (currentLang !== lang) && (currentLang !== genericLang);
               continue;
             } else if (skipLang) {
               continue;
@@ -588,6 +591,7 @@ document.webL10n = (function(window, document, undefined) {
     function isIn(n, list) {
       return list.indexOf(n) !== -1;
     }
+
     function isBetween(n, start, end) {
       return start <= n && n <= end;
     }
@@ -678,8 +682,8 @@ document.webL10n = (function(window, document, undefined) {
         if ((isBetween((n % 10), 2, 4)) && !(isBetween((n % 100), 12, 14)))
           return 'few';
         if ((n % 10) === 0 ||
-            (isBetween((n % 10), 5, 9)) ||
-            (isBetween((n % 100), 11, 14)))
+          (isBetween((n % 10), 5, 9)) ||
+          (isBetween((n % 100), 11, 14)))
           return 'many';
         if ((n % 10) == 1 && (n % 100) != 11)
           return 'one';
@@ -696,8 +700,8 @@ document.webL10n = (function(window, document, undefined) {
         if ((isBetween((n % 10), 2, 4)) && !(isBetween((n % 100), 12, 14)))
           return 'few';
         if (n != 1 && (isBetween((n % 10), 0, 1)) ||
-            (isBetween((n % 10), 5, 9)) ||
-            (isBetween((n % 100), 12, 14)))
+          (isBetween((n % 10), 5, 9)) ||
+          (isBetween((n % 100), 12, 14)))
           return 'many';
         if (n == 1)
           return 'one';
@@ -758,7 +762,7 @@ document.webL10n = (function(window, document, undefined) {
             isBetween((n % 100), 10, 19) ||
             isBetween((n % 100), 70, 79) ||
             isBetween((n % 100), 90, 99)
-            ))
+          ))
           return 'few';
         if ((n % 1000000) === 0 && n !== 0)
           return 'many';
@@ -800,7 +804,9 @@ document.webL10n = (function(window, document, undefined) {
     var index = locales2rules[lang.replace(/-.*$/, '')];
     if (!(index in pluralRules)) {
       consoleWarn('plural form unknown for [' + lang + ']');
-      return function() { return 'other'; };
+      return function() {
+        return 'other';
+      };
     }
     return pluralRules[index];
   }
@@ -850,10 +856,10 @@ document.webL10n = (function(window, document, undefined) {
     }
 
     /** This is where l10n expressions should be processed.
-      * The plan is to support C-style expressions from the l20n project;
-      * until then, only two kinds of simple expressions are supported:
-      *   {[ index ]} and {{ arguments }}.
-      */
+     * The plan is to support C-style expressions from the l20n project;
+     * until then, only two kinds of simple expressions are supported:
+     *   {[ index ]} and {{ arguments }}.
+     */
     var rv = {};
     for (var prop in data) {
       var str = data[prop];
@@ -910,7 +916,7 @@ document.webL10n = (function(window, document, undefined) {
       }
 
       str = str.substring(0, match.index) + sub +
-            str.substr(match.index + match[0].length);
+        str.substr(match.index + match[0].length);
       match = reArgs.exec(str);
     }
     return str;
@@ -1015,7 +1021,7 @@ document.webL10n = (function(window, document, undefined) {
     //     userLocale = userLocale.split('-')[0];
     // }
     consoleLog('loading [' + userLocale + '] resources, ' +
-        (gAsyncResourceLoading ? 'asynchronously.' : 'synchronously.'));
+      (gAsyncResourceLoading ? 'asynchronously.' : 'synchronously.'));
 
     // load the default locale and translate the document if required
     if (document.documentElement.lang === userLocale) {
@@ -1076,14 +1082,17 @@ document.webL10n = (function(window, document, undefined) {
         if (!element)
           return {};
         var l10nId = element.getAttribute('data-l10n-id'),
-            l10nArgs = element.getAttribute('data-l10n-args'),
-            args = {};
+          l10nArgs = element.getAttribute('data-l10n-args'),
+          args = {};
         if (l10nArgs) try {
           args = eval(l10nArgs); // XXX yeah, I know...
         } catch (e) {
           consoleWarn('could not parse arguments for #' + l10nId);
         }
-        return { id: l10nId, args: args };
+        return {
+          id: l10nId,
+          args: args
+        };
       };
     }
 
@@ -1093,8 +1102,8 @@ document.webL10n = (function(window, document, undefined) {
         if (!element)
           return [];
         var nodes = element.getElementsByTagName('*'),
-            l10nElements = [],
-            n = nodes.length;
+          l10nElements = [],
+          n = nodes.length;
         for (var i = 0; i < n; i++) {
           if (nodes[i].getAttribute('data-l10n-id'))
             l10nElements.push(nodes[i]);
@@ -1103,8 +1112,8 @@ document.webL10n = (function(window, document, undefined) {
       };
       getL10nResourceLinks = function() {
         var links = document.getElementsByTagName('link'),
-            l10nLinks = [],
-            n = links.length;
+          l10nLinks = [],
+          n = links.length;
         for (var i = 0; i < n; i++) {
           if (links[i].type == 'application/l10n')
             l10nLinks.push(links[i]);
@@ -1154,12 +1163,20 @@ document.webL10n = (function(window, document, undefined) {
     },
 
     // debug
-    getData: function() { return gL10nData; },
-    getText: function() { return gTextData; },
+    getData: function() {
+      return gL10nData;
+    },
+    getText: function() {
+      return gTextData;
+    },
 
     // get|set the document language
-    getLanguage: function() { return gLanguage; },
-    setLanguage: function(lang) { loadLocale(lang, translateFragment); },
+    getLanguage: function() {
+      return gLanguage;
+    },
+    setLanguage: function(lang) {
+      loadLocale(lang, translateFragment);
+    },
 
     // get the direction (ltr|rtl) of the current language
     getDirection: function() {
@@ -1173,7 +1190,9 @@ document.webL10n = (function(window, document, undefined) {
     translate: translateFragment,
 
     // this can be used to prevent race conditions
-    getReadyState: function() { return gReadyState; },
+    getReadyState: function() {
+      return gReadyState;
+    },
     ready: function(callback) {
       if (!callback) {
         return;
@@ -1190,10 +1209,9 @@ document.webL10n = (function(window, document, undefined) {
       }
     }
   };
-}) (window, document);
+})(window, document);
 
 // gettext-like shortcut for document.webL10n.get
 if (window._ === undefined) {
   var _ = document.webL10n.get;
 }
-
