@@ -6,6 +6,8 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.vscode/
+gut-env/
 .Python
 env/
 venv/
@@ -62,3 +64,4 @@ docs/_build/
 static
 rdf-files
 dl-cache
+tmp/
