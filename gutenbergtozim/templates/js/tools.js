@@ -89,7 +89,6 @@ function maximizeUI() {
   $(".precontent").slideDown(300);
 }
 
-
 function loadScript(url, nodeId, callback) {
   console.log("requesting script for #" + nodeId + " from " + url);
   if (document.getElementById(nodeId)) {
@@ -898,6 +897,10 @@ function showBookshelfSearchResults(value) {
     $("#bookShelfTable_next").html(document.webL10n.get("table-next"));
   });
 
+  // enable clearable if persisted value
+  if ($("#author_filter").val()) {
+    $("#author_filter").addClass("x onX");
+  }
 }
 $('#bookshelf_filter').keypress(function(event) {
   if (event.which == 13) {
