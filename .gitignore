@@ -65,3 +65,4 @@ static
 rdf-files
 dl-cache
 tmp/
+*.zim
