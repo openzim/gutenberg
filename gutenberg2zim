@@ -174,7 +174,7 @@ def main(arguments):
             rdf_path=RDF_FOLDER, only_books=BOOKS, concurrency=CONCURRENCY, force=FORCE
         )
         logger.info("Add possible url to db")
-        # setup_urls()
+        setup_urls()
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
