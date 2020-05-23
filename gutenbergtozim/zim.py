@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import (unicode_literals, absolute_import,
-                        division, print_function)
+from __future__ import unicode_literals, absolute_import, division, print_function
 import six
 
 from path import Path as path
@@ -14,21 +13,34 @@ from gutenbergtozim.iso639 import ISO_MATRIX
 from gutenbergtozim.export import export_skeleton
 
 
-def build_zimfile(static_folder, output_folder, zim_name=None,
-                  languages=[], formats=[],
-                  title=None, description=None,
-                  only_books=[],
-                  create_index=True, force=False, 
-                  title_search=False, add_bookshelves=False):
+def build_zimfile(
+    static_folder,
+    output_folder,
+    zim_name=None,
+    languages=[],
+    formats=[],
+    title=None,
+    description=None,
+    only_books=[],
+    create_index=True,
+    force=False,
+    title_search=False,
+    add_bookshelves=False,
+):
 
     # revert HTML/JS/CSS to zim-compatible versions
-    export_skeleton(static_folder=static_folder, dev_mode=False,
-                    languages=languages, formats=formats,
-                    only_books=only_books, 
-                    title_search=title_search, add_bookshelves=add_bookshelves)
+    export_skeleton(
+        static_folder=static_folder,
+        dev_mode=False,
+        languages=languages,
+        formats=formats,
+        only_books=only_books,
+        title_search=title_search,
+        add_bookshelves=add_bookshelves,
+    )
 
     if not languages:
-        languages = ['mul']
+        languages = ["mul"]
 
     languages.sort()
     formats.sort()
@@ -37,7 +49,9 @@ def build_zimfile(static_folder, output_folder, zim_name=None,
         if len(languages) > 5:
             title = "Project Gutenberg Library"
         else:
-            title = "Project Gutenberg Library ({langs})".format(langs=",".join(languages))
+            title = "Project Gutenberg Library ({langs})".format(
+                langs=",".join(languages)
+            )
 
         if len(formats) < len(FORMAT_MATRIX):
             title += " with {formats}".format(formats=",".join(formats))
@@ -60,21 +74,34 @@ def build_zimfile(static_folder, output_folder, zim_name=None,
     languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
     languages.sort()
 
-    cmd = ['zimwriterfs',
-           '--welcome', "Home.html",
-           '--favicon', "favicon.png",
-           '--language', ','.join(languages),
-           '--name', project_id,
-           '--title', title,
-           '--description', description,
-           '--creator', "gutenberg.org",
-           '--tags', 'gutenberg',
-           '--publisher', "Kiwix",
-           '--scraper', 'gutengergtozim-{v}'.format(v=VERSION),
-           static_folder, six.text_type(zim_path)]
+    cmd = [
+        "zimwriterfs",
+        "--welcome",
+        "Home.html",
+        "--favicon",
+        "favicon.png",
+        "--language",
+        ",".join(languages),
+        "--name",
+        project_id,
+        "--title",
+        title,
+        "--description",
+        description,
+        "--creator",
+        "gutenberg.org",
+        "--tags",
+        "gutenberg",
+        "--publisher",
+        "Kiwix",
+        "--scraper",
+        "gutengergtozim-{v}".format(v=VERSION),
+        static_folder,
+        six.text_type(zim_path),
+    ]
 
     if create_index:
-        cmd.insert(1, '--withFullTextIndex')
+        cmd.insert(1, "--withFullTextIndex")
     if exec_cmd(cmd) == 0:
         logger.info("Successfuly created ZIM file at {}".format(zim_path))
     else:
