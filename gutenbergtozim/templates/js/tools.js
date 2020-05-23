@@ -786,7 +786,7 @@ function init() {
         return;
       }
 
-      let url = "./" + encodeURIComponent($(this).val()) + "_cover." + title_dict[$(this).val()] + ".html";
+      let url = "./" + encodeURIComponent($(this).val().replace(/\//g, "-")) + "_cover." + title_dict[$(this).val()] + ".html";
       $(location).attr("href", url);
     }
   });
