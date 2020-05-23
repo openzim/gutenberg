@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import (unicode_literals, absolute_import,
-                        division, print_function)
+from __future__ import unicode_literals, absolute_import, division, print_function
 import os
 import sys
 
@@ -21,27 +20,28 @@ from gutenbergtozim.zim import build_zimfile
 from gutenbergtozim.checkdeps import check_dependencies
 
 
-help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
-        """[-r RDF_FOLDER] [-d CACHE_PATH] [-e STATIC_PATH] """
-        """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
-        """[-t ZIM_TITLE] [-n ZIM_DESC] """
-        """[-p CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
-        """[--prepare] [--parse] [--download] [--export] [--dev] """
-        """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
-        """[--title-search] [--bookshelves] """
-        """
+help = (
+    """Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
+    """[-r RDF_FOLDER] [-d CACHE_PATH] [-e STATIC_PATH] """
+    """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
+    """[-t ZIM_TITLE] [-n ZIM_DESC] """
+    """[-p CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
+    """[--prepare] [--parse] [--download] [--export] [--dev] """
+    """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
+    """[--title-search] [--bookshelves] """
+    """
 
 -h --help                       Display this help message
 -y --wipe-db                    Empty cached book metadata
 -F --force                      Redo step even if target already exist
 
 -l --languages=<list>           Comma-separated list of lang codes to filter"""
-        """ export to (preferably ISO 639-1, else ISO 639-3)
+    """ export to (preferably ISO 639-1, else ISO 639-3)
 -f --formats=<list>             Comma-separated list of formats to filter """
-        """export to (epub, html, pdf, all)
+    """export to (epub, html, pdf, all)
 
 -r --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use """
-        """extracted folder instead
+    """extracted folder instead
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
 -z --zim-file=<file>            Write ZIM into this file path
 -t --zim-title=<title>          Set ZIM title
@@ -49,80 +49,92 @@ help = ("""Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, """
-        """separated by commas, or dashes for intervals
+    """separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for download """
-        """and parsing tasks
+    """and parsing tasks
 --dlc=<nb>                      Number of concurrent *download* process for """
-        """download (overwrites --concurrency). """
-        """if server blocks high rate requests
+    """download (overwrites --concurrency). """
+    """if server blocks high rate requests
 -m --one-language-one-zim=<folder> When more than 1 language, do one zim for each """
-        """  language (and one with all)
+    """  language (and one with all)
 --no-index                      Do NOT create full-text index within ZIM file
 --check                         Check dependencies
 --prepare                       Download & extract rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
 --export                        Export downloaded content to zim-friendly """
-        """static HTML
+    """static HTML
 --dev                           Exports *just* Home+JS+CSS files """
-        """(overwritten by --zim step)
+    """(overwritten by --zim step)
 --zim                           Create a ZIM file
---title-search                  Add title search parameter
+--title-search                  Add field to search a book by title and directly jump to it
 --bookshelves                   Add bookshelves 
 
 This script is used to produce a ZIM file (and any intermediate state)
-of Gutenberg repository using a mirror.""")
+of Gutenberg repository using a mirror."""
+)
 
 
 def main(arguments):
 
     # actions constants
-    DO_PREPARE = arguments.get('--prepare', False)
-    DO_PARSE = arguments.get('--parse', False)
-    DO_DOWNLOAD = arguments.get('--download', False)
-    DO_EXPORT = arguments.get('--export', False)
-    DO_DEV = arguments.get('--dev', False)
-    DO_ZIM = arguments.get('--zim', False)
-    DO_CHECKDEPS = arguments.get('--check', False)
+    DO_PREPARE = arguments.get("--prepare", False)
+    DO_PARSE = arguments.get("--parse", False)
+    DO_DOWNLOAD = arguments.get("--download", False)
+    DO_EXPORT = arguments.get("--export", False)
+    DO_DEV = arguments.get("--dev", False)
+    DO_ZIM = arguments.get("--zim", False)
+    DO_CHECKDEPS = arguments.get("--check", False)
     ONE_LANG_ONE_ZIM_FOLDER = arguments.get("--one-language-one-zim") or None
-    COMPLETE_DUMP = arguments.get('--complete', False)
+    COMPLETE_DUMP = arguments.get("--complete", False)
 
-    RDF_FOLDER = arguments.get('--rdf-folder') or os.path.join('rdf-files')
-    STATIC_FOLDER = arguments.get('--static-folder') or os.path.join('static')
-    ZIM_NAME = arguments.get('--zim-file')
-    WIPE_DB = arguments.get('--wipe-db') or False
-    RDF_URL = arguments.get('--rdf-url') \
-        or 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2'
-    DL_CACHE = arguments.get('--dl-folder') or os.path.join('dl-cache')
-    BOOKS = arguments.get('--books') or ''
-    ZIM_TITLE = arguments.get('--zim-title')
-    ZIM_DESC = arguments.get('--zim-desc')
-    CONCURRENCY = int(arguments.get('--concurrency') or 16)
-    DL_CONCURRENCY = int(arguments.get('--dlc') or CONCURRENCY)
-    FORCE = arguments.get('--force', False)
-    NO_INDEX = arguments.get('--no-index', False)
-    TITLE_SEARCH = arguments.get('--title-search',False)
-    BOOKSHELVES = arguments.get('--bookshelves',False)
+    RDF_FOLDER = arguments.get("--rdf-folder") or os.path.join("rdf-files")
+    STATIC_FOLDER = arguments.get("--static-folder") or os.path.join("static")
+    ZIM_NAME = arguments.get("--zim-file")
+    WIPE_DB = arguments.get("--wipe-db") or False
+    RDF_URL = (
+        arguments.get("--rdf-url")
+        or "http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2"
+    )
+    DL_CACHE = arguments.get("--dl-folder") or os.path.join("dl-cache")
+    BOOKS = arguments.get("--books") or ""
+    ZIM_TITLE = arguments.get("--zim-title")
+    ZIM_DESC = arguments.get("--zim-desc")
+    CONCURRENCY = int(arguments.get("--concurrency") or 16)
+    DL_CONCURRENCY = int(arguments.get("--dlc") or CONCURRENCY)
+    FORCE = arguments.get("--force", False)
+    NO_INDEX = arguments.get("--no-index", False)
+    TITLE_SEARCH = arguments.get("--title-search", False)
+    BOOKSHELVES = arguments.get("--bookshelves", False)
 
     # create tmp dir
-    path('tmp').mkdir_p()
+    path("tmp").mkdir_p()
 
-    LANGUAGES = [x.strip().lower()
-                 for x in (arguments.get('--languages') or '').split(',')
-                 if x.strip()]
+    LANGUAGES = [
+        x.strip().lower()
+        for x in (arguments.get("--languages") or "").split(",")
+        if x.strip()
+    ]
     # special shortcuts for "all"
-    if arguments.get('--formats') in ['all', None]:
-        FORMATS = ['epub', 'pdf', 'html']
+    if arguments.get("--formats") in ["all", None]:
+        FORMATS = ["epub", "pdf", "html"]
     else:
-        FORMATS = list(set([x.strip().lower()
-                            for x in (arguments.get('--formats') or '').split(',')
-                            if x.strip()]))
+        FORMATS = list(
+            set(
+                [
+                    x.strip().lower()
+                    for x in (arguments.get("--formats") or "").split(",")
+                    if x.strip()
+                ]
+            )
+        )
 
     try:
-        BOOKS = [bid for bid in BOOKS.split(',')]
+        BOOKS = [bid for bid in BOOKS.split(",")]
 
         def f(x):
-            return list(map(int, [i for i in x.split('-') if i.isdigit()]))
+            return list(map(int, [i for i in x.split("-") if i.isdigit()]))
+
         books = []
         for i in BOOKS:
             blst = f(i)
@@ -139,8 +151,7 @@ def main(arguments):
         COMPLETE_DUMP = True
 
     if COMPLETE_DUMP:
-        DO_CHECKDEPS = DO_PREPARE = DO_PARSE = \
-            DO_DOWNLOAD = DO_EXPORT = DO_ZIM = True
+        DO_CHECKDEPS = DO_PREPARE = DO_PARSE = DO_DOWNLOAD = DO_EXPORT = DO_ZIM = True
 
     if DO_CHECKDEPS:
         logger.info("CHECKING for dependencies on the system")
@@ -159,23 +170,27 @@ def main(arguments):
 
     if DO_PARSE:
         logger.info("PARSING rdf-files in {}".format(RDF_FOLDER))
-        parse_and_fill(rdf_path=RDF_FOLDER, only_books=BOOKS,
-                       concurrency=CONCURRENCY, force=FORCE)
+        parse_and_fill(
+            rdf_path=RDF_FOLDER, only_books=BOOKS, concurrency=CONCURRENCY, force=FORCE
+        )
         logger.info("Add possible url to db")
-        #setup_urls()
+        # setup_urls()
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
-        download_all_books(download_cache=DL_CACHE,
-                           concurrency=DL_CONCURRENCY,
-                           languages=LANGUAGES,
-                           formats=FORMATS,
-                           only_books=BOOKS,
-                           force=FORCE)
+        download_all_books(
+            download_cache=DL_CACHE,
+            concurrency=DL_CONCURRENCY,
+            languages=LANGUAGES,
+            formats=FORMATS,
+            only_books=BOOKS,
+            force=FORCE,
+        )
     if ONE_LANG_ONE_ZIM_FOLDER:
         if LANGUAGES == []:
             zims = []
             from gutenbergtozim.database import Book
+
             for book in Book.select(Book.language).distinct():
                 zims.append([book.language])
             zims.append([])
@@ -188,25 +203,29 @@ def main(arguments):
 
         if DO_EXPORT:
             logger.info("EXPORTING ebooks to static folder (and JSON)")
-            export_all_books(static_folder=STATIC_FOLDER,
-                             download_cache=DL_CACHE,
-                             concurrency=CONCURRENCY,
-                             languages=zim_lang,
-                             formats=FORMATS,
-                             only_books=BOOKS,
-                             force=FORCE,
-                             title_search=TITLE_SEARCH,
-                             add_bookshelves=BOOKSHELVES)
+            export_all_books(
+                static_folder=STATIC_FOLDER,
+                download_cache=DL_CACHE,
+                concurrency=CONCURRENCY,
+                languages=zim_lang,
+                formats=FORMATS,
+                only_books=BOOKS,
+                force=FORCE,
+                title_search=TITLE_SEARCH,
+                add_bookshelves=BOOKSHELVES,
+            )
 
         if DO_DEV:
             logger.info("EXPORTING HTML/JS/CSS to static folder")
-            export_skeleton(static_folder=STATIC_FOLDER,
-                            dev_mode=True,
-                            languages=zim_lang,
-                            formats=FORMATS,
-                            only_books=BOOKS,
-                            title_search=TITLE_SEARCH,
-                            add_bookshelves=BOOKSHELVES)
+            export_skeleton(
+                static_folder=STATIC_FOLDER,
+                dev_mode=True,
+                languages=zim_lang,
+                formats=FORMATS,
+                only_books=BOOKS,
+                title_search=TITLE_SEARCH,
+                add_bookshelves=BOOKSHELVES,
+            )
 
         if DO_ZIM:
 
@@ -214,18 +233,22 @@ def main(arguments):
                 logger.error("You don't have zimwriterfs installed.")
                 sys.exit(1)
             logger.info("BUILDING ZIM off static folder {}".format(STATIC_FOLDER))
-            build_zimfile(static_folder=STATIC_FOLDER,
-                          output_folder=path(ONE_LANG_ONE_ZIM_FOLDER or '.').abspath(),
-                          zim_name=path(ZIM_NAME).name if ZIM_NAME else None,
-                          languages=zim_lang, formats=FORMATS,
-                          only_books=BOOKS,
-                          title=ZIM_TITLE, description=ZIM_DESC,
-                          create_index=not NO_INDEX,
-                          force=FORCE,
-                          title_search=TITLE_SEARCH,
-                          add_bookshelves=BOOKSHELVES)
+            build_zimfile(
+                static_folder=STATIC_FOLDER,
+                output_folder=path(ONE_LANG_ONE_ZIM_FOLDER or ".").abspath(),
+                zim_name=path(ZIM_NAME).name if ZIM_NAME else None,
+                languages=zim_lang,
+                formats=FORMATS,
+                only_books=BOOKS,
+                title=ZIM_TITLE,
+                description=ZIM_DESC,
+                create_index=not NO_INDEX,
+                force=FORCE,
+                title_search=TITLE_SEARCH,
+                add_bookshelves=BOOKSHELVES,
+            )
             shutil.rmtree(STATIC_FOLDER)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(docopt(help, version=VERSION))
