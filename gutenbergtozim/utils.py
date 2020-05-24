@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import (unicode_literals, absolute_import,
-                        division, print_function)
+from __future__ import unicode_literals, absolute_import, division, print_function
 import os
 import sys
 import hashlib
@@ -21,16 +20,18 @@ from gutenbergtozim import logger
 from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.database import Book, BookFormat, Format
 
-UTF8 = 'utf-8'
-FORMAT_MATRIX = collections.OrderedDict([
-    ('html', 'text/html'),
-    ('epub', 'application/epub+zip'),
-    ('pdf', 'application/pdf'),
-])
+UTF8 = "utf-8"
+FORMAT_MATRIX = collections.OrderedDict(
+    [
+        ("html", "text/html"),
+        ("epub", "application/epub+zip"),
+        ("pdf", "application/pdf"),
+    ]
+)
 
 BAD_BOOKS_FORMATS = {
-    39765: ['pdf'],
-    40194: ['pdf'],
+    39765: ["pdf"],
+    40194: ["pdf"],
 }
 
 
@@ -43,17 +44,17 @@ def critical_error(message):
 
 
 def normalize(text=None):
-    return None if text is None else unicodedata.normalize('NFC', text)
+    return None if text is None else unicodedata.normalize("NFC", text)
 
 
 def get_project_id(languages=[], formats=[], only_books=[]):
 
-    parts = ['gutenberg']
+    parts = ["gutenberg"]
     parts.append("-".join(languages))
     if len(formats) < len(FORMAT_MATRIX):
         parts.append("-".join(formats))
     parts.append("selection" if only_books else "all")
-    parts.append(datetime.datetime.now().strftime('%Y-%m'))
+    parts.append(datetime.datetime.now().strftime("%Y-%m"))
     return "_".join(parts)
 
 
@@ -61,7 +62,7 @@ def exec_cmd(cmd):
     if isinstance(cmd, (tuple, list)):
         args = cmd
     else:
-        args = cmd.split(' ')
+        args = cmd.split(" ")
     logger.debug(" ".join(args))
     if six.PY3:
         return subprocess.run(args).returncode
@@ -70,32 +71,47 @@ def exec_cmd(cmd):
 
 
 def download_file(url, fname):
-    cmd = ['curl', '--fail', '--insecure', '--location', '--silent',
-           '--show-error', '-C', '-', '--url', url]
+    cmd = [
+        "curl",
+        "--fail",
+        "--insecure",
+        "--location",
+        "--silent",
+        "--show-error",
+        "-C",
+        "-",
+        "--url",
+        url,
+    ]
     if fname:
-        cmd += ['--output', fname]
+        cmd += ["--output", fname]
     else:
-        cmd += ['--remote-name']
+        cmd += ["--remote-name"]
     cmdr = exec_cmd(cmd)
     return cmdr == 0
 
 
 def main_formats_for(book):
-    fmts = [fmt.format.mime
-            for fmt in BookFormat.select(BookFormat, Book, Format)
-                                 .join(Book).switch(BookFormat)
-                                 .join(Format)
-                                 .where(Book.id == book.id)]
+    fmts = [
+        fmt.format.mime
+        for fmt in BookFormat.select(BookFormat, Book, Format)
+        .join(Book)
+        .switch(BookFormat)
+        .join(Format)
+        .where(Book.id == book.id)
+    ]
     return [k for k, v in FORMAT_MATRIX.items() if v in fmts]
 
 
 def get_list_of_filtered_books(languages, formats, only_books=[]):
     if len(formats):
-        qs = Book.select().join(BookFormat) \
-                 .join(Format) \
-                 .where(Format.mime << [FORMAT_MATRIX.get(f)
-                                        for f in formats]) \
-                 .group_by(Book.id)
+        qs = (
+            Book.select()
+            .join(BookFormat)
+            .join(Format)
+            .where(Format.mime << [FORMAT_MATRIX.get(f) for f in formats])
+            .group_by(Book.id)
+        )
     else:
         qs = Book.select()
 
@@ -116,10 +132,10 @@ def get_langs_with_count(books):
             lang_count[book.language] = 0
         lang_count[book.language] += 1
 
-    return [(language_name(l), l, nb)
-            for l, nb in sorted(lang_count.items(),
-                                key=lambda x: x[1],
-                                reverse=True)]
+    return [
+        (language_name(l), l, nb)
+        for l, nb in sorted(lang_count.items(), key=lambda x: x[1], reverse=True)
+    ]
 
 
 def get_lang_groups(books):
@@ -127,17 +143,19 @@ def get_lang_groups(books):
     if len(langs_wt_count) <= NB_MAIN_LANGS:
         return langs_wt_count, []
     else:
-        return (langs_wt_count[:NB_MAIN_LANGS],
-                sorted(langs_wt_count[NB_MAIN_LANGS:], key=lambda x: x[0]))
+        return (
+            langs_wt_count[:NB_MAIN_LANGS],
+            sorted(langs_wt_count[NB_MAIN_LANGS:], key=lambda x: x[0]),
+        )
 
 
 def md5sum(fpath):
-    return hashlib.md5(read_file(fpath)[0].encode('utf-8')).hexdigest()
+    return hashlib.md5(read_file(fpath)[0].encode("utf-8")).hexdigest()
 
 
 def is_bad_cover(fpath):
     bad_sizes = [19263]
-    bad_sums = ['a059007e7a2e86f2bf92e4070b3e5c73']
+    bad_sums = ["a059007e7a2e86f2bf92e4070b3e5c73"]
 
     if path(fpath).size not in bad_sizes:
         return False
@@ -145,23 +163,23 @@ def is_bad_cover(fpath):
     return md5sum(fpath) in bad_sums
 
 
-def read_file_as(fpath, encoding='utf-8'):
+def read_file_as(fpath, encoding="utf-8"):
     # logger.debug("opening `{}` as `{}`".format(fpath, encoding))
     if six.PY2:
-        with open(fpath, 'r') as f:
+        with open(fpath, "r") as f:
             return f.read().decode(encoding)
     else:
-        with open(fpath, 'r', encoding=encoding) as f:
+        with open(fpath, "r", encoding=encoding) as f:
             return f.read()
 
 
 def guess_file_encoding(fpath):
-    with open(fpath, 'rb') as f:
-        return chardet.detect(f.read()).get('encoding')
+    with open(fpath, "rb") as f:
+        return chardet.detect(f.read()).get("encoding")
 
 
 def read_file(fpath):
-    for encoding in ['utf-8', 'iso-8859-1']:
+    for encoding in ["utf-8", "iso-8859-1"]:
         try:
             return read_file_as(fpath, encoding), encoding
         except UnicodeDecodeError:
@@ -174,20 +192,20 @@ def read_file(fpath):
 
 def save_file(content, fpath, encoding=UTF8):
     if six.PY2:
-        with open(fpath, 'w') as f:
+        with open(fpath, "w") as f:
             f.write(content.encode(encoding))
     else:
-        with open(fpath, 'w', encoding=encoding) as f:
+        with open(fpath, "w", encoding=encoding) as f:
             f.write(content)
 
 
 def zip_epub(epub_fpath, root_folder, fpaths):
-    with zipfile.ZipFile(epub_fpath, 'w', zipfile.ZIP_DEFLATED) as zf:
+    with zipfile.ZipFile(epub_fpath, "w", zipfile.ZIP_DEFLATED) as zf:
         for fpath in fpaths:
             zf.write(os.path.join(root_folder, fpath), fpath)
 
 
 def ensure_unicode(v):
     if six.PY2 and isinstance(v, str):
-        v = v.decode('utf8')
+        v = v.decode("utf8")
     return six.text_type(v)
