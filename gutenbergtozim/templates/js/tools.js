@@ -70,8 +70,6 @@ function goToAuthor(name) {
 
 function goToTitle(title) {
   $("#title_filter").val(title);
-  // $("#author_filter").change();
-  // showBooks();
 }
 
 
@@ -735,7 +733,6 @@ function init() {
     }
   });
 
-
   /* Title filter */
   $("#title_filter").autocomplete({
     source: function(request, response) {
@@ -756,38 +753,28 @@ function init() {
       })
     },
     select: function(event, ui) {
-      // minimizeUI();
-      let url = "./" + encodeURIComponent(ui.item.value) + "_cover." + title_dict[ui.item.value] + ".html";
+      minimizeUI();
+      let url = "./" + encodeURIComponent(ui.item.value.replace(/\//g, "-")) + "_cover." + title_dict[ui.item.value] + ".html";
       $(location).attr("href", url);
-      // showBooks();
-
-
-    }
-  });
-
-  $("#author_filter").keypress(function(event) {
-    if (event.which == 13) {
-      $.persistValue("author_filter", $(this).val(), persist_options);
-      showBooks();
-    }
-  });
-  $("#bookshelf_filter").keypress(function(event) {
-    if (event.which == 13) {
-      $.persistValue("author_filter", $(this).val(), persist_options);
-      showBookshelfSearchResults($(this).val());
     }
   });
 
   $("#title_filter").keypress(function(event) {
     if (event.which == 13) {
-      // $.persistValue("_filter", $(this).val(), persist_options);
-      // showBooks();
       if ($(this).val().length === 0 || title_dict === null || title_dict[$(this).val()] === undefined) {
+        $(this).val("");
         return;
       }
 
       let url = "./" + encodeURIComponent($(this).val().replace(/\//g, "-")) + "_cover." + title_dict[$(this).val()] + ".html";
       $(location).attr("href", url);
+    }
+  });
+
+  $("#bookshelf_filter").keypress(function(event) {
+    if (event.which == 13) {
+      $.persistValue("author_filter", $(this).val(), persist_options);
+      showBookshelfSearchResults($(this).val());
     }
   });
 
