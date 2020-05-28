@@ -76,7 +76,7 @@ l10n_strings = {
             "search": {"textContent": "Rechercher"},
             "author": {
                 "textContent": "Auteur",
-                "placeholder": "Voir les livres d'un seul auteur",
+                "placeholder": "Rechercher par nom d'auteur",
             },
             "cover-img": {"title": "Couverture du livre", "alt": "Couverture du livre"},
             "cover": {"textContent": "(couverture)"},
@@ -136,10 +136,10 @@ l10n_strings = {
                 "soigneusement avec l’aide de milliers "
                 "de volontaires."
             },
-            "bookshelves_title": {"textContent": "Étagères (A-Z)"},
-            "bookshelf_link": {"textContent": "Parcourir par étagère"},
-            "home_link": {"textContent": "Rentrer chez soi"},
-            "bookshelf": {"placeholder": "Recherche de bibliothèque"},
+            "bookshelves_title": {"textContent": "Rayons (A-Z)"},
+            "bookshelf_link": {"textContent": "Parcourir par rayon"},
+            "home_link": {"textContent": "Retour"},
+            "bookshelf": {"placeholder": "Recherche de rayon"},
         },
         "de": {
             "isocode": {"textContent": "de"},
