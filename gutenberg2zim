@@ -67,7 +67,7 @@ help = (
 --dev                           Exports *just* Home+JS+CSS files """
     """(overwritten by --zim step)
 --zim                           Create a ZIM file
---title-search                  Add title search parameter
+--title-search                  Add field to search a book by title and directly jump to it
 --bookshelves                   Add bookshelves 
 
 This script is used to produce a ZIM file (and any intermediate state)
@@ -174,7 +174,7 @@ def main(arguments):
             rdf_path=RDF_FOLDER, only_books=BOOKS, concurrency=CONCURRENCY, force=FORCE
         )
         logger.info("Add possible url to db")
-        # setup_urls()
+        setup_urls()
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")

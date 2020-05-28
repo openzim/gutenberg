@@ -979,7 +979,7 @@ def export_to_json_helpers(
 
         # Create the bookshelf home page
         context = get_default_context(project_id=project_id, books=books)
-        context.update({"bookshelf_home": True})
+        context.update({"bookshelf_home": True, "add_bookshelves": True})
         template = jinja_env.get_template("bookshelf_home.html")
         rendered = template.render(**context)
         save_bs_output(
@@ -996,6 +996,7 @@ def export_to_json_helpers(
                     "bookshelf_home": False,
                     "individual_book_shelf": True,
                     "no_filters": True,
+                    "add_bookshelves": True,
                 }
             )
             template = jinja_env.get_template("bookshelf.html")
