@@ -5,7 +5,7 @@
 from __future__ import unicode_literals, absolute_import, division, print_function
 
 import os
-import platform
+import shutil
 
 from collections import defaultdict
 
@@ -252,9 +252,15 @@ def setup_urls():
         "rsync -a --list-only {} > {}".format(UrlBuilder.RSYNC, file_with_url),
     ]
     exec_cmd(cmd)
-    in_place_opt = ["-i", ".bak"] if platform.system() == "Darwin" else ["-i"]
-    cmd = ["sed"] + in_place_opt + [r"s#.* \(.*\)$#\\1#", file_with_url]
-    exec_cmd(cmd)
+
+    # make a copy of rsync's result
+    shutil.copyfile(file_with_url, file_with_url + ".bak")
+
+    # strip rsync file to only contain relative path
+    with open(file_with_url + ".bak", "r") as src, open(file_with_url, "w") as dest:
+        for line in src.readlines():
+            if len(line) >= 47:
+                dest.write(line[46:])
 
     field_names = ["url"]
     load_csv(Url, file_with_url, field_names=field_names)
