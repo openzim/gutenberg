@@ -37,6 +37,7 @@ from gutenbergtozim.utils import (
 from gutenbergtozim.database import Book, Format, BookFormat, Author
 from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.l10n import l10n_strings
+from gutenbergtozim.s3 import upload_to_cache
 
 from itertools import groupby
 
@@ -174,6 +175,7 @@ def export_all_books(
     force=False,
     title_search=False,
     add_bookshelves=False,
+    s3_storage=None
 ):
 
     project_id = get_project_id(
@@ -262,6 +264,13 @@ def export_all_books(
         book.popularity = sum(
             [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
         )
+    for fl in cached_files:
+        if fl.startswith("optimized_"):
+            # rename and move
+            book_id = #
+            corresponding_book = [book for book in books if book.id == book_id]
+            write_book_presentation_article(static_folder=static_folder, book=corresponding_book[0], force=force, project_id=project_id, title_search=title_search, add_bookshelves=add_bookshelves, books=books)
+            
 
     def dlb(b):
         return export_book_to(
@@ -276,6 +285,7 @@ def export_all_books(
             force=force,
             title_search=title_search,
             add_bookshelves=add_bookshelves,
+            s3_storage=s3_storage
         )
 
     Pool(concurrency).map(dlb, books)
@@ -569,6 +579,7 @@ def export_book_to(
     force=False,
     title_search=False,
     add_bookshelves=False,
+    s3_storage=None,
 ):
     logger.info("\tExporting Book #{id}.".format(id=book.id))
 
@@ -576,6 +587,7 @@ def export_book_to(
     html, encoding = html_content_for(
         book=book, static_folder=static_folder, download_cache=download_cache
     )
+    html_book_optimized_files = []
     if html:
         article_fpath = os.path.join(static_folder, article_name_for(book))
         if not path(article_fpath).exists() or force:
@@ -586,6 +598,7 @@ def export_book_to(
                 raise
                 new_html = html
             save_bs_output(new_html, article_fpath, UTF8)
+            html_book_optimized_files.append(article_fpath)
         else:
             logger.info("\t\tSkipping HTML article {}".format(article_fpath))
 
@@ -706,7 +719,7 @@ def export_book_to(
         path(tmpd).rmtree_p()
 
     def handle_companion_file(
-        fname, dstfname=None, book=None, force=False, as_ext=None
+        fname, dstfname=None, book=None, force=False, as_ext=None, html_file_list=None, book_id=None, s3_storage=None
     ):
         ext = path(fname).ext if as_ext is None else as_ext
         src = os.path.join(path(download_cache).abspath(), fname)
@@ -722,6 +735,8 @@ def export_book_to(
             logger.info("\t\tCopying and optimizing image companion {}".format(fname))
             # copy_from_cache(src, dst)
             optimize_image(src, dst)
+            if html_file_list:
+                html_file_list.append(dst)
         elif ext == ".epub":
             logger.info("\t\tCreating optimized EPUB file {}".format(fname))
             tmp_epub = tempfile.NamedTemporaryFile(suffix=".epub", dir=TMP_FOLDER)
@@ -736,6 +751,8 @@ def export_book_to(
                 handle_companion_file(fname, dstfname, book, force, as_ext="zip")
             else:
                 path(tmp_epub.name).move(dst)
+                if s3_storage:
+                    upload_to_cache(dst, format="epub", book_id=book_id, s3_storage=s3_storage)
         else:
             # excludes files created by Windows Explorer
             if src.endswith("_Thumbs.db"):
@@ -744,6 +761,10 @@ def export_book_to(
             logger.debug("\t\tshitty ext: {}".format(dst))
             logger.info("\t\tCopying companion file to {}".format(fname))
             copy_from_cache(src, dst)
+            if ext == ".pdf" and s3_storage:
+                upload_to_cache(dst, format="pdf", book_id=book_id, s3_storage=s3_storage)
+            elif html_file_list:
+                html_file_list.append(dst)
 
     # associated files (images, etc)
     for fname in [fn for fn in cached_files if fn.startswith("{}_".format(book.id))]:
@@ -760,14 +781,17 @@ def export_book_to(
             html, encoding = read_file(src)
             new_html = update_html_for_static(book=book, html_content=html)
             save_bs_output(new_html, dst, UTF8)
+            html_book_optimized_files.append(dst)
         else:
             try:
-                handle_companion_file(fname, force=force)
+                handle_companion_file(fname, force=force, html_file_list=html_book_optimized_files)
             except Exception as e:
                 logger.exception(e)
                 logger.error(
                     "\t\tException while handling companion file: {}".format(e)
                 )
+    if s3_storage:
+        upload_to_cache(html_book_optimized_files, format="html", book_id=book.id, s3_storage=s3_storage)
 
     # other formats
     for format in formats:
@@ -775,13 +799,18 @@ def export_book_to(
             continue
         try:
             handle_companion_file(
-                fname_for(book, format), archive_name_for(book, format), force=force
+                fname_for(book, format), archive_name_for(book, format), force=force, book_id=book.id, s3_storage=s3_storage
             )
         except Exception as e:
             logger.exception(e)
             logger.error("\t\tException while handling companion file: {}".format(e))
 
     # book presentation article
+    write_book_presentation_article(static_folder=static_folder, book=book, force=force, project_id=project_id, title_search=title_search, add_bookshelves=add_bookshelves, books=books)
+    
+
+
+def write_book_presentation_article(static_folder, book, force, project_id, title_search, add_bookshelves, books):
     cover_fpath = os.path.join(static_folder, article_name_for(book=book, cover=True))
     if not path(cover_fpath).exists() or force:
         logger.info("\t\tExporting to {}".format(cover_fpath))
@@ -800,7 +829,6 @@ def export_book_to(
                 f.write(html)
     else:
         logger.info("\t\tSkipping cover {}".format(cover_fpath))
-
 
 def authors_from_ids(idlist):
     """ build a list of Author objects based on a list of author.gut_id
