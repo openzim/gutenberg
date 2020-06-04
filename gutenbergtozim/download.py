@@ -17,6 +17,7 @@ from gutenbergtozim.urls import get_urls
 from gutenbergtozim.database import BookFormat, Format, Book
 from gutenbergtozim.export import get_list_of_filtered_books, fname_for
 from gutenbergtozim.utils import download_file, FORMAT_MATRIX, ensure_unicode
+from gutenbergtozim.s3 import download_from_cache
 
 IMAGE_BASE = "http://aleph.gutenberg.org/cache/epub/"
 
@@ -101,7 +102,7 @@ def handle_zipped_epub(zippath, book, download_cache):
     path(tmpd).rmtree_p()
 
 
-def download_book(book, download_cache, languages, formats, force):
+def download_book(book, download_cache, languages, formats, force, s3_storage):
     logger.info("\tDownloading content files for Book #{id}".format(id=book.id))
 
     # apply filters
@@ -122,6 +123,19 @@ def download_book(book, download_cache, languages, formats, force):
                 "\t\t{fmt} already exists at {path}".format(fmt=format, path=fpath)
             )
             continue
+
+        # try to download from cache
+        etag = None
+        if s3_storage:
+            downloaded_from_cache = download_from_cache(
+                book=book,
+                etag=etag,
+                format=format,
+                download_cache=download_cache,
+                s3_storage=s3_storage,
+            )
+            if downloaded_from_cache:
+                continue
 
         # retrieve corresponding BookFormat
         bfs = BookFormat.filter(book=book)
@@ -259,7 +273,13 @@ def download_covers(book, download_cache):
 
 
 def download_all_books(
-    download_cache, concurrency, languages=[], formats=[], only_books=[], force=False
+    download_cache,
+    concurrency,
+    languages=[],
+    formats=[],
+    only_books=[],
+    force=False,
+    s3_storage=None,
 ):
     available_books = get_list_of_filtered_books(
         languages=languages, formats=formats, only_books=only_books
@@ -269,10 +289,10 @@ def download_all_books(
     path(download_cache).mkdir_p()
 
     def dlb(b):
-        return download_book(b, download_cache, languages, formats, force)
+        return download_book(b, download_cache, languages, formats, force, s3_storage)
 
     def dlb_covers(b):
-        return download_covers(b, download_cache)
+        return download_covers(b, download_cache, s3_storage)
 
     Pool(concurrency).map(dlb, available_books)
     Pool(concurrency).map(dlb_covers, available_books)
