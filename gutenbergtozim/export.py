@@ -776,8 +776,17 @@ def export_book_to(
             else:
                 path(tmp_epub.name).move(dst)
                 if s3_storage:
+                    bfs = BookFormat.filter(book=book)
+                    bf = bfs.filter(
+                        BookFormat.format
+                        << Format.filter(mime=FORMAT_MATRIX.get("epub"))
+                    ).get()
                     upload_to_cache(
-                        dst, format="epub", book_id=book_id, s3_storage=s3_storage
+                        asset=dst,
+                        format="epub",
+                        book_id=book_id,
+                        etag=bf.etag,
+                        s3_storage=s3_storage,
                     )
         else:
             # excludes files created by Windows Explorer
@@ -788,8 +797,16 @@ def export_book_to(
             logger.info("\t\tCopying companion file to {}".format(fname))
             copy_from_cache(src, dst)
             if ext == ".pdf" and s3_storage:
+                bfs = BookFormat.filter(book=book)
+                bf = bfs.filter(
+                    BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get("pdf"))
+                ).get()
                 upload_to_cache(
-                    dst, format="pdf", book_id=book_id, s3_storage=s3_storage
+                    asset=dst,
+                    format="pdf",
+                    book_id=book_id,
+                    etag=bf.etag,
+                    s3_storage=s3_storage,
                 )
             elif html_file_list:
                 html_file_list.append(dst)
@@ -821,9 +838,14 @@ def export_book_to(
                     "\t\tException while handling companion file: {}".format(e)
                 )
     if s3_storage:
+        bfs = BookFormat.filter(book=book)
+        bf = bfs.filter(
+            BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get("html"))
+        ).get()
         upload_to_cache(
-            html_book_optimized_files,
+            asset=html_book_optimized_files,
             format="html",
+            etag=bf.etag,
             book_id=book.id,
             s3_storage=s3_storage,
         )

@@ -16,7 +16,12 @@ from gutenbergtozim import logger, TMP_FOLDER
 from gutenbergtozim.urls import get_urls
 from gutenbergtozim.database import BookFormat, Format, Book
 from gutenbergtozim.export import get_list_of_filtered_books, fname_for
-from gutenbergtozim.utils import download_file, FORMAT_MATRIX, ensure_unicode
+from gutenbergtozim.utils import (
+    download_file,
+    FORMAT_MATRIX,
+    ensure_unicode,
+    get_etag_from_url,
+)
 from gutenbergtozim.s3 import download_from_cache
 
 IMAGE_BASE = "http://aleph.gutenberg.org/cache/epub/"
@@ -124,19 +129,6 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
             )
             continue
 
-        # try to download from cache
-        etag = None
-        if s3_storage:
-            downloaded_from_cache = download_from_cache(
-                book=book,
-                etag=etag,
-                format=format,
-                download_cache=download_cache,
-                s3_storage=s3_storage,
-            )
-            if downloaded_from_cache:
-                continue
-
         # retrieve corresponding BookFormat
         bfs = BookFormat.filter(book=book)
 
@@ -236,6 +228,18 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
             if url.endswith(".zip"):
                 zpath = "{}.zip".format(fpath)
 
+                bf.etag = get_etag_from_url(url)
+                bf.save()
+                if s3_storage:
+                    downloaded_from_cache = download_from_cache(
+                        book=book,
+                        etag=bf.etag,
+                        format=format,
+                        download_cache=download_cache,
+                        s3_storage=s3_storage,
+                    )
+                    if downloaded_from_cache:
+                        continue
                 if not download_file(url, zpath):
                     logger.error("ZIP file donwload failed: {}".format(zpath))
                     continue
@@ -245,6 +249,24 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
                     zippath=zpath, book=book, download_cache=download_cache
                 )
             else:
+                if (
+                    url.endswith(".htm")
+                    or url.endswith(".pdf")
+                    or url.endswith(".html")
+                    or url.endswith(".epub")
+                ):
+                    bf.etag = get_etag_from_url(url)
+                    bf.save()
+                    if s3_storage:
+                        downloaded_from_cache = download_from_cache(
+                            book=book,
+                            etag=bf.etag,
+                            format=format,
+                            download_cache=download_cache,
+                            s3_storage=s3_storage,
+                        )
+                        if downloaded_from_cache:
+                            continue
                 if not download_file(url, fpath):
                     logger.error("file donwload failed: {}".format(fpath))
                     continue

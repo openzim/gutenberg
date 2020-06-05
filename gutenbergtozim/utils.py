@@ -11,6 +11,7 @@ import zipfile
 import collections
 import unicodedata
 import datetime
+import requests
 
 import six
 import chardet
@@ -36,6 +37,17 @@ BAD_BOOKS_FORMATS = {
 
 
 NB_MAIN_LANGS = 5
+
+
+def get_etag_from_url(url):
+    try:
+        response_headers = requests.head(url=url, allow_redirects=True).headers
+    except Exception as e:
+        print(url + " > Problem while head request\n" + str(e) + "\n")
+        return None
+    else:
+        if response_headers.get("etag") is not None:
+            return response_headers["etag"]
 
 
 def critical_error(message):
