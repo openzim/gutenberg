@@ -228,12 +228,11 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
             if url.endswith(".zip"):
                 zpath = "{}.zip".format(fpath)
 
-                bf.etag = get_etag_from_url(url)
-                bf.save()
+                etag = get_etag_from_url(url)
                 if s3_storage:
                     downloaded_from_cache = download_from_cache(
                         book=book,
-                        etag=bf.etag,
+                        etag=etag,
                         format=format,
                         download_cache=download_cache,
                         s3_storage=s3_storage,
@@ -243,7 +242,9 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
                 if not download_file(url, zpath):
                     logger.error("ZIP file donwload failed: {}".format(zpath))
                     continue
-
+                # save etag
+                book.html_etag = etag
+                book.save()
                 # extract zipfile
                 handle_zipped_epub(
                     zippath=zpath, book=book, download_cache=download_cache
@@ -255,21 +256,31 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
                     or url.endswith(".html")
                     or url.endswith(".epub")
                 ):
-                    bf.etag = get_etag_from_url(url)
-                    bf.save()
+                    etag = get_etag_from_url(url)
                     if s3_storage:
+                        logger.info(
+                            f"Trying to download {book.id} from optimization cache"
+                        )
                         downloaded_from_cache = download_from_cache(
                             book=book,
-                            etag=bf.etag,
+                            etag=etag,
                             format=format,
                             download_cache=download_cache,
                             s3_storage=s3_storage,
                         )
                         if downloaded_from_cache:
                             continue
-                if not download_file(url, fpath):
-                    logger.error("file donwload failed: {}".format(fpath))
-                    continue
+                    if not download_file(url, fpath):
+                        logger.error("file donwload failed: {}".format(fpath))
+                        continue
+                    # save etag
+                    logger.debug(f"Saving ETag for {book.id}")
+                    if url.endswith(".htm") or url.endswith(".html"):
+                        book.html_etag = etag
+                        book.save()
+                    elif url.endswith(".epub"):
+                        book.epub_etag = etag
+                        book.save()
 
             # store working URL in DB
             bf.downloaded_from = url
@@ -314,7 +325,7 @@ def download_all_books(
         return download_book(b, download_cache, languages, formats, force, s3_storage)
 
     def dlb_covers(b):
-        return download_covers(b, download_cache, s3_storage)
+        return download_covers(b, download_cache)
 
     Pool(concurrency).map(dlb, available_books)
     Pool(concurrency).map(dlb_covers, available_books)

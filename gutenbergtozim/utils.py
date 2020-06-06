@@ -39,6 +39,26 @@ BAD_BOOKS_FORMATS = {
 NB_MAIN_LANGS = 5
 
 
+def book_name_for_fs(book):
+    return book.title.strip().replace("/", "-")[:230]
+
+
+def article_name_for(book, cover=False):
+    cover = "_cover" if cover else ""
+    title = book_name_for_fs(book)
+    return "{title}{cover}.{id}.html".format(title=title, cover=cover, id=book.id)
+
+
+def archive_name_for(book, format):
+    return "{title}.{id}.{format}".format(
+        title=book_name_for_fs(book), id=book.id, format=format
+    )
+
+
+def fname_for(book, format):
+    return "{id}.{format}".format(id=book.id, format=format)
+
+
 def get_etag_from_url(url):
     try:
         response_headers = requests.head(url=url, allow_redirects=True).headers

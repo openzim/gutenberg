@@ -8,8 +8,8 @@ from path import Path as path
 
 from kiwixstorage import KiwixStorage
 from pif import get_public_ip
-from . import logger
-from gutenbergtozim.export import archive_name_for
+from . import logger, TMP_FOLDER
+from .utils import archive_name_for
 
 
 def s3_credentials_ok(s3_url_with_credentials):
@@ -30,25 +30,19 @@ def s3_credentials_ok(s3_url_with_credentials):
 def download_from_cache(book, etag, format, download_cache, s3_storage):
     """ whether it successfully downloaded from cache """
     key = f"{book.id}/{format}"
-    ext = format
     if format == "html":
-        ext = "zip"
+        format = "zip"
     if not s3_storage.has_object_matching_meta(key, tag="etag", value=etag):
         return False
     fpath = os.path.join(
         path(download_cache).abspath(),
-        f"optimized_{archive_name_for(book, format)}.{ext}",
+        f"optimized_{book.id}_{archive_name_for(book, format)}",
     )
     try:
         s3_storage.download_file(key, fpath)
-        if format == "html":
+        if format == "zip":
             with zipfile.ZipFile(fpath, "r") as zipfl:
-                for fl in zipfl.namelist():
-                    target_path = os.path.join(
-                        path(download_cache).abspath(), f"optimized_{fl}"
-                    )
-                    with open(target_path, "w") as f:
-                        f.write(fl)
+                zipfl.extractall(download_cache)
             os.unlink(fpath)
     except Exception as exc:
         logger.error(f"{key} failed to download from cache: {exc}")
@@ -61,19 +55,19 @@ def upload_to_cache(book_id, asset, etag, format, s3_storage):
     """ whether it successfully uploaded to cache """
     fpath = asset
     key = f"{book_id}/{format}"
+    zippath = path(f"{TMP_FOLDER}/{book_id}.zip")
     if isinstance(asset, list):
-        with zipfile.ZipFile("temp.zip", "w") as zipfl:
+        with zipfile.ZipFile(zippath, "w") as zipfl:
             for fl in asset:
-                zipfl.write(fl)
-                fpath = "temp.zip"
-
-    fpath = path(fpath)
+                zipfl.write(fl, arcname=f"optimized_{book_id}_{fl.name}")
+        fpath = zippath
     try:
         s3_storage.upload_file(fpath, key, meta={"etag": etag})
     except Exception as exc:
         logger.error(f"{key} failed to upload to cache: {exc}")
         return False
     finally:
-        os.unlink("temp.zip")
+        if zippath.exists():
+            os.unlink(zippath)
     logger.info(f"uploaded {fpath} to cache at {key}")
     return True

@@ -33,6 +33,10 @@ from gutenbergtozim.utils import (
     save_file,
     UTF8,
     get_project_id,
+    book_name_for_fs,
+    archive_name_for,
+    fname_for,
+    article_name_for,
 )
 from gutenbergtozim.database import Book, Format, BookFormat, Author
 from gutenbergtozim.iso639 import language_name
@@ -72,10 +76,6 @@ def fa_for_format(format):
         "epub": "fa-download",
         "pdf": "fa-file-pdf-o",
     }.get(format, "fa-file-o")
-
-
-def book_name_for_fs(book):
-    return book.title.strip().replace("/", "-")[:230]
 
 
 def zim_link_prefix(format):
@@ -267,24 +267,29 @@ def export_all_books(
 
     # copy already optimized files
     copied_optimized_files = []
+    optimized_book_ids = []
     for fl in cached_files:
         if fl.startswith("optimized_"):
             nm_parts = fl.split("_", 2)
             book_id = nm_parts[1]
+            optimized_book_ids.append(int(book_id))
             src = os.path.join(path(download_cache).abspath(), fl)
             dst = os.path.join(path(static_folder).abspath(), nm_parts[2])
             path(src).copy(dst)
-            corresponding_book = [book for book in books if book.id == book_id]
-            write_book_presentation_article(
-                static_folder=static_folder,
-                book=corresponding_book[0],
-                force=force,
-                project_id=project_id,
-                title_search=title_search,
-                add_bookshelves=add_bookshelves,
-                books=books,
-            )
             copied_optimized_files.append(fl)
+
+    # generate cover articles for optimized files that were copied
+    for book_id in set(optimized_book_ids):
+        corresponding_book = [book for book in books if book.id == book_id]
+        write_book_presentation_article(
+            static_folder=static_folder,
+            book=corresponding_book[0],
+            force=force,
+            project_id=project_id,
+            title_search=title_search,
+            add_bookshelves=add_bookshelves,
+            books=books,
+        )
 
     # remove optimized files from cached_files
     cached_files = [fl for fl in cached_files if fl not in copied_optimized_files]
@@ -306,22 +311,6 @@ def export_all_books(
         )
 
     Pool(concurrency).map(dlb, books)
-
-
-def article_name_for(book, cover=False):
-    cover = "_cover" if cover else ""
-    title = book_name_for_fs(book)
-    return "{title}{cover}.{id}.html".format(title=title, cover=cover, id=book.id)
-
-
-def archive_name_for(book, format):
-    return "{title}.{id}.{format}".format(
-        title=book_name_for_fs(book), id=book.id, format=format
-    )
-
-
-def fname_for(book, format):
-    return "{id}.{format}".format(id=book.id, format=format)
 
 
 def html_content_for(book, static_folder, download_cache):
@@ -615,7 +604,7 @@ def export_book_to(
                 raise
                 new_html = html
             save_bs_output(new_html, article_fpath, UTF8)
-            html_book_optimized_files.append(article_fpath)
+            html_book_optimized_files.append(path(article_fpath).abspath())
         else:
             logger.info("\t\tSkipping HTML article {}".format(article_fpath))
 
@@ -742,7 +731,6 @@ def export_book_to(
         force=False,
         as_ext=None,
         html_file_list=None,
-        book_id=None,
         s3_storage=None,
     ):
         ext = path(fname).ext if as_ext is None else as_ext
@@ -772,20 +760,15 @@ def export_book_to(
                     "\t\tBad zip file. "
                     "Copying as it might be working{}".format(fname)
                 )
-                handle_companion_file(fname, dstfname, book, force, as_ext="zip")
+                handle_companion_file(fname, dstfname, book, force, as_ext=".zip")
             else:
                 path(tmp_epub.name).move(dst)
                 if s3_storage:
-                    bfs = BookFormat.filter(book=book)
-                    bf = bfs.filter(
-                        BookFormat.format
-                        << Format.filter(mime=FORMAT_MATRIX.get("epub"))
-                    ).get()
                     upload_to_cache(
                         asset=dst,
                         format="epub",
-                        book_id=book_id,
-                        etag=bf.etag,
+                        book_id=book.id,
+                        etag=book.epub_etag,
                         s3_storage=s3_storage,
                     )
         else:
@@ -796,19 +779,7 @@ def export_book_to(
             logger.debug("\t\tshitty ext: {}".format(dst))
             logger.info("\t\tCopying companion file to {}".format(fname))
             copy_from_cache(src, dst)
-            if ext == ".pdf" and s3_storage:
-                bfs = BookFormat.filter(book=book)
-                bf = bfs.filter(
-                    BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get("pdf"))
-                ).get()
-                upload_to_cache(
-                    asset=dst,
-                    format="pdf",
-                    book_id=book_id,
-                    etag=bf.etag,
-                    s3_storage=s3_storage,
-                )
-            elif html_file_list:
+            if ext != ".pdf" and ext != ".zip" and html_file_list:
                 html_file_list.append(dst)
 
     # associated files (images, etc)
@@ -837,15 +808,11 @@ def export_book_to(
                 logger.error(
                     "\t\tException while handling companion file: {}".format(e)
                 )
-    if s3_storage:
-        bfs = BookFormat.filter(book=book)
-        bf = bfs.filter(
-            BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get("html"))
-        ).get()
+    if s3_storage and html_book_optimized_files:
         upload_to_cache(
             asset=html_book_optimized_files,
             format="html",
-            etag=bf.etag,
+            etag=book.html_etag,
             book_id=book.id,
             s3_storage=s3_storage,
         )
@@ -859,7 +826,7 @@ def export_book_to(
                 fname_for(book, format),
                 archive_name_for(book, format),
                 force=force,
-                book_id=book.id,
+                book=book,
                 s3_storage=s3_storage,
             )
         except Exception as e:

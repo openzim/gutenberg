@@ -142,8 +142,9 @@ class Book(BaseModel):
     downloads = IntegerField(default=0)
     bookshelf = CharField(max_length=500, null=True)
     cover_page = IntegerField(default=0)
-
     popularity = 0
+    html_etag = CharField(max_length=500, null=True)
+    epub_etag = CharField(max_length=500, null=True)
 
     def __unicode__(self):
         return "{}/{}/{}".format(self.id, self.title, self.bookshelf)
