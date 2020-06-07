@@ -103,7 +103,9 @@ def handle_zipped_epub(zippath, book, download_cache):
                 raise
                 # import ipdb; ipdb.set_trace()
 
-    # delete temp directory
+    # delete temp directory and zipfile
+    if path(zippath).exists():
+        os.unlink(zippath)
     path(tmpd).rmtree_p()
 
 
@@ -230,14 +232,13 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
 
                 etag = get_etag_from_url(url)
                 if s3_storage:
-                    downloaded_from_cache = download_from_cache(
+                    if download_from_cache(
                         book=book,
                         etag=etag,
                         format=format,
                         download_cache=download_cache,
                         s3_storage=s3_storage,
-                    )
-                    if downloaded_from_cache:
+                    ):
                         continue
                 if not download_file(url, zpath):
                     logger.error("ZIP file donwload failed: {}".format(zpath))
@@ -252,7 +253,6 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
             else:
                 if (
                     url.endswith(".htm")
-                    or url.endswith(".pdf")
                     or url.endswith(".html")
                     or url.endswith(".epub")
                 ):
@@ -261,26 +261,26 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
                         logger.info(
                             f"Trying to download {book.id} from optimization cache"
                         )
-                        downloaded_from_cache = download_from_cache(
+                        if download_from_cache(
                             book=book,
                             etag=etag,
                             format=format,
                             download_cache=download_cache,
                             s3_storage=s3_storage,
-                        )
-                        if downloaded_from_cache:
+                        ):
                             continue
-                    if not download_file(url, fpath):
-                        logger.error("file donwload failed: {}".format(fpath))
-                        continue
-                    # save etag
-                    logger.debug(f"Saving ETag for {book.id}")
-                    if url.endswith(".htm") or url.endswith(".html"):
-                        book.html_etag = etag
-                        book.save()
-                    elif url.endswith(".epub"):
-                        book.epub_etag = etag
-                        book.save()
+                if not download_file(url, fpath):
+                    logger.error("file donwload failed: {}".format(fpath))
+                    continue
+                # save etag if html or epub
+                if url.endswith(".htm") or url.endswith(".html"):
+                    logger.debug(f"Saving html ETag for {book.id}")
+                    book.html_etag = etag
+                    book.save()
+                elif url.endswith(".epub"):
+                    logger.debug(f"Saving epub ETag for {book.id}")
+                    book.epub_etag = etag
+                    book.save()
 
             # store working URL in DB
             bf.downloaded_from = url
@@ -292,14 +292,18 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
             continue
 
 
-def download_covers(book, download_cache):
+def download_covers(book, download_cache, cached_files):
     cover = "{}_cover.jpg".format(book.id)
     fpath = os.path.join(download_cache, cover)
     has_cover = Book.select(Book.cover_page).where(Book.id == book.id)
     if has_cover:
-        title = "{}{}/pg{}.cover.medium.jpg".format(IMAGE_BASE, book.id, book.id)
-        logger.debug("Downloading {}".format(title))
-        download_file(title, fpath)
+        # check if cover already present
+        if not [fl for fl in cached_files if fl.endswith(cover)]:
+            title = "{}{}/pg{}.cover.medium.jpg".format(IMAGE_BASE, book.id, book.id)
+            logger.debug("Downloading {}".format(title))
+            download_file(title, fpath)
+        else:
+            logger.debug(f"Cover already present for book #{book.id}")
     else:
         logger.debug("No Book Cover found for Book #{}".format(book.id))
     return True
@@ -324,8 +328,10 @@ def download_all_books(
     def dlb(b):
         return download_book(b, download_cache, languages, formats, force, s3_storage)
 
-    def dlb_covers(b):
-        return download_covers(b, download_cache)
-
     Pool(concurrency).map(dlb, available_books)
+    cached_files = os.listdir(download_cache)
+
+    def dlb_covers(b):
+        return download_covers(b, download_cache, cached_files)
+
     Pool(concurrency).map(dlb_covers, available_books)
