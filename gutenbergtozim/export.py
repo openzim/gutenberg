@@ -43,8 +43,6 @@ from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.l10n import l10n_strings
 from gutenbergtozim.s3 import upload_to_cache
 
-from itertools import groupby
-
 jinja_env = Environment(loader=PackageLoader("gutenbergtozim", "templates"))
 
 DEBUG_COUNT = []
