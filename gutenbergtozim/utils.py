@@ -6,6 +6,7 @@ from __future__ import unicode_literals, absolute_import, division, print_functi
 import os
 import sys
 import hashlib
+import pathlib
 import subprocess
 import zipfile
 import collections
@@ -102,7 +103,8 @@ def exec_cmd(cmd):
         return subprocess.call(args)
 
 
-def download_file(url, fname):
+def download_file(url, fname=None):
+    fname.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
         "curl",
         "--fail",
@@ -116,7 +118,7 @@ def download_file(url, fname):
         url,
     ]
     if fname:
-        cmd += ["--output", fname]
+        cmd += ["--output", str(fname.resolve())]
     else:
         cmd += ["--remote-name"]
     cmdr = exec_cmd(cmd)
