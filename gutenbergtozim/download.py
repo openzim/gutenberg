@@ -180,7 +180,7 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
                 continue
         else:
             bfs = bfs.filter(
-                BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get(format))
+                BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get(book_format))
             )
 
         if not bfs.count():
@@ -232,7 +232,7 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
                     if download_from_cache(
                         book=book,
                         etag=etag,
-                        format=book_format,
+                        book_format=book_format,
                         dest_dir=optimized_dir,
                         s3_storage=s3_storage,
                     ):
@@ -259,7 +259,7 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
                         if download_from_cache(
                             book=book,
                             etag=etag,
-                            format=format,
+                            book_format=book_format,
                             dest_dir=optimized_dir,
                             s3_storage=s3_storage,
                         ):
@@ -282,7 +282,7 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
             bf.save()
 
         if not bf.downloaded_from:
-            logger.error("NO FILE FOR #{}/{}".format(book.id, format))
+            logger.error("NO FILE FOR #{}/{}".format(book.id, book_format))
             pp(allurls)
             continue
 
@@ -301,7 +301,7 @@ def download_covers(book, book_dir, s3_storage):
             downloaded_from_cache = download_from_cache(
                 book=book,
                 etag=etag,
-                format="cover",
+                book_format="cover",
                 dest_dir=book_dir.joinpath("optimized"),
                 s3_storage=s3_storage,
             )

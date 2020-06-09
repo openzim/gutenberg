@@ -27,21 +27,21 @@ def s3_credentials_ok(s3_url_with_credentials):
     return s3_storage
 
 
-def download_from_cache(book, etag, format, dest_dir, s3_storage):
+def download_from_cache(book, etag, book_format, dest_dir, s3_storage):
     """ whether it successfully downloaded from cache """
-    key = f"{book.id}/{format}"
+    key = f"{book.id}/{book_format}"
     if not s3_storage.has_object_matching_meta(key, tag="etag", value=etag):
         return False
     dest_dir.mkdir(parents=True, exist_ok=True)
-    if format == "cover":
+    if book_format == "cover":
         fpath = dest_dir.joinpath(f"{book.id}_cover.jpg")
     else:
-        if format == "html":
-            format = "zip"
-        fpath = dest_dir.joinpath(archive_name_for(book, format))
+        if book_format == "html":
+            book_format = "zip"
+        fpath = dest_dir.joinpath(archive_name_for(book, book_format))
     try:
         s3_storage.download_file(key, fpath)
-        if format == "zip":
+        if book_format == "zip":
             with zipfile.ZipFile(fpath, "r") as zipfl:
                 zipfl.extractall(dest_dir)
             os.unlink(fpath)
@@ -52,10 +52,10 @@ def download_from_cache(book, etag, format, dest_dir, s3_storage):
     return True
 
 
-def upload_to_cache(book_id, asset, etag, format, s3_storage):
+def upload_to_cache(book_id, asset, etag, book_format, s3_storage):
     """ whether it successfully uploaded to cache """
     fpath = asset
-    key = f"{book_id}/{format}"
+    key = f"{book_id}/{book_format}"
     zippath = pathlib.Path(f"{TMP_FOLDER}/{book_id}.zip")
     if isinstance(asset, list):
         with zipfile.ZipFile(zippath, "w") as zipfl:

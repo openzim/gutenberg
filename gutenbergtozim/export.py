@@ -661,7 +661,7 @@ def handle_unoptimized_files(
                     zipped_files.remove(fname)
                     remove_cover = True
                 else:
-                    optimize_image(fnp, fnp)
+                    optimize_image(pathlib.Path(fnp), pathlib.Path(fnp))
 
             if path(fname).ext in (".htm", ".html"):
                 html_content, _ = read_file(fnp)
@@ -729,10 +729,10 @@ def handle_unoptimized_files(
         if ext in (".png", ".jpg", ".jpeg", ".gif"):
             logger.info("\t\tCopying and optimizing image companion {}".format(fname))
             optimize_image(src, dst)
-            if dst.name.endswith(f"cover.jpg") and s3_storage:
+            if dst.name.endswith("cover.jpg") and s3_storage:
                 upload_to_cache(
                     asset=dst,
-                    format="cover",
+                    book_format="cover",
                     book_id=book.id,
                     etag=book.cover_etag,
                     s3_storage=s3_storage,
@@ -756,7 +756,7 @@ def handle_unoptimized_files(
                 if s3_storage:
                     upload_to_cache(
                         asset=dst,
-                        format="epub",
+                        book_format="epub",
                         book_id=book.id,
                         etag=book.epub_etag,
                         s3_storage=s3_storage,
@@ -773,7 +773,7 @@ def handle_unoptimized_files(
 
     # associated files (images, etc)
     for fpath in src_dir.iterdir():
-        if fpath.is_file():
+        if fpath.is_file() and fpath.name.startswith(f"{book.id}_"):
             if fpath.suffix in (".html", ".htm"):
                 src = fpath
                 dst = static_folder.joinpath(fpath.name)
@@ -799,7 +799,7 @@ def handle_unoptimized_files(
     if s3_storage and html_book_optimized_files:
         upload_to_cache(
             asset=html_book_optimized_files,
-            format="html",
+            book_format="html",
             etag=book.html_etag,
             book_id=book.id,
             s3_storage=s3_storage,
