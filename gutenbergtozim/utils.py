@@ -50,14 +50,12 @@ def article_name_for(book, cover=False):
     return "{title}{cover}.{id}.html".format(title=title, cover=cover, id=book.id)
 
 
-def archive_name_for(book, format):
-    return "{title}.{id}.{format}".format(
-        title=book_name_for_fs(book), id=book.id, format=format
-    )
+def archive_name_for(book, book_format):
+    return f"{book_name_for_fs(book)}.{book.id}.{book_format}"
 
 
-def fname_for(book, format):
-    return "{id}.{format}".format(id=book.id, format=format)
+def fname_for(book, book_format):
+    return f"{book.id}.{book_format}"
 
 
 def get_etag_from_url(url):
