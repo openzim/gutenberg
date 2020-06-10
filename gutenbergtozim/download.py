@@ -104,7 +104,9 @@ def handle_zipped_epub(zippath, book, dst_dir):
     path(tmpd).rmtree_p()
 
 
-def download_book(book, download_cache, languages, formats, force, s3_storage):
+def download_book(
+    book, download_cache, languages, formats, force, s3_storage, optimizer_version
+):
     logger.info("\tDownloading content files for Book #{id}".format(id=book.id))
 
     # apply filters
@@ -127,6 +129,19 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
         if (unoptimized_fpath.exists() or optimized_fpath.exists()) and not force:
             logger.debug(f"\t\t{book_format} already exists")
             continue
+
+        if force:
+            if book_format == "html":
+                for fl in book_dir.iterdir():
+                    if fl.is_file() and fl.suffix not in [".pdf", ".epub"]:
+                        fl.unlink()
+            else:
+                unoptimized_fpath.unlink(missing_ok=True)
+                optimized_fpath.unlink(missing_ok=True)
+            # delete dirs which are empty
+            for dir_name in [optimized_dir, unoptimized_dir]:
+                if not [fl for fl in dir_name.iterdir()]:
+                    dir_name.rmdir()
 
         # retrieve corresponding BookFormat
         bfs = BookFormat.filter(book=book)
@@ -235,6 +250,7 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
                         book_format=book_format,
                         dest_dir=optimized_dir,
                         s3_storage=s3_storage,
+                        optimizer_version=optimizer_version,
                     ):
                         continue
                 if not download_file(url, zpath):
@@ -249,6 +265,7 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
                 if (
                     url.endswith(".htm")
                     or url.endswith(".html")
+                    or url.endswith(".html.utf8")
                     or url.endswith(".epub")
                 ):
                     etag = get_etag_from_url(url)
@@ -262,13 +279,18 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
                             book_format=book_format,
                             dest_dir=optimized_dir,
                             s3_storage=s3_storage,
+                            optimizer_version=optimizer_version,
                         ):
                             continue
                 if not download_file(url, unoptimized_fpath):
                     logger.error("file donwload failed: {}".format(unoptimized_fpath))
                     continue
-                # save etag if html or epub
-                if url.endswith(".htm") or url.endswith(".html"):
+                # save etag if html or epub if download is successful
+                if (
+                    url.endswith(".htm")
+                    or url.endswith(".html")
+                    or url.endswith(".html.utf8")
+                ):
                     logger.debug(f"Saving html ETag for {book.id}")
                     book.html_etag = etag
                     book.save()
@@ -287,13 +309,20 @@ def download_book(book, download_cache, languages, formats, force, s3_storage):
             continue
 
 
-def download_covers(book, book_dir, s3_storage):
+def download_covers(book, book_dir, s3_storage, optimizer_version):
     has_cover = Book.select(Book.cover_page).where(Book.id == book.id)
     if has_cover:
         # try to download optimized cover from cache if s3_storage
         url = "{}{}/pg{}.cover.medium.jpg".format(IMAGE_BASE, book.id, book.id)
         etag = get_etag_from_url(url)
         downloaded_from_cache = False
+        cover = "{}_cover_image.jpg".format(book.id)
+        if (
+            book_dir.joinpath("optimized").joinpath(cover).exists()
+            or book_dir.joinpath("unoptimized").joinpath(cover).exists()
+        ):
+            logger.debug(f"Cover already exists for book #{book.id}")
+            return True
         if s3_storage:
             logger.info(
                 f"Trying to download cover for {book.id} from optimization cache"
@@ -304,9 +333,9 @@ def download_covers(book, book_dir, s3_storage):
                 book_format="cover",
                 dest_dir=book_dir.joinpath("optimized"),
                 s3_storage=s3_storage,
+                optimizer_version=optimizer_version,
             )
         if not downloaded_from_cache:
-            cover = "{}_cover.jpg".format(book.id)
             logger.debug("Downloading {}".format(url))
             download_file(url, book_dir.joinpath("unoptimized").joinpath(cover))
             book.cover_etag = etag
@@ -324,6 +353,7 @@ def download_all_books(
     only_books=[],
     force=False,
     s3_storage=None,
+    optimizer_version=None,
 ):
     available_books = get_list_of_filtered_books(
         languages=languages, formats=formats, only_books=only_books
@@ -333,13 +363,18 @@ def download_all_books(
     path(download_cache).mkdir_p()
 
     def dlb(b):
-        return download_book(b, download_cache, languages, formats, force, s3_storage)
+        return download_book(
+            b, download_cache, languages, formats, force, s3_storage, optimizer_version
+        )
 
     Pool(concurrency).map(dlb, available_books)
 
     def dlb_covers(b):
         return download_covers(
-            b, pathlib.Path(download_cache).joinpath(str(b.id)), s3_storage
+            b,
+            pathlib.Path(download_cache).joinpath(str(b.id)),
+            s3_storage,
+            optimizer_version,
         )
 
     Pool(concurrency).map(dlb_covers, available_books)

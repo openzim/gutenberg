@@ -176,6 +176,7 @@ def export_all_books(
     title_search=False,
     add_bookshelves=False,
     s3_storage=None,
+    optimizer_version=None,
 ):
 
     project_id = get_project_id(
@@ -275,6 +276,7 @@ def export_all_books(
             title_search=title_search,
             add_bookshelves=add_bookshelves,
             s3_storage=s3_storage,
+            optimizer_version=optimizer_version,
         )
 
     Pool(concurrency).map(dlb, books)
@@ -492,7 +494,7 @@ def update_html_for_static(book, html_content, epub=False):
 def cover_html_content_for(
     book, static_folder, books, project_id, title_search, add_bookshelves
 ):
-    cover_img = "{id}_cover.jpg".format(id=book.id)
+    cover_img = "{id}_cover_image.jpg".format(id=book.id)
     cover_img = cover_img if static_folder.joinpath(cover_img).exists() else None
     translate_author = (
         ' data-l10n-id="author-{id}"'.format(id=book.author.name().lower())
@@ -548,6 +550,7 @@ def export_book(
     title_search,
     add_bookshelves,
     s3_storage,
+    optimizer_version,
 ):
     optimized_files_dir = book_dir.joinpath("optimized")
     if optimized_files_dir.exists():
@@ -566,6 +569,7 @@ def export_book(
             title_search=title_search,
             add_bookshelves=add_bookshelves,
             s3_storage=s3_storage,
+            optimizer_version=optimizer_version,
         )
     write_book_presentation_article(
         static_folder=static_folder,
@@ -586,6 +590,7 @@ def handle_unoptimized_files(
     formats,
     books,
     project_id,
+    optimizer_version,
     force=False,
     title_search=False,
     add_bookshelves=False,
@@ -729,13 +734,14 @@ def handle_unoptimized_files(
         if ext in (".png", ".jpg", ".jpeg", ".gif"):
             logger.info("\t\tCopying and optimizing image companion {}".format(fname))
             optimize_image(src, dst)
-            if dst.name.endswith("cover.jpg") and s3_storage:
+            if dst.name == (f"{book.id}_cover_image.jpg") and s3_storage:
                 upload_to_cache(
                     asset=dst,
                     book_format="cover",
                     book_id=book.id,
                     etag=book.cover_etag,
                     s3_storage=s3_storage,
+                    optimizer_version=optimizer_version,
                 )
             elif html_file_list:
                 html_file_list.append(dst)
@@ -760,6 +766,7 @@ def handle_unoptimized_files(
                         book_id=book.id,
                         etag=book.epub_etag,
                         s3_storage=s3_storage,
+                        optimizer_version=optimizer_version,
                     )
         else:
             # excludes files created by Windows Explorer
@@ -789,7 +796,11 @@ def handle_unoptimized_files(
             else:
                 try:
                     handle_companion_file(
-                        fpath, force=force, html_file_list=html_book_optimized_files
+                        fpath,
+                        force=force,
+                        html_file_list=html_book_optimized_files,
+                        s3_storage=s3_storage,
+                        book=book,
                     )
                 except Exception as e:
                     logger.exception(e)
@@ -803,6 +814,7 @@ def handle_unoptimized_files(
             etag=book.html_etag,
             book_id=book.id,
             s3_storage=s3_storage,
+            optimizer_version=optimizer_version,
         )
 
     # other formats

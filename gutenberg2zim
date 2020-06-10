@@ -70,7 +70,8 @@ help = (
 --zim                           Create a ZIM file
 --title-search                  Add field to search a book by title and directly jump to it
 --bookshelves                   Add bookshelves
---optimization-cache=<url>      URL with credentials to S3 bucket for using as optimization cache 
+--optimization-cache=<url>      URL with credentials to S3 bucket for using as optimization cache
+--use-any-optimized-version     Try to use any optimized version found on optimization cache
 
 This script is used to produce a ZIM file (and any intermediate state)
 of Gutenberg repository using a mirror."""
@@ -78,6 +79,8 @@ of Gutenberg repository using a mirror."""
 
 
 def main(arguments):
+    # optimizer version to use
+    OPTIMIZER_VERSION = "v1"
 
     # actions constants
     DO_PREPARE = arguments.get("--prepare", False)
@@ -109,6 +112,7 @@ def main(arguments):
     TITLE_SEARCH = arguments.get("--title-search", False)
     BOOKSHELVES = arguments.get("--bookshelves", False)
     OPTIMIZATION_CACHE = arguments.get("--optimization-cache") or None
+    USE_ANY_OPTIMIZED_VERSION = arguments.get("--use-any-optimized-version", False)
 
     s3_storage = None
     if OPTIMIZATION_CACHE:
@@ -196,6 +200,9 @@ def main(arguments):
             only_books=BOOKS,
             force=FORCE,
             s3_storage=s3_storage,
+            optimizer_version=OPTIMIZER_VERSION
+            if not USE_ANY_OPTIMIZED_VERSION
+            else None,
         )
     if ONE_LANG_ONE_ZIM_FOLDER:
         if LANGUAGES == []:
@@ -225,6 +232,9 @@ def main(arguments):
                 title_search=TITLE_SEARCH,
                 add_bookshelves=BOOKSHELVES,
                 s3_storage=s3_storage,
+                optimizer_version=OPTIMIZER_VERSION
+                if not USE_ANY_OPTIMIZED_VERSION
+                else None,
             )
 
         if DO_DEV:

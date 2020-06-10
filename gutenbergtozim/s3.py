@@ -27,14 +27,27 @@ def s3_credentials_ok(s3_url_with_credentials):
     return s3_storage
 
 
-def download_from_cache(book, etag, book_format, dest_dir, s3_storage):
+def download_from_cache(
+    book, etag, book_format, dest_dir, s3_storage, optimizer_version
+):
     """ whether it successfully downloaded from cache """
     key = f"{book.id}/{book_format}"
-    if not s3_storage.has_object_matching_meta(key, tag="etag", value=etag):
+    if not s3_storage.has_object(key):
+        return False
+    meta = s3_storage.get_object_stat(key).meta
+    if meta.get("etag") != etag:
+        logger.error(
+            f"etag doesn't match for {key}. Expected {etag}, got {meta.get('etag')}"
+        )
+        return False
+    if optimizer_version and (meta.get("optimizer_version") != optimizer_version):
+        logger.error(
+            f"optimizer version doesn't match for {key}. Expected {optimizer_version}, got {meta.get('optimizer_version')}"
+        )
         return False
     dest_dir.mkdir(parents=True, exist_ok=True)
     if book_format == "cover":
-        fpath = dest_dir.joinpath(f"{book.id}_cover.jpg")
+        fpath = dest_dir.joinpath(f"{book.id}_cover_image.jpg")
     else:
         if book_format == "html":
             book_format = "zip"
@@ -52,7 +65,7 @@ def download_from_cache(book, etag, book_format, dest_dir, s3_storage):
     return True
 
 
-def upload_to_cache(book_id, asset, etag, book_format, s3_storage):
+def upload_to_cache(book_id, asset, etag, book_format, s3_storage, optimizer_version):
     """ whether it successfully uploaded to cache """
     fpath = asset
     key = f"{book_id}/{book_format}"
@@ -63,8 +76,11 @@ def upload_to_cache(book_id, asset, etag, book_format, s3_storage):
                 zipfl.write(fl, arcname=fl.name)
         fpath = zippath
     try:
-        s3_storage.upload_file(fpath, key, meta={"etag": etag})
+        s3_storage.upload_file(
+            fpath, key, meta={"etag": etag, "optimizer_version": optimizer_version}
+        )
     except Exception as exc:
+        print(etag)
         logger.error(f"{key} failed to upload to cache: {exc}")
         return False
     finally:
