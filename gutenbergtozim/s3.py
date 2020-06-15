@@ -40,7 +40,9 @@ def download_from_cache(
             f"etag doesn't match for {key}. Expected {etag}, got {meta.get('etag')}"
         )
         return False
-    if optimizer_version and (meta.get("optimizer_version") != optimizer_version):
+    if book_format != "cover" and (
+        meta.get("optimizer_version") != optimizer_version[book_format]
+    ):
         logger.error(
             f"optimizer version doesn't match for {key}. Expected {optimizer_version}, got {meta.get('optimizer_version')}"
         )
@@ -76,11 +78,11 @@ def upload_to_cache(book_id, asset, etag, book_format, s3_storage, optimizer_ver
                 zipfl.write(fl, arcname=fl.name)
         fpath = zippath
     try:
-        s3_storage.upload_file(
-            fpath, key, meta={"etag": etag, "optimizer_version": optimizer_version}
-        )
+        meta = {"etag": etag}
+        if book_format != "cover":
+            meta.update({"optimizer_version": optimizer_version[book_format]})
+        s3_storage.upload_file(fpath, key, meta=meta)
     except Exception as exc:
-        print(etag)
         logger.error(f"{key} failed to upload to cache: {exc}")
         return False
     finally:

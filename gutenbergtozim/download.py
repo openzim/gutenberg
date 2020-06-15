@@ -132,15 +132,19 @@ def download_book(
 
         if force:
             if book_format == "html":
-                for fl in book_dir.iterdir():
-                    if fl.is_file() and fl.suffix not in [".pdf", ".epub"]:
-                        fl.unlink()
+                for fpath in book_dir.iterdir():
+                    if fpath.is_file() and fpath.suffix not in [".pdf", ".epub"]:
+                        fpath.unlink()
             else:
-                unoptimized_fpath.unlink(missing_ok=True)
-                optimized_fpath.unlink(missing_ok=True)
+                if unoptimized_fpath.exists():
+                    unoptimized_fpath.unlink()
+                if optimized_fpath.exists():
+                    optimized_fpath.unlink()
             # delete dirs which are empty
             for dir_name in [optimized_dir, unoptimized_dir]:
-                if not [fl for fl in dir_name.iterdir()]:
+                if not dir_name.exists():
+                    continue
+                if not list(dir_name.iterdir()):
                     dir_name.rmdir()
 
         # retrieve corresponding BookFormat
@@ -305,6 +309,9 @@ def download_book(
 
         if not bf.downloaded_from:
             logger.error("NO FILE FOR #{}/{}".format(book.id, book_format))
+            # delete instance from DB if download failed
+            logger.info("Deleting instance from DB")
+            bf.delete_instance()
             pp(allurls)
             continue
 

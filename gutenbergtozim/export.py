@@ -554,7 +554,9 @@ def export_book(
 ):
     optimized_files_dir = book_dir.joinpath("optimized")
     if optimized_files_dir.exists():
-        shutil.copytree(optimized_files_dir, static_folder, dirs_exist_ok=True)
+        for fpath in optimized_files_dir.iterdir():
+            if not static_folder.joinpath(fpath.name).exists():
+                shutil.copy2(fpath, static_folder)
     unoptimized_files_dir = book_dir.joinpath("unoptimized")
     if unoptimized_files_dir.exists():
         handle_unoptimized_files(
@@ -596,6 +598,26 @@ def handle_unoptimized_files(
     add_bookshelves=False,
     s3_storage=None,
 ):
+    def copy_file(src, dst):
+        logger.info("\t\tCopying {}".format(dst))
+        try:
+            shutil.copy2(src, dst)
+        except IOError:
+            logger.error("/!\\ Unable to copy missing file {}".format(src))
+            return
+
+    def update_download_cache(unoptimized_file, optimized_file):
+        book_dir = unoptimized_file.parents[1]
+        optimized_dir = book_dir.joinpath("optimized")
+        unoptimized_dir = book_dir.joinpath("unoptimized")
+        if not optimized_dir.exists():
+            optimized_dir.mkdir()
+        dst = optimized_dir.joinpath(optimized_file.name)
+        os.unlink(unoptimized_file)
+        copy_file(optimized_file.resolve(), dst.resolve())
+        if not [fpath for fpath in unoptimized_dir.iterdir()]:
+            unoptimized_dir.rmdir()
+
     logger.info("\tExporting Book #{id}.".format(id=book.id))
 
     # actual book content, as HTML
@@ -611,16 +633,11 @@ def handle_unoptimized_files(
                 raise
             save_bs_output(new_html, article_fpath, UTF8)
             html_book_optimized_files.append(article_fpath)
+            update_download_cache(
+                src_dir.joinpath(fname_for(book, "html")), article_fpath
+            )
         else:
             logger.info("\t\tSkipping HTML article {}".format(article_fpath))
-
-    def copy_file(src, dst):
-        logger.info("\t\tCopying {}".format(dst))
-        try:
-            shutil.copy2(src, dst)
-        except IOError:
-            logger.error("/!\\ Unable to copy missing file {}".format(src))
-            return
 
     def optimize_image(src, dst, force=False):
         if dst.exists() and not force:
@@ -743,8 +760,10 @@ def handle_unoptimized_files(
                     s3_storage=s3_storage,
                     optimizer_version=optimizer_version,
                 )
+                update_download_cache(src, dst)
             elif html_file_list:
                 html_file_list.append(dst)
+                update_download_cache(src, dst)
         elif ext == ".epub":
             logger.info("\t\tCreating optimized EPUB file {}".format(fname))
             tmp_epub = tempfile.NamedTemporaryFile(suffix=".epub", dir=TMP_FOLDER)
@@ -768,6 +787,7 @@ def handle_unoptimized_files(
                         s3_storage=s3_storage,
                         optimizer_version=optimizer_version,
                     )
+                    update_download_cache(src, dst)
         else:
             # excludes files created by Windows Explorer
             if src.name.endswith("_Thumbs.db"):
@@ -777,6 +797,7 @@ def handle_unoptimized_files(
             copy_file(src, dst)
             if ext != ".pdf" and ext != ".zip" and html_file_list:
                 html_file_list.append(dst)
+                update_download_cache(src, dst)
 
     # associated files (images, etc)
     for fpath in src_dir.iterdir():
@@ -793,6 +814,7 @@ def handle_unoptimized_files(
                 new_html = update_html_for_static(book=book, html_content=html)
                 save_bs_output(new_html, dst, UTF8)
                 html_book_optimized_files.append(dst)
+                move_to_optimized(src, dst)
             else:
                 try:
                     handle_companion_file(
