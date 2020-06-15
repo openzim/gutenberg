@@ -660,7 +660,8 @@ def handle_unoptimized_files(
         exec_cmd(["advdef", "-z", "-4", "-i", "5", dst])
 
     def optimize_jpeg(src, dst):
-        copy_file(src, dst)
+        if src != dst:
+            copy_file(src, dst)
         exec_cmd(["jpegoptim", "--strip-all", "-m50", dst])
 
     def optimize_epub(src, dst):
