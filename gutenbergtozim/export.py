@@ -683,7 +683,7 @@ def handle_unoptimized_files(
                     zipped_files.remove(fname)
                     remove_cover = True
                 else:
-                    optimize_image(pathlib.Path(fnp), pathlib.Path(fnp))
+                    optimize_image(pathlib.Path(fnp), pathlib.Path(fnp), force=True)
 
             if path(fname).ext in (".htm", ".html"):
                 html_content, _ = read_file(fnp)
