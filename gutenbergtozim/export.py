@@ -814,7 +814,7 @@ def handle_unoptimized_files(
                 new_html = update_html_for_static(book=book, html_content=html)
                 save_bs_output(new_html, dst, UTF8)
                 html_book_optimized_files.append(dst)
-                move_to_optimized(src, dst)
+                update_download_cache(src, dst)
             else:
                 try:
                     handle_companion_file(
