@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import unicode_literals, absolute_import, division, print_function
 import os
 import pathlib
 import tempfile
@@ -206,7 +205,7 @@ def download_book(
             logger.debug(
                 "[{}] not avail. for #{}# {}".format(
                     book_format, book.id, book.title
-                ).encode("utf-8")
+                )
             )
             continue
 
@@ -221,7 +220,7 @@ def download_book(
         logger.debug(
             "[{}] Requesting URLs for #{}# {}".format(
                 book_format, book.id, book.title
-            ).encode("utf-8")
+            )
         )
 
         # retrieve list of URLs for format unless we have it in DB
