@@ -80,7 +80,7 @@ of Gutenberg repository using a mirror."""
 
 def main(arguments):
     # optimizer version to use
-    OPTIMIZER_VERSION = "v1"
+    OPTIMIZER_VERSION = {"html": "v1", "epub": "v1"}
 
     # actions constants
     DO_PREPARE = arguments.get("--prepare", False)

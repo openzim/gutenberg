@@ -40,8 +40,10 @@ def download_from_cache(
             f"etag doesn't match for {key}. Expected {etag}, got {meta.get('etag')}"
         )
         return False
-    if book_format != "cover" and (
-        meta.get("optimizer_version") != optimizer_version[book_format]
+    if (
+        book_format != "cover"
+        and optimizer_version is not None
+        and (meta.get("optimizer_version") != optimizer_version[book_format])
     ):
         logger.error(
             f"optimizer version doesn't match for {key}. Expected {optimizer_version}, got {meta.get('optimizer_version')}"
