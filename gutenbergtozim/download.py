@@ -234,6 +234,7 @@ def download_book(
         import copy
 
         allurls = copy.copy(urls)
+        downloaded_from_cache = False
 
         while urls:
             url = urls.pop()
@@ -256,6 +257,7 @@ def download_book(
                         s3_storage=s3_storage,
                         optimizer_version=optimizer_version,
                     ):
+                        downloaded_from_cache = True
                         continue
                 if not download_file(url, zpath):
                     logger.error("ZIP file donwload failed: {}".format(zpath))
@@ -285,6 +287,7 @@ def download_book(
                             s3_storage=s3_storage,
                             optimizer_version=optimizer_version,
                         ):
+                            downloaded_from_cache = True
                             continue
                 if not download_file(url, unoptimized_fpath):
                     logger.error("file donwload failed: {}".format(unoptimized_fpath))
@@ -307,7 +310,7 @@ def download_book(
             bf.downloaded_from = url
             bf.save()
 
-        if not bf.downloaded_from:
+        if not bf.downloaded_from and not downloaded_from_cache:
             logger.error("NO FILE FOR #{}/{}".format(book.id, book_format))
             # delete instance from DB if download failed
             logger.info("Deleting instance from DB")
