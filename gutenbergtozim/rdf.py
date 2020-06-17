@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import unicode_literals, absolute_import, division, print_function
 import os
 import re
 from multiprocessing.dummy import Pool
@@ -256,7 +255,7 @@ def save_rdf_in_database(parser):
             language=parser.language.strip(),
             downloads=parser.downloads,
             bookshelf=parser.bookshelf,
-            cover_image=parser.cover_image,
+            cover_page=parser.cover_image,
         )
     else:
         book_record.title = normalize(parser.title.strip())
@@ -266,6 +265,15 @@ def save_rdf_in_database(parser):
         book_record.language = parser.language.strip()
         book_record.downloads = parser.downloads
         book_record.save()
+
+    # insert pdf if not exists in parser.file_types
+    # this is done as presence of PDF on server and RDF is inconsistent
+    if not [
+        key
+        for key in parser.file_types
+        if parser.file_types[key].startswith("application/pdf")
+    ]:
+        parser.file_types.update({"{id}-pdf.pdf": "application/pdf"})
 
     # Insert formats
     for file_type in parser.file_types:

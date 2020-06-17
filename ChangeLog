@@ -3,6 +3,7 @@ dev
 - added bookshelves mode option
 - added title search option (doesn't scale!)
 - fixed setup_urls on macos
+- add s3 based optimization cache
 
 1.1.5
 - simplified home page results on smaller screen sizes

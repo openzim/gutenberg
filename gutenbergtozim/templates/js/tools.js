@@ -270,8 +270,8 @@ function showBooks() {
             {
               targets: 0,
               render: function(data, type, full, meta) {
-                img = '<img class="pure-u-1-8 book-cover-pre" src= "' + {% if not dev_mode %} '../I/' + {% endif %} full[3] + '_cover.jpg"' +
-                  'onerror="this.onerror=null;this.src=\'' + {% if not dev_mode %} '../I/' + {% endif %} 'favicon.png\'" >';
+                img = '<img class="pure-u-1-8 book-cover-pre" src= "' + {% if not dev_mode %} '../I/' + {% endif %} full[3] + '_cover_image.jpg"' +
+                  'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + {% if not dev_mode %} '../I/' + {% endif %} 'favicon.png\'" >';
                 div = '<div class="list-stripe"></div>';
                 title = '<span style="display: none">' + full[3] + '</span>';
                 title += ' <span class = "table-title">' + full[0] + '</span>';
@@ -464,8 +464,8 @@ function showBookshelf(bookshelfURL) {
             {
               targets: 0,
               render: function(data, type, full, meta) {
-                img = '<img class="pure-u-1-8 book-cover-pre" src= "' + {% if not dev_mode %} '../I/' + {% endif %} full[3] + '_cover.jpg"' +
-                  'onerror="this.onerror=null;this.src=\'' + {% if not dev_mode %} '../I/' + {% endif %} 'favicon.png\'" >';
+                img = '<img class="pure-u-1-8 book-cover-pre" src= "' + {% if not dev_mode %} '../I/' + {% endif %} full[3] + '_cover_image.jpg"' +
+                  'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + {% if not dev_mode %} '../I/' + {% endif %} 'favicon.png\'" >';
                 div = '<div class="list-stripe"></div>';
                 title = '<span style="display: none">' + full[3] + '</span>';
                 title += ' <span class = "table-title">' + full[0] + '</span>';

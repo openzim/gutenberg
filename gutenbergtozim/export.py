@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import unicode_literals, absolute_import, division, print_function
 import os
 import json
 import zipfile
 import tempfile
 import urllib
+import pathlib
+import shutil
 
 import six
 from six import text_type
@@ -33,12 +34,15 @@ from gutenbergtozim.utils import (
     save_file,
     UTF8,
     get_project_id,
+    book_name_for_fs,
+    archive_name_for,
+    fname_for,
+    article_name_for,
 )
 from gutenbergtozim.database import Book, Format, BookFormat, Author
 from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.l10n import l10n_strings
-
-from itertools import groupby
+from gutenbergtozim.s3 import upload_to_cache
 
 jinja_env = Environment(loader=PackageLoader("gutenbergtozim", "templates"))
 
@@ -71,10 +75,6 @@ def fa_for_format(format):
         "epub": "fa-download",
         "pdf": "fa-file-pdf-o",
     }.get(format, "fa-file-o")
-
-
-def book_name_for_fs(book):
-    return book.title.strip().replace("/", "-")[:230]
 
 
 def zim_link_prefix(format):
@@ -174,6 +174,8 @@ def export_all_books(
     force=False,
     title_search=False,
     add_bookshelves=False,
+    s3_storage=None,
+    optimizer_version=None,
 ):
 
     project_id = get_project_id(
@@ -255,20 +257,16 @@ def export_all_books(
             stars = stars - 1
         nb_downloads = popbooks[ibook].downloads
 
-    # export to HTML
-    cached_files = os.listdir(download_cache)
-
     for book in books:
         book.popularity = sum(
             [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
         )
 
     def dlb(b):
-        return export_book_to(
+        return export_book(
             b,
-            static_folder=static_folder,
-            download_cache=download_cache,
-            cached_files=cached_files,
+            static_folder=pathlib.Path(static_folder),
+            book_dir=pathlib.Path(download_cache).joinpath(str(b.id)),
             languages=languages,
             formats=formats,
             books=books,
@@ -276,33 +274,19 @@ def export_all_books(
             force=force,
             title_search=title_search,
             add_bookshelves=add_bookshelves,
+            s3_storage=s3_storage,
+            optimizer_version=optimizer_version,
         )
 
     Pool(concurrency).map(dlb, books)
 
 
-def article_name_for(book, cover=False):
-    cover = "_cover" if cover else ""
-    title = book_name_for_fs(book)
-    return "{title}{cover}.{id}.html".format(title=title, cover=cover, id=book.id)
+def html_content_for(book, src_dir):
 
-
-def archive_name_for(book, format):
-    return "{title}.{id}.{format}".format(
-        title=book_name_for_fs(book), id=book.id, format=format
-    )
-
-
-def fname_for(book, format):
-    return "{id}.{format}".format(id=book.id, format=format)
-
-
-def html_content_for(book, static_folder, download_cache):
-
-    html_fpath = os.path.join(download_cache, fname_for(book, "html"))
+    html_fpath = src_dir.joinpath(fname_for(book, "html"))
 
     # is HTML file present?
-    if not path(html_fpath).exists():
+    if not html_fpath.exists():
         logger.warn("Missing HTML content for #{} at {}".format(book.id, html_fpath))
         return None, None
 
@@ -326,7 +310,7 @@ def update_html_for_static(book, html_content, epub=False):
             del meta.attrs["charset"]
         elif "content" in meta.attrs and "charset=" in meta.attrs.get("content"):
             try:
-                ctype, ccharset = meta.attrs.get("content").split(";", 1)
+                ctype, _ = meta.attrs.get("content").split(";", 1)
             except Exception:
                 continue
             else:
@@ -509,10 +493,8 @@ def update_html_for_static(book, html_content, epub=False):
 def cover_html_content_for(
     book, static_folder, books, project_id, title_search, add_bookshelves
 ):
-    cover_img = "{id}_cover.jpg".format(id=book.id)
-    cover_img = (
-        cover_img if path(os.path.join(static_folder, cover_img)).exists() else None
-    )
+    cover_img = "{id}_cover_image.jpg".format(id=book.id)
+    cover_img = cover_img if static_folder.joinpath(cover_img).exists() else None
     translate_author = (
         ' data-l10n-id="author-{id}"'.format(id=book.author.name().lower())
         if book.author.name() in ["Anonymous", "Various"]
@@ -539,7 +521,7 @@ def cover_html_content_for(
     return template.render(**context)
 
 
-def author_html_content_for(author, static_folder, books, project_id):
+def author_html_content_for(author, books, project_id):
     context = get_default_context(project_id=project_id, books=books)
     context.update({"author": author})
     template = jinja_env.get_template("author.html")
@@ -552,80 +534,121 @@ def save_author_file(author, static_folder, books, project_id, force=False):
         logger.debug("\t\tSkipping author file {}".format(fpath))
         return
     logger.debug("\t\tSaving author file {}".format(fpath))
-    save_file(
-        author_html_content_for(author, static_folder, books, project_id), fpath, UTF8
-    )
+    save_file(author_html_content_for(author, books, project_id), fpath, UTF8)
 
 
-def export_book_to(
+def export_book(
     book,
     static_folder,
-    download_cache,
-    cached_files,
+    book_dir,
     languages,
     formats,
     books,
     project_id,
+    force,
+    title_search,
+    add_bookshelves,
+    s3_storage,
+    optimizer_version,
+):
+    optimized_files_dir = book_dir.joinpath("optimized")
+    if optimized_files_dir.exists():
+        for fpath in optimized_files_dir.iterdir():
+            if not static_folder.joinpath(fpath.name).exists():
+                shutil.copy2(fpath, static_folder)
+    unoptimized_files_dir = book_dir.joinpath("unoptimized")
+    if unoptimized_files_dir.exists():
+        handle_unoptimized_files(
+            book=book,
+            static_folder=static_folder,
+            src_dir=unoptimized_files_dir,
+            languages=languages,
+            formats=formats,
+            books=books,
+            project_id=project_id,
+            force=force,
+            title_search=title_search,
+            add_bookshelves=add_bookshelves,
+            s3_storage=s3_storage,
+            optimizer_version=optimizer_version,
+        )
+    write_book_presentation_article(
+        static_folder=static_folder,
+        book=book,
+        force=force,
+        project_id=project_id,
+        title_search=title_search,
+        add_bookshelves=add_bookshelves,
+        books=books,
+    )
+
+
+def handle_unoptimized_files(
+    book,
+    static_folder,
+    src_dir,
+    languages,
+    formats,
+    books,
+    project_id,
+    optimizer_version,
     force=False,
     title_search=False,
     add_bookshelves=False,
+    s3_storage=None,
 ):
+    def copy_file(src, dst):
+        logger.info("\t\tCopying {}".format(dst))
+        try:
+            shutil.copy2(src, dst)
+        except IOError:
+            logger.error("/!\\ Unable to copy missing file {}".format(src))
+            return
+
+    def update_download_cache(unoptimized_file, optimized_file):
+        book_dir = unoptimized_file.parents[1]
+        optimized_dir = book_dir.joinpath("optimized")
+        unoptimized_dir = book_dir.joinpath("unoptimized")
+        if not optimized_dir.exists():
+            optimized_dir.mkdir()
+        dst = optimized_dir.joinpath(optimized_file.name)
+        os.unlink(unoptimized_file)
+        copy_file(optimized_file.resolve(), dst.resolve())
+        if not [fpath for fpath in unoptimized_dir.iterdir()]:
+            unoptimized_dir.rmdir()
+
     logger.info("\tExporting Book #{id}.".format(id=book.id))
 
     # actual book content, as HTML
-    html, encoding = html_content_for(
-        book=book, static_folder=static_folder, download_cache=download_cache
-    )
+    html, _ = html_content_for(book=book, src_dir=src_dir)
+    html_book_optimized_files = []
     if html:
-        article_fpath = os.path.join(static_folder, article_name_for(book))
-        if not path(article_fpath).exists() or force:
+        article_fpath = static_folder.joinpath(article_name_for(book))
+        if not article_fpath.exists() or force:
             logger.info("\t\tExporting to {}".format(article_fpath))
             try:
                 new_html = update_html_for_static(book=book, html_content=html)
             except Exception:
                 raise
-                new_html = html
             save_bs_output(new_html, article_fpath, UTF8)
+            html_book_optimized_files.append(article_fpath)
+            update_download_cache(
+                src_dir.joinpath(fname_for(book, "html")), article_fpath
+            )
         else:
             logger.info("\t\tSkipping HTML article {}".format(article_fpath))
 
-    def symlink_from_cache(fname, dstfname=None):
-        src = os.path.join(path(download_cache).abspath(), fname)
-        if dstfname is None:
-            dstfname = fname
-        dst = os.path.join(path(static_folder).abspath(), dstfname)
-        logger.info("\t\tSymlinking {}".format(dst))
-        path(dst).unlink_p()
-        try:
-            path(src).link(dst)  # hard link
-        except IOError:
-            logger.error("/!\\ Unable to symlink missing file {}".format(src))
-            return
-
-    def copy_from_cache(fname, dstfname=None):
-        src = os.path.join(path(download_cache).abspath(), fname)
-        if dstfname is None:
-            dstfname = fname
-        dst = os.path.join(path(static_folder).abspath(), dstfname)
-        logger.info("\t\tCopying {}".format(dst))
-        path(dst).unlink_p()
-        try:
-            path(src).copy(dst)
-        except IOError:
-            logger.error("/!\\ Unable to copy missing file {}".format(src))
-            return
-
     def optimize_image(src, dst, force=False):
-        if path(dst).exists() and not force:
+        if dst.exists() and not force:
             logger.info("\tSkipping image optimization for {}".format(dst))
             return dst
         logger.info("\tOptimizing image {}".format(dst))
-        if path(src).ext == ".png":
-            return optimize_png(src, dst)
-        if path(src).ext in (".jpg", ".jpeg"):
-            return optimize_jpeg(src, dst)
-        if path(src).ext == ".gif":
-            return optimize_gif(src, dst)
+        if src.suffix == ".png":
+            return optimize_png(str(src.resolve()), str(dst.resolve()))
+        if src.suffix in (".jpg", ".jpeg"):
+            return optimize_jpeg(str(src.resolve()), str(dst.resolve()))
+        if src.suffix == ".gif":
+            return optimize_gif(str(src.resolve()), str(dst.resolve()))
         return dst
 
     def optimize_gif(src, dst):
@@ -636,7 +659,8 @@ def export_book_to(
         exec_cmd(["advdef", "-z", "-4", "-i", "5", dst])
 
     def optimize_jpeg(src, dst):
-        copy_from_cache(src, dst)
+        if src != dst:
+            copy_file(src, dst)
         exec_cmd(["jpegoptim", "--strip-all", "-m50", dst])
 
     def optimize_epub(src, dst):
@@ -659,10 +683,10 @@ def export_book_to(
                     zipped_files.remove(fname)
                     remove_cover = True
                 else:
-                    optimize_image(fnp, fnp)
+                    optimize_image(pathlib.Path(fnp), pathlib.Path(fnp), force=True)
 
             if path(fname).ext in (".htm", ".html"):
-                html_content, html_encoding = read_file(fnp)
+                html_content, _ = read_file(fnp)
                 html = update_html_for_static(
                     book=book, html_content=html_content, epub=True
                 )
@@ -670,7 +694,7 @@ def export_book_to(
 
             if path(fname).ext == ".ncx":
                 pattern = "*** START: FULL LICENSE ***"
-                ncx, ncx_encoding = read_file(fnp)
+                ncx, _ = read_file(fnp)
                 soup = BeautifulSoup(ncx, "lxml-xml")
                 for tag in soup.findAll("text"):
                     if pattern in tag.text:
@@ -691,7 +715,7 @@ def export_book_to(
             soup = None
             opff = os.path.join(tmpd, text_type(book.id), "content.opf")
             if os.path.exists(opff):
-                opff_content, opff_encoding = read_file(opff)
+                opff_content, _ = read_file(opff)
                 soup = BeautifulSoup(opff_content, "lxml-xml")
 
                 for elem in soup.findAll():
@@ -706,22 +730,40 @@ def export_book_to(
         path(tmpd).rmtree_p()
 
     def handle_companion_file(
-        fname, dstfname=None, book=None, force=False, as_ext=None
+        fname,
+        dstfname=None,
+        book=None,
+        force=False,
+        as_ext=None,
+        html_file_list=None,
+        s3_storage=None,
     ):
-        ext = path(fname).ext if as_ext is None else as_ext
-        src = os.path.join(path(download_cache).abspath(), fname)
+        ext = fname.suffix if as_ext is None else as_ext
+        src = fname
         if dstfname is None:
-            dstfname = fname
-        dst = os.path.join(path(static_folder).abspath(), dstfname)
-        if path(dst).exists() and not force:
+            dstfname = fname.name
+        dst = static_folder.joinpath(dstfname)
+        if dst.exists() and not force:
             logger.debug("\t\tSkipping existing companion {}".format(dstfname))
             return
 
         # optimization based on mime/extension
         if ext in (".png", ".jpg", ".jpeg", ".gif"):
             logger.info("\t\tCopying and optimizing image companion {}".format(fname))
-            # copy_from_cache(src, dst)
             optimize_image(src, dst)
+            if dst.name == (f"{book.id}_cover_image.jpg") and s3_storage:
+                upload_to_cache(
+                    asset=dst,
+                    book_format="cover",
+                    book_id=book.id,
+                    etag=book.cover_etag,
+                    s3_storage=s3_storage,
+                    optimizer_version=optimizer_version,
+                )
+                update_download_cache(src, dst)
+            elif html_file_list:
+                html_file_list.append(dst)
+                update_download_cache(src, dst)
         elif ext == ".epub":
             logger.info("\t\tCreating optimized EPUB file {}".format(fname))
             tmp_epub = tempfile.NamedTemporaryFile(suffix=".epub", dir=TMP_FOLDER)
@@ -733,41 +775,69 @@ def export_book_to(
                     "\t\tBad zip file. "
                     "Copying as it might be working{}".format(fname)
                 )
-                handle_companion_file(fname, dstfname, book, force, as_ext="zip")
+                handle_companion_file(fname, dstfname, book, force, as_ext=".zip")
             else:
                 path(tmp_epub.name).move(dst)
+                if s3_storage:
+                    upload_to_cache(
+                        asset=dst,
+                        book_format="epub",
+                        book_id=book.id,
+                        etag=book.epub_etag,
+                        s3_storage=s3_storage,
+                        optimizer_version=optimizer_version,
+                    )
+                    update_download_cache(src, dst)
         else:
             # excludes files created by Windows Explorer
-            if src.endswith("_Thumbs.db"):
+            if src.name.endswith("_Thumbs.db"):
                 return
             # copy otherwise (PDF mostly)
-            logger.debug("\t\tshitty ext: {}".format(dst))
-            logger.info("\t\tCopying companion file to {}".format(fname))
-            copy_from_cache(src, dst)
+            logger.info("\t\tCopying companion file to {}".format(dst))
+            copy_file(src, dst)
+            if ext != ".pdf" and ext != ".zip" and html_file_list:
+                html_file_list.append(dst)
+                update_download_cache(src, dst)
 
     # associated files (images, etc)
-    for fname in [fn for fn in cached_files if fn.startswith("{}_".format(book.id))]:
+    for fpath in src_dir.iterdir():
+        if fpath.is_file() and fpath.name.startswith(f"{book.id}_"):
+            if fpath.suffix in (".html", ".htm"):
+                src = fpath
+                dst = static_folder.joinpath(fpath.name)
+                if dst.exists() and not force:
+                    logger.debug("\t\tSkipping existing HTML {}".format(dst))
+                    continue
 
-        if path(fname).ext in (".html", ".htm"):
-            src = os.path.join(path(download_cache).abspath(), fname)
-            dst = os.path.join(path(static_folder).abspath(), fname)
-
-            if path(dst).exists() and not force:
-                logger.debug("\t\tSkipping existing HTML {}".format(dst))
-                continue
-
-            logger.info("\t\tExporting HTML file to {}".format(dst))
-            html, encoding = read_file(src)
-            new_html = update_html_for_static(book=book, html_content=html)
-            save_bs_output(new_html, dst, UTF8)
-        else:
-            try:
-                handle_companion_file(fname, force=force)
-            except Exception as e:
-                logger.exception(e)
-                logger.error(
-                    "\t\tException while handling companion file: {}".format(e)
-                )
+                logger.info("\t\tExporting HTML file to {}".format(dst))
+                html, _ = read_file(src)
+                new_html = update_html_for_static(book=book, html_content=html)
+                save_bs_output(new_html, dst, UTF8)
+                html_book_optimized_files.append(dst)
+                update_download_cache(src, dst)
+            else:
+                try:
+                    handle_companion_file(
+                        fpath,
+                        force=force,
+                        html_file_list=html_book_optimized_files,
+                        s3_storage=s3_storage,
+                        book=book,
+                    )
+                except Exception as e:
+                    logger.exception(e)
+                    logger.error(
+                        "\t\tException while handling companion file: {}".format(e)
+                    )
+    if s3_storage and html_book_optimized_files:
+        upload_to_cache(
+            asset=html_book_optimized_files,
+            book_format="html",
+            etag=book.html_etag,
+            book_id=book.id,
+            s3_storage=s3_storage,
+            optimizer_version=optimizer_version,
+        )
 
     # other formats
     for format in formats:
@@ -775,15 +845,22 @@ def export_book_to(
             continue
         try:
             handle_companion_file(
-                fname_for(book, format), archive_name_for(book, format), force=force
+                src_dir.joinpath(fname_for(book, format)),
+                archive_name_for(book, format),
+                force=force,
+                book=book,
+                s3_storage=s3_storage,
             )
         except Exception as e:
             logger.exception(e)
             logger.error("\t\tException while handling companion file: {}".format(e))
 
-    # book presentation article
-    cover_fpath = os.path.join(static_folder, article_name_for(book=book, cover=True))
-    if not path(cover_fpath).exists() or force:
+
+def write_book_presentation_article(
+    static_folder, book, force, project_id, title_search, add_bookshelves, books
+):
+    cover_fpath = static_folder.joinpath(article_name_for(book=book, cover=True))
+    if not cover_fpath.exists() or force:
         logger.info("\t\tExporting to {}".format(cover_fpath))
         html = cover_html_content_for(
             book=book,

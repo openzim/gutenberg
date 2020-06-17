@@ -18,6 +18,7 @@ from gutenbergtozim.export import export_all_books, export_skeleton
 from gutenbergtozim.urls import setup_urls
 from gutenbergtozim.zim import build_zimfile
 from gutenbergtozim.checkdeps import check_dependencies
+from gutenbergtozim.s3 import s3_credentials_ok
 
 
 help = (
@@ -28,7 +29,7 @@ help = (
     """[-p CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
     """[--prepare] [--parse] [--download] [--export] [--dev] """
     """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
-    """[--title-search] [--bookshelves] """
+    """[--title-search] [--bookshelves] [--optimization-cache S3URL]"""
     """
 
 -h --help                       Display this help message
@@ -68,7 +69,9 @@ help = (
     """(overwritten by --zim step)
 --zim                           Create a ZIM file
 --title-search                  Add field to search a book by title and directly jump to it
---bookshelves                   Add bookshelves 
+--bookshelves                   Add bookshelves
+--optimization-cache=<url>      URL with credentials to S3 bucket for using as optimization cache
+--use-any-optimized-version     Try to use any optimized version found on optimization cache
 
 This script is used to produce a ZIM file (and any intermediate state)
 of Gutenberg repository using a mirror."""
@@ -76,6 +79,8 @@ of Gutenberg repository using a mirror."""
 
 
 def main(arguments):
+    # optimizer version to use
+    OPTIMIZER_VERSION = {"html": "v1", "epub": "v1", "cover": "v1"}
 
     # actions constants
     DO_PREPARE = arguments.get("--prepare", False)
@@ -106,6 +111,15 @@ def main(arguments):
     NO_INDEX = arguments.get("--no-index", False)
     TITLE_SEARCH = arguments.get("--title-search", False)
     BOOKSHELVES = arguments.get("--bookshelves", False)
+    OPTIMIZATION_CACHE = arguments.get("--optimization-cache") or None
+    USE_ANY_OPTIMIZED_VERSION = arguments.get("--use-any-optimized-version", False)
+
+    s3_storage = None
+    if OPTIMIZATION_CACHE:
+        s3_storage = s3_credentials_ok(OPTIMIZATION_CACHE)
+        if not s3_storage:
+            raise ValueError("Unable to connect to Optimization Cache. Check its URL.")
+        logger.info("S3 Credentials OK. Continuing ... ")
 
     # create tmp dir
     path("tmp").mkdir_p()
@@ -185,6 +199,10 @@ def main(arguments):
             formats=FORMATS,
             only_books=BOOKS,
             force=FORCE,
+            s3_storage=s3_storage,
+            optimizer_version=OPTIMIZER_VERSION
+            if not USE_ANY_OPTIMIZED_VERSION
+            else None,
         )
     if ONE_LANG_ONE_ZIM_FOLDER:
         if LANGUAGES == []:
@@ -213,6 +231,8 @@ def main(arguments):
                 force=FORCE,
                 title_search=TITLE_SEARCH,
                 add_bookshelves=BOOKSHELVES,
+                s3_storage=s3_storage,
+                optimizer_version=OPTIMIZER_VERSION,
             )
 
         if DO_DEV:

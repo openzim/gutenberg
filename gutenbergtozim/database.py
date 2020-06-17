@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import unicode_literals, absolute_import, division, print_function
-
 from peewee import (
     Model,  # SqliteDatabase,
     CharField,
@@ -142,8 +140,10 @@ class Book(BaseModel):
     downloads = IntegerField(default=0)
     bookshelf = CharField(max_length=500, null=True)
     cover_page = IntegerField(default=0)
-
     popularity = 0
+    html_etag = CharField(max_length=500, null=True)
+    epub_etag = CharField(max_length=500, null=True)
+    cover_etag = CharField(max_length=500, null=True)
 
     def __unicode__(self):
         return "{}/{}/{}".format(self.id, self.title, self.bookshelf)

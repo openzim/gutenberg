@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import unicode_literals, absolute_import, division, print_function
-
 import os
 import shutil
 
@@ -11,7 +9,6 @@ from collections import defaultdict
 
 from gutenbergtozim.database import Book, BookFormat, Url
 from gutenbergtozim.utils import FORMAT_MATRIX, exec_cmd
-from gutenbergtozim import logger
 
 try:
     import urlparse
@@ -52,24 +49,18 @@ class UrlBuilder:
         these books do not exist.
 
         """
-        if int(self.b_id) > 10:
-            if self.base == self.BASE_ONE:
+        if self.base == self.BASE_ONE:
+            if int(self.b_id) > 10:
                 base_url = os.path.join(
                     os.path.join(*list(str(self.b_id))[:-1]), str(self.b_id)
                 )
-                url = os.path.join(self.base, base_url)
-            elif self.base == self.BASE_TWO:
-                url = os.path.join(self.base, str(self.b_id))
-            elif self.base == self.BASE_THREE:
-                url = self.base
-
-        else:
-            logger.warning(
-                "Figuring out the url of books \
-                with an ID of {ID <= 10} is not implemented"
-            )
-            return None
-
+            else:
+                base_url = os.path.join(os.path.join("0", str(self.b_id)))
+            url = os.path.join(self.base, base_url)
+        elif self.base == self.BASE_TWO:
+            url = os.path.join(self.base, str(self.b_id))
+        elif self.base == self.BASE_THREE:
+            url = self.base
         return url
 
     def with_base(self, base):
@@ -165,7 +156,9 @@ def build_epub(files):
 
     name = "".join(["pg", b_id])
     url = os.path.join(u.build(), name + ".epub")
-    urls.append(url)
+    url_images = os.path.join(u.build(), name + "-images.epub")
+    url_noimages = os.path.join(u.build(), name + "-noimages.epub")
+    urls.extend([url, url_images, url_noimages])
     return urls
 
 

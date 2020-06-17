@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import unicode_literals, absolute_import, division, print_function
 import os
 import sys
 import hashlib
@@ -11,6 +10,7 @@ import zipfile
 import collections
 import unicodedata
 import datetime
+import requests
 
 import six
 import chardet
@@ -36,6 +36,34 @@ BAD_BOOKS_FORMATS = {
 
 
 NB_MAIN_LANGS = 5
+
+
+def book_name_for_fs(book):
+    return book.title.strip().replace("/", "-")[:230]
+
+
+def article_name_for(book, cover=False):
+    cover = "_cover" if cover else ""
+    title = book_name_for_fs(book)
+    return "{title}{cover}.{id}.html".format(title=title, cover=cover, id=book.id)
+
+
+def archive_name_for(book, book_format):
+    return f"{book_name_for_fs(book)}.{book.id}.{book_format}"
+
+
+def fname_for(book, book_format):
+    return f"{book.id}.{book_format}"
+
+
+def get_etag_from_url(url):
+    try:
+        response_headers = requests.head(url=url, allow_redirects=True).headers
+    except Exception as e:
+        logger.error(url + " > Problem while head request\n" + str(e) + "\n")
+        return None
+    else:
+        return response_headers.get("Etag", None)
 
 
 def critical_error(message):
@@ -70,7 +98,8 @@ def exec_cmd(cmd):
         return subprocess.call(args)
 
 
-def download_file(url, fname):
+def download_file(url, fname=None):
+    fname.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
         "curl",
         "--fail",
@@ -84,7 +113,7 @@ def download_file(url, fname):
         url,
     ]
     if fname:
-        cmd += ["--output", fname]
+        cmd += ["--output", str(fname.resolve())]
     else:
         cmd += ["--remote-name"]
     cmdr = exec_cmd(cmd)
