@@ -4,6 +4,7 @@
 
 import os
 import re
+import pathlib
 from multiprocessing.dummy import Pool
 
 import peewee
@@ -31,7 +32,7 @@ def download_rdf_file(rdf_url):
         return fname
 
     logger.info("\tDownloading {} into {}".format(rdf_url, fname))
-    download_file(rdf_url, fname)
+    download_file(rdf_url, pathlib.Path(fname).resolve())
 
     return fname
 
