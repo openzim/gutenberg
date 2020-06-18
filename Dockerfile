@@ -39,4 +39,5 @@ WORKDIR /src/
 RUN python3 ./setup.py install
 
 # Boot commands
+WORKDIR /output
 CMD gutenberg2zim --help ; /bin/bash
