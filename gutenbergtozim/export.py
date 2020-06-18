@@ -669,9 +669,13 @@ def handle_unoptimized_files(
         # create temp directory to extract to
         tmpd = tempfile.mkdtemp(dir=TMP_FOLDER)
 
-        with zipfile.ZipFile(src, "r") as zf:
-            zipped_files = zf.namelist()
-            zf.extractall(tmpd)
+        try:
+            with zipfile.ZipFile(src, "r") as zf:
+                zipped_files = zf.namelist()
+                zf.extractall(tmpd)
+        except zipfile.BadZipFile as exc:
+            shutil.rmtree(tmpd)
+            raise exc
 
         remove_cover = False
         for fname in zipped_files:
