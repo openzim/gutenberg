@@ -9,6 +9,8 @@ import sys
 from docopt import docopt
 from path import Path as path
 import shutil
+import pathlib
+import tempfile
 
 from gutenbergtozim import logger, VERSION
 from gutenbergtozim.database import setup_database
@@ -29,7 +31,8 @@ help = (
     """[-p CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
     """[--prepare] [--parse] [--download] [--export] [--dev] """
     """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
-    """[--title-search] [--bookshelves] [--optimization-cache S3URL]"""
+    """[--title-search] [--bookshelves] [--optimization-cache S3URL] """
+    """[--tmp-dir TMP_DIR] """
     """
 
 -h --help                       Display this help message
@@ -72,6 +75,7 @@ help = (
 --bookshelves                   Add bookshelves
 --optimization-cache=<url>      URL with credentials to S3 bucket for using as optimization cache
 --use-any-optimized-version     Try to use any optimized version found on optimization cache
+--tmp-dir=<folder>              Directory to store temporary files and static folder in (if static-folder is not given)
 
 This script is used to produce a ZIM file (and any intermediate state)
 of Gutenberg repository using a mirror."""
@@ -94,7 +98,8 @@ def main(arguments):
     COMPLETE_DUMP = arguments.get("--complete", False)
 
     RDF_FOLDER = arguments.get("--rdf-folder") or os.path.join("rdf-files")
-    STATIC_FOLDER = arguments.get("--static-folder") or os.path.join("static")
+    TMP_DIR = arguments.get("--tmp-dir") or None
+    STATIC_FOLDER = arguments.get("--static-folder") or None
     ZIM_NAME = arguments.get("--zim-file")
     WIPE_DB = arguments.get("--wipe-db") or False
     RDF_URL = (
@@ -114,15 +119,18 @@ def main(arguments):
     OPTIMIZATION_CACHE = arguments.get("--optimization-cache") or None
     USE_ANY_OPTIMIZED_VERSION = arguments.get("--use-any-optimized-version", False)
 
+    if TMP_DIR:
+        pathlib.Path(TMP_DIR).mkdir(parents=True, exist_ok=True)
+    if not STATIC_FOLDER and DO_EXPORT:
+        STATIC_FOLDER = tempfile.mkdtemp(dir=TMP_DIR)
+    TEMP_FILES = tempfile.mkdtemp(dir=TMP_DIR)
+
     s3_storage = None
     if OPTIMIZATION_CACHE:
         s3_storage = s3_credentials_ok(OPTIMIZATION_CACHE)
         if not s3_storage:
             raise ValueError("Unable to connect to Optimization Cache. Check its URL.")
         logger.info("S3 Credentials OK. Continuing ... ")
-
-    # create tmp dir
-    path("tmp").mkdir_p()
 
     LANGUAGES = [
         x.strip().lower()
@@ -188,7 +196,7 @@ def main(arguments):
             rdf_path=RDF_FOLDER, only_books=BOOKS, concurrency=CONCURRENCY, force=FORCE
         )
         logger.info("Add possible url to db")
-        setup_urls()
+        setup_urls(TEMP_FILES)
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
@@ -203,6 +211,7 @@ def main(arguments):
             optimizer_version=OPTIMIZER_VERSION
             if not USE_ANY_OPTIMIZED_VERSION
             else None,
+            temp_folder=TEMP_FILES,
         )
     if ONE_LANG_ONE_ZIM_FOLDER:
         if LANGUAGES == []:
@@ -233,6 +242,7 @@ def main(arguments):
                 add_bookshelves=BOOKSHELVES,
                 s3_storage=s3_storage,
                 optimizer_version=OPTIMIZER_VERSION,
+                temp_folder=TEMP_FILES,
             )
 
         if DO_DEV:
@@ -268,6 +278,9 @@ def main(arguments):
                 add_bookshelves=BOOKSHELVES,
             )
             shutil.rmtree(STATIC_FOLDER)
+
+    # remove the TEMP_FILES folder
+    shutil.rmtree(TEMP_FILES)
 
 
 if __name__ == "__main__":

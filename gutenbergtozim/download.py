@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
+from __future__ import unicode_literals, absolute_import, division, print_function
 import os
 import pathlib
 import tempfile
@@ -12,7 +13,7 @@ from multiprocessing.dummy import Pool
 import requests
 from path import Path as path
 
-from gutenbergtozim import logger, TMP_FOLDER
+from gutenbergtozim import logger
 from gutenbergtozim.urls import get_urls
 from gutenbergtozim.database import BookFormat, Format, Book
 from gutenbergtozim.export import get_list_of_filtered_books, fname_for
@@ -33,7 +34,7 @@ def resource_exists(url):
     return r.status_code == requests.codes.ok
 
 
-def handle_zipped_epub(zippath, book, dst_dir):
+def handle_zipped_epub(zippath, book, dst_dir, temp_folder):
     def clfn(fn):
         return os.path.join(*os.path.split(fn)[1:])
 
@@ -45,7 +46,7 @@ def handle_zipped_epub(zippath, book, dst_dir):
 
     zipped_files = []
     # create temp directory to extract to
-    tmpd = tempfile.mkdtemp(dir=TMP_FOLDER)
+    tmpd = tempfile.mkdtemp(dir=temp_folder)
     try:
         with zipfile.ZipFile(zippath, "r") as zf:
             # check that there is no insecure data (absolute names)
@@ -104,7 +105,14 @@ def handle_zipped_epub(zippath, book, dst_dir):
 
 
 def download_book(
-    book, download_cache, languages, formats, force, s3_storage, optimizer_version
+    book,
+    download_cache,
+    languages,
+    formats,
+    force,
+    s3_storage,
+    optimizer_version,
+    temp_folder,
 ):
     logger.info("\tDownloading content files for Book #{id}".format(id=book.id))
 
@@ -205,7 +213,7 @@ def download_book(
             logger.debug(
                 "[{}] not avail. for #{}# {}".format(
                     book_format, book.id, book.title
-                )
+                ).encode("utf-8")
             )
             continue
 
@@ -220,7 +228,7 @@ def download_book(
         logger.debug(
             "[{}] Requesting URLs for #{}# {}".format(
                 book_format, book.id, book.title
-            )
+            ).encode("utf-8")
         )
 
         # retrieve list of URLs for format unless we have it in DB
@@ -265,7 +273,12 @@ def download_book(
                 book.html_etag = etag
                 book.save()
                 # extract zipfile
-                handle_zipped_epub(zippath=zpath, book=book, dst_dir=unoptimized_dir)
+                handle_zipped_epub(
+                    zippath=zpath,
+                    book=book,
+                    dst_dir=unoptimized_dir,
+                    temp_folder=temp_folder,
+                )
             else:
                 if (
                     url.endswith(".htm")
@@ -363,6 +376,7 @@ def download_all_books(
     force=False,
     s3_storage=None,
     optimizer_version=None,
+    temp_folder=None,
 ):
     available_books = get_list_of_filtered_books(
         languages=languages, formats=formats, only_books=only_books
@@ -373,7 +387,14 @@ def download_all_books(
 
     def dlb(b):
         return download_book(
-            b, download_cache, languages, formats, force, s3_storage, optimizer_version
+            b,
+            download_cache,
+            languages,
+            formats,
+            force,
+            s3_storage,
+            optimizer_version,
+            temp_folder,
         )
 
     Pool(concurrency).map(dlb, available_books)

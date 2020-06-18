@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
+from __future__ import unicode_literals, absolute_import, division, print_function
 import os
 import json
 import zipfile
@@ -19,7 +20,7 @@ from jinja2 import Environment, PackageLoader
 from multiprocessing.dummy import Pool
 
 import gutenbergtozim
-from gutenbergtozim import logger, TMP_FOLDER
+from gutenbergtozim import logger
 from gutenbergtozim.utils import (
     FORMAT_MATRIX,
     main_formats_for,
@@ -176,6 +177,7 @@ def export_all_books(
     add_bookshelves=False,
     s3_storage=None,
     optimizer_version=None,
+    temp_folder=None,
 ):
 
     project_id = get_project_id(
@@ -276,6 +278,7 @@ def export_all_books(
             add_bookshelves=add_bookshelves,
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
+            temp_folder=temp_folder,
         )
 
     Pool(concurrency).map(dlb, books)
@@ -550,6 +553,7 @@ def export_book(
     add_bookshelves,
     s3_storage,
     optimizer_version,
+    temp_folder,
 ):
     optimized_files_dir = book_dir.joinpath("optimized")
     if optimized_files_dir.exists():
@@ -571,6 +575,7 @@ def export_book(
             add_bookshelves=add_bookshelves,
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
+            temp_folder=temp_folder,
         )
     write_book_presentation_article(
         static_folder=static_folder,
@@ -596,6 +601,7 @@ def handle_unoptimized_files(
     title_search=False,
     add_bookshelves=False,
     s3_storage=None,
+    temp_folder=None,
 ):
     def copy_file(src, dst):
         logger.info("\t\tCopying {}".format(dst))
@@ -663,15 +669,19 @@ def handle_unoptimized_files(
             copy_file(src, dst)
         exec_cmd(["jpegoptim", "--strip-all", "-m50", dst])
 
-    def optimize_epub(src, dst):
+    def optimize_epub(src, dst, temp_folder):
         logger.info("\t\tCreating ePUB off {} at {}".format(src, dst))
         zipped_files = []
         # create temp directory to extract to
-        tmpd = tempfile.mkdtemp(dir=TMP_FOLDER)
+        tmpd = tempfile.mkdtemp(dir=temp_folder)
 
-        with zipfile.ZipFile(src, "r") as zf:
-            zipped_files = zf.namelist()
-            zf.extractall(tmpd)
+        try:
+            with zipfile.ZipFile(src, "r") as zf:
+                zipped_files = zf.namelist()
+                zf.extractall(tmpd)
+        except zipfile.BadZipFile as exc:
+            shutil.rmtree(tmpd)
+            raise exc
 
         remove_cover = False
         for fname in zipped_files:
@@ -737,6 +747,7 @@ def handle_unoptimized_files(
         as_ext=None,
         html_file_list=None,
         s3_storage=None,
+        temp_folder=None,
     ):
         ext = fname.suffix if as_ext is None else as_ext
         src = fname
@@ -759,6 +770,7 @@ def handle_unoptimized_files(
                     etag=book.cover_etag,
                     s3_storage=s3_storage,
                     optimizer_version=optimizer_version,
+                    temp_folder=temp_folder,
                 )
                 update_download_cache(src, dst)
             elif html_file_list:
@@ -766,10 +778,10 @@ def handle_unoptimized_files(
                 update_download_cache(src, dst)
         elif ext == ".epub":
             logger.info("\t\tCreating optimized EPUB file {}".format(fname))
-            tmp_epub = tempfile.NamedTemporaryFile(suffix=".epub", dir=TMP_FOLDER)
+            tmp_epub = tempfile.NamedTemporaryFile(suffix=".epub", dir=temp_folder)
             tmp_epub.close()
             try:
-                optimize_epub(src, tmp_epub.name)
+                optimize_epub(src, tmp_epub.name, temp_folder)
             except zipfile.BadZipFile:
                 logger.warn(
                     "\t\tBad zip file. "
@@ -786,6 +798,7 @@ def handle_unoptimized_files(
                         etag=book.epub_etag,
                         s3_storage=s3_storage,
                         optimizer_version=optimizer_version,
+                        temp_folder=temp_folder,
                     )
                     update_download_cache(src, dst)
         else:
@@ -823,6 +836,7 @@ def handle_unoptimized_files(
                         html_file_list=html_book_optimized_files,
                         s3_storage=s3_storage,
                         book=book,
+                        temp_folder=temp_folder,
                     )
                 except Exception as e:
                     logger.exception(e)
@@ -837,6 +851,7 @@ def handle_unoptimized_files(
             book_id=book.id,
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
+            temp_folder=temp_folder,
         )
 
     # other formats
@@ -850,6 +865,7 @@ def handle_unoptimized_files(
                 force=force,
                 book=book,
                 s3_storage=s3_storage,
+                temp_folder=temp_folder,
             )
         except Exception as e:
             logger.exception(e)

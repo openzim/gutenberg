@@ -8,7 +8,7 @@ import pathlib
 
 from kiwixstorage import KiwixStorage
 from pif import get_public_ip
-from . import logger, TMP_FOLDER
+from . import logger
 from .utils import archive_name_for
 
 
@@ -67,11 +67,13 @@ def download_from_cache(
     return True
 
 
-def upload_to_cache(book_id, asset, etag, book_format, s3_storage, optimizer_version):
+def upload_to_cache(
+    book_id, asset, etag, book_format, s3_storage, optimizer_version, temp_folder
+):
     """ whether it successfully uploaded to cache """
     fpath = asset
     key = f"{book_id}/{book_format}"
-    zippath = pathlib.Path(f"{TMP_FOLDER}/{book_id}.zip")
+    zippath = pathlib.Path(f"{temp_folder}/{book_id}.zip")
     if isinstance(asset, list):
         with zipfile.ZipFile(zippath, "w") as zipfl:
             for fl in asset:
