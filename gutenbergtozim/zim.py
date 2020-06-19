@@ -99,8 +99,8 @@ def build_zimfile(
         six.text_type(zim_path),
     ]
 
-    if create_index:
-        cmd.insert(1, "--withFullTextIndex")
+    if not create_index:
+        cmd.insert(1, "--withoutFTIndex")
     if exec_cmd(cmd) == 0:
         logger.info("Successfuly created ZIM file at {}".format(zim_path))
     else:
