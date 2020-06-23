@@ -572,6 +572,7 @@ def export_book(
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
         )
+
     write_book_presentation_article(
         static_folder=static_folder,
         book=book,

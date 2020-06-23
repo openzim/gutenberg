@@ -203,9 +203,7 @@ def download_book(
 
         if not bfs.count():
             logger.debug(
-                "[{}] not avail. for #{}# {}".format(
-                    book_format, book.id, book.title
-                )
+                "[{}] not avail. for #{}# {}".format(book_format, book.id, book.title)
             )
             continue
 
@@ -218,9 +216,7 @@ def download_book(
             bf = bfs.get()
 
         logger.debug(
-            "[{}] Requesting URLs for #{}# {}".format(
-                book_format, book.id, book.title
-            )
+            "[{}] Requesting URLs for #{}# {}".format(book_format, book.id, book.title)
         )
 
         # retrieve list of URLs for format unless we have it in DB
@@ -308,6 +304,8 @@ def download_book(
             # store working URL in DB
             bf.downloaded_from = url
             bf.save()
+            # break as we got a working URL
+            break
 
         if not bf.downloaded_from and not downloaded_from_cache:
             logger.error("NO FILE FOR #{}/{}".format(book.id, book_format))
@@ -315,7 +313,6 @@ def download_book(
             logger.info("Deleting instance from DB")
             bf.delete_instance()
             pp(allurls)
-            continue
 
 
 def download_covers(book, book_dir, s3_storage, optimizer_version):
