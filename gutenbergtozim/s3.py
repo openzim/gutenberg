@@ -75,7 +75,10 @@ def upload_to_cache(book_id, asset, etag, book_format, s3_storage, optimizer_ver
     if isinstance(asset, list):
         with zipfile.ZipFile(zippath, "w") as zipfl:
             for fl in asset:
-                zipfl.write(fl, arcname=fl.name)
+                if fl.exists():
+                    zipfl.write(fl, arcname=fl.name)
+                else:
+                    logger.error(f"Skipping {fl.name} in S3 zip as it may be corrupt")
         fpath = zippath
     try:
         s3_storage.upload_file(
