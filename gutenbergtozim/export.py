@@ -636,6 +636,8 @@ def handle_unoptimized_files(
             update_download_cache(
                 src_dir.joinpath(fname_for(book, "html")), article_fpath
             )
+            if not src_dir.exists():
+                return
         else:
             logger.info("\t\tSkipping HTML article {}".format(article_fpath))
 
@@ -848,17 +850,21 @@ def handle_unoptimized_files(
     for format in formats:
         if format not in book.formats() or format == "html":
             continue
-        try:
-            handle_companion_file(
-                src_dir.joinpath(fname_for(book, format)),
-                archive_name_for(book, format),
-                force=force,
-                book=book,
-                s3_storage=s3_storage,
-            )
-        except Exception as e:
-            logger.exception(e)
-            logger.error("\t\tException while handling companion file: {}".format(e))
+        book_file = src_dir.joinpath(fname_for(book, format))
+        if book_file.exists():
+            try:
+                handle_companion_file(
+                    book_file,
+                    archive_name_for(book, format),
+                    force=force,
+                    book=book,
+                    s3_storage=s3_storage,
+                )
+            except Exception as e:
+                logger.exception(e)
+                logger.error(
+                    "\t\tException while handling companion file: {}".format(e)
+                )
 
 
 def write_book_presentation_article(
