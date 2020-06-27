@@ -29,8 +29,12 @@ IMAGE_BASE = "http://aleph.gutenberg.org/cache/epub/"
 
 
 def resource_exists(url):
-    r = requests.get(url, stream=True, timeout=20)  # in seconds
-    return r.status_code == requests.codes.ok
+    try:
+        r = requests.get(url, stream=True, timeout=20)  # in seconds
+        return r.status_code == requests.codes.ok
+    except Exception as exc:
+        logger.error(f"Exception occurred while testing {url}\n {exc}")
+        return False
 
 
 def handle_zipped_epub(zippath, book, dst_dir):
