@@ -125,10 +125,12 @@ def build_urls(files):
                 for u in possible_url
                 if Url.get_or_none(url=urlparse.urlparse(u).path[1:])
             ]
-            if len(filtre) == 0 and len(possible_url) != 0:
-                files[i] = possible_url
-            else:
-                files[i] = filtre
+            files[i] = filtre
+            # for development
+            # if len(filtre) == 0 and len(possible_url) != 0:
+            #     files[i] = possible_url
+            # else:
+            #     files[i] = filtre
 
     return files
 

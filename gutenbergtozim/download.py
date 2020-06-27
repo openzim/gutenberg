@@ -27,14 +27,14 @@ from gutenbergtozim.s3 import download_from_cache
 
 IMAGE_BASE = "http://aleph.gutenberg.org/cache/epub/"
 
-
-def resource_exists(url):
-    try:
-        r = requests.get(url, stream=True, timeout=20)  # in seconds
-        return r.status_code == requests.codes.ok
-    except Exception as exc:
-        logger.error(f"Exception occurred while testing {url}\n {exc}")
-        return False
+# for development
+# def resource_exists(url):
+#     try:
+#         r = requests.get(url, stream=True, timeout=20)  # in seconds
+#         return r.status_code == requests.codes.ok
+#     except Exception as exc:
+#         logger.error(f"Exception occurred while testing {url}\n {exc}")
+#         return False
 
 
 def handle_zipped_epub(zippath, book, dst_dir):
@@ -238,9 +238,10 @@ def download_book(
         while urls:
             url = urls.pop()
 
-            if len(allurls) != 1:
-                if not resource_exists(url):
-                    continue
+            # for development
+            # if len(allurls) != 1:
+            #     if not resource_exists(url):
+            #         continue
 
             # HTML files are *sometime* available as ZIP files
             if url.endswith(".zip"):
