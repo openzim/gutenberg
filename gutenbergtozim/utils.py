@@ -15,6 +15,7 @@ import requests
 import six
 import chardet
 from path import Path as path
+from zimscraperlib.download import save_large_file
 
 from gutenbergtozim import logger
 from gutenbergtozim.iso639 import language_name
@@ -100,24 +101,12 @@ def exec_cmd(cmd):
 
 def download_file(url, fname=None):
     fname.parent.mkdir(parents=True, exist_ok=True)
-    cmd = [
-        "curl",
-        "--fail",
-        "--insecure",
-        "--location",
-        "--silent",
-        "--show-error",
-        "-C",
-        "-",
-        "--url",
-        url,
-    ]
-    if fname:
-        cmd += ["--output", str(fname.resolve())]
-    else:
-        cmd += ["--remote-name"]
-    cmdr = exec_cmd(cmd)
-    return cmdr == 0
+    try:
+        save_large_file(url, fname)
+        return True
+    except Exception as exc:
+        logger.error(f"Error while downloading from {url}: {exc}")
+        return False
 
 
 def main_formats_for(book):
