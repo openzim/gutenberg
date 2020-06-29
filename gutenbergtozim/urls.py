@@ -125,6 +125,7 @@ def build_urls(files):
                 for u in possible_url
                 if Url.get_or_none(url=urlparse.urlparse(u).path[1:])
             ]
+            # Use only the URLs in DB
             files[i] = filtre
             # for development
             # if len(filtre) == 0 and len(possible_url) != 0:
