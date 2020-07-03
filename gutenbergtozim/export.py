@@ -363,14 +363,12 @@ def update_html_for_static(book, html_content, epub=False):
         if soup.title:
             soup.title.string = book.title
         else:
-            title_tag = soup.new_tag("title")
-            title_tag.string = book.title
-            if soup.find("head"):
-                soup.head.append(title_tag)
-            else:
-                head_tag = soup.new_tag("head")
-                head_tag.append(title_tag)
-                soup.html.insert(0, head_tag)
+            head = soup.find("head")
+            if not head:
+                head = soup.new_tag("head")
+                soup.html.insert(0, head)
+            head.append(soup.new_tag("title"))
+            soup.title.string = book.title
 
     patterns = [
         (
