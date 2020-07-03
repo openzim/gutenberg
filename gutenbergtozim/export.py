@@ -360,7 +360,15 @@ def update_html_for_static(book, html_content, epub=False):
 
     # Add the title
     if not epub:
-        soup.title.string = book.title
+        if soup.title:
+            soup.title.string = book.title
+        else:
+            head = soup.find("head")
+            if not head:
+                head = soup.new_tag("head")
+                soup.html.insert(0, head)
+            head.append(soup.new_tag("title"))
+            soup.title.string = book.title
 
     patterns = [
         (
