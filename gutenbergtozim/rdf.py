@@ -98,7 +98,7 @@ def parse_and_process_file(rdf_file, force=False):
         return
 
     logger.info("\tParsing file {}".format(rdf_file))
-    with open(rdf_file, "r") as f:
+    with open(rdf_file, "r", encoding="UTF-8") as f:
         parser = RdfParser(f.read(), gid).parse()
 
     if parser.license == "None":
