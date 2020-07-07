@@ -50,4 +50,8 @@ RUN python3 ./setup.py install
 
 # Boot commands
 WORKDIR /output
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 CMD gutenberg2zim --help ; /bin/bash
