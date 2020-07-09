@@ -3,11 +3,12 @@
 # vim: ai ts=4 sts=4 et sw=4 nu
 
 import six
+import subprocess
 
 from path import Path as path
 
 from gutenbergtozim import logger, VERSION
-from gutenbergtozim.utils import exec_cmd, get_project_id, FORMAT_MATRIX
+from gutenbergtozim.utils import get_project_id, FORMAT_MATRIX
 from gutenbergtozim.iso639 import ISO_MATRIX
 from gutenbergtozim.export import export_skeleton
 
@@ -101,7 +102,12 @@ def build_zimfile(
 
     if not create_index:
         cmd.insert(1, "--withoutFTIndex")
-    if exec_cmd(cmd) == 0:
+    zimwriterfs = subprocess.run(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True
+    )
+    if zimwriterfs.returncode == 0:
         logger.info("Successfuly created ZIM file at {}".format(zim_path))
     else:
         logger.error("Unable to create ZIM file :(")
+        logger.debug(zimwriterfs.stdout)
+        raise SystemExit
