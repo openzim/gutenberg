@@ -49,7 +49,18 @@ def extract_rdf_files(rdf_tarball, rdf_path, force=False):
     dest.mkdir_p()
 
     exec_cmd(
-        ["tar", "-C", rdf_path, "--strip-components", "2", "-x", "-f", rdf_tarball]
+        [
+            "tar",
+            "-C",
+            rdf_path,
+            "--strip-components",
+            "2",
+            "--extract",
+            "--no-same-owner",
+            "--no-same-permissions",
+            "-f",
+            rdf_tarball,
+        ]
     )
     return
 
