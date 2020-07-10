@@ -102,12 +102,9 @@ def build_zimfile(
 
     if not create_index:
         cmd.insert(1, "--withoutFTIndex")
-    zimwriterfs = subprocess.run(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True
-    )
+    zimwriterfs = subprocess.run(cmd)
     if zimwriterfs.returncode == 0:
         logger.info("Successfuly created ZIM file at {}".format(zim_path))
     else:
         logger.error("Unable to create ZIM file :(")
-        logger.debug(zimwriterfs.stdout)
-        raise SystemExit
+        raise SystemExit(zimwriterfs.returncode)
