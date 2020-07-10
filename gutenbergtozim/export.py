@@ -766,15 +766,16 @@ def handle_unoptimized_files(
         if ext in (".png", ".jpg", ".jpeg", ".gif"):
             logger.info("\t\tCopying and optimizing image companion {}".format(fname))
             optimize_image(src, dst)
-            if dst.name == (f"{book.id}_cover_image.jpg") and s3_storage:
-                upload_to_cache(
-                    asset=dst,
-                    book_format="cover",
-                    book_id=book.id,
-                    etag=book.cover_etag,
-                    s3_storage=s3_storage,
-                    optimizer_version=optimizer_version,
-                )
+            if dst.name == (f"{book.id}_cover_image.jpg"):
+                if s3_storage:
+                    upload_to_cache(
+                        asset=dst,
+                        book_format="cover",
+                        book_id=book.id,
+                        etag=book.cover_etag,
+                        s3_storage=s3_storage,
+                        optimizer_version=optimizer_version,
+                    )
                 update_download_cache(src, dst)
             elif html_file_list:
                 html_file_list.append(dst)
@@ -802,7 +803,7 @@ def handle_unoptimized_files(
                         s3_storage=s3_storage,
                         optimizer_version=optimizer_version,
                     )
-                    update_download_cache(src, dst)
+                update_download_cache(src, dst)
         else:
             # excludes files created by Windows Explorer
             if src.name.endswith("_Thumbs.db"):
