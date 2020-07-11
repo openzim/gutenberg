@@ -99,13 +99,15 @@ def exec_cmd(cmd):
         return subprocess.call(args)
 
 
-def download_file(url, fname=None):
-    fname.parent.mkdir(parents=True, exist_ok=True)
+def download_file(url, fpath):
+    fpath.parent.mkdir(parents=True, exist_ok=True)
     try:
-        save_large_file(url, fname)
+        save_large_file(url, fpath)
         return True
     except Exception as exc:
         logger.error(f"Error while downloading from {url}: {exc}")
+        if fpath.exists():
+            os.unlink(fpath)
         return False
 
 

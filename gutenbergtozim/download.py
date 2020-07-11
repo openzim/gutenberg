@@ -3,6 +3,7 @@
 # vim: ai ts=4 sts=4 et sw=4 nu
 
 import os
+import shutil
 import pathlib
 import tempfile
 import zipfile
@@ -123,6 +124,7 @@ def download_book(
     book_dir = pathlib.Path(download_cache).joinpath(str(book.id))
     optimized_dir = book_dir.joinpath("optimized")
     unoptimized_dir = book_dir.joinpath("unoptimized")
+    unsuccessful_formats = []
     for book_format in formats:
 
         unoptimized_fpath = unoptimized_dir.joinpath(fname_for(book, book_format))
@@ -130,7 +132,7 @@ def download_book(
 
         # check if already downloaded
         if (unoptimized_fpath.exists() or optimized_fpath.exists()) and not force:
-            logger.debug(f"\t\t{book_format} already exists")
+            logger.debug(f"\t\t{book_format} already exists for book #{book.id}")
             continue
 
         if force:
@@ -199,6 +201,7 @@ def download_book(
                     )
                 )
                 logger.error("html not found")
+                unsuccessful_formats.append(book_format)
                 continue
         else:
             bfs = bfs.filter(
@@ -209,6 +212,7 @@ def download_book(
             logger.debug(
                 "[{}] not avail. for #{}# {}".format(book_format, book.id, book.title)
             )
+            unsuccessful_formats.append(book_format)
             continue
 
         if bfs.count() > 1:
@@ -258,7 +262,7 @@ def download_book(
                         optimizer_version=optimizer_version,
                     ):
                         downloaded_from_cache = True
-                        continue
+                        break
                 if not download_file(url, zpath):
                     logger.error("ZIP file donwload failed: {}".format(zpath))
                     continue
@@ -288,7 +292,7 @@ def download_book(
                             optimizer_version=optimizer_version,
                         ):
                             downloaded_from_cache = True
-                            continue
+                            break
                 if not download_file(url, unoptimized_fpath):
                     logger.error("file donwload failed: {}".format(unoptimized_fpath))
                     continue
@@ -317,10 +321,22 @@ def download_book(
             # delete instance from DB if download failed
             logger.info("Deleting instance from DB")
             bf.delete_instance()
+            unsuccessful_formats.append(book_format)
             pp(allurls)
 
+    # delete book from DB if not downloaded in any format
+    if len(unsuccessful_formats) == len(formats):
+        logger.debug(
+            f"Book #{book.id} could not be downloaded in any format. Deleting from DB ..."
+        )
+        book.delete_instance()
+        if book_dir.exists():
+            shutil.rmtree(book_dir, ignore_errors=True)
+        return
+    download_cover(book, book_dir, s3_storage, optimizer_version)
 
-def download_covers(book, book_dir, s3_storage, optimizer_version):
+
+def download_cover(book, book_dir, s3_storage, optimizer_version):
     has_cover = Book.select(Book.cover_page).where(Book.id == book.id)
     if has_cover:
         # try to download optimized cover from cache if s3_storage
@@ -333,7 +349,7 @@ def download_covers(book, book_dir, s3_storage, optimizer_version):
             or book_dir.joinpath("unoptimized").joinpath(cover).exists()
         ):
             logger.debug(f"Cover already exists for book #{book.id}")
-            return True
+            return
         if s3_storage:
             logger.info(
                 f"Trying to download cover for {book.id} from optimization cache"
@@ -348,12 +364,11 @@ def download_covers(book, book_dir, s3_storage, optimizer_version):
             )
         if not downloaded_from_cache:
             logger.debug("Downloading {}".format(url))
-            download_file(url, book_dir.joinpath("unoptimized").joinpath(cover))
-            book.cover_etag = etag
-            book.save()
+            if download_file(url, book_dir.joinpath("unoptimized").joinpath(cover)):
+                book.cover_etag = etag
+                book.save()
     else:
         logger.debug("No Book Cover found for Book #{}".format(book.id))
-    return True
 
 
 def download_all_books(
@@ -379,13 +394,3 @@ def download_all_books(
         )
 
     Pool(concurrency).map(dlb, available_books)
-
-    def dlb_covers(b):
-        return download_covers(
-            b,
-            pathlib.Path(download_cache).joinpath(str(b.id)),
-            s3_storage,
-            optimizer_version,
-        )
-
-    Pool(concurrency).map(dlb_covers, available_books)
