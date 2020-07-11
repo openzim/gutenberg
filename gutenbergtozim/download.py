@@ -201,6 +201,7 @@ def download_book(
                     )
                 )
                 logger.error("html not found")
+                unsuccessful_formats.append(book_format)
                 continue
         else:
             bfs = bfs.filter(
@@ -211,6 +212,7 @@ def download_book(
             logger.debug(
                 "[{}] not avail. for #{}# {}".format(book_format, book.id, book.title)
             )
+            unsuccessful_formats.append(book_format)
             continue
 
         if bfs.count() > 1:
@@ -323,7 +325,10 @@ def download_book(
             pp(allurls)
 
     # delete book from DB if not downloaded in any format
-    if all(format in unsuccessful_formats for format in ["html", "pdf", "epub"]):
+    if len(unsuccessful_formats) == len(formats):
+        logger.debug(
+            f"Book #{book.id} could not be downloaded in any format. Deleting from DB ..."
+        )
         book.delete_instance()
         if book_dir.exists():
             shutil.rmtree(book_dir, ignore_errors=True)

@@ -110,6 +110,7 @@ def download_file(url, fpath):
             os.unlink(fpath)
         return False
 
+
 def main_formats_for(book):
     fmts = [
         fmt.format.mime
