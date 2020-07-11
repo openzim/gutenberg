@@ -327,9 +327,11 @@ def download_book(
         book.delete_instance()
         if book_dir.exists():
             shutil.rmtree(book_dir, ignore_errors=True)
+        return
+    download_cover(book, book_dir, s3_storage, optimizer_version)
 
 
-def download_covers(book, book_dir, s3_storage, optimizer_version):
+def download_cover(book, book_dir, s3_storage, optimizer_version):
     has_cover = Book.select(Book.cover_page).where(Book.id == book.id)
     if has_cover:
         # try to download optimized cover from cache if s3_storage
@@ -342,7 +344,7 @@ def download_covers(book, book_dir, s3_storage, optimizer_version):
             or book_dir.joinpath("unoptimized").joinpath(cover).exists()
         ):
             logger.debug(f"Cover already exists for book #{book.id}")
-            return True
+            return
         if s3_storage:
             logger.info(
                 f"Trying to download cover for {book.id} from optimization cache"
@@ -362,7 +364,6 @@ def download_covers(book, book_dir, s3_storage, optimizer_version):
                 book.save()
     else:
         logger.debug("No Book Cover found for Book #{}".format(book.id))
-    return True
 
 
 def download_all_books(
@@ -388,17 +389,3 @@ def download_all_books(
         )
 
     Pool(concurrency).map(dlb, available_books)
-
-    successful_books = get_list_of_filtered_books(
-        languages=languages, formats=formats, only_books=only_books
-    )
-
-    def dlb_covers(b):
-        return download_covers(
-            b,
-            pathlib.Path(download_cache).joinpath(str(b.id)),
-            s3_storage,
-            optimizer_version,
-        )
-
-    Pool(concurrency).map(dlb_covers, successful_books)
