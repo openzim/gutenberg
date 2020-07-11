@@ -3,6 +3,7 @@
 # vim: ai ts=4 sts=4 et sw=4 nu
 
 import os
+import shutil
 import pathlib
 import tempfile
 import zipfile
@@ -123,6 +124,7 @@ def download_book(
     book_dir = pathlib.Path(download_cache).joinpath(str(book.id))
     optimized_dir = book_dir.joinpath("optimized")
     unoptimized_dir = book_dir.joinpath("unoptimized")
+    unsuccessful_formats = []
     for book_format in formats:
 
         unoptimized_fpath = unoptimized_dir.joinpath(fname_for(book, book_format))
@@ -130,7 +132,7 @@ def download_book(
 
         # check if already downloaded
         if (unoptimized_fpath.exists() or optimized_fpath.exists()) and not force:
-            logger.debug(f"\t\t{book_format} already exists")
+            logger.debug(f"\t\t{book_format} already exists for book #{book.id}")
             continue
 
         if force:
@@ -317,7 +319,14 @@ def download_book(
             # delete instance from DB if download failed
             logger.info("Deleting instance from DB")
             bf.delete_instance()
+            unsuccessful_formats.append(book_format)
             pp(allurls)
+
+    # delete book from DB if not downloaded in any format
+    if all(format in unsuccessful_formats for format in ["html", "pdf", "epub"]):
+        book.delete_instance()
+        if book_dir.exists():
+            shutil.rmtree(book_dir, ignore_errors=True)
 
 
 def download_covers(book, book_dir, s3_storage, optimizer_version):
@@ -348,9 +357,9 @@ def download_covers(book, book_dir, s3_storage, optimizer_version):
             )
         if not downloaded_from_cache:
             logger.debug("Downloading {}".format(url))
-            download_file(url, book_dir.joinpath("unoptimized").joinpath(cover))
-            book.cover_etag = etag
-            book.save()
+            if download_file(url, book_dir.joinpath("unoptimized").joinpath(cover)):
+                book.cover_etag = etag
+                book.save()
     else:
         logger.debug("No Book Cover found for Book #{}".format(book.id))
     return True
@@ -380,6 +389,10 @@ def download_all_books(
 
     Pool(concurrency).map(dlb, available_books)
 
+    successful_books = get_list_of_filtered_books(
+        languages=languages, formats=formats, only_books=only_books
+    )
+
     def dlb_covers(b):
         return download_covers(
             b,
@@ -388,4 +401,4 @@ def download_all_books(
             optimizer_version,
         )
 
-    Pool(concurrency).map(dlb_covers, available_books)
+    Pool(concurrency).map(dlb_covers, successful_books)
