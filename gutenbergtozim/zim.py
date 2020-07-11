@@ -96,6 +96,7 @@ def build_zimfile(
         "Kiwix",
         "--scraper",
         "gutengergtozim-{v}".format(v=VERSION),
+        "--verbose",
         static_folder,
         six.text_type(zim_path),
     ]

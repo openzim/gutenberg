@@ -258,7 +258,7 @@ def download_book(
                         optimizer_version=optimizer_version,
                     ):
                         downloaded_from_cache = True
-                        continue
+                        break
                 if not download_file(url, zpath):
                     logger.error("ZIP file donwload failed: {}".format(zpath))
                     continue
@@ -288,7 +288,7 @@ def download_book(
                             optimizer_version=optimizer_version,
                         ):
                             downloaded_from_cache = True
-                            continue
+                            break
                 if not download_file(url, unoptimized_fpath):
                     logger.error("file donwload failed: {}".format(unoptimized_fpath))
                     continue
