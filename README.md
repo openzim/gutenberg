@@ -12,7 +12,7 @@ clean and user friendly format for storing content for offline usage.
 
 ## Setting up the environment
 
-It's recommended that you use `virtualenv`. `py2.7.x` and `py3.6+` are supported.
+It's recommended that you use `virtualenv` and `py3.6+`.
 
 ### Install the dependencies
 
