@@ -1,7 +1,7 @@
 FROM ubuntu:bionic
 
 
-ENV ZIMWRITERFS_VERSION 1.3.8
+ENV ZIMWRITERFS_VERSION 1.3.10-4
 
 # Install necessary packages
 RUN apt-get update -y && \
