@@ -1,14 +1,21 @@
-dev
-
+1.1.5
+- simplified home page results on smaller screen sizes
 - added bookshelves mode option
 - added title search option (doesn't scale!)
 - fixed setup_urls on macos
 - add s3 based optimization cache
 - do not allow checking other URLs if downloaded from s3
 - remove book from DB if not downloaded in any format
-
-1.1.5
-- simplified home page results on smaller screen sizes
+- better handling of downloaded/optimized files
+- More informative and better displayed logs
+- switched to python3.6+
+- docker image now based on bionic
+- docker image only writes onto /output
+- using zimwriterfs 1.3.10-4
+- using zimscraperlib
+- fixed some articles missing titles
+- zimwriterfs error on all-langs now stops whole process
+- safer extraction of rdf-files.tar
 
 1.1.4
 - Fixed broken setup.py (moved LICENSE file)
