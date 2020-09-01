@@ -75,8 +75,14 @@ class Author(BaseModel):
     class Meta:
         database = db
         fixtures = [
-            {"gut_id": "116", "last_name": "Various",},
-            {"gut_id": "216", "last_name": "Anonymous",},
+            {
+                "gut_id": "116",
+                "last_name": "Various",
+            },
+            {
+                "gut_id": "216",
+                "last_name": "Anonymous",
+            },
         ]
 
     gut_id = CharField(primary_key=True, max_length=100)

@@ -900,10 +900,10 @@ def write_book_presentation_article(
 
 
 def authors_from_ids(idlist):
-    """ build a list of Author objects based on a list of author.gut_id
+    """build a list of Author objects based on a list of author.gut_id
 
-        Used to overcome large SELECT IN SQL stmts which peewee complains
-        about. Slower !! """
+    Used to overcome large SELECT IN SQL stmts which peewee complains
+    about. Slower !!"""
     authors = []
     for author in Author.select().order_by(
         Author.last_name.asc(), Author.first_names.asc()
