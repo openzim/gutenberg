@@ -91,7 +91,7 @@ def build_zimfile(
         "--creator",
         "gutenberg.org",
         "--tags",
-        "gutenberg",
+        "_category:gutenberg;gutenberg",
         "--publisher",
         "Kiwix",
         "--scraper",
