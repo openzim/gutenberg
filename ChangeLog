@@ -1,6 +1,7 @@
-1.1.6.dev0
+1.1.6
 
-- n/a
+- removed duplicate dependencies
+- Added tag _category:gutenberg which was missing
 
 1.1.5
 - simplified home page results on smaller screen sizes
