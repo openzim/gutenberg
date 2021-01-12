@@ -10,11 +10,20 @@ from setuptools import setup, find_packages
 
 from gutenbergtozim import VERSION
 
+import subprocess
+
+import pathlib
+
+root_dir = pathlib.Path(__file__).parent
+
 with open("pypi-readme.rst", "r", "utf-8") as f:
     readme = f.read()
 
 with open("requirements.pip", "r") as f:
     requirements = [l.strip() for l in f.readlines() if len(l.strip())]
+
+print("Downloading and fixing JS dependencies...")
+subprocess.run([str(root_dir.joinpath("get_js_deps.sh").resolve())], check=True)
 
 setup(
     name="gutenberg2zim",
