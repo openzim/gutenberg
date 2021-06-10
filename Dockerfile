@@ -1,8 +1,6 @@
 FROM ubuntu:bionic
 
 
-ENV ZIMWRITERFS_VERSION 1.3.10-4
-
 # Install necessary packages
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends advancecomp python3-pip python3-dev python3-setuptools libxml2-dev libxslt-dev p7zip-full python3-pillow curl zip bash sed rsync libjpeg-dev libpng-dev wget build-essential make locales && \
@@ -10,10 +8,10 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 # add zimwriterfs
-RUN wget http://download.openzim.org/release/zimwriterfs/zimwriterfs_linux-x86_64-${ZIMWRITERFS_VERSION}.tar.gz
-RUN tar -C /usr/bin --strip-components 1 -xf zimwriterfs_linux-x86_64-${ZIMWRITERFS_VERSION}.tar.gz
-RUN rm -f zimwriterfs_linux-x86_64-${ZIMWRITERFS_VERSION}.tar.gz
-RUN chmod +x /usr/bin/zimwriterfs
+RUN wget -L http://download.openzim.org/release/zim-tools/zim-tools_linux-x86_64-2.1.0-1.tar.gz \
+    && tar xf zim-tools_linux-x86_64-2.1.0-1.tar.gz \
+    && mv zim-tools_linux-x86_64-2.1.0-1/zim* /usr/bin/ \
+    && rmdir zim-tools_linux-x86_64-2.1.0-1
 RUN zimwriterfs --version
 
 # Install jpegoptim

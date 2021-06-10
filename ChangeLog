@@ -2,6 +2,7 @@
 
 - removed duplicate dependencies
 - Added tag _category:gutenberg which was missing
+- docker-only release with updated zimwriterfs (2.1.0-1)
 
 1.1.5
 - simplified home page results on smaller screen sizes
