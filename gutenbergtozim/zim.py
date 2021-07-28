@@ -76,6 +76,7 @@ def build_zimfile(
 
     cmd = [
         "zimwriterfs",
+        "--zstd",
         "--welcome",
         "Home.html",
         "--favicon",
