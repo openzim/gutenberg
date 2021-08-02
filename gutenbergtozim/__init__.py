@@ -10,4 +10,4 @@ logger = getLogger(__name__, level=logging.DEBUG)
 
 TMP_FOLDER = "tmp"
 
-VERSION = "1.1.7"
+VERSION = "1.1.8"
