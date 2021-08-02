@@ -490,52 +490,52 @@ body.cover .content h2 {
 
 @font-face {
     font-family: 'RobotoLight';
-    src: url('../fonts/Roboto-Light.ttf');
+    src: url('../../I/fonts/Roboto-Light.ttf');
 }
 
 @font-face {
     font-family: 'RobotoBlack';
-    src: url('../fonts/Roboto-Black.ttf');
+    src: url('../../I/fonts/Roboto-Black.ttf');
 }
 
 @font-face {
     font-family: 'RobotoBold';
-    src: url('../fonts/Roboto-Bold.ttf');
+    src: url('../../I/fonts/Roboto-Bold.ttf');
 }
 
 @font-face {
     font-family: 'RobotoLight';
-    src: url('../fonts/Roboto-Light.ttf');
+    src: url('../../I/fonts/Roboto-Light.ttf');
 }
 
 @font-face {
     font-family: 'RobotoMedium';
-    src: url('../fonts/Roboto-Medium.ttf');
+    src: url('../../I/fonts/Roboto-Medium.ttf');
 }
 
 @font-face {
     font-family: 'RobotoRegular';
-    src: url('../fonts/Roboto-Regular.ttf');
+    src: url('../../I/fonts/Roboto-Regular.ttf');
 }
 
 @font-face {
     font-family: 'RobotoCondensedBold';
-    src: url('../fonts/RobotoCondensed-Bold.ttf');
+    src: url('../../I/fonts/RobotoCondensed-Bold.ttf');
 }
 
 @font-face {
     font-family: 'RobotoCondensedLight';
-    src: url('../fonts/RobotoCondensed-Light.ttf');
+    src: url('../../I/fonts/RobotoCondensed-Light.ttf');
 }
 
 @font-face {
     font-family: 'RobotoCondensedRegular';
-    src: url('../fonts/RobotoCondensed-Regular.ttf');
+    src: url('../../I/fonts/RobotoCondensed-Regular.ttf');
 }
 
 @font-face {
     font-family: 'RobotoThin';
-    src: url('../fonts/Roboto-Thin.ttf');
+    src: url('../../I/fonts/Roboto-Thin.ttf');
 }
 
 #author_filter.clearable{
