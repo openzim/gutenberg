@@ -51,7 +51,7 @@ NB_POPULARITY_STARS = 5
 
 
 def get_ui_languages_for(books):
-    ui_languages = ["en", "fr", "de", "it", "ar", "nl", "es"]
+    ui_languages = ["en", "fr", "de", "it", "ar", "nl", "es", "pt"]
     languages = get_langs_with_count(books=books)
     if len(languages) == 1 and languages[-1][1] in ui_languages:
         return [languages[-1][1]]
