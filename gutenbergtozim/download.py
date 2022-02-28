@@ -26,7 +26,7 @@ from gutenbergtozim.utils import (
 )
 from gutenbergtozim.s3 import download_from_cache
 
-IMAGE_BASE = "http://aleph.gutenberg.org/cache/epub/"
+IMAGE_BASE = "http://dante.pglaf.org/cache/epub/"
 
 # for development
 # def resource_exists(url):
