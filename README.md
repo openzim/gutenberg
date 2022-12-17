@@ -107,8 +107,8 @@ You can find the full arguments list below:
 
 ## Screenshots
 
-![](https://raw.githubusercontent.com/openzim/gutenberg/master/pictures/screenshot_1.png)
-![](https://raw.githubusercontent.com/openzim/gutenberg/master/pictures/screenshot_1.png)
+![](https://raw.githubusercontent.com/openzim/gutenberg/main/pictures/screenshot_1.png)
+![](https://raw.githubusercontent.com/openzim/gutenberg/main/pictures/screenshot_2.png)
 
 ## License
 
