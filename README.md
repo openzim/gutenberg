@@ -19,7 +19,7 @@ It's recommended that you use `virtualenv` and `py3.6+`.
 #### GNU/Linux
 
 ```bash
-sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle curl zip
+sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle curl zip zim-tools
 sudo pip install virtualenv
 ```
 
