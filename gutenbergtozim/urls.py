@@ -4,9 +4,11 @@
 
 import os
 import shutil
+from path import Path as path
 
 from collections import defaultdict
 
+from gutenbergtozim import logger
 from gutenbergtozim.database import Book, BookFormat, Url
 from gutenbergtozim.utils import FORMAT_MATRIX, exec_cmd
 
@@ -14,7 +16,6 @@ try:
     import urlparse
 except ImportError:
     import urllib.parse as urlparse
-from playhouse.csv_loader import load_csv
 
 
 class UrlBuilder:
@@ -239,27 +240,40 @@ def build_html(files):
     return list(set(urls))
 
 
-def setup_urls():
+def setup_urls(force=False):
 
     file_with_url = os.path.join("tmp", "file_on_{}".format(UrlBuilder.SERVER_NAME))
-    cmd = [
-        "bash",
-        "-c",
-        "rsync -a --list-only {} > {}".format(UrlBuilder.RSYNC, file_with_url),
-    ]
-    exec_cmd(cmd)
 
-    # make a copy of rsync's result
-    shutil.copyfile(file_with_url, file_with_url + ".bak")
+    if path(file_with_url).exists() and not force:
+        logger.info(
+            "\tUrls rsync result {} already exists, processing existing file".format(
+                file_with_url
+            )
+        )
+    else:
+        cmd = [
+            "bash",
+            "-c",
+            "rsync -a --list-only {} > {}".format(UrlBuilder.RSYNC, file_with_url),
+        ]
+        exec_cmd(cmd)
 
-    # strip rsync file to only contain relative path
-    with open(file_with_url + ".bak", "r") as src, open(file_with_url, "w") as dest:
+    logger.info("\tLooking after relative path start in urls rsync result")
+    # search for "GUTINDEX*" file, so that we known where starts the relative path in rsync output
+    with open(file_with_url, "r", errors="replace") as src:
         for line in src.readlines():
-            if len(line) >= 47:
-                dest.write(line[46:])
+            start_rel_path_idx = line.find("GUTINDEX")
+            if start_rel_path_idx >= 0:
+                break
 
-    field_names = ["url"]
-    load_csv(Url, file_with_url, field_names=field_names)
+    if start_rel_path_idx == -1:
+        raise ValueError("Unable to find relative path start in urls file")
+
+    logger.info("\tAppending urls in DB from rsync result")
+    # strip rsync file to only contain relative path
+    with open(file_with_url, "r", errors="replace") as src:
+        for line in src.readlines():
+            Url.create(url=line[start_rel_path_idx:].strip())
 
 
 if __name__ == "__main__":
