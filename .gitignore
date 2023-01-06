@@ -62,6 +62,7 @@ docs/_build/
 *.tar.bz2
 *.db*
 *~
+dump
 static
 rdf-files
 dl-cache

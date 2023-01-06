@@ -139,7 +139,7 @@ def get_list_of_filtered_books(languages, formats, only_books=[]):
         # print(only_books)
         qs = qs.where(Book.id << only_books)
 
-    if len(languages):
+    if len(languages) and languages[0] != "mul":
         qs = qs.where(Book.language << languages)
 
     return qs

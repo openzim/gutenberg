@@ -5,7 +5,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
-import shutil
 import sys
 
 from docopt import docopt
@@ -252,25 +251,24 @@ def main(arguments):
 
         if DO_ZIM:
 
-            if not check_dependencies()[1]:
-                logger.error("You don't have zimwriterfs installed.")
-                sys.exit(1)
-            logger.info("BUILDING ZIM off static folder {}".format(STATIC_FOLDER))
+            logger.info("BUILDING ZIM dynamically")
             build_zimfile(
-                static_folder=STATIC_FOLDER,
                 output_folder=path(ONE_LANG_ONE_ZIM_FOLDER or ".").abspath(),
-                zim_name=path(ZIM_NAME).name if ZIM_NAME else None,
+                download_cache=DL_CACHE,
+                concurrency=CONCURRENCY,
                 languages=zim_lang,
                 formats=FORMATS,
                 only_books=BOOKS,
-                title=ZIM_TITLE,
-                description=ZIM_DESC,
-                create_index=not NO_INDEX,
                 force=FORCE,
                 title_search=TITLE_SEARCH,
                 add_bookshelves=BOOKSHELVES,
+                s3_storage=s3_storage,
+                optimizer_version=OPTIMIZER_VERSION,
+                zim_name=path(ZIM_NAME).name if ZIM_NAME else None,
+                title=ZIM_TITLE,
+                description=ZIM_DESC,
+                create_index=not NO_INDEX,
             )
-            shutil.rmtree(STATIC_FOLDER)
 
 
 if __name__ == "__main__":
