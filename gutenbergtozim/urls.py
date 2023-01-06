@@ -3,7 +3,6 @@
 # vim: ai ts=4 sts=4 et sw=4 nu
 
 import os
-import shutil
 from collections import defaultdict
 
 from path import Path as path
@@ -259,7 +258,8 @@ def setup_urls(force=False):
         exec_cmd(cmd)
 
     logger.info("\tLooking after relative path start in urls rsync result")
-    # search for "GUTINDEX*" file, so that we known where starts the relative path in rsync output
+    # search for "GUTINDEX*" file, so that we known where starts the relative
+    # path in rsync output
     with open(file_with_url, "r", errors="replace") as src:
         for line in src.readlines():
             start_rel_path_idx = line.find("GUTINDEX")
@@ -269,8 +269,8 @@ def setup_urls(force=False):
     if start_rel_path_idx == -1:
         raise ValueError("Unable to find relative path start in urls file")
 
-    logger.info("\Removing all urls already present in DB")
-    qry=Url.delete()
+    logger.info("\tRemoving all urls already present in DB")
+    qry = Url.delete()
     qry.execute()
 
     logger.info("\tAppending urls in DB from rsync result")

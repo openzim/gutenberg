@@ -10,7 +10,6 @@ import zipfile
 from multiprocessing.dummy import Pool
 from pprint import pprint as pp
 
-import requests
 from path import Path as path
 
 from gutenbergtozim import TMP_FOLDER, logger
@@ -327,7 +326,8 @@ def download_book(
     # delete book from DB if not downloaded in any format
     if len(unsuccessful_formats) == len(formats):
         logger.debug(
-            f"Book #{book.id} could not be downloaded in any format. Deleting from DB ..."
+            f"Book #{book.id} could not be downloaded in any format. "
+            + "Deleting from DB ..."
         )
         book.delete_instance()
         if book_dir.exists():

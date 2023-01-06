@@ -45,7 +45,8 @@ def download_from_cache(
         meta.get("optimizer_version") != optimizer_version[book_format]
     ):
         logger.error(
-            f"optimizer version doesn't match for {key}. Expected {optimizer_version[book_format]}, got {meta.get('optimizer_version')}"
+            f"optimizer version doesn't match for {key}. Expected "
+            + "{optimizer_version[book_format]}, got {meta.get('optimizer_version')}"
         )
         return False
     dest_dir.mkdir(parents=True, exist_ok=True)

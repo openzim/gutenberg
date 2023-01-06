@@ -57,7 +57,7 @@ help = (
     """download (overwrites --concurrency). """
     """if server blocks high rate requests
 -m --one-language-one-zim=<folder> When more than 1 language, do one zim for each """
-    """  language (and one with all)
+    """language (and one with all)
 --no-index                      Do NOT create full-text index within ZIM file
 --check                         Check dependencies
 --prepare                       Download & extract rdf-files.tar.bz2
@@ -68,10 +68,13 @@ help = (
 --dev                           Exports *just* Home+JS+CSS files """
     """(overwritten by --zim step)
 --zim                           Create a ZIM file
---title-search                  Add field to search a book by title and directly jump to it
+--title-search                  Add field to search a book by title and directly """
+    """jump to it
 --bookshelves                   Add bookshelves
---optimization-cache=<url>      URL with credentials to S3 bucket for using as optimization cache
---use-any-optimized-version     Try to use any optimized version found on optimization cache
+--optimization-cache=<url>      URL with credentials to S3 bucket for using as """
+    """optimization cache
+--use-any-optimized-version     Try to use any optimized version found on """
+    """optimization cache
 
 This script is used to produce a ZIM file (and any intermediate state)
 of Gutenberg repository using a mirror."""
@@ -213,7 +216,7 @@ def main(arguments):
                 zims.append([book.language])
             zims.append([])
         else:
-            zims = [[l] for l in LANGUAGES] + [LANGUAGES]
+            zims = [[lang] for lang in LANGUAGES] + [LANGUAGES]
     else:
         zims = [LANGUAGES]
 

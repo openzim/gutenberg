@@ -153,8 +153,8 @@ def get_langs_with_count(books):
         lang_count[book.language] += 1
 
     return [
-        (language_name(l), l, nb)
-        for l, nb in sorted(lang_count.items(), key=lambda x: x[1], reverse=True)
+        (language_name(lang), lang, nb)
+        for lang, nb in sorted(lang_count.items(), key=lambda x: x[1], reverse=True)
     ]
 
 
