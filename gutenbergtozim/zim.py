@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-import six
 import subprocess
 
+import six
 from path import Path as path
 
-from gutenbergtozim import logger, VERSION
-from gutenbergtozim.utils import get_project_id, FORMAT_MATRIX
-from gutenbergtozim.iso639 import ISO_MATRIX
+from gutenbergtozim import VERSION, logger
 from gutenbergtozim.export import export_skeleton
+from gutenbergtozim.iso639 import ISO_MATRIX
+from gutenbergtozim.utils import FORMAT_MATRIX, get_project_id
 
 
 def build_zimfile(

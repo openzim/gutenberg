@@ -2,24 +2,24 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import unicode_literals, absolute_import, division, print_function
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
+import shutil
 import sys
 
 from docopt import docopt
 from path import Path as path
-import shutil
 
-from gutenbergtozim import logger, VERSION
+from gutenbergtozim import VERSION, logger
+from gutenbergtozim.checkdeps import check_dependencies
 from gutenbergtozim.database import setup_database
-from gutenbergtozim.rdf import setup_rdf_folder, parse_and_fill
 from gutenbergtozim.download import download_all_books
 from gutenbergtozim.export import export_all_books, export_skeleton
+from gutenbergtozim.rdf import parse_and_fill, setup_rdf_folder
+from gutenbergtozim.s3 import s3_credentials_ok
 from gutenbergtozim.urls import setup_urls
 from gutenbergtozim.zim import build_zimfile
-from gutenbergtozim.checkdeps import check_dependencies
-from gutenbergtozim.s3 import s3_credentials_ok
-
 
 help = (
     """Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """

@@ -3,12 +3,13 @@
 # vim: ai ts=4 sts=4 et sw=4 nu
 
 import os
-import zipfile
 import pathlib
+import zipfile
 
 from kiwixstorage import KiwixStorage
 from pif import get_public_ip
-from . import logger, TMP_FOLDER
+
+from . import TMP_FOLDER, logger
 from .utils import archive_name_for
 
 

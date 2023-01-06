@@ -2,24 +2,24 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-import os
-import sys
-import hashlib
-import subprocess
-import zipfile
 import collections
-import unicodedata
 import datetime
-import requests
+import hashlib
+import os
+import subprocess
+import sys
+import unicodedata
+import zipfile
 
-import six
 import chardet
+import requests
+import six
 from path import Path as path
 from zimscraperlib.download import save_large_file
 
 from gutenbergtozim import logger
-from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.database import Book, BookFormat, Format
+from gutenbergtozim.iso639 import language_name
 
 UTF8 = "utf-8"
 FORMAT_MATRIX = collections.OrderedDict(

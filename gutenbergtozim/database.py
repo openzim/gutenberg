@@ -2,14 +2,8 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from peewee import (
-    Model,  # SqliteDatabase,
-    CharField,
-    BooleanField,
-    IntegerField,
-    ForeignKeyField,
-    TextField,
-)
+from peewee import Model  # SqliteDatabase,
+from peewee import BooleanField, CharField, ForeignKeyField, IntegerField, TextField
 from playhouse.apsw_ext import APSWDatabase
 
 from gutenbergtozim import logger

@@ -4,9 +4,9 @@
 
 import os
 import shutil
-from path import Path as path
-
 from collections import defaultdict
+
+from path import Path as path
 
 from gutenbergtozim import logger
 from gutenbergtozim.database import Book, BookFormat, Url

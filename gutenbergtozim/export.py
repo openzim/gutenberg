@@ -2,47 +2,47 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-import os
 import json
-import zipfile
-import tempfile
-import urllib
+import os
 import pathlib
 import shutil
-
-import six
-from six import text_type
-import bs4
-from bs4 import BeautifulSoup
-from path import Path as path
-from jinja2 import Environment, PackageLoader
+import tempfile
+import urllib
+import zipfile
 from multiprocessing.dummy import Pool
 
+import bs4
+import six
+from bs4 import BeautifulSoup
+from jinja2 import Environment, PackageLoader
+from path import Path as path
+from six import text_type
+
 import gutenbergtozim
-from gutenbergtozim import logger, TMP_FOLDER
-from gutenbergtozim.utils import (
-    FORMAT_MATRIX,
-    main_formats_for,
-    get_list_of_filtered_books,
-    exec_cmd,
-    get_langs_with_count,
-    get_lang_groups,
-    is_bad_cover,
-    read_file,
-    zip_epub,
-    critical_error,
-    save_file,
-    UTF8,
-    get_project_id,
-    book_name_for_fs,
-    archive_name_for,
-    fname_for,
-    article_name_for,
-)
-from gutenbergtozim.database import Book, Format, BookFormat, Author
+from gutenbergtozim import TMP_FOLDER, logger
+from gutenbergtozim.database import Author, Book, BookFormat, Format
 from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.l10n import l10n_strings
 from gutenbergtozim.s3 import upload_to_cache
+from gutenbergtozim.utils import (
+    FORMAT_MATRIX,
+    UTF8,
+    archive_name_for,
+    article_name_for,
+    book_name_for_fs,
+    critical_error,
+    exec_cmd,
+    fname_for,
+    get_lang_groups,
+    get_langs_with_count,
+    get_list_of_filtered_books,
+    get_project_id,
+    is_bad_cover,
+    main_formats_for,
+    read_file,
+    save_file,
+    zip_epub,
+)
 
 jinja_env = Environment(loader=PackageLoader("gutenbergtozim", "templates"))
 
