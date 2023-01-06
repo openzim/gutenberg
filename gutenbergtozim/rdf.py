@@ -18,7 +18,7 @@ from gutenbergtozim.utils import BAD_BOOKS_FORMATS, FORMAT_MATRIX, normalize
 
 
 def setup_rdf_folder(rdf_url, rdf_path, force=False):
-    """ Download and Extract rdf-files """
+    """Download and Extract rdf-files"""
 
     rdf_tarball = download_rdf_file(rdf_url)
     extract_rdf_files(rdf_tarball, rdf_path, force=force)

@@ -30,7 +30,7 @@ def s3_credentials_ok(s3_url_with_credentials):
 def download_from_cache(
     book, etag, book_format, dest_dir, s3_storage, optimizer_version
 ):
-    """ whether it successfully downloaded from cache """
+    """whether it successfully downloaded from cache"""
     key = f"{book.id}/{book_format}"
     if not s3_storage.has_object(key):
         return False
@@ -68,7 +68,7 @@ def download_from_cache(
 
 
 def upload_to_cache(book_id, asset, etag, book_format, s3_storage, optimizer_version):
-    """ whether it successfully uploaded to cache """
+    """whether it successfully uploaded to cache"""
     fpath = asset
     key = f"{book_id}/{book_format}"
     zippath = pathlib.Path(f"{TMP_FOLDER}/{book_id}.zip")
