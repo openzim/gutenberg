@@ -60,7 +60,7 @@ docs/_build/
 *.sublime-project
 *.sublime-workspace
 *.tar.bz2
-*.db
+*.db*
 *~
 static
 rdf-files
