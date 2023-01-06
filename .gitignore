@@ -11,6 +11,7 @@ gut-env/
 .Python
 env/
 venv/
+.venv/
 bin/
 build/
 develop-eggs/
