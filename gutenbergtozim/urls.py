@@ -269,6 +269,10 @@ def setup_urls(force=False):
     if start_rel_path_idx == -1:
         raise ValueError("Unable to find relative path start in urls file")
 
+    logger.info("\Removing all urls already present in DB")
+    qry=Url.delete()
+    qry.execute()
+
     logger.info("\tAppending urls in DB from rsync result")
     # strip rsync file to only contain relative path
     with open(file_with_url, "r", errors="replace") as src:
