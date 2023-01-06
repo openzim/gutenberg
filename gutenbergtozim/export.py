@@ -191,7 +191,7 @@ def export_all_books(
 
     if not len(get_langs_with_count(books=books)):
         critical_error(
-            "Unable to proceed. Combination of lamguages, "
+            "Unable to proceed. Combination of languages, "
             "books and formats has no result."
         )
 

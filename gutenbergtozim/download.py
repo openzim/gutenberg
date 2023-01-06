@@ -264,7 +264,7 @@ def download_book(
                         downloaded_from_cache = True
                         break
                 if not download_file(url, zpath):
-                    logger.error("ZIP file donwload failed: {}".format(zpath))
+                    logger.error("ZIP file download failed: {}".format(zpath))
                     continue
                 # save etag
                 book.html_etag = etag
