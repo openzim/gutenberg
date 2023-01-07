@@ -241,7 +241,6 @@ def main(arguments):
             logger.info("EXPORTING HTML/JS/CSS to static folder")
             export_skeleton(
                 static_folder=STATIC_FOLDER,
-                dev_mode=True,
                 languages=zim_lang,
                 formats=FORMATS,
                 only_books=BOOKS,
