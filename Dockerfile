@@ -1,18 +1,11 @@
-FROM ubuntu:bionic
+FROM python:3.11
 
 
 # Install necessary packages
 RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends advancecomp python3-pip python3-dev python3-setuptools libxml2-dev libxslt-dev p7zip-full python3-pillow curl zip bash sed rsync libjpeg-dev libpng-dev wget build-essential make locales && \
+    apt-get install -y --no-install-recommends advancecomp libxml2-dev libxslt-dev p7zip-full python3-pillow curl zip bash sed rsync libjpeg-dev libpng-dev wget build-essential make locales && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
-# add zimwriterfs
-RUN wget -L http://download.openzim.org/release/zim-tools/zim-tools_linux-x86_64-2.1.0-1.tar.gz \
-    && tar xf zim-tools_linux-x86_64-2.1.0-1.tar.gz \
-    && mv zim-tools_linux-x86_64-2.1.0-1/zim* /usr/bin/ \
-    && rmdir zim-tools_linux-x86_64-2.1.0-1
-RUN zimwriterfs --version
 
 # Install jpegoptim
 RUN wget http://www.kokkonen.net/tjko/src/jpegoptim-1.4.4.tar.gz
