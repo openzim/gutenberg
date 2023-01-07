@@ -17,6 +17,7 @@ import six
 from bs4 import BeautifulSoup
 from jinja2 import Environment, PackageLoader
 from path import Path as path
+from schedule import every
 from six import text_type
 
 import gutenbergtozim
@@ -173,6 +174,7 @@ def export_all_books(
     add_bookshelves=False,
     s3_storage=None,
     optimizer_version=None,
+    stats_filename=None,
 ):
 
     books = get_list_of_filtered_books(
@@ -248,8 +250,14 @@ def export_all_books(
             [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
         )
 
+    Global.set_total(len(books))
+    Global.reset_progress()
+
+    # set a timer to report progress only every 10 seconds, no need to do it more often
+    every(10).seconds.do(report_progress, stats_filename=stats_filename)
+
     def dlb(b):
-        return export_book(
+        export_book(
             b,
             book_dir=pathlib.Path(download_cache).joinpath(str(b.id)),
             languages=languages,
@@ -262,8 +270,23 @@ def export_all_books(
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
         )
+        Global.inc_progress()
 
     Pool(concurrency).map(dlb, books)
+
+    # do it one more time at the end to indicate completion
+    report_progress(stats_filename=stats_filename)
+
+
+def report_progress(stats_filename=None):
+    if not stats_filename:
+        return
+    progress = {
+        "done": Global.progress,
+        "total": Global.total,
+    }
+    with open(stats_filename, "w") as outfile:
+        json.dump(progress, outfile, indent=2)
 
 
 def html_content_for(book, src_dir):

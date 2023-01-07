@@ -27,6 +27,7 @@ def build_zimfile(
     title=None,
     description=None,
     create_index=True,
+    stats_filename=None,
 ):
 
     if not languages:
@@ -86,6 +87,7 @@ def build_zimfile(
         add_bookshelves=add_bookshelves,
         s3_storage=s3_storage,
         optimizer_version=optimizer_version,
+        stats_filename=stats_filename,
     )
 
     Global.finish()

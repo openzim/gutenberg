@@ -14,6 +14,24 @@ class Global:
     creator = None
     _lock = threading.Lock()
 
+    total = 0
+    progress = 0
+
+    @staticmethod
+    def set_total(total):
+        with Global._lock:
+            Global.total = total
+
+    @staticmethod
+    def reset_progress():
+        with Global._lock:
+            Global.progress = 0
+
+    @staticmethod
+    def inc_progress():
+        with Global._lock:
+            Global.progress += 1
+
     @staticmethod
     def setup(filename, language, title, description, name):
 
@@ -60,9 +78,11 @@ class Global:
                 callback=callback,
             )
 
+    @staticmethod
     def start():
         Global.creator.start()
 
+    @staticmethod
     def finish():
         if Global.creator.can_finish:
             logger.info("Finishing ZIM file")
