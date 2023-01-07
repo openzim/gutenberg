@@ -33,7 +33,7 @@ def download_rdf_file(rdf_url):
     fname = "rdf-files.tar.bz2"
 
     if path(fname).exists():
-        logger.info("\tdf-files.tar.bz2 already exists in {}".format(fname))
+        logger.info("\trdf-files.tar.bz2 already exists in {}".format(fname))
         return fname
 
     logger.info("\tDownloading {} into {}".format(rdf_url, fname))
