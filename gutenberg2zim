@@ -50,7 +50,7 @@ help = (
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, """
     """separated by commas, or dashes for intervals
--c --concurrency=<nb>           Number of concurrent process for download """
+-p --concurrency=<nb>           Number of concurrent process for download """
     """and parsing tasks
 --dlc=<nb>                      Number of concurrent *download* process for """
     """download (overwrites --concurrency). """
