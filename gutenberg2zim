@@ -155,7 +155,7 @@ def main(arguments):
         BOOKS = []
 
     # no arguments, default to --complete
-    if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_ZIM ):
+    if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_ZIM):
         COMPLETE_DUMP = True
 
     if COMPLETE_DUMP:

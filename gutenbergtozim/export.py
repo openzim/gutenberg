@@ -12,8 +12,6 @@ import urllib
 import zipfile
 from multiprocessing.dummy import Pool
 
-from zimscraperlib.image.transformation import resize_image
-
 import bs4
 import six
 from bs4 import BeautifulSoup
@@ -21,6 +19,7 @@ from jinja2 import Environment, PackageLoader
 from path import Path as path
 from schedule import every
 from six import text_type
+from zimscraperlib.image.transformation import resize_image
 
 import gutenbergtozim
 from gutenbergtozim import TMP_FOLDER, TMP_FOLDER_PATH, logger
@@ -110,6 +109,7 @@ def tmpl_path():
 def get_list_of_all_languages():
     return list(set(list([b.language for b in Book.select(Book.language)])))
 
+
 def export_illustration():
     logger.info("Adding illustration")
 
@@ -122,7 +122,8 @@ def export_illustration():
     for size in (96, 48):
         resize_image(tmp_illus_fpath, width=size, height=size, method="thumbnail")
         Global.add_illustration(tmp_illus_fpath, size)
-                
+
+
 def export_skeleton(
     project_id,
     books,
