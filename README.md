@@ -10,6 +10,9 @@ storing content for offline usage.
 [![CodeFactor](https://www.codefactor.io/repository/github/openzim/gutenberg/badge)](https://www.codefactor.io/repository/github/openzim/gutenberg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+## Coding guidelines
+Main coding guidelines comes from the [openZIM Wiki](https://github.com/openzim/overview/wiki)
+
 ## Setting up the environment
 
 It's recommended that you use `virtualenv` and `py3.6+`.
