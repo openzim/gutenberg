@@ -38,7 +38,7 @@ class Global:
         Global.creator = Creator(
             filename=filename,
             main_path="Home.html",
-            favicon_path="favicon.png",
+            favicon_path="illustration",
             language=language,
             workaround_nocancel=False,
             title=title,
@@ -77,6 +77,12 @@ class Global:
                 delete_fpath=delete_fpath,
                 callback=callback,
             )
+
+    @staticmethod
+    def add_illustration(illus_fpath, illus_size):
+        with open(illus_fpath, "rb") as fh:
+            with Global._lock:
+                Global.creator.add_illustration(illus_size, fh.read())
 
     @staticmethod
     def start():

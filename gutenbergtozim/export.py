@@ -12,6 +12,8 @@ import urllib
 import zipfile
 from multiprocessing.dummy import Pool
 
+from zimscraperlib.image.transformation import resize_image
+
 import bs4
 import six
 from bs4 import BeautifulSoup
@@ -108,7 +110,19 @@ def tmpl_path():
 def get_list_of_all_languages():
     return list(set(list([b.language for b in Book.select(Book.language)])))
 
+def export_illustration():
+    logger.info("Adding illustration")
 
+    src_illus_fpath = pathlib.Path(tmpl_path(), "favicon.png")
+    tmp_illus_fpath = pathlib.Path(TMP_FOLDER_PATH, "illustration.png")
+
+    shutil.copy(src_illus_fpath, tmp_illus_fpath)
+
+    # resize to appropriate size (ZIM uses 48x48 so we double for retina)
+    for size in (96, 48):
+        resize_image(tmp_illus_fpath, width=size, height=size, method="thumbnail")
+        Global.add_illustration(tmp_illus_fpath, size)
+                
 def export_skeleton(
     project_id,
     books,
@@ -208,6 +222,9 @@ def export_all_books(
     logger.debug("\tFiltered book collection, PDF: {}".format(nb_by_fmt("pdf")))
     logger.debug("\tFiltered book collection, ePUB: {}".format(nb_by_fmt("epub")))
     logger.debug("\tFiltered book collection, HTML: {}".format(nb_by_fmt("html")))
+
+    # export illustation
+    export_illustration()
 
     # export to JSON helpers
     export_to_json_helpers(
