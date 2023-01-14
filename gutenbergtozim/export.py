@@ -165,15 +165,15 @@ def export_skeleton(
         }
     )
 
-    for tpl_path in ("Home.html",):
-        template = jinja_env.get_template(tpl_path)
-        rendered = template.render(**context)
-        Global.add_item_for(
-            path=tpl_path,
-            content=rendered,
-            mimetype="text/html",
-            is_front=True,
-        )
+    tpl_path = "Home.html"
+    template = jinja_env.get_template(tpl_path)
+    rendered = template.render(**context)
+    Global.add_item_for(
+        path=tpl_path,
+        content=rendered,
+        mimetype="text/html",
+        is_front=True,
+    )
 
 
 def export_all_books(
