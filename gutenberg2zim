@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 import os
 import sys
 
@@ -14,7 +12,6 @@ from gutenbergtozim import VERSION, logger
 from gutenbergtozim.checkdeps import check_dependencies
 from gutenbergtozim.database import setup_database
 from gutenbergtozim.download import download_all_books
-from gutenbergtozim.export import export_all_books, export_skeleton
 from gutenbergtozim.rdf import parse_and_fill, setup_rdf_folder
 from gutenbergtozim.s3 import s3_credentials_ok
 from gutenbergtozim.urls import setup_urls
@@ -92,7 +89,6 @@ def main(arguments):
     COMPLETE_DUMP = arguments.get("--complete", False)
 
     RDF_FOLDER = arguments.get("--rdf-folder") or os.path.join("rdf-files")
-    STATIC_FOLDER = arguments.get("--static-folder") or os.path.join("static")
     ZIM_NAME = arguments.get("--zim-file")
     WIPE_DB = arguments.get("--wipe-db") or False
     RDF_URL = (
@@ -106,7 +102,6 @@ def main(arguments):
     CONCURRENCY = int(arguments.get("--concurrency") or 16)
     DL_CONCURRENCY = int(arguments.get("--dlc") or CONCURRENCY)
     FORCE = arguments.get("--force", False)
-    NO_INDEX = arguments.get("--no-index", False)
     TITLE_SEARCH = arguments.get("--title-search", False)
     BOOKSHELVES = arguments.get("--bookshelves", False)
     OPTIMIZATION_CACHE = arguments.get("--optimization-cache") or None
@@ -236,7 +231,6 @@ def main(arguments):
                 zim_name=path(ZIM_NAME).name if ZIM_NAME else None,
                 title=ZIM_TITLE,
                 description=ZIM_DESC,
-                create_index=not NO_INDEX,
                 stats_filename=STATS_FILENAME,
             )
 

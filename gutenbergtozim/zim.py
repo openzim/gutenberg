@@ -26,7 +26,6 @@ def build_zimfile(
     zim_name=None,
     title=None,
     description=None,
-    create_index=True,
     stats_filename=None,
 ):
 

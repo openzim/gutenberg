@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from peewee import Model  # SqliteDatabase,
+from peewee import Model
 from peewee import BooleanField, CharField, ForeignKeyField, IntegerField, TextField
 from playhouse.apsw_ext import APSWDatabase
 
 from gutenbergtozim import logger
 
-# db = SqliteDatabase('gutenberg.db')
 timeout = 60 * 5 * 16
 db = APSWDatabase(
     "gutenberg.db",
