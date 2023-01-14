@@ -62,12 +62,12 @@ def build_zimfile(
         logger.info("ZIM file `{}` already exist.".format(zim_name))
         return
 
-    languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
-    languages.sort()
+    iso_languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
+    iso_languages.sort()
 
     Global.setup(
         filename=zim_path,
-        language=",".join(languages),
+        language=",".join(iso_languages),
         title=title,
         description=description,
         name=project_id,
