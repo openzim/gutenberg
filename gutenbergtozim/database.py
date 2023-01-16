@@ -14,7 +14,7 @@ from playhouse.apsw_ext import APSWDatabase
 
 from gutenbergtozim import logger
 
-timeout = 60 * 5 * 16
+timeout = 10
 db = APSWDatabase(
     "gutenberg.db",
     pragmas=(
