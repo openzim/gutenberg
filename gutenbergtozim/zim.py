@@ -2,42 +2,32 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-import six
-import subprocess
-
 from path import Path as path
 
-from gutenbergtozim import logger, VERSION
-from gutenbergtozim.utils import get_project_id, FORMAT_MATRIX
+from gutenbergtozim import logger
+from gutenbergtozim.export import export_all_books
 from gutenbergtozim.iso639 import ISO_MATRIX
-from gutenbergtozim.export import export_skeleton
+from gutenbergtozim.shared import Global
+from gutenbergtozim.utils import FORMAT_MATRIX, get_project_id
 
 
 def build_zimfile(
-    static_folder,
     output_folder,
-    zim_name=None,
+    download_cache=None,
+    concurrency=None,
     languages=[],
     formats=[],
-    title=None,
-    description=None,
     only_books=[],
-    create_index=True,
     force=False,
     title_search=False,
     add_bookshelves=False,
+    s3_storage=None,
+    optimizer_version=None,
+    zim_name=None,
+    title=None,
+    description=None,
+    stats_filename=None,
 ):
-
-    # revert HTML/JS/CSS to zim-compatible versions
-    export_skeleton(
-        static_folder=static_folder,
-        dev_mode=False,
-        languages=languages,
-        formats=formats,
-        only_books=only_books,
-        title_search=title_search,
-        add_bookshelves=add_bookshelves,
-    )
 
     if not languages:
         languages = ["mul"]
@@ -71,42 +61,51 @@ def build_zimfile(
         logger.info("ZIM file `{}` already exist.".format(zim_name))
         return
 
-    languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
-    languages.sort()
+    iso_languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
+    iso_languages.sort()
 
-    cmd = [
-        "zimwriterfs",
-        "--zstd",
-        "--welcome",
-        "Home.html",
-        "--favicon",
-        "favicon.png",
-        "--language",
-        ",".join(languages),
-        "--name",
-        project_id,
-        "--title",
-        title,
-        "--description",
-        description,
-        "--creator",
-        "gutenberg.org",
-        "--tags",
-        "_category:gutenberg;gutenberg",
-        "--publisher",
-        "Kiwix",
-        "--scraper",
-        "gutengergtozim-{v}".format(v=VERSION),
-        "--verbose",
-        static_folder,
-        six.text_type(zim_path),
-    ]
+    Global.setup(
+        filename=zim_path,
+        language=",".join(iso_languages),
+        title=title,
+        description=description,
+        name=project_id,
+    )
 
-    if not create_index:
-        cmd.insert(1, "--withoutFTIndex")
-    zimwriterfs = subprocess.run(cmd)
-    if zimwriterfs.returncode == 0:
-        logger.info("Successfuly created ZIM file at {}".format(zim_path))
+    Global.start()
+
+    try:
+        export_all_books(
+            project_id=project_id,
+            download_cache=download_cache,
+            concurrency=concurrency,
+            languages=languages,
+            formats=formats,
+            only_books=only_books,
+            force=force,
+            title_search=title_search,
+            add_bookshelves=add_bookshelves,
+            s3_storage=s3_storage,
+            optimizer_version=optimizer_version,
+            stats_filename=stats_filename,
+        )
+
+    except Exception as exc:
+        # request Creator not to create a ZIM file on finish
+        Global.creator.can_finish = False
+        if isinstance(exc, KeyboardInterrupt):
+            logger.error("KeyboardInterrupt, exiting.")
+        else:
+            logger.error(f"Interrupting process due to error: {exc}")
+            logger.exception(exc)
+        return
     else:
-        logger.error("Unable to create ZIM file :(")
-        raise SystemExit(zimwriterfs.returncode)
+        if Global.creator.can_finish:
+            logger.info("Finishing ZIM file")
+            Global.finish()
+            logger.info(
+                f"Finished Zim {Global.creator.filename.name} "
+                f"in {Global.creator.filename.parent}"
+            )
+
+    logger.info("Scraper has finished normally")

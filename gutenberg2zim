@@ -2,34 +2,31 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-from __future__ import unicode_literals, absolute_import, division, print_function
 import os
 import sys
 
 from docopt import docopt
 from path import Path as path
-import shutil
 
-from gutenbergtozim import logger, VERSION
+from gutenbergtozim import VERSION, logger
+from gutenbergtozim.checkdeps import check_dependencies
 from gutenbergtozim.database import setup_database
-from gutenbergtozim.rdf import setup_rdf_folder, parse_and_fill
 from gutenbergtozim.download import download_all_books
-from gutenbergtozim.export import export_all_books, export_skeleton
+from gutenbergtozim.rdf import parse_and_fill, setup_rdf_folder
+from gutenbergtozim.s3 import s3_credentials_ok
 from gutenbergtozim.urls import setup_urls
 from gutenbergtozim.zim import build_zimfile
-from gutenbergtozim.checkdeps import check_dependencies
-from gutenbergtozim.s3 import s3_credentials_ok
-
 
 help = (
     """Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
     """[-r RDF_FOLDER] [-d CACHE_PATH] [-e STATIC_PATH] """
     """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
     """[-t ZIM_TITLE] [-n ZIM_DESC] """
-    """[-p CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
+    """[-c CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
     """[--prepare] [--parse] [--download] [--export] [--dev] """
     """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
-    """[--title-search] [--bookshelves] [--optimization-cache S3URL]"""
+    """[--title-search] [--bookshelves] [--optimization-cache S3URL] """
+    """[--stats-filename STATS_FILENAME]"""
     """
 
 -h --help                       Display this help message
@@ -57,21 +54,21 @@ help = (
     """download (overwrites --concurrency). """
     """if server blocks high rate requests
 -m --one-language-one-zim=<folder> When more than 1 language, do one zim for each """
-    """  language (and one with all)
+    """language (and one with all)
 --no-index                      Do NOT create full-text index within ZIM file
 --check                         Check dependencies
 --prepare                       Download & extract rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
---export                        Export downloaded content to zim-friendly """
-    """static HTML
---dev                           Exports *just* Home+JS+CSS files """
-    """(overwritten by --zim step)
 --zim                           Create a ZIM file
---title-search                  Add field to search a book by title and directly jump to it
+--title-search                  Add field to search a book by title and directly """
+    """jump to it
 --bookshelves                   Add bookshelves
---optimization-cache=<url>      URL with credentials to S3 bucket for using as optimization cache
---use-any-optimized-version     Try to use any optimized version found on optimization cache
+--optimization-cache=<url>      URL with credentials to S3 bucket for using as """
+    """optimization cache
+--use-any-optimized-version     Try to use any optimized version found on """
+    """optimization cache
+--stats-filename=<filename>  Path to store the progress JSON file to
 
 This script is used to produce a ZIM file (and any intermediate state)
 of Gutenberg repository using a mirror."""
@@ -86,15 +83,12 @@ def main(arguments):
     DO_PREPARE = arguments.get("--prepare", False)
     DO_PARSE = arguments.get("--parse", False)
     DO_DOWNLOAD = arguments.get("--download", False)
-    DO_EXPORT = arguments.get("--export", False)
-    DO_DEV = arguments.get("--dev", False)
     DO_ZIM = arguments.get("--zim", False)
     DO_CHECKDEPS = arguments.get("--check", False)
     ONE_LANG_ONE_ZIM_FOLDER = arguments.get("--one-language-one-zim") or None
     COMPLETE_DUMP = arguments.get("--complete", False)
 
     RDF_FOLDER = arguments.get("--rdf-folder") or os.path.join("rdf-files")
-    STATIC_FOLDER = arguments.get("--static-folder") or os.path.join("static")
     ZIM_NAME = arguments.get("--zim-file")
     WIPE_DB = arguments.get("--wipe-db") or False
     RDF_URL = (
@@ -108,11 +102,11 @@ def main(arguments):
     CONCURRENCY = int(arguments.get("--concurrency") or 16)
     DL_CONCURRENCY = int(arguments.get("--dlc") or CONCURRENCY)
     FORCE = arguments.get("--force", False)
-    NO_INDEX = arguments.get("--no-index", False)
     TITLE_SEARCH = arguments.get("--title-search", False)
     BOOKSHELVES = arguments.get("--bookshelves", False)
     OPTIMIZATION_CACHE = arguments.get("--optimization-cache") or None
     USE_ANY_OPTIMIZED_VERSION = arguments.get("--use-any-optimized-version", False)
+    STATS_FILENAME = arguments.get("--stats-filename") or None
 
     s3_storage = None
     if OPTIMIZATION_CACHE:
@@ -161,11 +155,11 @@ def main(arguments):
         BOOKS = []
 
     # no arguments, default to --complete
-    if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_EXPORT + DO_ZIM + DO_DEV):
+    if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_ZIM):
         COMPLETE_DUMP = True
 
     if COMPLETE_DUMP:
-        DO_CHECKDEPS = DO_PREPARE = DO_PARSE = DO_DOWNLOAD = DO_EXPORT = DO_ZIM = True
+        DO_CHECKDEPS = DO_PREPARE = DO_PARSE = DO_DOWNLOAD = DO_ZIM = True
 
     if DO_CHECKDEPS:
         logger.info("CHECKING for dependencies on the system")
@@ -188,7 +182,7 @@ def main(arguments):
             rdf_path=RDF_FOLDER, only_books=BOOKS, concurrency=CONCURRENCY, force=FORCE
         )
         logger.info("Add possible url to db")
-        setup_urls()
+        setup_urls(force=FORCE)
 
     if DO_DOWNLOAD:
         logger.info("DOWNLOADING ebooks from mirror using filters")
@@ -213,16 +207,17 @@ def main(arguments):
                 zims.append([book.language])
             zims.append([])
         else:
-            zims = [[l] for l in LANGUAGES] + [LANGUAGES]
+            zims = [[lang] for lang in LANGUAGES] + [LANGUAGES]
     else:
         zims = [LANGUAGES]
 
     for zim_lang in zims:
 
-        if DO_EXPORT:
-            logger.info("EXPORTING ebooks to static folder (and JSON)")
-            export_all_books(
-                static_folder=STATIC_FOLDER,
+        if DO_ZIM:
+
+            logger.info("BUILDING ZIM dynamically")
+            build_zimfile(
+                output_folder=path(ONE_LANG_ONE_ZIM_FOLDER or ".").abspath(),
                 download_cache=DL_CACHE,
                 concurrency=CONCURRENCY,
                 languages=zim_lang,
@@ -233,41 +228,11 @@ def main(arguments):
                 add_bookshelves=BOOKSHELVES,
                 s3_storage=s3_storage,
                 optimizer_version=OPTIMIZER_VERSION,
-            )
-
-        if DO_DEV:
-            logger.info("EXPORTING HTML/JS/CSS to static folder")
-            export_skeleton(
-                static_folder=STATIC_FOLDER,
-                dev_mode=True,
-                languages=zim_lang,
-                formats=FORMATS,
-                only_books=BOOKS,
-                title_search=TITLE_SEARCH,
-                add_bookshelves=BOOKSHELVES,
-            )
-
-        if DO_ZIM:
-
-            if not check_dependencies()[1]:
-                logger.error("You don't have zimwriterfs installed.")
-                sys.exit(1)
-            logger.info("BUILDING ZIM off static folder {}".format(STATIC_FOLDER))
-            build_zimfile(
-                static_folder=STATIC_FOLDER,
-                output_folder=path(ONE_LANG_ONE_ZIM_FOLDER or ".").abspath(),
                 zim_name=path(ZIM_NAME).name if ZIM_NAME else None,
-                languages=zim_lang,
-                formats=FORMATS,
-                only_books=BOOKS,
                 title=ZIM_TITLE,
                 description=ZIM_DESC,
-                create_index=not NO_INDEX,
-                force=FORCE,
-                title_search=TITLE_SEARCH,
-                add_bookshelves=BOOKSHELVES,
+                stats_filename=STATS_FILENAME,
             )
-            shutil.rmtree(STATIC_FOLDER)
 
 
 if __name__ == "__main__":

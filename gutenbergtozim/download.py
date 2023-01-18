@@ -3,28 +3,27 @@
 # vim: ai ts=4 sts=4 et sw=4 nu
 
 import os
-import shutil
 import pathlib
+import shutil
 import tempfile
 import zipfile
-from pprint import pprint as pp
 from multiprocessing.dummy import Pool
+from pprint import pprint as pp
 
-import requests
 from path import Path as path
 
-from gutenbergtozim import logger, TMP_FOLDER
+from gutenbergtozim import TMP_FOLDER, logger
+from gutenbergtozim.database import Book, BookFormat, Format
+from gutenbergtozim.export import fname_for, get_list_of_filtered_books
+from gutenbergtozim.s3 import download_from_cache
 from gutenbergtozim.urls import get_urls
-from gutenbergtozim.database import BookFormat, Format, Book
-from gutenbergtozim.export import get_list_of_filtered_books, fname_for
 from gutenbergtozim.utils import (
-    download_file,
     FORMAT_MATRIX,
+    archive_name_for,
+    download_file,
     ensure_unicode,
     get_etag_from_url,
-    archive_name_for,
 )
-from gutenbergtozim.s3 import download_from_cache
 
 IMAGE_BASE = "http://dante.pglaf.org/cache/epub/"
 
@@ -264,7 +263,7 @@ def download_book(
                         downloaded_from_cache = True
                         break
                 if not download_file(url, zpath):
-                    logger.error("ZIP file donwload failed: {}".format(zpath))
+                    logger.error("ZIP file download failed: {}".format(zpath))
                     continue
                 # save etag
                 book.html_etag = etag
@@ -327,7 +326,8 @@ def download_book(
     # delete book from DB if not downloaded in any format
     if len(unsuccessful_formats) == len(formats):
         logger.debug(
-            f"Book #{book.id} could not be downloaded in any format. Deleting from DB ..."
+            f"Book #{book.id} could not be downloaded in any format. "
+            + "Deleting from DB ..."
         )
         book.delete_instance()
         if book_dir.exists():

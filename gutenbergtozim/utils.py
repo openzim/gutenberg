@@ -2,24 +2,24 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
-import os
-import sys
-import hashlib
-import subprocess
-import zipfile
 import collections
-import unicodedata
 import datetime
-import requests
+import hashlib
+import os
+import subprocess
+import sys
+import unicodedata
+import zipfile
 
-import six
 import chardet
+import requests
+import six
 from path import Path as path
 from zimscraperlib.download import save_large_file
 
 from gutenbergtozim import logger
-from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.database import Book, BookFormat, Format
+from gutenbergtozim.iso639 import language_name
 
 UTF8 = "utf-8"
 FORMAT_MATRIX = collections.OrderedDict(
@@ -139,7 +139,7 @@ def get_list_of_filtered_books(languages, formats, only_books=[]):
         # print(only_books)
         qs = qs.where(Book.id << only_books)
 
-    if len(languages):
+    if len(languages) and languages[0] != "mul":
         qs = qs.where(Book.language << languages)
 
     return qs
@@ -153,8 +153,8 @@ def get_langs_with_count(books):
         lang_count[book.language] += 1
 
     return [
-        (language_name(l), l, nb)
-        for l, nb in sorted(lang_count.items(), key=lambda x: x[1], reverse=True)
+        (language_name(lang), lang, nb)
+        for lang, nb in sorted(lang_count.items(), key=lambda x: x[1], reverse=True)
     ]
 
 

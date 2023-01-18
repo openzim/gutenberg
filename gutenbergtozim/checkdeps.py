@@ -29,20 +29,12 @@ def check_dependencies():
         "pngquant": "PNG compression tool, part of `pngquant` package",
         "advdef": "PNG compression tool, part of `advancecomp` package",
         "jpegoptim": "JPEG compression tool, part of `jpegoptim` package",
-        "zip": "ZIP file packager for ePub",
         "tar": "TAR archive extractor",
-        "curl": "Files downloader, part of `curl` package",
-        "zimwriterfs": "ZIM file writer, available on kiwix-other repository",
     }
 
     all_good = True
     has_zimwriter = True
     for bin, msg in all_bins.items():
-        if bin == "zimwriterfs":
-            if not bin_is_present(bin):
-                has_zimwriter = False
-                continue
-
         if not bin_is_present(bin):
             logger.error("\t*{}* binary missing. {}".format(bin, msg))
             all_good = False

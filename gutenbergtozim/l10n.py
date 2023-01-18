@@ -471,18 +471,23 @@ l10n_strings = {
         "pt": {
             "isocode": {"textContent": "pt"},
             "autonym": {"textContent": "Portuguese"},
-            "homepage": {"alt": "Homepage","title": "Homepage"},
+            "homepage": {"alt": "Homepage", "title": "Homepage"},
             "choose-language": {"placeholder": "Escolha um idioma ..."},
             "ui-language-switcher": {"title": "Linguagem de interface"},
             "search": {"textContent": "Pesquisa"},
-            "author": {"textContent": "Autor","placeholder": "Pesquisar por nome do autor"},
-            "title": {"textContext": "Título","placeholder": "Pesquisa por título"},
-            "cover-img": {"alt": "Capa De Livro","title": "Capa De Livro"},
+            "author": {
+                "textContent": "Autor",
+                "placeholder": "Pesquisar por nome do autor",
+            },
+            "title": {"textContext": "Título", "placeholder": "Pesquisa por título"},
+            "cover-img": {"alt": "Capa De Livro", "title": "Capa De Livro"},
             "cover": {"textContent": "(capa)"},
             "filter": {"textContent": "Filtro:"},
             "popularity": {"textContent": "Popularidade"},
             "sort": {"textContent": "Classificação:"},
-            "sort-popularity": {"textContent": "Classificação de livros por popularidade"},
+            "sort-popularity": {
+                "textContent": "Classificação de livros por popularidade"
+            },
             "sort-title": {"textContent": "Classificação de livros por título"},
             "format": {"textContent": "Formato"},
             "loading": {"textContent": "Carregando ..."},
@@ -499,22 +504,36 @@ l10n_strings = {
             "license-pd": {"textContent": "Domínio público nos EUA."},
             "nb-downloads": {"textContent": "{[ plural (nb) ]}"},
             "nb-downloads[one]": {"textContent": "1 download nos últimos 30 dias."},
-            "nb-downloads[other]": {"textContent": "{{nb}} downloads nos últimos 30 dias."},
+            "nb-downloads[other]": {
+                "textContent": "{{nb}} downloads nos últimos 30 dias."
+            },
             "top-title": {"textContent": "Biblioteca do Projeto Gutenberg"},
             "sub-title": {"textContent": "O primeiro produtor de ebooks gratuos"},
             "table-previous": {"textContent": "Anterior"},
             "table-next": {"textContent": "Próximo"},
-            "about-1": {"textContent": "Projeto Gutenberg oferece mais de" "60.000 ebooks gratuos"},
-            "about-2": {"textContent": "Escolha entre livros de epub grátis, " "livros de kindle grátis."},
+            "about-1": {
+                "textContent": "Projeto Gutenberg oferece mais de"
+                "60.000 ebooks gratuos"
+            },
+            "about-2": {
+                "textContent": "Escolha entre livros de epub grátis, "
+                "livros de kindle grátis."
+            },
             "about-3": {"textContent": "Baixe-os ou leia-os online."},
             "about-4": {"textContent": "Nós carregamos ebooks de alta qualidade"},
-            "about-5": {"textContent": "Todos os nossos ebooks foram publicados anteriormente" "por editoras de Bona fide."},
-            "about-6": {"textContent": "Nós digitalizamos e diligentemente " "os protestamos com a ajuda de " "milhares de voluntários."},
+            "about-5": {
+                "textContent": "Todos os nossos ebooks foram publicados anteriormente"
+                "por editoras de Bona fide."
+            },
+            "about-6": {
+                "textContent": "Nós digitalizamos e diligentemente "
+                "os protestamos com a ajuda de "
+                "milhares de voluntários."
+            },
             "bookshelves_title": {"textContent": "Prateleiras (A-Z)"},
             "bookshelf_link": {"textContent": "Navegar por Bookshelf"},
             "home_link": {"textContent": "Ir Para Casa"},
-            "bookshelf": {"placeholder": "Pesquisa de Estante"}
-    }
-
+            "bookshelf": {"placeholder": "Pesquisa de Estante"},
+        },
     },
 }

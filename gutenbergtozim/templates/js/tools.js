@@ -100,7 +100,7 @@ function loadScript(url, nodeId, callback) {
   var script = document.createElement("script");
   script.setAttribute("type", "text/javascript");
   script.setAttribute("id", nodeId);
-  script.setAttribute("src", {% if not dev_mode %} "../-/" + {% endif %}url);
+  script.setAttribute("src", url);
 
   document.getElementsByTagName("head")[0].appendChild(script);
   if (script.readyState) { //IE
@@ -270,8 +270,8 @@ function showBooks() {
             {
               targets: 0,
               render: function(data, type, full, meta) {
-                img = '<img class="pure-u-1-8 book-cover-pre" src= "' + {% if not dev_mode %} '../I/' + {% endif %} full[3] + '_cover_image.jpg"' +
-                  'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + {% if not dev_mode %} '../I/' + {% endif %} 'favicon.png\'" >';
+                img = '<img class="pure-u-1-8 book-cover-pre" src= "' + full[3] + '_cover_image.jpg"' +
+                  'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + 'favicon.png\'" >';
                 div = '<div class="list-stripe"></div>';
                 title = '<span style="display: none">' + full[3] + '</span>';
                 title += ' <span class = "table-title">' + full[0] + '</span>';
@@ -308,7 +308,7 @@ function showBooks() {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': HTML" href="../A/' +
+                    ': HTML" href="' +
                     urlBase +
                     '.html"><i class="fa fa-html5 fa-3x"></i></a>';
                 }
@@ -316,7 +316,7 @@ function showBooks() {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': EPUB" href="../I/' +
+                    ': EPUB" href="' +
                     urlBase +
                     '.epub"><i class="fa fa-download fa-3x"></i></a>';
                 }
@@ -324,7 +324,7 @@ function showBooks() {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': PDF" href="../I/' +
+                    ': PDF" href="' +
                     urlBase +
                     '.pdf"><i class="fa fa-file-pdf-o fa-3x"></i></a>';
                 }
@@ -464,8 +464,8 @@ function showBookshelf(bookshelfURL) {
             {
               targets: 0,
               render: function(data, type, full, meta) {
-                img = '<img class="pure-u-1-8 book-cover-pre" src= "' + {% if not dev_mode %} '../I/' + {% endif %} full[3] + '_cover_image.jpg"' +
-                  'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + {% if not dev_mode %} '../I/' + {% endif %} 'favicon.png\'" >';
+                img = '<img class="pure-u-1-8 book-cover-pre" src= "' + full[3] + '_cover_image.jpg"' +
+                  'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + 'favicon.png\'" >';
                 div = '<div class="list-stripe"></div>';
                 title = '<span style="display: none">' + full[3] + '</span>';
                 title += ' <span class = "table-title">' + full[0] + '</span>';
@@ -502,7 +502,7 @@ function showBookshelf(bookshelfURL) {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': HTML" href="../A/' +
+                    ': HTML" href="' +
                     urlBase +
                     '.html"><i class="fa fa-html5 fa-3x"></i></a>';
                 }
@@ -510,7 +510,7 @@ function showBookshelf(bookshelfURL) {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': EPUB" href="../I/' +
+                    ': EPUB" href="' +
                     urlBase +
                     '.epub"><i class="fa fa-download fa-3x"></i></a>';
                 }
@@ -518,7 +518,7 @@ function showBookshelf(bookshelfURL) {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': PDF" href="../I/' +
+                    ': PDF" href="' +
                     urlBase +
                     '.pdf"><i class="fa fa-file-pdf-o fa-3x"></i></a>';
                 }

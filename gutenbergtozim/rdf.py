@@ -3,22 +3,27 @@
 # vim: ai ts=4 sts=4 et sw=4 nu
 
 import os
-import re
 import pathlib
+import re
 from multiprocessing.dummy import Pool
 
 import peewee
-from path import Path as path
 from bs4 import BeautifulSoup
+from path import Path as path
 
 from gutenbergtozim import logger
-from gutenbergtozim.utils import exec_cmd, download_file
-from gutenbergtozim.database import Author, Format, BookFormat, License, Book
-from gutenbergtozim.utils import BAD_BOOKS_FORMATS, FORMAT_MATRIX, normalize
+from gutenbergtozim.database import Author, Book, BookFormat, Format, License
+from gutenbergtozim.utils import (
+    BAD_BOOKS_FORMATS,
+    FORMAT_MATRIX,
+    download_file,
+    exec_cmd,
+    normalize,
+)
 
 
 def setup_rdf_folder(rdf_url, rdf_path, force=False):
-    """ Download and Extract rdf-files """
+    """Download and Extract rdf-files"""
 
     rdf_tarball = download_rdf_file(rdf_url)
     extract_rdf_files(rdf_tarball, rdf_path, force=force)
@@ -28,7 +33,7 @@ def download_rdf_file(rdf_url):
     fname = "rdf-files.tar.bz2"
 
     if path(fname).exists():
-        logger.info("\tdf-files.tar.bz2 already exists in {}".format(fname))
+        logger.info("\trdf-files.tar.bz2 already exists in {}".format(fname))
         return fname
 
     logger.info("\tDownloading {} into {}".format(rdf_url, fname))
