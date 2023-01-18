@@ -38,7 +38,6 @@ class Global:
         Global.creator = Creator(
             filename=filename,
             main_path="Home.html",
-            favicon_path="illustration",
             language=language,
             workaround_nocancel=False,
             title=title,
