@@ -22,7 +22,7 @@ help = (
     """[-r RDF_FOLDER] [-d CACHE_PATH] [-e STATIC_PATH] """
     """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
     """[-t ZIM_TITLE] [-n ZIM_DESC] """
-    """[-p CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
+    """[-c CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
     """[--prepare] [--parse] [--download] [--export] [--dev] """
     """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
     """[--title-search] [--bookshelves] [--optimization-cache S3URL] """
@@ -48,7 +48,7 @@ help = (
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, """
     """separated by commas, or dashes for intervals
--p --concurrency=<nb>           Number of concurrent process for download """
+-c --concurrency=<nb>           Number of concurrent process for download """
     """and parsing tasks
 --dlc=<nb>                      Number of concurrent *download* process for """
     """download (overwrites --concurrency). """
