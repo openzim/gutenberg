@@ -41,7 +41,6 @@ from gutenbergtozim.utils import (
     get_langs_with_count,
     get_list_of_filtered_books,
     is_bad_cover,
-    main_formats_for,
     read_file,
     save_file,
     zip_epub,
@@ -323,7 +322,7 @@ def html_content_for(book, src_dir):
         raise
 
 
-def update_html_for_static(book, html_content, epub=False):
+def update_html_for_static(book, html_content, formats, epub=False):
     soup = BeautifulSoup(html_content, "lxml-html")
 
     # remove encoding as we're saving to UTF8 anyway
@@ -500,7 +499,7 @@ def update_html_for_static(book, html_content, epub=False):
     # build infobox
     if not epub:
         infobox = jinja_env.get_template("book_infobox.html")
-        infobox_html = infobox.render({"book": book})
+        infobox_html = infobox.render({"book": book, "formats": formats})
         info_soup = BeautifulSoup(infobox_html, "lxml-html")
         body.insert(0, info_soup.find("div"))
 
@@ -525,7 +524,7 @@ def update_html_for_static(book, html_content, epub=False):
 
 
 def cover_html_content_for(
-    book, optimized_files_dir, books, project_id, title_search, add_bookshelves
+    book, optimized_files_dir, books, project_id, title_search, add_bookshelves, formats
 ):
     cover_img = "{id}_cover_image.jpg".format(id=book.id)
     cover_img = cover_img if optimized_files_dir.joinpath(cover_img).exists() else None
@@ -544,7 +543,7 @@ def cover_html_content_for(
         {
             "book": book,
             "cover_img": cover_img,
-            "formats": main_formats_for(book),
+            "formats": book.requested_formats(formats),
             "translate_author": translate_author,
             "translate_license": translate_license,
             "title_search": title_search,
@@ -614,6 +613,7 @@ def export_book(
         title_search=title_search,
         add_bookshelves=add_bookshelves,
         books=books,
+        formats=formats,
     )
 
 
@@ -663,7 +663,9 @@ def handle_unoptimized_files(
         if not article_fpath.exists() or force:
             logger.info("\t\tExporting to {}".format(article_fpath))
             try:
-                new_html = update_html_for_static(book=book, html_content=html)
+                new_html = update_html_for_static(
+                    book=book, html_content=html, formats=formats
+                )
             except Exception:
                 raise
             save_bs_output(new_html, article_fpath, UTF8)
@@ -731,7 +733,7 @@ def handle_unoptimized_files(
             if path(fname).ext in (".htm", ".html"):
                 html_content, _ = read_file(fnp)
                 html = update_html_for_static(
-                    book=book, html_content=html_content, epub=True
+                    book=book, html_content=html_content, formats=formats, epub=True
                 )
                 save_bs_output(html, fnp, UTF8)
 
@@ -860,7 +862,9 @@ def handle_unoptimized_files(
 
                 logger.info("\tExporting HTML file to {}".format(dst))
                 html, _ = read_file(src)
-                new_html = update_html_for_static(book=book, html_content=html)
+                new_html = update_html_for_static(
+                    book=book, html_content=html, formats=formats
+                )
                 save_bs_output(new_html, dst, UTF8)
                 html_book_optimized_files.append(dst)
                 update_download_cache(src, dst)
@@ -910,7 +914,14 @@ def handle_unoptimized_files(
 
 
 def write_book_presentation_article(
-    book, optimized_files_dir, force, project_id, title_search, add_bookshelves, books
+    book,
+    optimized_files_dir,
+    force,
+    project_id,
+    title_search,
+    add_bookshelves,
+    books,
+    formats,
 ):
     article_name = article_name_for(book=book, cover=True)
     cover_fpath = TMP_FOLDER_PATH.joinpath(article_name)
@@ -923,6 +934,7 @@ def write_book_presentation_article(
             project_id=project_id,
             title_search=title_search,
             add_bookshelves=add_bookshelves,
+            formats=formats,
         )
         with open(cover_fpath, "w") as f:
             if six.PY2:
@@ -989,14 +1001,20 @@ def export_to_json_helpers(
     # all books sorted by popularity
     logger.info("\t\tDumping full_by_popularity.js")
     dumpjs(
-        [book.to_array() for book in books.order_by(Book.downloads.desc())],
+        [
+            book.to_array(all_requested_formats=formats)
+            for book in books.order_by(Book.downloads.desc())
+        ],
         "full_by_popularity.js",
     )
 
     # all books sorted by title
     logger.info("\t\tDumping full_by_title.js")
     dumpjs(
-        [book.to_array() for book in books.order_by(Book.title.asc())],
+        [
+            book.to_array(all_requested_formats=formats)
+            for book in books.order_by(Book.title.asc())
+        ],
         "full_by_title.js",
     )
 
@@ -1017,7 +1035,7 @@ def export_to_json_helpers(
         logger.info("\t\tDumping lang_{}_by_popularity.js".format(lang))
         dumpjs(
             [
-                book.to_array()
+                book.to_array(all_requested_formats=formats)
                 for book in books.where(Book.language == lang).order_by(
                     Book.downloads.desc()
                 )
@@ -1028,7 +1046,7 @@ def export_to_json_helpers(
         logger.info("\t\tDumping lang_{}_by_title.js".format(lang))
         dumpjs(
             [
-                book.to_array()
+                book.to_array(all_requested_formats=formats)
                 for book in books.where(Book.language == lang).order_by(
                     Book.title.asc()
                 )
@@ -1056,7 +1074,7 @@ def export_to_json_helpers(
             logger.info("\t\tDumping bookshelf_{}_by_popularity.js".format(bookshelf))
             dumpjs(
                 [
-                    book.to_array()
+                    book.to_array(all_requested_formats=formats)
                     for book in books.select()
                     .where(Book.bookshelf == bookshelf)
                     .order_by(Book.downloads.desc())
@@ -1068,7 +1086,7 @@ def export_to_json_helpers(
             logger.info("\t\tDumping bookshelf_{}_by_title.js".format(bookshelf))
             dumpjs(
                 [
-                    book.to_array()
+                    book.to_array(all_requested_formats=formats)
                     for book in books.select()
                     .where(Book.bookshelf == bookshelf)
                     .order_by(Book.title.asc())
@@ -1082,7 +1100,7 @@ def export_to_json_helpers(
                 )
                 dumpjs(
                     [
-                        book.to_array()
+                        book.to_array(all_requested_formats=formats)
                         for book in books.select()
                         .where(Book.language == lang)
                         .where(Book.bookshelf == bookshelf)
@@ -1093,7 +1111,7 @@ def export_to_json_helpers(
 
                 dumpjs(
                     [
-                        book.to_array()
+                        book.to_array(all_requested_formats=formats)
                         for book in books.select()
                         .where(Book.language == lang)
                         .where(Book.bookshelf == bookshelf)
@@ -1154,7 +1172,7 @@ def export_to_json_helpers(
         logger.info("\t\tDumping auth_{}_by_popularity.js".format(author.gut_id))
         dumpjs(
             [
-                book.to_array()
+                book.to_array(all_requested_formats=formats)
                 for book in books.where(Book.author == author).order_by(
                     Book.downloads.desc()
                 )
@@ -1165,7 +1183,7 @@ def export_to_json_helpers(
         logger.info("\t\tDumping auth_{}_by_title.js".format(author.gut_id))
         dumpjs(
             [
-                book.to_array()
+                book.to_array(all_requested_formats=formats)
                 for book in books.where(Book.author == author).order_by(
                     Book.title.asc()
                 )
@@ -1177,7 +1195,7 @@ def export_to_json_helpers(
             logger.info("\t\tDumping auth_{}_by_lang_{}.js".format(author.gut_id, lang))
             dumpjs(
                 [
-                    book.to_array()
+                    book.to_array(all_requested_formats=formats)
                     for book in books.where(Book.language == lang)
                     .where(Book.author == author)
                     .order_by(Book.downloads.desc())
@@ -1187,7 +1205,7 @@ def export_to_json_helpers(
 
             dumpjs(
                 [
-                    book.to_array()
+                    book.to_array(all_requested_formats=formats)
                     for book in books.where(Book.language == lang)
                     .where(Book.author == author)
                     .order_by(Book.title.asc())

@@ -3,7 +3,7 @@
     <span class="zim_info">
     <a title="{{ book.title }}" href="{{ book|book_name_for_fs|urlencode }}_cover.{{ book.id }}.html"><i class="fa fa-info-circle fa-2x"></i></a>
     </span>
-    {% for format in book.formats() %}
+    {% for format in book.requested_formats(formats) %}
         {% if not format == 'html' %}
             <span class="zim_{{ format }}">
             <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs|urlencode }}.{{ book.id }}.{{ format }}">
