@@ -165,8 +165,8 @@ class Book(BaseModel):
             "cover_page": self.cover_page,
         }
 
-    def to_array(self):
-        fmts = self.formats()
+    def to_array(self, all_requested_formats):
+        fmts = self.requested_formats(all_requested_formats)
         return [
             self.title,
             # self.subtitle,
@@ -187,6 +187,11 @@ class Book(BaseModel):
         from gutenbergtozim.utils import main_formats_for
 
         return main_formats_for(self)
+
+    def requested_formats(self, all_requested_formats):
+        fmts = self.formats()
+        requested_formats = [fmt for fmt in fmts if fmt in all_requested_formats]
+        return requested_formats
 
 
 class BookFormat(BaseModel):
