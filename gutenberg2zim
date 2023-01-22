@@ -46,8 +46,8 @@ help = (
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, """
     """separated by commas, or dashes for intervals
--c --concurrency=<nb>           Number of concurrent process for download """
-    """and parsing tasks
+-c --concurrency=<nb>           Number of concurrent process for processing """
+    """tasks
 --dlc=<nb>                      Number of concurrent *download* process for """
     """download (overwrites --concurrency). """
     """if server blocks high rate requests
@@ -55,7 +55,7 @@ help = (
     """language (and one with all)
 --no-index                      Do NOT create full-text index within ZIM file
 --check                         Check dependencies
---prepare                       Download & extract rdf-files.tar.bz2
+--prepare                       Download rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
 --zim                           Create a ZIM file

@@ -83,7 +83,6 @@ You can find the full arguments list below:
 -l --languages=<list>           Comma-separated list of lang codes to filter export to (preferably ISO 639-1, else ISO 639-3)
 -f --formats=<list>             Comma-separated list of formats to filter export to (epub, html, pdf, all)
 
--r --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use extracted folder instead
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
 -z --zim-file=<file>            Write ZIM into this file path
 -t --zim-title=<title>          Set ZIM title
@@ -91,16 +90,14 @@ You can find the full arguments list below:
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, separated by commas, or dashes for intervals
--c --concurrency=<nb>           Number of concurrent process for download and parsing tasks
+-c --concurrency=<nb>           Number of concurrent process for processing tasks
 --dlc=<nb>                      Number of concurrent *download* process for download (overwrites --concurrency). if server blocks high rate requests
 -m --one-language-one-zim=<folder> When more than 1 language, do one zim for each   language (and one with all)
 --no-index                      Do NOT create full-text index within ZIM file
 --check                         Check dependencies
---prepare                       Download & extract rdf-files.tar.bz2
+--prepare                       Download rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
---export                        Export downloaded content to zim-friendly static HTML
---dev                           Exports *just* Home+JS+CSS files (overwritten by --zim step)
 --zim                           Create a ZIM file
 --title-search                  Add field to search a book by title and directly jump to it
 --bookshelves                   Add bookshelves
