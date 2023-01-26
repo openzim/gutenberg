@@ -58,18 +58,6 @@ class License(BaseModel):
         return self.name
 
 
-class Format(BaseModel):
-    class Meta:
-        database = db
-
-    mime = CharField(max_length=100)
-    images = BooleanField(default=True)
-    pattern = CharField(max_length=100)
-
-    def __unicode__(self):
-        return self.mime
-
-
 class Author(BaseModel):
     class Meta:
         database = db
@@ -199,12 +187,13 @@ class BookFormat(BaseModel):
         database = db
 
     book = ForeignKeyField(Book, related_name="bookformats")
-    format = ForeignKeyField(Format, related_name="bookformats")
+    mime = CharField(max_length=100)
+    images = BooleanField(default=True)
+    pattern = CharField(max_length=100)
     downloaded_from = CharField(max_length=300, null=True)
 
     def __unicode__(self):
-        return "[{}] {}".format(self.format, self.book.title)
-
+        return "[{}] {}".format(self.mime, self.book.title)
 
 class Url(BaseModel):
     class Meta:
@@ -227,7 +216,7 @@ def load_fixtures(model):
 def setup_database(wipe=False):
     logger.info("Setting up the database")
 
-    for model in (License, Format, Author, Book, BookFormat, Url):
+    for model in (License, Author, Book, BookFormat, Url):
         if wipe:
             model.drop_table(fail_silently=True)
         if not model.table_exists():

@@ -23,7 +23,7 @@ from zimscraperlib.image.transformation import resize_image
 
 import gutenbergtozim
 from gutenbergtozim import TMP_FOLDER, TMP_FOLDER_PATH, logger
-from gutenbergtozim.database import Author, Book, BookFormat, Format
+from gutenbergtozim.database import Author, Book, BookFormat
 from gutenbergtozim.iso639 import language_name
 from gutenbergtozim.l10n import l10n_strings
 from gutenbergtozim.s3 import upload_to_cache
@@ -209,12 +209,11 @@ def export_all_books(
             [
                 1
                 for book in books
-                if BookFormat.select(BookFormat, Book, Format)
+                if BookFormat.select(BookFormat, Book)
                 .join(Book)
                 .switch(BookFormat)
-                .join(Format)
                 .where(Book.id == book.id)
-                .where(Format.mime == FORMAT_MATRIX.get(fmt))
+                .where(BookFormat.mime == FORMAT_MATRIX.get(fmt))
                 .count()
             ]
         )

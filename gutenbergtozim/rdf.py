@@ -11,7 +11,7 @@ import peewee
 from bs4 import BeautifulSoup
 
 from gutenbergtozim import logger
-from gutenbergtozim.database import Author, Book, BookFormat, Format, License
+from gutenbergtozim.database import Author, Book, BookFormat, License
 from gutenbergtozim.utils import (
     BAD_BOOKS_FORMATS,
     FORMAT_MATRIX,
@@ -274,18 +274,14 @@ def save_rdf_in_database(parser):
             )
             continue
 
-        format_record, _ = Format.get_or_create(
+        # Insert book format
+        BookFormat.create(
+            book=book_record,
             mime=mime,
             images=file_type.endswith(".images")
             or parser.file_types[file_type] == "application/pdf",
-            pattern=pattern,
+            pattern=pattern,            
         )
-
-        # Insert book format
-        BookFormat.get_or_create(
-            book=book_record, format=format_record  # foreign key  # foreign key
-        )
-
 
 def get_formatted_number(num):
     """

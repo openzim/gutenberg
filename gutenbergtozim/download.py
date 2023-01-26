@@ -13,7 +13,7 @@ from pprint import pprint as pp
 from path import Path as path
 
 from gutenbergtozim import TMP_FOLDER, logger
-from gutenbergtozim.database import Book, BookFormat, Format
+from gutenbergtozim.database import Book, BookFormat
 from gutenbergtozim.export import fname_for, get_list_of_filtered_books
 from gutenbergtozim.s3 import download_from_cache
 from gutenbergtozim.urls import get_urls
@@ -181,7 +181,7 @@ def download_book(
                 "8mort10h.zip",
             ]
             bfso = bfs
-            bfs = bfs.join(Format).filter(Format.pattern << patterns)
+            bfs = bfs.filter(BookFormat.pattern << patterns)
             if not bfs.count():
                 pp(
                     list(
@@ -203,9 +203,7 @@ def download_book(
                 unsuccessful_formats.append(book_format)
                 continue
         else:
-            bfs = bfs.filter(
-                BookFormat.format << Format.filter(mime=FORMAT_MATRIX.get(book_format))
-            )
+            bfs = bfs.filter(mime=FORMAT_MATRIX.get(book_format))
 
         if not bfs.count():
             logger.debug(
@@ -216,7 +214,7 @@ def download_book(
 
         if bfs.count() > 1:
             try:
-                bf = bfs.join(Format).filter(Format.images).get()
+                bf = bfs.filter(images).get()
             except Exception:
                 bf = bfs.get()
         else:
