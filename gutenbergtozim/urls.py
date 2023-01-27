@@ -80,9 +80,7 @@ def get_urls(book):
     param: book: The book you want the possible urls from
     returns: a list of all possible urls sorted by their probability
     """
-    filtered_book = [
-        bf.format for bf in BookFormat.select().where(BookFormat.book == book)
-    ]
+    filtered_book = BookFormat.select().where(BookFormat.book == book)
 
     # Strip out the encoding of the file
     def f(x):

@@ -5,117 +5,73 @@
 import os
 import pathlib
 import re
-from multiprocessing.dummy import Pool
+import tarfile
 
 import peewee
 from bs4 import BeautifulSoup
-from path import Path as path
 
 from gutenbergtozim import logger
-from gutenbergtozim.database import Author, Book, BookFormat, Format, License
+from gutenbergtozim.database import Author, Book, BookFormat, License
 from gutenbergtozim.utils import (
     BAD_BOOKS_FORMATS,
     FORMAT_MATRIX,
     download_file,
-    exec_cmd,
     normalize,
 )
 
 
-def setup_rdf_folder(rdf_url, rdf_path, force=False):
-    """Download and Extract rdf-files"""
-
-    rdf_tarball = download_rdf_file(rdf_url)
-    extract_rdf_files(rdf_tarball, rdf_path, force=force)
-
-
-def download_rdf_file(rdf_url):
+def get_rdf_fpath():
     fname = "rdf-files.tar.bz2"
-
-    if path(fname).exists():
-        logger.info("\trdf-files.tar.bz2 already exists in {}".format(fname))
-        return fname
-
-    logger.info("\tDownloading {} into {}".format(rdf_url, fname))
-    download_file(rdf_url, pathlib.Path(fname).resolve())
-
-    return fname
+    fpath = pathlib.Path(fname).resolve()
+    return fpath
 
 
-def extract_rdf_files(rdf_tarball, rdf_path, force=False):
-    if path(rdf_path).exists() and not force:
-        logger.info("\tRDF-files folder already exists in {}".format(rdf_path))
+def download_rdf_file(rdf_path, rdf_url):
+    """Download rdf-files archive"""
+    if rdf_path.exists():
+        logger.info("\trdf-files archive already exists in {}".format(rdf_path))
         return
 
-    logger.info("\tExtracting {} into {}".format(rdf_tarball, rdf_path))
-
-    # create destdir if not exists
-    dest = path(rdf_path)
-    dest.mkdir_p()
-
-    exec_cmd(
-        [
-            "tar",
-            "-C",
-            rdf_path,
-            "--strip-components",
-            "2",
-            "--extract",
-            "--no-same-owner",
-            "--no-same-permissions",
-            "-f",
-            rdf_tarball,
-        ]
-    )
-    return
+    logger.info("\tDownloading {} into {}".format(rdf_url, rdf_path))
+    download_file(rdf_url, rdf_path)
 
 
-def parse_and_fill(rdf_path, concurrency, only_books=[], force=False):
+def parse_and_fill(rdf_path, only_books=[], force=False):
     logger.info("\tLooping throught RDF files in {}".format(rdf_path))
 
-    fpaths = []
-    for root, dirs, files in os.walk(rdf_path):
-        if root.endswith("999999"):
+    rdf_tarfile = tarfile.open(name=rdf_path, mode="r|bz2")
+
+    for rdf_member in rdf_tarfile:
+
+        rdf_member_path = pathlib.Path(rdf_member.name)
+
+        # skip books outside of requested list
+        if only_books and rdf_member_path.stem.replace("pg", "") not in only_books:
             continue
 
-        # skip books outside of requsted list
-        if len(only_books) and path(root).basename() not in [
-            str(bid) for bid in only_books
-        ]:
+        if rdf_member_path.name == "pg0.rdf":
             continue
 
-        for fname in files:
-            if fname in (".", "..", "pg0.rdf"):
-                continue
+        if not str(rdf_member_path.name).endswith(".rdf"):
+            continue
 
-            if not fname.endswith(".rdf"):
-                continue
-
-            fpaths.append(os.path.join(root, fname))
-
-    fpaths = sorted(
-        fpaths, key=lambda f: int(re.match(r".*/pg([0-9]+).rdf", f).groups()[0])
-    )
-
-    def ppf(x):
-        return parse_and_process_file(x, force)
-
-    Pool(concurrency).map(ppf, fpaths)
+        parse_and_process_file(rdf_tarfile, rdf_member, force)
 
 
-def parse_and_process_file(rdf_file, force=False):
-    if not path(rdf_file).exists():
-        raise ValueError(rdf_file)
+def parse_and_process_file(rdf_tarfile, rdf_member, force=False):
 
-    gid = re.match(r".*/pg([0-9]+).rdf", rdf_file).groups()[0]
+    gid = re.match(r".*/pg([0-9]+).rdf", rdf_member.name).groups()[0]
 
     if Book.get_or_none(id=int(gid)):
-        logger.info("\tSkipping already parsed file {}".format(rdf_file))
+        logger.info(
+            "\tSkipping already parsed file {} for book id {}".format(
+                rdf_member.name, gid
+            )
+        )
         return
 
-    logger.info("\tParsing file {}".format(rdf_file))
-    with open(rdf_file, "r", encoding="UTF-8") as f:
-        parser = RdfParser(f.read(), gid).parse()
+    logger.info("\tParsing file {} for book id {}".format(rdf_member.name, gid))
+    parser = RdfParser(rdf_tarfile.extractfile(rdf_member).read(), gid).parse()
 
     if parser.license == "None":
         logger.info("\tWARN: Unusable book without any information {}".format(gid))
@@ -316,18 +272,14 @@ def save_rdf_in_database(parser):
             )
             continue
 
-        format_record, _ = Format.get_or_create(
+        # Insert book format
+        BookFormat.create(
+            book=book_record,
             mime=mime,
             images=file_type.endswith(".images")
             or parser.file_types[file_type] == "application/pdf",
-            pattern=pattern,
+            pattern=pattern,            
         )
-
-        # Insert book format
-        BookFormat.get_or_create(
-            book=book_record, format=format_record  # foreign key  # foreign key
-        )
-
 
 def get_formatted_number(num):
     """

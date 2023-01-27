@@ -100,12 +100,6 @@ def build_zimfile(
             logger.exception(exc)
         return
     else:
-        if Global.creator.can_finish:
-            logger.info("Finishing ZIM file")
-            Global.finish()
-            logger.info(
-                f"Finished Zim {Global.creator.filename.name} "
-                f"in {Global.creator.filename.parent}"
-            )
+        Global.finish()
 
     logger.info("Scraper has finished normally")

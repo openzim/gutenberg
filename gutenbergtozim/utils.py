@@ -18,7 +18,7 @@ from path import Path as path
 from zimscraperlib.download import save_large_file
 
 from gutenbergtozim import logger
-from gutenbergtozim.database import Book, BookFormat, Format
+from gutenbergtozim.database import Book, BookFormat
 from gutenbergtozim.iso639 import language_name
 
 UTF8 = "utf-8"
@@ -113,11 +113,10 @@ def download_file(url, fpath):
 
 def main_formats_for(book):
     fmts = [
-        fmt.format.mime
-        for fmt in BookFormat.select(BookFormat, Book, Format)
+        fmt.mime
+        for fmt in BookFormat.select(BookFormat, Book)
         .join(Book)
         .switch(BookFormat)
-        .join(Format)
         .where(Book.id == book.id)
     ]
     return [k for k, v in FORMAT_MATRIX.items() if v in fmts]
@@ -128,8 +127,7 @@ def get_list_of_filtered_books(languages, formats, only_books=[]):
         qs = (
             Book.select()
             .join(BookFormat)
-            .join(Format)
-            .where(Format.mime << [FORMAT_MATRIX.get(f) for f in formats])
+            .where(BookFormat.mime << [FORMAT_MATRIX.get(f) for f in formats])
             .group_by(Book.id)
         )
     else:

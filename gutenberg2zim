@@ -12,14 +12,14 @@ from gutenbergtozim import VERSION, logger
 from gutenbergtozim.checkdeps import check_dependencies
 from gutenbergtozim.database import setup_database
 from gutenbergtozim.download import download_all_books
-from gutenbergtozim.rdf import parse_and_fill, setup_rdf_folder
+from gutenbergtozim.rdf import parse_and_fill, download_rdf_file, get_rdf_fpath
 from gutenbergtozim.s3 import s3_credentials_ok
 from gutenbergtozim.urls import setup_urls
 from gutenbergtozim.zim import build_zimfile
 
 help = (
     """Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
-    """[-r RDF_FOLDER] [-d CACHE_PATH] [-e STATIC_PATH] """
+    """[-d CACHE_PATH] [-e STATIC_PATH] """
     """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
     """[-t ZIM_TITLE] [-n ZIM_DESC] """
     """[-c CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
@@ -38,8 +38,6 @@ help = (
 -f --formats=<list>             Comma-separated list of formats to filter """
     """export to (epub, html, pdf, all)
 
--r --rdf-folder=<folder>        Don't download rdf-files.tar.bz2 and use """
-    """extracted folder instead
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
 -z --zim-file=<file>            Write ZIM into this file path
 -t --zim-title=<title>          Set ZIM title
@@ -48,8 +46,8 @@ help = (
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, """
     """separated by commas, or dashes for intervals
--c --concurrency=<nb>           Number of concurrent process for download """
-    """and parsing tasks
+-c --concurrency=<nb>           Number of concurrent process for processing """
+    """tasks
 --dlc=<nb>                      Number of concurrent *download* process for """
     """download (overwrites --concurrency). """
     """if server blocks high rate requests
@@ -57,7 +55,7 @@ help = (
     """language (and one with all)
 --no-index                      Do NOT create full-text index within ZIM file
 --check                         Check dependencies
---prepare                       Download & extract rdf-files.tar.bz2
+--prepare                       Download rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
 --zim                           Create a ZIM file
@@ -88,7 +86,6 @@ def main(arguments):
     ONE_LANG_ONE_ZIM_FOLDER = arguments.get("--one-language-one-zim") or None
     COMPLETE_DUMP = arguments.get("--complete", False)
 
-    RDF_FOLDER = arguments.get("--rdf-folder") or os.path.join("rdf-files")
     ZIM_NAME = arguments.get("--zim-file")
     WIPE_DB = arguments.get("--wipe-db") or False
     RDF_URL = (
@@ -167,9 +164,11 @@ def main(arguments):
             logger.error("Exiting...")
             sys.exit(1)
 
+    rdf_path = get_rdf_fpath()
+
     if DO_PREPARE:
         logger.info("PREPARING rdf-files cache from {}".format(RDF_URL))
-        setup_rdf_folder(rdf_url=RDF_URL, rdf_path=RDF_FOLDER, force=FORCE)
+        download_rdf_file(rdf_url=RDF_URL, rdf_path=rdf_path)
 
     if WIPE_DB:
         logger.info("RESETING DATABASE IF EXISTS")
@@ -177,10 +176,8 @@ def main(arguments):
     setup_database(wipe=WIPE_DB)
 
     if DO_PARSE:
-        logger.info("PARSING rdf-files in {}".format(RDF_FOLDER))
-        parse_and_fill(
-            rdf_path=RDF_FOLDER, only_books=BOOKS, concurrency=CONCURRENCY, force=FORCE
-        )
+        logger.info("PARSING rdf-files in {}".format(rdf_path))
+        parse_and_fill(rdf_path=rdf_path, only_books=BOOKS, force=FORCE)
         logger.info("Add possible url to db")
         setup_urls(force=FORCE)
 
