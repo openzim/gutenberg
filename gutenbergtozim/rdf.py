@@ -46,7 +46,7 @@ def parse_and_fill(rdf_path, only_books=[], force=False):
         rdf_member_path = pathlib.Path(rdf_member.name)
 
         # skip books outside of requested list
-        if only_books and rdf_member_path.stem.replace("pg", "") not in only_books:
+        if only_books and int(rdf_member_path.stem.replace("pg", "").replace(".rdf", "")) not in only_books:
             continue
 
         if rdf_member_path.name == "pg0.rdf":
