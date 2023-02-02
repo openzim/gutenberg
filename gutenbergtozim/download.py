@@ -186,16 +186,16 @@ def download_book(
                 pp(
                     list(
                         [
-                            (b.format.mime, b.format.images, b.format.pattern)
-                            for b in bfs
+                            (bf.mime, bf.images, bf.pattern)
+                            for bf in bfs
                         ]
                     )
                 )
                 pp(
                     list(
                         [
-                            (b.format.mime, b.format.images, b.format.pattern)
-                            for b in bfso
+                            (bf.mime, bf.images, bf.pattern)
+                            for bf in bfso
                         ]
                     )
                 )
