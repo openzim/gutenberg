@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 
 from gutenbergtozim import logger
 from gutenbergtozim.database import Author, Book, BookFormat, License
+from gutenbergtozim.pg_archive_urls import archive_url
 from gutenbergtozim.utils import (
     BAD_BOOKS_FORMATS,
     FORMAT_MATRIX,
@@ -165,14 +166,15 @@ class RdfParser:
         self.license = soup.find("dcterms:rights").text
 
         # Finding out all the file types this book is available in
-        file_types = soup.find_all("pgterms:file")
-        self.file_types = {}
-        for x in file_types:
-            if not x.find("rdf:value").text.endswith("application/zip"):
-                k = x.attrs["rdf:about"].split("/")[-1]
-                v = x.find("rdf:value").text
-                self.file_types.update({k: v})
-
+        files = soup.find_all("pgterms:file")
+        self.files = []
+        for x in files:
+            self.files.append({
+                "mime": x.find("rdf:value").text,
+                "url": x.attrs["rdf:about"],
+                "pattern": x.attrs["rdf:about"].split("/")[-1],
+            })
+            
         return self
 
 
@@ -242,24 +244,29 @@ def save_rdf_in_database(parser):
     # insert pdf if not exists in parser.file_types
     # this is done as presence of PDF on server and RDF is inconsistent
     if not [
-        key
-        for key in parser.file_types
-        if parser.file_types[key].startswith("application/pdf")
+        file
+        for file in parser.files
+        if file["mime"].startswith("application/pdf")
     ]:
-        parser.file_types.update({"{id}-pdf.pdf": "application/pdf"})
+        parser.files.append({
+            "pattern": "{id}-pdf.pdf",
+            "mime": "application/pdf",
+            "url": "forced",
+            }
+        )
 
     # Insert formats
-    for file_type in parser.file_types:
+    for file in parser.files:
 
         # Sanitize MIME
-        mime = parser.file_types[file_type]
+        mime = file["mime"]
         if not mime.startswith("text/plain"):
             mime = re.sub(r"; charset=[a-z0-9-]+", "", mime)
         # else:
         #    charset = re.match(r'; charset=([a-z0-9-]+)', mime).groups()[0]
 
         # Insert format type
-        pattern = re.sub(r"" + parser.gid, "{id}", file_type)
+        pattern = re.sub(r"" + parser.gid, "{id}", file["pattern"])
         pattern = pattern.split("/")[-1]
 
         bid = int(book_record.id)
@@ -276,9 +283,11 @@ def save_rdf_in_database(parser):
         BookFormat.create(
             book=book_record,
             mime=mime,
-            images=file_type.endswith(".images")
-            or parser.file_types[file_type] == "application/pdf",
-            pattern=pattern,            
+            images=pattern.endswith(".images")
+            or mime == "application/pdf",
+            pattern=pattern,
+            rdf_url=file["url"],
+            archive_url=archive_url(file["url"]),
         )
 
 def get_formatted_number(num):

@@ -5,6 +5,7 @@
 from peewee import (
     BooleanField,
     CharField,
+    CompositeKey,
     ForeignKeyField,
     IntegerField,
     Model,
@@ -191,9 +192,23 @@ class BookFormat(BaseModel):
     images = BooleanField(default=True)
     pattern = CharField(max_length=100)
     downloaded_from = CharField(max_length=300, null=True)
+    rdf_url = CharField(max_length=300)
+    archive_url = CharField(max_length=300)
 
     def __unicode__(self):
         return "[{}] {}".format(self.mime, self.book.title)
+
+class BookDownload(BaseModel):
+    class Meta:
+        database = db
+        primary_key = CompositeKey('book', 'format')
+
+    book = ForeignKeyField(Book, related_name="bookdownloads")
+    format = CharField(max_length=100)
+    downloaded_from = CharField(max_length=300, null=True)
+
+    def __unicode__(self):
+        return "[{}] {}".format(self.format, self.book.title)
 
 class Url(BaseModel):
     class Meta:
@@ -216,8 +231,8 @@ def load_fixtures(model):
 def setup_database(wipe=False):
     logger.info("Setting up the database")
 
-    for model in (License, Author, Book, BookFormat, Url):
-        if wipe:
+    for model in (License, Author, Book, BookFormat, BookDownload, Url):
+        if wipe and model != Url:
             model.drop_table(fail_silently=True)
         if not model.table_exists():
             model.create_table()

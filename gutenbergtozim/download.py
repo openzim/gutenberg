@@ -15,7 +15,7 @@ import backoff
 from path import Path as path
 
 from gutenbergtozim import TMP_FOLDER, logger
-from gutenbergtozim.database import Book, BookFormat
+from gutenbergtozim.database import Book, BookFormat, BookDownload
 from gutenbergtozim.export import fname_for, get_list_of_filtered_books
 from gutenbergtozim.s3 import download_from_cache
 from gutenbergtozim.urls import get_urls
@@ -312,6 +312,12 @@ def download_book(
             # store working URL in DB
             bf.downloaded_from = url
             bf.save()
+
+            BookDownload.create(
+                book = book,
+                format = book_format,
+                downloaded_from = url,
+            )
             # break as we got a working URL
             break
 
@@ -367,6 +373,12 @@ def download_cover(book, book_dir, s3_storage, optimizer_version):
             if download_file(url, book_dir.joinpath("unoptimized").joinpath(cover)):
                 book.cover_etag = etag
                 book.save()
+
+                BookDownload.create(
+                    book = book,
+                    format = "cover",
+                    downloaded_from = url,
+                )
     else:
         logger.debug("No Book Cover found for Book #{}".format(book.id))
 
