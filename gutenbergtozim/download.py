@@ -265,11 +265,12 @@ def download_book(
                 if not download_file(url, zpath):
                     logger.error("ZIP file download failed: {}".format(zpath))
                     continue
+                os.unlink(zpath)
                 # save etag
                 book.html_etag = etag
                 book.save()
                 # extract zipfile
-                handle_zipped_epub(zippath=zpath, book=book, dst_dir=unoptimized_dir)
+                #handle_zipped_epub(zippath=zpath, book=book, dst_dir=unoptimized_dir)
             else:
                 if (
                     url.endswith(".htm")
@@ -295,6 +296,8 @@ def download_book(
                 if not download_file(url, unoptimized_fpath):
                     logger.error("file donwload failed: {}".format(unoptimized_fpath))
                     continue
+                os.unlink(unoptimized_fpath)
+                
                 # save etag if html or epub if download is successful
                 if (
                     url.endswith(".htm")
@@ -370,7 +373,9 @@ def download_cover(book, book_dir, s3_storage, optimizer_version):
             )
         if not downloaded_from_cache:
             logger.debug("Downloading {}".format(url))
-            if download_file(url, book_dir.joinpath("unoptimized").joinpath(cover)):
+            cover_path = book_dir.joinpath("unoptimized").joinpath(cover)
+            if download_file(url, cover_path):   
+                os.unlink(cover_path)
                 book.cover_etag = etag
                 book.save()
 
