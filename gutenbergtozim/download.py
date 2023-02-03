@@ -10,6 +10,8 @@ import zipfile
 from multiprocessing.dummy import Pool
 from pprint import pprint as pp
 
+import apsw
+import backoff
 from path import Path as path
 
 from gutenbergtozim import TMP_FOLDER, logger
@@ -386,6 +388,19 @@ def download_all_books(
     # ensure dir exist
     path(download_cache).mkdir_p()
 
+    def backoff_busy_error_hdlr(details):
+        logger.warning(
+            "Backing off {wait:0.1f} seconds after {tries} tries "
+            "calling function {target} with args {args} and kwargs "
+            "{kwargs} due to apsw.BusyError".format(**details)
+        )
+
+    @backoff.on_exception(
+        backoff.constant,
+        apsw.BusyError,
+        max_time=3,
+        on_backoff=backoff_busy_error_hdlr,
+    )
     def dlb(b):
         return download_book(
             b, download_cache, languages, formats, force, s3_storage, optimizer_version
