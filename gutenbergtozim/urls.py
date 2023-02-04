@@ -259,7 +259,7 @@ def setup_urls(force=False):
     # search for "GUTINDEX*" file, so that we known where starts the relative
     # path in rsync output
     with open(file_with_url, "r", errors="replace") as src:
-        for line in src.readlines():
+        for line in src:
             start_rel_path_idx = line.find("GUTINDEX")
             if start_rel_path_idx >= 0:
                 break
@@ -274,7 +274,7 @@ def setup_urls(force=False):
     logger.info("\tAppending urls in DB from rsync result")
     # strip rsync file to only contain relative path
     with open(file_with_url, "r", errors="replace") as src:
-        for line in src.readlines():
+        for line in src:
             Url.create(url=line[start_rel_path_idx:].strip())
 
 
