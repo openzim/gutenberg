@@ -13,7 +13,7 @@ logger = getLogger(__name__, level=logging.DEBUG)
 TMP_FOLDER = "tmp"
 TMP_FOLDER_PATH = path(TMP_FOLDER)
 
-VERSION = "1.1.9"
+VERSION = "2.0.0"
 
 lock = threading.Lock()
 

@@ -1,23 +1,58 @@
-1.1.9
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
+as of 2.0.0.
+
+## [2.0.0] - 2023-02-20
+
+### Added
+
+- Porgress report using `--stats-filename`
+
+### Changed
+
+- Updated dependencies, including zimscraperlib (2.0)
+- Now creating no-namespace ZIM with Illustration
+- Fixed/reduced sqlite timeouts
+- Better handling of rsync'd list of URLs
+- RDF files are not extracted to disk anymore (faster on selections)
+- Remove all Urls from DB before processing rsync'd ones
+- Fixed --concurrency short flag (now `-c`)
+- Docker image now uses python3.11
+- DB don't use a separate Format table anymore
+
+### Removed
+
+- Dependency to zimwriterfs binary.
+- `-r`/`--rdf-folder` flag: rdf not extracted to disk anymore
+- `--export`: HTML files not written to disk first anymore
+- `--dev`: idem
+- Binaries from docker images: jpegoptim, pngquant, gifsicle, zip, curl, p7zip
+
+## [1.1.9]
 
 - Added portuguese translation
 - Changed mirror used as aleph doesn't contain all files anymore
 
-1.1.8
+## [1.1.8]
 
 - Changed links to accomodate zimwriterfs 2.1.0-2 (#144)
 
-1.1.7
+## [1.1.7]
 
 - Using --zstd option with zimwriterfs
 
-1.1.6
+## [1.1.6]
 
 - removed duplicate dependencies
 - Added tag _category:gutenberg which was missing
 - docker-only release with updated zimwriterfs (2.1.0-1)
 
-1.1.5
+## [1.1.5]
+
 - simplified home page results on smaller screen sizes
 - added bookshelves mode option
 - added title search option (doesn't scale!)
@@ -36,14 +71,16 @@
 - zimwriterfs error on all-langs now stops whole process
 - safer extraction of rdf-files.tar
 
-1.1.4
+## [1.1.4]
+
 - Fixed broken setup.py (moved LICENSE file)
 - Added changelog
 - fixed running on macOS
 - fixed running with PY3
 - defaulting to PY3 on Docker
 
-1.1.3
+## [1.1.3]
+
 - Added ability to set an output folder for --one-language-one-zim
 - removed unused -m parameter
 - Added --tags
@@ -56,5 +93,6 @@
 - fixed python3 compatibility
 - cleaned-up code (tab/space mix)
 
-1.1.2
+## [1.1.2]
+
 - initial version
