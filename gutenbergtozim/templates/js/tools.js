@@ -1,7 +1,6 @@
 var sortMethod = "popularity";
 var booksUrl = "full_by_popularity.js";
 var bookshelves = "bookshelves.js";
-var inBooksLooadingLoop = false;
 var booksTable = null;
 var title_dict = null;
 var globalShelvesTable = null;
@@ -14,7 +13,7 @@ var persist_options = {
 };
 
 
-function queryParams(key) {
+/*function queryParams(key) {
   var qd = {};
   if (location.search) location.search.substr(1).split("&").forEach(function(item) {
     var s = item.split("="),
@@ -26,7 +25,7 @@ function queryParams(key) {
     return qd;
   else
     return qd[key];
-}
+}*/
 
 function getPersistedPage() {
   var pp = $("#page_record").val();
@@ -41,7 +40,7 @@ function getPersistedPage() {
   }
 }
 
-function getRequestedPage() {
+/*function getRequestedPage() {
   var qp = queryParams("page");
   try {
     return parseInt(qp) - 1;
@@ -52,7 +51,7 @@ function getRequestedPage() {
     }
     return 0;
   }
-}
+}*/
 
 function onTablePageChange(e, settings, table) {
   // record global ref to table
@@ -68,9 +67,9 @@ function goToAuthor(name) {
   showBooks();
 }
 
-function goToTitle(title) {
+/*function goToTitle(title) {
   $("#title_filter").val(title);
-}
+}*/
 
 
 function minimizeUI() {
@@ -80,12 +79,12 @@ function minimizeUI() {
   $(".precontent").slideUp(300);
 }
 
-function maximizeUI() {
+/*function maximizeUI() {
   console.log("maximizeUI");
   $("#hide-precontent").val("");
   $("#hide-precontent").change();
   $(".precontent").slideDown(300);
-}
+}*/
 
 function loadScript(url, nodeId, callback) {
   console.log("requesting script for #" + nodeId + " from " + url);
@@ -197,9 +196,9 @@ function is_cover_page() {
   return $("body").hasClass("cover");
 }
 
-function is_bookshelf_page() {
+/*function is_bookshelf_page() {
   return $("body").hasClass("individual_book_shelf");
-}
+}*/
 
 function is_bookshelves_page() {
   return $('#bookshelvesDisplay').length != 0;
@@ -234,7 +233,7 @@ function showBooks() {
 
       $(document).ready(function() {
         booksTable = $("#books_table").dataTable({
-          initComplete: function(settings, json) {
+          initComplete: function() {
             var requestedPage = getPersistedPage();
             if (requestedPage) {
               this.api()
@@ -269,7 +268,7 @@ function showBooks() {
             },
             {
               targets: 0,
-              render: function(data, type, full, meta) {
+              render: function(data, type, full) {
                 img = '<img class="pure-u-1-8 book-cover-pre" src= "' + full[3] + '_cover_image.jpg"' +
                   'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + 'favicon.png\'" >';
                 div = '<div class="list-stripe"></div>';
@@ -292,13 +291,13 @@ function showBooks() {
             },
             {
               targets: 1,
-              render: function(data, type, full, meta) {
+              render: function() {
                 return "";
               }
             },
             {
               targets: 2,
-              render: function(data, type, full, meta) {
+              render: function(data, type, full) {
                 var html = "";
                 var urlBase =
                   full[0].replace("/", "-").substring(0, 230) + "." + full[3];
@@ -353,7 +352,6 @@ function showBooks() {
           );
         } else if (event.which == 2) {
           /* Middle click */
-          var href = $(this).attr("data-href");
           var link = $(
             "<a href='" +
             encodeURIComponent(titre.replace("/", "-").substring(0, 230)) +
@@ -428,7 +426,7 @@ function showBookshelf(bookshelfURL) {
 
       $(document).ready(function() {
         booksTable = $("#books_table").dataTable({
-          initComplete: function(settings, json) {
+          initComplete: function() {
             var requestedPage = getPersistedPage();
             if (requestedPage) {
               this.api()
@@ -463,7 +461,7 @@ function showBookshelf(bookshelfURL) {
             },
             {
               targets: 0,
-              render: function(data, type, full, meta) {
+              render: function(data, type, full) {
                 img = '<img class="pure-u-1-8 book-cover-pre" src= "' + full[3] + '_cover_image.jpg"' +
                   'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + 'favicon.png\'" >';
                 div = '<div class="list-stripe"></div>';
@@ -486,13 +484,13 @@ function showBookshelf(bookshelfURL) {
             },
             {
               targets: 1,
-              render: function(data, type, full, meta) {
+              render: function() {
                 return "";
               }
             },
             {
               targets: 2,
-              render: function(data, type, full, meta) {
+              render: function(data, type, full) {
                 var html = "";
                 var urlBase =
                   full[0].replace("/", "-").substring(0, 230) + "." + full[3];
@@ -547,7 +545,6 @@ function showBookshelf(bookshelfURL) {
           );
         } else if (event.which == 2) {
           /* Middle click */
-          var href = $(this).attr("data-href");
           var link = $(
             "<a href='" +
             encodeURIComponent(titre.replace("/", "-").substring(0, 230)) +
@@ -600,7 +597,7 @@ function onLocalized() {
     // console.debug("no persisted lang or equal to browser, updating select");
     l10nselect.val(detectedLang);
   }
-  l10nselect.on("change", function(e) {
+  l10nselect.on("change", function() {
     // console.debug("on change, setting lang " + $(this).val());
     $.persistValue("l10nselect", $(this).val(), persist_options);
     l10n.setLanguage($(this).val());
@@ -654,7 +651,7 @@ function init() {
     create_options(language_filter, languages_json_data);
   }
 
-  language_filter.on("change", function(e) {
+  language_filter.on("change", function() {
     minimizeUI();
     if (globalShelvesTable == null) {
       showBooks();
