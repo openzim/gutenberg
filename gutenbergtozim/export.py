@@ -130,6 +130,24 @@ def export_skeleton(
     add_bookshelves,
 ):
 
+    context = get_default_context(project_id, books=books)
+    context.update(
+        {
+            "show_books": True,
+            "title_search": title_search,
+            "add_bookshelves": add_bookshelves,
+        }
+    )
+
+    # js/l10n.js is a template (includes list of avail languages)
+    rendered = jinja_env.get_template("js/l10n.js").render(**context)
+    Global.add_item_for(
+        path="js/l10n.js",
+        content=rendered,
+        mimetype="text/html",
+        is_front=True,
+    )
+
     # add CSS/JS/* to zim
     src_folder = tmpl_path()
     for fname in (
@@ -150,21 +168,12 @@ def export_skeleton(
             Global.add_item_for(path=fname, fpath=assets_root)
         else:
             for fpath in assets_root.glob("**/*"):
-                if not fpath.is_file():
+                if not fpath.is_file() or fpath.name == "l10n.js":
                     continue
                 path = str(fpath.relative_to(src))
                 Global.add_item_for(path=os.path.join(fname, path), fpath=fpath)
 
     # export homepage
-    context = get_default_context(project_id, books=books)
-    context.update(
-        {
-            "show_books": True,
-            "title_search": title_search,
-            "add_bookshelves": add_bookshelves,
-        }
-    )
-
     tpl_path = "Home.html"
     template = jinja_env.get_template(tpl_path)
     rendered = template.render(**context)
