@@ -11,6 +11,7 @@ as of 2.0.0.
 ### Changed
 
 - Fixed regression with broken filters on on multiple-languages ZIM (#175)
+- Fixed `Name` metadata that was incorrectly including period (#177)
 
 ## [2.0.0] - 2023-02-20
 

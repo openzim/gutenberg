@@ -3,7 +3,6 @@
 # vim: ai ts=4 sts=4 et sw=4 nu
 
 import collections
-import datetime
 import hashlib
 import os
 import subprocess
@@ -83,7 +82,6 @@ def get_project_id(languages=[], formats=[], only_books=[]):
     if len(formats) < len(FORMAT_MATRIX):
         parts.append("-".join(formats))
     parts.append("selection" if only_books else "all")
-    parts.append(datetime.datetime.now().strftime("%Y-%m"))
     return "_".join(parts)
 
 

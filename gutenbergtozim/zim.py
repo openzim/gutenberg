@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
+import datetime
 from path import Path as path
 
 from gutenbergtozim import logger
@@ -54,7 +55,8 @@ def build_zimfile(
     project_id = get_project_id(languages, formats, only_books)
 
     if zim_name is None:
-        zim_name = "{}.zim".format(project_id)
+        zim_name = "{}_{}.zim".format(
+            project_id, datetime.datetime.now().strftime("%Y-%m"))
     zim_path = output_folder.joinpath(zim_name)
 
     if path(zim_name).exists() and not force:
