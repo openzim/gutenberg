@@ -5,7 +5,10 @@
 import datetime
 from path import Path as path
 
+from peewee import fn
+
 from gutenbergtozim import logger
+from gutenbergtozim.database import Book
 from gutenbergtozim.export import export_all_books
 from gutenbergtozim.iso639 import ISO_MATRIX
 from gutenbergtozim.shared import Global
@@ -30,19 +33,24 @@ def build_zimfile(
     stats_filename=None,
 ):
 
-    if not languages:
-        languages = ["mul"]
+    # replace languages (requested) with actual list of languages with books
+    # sorted by most used
+    nb = fn.COUNT(Book.language).alias("nb")
+    languages = [
+        book.language
+        for book in Book.select(Book.language, nb)
+        .group_by(Book.language)
+        .order_by(nb.desc())
+        if book.language in languages
+    ]
 
-    languages.sort()
     formats.sort()
 
     if title is None:
         if len(languages) > 5:
             title = "Project Gutenberg Library"
         else:
-            title = "Project Gutenberg Library ({langs})".format(
-                langs=",".join(languages)
-            )
+            title = f"Project Gutenberg Library ({', '.join(languages)})"
 
         if len(formats) < len(FORMAT_MATRIX):
             title += " with {formats}".format(formats=",".join(formats))
@@ -56,7 +64,8 @@ def build_zimfile(
 
     if zim_name is None:
         zim_name = "{}_{}.zim".format(
-            project_id, datetime.datetime.now().strftime("%Y-%m"))
+            project_id, datetime.datetime.now().strftime("%Y-%m")
+        )
     zim_path = output_folder.joinpath(zim_name)
 
     if path(zim_name).exists() and not force:
@@ -64,7 +73,6 @@ def build_zimfile(
         return
 
     iso_languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
-    iso_languages.sort()
 
     Global.setup(
         filename=zim_path,

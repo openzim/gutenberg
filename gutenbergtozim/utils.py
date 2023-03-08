@@ -78,7 +78,7 @@ def normalize(text=None):
 def get_project_id(languages=[], formats=[], only_books=[]):
 
     parts = ["gutenberg"]
-    parts.append("-".join(languages))
+    parts.append("mul" if len(languages) > 1 else languages[0])
     if len(formats) < len(FORMAT_MATRIX):
         parts.append("-".join(formats))
     parts.append("selection" if only_books else "all")

@@ -12,6 +12,6 @@ apsw==3.40.0.0
 kiwixstorage>=0.5,<1.0
 requests>=2.23,<3.0
 pif==0.8.2
-zimscraperlib>=2.0,<2.1
+zimscraperlib>=2.1,<2.2
 schedule>=1.1.0,<1.2
 backoff==2.2.1

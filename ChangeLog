@@ -12,6 +12,8 @@ as of 2.0.0.
 
 - Fixed regression with broken filters on on multiple-languages ZIM (#175)
 - Fixed `Name` metadata that was incorrectly including period (#177)
+- Fixed `Language` metadata (and filename) for multilang ZIMs (#174)
+- Using zimscraperlib 2.1.0
 
 ## [2.0.0] - 2023-02-20
 
