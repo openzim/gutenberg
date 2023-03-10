@@ -33,16 +33,19 @@ def build_zimfile(
     stats_filename=None,
 ):
 
-    # replace languages (requested) with actual list of languages with books
-    # sorted by most used
+    # actual list of languages with books sorted by most used
     nb = fn.COUNT(Book.language).alias("nb")
-    languages = [
+    db_languages = [
         book.language
         for book in Book.select(Book.language, nb)
         .group_by(Book.language)
         .order_by(nb.desc())
-        if book.language in languages
     ]
+    if languages:
+        # user requested some languages, limit db-collected ones to matching
+        languages = [lang for lang in db_languages if lang in languages]
+    else:
+        languages = db_languages
 
     formats.sort()
 
