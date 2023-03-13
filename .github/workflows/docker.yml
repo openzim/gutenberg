@@ -4,15 +4,13 @@ on:
   push:
     branches:
       - main
-    tags:
-      - v*
 
 jobs:
   build-and-push:
     name: Deploy Docker Image
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.3.0
       - name: Build and push
         uses: openzim/docker-publish-action@v9
         with:
