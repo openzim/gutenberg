@@ -12,7 +12,6 @@ COPY requirements.pip /src/
 RUN python3 -m pip install -r /src/requirements.pip
 COPY LICENSE /src/
 COPY pypi-readme.rst /src/
-COPY languages_06_2018 /src/
 COPY MANIFEST.in /src/
 COPY setup.py /src/
 COPY gutenberg2zim /src/
