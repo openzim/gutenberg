@@ -35,15 +35,14 @@ jobs:
           twine upload dist/*
 
       - name: Build and push
-        uses: openzim/docker-publish-action@v9
+        uses: openzim/docker-publish-action@v10
         with:
           image-name: openzim/gutenberg
           tag-pattern: /^v([0-9.]+)$/
           latest-on-tag: true
           restrict-to: openzim/gutenberg
+          registries: ghcr.io
           credentials:
-            DOCKERIO_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-            DOCKERIO_TOKEN=${{ secrets.DOCKERHUB_PASSWORD }}
             GHCRIO_USERNAME=${{ secrets.GHCR_USERNAME }}
             GHCRIO_TOKEN=${{ secrets.GHCR_TOKEN }}
           repo_description: auto

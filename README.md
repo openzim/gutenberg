@@ -6,7 +6,7 @@ Gutenberg](https://www.gutenberg.org) library and puts it in a
 storing content for offline usage.
 
 [![Python package](https://img.shields.io/pypi/v/gutenberg2zim.svg)](https://pypi.python.org/pypi/gutenberg2zim)
-[![Docker](https://img.shields.io/docker/v/openzim/gutenberg?label=docker&sort=semver)](https://hub.docker.com/r/openzim/gutenberg)
+[![Docker](https://ghcr-badge.deta.dev/openzim/gutenberg/latest_tag?label=docker)](https://ghcr.io/openzim/gutenberg)
 [![CodeFactor](https://www.codefactor.io/repository/github/openzim/gutenberg/badge)](https://www.codefactor.io/repository/github/openzim/gutenberg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
