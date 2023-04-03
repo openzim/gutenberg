@@ -12,21 +12,6 @@ var persist_options = {
   debug: true,
 };
 
-
-/*function queryParams(key) {
-  var qd = {};
-  if (location.search) location.search.substr(1).split("&").forEach(function(item) {
-    var s = item.split("="),
-      k = s[0],
-      v = s[1] && decodeURIComponent(s[1]);
-    (qd[k] = qd[k] || []).push(v)
-  })
-  if (key == undefined)
-    return qd;
-  else
-    return qd[key];
-}*/
-
 function getPersistedPage() {
   var pp = $("#page_record").val();
   try {
@@ -39,19 +24,6 @@ function getPersistedPage() {
     return 0;
   }
 }
-
-/*function getRequestedPage() {
-  var qp = queryParams("page");
-  try {
-    return parseInt(qp) - 1;
-  } catch (e) {
-    if (qp) {
-      console.log(e);
-      console.warn("Unable to work with requested page `" + qp + "`");
-    }
-    return 0;
-  }
-}*/
 
 function onTablePageChange(e, settings, table) {
   // record global ref to table
@@ -67,24 +39,12 @@ function goToAuthor(name) {
   showBooks();
 }
 
-/*function goToTitle(title) {
-  $("#title_filter").val(title);
-}*/
-
-
 function minimizeUI() {
   console.log("minimizeUI");
   $("#hide-precontent").val("true");
   $("#hide-precontent").change();
   $(".precontent").slideUp(300);
 }
-
-/*function maximizeUI() {
-  console.log("maximizeUI");
-  $("#hide-precontent").val("");
-  $("#hide-precontent").change();
-  $(".precontent").slideDown(300);
-}*/
 
 function loadScript(url, nodeId, callback) {
   console.log("requesting script for #" + nodeId + " from " + url);
@@ -195,10 +155,6 @@ function populateFilters(callback) {
 function is_cover_page() {
   return $("body").hasClass("cover");
 }
-
-/*function is_bookshelf_page() {
-  return $("body").hasClass("individual_book_shelf");
-}*/
 
 function is_bookshelves_page() {
   return $('#bookshelvesDisplay').length != 0;
