@@ -34,7 +34,6 @@ class Global:
 
     @staticmethod
     def setup(filename, language, title, description, name):
-
         Global.creator = Creator(
             filename=filename,
             main_path="Home.html",
@@ -62,8 +61,9 @@ class Global:
         delete_fpath: Optional[bool] = False,
         callback: Optional[Union[callable, Tuple[callable, Any]]] = None,
     ):
-
         logger.debug("\t\tAdding ZIM item at {}".format(path))
+        if not mimetype and path.endswith(".epub"):
+            mimetype = "application/epub+zip"
         with Global._lock:
             Global.creator.add_item_for(
                 path=path,

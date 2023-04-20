@@ -15,6 +15,7 @@ as of 2.0.0.
 - Fixed `Language` metadata (and filename) for multilang ZIMs (#174)
 - Using zimscraperlib 2.1.0
 - Using localized Title and Description metadata (#148)
+- Fixed regression with epub files stored as `application/zip` (#181)
 
 ## [2.0.0] - 2023-02-20
 
