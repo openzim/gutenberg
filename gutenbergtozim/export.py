@@ -144,7 +144,7 @@ def export_skeleton(
     Global.add_item_for(
         path="js/l10n.js",
         content=rendered,
-        mimetype="text/html",
+        mimetype="text/javascript",
         is_front=True,
     )
 
@@ -1002,7 +1002,7 @@ def export_to_json_helpers(
         Global.add_item_for(
             path=fn,
             content="var {var} = {content};".format(var=var, content=json.dumps(col)),
-            mimetype="application/javascript",
+            mimetype="text/javascript",
             is_front=False,
         )
 
