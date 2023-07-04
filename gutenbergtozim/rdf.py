@@ -11,7 +11,7 @@ import peewee
 from bs4 import BeautifulSoup
 
 from gutenbergtozim import logger
-from gutenbergtozim.database import Author, Book, BookFormat, License
+from gutenbergtozim.database import Author, Book, BookFormat, BookDownload, License
 from gutenbergtozim.pg_archive_urls import archive_url
 from gutenbergtozim.utils import (
     BAD_BOOKS_FORMATS,
@@ -63,15 +63,15 @@ def parse_and_process_file(rdf_tarfile, rdf_member, force=False):
 
     gid = re.match(r".*/pg([0-9]+).rdf", rdf_member.name).groups()[0]
 
-    if Book.get_or_none(id=int(gid)):
-        logger.info(
-            "\tSkipping already parsed file {} for book id {}".format(
-                rdf_member.name, gid
-            )
-        )
-        return
+    # if Book.get_or_none(id=int(gid)):
+    #     logger.info(
+    #         "\tSkipping already parsed file {} for book id {}".format(
+    #             rdf_member.name, gid
+    #         )
+    #     )
+    #     return
 
-    logger.info("\tParsing file {} for book id {}".format(rdf_member.name, gid))
+    #logger.info("\tParsing file {} for book id {}".format(rdf_member.name, gid))
     parser = RdfParser(rdf_tarfile.extractfile(rdf_member).read(), gid).parse()
 
     if parser.license == "None":
@@ -79,8 +79,64 @@ def parse_and_process_file(rdf_tarfile, rdf_member, force=False):
     elif parser.title == "":
         logger.info("\tWARN: Unusable book without title {}".format(gid))
     else:
-        save_rdf_in_database(parser)
+        guess_urls(parser)
+        #save_rdf_in_database(parser)
 
+def guess_html_url(parser):
+    
+    # we prefer the -h.zip file because it contains everything we need
+    # if it is not available, then we use the .html.noimages file since we won't grab images anyway
+    # -h.htm and .html.images files are not considered (at least for now) since they are linking to
+    # external content (images) which would have to be downloaded separately. 
+    # See book ID 12345 for an example of a book with images
+
+    # html_files = [file for file in parser.files if file["mime"].startswith("text/html")]
+    # if len(html_files) == 0:
+    #     return None
+
+    html_files_sub = [file for file in parser.files if file['url'].endswith('/{}/{}-h.zip'.format(parser.gid, parser.gid))]
+    if len(html_files_sub) > 1:
+        logger.warning("Too many HTML files found ending with '-h.zip' for book ID {}, selecting the first one randomly".format(parser.gid))
+    
+    if len(html_files_sub) >= 1:
+        return archive_url(html_files_sub[0]['url'])
+
+    html_files_sub = [file for file in parser.files if file['url'].endswith('/{}.html.noimages'.format(parser.gid))]
+    if len(html_files_sub) > 1:
+        logger.warning("Too many HTML files found ending with '.html.noimages' for book ID {}, selecting the first one randomly".format(parser.gid))
+    
+    if len(html_files_sub) >= 1:
+        return archive_url(html_files_sub[0]['url'])
+
+    # html_files_sub = [file for file in parser.files if file['url'].endswith('-h.htm')]
+    # if len(html_files_sub) > 1:
+    #     logger.warning("Too many HTML files found ending with '-h.htm' for book ID {}, selecting the first one randomly".format(parser.gid))
+    
+    # if len(html_files_sub) >= 1:
+    #     return archive_url(html_files_sub[0]['url'])
+
+    html_files_sub = [file for file in parser.files if file['url'].endswith('.html.images')]
+    if len(html_files_sub) > 1:
+        logger.warning("Too many HTML files found ending with '.html.images' for book ID {}, selecting the first one randomly".format(parser.gid))
+    
+    if len(html_files_sub) >= 1:
+        return archive_url(html_files_sub[0]['url'])
+    
+    return None
+
+def guess_urls(parser):
+    #book_record = Book.get(id=parser.gid)
+
+    html_url = guess_html_url(parser)
+    book_download = BookDownload.get_or_none(book_id = parser.gid, format = "html")
+    if book_download is None and html_url is not None:
+        logger.warning("A URL {} has been found for book id {} while none was downloaded by former parser".format(html_url, parser.gid))
+    if book_download is not None and html_url is None:
+        logger.warning("No URL has been found for book id {} while {} was downloaded by former parser".format(parser.gid, book_download.downloaded_from))
+    if book_download is not None and html_url is not None:
+        if book_download.downloaded_from != html_url:
+            logger.warning("Different URLs have been found for book id {}: {} has been found while {} was downloaded by former parser".format(parser.gid, html_url, book_download.downloaded_from))
+    
 
 class RdfParser:
     def __init__(self, rdf_data, gid):

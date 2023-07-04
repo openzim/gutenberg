@@ -68,17 +68,17 @@ def archive_url(pg_url, netloc="dante.pglaf.org", scheme='http'):
     return f'{scheme}://{netloc}{path}'
         
 
-# example1 = 'https://www.gutenberg.org/ebooks/12345.html.images'
-# example2 = 'https://www.gutenberg.org/files/12345/12345-h/12345-h.htm'
-# example3 = 'https://www.gutenberg.org/cache/epub/12345/pg12345-images.html.utf8'
-# my_example_1 = 'https://www.gutenberg.org/ebooks/67735.epub3.images'
-# my_example_2 = 'https://www.gutenberg.org/files/67735/67735-h/67735-h.htm'
-# my_example_3 = 'https://www.gutenberg.org/files/67735/67735-h.zip'
-# my_example_4 = 'https://www.gutenberg.org/cache/epub/67735/pg67735.cover.medium.jpg'
-# print("example1: {} => {}".format(example1, archive_url(example1)))
-# print("example2: {} => {}".format(example2, archive_url(example2)))
-# print("example3: {} => {}".format(example3, archive_url(example3)))
-# print("my_example_1: {} => {}".format(my_example_1, archive_url(my_example_1)))
-# print("my_example_2: {} => {}".format(my_example_2, archive_url(my_example_2)))
-# print("my_example_3: {} => {}".format(my_example_3, archive_url(my_example_3)))
-# print("my_example_4: {} => {}".format(my_example_4, archive_url(my_example_4)))
+example1 = 'https://www.gutenberg.org/ebooks/12345.html.images'
+example2 = 'https://www.gutenberg.org/files/12345/12345-h/12345-h.htm'
+example3 = 'https://www.gutenberg.org/cache/epub/12345/pg12345-images.html.utf8'
+my_example_1 = 'https://www.gutenberg.org/ebooks/67735.epub3.images'
+my_example_2 = 'https://www.gutenberg.org/files/67735/67735-h/67735-h.htm'
+my_example_3 = 'https://www.gutenberg.org/files/67735/67735-h.zip'
+my_example_4 = 'https://www.gutenberg.org/cache/epub/67735/pg67735.cover.medium.jpg'
+print("example1: {} => {}".format(example1, archive_url(example1)))
+print("example2: {} => {}".format(example2, archive_url(example2)))
+print("example3: {} => {}".format(example3, archive_url(example3)))
+print("my_example_1: {} => {}".format(my_example_1, archive_url(my_example_1)))
+print("my_example_2: {} => {}".format(my_example_2, archive_url(my_example_2)))
+print("my_example_3: {} => {}".format(my_example_3, archive_url(my_example_3)))
+print("my_example_4: {} => {}".format(my_example_4, archive_url(my_example_4)))
