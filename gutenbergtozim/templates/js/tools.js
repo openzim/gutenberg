@@ -852,3 +852,37 @@ $('#bookshelf_filter').keypress(function(event) {
 
 
 document.webL10n.ready(onLocalized);
+
+function author_clicked() {
+  if (this.dataset.authorName) {
+    goToAuthor(this.dataset.authorName)
+  }
+}
+
+$(window).on('load', function () {
+  const show_books = (document.querySelector('meta[name="show_books"]').content === "1");
+  const bookshelf_home = (document.querySelector('meta[name="bookshelf_home"]').content === "1");
+  const bookshelf = document.querySelector('meta[name="bookshelf"]').content
+
+  init();
+
+  if (show_books) {
+    showBooks();
+  } else {
+    populateFilters();
+  }
+
+  if (bookshelf_home) {
+    showBookshelfSearchResults('');
+  }
+
+  if (bookshelf.length>0) {
+    showBookshelf(bookshelf);
+  }
+
+  const authorBtns = document.getElementsByClassName("author-btn");
+  for (var i = 0; i < authorBtns.length; ++i) {
+      authorBtns[i].addEventListener("click", author_clicked);
+  }
+
+});
