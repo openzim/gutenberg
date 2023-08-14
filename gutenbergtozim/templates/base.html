@@ -4,6 +4,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title {% if show_books %} data-l10n-id="top-title"{% endif %}>{% block title %}Project Gutenberg Library{% endblock %}</title>
         <meta name="description" content="Project Gutenberg Ebooks." />
+        <meta name="show_books" content="{% if show_books %}1{% else %}0{% endif %}" />
+        <meta name="bookshelf_home" content="{% if bookshelf_home %}1{% else %}0{% endif %}" />
+        <meta name="bookshelf" content="{% if bookshelf is defined %}{{ bookshelf }}{% endif %}" />
         <link rel="shortcut icon" href="favicon.ico" />
         <link rel="stylesheet" href="css/pure-min.css" type="text/css" />
         <link rel="stylesheet" href="css/grids-responsive-min.css" type="text/css" />
@@ -26,7 +29,7 @@
         <script src="other_languages.js" type="text/javascript"></script>
     </head>
 
-<body onload="init();  {% if show_books %} showBooks(); {% else %} populateFilters(); {% endif %} {%if bookshelf_home %} showBookshelfSearchResults(''); {%endif%} {%if bookshelf is defined%} showBookshelf(`{{ bookshelf }} `); {%endif%}" class="pure-skin-gutenberg {%if bookshelf_home%}bookshelf_home{%endif%}  {%if individual_book_shelf%}individual_book_shelf{%endif%}  {% if not show_books %}cover{% else %}home{% endif %}">
+<body class="pure-skin-gutenberg {%if bookshelf_home%}bookshelf_home{%endif%}  {%if individual_book_shelf%}individual_book_shelf{%endif%}  {% if not show_books %}cover{% else %}home{% endif %}">
     <div id="spinner" class="spinner" style="display:none;" >
         <img id="img-spinner" src="css/spinner.gif" alt="Loading" />
     </div>
