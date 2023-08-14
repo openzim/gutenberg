@@ -28,11 +28,11 @@ class UrlBuilder:
         >>> url = builder.build()
     """
 
-    SERVER_NAME = "dante_pglaf_org"
-    RSYNC = "rsync://dante.pglaf.org/gutenberg/"
-    BASE_ONE = "http://dante.pglaf.org/"
-    BASE_TWO = "http://dante.pglaf.org/cache/epub/"
-    BASE_THREE = "http://dante.pglaf.org/etext"
+    SERVER_NAME = "aleph_pglaf_org"
+    RSYNC = "rsync://aleph.pglaf.org/gutenberg/"
+    BASE_ONE = "http://aleph.pglaf.org/"
+    BASE_TWO = "http://aleph.pglaf.org/cache/epub/"
+    BASE_THREE = "http://aleph.pglaf.org/etext"
 
     def __init__(self):
         self.base = self.BASE_ONE
