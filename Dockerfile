@@ -1,4 +1,4 @@
-FROM python:3.11.1-bullseye
+FROM python:3.11.4-bookworm
 
 # Install necessary packages
 RUN apt-get update -y && \
