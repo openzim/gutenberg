@@ -14,6 +14,7 @@ COPY LICENSE /src/
 COPY pypi-readme.rst /src/
 COPY MANIFEST.in /src/
 COPY setup.py /src/
+COPY get_js_deps.sh /src/
 COPY gutenberg2zim /src/
 COPY gutenbergtozim /src/gutenbergtozim
 WORKDIR /src/
