@@ -7,7 +7,7 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 # Install gutenberg (from source)
-RUN locale-gen "en_US.UTF-8"
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen "en_US.UTF-8"
 COPY requirements.pip /src/
 RUN python3 -m pip install -r /src/requirements.pip
 COPY LICENSE /src/
