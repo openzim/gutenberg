@@ -860,8 +860,8 @@ function author_clicked() {
 }
 
 $(window).on('load', function () {
-  const show_books = (document.querySelector('meta[name="show_books"]').content === "1");
-  const bookshelf_home = (document.querySelector('meta[name="bookshelf_home"]').content === "1");
+  const show_books = (document.querySelector('meta[name="show_books"]').content === "true");
+  const bookshelf_home = (document.querySelector('meta[name="bookshelf_home"]').content === "true");
   const bookshelf = document.querySelector('meta[name="bookshelf"]').content
 
   init();
