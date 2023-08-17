@@ -14,12 +14,12 @@ import apsw
 import backoff
 from path import Path as path
 
-from gutenbergtozim import TMP_FOLDER, logger
-from gutenbergtozim.database import Book, BookFormat
-from gutenbergtozim.export import fname_for, get_list_of_filtered_books
-from gutenbergtozim.s3 import download_from_cache
-from gutenbergtozim.urls import get_urls
-from gutenbergtozim.utils import (
+from gutenberg2zim import TMP_FOLDER, logger
+from gutenberg2zim.database import Book, BookFormat
+from gutenberg2zim.export import fname_for, get_list_of_filtered_books
+from gutenberg2zim.s3 import download_from_cache
+from gutenberg2zim.urls import get_urls
+from gutenberg2zim.utils import (
     FORMAT_MATRIX,
     archive_name_for,
     download_file,

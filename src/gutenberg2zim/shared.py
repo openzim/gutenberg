@@ -5,7 +5,7 @@ from typing import Any, Optional, Tuple, Union
 
 from zimscraperlib.zim.creator import Creator
 
-from gutenbergtozim import VERSION, logger
+from gutenberg2zim import VERSION, logger
 
 
 class Global:

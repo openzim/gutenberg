@@ -12,7 +12,7 @@ from codecs import open
 
 from setuptools import setup, find_packages
 
-from gutenbergtozim import VERSION
+from gutenberg2zim import VERSION
 
 root_dir = pathlib.Path(__file__).parent
 

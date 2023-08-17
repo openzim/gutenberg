@@ -16,9 +16,9 @@ import six
 from path import Path as path
 from zimscraperlib.download import save_large_file
 
-from gutenbergtozim import logger
-from gutenbergtozim.database import Book, BookFormat
-from gutenbergtozim.iso639 import language_name
+from gutenberg2zim import logger
+from gutenberg2zim.database import Book, BookFormat
+from gutenberg2zim.iso639 import language_name
 
 UTF8 = "utf-8"
 FORMAT_MATRIX = collections.OrderedDict(

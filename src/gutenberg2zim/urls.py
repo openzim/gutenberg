@@ -7,9 +7,9 @@ from collections import defaultdict
 
 from path import Path as path
 
-from gutenbergtozim import logger
-from gutenbergtozim.database import Book, BookFormat, Url
-from gutenbergtozim.utils import FORMAT_MATRIX, exec_cmd
+from gutenberg2zim import logger
+from gutenberg2zim.database import Book, BookFormat, Url
+from gutenberg2zim.utils import FORMAT_MATRIX, exec_cmd
 
 try:
     import urlparse

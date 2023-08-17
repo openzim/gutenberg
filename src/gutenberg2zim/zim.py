@@ -7,13 +7,13 @@ from path import Path as path
 
 from peewee import fn
 
-from gutenbergtozim import logger
-from gutenbergtozim.database import Book
-from gutenbergtozim.export import export_all_books
-from gutenbergtozim.iso639 import ISO_MATRIX
-from gutenbergtozim.l10n import metadata_translations
-from gutenbergtozim.shared import Global
-from gutenbergtozim.utils import get_project_id
+from gutenberg2zim import logger
+from gutenberg2zim.database import Book
+from gutenberg2zim.export import export_all_books
+from gutenberg2zim.iso639 import ISO_MATRIX
+from gutenberg2zim.l10n import metadata_translations
+from gutenberg2zim.shared import Global
+from gutenberg2zim.utils import get_project_id
 
 
 def build_zimfile(

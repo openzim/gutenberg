@@ -4,7 +4,7 @@
 
 import subprocess
 
-from gutenbergtozim import logger
+from gutenberg2zim import logger
 
 
 def check_dependencies():

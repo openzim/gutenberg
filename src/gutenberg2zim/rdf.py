@@ -10,9 +10,9 @@ import tarfile
 import peewee
 from bs4 import BeautifulSoup
 
-from gutenbergtozim import logger
-from gutenbergtozim.database import Author, Book, BookFormat, License
-from gutenbergtozim.utils import (
+from gutenberg2zim import logger
+from gutenberg2zim.database import Author, Book, BookFormat, License
+from gutenberg2zim.utils import (
     BAD_BOOKS_FORMATS,
     FORMAT_MATRIX,
     download_file,

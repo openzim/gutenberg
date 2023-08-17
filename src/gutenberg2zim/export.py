@@ -22,13 +22,13 @@ from six import text_type
 from zimscraperlib.image.transformation import resize_image
 
 import gutenbergtozim
-from gutenbergtozim import TMP_FOLDER, TMP_FOLDER_PATH, logger
-from gutenbergtozim.database import Author, Book, BookFormat
-from gutenbergtozim.iso639 import language_name
-from gutenbergtozim.l10n import l10n_strings
-from gutenbergtozim.s3 import upload_to_cache
-from gutenbergtozim.shared import Global
-from gutenbergtozim.utils import (
+from gutenberg2zim import TMP_FOLDER, TMP_FOLDER_PATH, logger
+from gutenberg2zim.database import Author, Book, BookFormat
+from gutenberg2zim.iso639 import language_name
+from gutenberg2zim.l10n import l10n_strings
+from gutenberg2zim.s3 import upload_to_cache
+from gutenberg2zim.shared import Global
+from gutenberg2zim.utils import (
     FORMAT_MATRIX,
     UTF8,
     archive_name_for,

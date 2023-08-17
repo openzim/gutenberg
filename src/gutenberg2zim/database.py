@@ -12,7 +12,7 @@ from peewee import (
 )
 from playhouse.apsw_ext import APSWDatabase
 
-from gutenbergtozim import logger
+from gutenberg2zim import logger
 
 timeout = 10
 db = APSWDatabase(
@@ -172,7 +172,7 @@ class Book(BaseModel):
         ]
 
     def formats(self):
-        from gutenbergtozim.utils import main_formats_for
+        from gutenberg2zim.utils import main_formats_for
 
         return main_formats_for(self)
 

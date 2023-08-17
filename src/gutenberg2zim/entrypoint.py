@@ -8,14 +8,14 @@ import sys
 from docopt import docopt
 from path import Path as path
 
-from gutenbergtozim import VERSION, logger
-from gutenbergtozim.checkdeps import check_dependencies
-from gutenbergtozim.database import setup_database
-from gutenbergtozim.download import download_all_books
-from gutenbergtozim.rdf import parse_and_fill, download_rdf_file, get_rdf_fpath
-from gutenbergtozim.s3 import s3_credentials_ok
-from gutenbergtozim.urls import setup_urls
-from gutenbergtozim.zim import build_zimfile
+from gutenberg2zim import VERSION, logger
+from gutenberg2zim.checkdeps import check_dependencies
+from gutenberg2zim.database import setup_database
+from gutenberg2zim.download import download_all_books
+from gutenberg2zim.rdf import parse_and_fill, download_rdf_file, get_rdf_fpath
+from gutenberg2zim.s3 import s3_credentials_ok
+from gutenberg2zim.urls import setup_urls
+from gutenberg2zim.zim import build_zimfile
 
 help = (
     """Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
@@ -198,7 +198,7 @@ def main(arguments):
     if ONE_LANG_ONE_ZIM_FOLDER:
         if LANGUAGES == []:
             zims = []
-            from gutenbergtozim.database import Book
+            from gutenberg2zim.database import Book
 
             for book in Book.select(Book.language).distinct():
                 zims.append([book.language])
