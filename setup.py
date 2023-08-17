@@ -4,11 +4,20 @@
 
 """ Project Gutemberg ZIM creator for Offline Use """
 
+import pathlib
+
+import subprocess
+
 from codecs import open
 
 from setuptools import setup, find_packages
 
 from gutenbergtozim import VERSION
+
+root_dir = pathlib.Path(__file__).parent
+
+print("Getting JS dependencies...")
+subprocess.run([str(root_dir.joinpath("get_js_deps.sh").resolve())], check=True)
 
 with open("pypi-readme.rst", "r", "utf-8") as f:
     readme = f.read()

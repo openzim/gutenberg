@@ -27,7 +27,7 @@ from gutenbergtozim.utils import (
     get_etag_from_url,
 )
 
-IMAGE_BASE = "http://dante.pglaf.org/cache/epub/"
+IMAGE_BASE = "http://aleph.pglaf.org/cache/epub/"
 
 # for development
 # def resource_exists(url):

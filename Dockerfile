@@ -1,4 +1,4 @@
-FROM python:3.11.1-bullseye
+FROM python:3.11.4-bookworm
 
 # Install necessary packages
 RUN apt-get update -y && \
@@ -7,13 +7,14 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 # Install gutenberg (from source)
-RUN locale-gen "en_US.UTF-8"
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen "en_US.UTF-8"
 COPY requirements.pip /src/
 RUN python3 -m pip install -r /src/requirements.pip
 COPY LICENSE /src/
 COPY pypi-readme.rst /src/
 COPY MANIFEST.in /src/
 COPY setup.py /src/
+COPY get_js_deps.sh /src/
 COPY gutenberg2zim /src/
 COPY gutenbergtozim /src/gutenbergtozim
 WORKDIR /src/
