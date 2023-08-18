@@ -132,7 +132,7 @@ def main():
         )
 
     try:
-        books_csv = list(books_csv.split(","))
+        books_csv = books_csv.split(",")
 
         def f(x):
             return list(map(int, [i for i in x.split("-") if i.isdigit()]))
