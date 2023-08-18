@@ -2,8 +2,6 @@ import os
 import urllib.parse as urlparse
 from collections import defaultdict
 
-from path import Path
-
 from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
 from gutenberg2zim.database import Book, BookFormat, Url
 from gutenberg2zim.utils import FORMAT_MATRIX, exec_cmd
