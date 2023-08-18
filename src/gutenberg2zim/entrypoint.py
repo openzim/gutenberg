@@ -91,7 +91,7 @@ def main():
         or "http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2"
     )
     dl_cache = arguments.get("--dl-folder") or os.path.join("dl-cache")
-    books = arguments.get("--books") or ""
+    books_csv = arguments.get("--books") or ""
     zim_title = arguments.get("--zim-title")
     zim_desc = arguments.get("--zim-desc")
     concurrency = int(arguments.get("--concurrency") or 16)
@@ -132,21 +132,21 @@ def main():
         )
 
     try:
-        books = list(books.split(","))
+        books_csv = list(books_csv.split(","))
 
         def f(x):
             return list(map(int, [i for i in x.split("-") if i.isdigit()]))
 
         books = []
-        for i in books:
+        for i in books_csv:
             blst = f(i)
             if len(blst) > 1:
                 blst = range(blst[0], blst[1] + 1)
             books.extend(blst)
-        books = list(set(books))
+        books_csv = list(set(books))
     except Exception as e:
         logger.error(e)
-        books = []
+        books_csv = []
 
     # no arguments, default to --complete
     if not (do_prepare + do_parse + do_download + do_zim):
