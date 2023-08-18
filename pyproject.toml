@@ -37,11 +37,13 @@ dynamic = ["version"]
 [project.optional-dependencies]
 scripts = ["invoke==2.2.0"]
 lint = ["black==23.7.0", "ruff==0.0.280"]
-check = ["pyright==1.1.318"]
-test = ["pytest==7.4.0", "coverage==7.2.7"]
+check = ["pyright==1.1.323"]
+test = ["pytest==7.4.0", "coverage==7.3.0"]
 dev = [
   "pre-commit==3.3.3",
   "debugpy==1.6.7",
+  "ipdb==0.13.13",
+  "ipython==8.14.0",
   "gutenberg2zim[scripts]",
   "gutenberg2zim[lint]",
   "gutenberg2zim[test]",
