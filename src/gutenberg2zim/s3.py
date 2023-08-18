@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # vim: ai ts=4 sts=4 et sw=4 nu
 
 import os
@@ -9,8 +8,8 @@ import zipfile
 from kiwixstorage import KiwixStorage
 from pif import get_public_ip
 
-from . import TMP_FOLDER, logger
-from .utils import archive_name_for
+from gutenberg2zim.constants import TMP_FOLDER, logger
+from gutenberg2zim.utils import archive_name_for
 
 
 def s3_credentials_ok(s3_url_with_credentials):
@@ -46,7 +45,7 @@ def download_from_cache(
     ):
         logger.error(
             f"optimizer version doesn't match for {key}. Expected "
-            + "{optimizer_version[book_format]}, got {meta.get('optimizer_version')}"
+            "{optimizer_version[book_format]}, got {meta.get('optimizer_version')}"
         )
         return False
     dest_dir.mkdir(parents=True, exist_ok=True)

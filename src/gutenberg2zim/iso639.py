@@ -1,13 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 import babel
 
 
 def language_name(code):
     try:
-        return babel.Locale(code).get_language_name(code).title()
+        return babel.Locale(code).get_language_name(code).title()  # type: ignore
     except Exception:
         return other_language_names.get(code, code)
 
@@ -26,7 +22,7 @@ other_language_names = {
     "yi": "ייִדיש",
     "ale": "Unangam Tunuu / Унáҥам Тунý",
     "ang": "Ænglisc",
-    "arp": "Hinónoʼeitíít",
+    "arp": "Hinóno`eitíít",
     "bgi": "Giangan",
     "ceb": "Cebuano",
     "csb": "kaszëbsczi",

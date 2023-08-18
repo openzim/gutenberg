@@ -14,7 +14,7 @@ fi
 
 # Absolute path this script is in.
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
-ASSETS_PATH="${SCRIPT_PATH}/gutenbergtozim/templates"
+ASSETS_PATH="${SCRIPT_PATH}/src/gutenberg2zim/templates"
 
 echo "About to download JS assets to ${ASSETS_PATH}"
 
