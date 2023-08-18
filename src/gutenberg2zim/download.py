@@ -71,25 +71,25 @@ def handle_zipped_epub(zippath, book, dst_dir: pathlib.Path):
         sum([1 for f in zipped_files if f.endswith("html") or f.endswith(".htm")]) > 1
     )
     # move all extracted files to proper locations
-    for fname in zipped_files:
+    for zipped_file in zipped_files:
         # skip folders
-        if not Path(fname).ext:
+        if not Path(zipped_file).ext:
             continue
 
-        src = os.path.join(tmpd, fname)
+        src = os.path.join(tmpd, zipped_file)
         if os.path.exists(src):
-            fname_path = Path(fname).basename()
+            fname = Path(zipped_file).basename()
 
-            if fname_path.endswith(".html") or fname_path.endswith(".htm"):
+            if fname.endswith(".html") or fname.endswith(".htm"):
                 if mhtml:
-                    if fname_path.startswith(f"{book.id}-h."):
+                    if fname.startswith(f"{book.id}-h."):
                         dst = dst_dir.joinpath(f"{book.id}.html")
                     else:
-                        dst = dst_dir.joinpath(f"{book.id}_{fname_path}")
+                        dst = dst_dir.joinpath(f"{book.id}_{fname}")
                 else:
                     dst = dst_dir.joinpath(f"{book.id}.html")
             else:
-                dst = dst_dir.joinpath(f"{book.id}_{fname_path}")
+                dst = dst_dir.joinpath(f"{book.id}_{fname}")
             try:
                 Path(src).move(str(dst))
             except Exception as e:
