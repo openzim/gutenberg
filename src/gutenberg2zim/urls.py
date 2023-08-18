@@ -61,7 +61,7 @@ class UrlBuilder:
     def with_id(self, b_id):
         self.b_id = b_id
 
-    def __unicode__(self):
+    def __str__(self):
         return self.build_url()  # type: ignore
 
 

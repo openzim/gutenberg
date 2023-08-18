@@ -51,7 +51,7 @@ class License(BaseModel):
     slug = CharField(max_length=20, primary_key=True)
     name = CharField()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -75,7 +75,7 @@ class Author(BaseModel):
     birth_year = CharField(max_length=10, null=True)
     death_year = CharField(max_length=10, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name()
 
     def fname(self):
@@ -135,7 +135,7 @@ class Book(BaseModel):
     epub_etag = CharField(max_length=500, null=True)
     cover_etag = CharField(max_length=500, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return f"{self.id}/{self.title}/{self.bookshelf}"
 
     def to_dict(self):
@@ -189,7 +189,7 @@ class BookFormat(BaseModel):
     pattern = CharField(max_length=100)
     downloaded_from = CharField(max_length=300, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return f"[{self.mime}] {self.book.title}"
 
 
@@ -199,7 +199,7 @@ class Url(BaseModel):
 
     url = TextField(index=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.url
 
 
