@@ -98,7 +98,6 @@ def handle_zipped_epub(zippath, book, dst_dir: pathlib.Path):
                 print(e)  # noqa: T201
                 print("".join(traceback.format_exc()))  # noqa: T201
                 raise
-                # import ipdb; ipdb.set_trace()
 
     # delete temp directory and zipfile
     if Path(zippath).exists():
