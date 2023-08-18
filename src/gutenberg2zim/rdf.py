@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 import os
 import pathlib
 import re
@@ -10,7 +6,7 @@ import tarfile
 import peewee
 from bs4 import BeautifulSoup
 
-from gutenberg2zim import logger
+from gutenberg2zim.constants import logger
 from gutenberg2zim.database import Author, Book, BookFormat, License
 from gutenberg2zim.utils import (
     BAD_BOOKS_FORMATS,
@@ -29,24 +25,27 @@ def get_rdf_fpath():
 def download_rdf_file(rdf_path, rdf_url):
     """Download rdf-files archive"""
     if rdf_path.exists():
-        logger.info("\trdf-files archive already exists in {}".format(rdf_path))
+        logger.info(f"\trdf-files archive already exists in {rdf_path}")
         return
 
-    logger.info("\tDownloading {} into {}".format(rdf_url, rdf_path))
+    logger.info(f"\tDownloading {rdf_url} into {rdf_path}")
     download_file(rdf_url, rdf_path)
 
 
-def parse_and_fill(rdf_path, only_books=[], force=False):
-    logger.info("\tLooping throught RDF files in {}".format(rdf_path))
+def parse_and_fill(rdf_path, only_books):
+    logger.info(f"\tLooping throught RDF files in {rdf_path}")
 
     rdf_tarfile = tarfile.open(name=rdf_path, mode="r|bz2")
 
     for rdf_member in rdf_tarfile:
-
         rdf_member_path = pathlib.Path(rdf_member.name)
 
         # skip books outside of requested list
-        if only_books and int(rdf_member_path.stem.replace("pg", "").replace(".rdf", "")) not in only_books:
+        if (
+            only_books
+            and int(rdf_member_path.stem.replace("pg", "").replace(".rdf", ""))
+            not in only_books
+        ):
             continue
 
         if rdf_member_path.name == "pg0.rdf":
@@ -55,28 +54,25 @@ def parse_and_fill(rdf_path, only_books=[], force=False):
         if not str(rdf_member_path.name).endswith(".rdf"):
             continue
 
-        parse_and_process_file(rdf_tarfile, rdf_member, force)
+        parse_and_process_file(rdf_tarfile, rdf_member)
 
 
-def parse_and_process_file(rdf_tarfile, rdf_member, force=False):
-
-    gid = re.match(r".*/pg([0-9]+).rdf", rdf_member.name).groups()[0]
+def parse_and_process_file(rdf_tarfile, rdf_member):
+    gid = re.match(r".*/pg([0-9]+).rdf", rdf_member.name).groups()[0]  # type: ignore
 
     if Book.get_or_none(id=int(gid)):
         logger.info(
-            "\tSkipping already parsed file {} for book id {}".format(
-                rdf_member.name, gid
-            )
+            f"\tSkipping already parsed file {rdf_member.name} for book id {gid}"
         )
         return
 
-    logger.info("\tParsing file {} for book id {}".format(rdf_member.name, gid))
+    logger.info(f"\tParsing file {rdf_member.name} for book id {gid}")
     parser = RdfParser(rdf_tarfile.extractfile(rdf_member).read(), gid).parse()
 
     if parser.license == "None":
-        logger.info("\tWARN: Unusable book without any information {}".format(gid))
+        logger.info(f"\tWARN: Unusable book without any information {gid}")
     elif parser.title == "":
-        logger.info("\tWARN: Unusable book without title {}".format(gid))
+        logger.info(f"\tWARN: Unusable book without title {gid}")
     else:
         save_rdf_in_database(parser)
 
@@ -109,7 +105,7 @@ class RdfParser:
         # Parsing for the bookshelf name
         self.bookshelf = soup.find("pgterms:bookshelf")
         if self.bookshelf:
-            self.bookshelf = self.bookshelf.find("rdf:value").text
+            self.bookshelf = self.bookshelf.find("rdf:value").text  # type: ignore
 
         # Search rdf to see if the image exists at the hard link
         # https://www.gutenberg.ord/cache/epub/id/pg{id}.cover.medium.jpg
@@ -130,14 +126,14 @@ class RdfParser:
         if self.author:
             self.author_id = self.author.find("pgterms:agent")
             self.author_id = (
-                self.author_id.attrs["rdf:about"].split("/")[-1]
+                self.author_id.attrs["rdf:about"].split("/")[-1]  # type: ignore
                 if "rdf:about" in getattr(self.author_id, "attrs", "")
                 else None
             )
 
             if self.author.find("pgterms:name"):
                 self.author_name = self.author.find("pgterms:name")
-                self.author_name = self.author_name.text.split(",")
+                self.author_name = self.author_name.text.split(",")  # type: ignore
 
                 if len(self.author_name) > 1:
                     self.first_name = " ".join(self.author_name[::-2]).strip()
@@ -154,15 +150,17 @@ class RdfParser:
         self.death_year = get_formatted_number(self.death_year)
 
         # ISO 639-3 language codes that consist of 2 or 3 letters
-        self.language = soup.find("dcterms:language").find("rdf:value").text
+        self.language = (
+            soup.find("dcterms:language").find("rdf:value").text  # type: ignore
+        )
 
         # The download count of the books on www.gutenberg.org.
         # This will be used to determine the popularity of the book.
-        self.downloads = soup.find("pgterms:downloads").text
+        self.downloads = soup.find("pgterms:downloads").text  # type: ignore
 
         # The book might be licensed under GPL, public domain
         # or might be copyrighted
-        self.license = soup.find("dcterms:rights").text
+        self.license = soup.find("dcterms:rights").text  # type: ignore
 
         # Finding out all the file types this book is available in
         file_types = soup.find_all("pgterms:file")
@@ -177,7 +175,6 @@ class RdfParser:
 
 
 def save_rdf_in_database(parser):
-
     # Insert author, if it not exists
     if parser.author_id:
         try:
@@ -218,7 +215,7 @@ def save_rdf_in_database(parser):
 
     try:
         book_record = Book.get(id=parser.gid)
-    except Book.DoesNotExist:
+    except peewee.DoesNotExist:
         book_record = Book.create(
             id=parser.gid,
             title=normalize(parser.title.strip()),
@@ -250,7 +247,6 @@ def save_rdf_in_database(parser):
 
     # Insert formats
     for file_type in parser.file_types:
-
         # Sanitize MIME
         mime = parser.file_types[file_type]
         if not mime.startswith("text/plain"):
@@ -265,11 +261,9 @@ def save_rdf_in_database(parser):
         bid = int(book_record.id)
 
         if bid in BAD_BOOKS_FORMATS.keys() and mime in [
-            FORMAT_MATRIX.get(f) for f in BAD_BOOKS_FORMATS.get(bid)
+            FORMAT_MATRIX.get(f) for f in BAD_BOOKS_FORMATS.get(bid)  # type: ignore
         ]:
-            logger.error(
-                "\t**** EXCLUDING **** {} for book #{} from list.".format(mime, bid)
-            )
+            logger.error(f"\t**** EXCLUDING **** {mime} for book #{bid} from list.")
             continue
 
         # Insert book format
@@ -278,8 +272,9 @@ def save_rdf_in_database(parser):
             mime=mime,
             images=file_type.endswith(".images")
             or parser.file_types[file_type] == "application/pdf",
-            pattern=pattern,            
+            pattern=pattern,
         )
+
 
 def get_formatted_number(num):
     """
@@ -299,15 +294,15 @@ def get_formatted_number(num):
 
 if __name__ == "__main__":
     # Bacic Test with a sample rdf file
-    nums = ["{0:0=5d}".format(i) for i in range(21000, 40000)]
+    nums = [f"{i:0=5d}" for i in range(21000, 40000)]
     for num in nums:
-        print(num)
+        print(num)  # noqa: T201
         curd = os.path.dirname(os.path.realpath(__file__))
         rdf = os.path.join(curd, "..", "rdf-files", num, "pg" + num + ".rdf")
         if os.path.isfile(rdf):
             data = ""
-            with open(rdf, "r") as f:
+            with open(rdf) as f:
                 data = f.read()
 
             parser = RdfParser(data, num).parse()
-            print(parser.first_name, parser.last_name)
+            print(parser.first_name, parser.last_name)  # noqa: T201

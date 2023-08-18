@@ -1,10 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 from peewee import (
     BooleanField,
     CharField,
+    DoesNotExist,
     ForeignKeyField,
     IntegerField,
     Model,
@@ -12,7 +9,7 @@ from peewee import (
 )
 from playhouse.apsw_ext import APSWDatabase
 
-from gutenberg2zim import logger
+from gutenberg2zim.constants import logger
 
 timeout = 10
 db = APSWDatabase(
@@ -33,14 +30,14 @@ class BaseModel(Model):
     def get_or_none(cls, *query, **kwargs):
         try:
             return cls.get(*query, **kwargs)
-        except cls.DoesNotExist:
+        except DoesNotExist:
             return None
 
 
 class License(BaseModel):
     class Meta:
         database = db
-        fixtures = [
+        fixtures = (
             {"slug": "PD", "name": "Public domain in the USA."},
             {"slug": "None", "name": "None"},
             {
@@ -49,7 +46,7 @@ class License(BaseModel):
                 "notice inside this book "
                 "for details.",
             },
-        ]
+        )
 
     slug = CharField(max_length=20, primary_key=True)
     name = CharField()
@@ -61,7 +58,7 @@ class License(BaseModel):
 class Author(BaseModel):
     class Meta:
         database = db
-        fixtures = [
+        fixtures = (
             {
                 "gut_id": "116",
                 "last_name": "Various",
@@ -70,7 +67,7 @@ class Author(BaseModel):
                 "gut_id": "216",
                 "last_name": "Anonymous",
             },
-        ]
+        )
 
     gut_id = CharField(primary_key=True, max_length=100)
     last_name = CharField(max_length=150)
@@ -82,7 +79,7 @@ class Author(BaseModel):
         return self.name()
 
     def fname(self):
-        return "{name}.{id}".format(name=self.name(), id=self.gut_id)
+        return f"{self.name()}.{self.gut_id}"
 
     def name(self):
         def sanitize(text):
@@ -97,7 +94,7 @@ class Author(BaseModel):
         if not self.last_name:
             return sanitize(self.first_names)
 
-        return sanitize("{fn} {ln}".format(ln=self.last_name, fn=self.first_names))
+        return sanitize(f"{self.first_names} {self.last_name}")
 
     def to_dict(self):
         return {
@@ -124,11 +121,11 @@ class Book(BaseModel):
     class Meta:
         database = db
 
-    id = IntegerField(primary_key=True)
+    id = IntegerField(primary_key=True)  # noqa: A003
     title = CharField(max_length=500)
     subtitle = CharField(max_length=500, null=True)
     author = ForeignKeyField(Author, related_name="books")
-    license = ForeignKeyField(License, related_name="books")
+    license = ForeignKeyField(License, related_name="books")  # noqa: A003
     language = CharField(max_length=10)
     downloads = IntegerField(default=0)
     bookshelf = CharField(max_length=500, null=True)
@@ -139,7 +136,7 @@ class Book(BaseModel):
     cover_etag = CharField(max_length=500, null=True)
 
     def __unicode__(self):
-        return "{}/{}/{}".format(self.id, self.title, self.bookshelf)
+        return f"{self.id}/{self.title}/{self.bookshelf}"
 
     def to_dict(self):
         return {
@@ -193,7 +190,8 @@ class BookFormat(BaseModel):
     downloaded_from = CharField(max_length=300, null=True)
 
     def __unicode__(self):
-        return "[{}] {}".format(self.mime, self.book.title)
+        return f"[{self.mime}] {self.book.title}"
+
 
 class Url(BaseModel):
     class Meta:
@@ -206,14 +204,14 @@ class Url(BaseModel):
 
 
 def load_fixtures(model):
-    logger.info("Loading fixtures for {}".format(model._meta.name))
+    logger.info(f"Loading fixtures for {model._meta.name}")
 
     for fixture in getattr(model._meta, "fixtures", []):
         f = model.create(**fixture)
-        logger.debug("[fixtures] Created {}".format(f))
+        logger.debug(f"[fixtures] Created {f}")
 
 
-def setup_database(wipe=False):
+def setup_database(*, wipe=False):
     logger.info("Setting up the database")
 
     for model in (License, Author, Book, BookFormat, Url):
@@ -221,7 +219,7 @@ def setup_database(wipe=False):
             model.drop_table(fail_silently=True)
         if not model.table_exists():
             model.create_table()
-            logger.debug("Created table for {}".format(model._meta.name))
+            logger.debug(f"Created table for {model._meta.name}")  # type: ignore
             load_fixtures(model)
         else:
-            logger.debug("{} table already exists.".format(model._meta.name))
+            logger.debug(f"{model._meta.name} table already exists.")  # type: ignore

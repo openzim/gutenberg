@@ -1,23 +1,19 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 import os
 import sys
 
 from docopt import docopt
-from path import Path as path
+from path import Path
 
-from gutenberg2zim import VERSION, logger
 from gutenberg2zim.checkdeps import check_dependencies
+from gutenberg2zim.constants import VERSION, logger
 from gutenberg2zim.database import setup_database
 from gutenberg2zim.download import download_all_books
-from gutenberg2zim.rdf import parse_and_fill, download_rdf_file, get_rdf_fpath
+from gutenberg2zim.rdf import download_rdf_file, get_rdf_fpath, parse_and_fill
 from gutenberg2zim.s3 import s3_credentials_ok
 from gutenberg2zim.urls import setup_urls
 from gutenberg2zim.zim import build_zimfile
 
-help = (
+help_info = (
     """Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
     """[-d CACHE_PATH] [-e STATIC_PATH] """
     """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
@@ -73,92 +69,93 @@ of Gutenberg repository using a mirror."""
 )
 
 
-def main(arguments):
+def main():
+    arguments = docopt(help_info, version=VERSION)
+
     # optimizer version to use
-    OPTIMIZER_VERSION = {"html": "v1", "epub": "v1", "cover": "v1"}
+    optimizer_version = {"html": "v1", "epub": "v1", "cover": "v1"}
 
     # actions constants
-    DO_PREPARE = arguments.get("--prepare", False)
-    DO_PARSE = arguments.get("--parse", False)
-    DO_DOWNLOAD = arguments.get("--download", False)
-    DO_ZIM = arguments.get("--zim", False)
-    DO_CHECKDEPS = arguments.get("--check", False)
-    ONE_LANG_ONE_ZIM_FOLDER = arguments.get("--one-language-one-zim") or None
-    COMPLETE_DUMP = arguments.get("--complete", False)
+    do_prepare = arguments.get("--prepare", False)
+    do_parse = arguments.get("--parse", False)
+    do_download = arguments.get("--download", False)
+    do_zim = arguments.get("--zim", False)
+    do_checkdeps = arguments.get("--check", False)
+    one_lang_one_zim_folder = arguments.get("--one-language-one-zim") or None
+    complete_dump = arguments.get("--complete", False)
 
-    ZIM_NAME = arguments.get("--zim-file")
-    WIPE_DB = arguments.get("--wipe-db") or False
-    RDF_URL = (
+    zim_name = arguments.get("--zim-file")
+    wipe_db = arguments.get("--wipe-db") or False
+    rdf_url = (
         arguments.get("--rdf-url")
         or "http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2"
     )
-    DL_CACHE = arguments.get("--dl-folder") or os.path.join("dl-cache")
-    BOOKS = arguments.get("--books") or ""
-    ZIM_TITLE = arguments.get("--zim-title")
-    ZIM_DESC = arguments.get("--zim-desc")
-    CONCURRENCY = int(arguments.get("--concurrency") or 16)
-    DL_CONCURRENCY = int(arguments.get("--dlc") or CONCURRENCY)
-    FORCE = arguments.get("--force", False)
-    TITLE_SEARCH = arguments.get("--title-search", False)
-    BOOKSHELVES = arguments.get("--bookshelves", False)
-    OPTIMIZATION_CACHE = arguments.get("--optimization-cache") or None
-    USE_ANY_OPTIMIZED_VERSION = arguments.get("--use-any-optimized-version", False)
-    STATS_FILENAME = arguments.get("--stats-filename") or None
+    dl_cache = arguments.get("--dl-folder") or os.path.join("dl-cache")
+    books = arguments.get("--books") or ""
+    zim_title = arguments.get("--zim-title")
+    zim_desc = arguments.get("--zim-desc")
+    concurrency = int(arguments.get("--concurrency") or 16)
+    dl_concurrency = int(arguments.get("--dlc") or concurrency)
+    force = arguments.get("--force", False)
+    title_search = arguments.get("--title-search", False)
+    bookshelves = arguments.get("--bookshelves", False)
+    optimization_cache = arguments.get("--optimization-cache") or None
+    use_any_optimized_version = arguments.get("--use-any-optimized-version", False)
+    stats_filename = arguments.get("--stats-filename") or None
 
     s3_storage = None
-    if OPTIMIZATION_CACHE:
-        s3_storage = s3_credentials_ok(OPTIMIZATION_CACHE)
+    if optimization_cache:
+        s3_storage = s3_credentials_ok(optimization_cache)
         if not s3_storage:
             raise ValueError("Unable to connect to Optimization Cache. Check its URL.")
         logger.info("S3 Credentials OK. Continuing ... ")
 
     # create tmp dir
-    path("tmp").mkdir_p()
+    Path("tmp").mkdir_p()
 
-    LANGUAGES = [
+    languages = [
         x.strip().lower()
         for x in (arguments.get("--languages") or "").split(",")
         if x.strip()
     ]
     # special shortcuts for "all"
+    formats: list[str]
     if arguments.get("--formats") in ["all", None]:
-        FORMATS = ["epub", "pdf", "html"]
+        formats = ["epub", "pdf", "html"]
     else:
-        FORMATS = list(
-            set(
-                [
-                    x.strip().lower()
-                    for x in (arguments.get("--formats") or "").split(",")
-                    if x.strip()
-                ]
-            )
+        formats = list(
+            {
+                x.strip().lower()
+                for x in (arguments.get("--formats") or "").split(",")
+                if x.strip()
+            }
         )
 
     try:
-        BOOKS = [bid for bid in BOOKS.split(",")]
+        books = list(books.split(","))
 
         def f(x):
             return list(map(int, [i for i in x.split("-") if i.isdigit()]))
 
         books = []
-        for i in BOOKS:
+        for i in books:
             blst = f(i)
             if len(blst) > 1:
                 blst = range(blst[0], blst[1] + 1)
             books.extend(blst)
-        BOOKS = list(set(books))
+        books = list(set(books))
     except Exception as e:
         logger.error(e)
-        BOOKS = []
+        books = []
 
     # no arguments, default to --complete
-    if not (DO_PREPARE + DO_PARSE + DO_DOWNLOAD + DO_ZIM):
-        COMPLETE_DUMP = True
+    if not (do_prepare + do_parse + do_download + do_zim):
+        complete_dump = True
 
-    if COMPLETE_DUMP:
-        DO_CHECKDEPS = DO_PREPARE = DO_PARSE = DO_DOWNLOAD = DO_ZIM = True
+    if complete_dump:
+        do_checkdeps = do_prepare = do_parse = do_download = do_zim = True
 
-    if DO_CHECKDEPS:
+    if do_checkdeps:
         logger.info("CHECKING for dependencies on the system")
         if not check_dependencies()[0]:
             logger.error("Exiting...")
@@ -166,37 +163,37 @@ def main(arguments):
 
     rdf_path = get_rdf_fpath()
 
-    if DO_PREPARE:
-        logger.info("PREPARING rdf-files cache from {}".format(RDF_URL))
-        download_rdf_file(rdf_url=RDF_URL, rdf_path=rdf_path)
+    if do_prepare:
+        logger.info(f"PREPARING rdf-files cache from {rdf_url}")
+        download_rdf_file(rdf_url=rdf_url, rdf_path=rdf_path)
 
-    if WIPE_DB:
+    if wipe_db:
         logger.info("RESETING DATABASE IF EXISTS")
     logger.info("SETTING UP DATABASE")
-    setup_database(wipe=WIPE_DB)
+    setup_database(wipe=wipe_db)
 
-    if DO_PARSE:
-        logger.info("PARSING rdf-files in {}".format(rdf_path))
-        parse_and_fill(rdf_path=rdf_path, only_books=BOOKS, force=FORCE)
+    if do_parse:
+        logger.info(f"PARSING rdf-files in {rdf_path}")
+        parse_and_fill(rdf_path=rdf_path, only_books=books)
         logger.info("Add possible url to db")
-        setup_urls(force=FORCE)
+        setup_urls(force=force)
 
-    if DO_DOWNLOAD:
+    if do_download:
         logger.info("DOWNLOADING ebooks from mirror using filters")
         download_all_books(
-            download_cache=DL_CACHE,
-            concurrency=DL_CONCURRENCY,
-            languages=LANGUAGES,
-            formats=FORMATS,
-            only_books=BOOKS,
-            force=FORCE,
+            download_cache=dl_cache,
+            concurrency=dl_concurrency,
+            languages=languages,
+            formats=formats,
+            only_books=books,
+            force=force,
             s3_storage=s3_storage,
-            optimizer_version=OPTIMIZER_VERSION
-            if not USE_ANY_OPTIMIZED_VERSION
+            optimizer_version=optimizer_version
+            if not use_any_optimized_version
             else None,
         )
-    if ONE_LANG_ONE_ZIM_FOLDER:
-        if LANGUAGES == []:
+    if one_lang_one_zim_folder:
+        if languages == []:
             zims = []
             from gutenberg2zim.database import Book
 
@@ -204,33 +201,27 @@ def main(arguments):
                 zims.append([book.language])
             zims.append([])
         else:
-            zims = [[lang] for lang in LANGUAGES] + [LANGUAGES]
+            zims = [[lang] for lang in languages] + [languages]
     else:
-        zims = [LANGUAGES]
+        zims = [languages]
 
     for zim_lang in zims:
-
-        if DO_ZIM:
-
+        if do_zim:
             logger.info("BUILDING ZIM dynamically")
             build_zimfile(
-                output_folder=path(ONE_LANG_ONE_ZIM_FOLDER or ".").abspath(),
-                download_cache=DL_CACHE,
-                concurrency=CONCURRENCY,
+                output_folder=Path(one_lang_one_zim_folder or ".").abspath(),
+                download_cache=dl_cache,
+                concurrency=concurrency,
                 languages=zim_lang,
-                formats=FORMATS,
-                only_books=BOOKS,
-                force=FORCE,
-                title_search=TITLE_SEARCH,
-                add_bookshelves=BOOKSHELVES,
+                formats=formats,
+                only_books=books,
+                force=force,
+                title_search=title_search,
+                add_bookshelves=bookshelves,
                 s3_storage=s3_storage,
-                optimizer_version=OPTIMIZER_VERSION,
-                zim_name=path(ZIM_NAME).name if ZIM_NAME else None,
-                title=ZIM_TITLE,
-                description=ZIM_DESC,
-                stats_filename=STATS_FILENAME,
+                optimizer_version=optimizer_version,
+                zim_name=Path(zim_name).name if zim_name else None,
+                title=zim_title,
+                description=zim_desc,
+                stats_filename=stats_filename,
             )
-
-
-if __name__ == "__main__":
-    main(docopt(help, version=VERSION))

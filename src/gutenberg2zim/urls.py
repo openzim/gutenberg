@@ -1,20 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 import os
+import urllib.parse as urlparse
 from collections import defaultdict
 
-from path import Path as path
+from path import Path
 
-from gutenberg2zim import logger
+from gutenberg2zim.constants import logger
 from gutenberg2zim.database import Book, BookFormat, Url
 from gutenberg2zim.utils import FORMAT_MATRIX, exec_cmd
-
-try:
-    import urlparse
-except ImportError:
-    import urllib.parse as urlparse
 
 
 class UrlBuilder:
@@ -50,7 +42,7 @@ class UrlBuilder:
 
         """
         if self.base == self.BASE_ONE:
-            if int(self.b_id) > 10:
+            if int(self.b_id) > 10:  # noqa: PLR2004
                 base_url = os.path.join(
                     os.path.join(*list(str(self.b_id))[:-1]), str(self.b_id)
                 )
@@ -61,7 +53,7 @@ class UrlBuilder:
             url = os.path.join(self.base, str(self.b_id))
         elif self.base == self.BASE_THREE:
             url = self.base
-        return url
+        return url  # type: ignore
 
     def with_base(self, base):
         self.base = base
@@ -70,7 +62,7 @@ class UrlBuilder:
         self.b_id = b_id
 
     def __unicode__(self):
-        return self.build_url()
+        return self.build_url()  # type: ignore
 
 
 def get_urls(book):
@@ -227,7 +219,7 @@ def build_html(files):
     etext_nums = []
     etext_nums.extend(range(90, 100))
     etext_nums.extend(range(0, 6))
-    etext_names = ["{0:0=2d}".format(i) for i in etext_nums]
+    etext_names = [f"{i:0=2d}" for i in etext_nums]
     etext_urls = []
     for i in etext_names:
         etext_urls.append(os.path.join(u.build() + i, file_name))
@@ -237,11 +229,10 @@ def build_html(files):
     return list(set(urls))
 
 
-def setup_urls(force=False):
+def setup_urls(force):
+    file_with_url = os.path.join("tmp", f"file_on_{UrlBuilder.SERVER_NAME}")
 
-    file_with_url = os.path.join("tmp", "file_on_{}".format(UrlBuilder.SERVER_NAME))
-
-    if path(file_with_url).exists() and not force:
+    if Path(file_with_url).exists() and not force:
         logger.info(
             "\tUrls rsync result {} already exists, processing existing file".format(
                 file_with_url
@@ -251,20 +242,20 @@ def setup_urls(force=False):
         cmd = [
             "bash",
             "-c",
-            "rsync -a --list-only {} > {}".format(UrlBuilder.RSYNC, file_with_url),
+            f"rsync -a --list-only {UrlBuilder.RSYNC} > {file_with_url}",
         ]
         exec_cmd(cmd)
 
     logger.info("\tLooking after relative path start in urls rsync result")
     # search for "GUTINDEX*" file, so that we known where starts the relative
     # path in rsync output
-    with open(file_with_url, "r", errors="replace") as src:
+    with open(file_with_url, errors="replace") as src:
         for line in src.readlines():
             start_rel_path_idx = line.find("GUTINDEX")
             if start_rel_path_idx >= 0:
                 break
 
-    if start_rel_path_idx == -1:
+    if start_rel_path_idx == -1:  # type: ignore
         raise ValueError("Unable to find relative path start in urls file")
 
     logger.info("\tRemoving all urls already present in DB")
@@ -273,11 +264,11 @@ def setup_urls(force=False):
 
     logger.info("\tAppending urls in DB from rsync result")
     # strip rsync file to only contain relative path
-    with open(file_with_url, "r", errors="replace") as src:
+    with open(file_with_url, errors="replace") as src:
         for line in src.readlines():
-            Url.create(url=line[start_rel_path_idx:].strip())
+            Url.create(url=line[start_rel_path_idx:].strip())  # type: ignore
 
 
 if __name__ == "__main__":
     book = Book.get(id=9)
-    print(get_urls(book))
+    print(get_urls(book))  # noqa: T201

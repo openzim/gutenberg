@@ -1,28 +1,23 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 import json
 import os
 import pathlib
 import shutil
 import tempfile
 import traceback
-import urllib
+import urllib.parse
 import zipfile
 from multiprocessing.dummy import Pool
 
 import bs4
-import six
 from bs4 import BeautifulSoup
 from jinja2 import Environment, PackageLoader
-from path import Path as path
+from path import Path
 from schedule import every
 from six import text_type
 from zimscraperlib.image.transformation import resize_image
 
-import gutenbergtozim
-from gutenberg2zim import TMP_FOLDER, TMP_FOLDER_PATH, logger
+import gutenberg2zim
+from gutenberg2zim.constants import TMP_FOLDER, TMP_FOLDER_PATH, logger
 from gutenberg2zim.database import Author, Book, BookFormat
 from gutenberg2zim.iso639 import language_name
 from gutenberg2zim.l10n import l10n_strings
@@ -46,7 +41,9 @@ from gutenberg2zim.utils import (
     zip_epub,
 )
 
-jinja_env = Environment(loader=PackageLoader("gutenbergtozim", "templates"))
+jinja_env = Environment(  # noqa: S701
+    loader=PackageLoader("gutenberg2zim", "templates")
+)
 
 DEBUG_COUNT = []
 NB_POPULARITY_STARS = 5
@@ -61,7 +58,6 @@ def get_ui_languages_for(books):
 
 
 def get_default_context(project_id, books):
-
     return {
         "l10n_strings": json.dumps(l10n_strings),
         "ui_languages": get_ui_languages_for(books),
@@ -70,28 +66,25 @@ def get_default_context(project_id, books):
     }
 
 
-def fa_for_format(format):
+def fa_for_format(book_format):
     return {
         "html": "",
         "info": "fa-info-circle",
         "epub": "fa-download",
         "pdf": "fa-file-pdf-o",
-    }.get(format, "fa-file-o")
+    }.get(book_format, "fa-file-o")
 
 
-def zim_link_prefix(format):
-    return "../{}/".format({"html": "A", "epub": "I", "pdf": "I"}.get(format))
+def zim_link_prefix(book_format):
+    return "../{}/".format({"html": "A", "epub": "I", "pdf": "I"}.get(book_format))
 
 
 def urlencode(url):
-    if six.PY2:
-        return urllib.quote(url.encode(UTF8))
-    else:
-        return urllib.parse.quote(url)
+    return urllib.parse.quote(url)
 
 
 def save_bs_output(soup, fpath, encoding=UTF8):
-    save_file(soup if six.PY2 else str(soup), fpath, encoding)
+    save_file(str(soup), fpath, encoding)
 
 
 jinja_env.filters["book_name_for_fs"] = book_name_for_fs
@@ -102,11 +95,11 @@ jinja_env.filters["urlencode"] = urlencode
 
 
 def tmpl_path():
-    return os.path.join(path(gutenbergtozim.__file__).parent, "templates")
+    return os.path.join(Path(gutenberg2zim.__file__).parent, "templates")
 
 
 def get_list_of_all_languages():
-    return list(set(list([b.language for b in Book.select(Book.language)])))
+    return list({b.language for b in Book.select(Book.language)})
 
 
 def export_illustration():
@@ -129,7 +122,6 @@ def export_skeleton(
     title_search,
     add_bookshelves,
 ):
-
     context = get_default_context(project_id, books=books)
     context.update(
         {
@@ -143,7 +135,7 @@ def export_skeleton(
     rendered = jinja_env.get_template("js/l10n.js").render(**context)
     Global.add_item_for(
         path="js/l10n.js",
-        content=rendered,
+        content=rendered,  # type: ignore
         mimetype="text/javascript",
         is_front=True,
     )
@@ -179,7 +171,7 @@ def export_skeleton(
     rendered = template.render(**context)
     Global.add_item_for(
         path=tpl_path,
-        content=rendered,
+        content=rendered,  # type: ignore
         mimetype="text/html",
         is_front=True,
     )
@@ -187,19 +179,18 @@ def export_skeleton(
 
 def export_all_books(
     project_id,
-    download_cache=None,
-    concurrency=None,
-    languages=[],
-    formats=[],
-    only_books=[],
-    force=False,
-    title_search=False,
-    add_bookshelves=False,
-    s3_storage=None,
-    optimizer_version=None,
-    stats_filename=None,
+    download_cache,
+    concurrency,
+    languages,
+    formats,
+    only_books,
+    force,
+    title_search,
+    add_bookshelves,
+    s3_storage,
+    optimizer_version,
+    stats_filename,
 ):
-
     books = get_list_of_filtered_books(
         languages=languages, formats=formats, only_books=only_books
     )
@@ -237,10 +228,8 @@ def export_all_books(
     # export to JSON helpers
     export_to_json_helpers(
         books=books,
-        languages=languages,
         formats=formats,
         project_id=project_id,
-        title_search=title_search,
         add_bookshelves=add_bookshelves,
     )
 
@@ -285,7 +274,6 @@ def export_all_books(
         export_book(
             b,
             book_dir=pathlib.Path(download_cache).joinpath(str(b.id)),
-            languages=languages,
             formats=formats,
             books=books,
             project_id=project_id,
@@ -315,22 +303,21 @@ def report_progress(stats_filename=None):
 
 
 def html_content_for(book, src_dir):
-
     html_fpath = src_dir.joinpath(fname_for(book, "html"))
 
     # is HTML file present?
     if not html_fpath.exists():
-        logger.warn("Missing HTML content for #{} at {}".format(book.id, html_fpath))
+        logger.warn(f"Missing HTML content for #{book.id} at {html_fpath}")
         return None, None
 
     try:
         return read_file(html_fpath)
     except UnicodeDecodeError:
-        logger.error("Unable to read HTML content: {}".format(html_fpath))
+        logger.error(f"Unable to read HTML content: {html_fpath}")
         raise
 
 
-def update_html_for_static(book, html_content, formats, epub=False):
+def update_html_for_static(book, html_content, formats, *, epub=False):
     soup = BeautifulSoup(html_content, "lxml-html")
 
     # remove encoding as we're saving to UTF8 anyway
@@ -344,7 +331,7 @@ def update_html_for_static(book, html_content, formats, epub=False):
         elif "content" in meta.attrs and "charset=" in meta.attrs.get("content"):
             try:
                 ctype, _ = meta.attrs.get("content").split(";", 1)
-            except Exception:
+            except Exception:  # noqa: S112
                 continue
             else:
                 encoding_specified = True
@@ -359,9 +346,7 @@ def update_html_for_static(book, html_content, formats, epub=False):
     if not epub:
         for img in soup.findAll("img"):
             if "src" in img.attrs:
-                img.attrs["src"] = img.attrs["src"].replace(
-                    "images/", "{id}_".format(id=book.id)
-                )
+                img.attrs["src"] = img.attrs["src"].replace("images/", f"{book.id}_")
 
     # update all <a> links to internal HTML pages
     # should only apply to relative URLs to HTML files.
@@ -376,7 +361,7 @@ def update_html_for_static(book, html_content, formats, epub=False):
             return None
 
         if len(urlp.strip()):
-            nurl = "{id}_{url}".format(id=book.id, url=urlp)
+            nurl = f"{book.id}_{urlp}"
         else:
             nurl = ""
 
@@ -399,9 +384,9 @@ def update_html_for_static(book, html_content, formats, epub=False):
             head = soup.find("head")
             if not head:
                 head = soup.new_tag("head")
-                soup.html.insert(0, head)
+                soup.html.insert(0, head)  # type: ignore
             head.append(soup.new_tag("title"))
-            soup.title.string = book.title
+            soup.title.string = book.title  # type: ignore
 
     patterns = [
         (
@@ -413,8 +398,8 @@ def update_html_for_static(book, html_content, formats, epub=False):
             "***END OF THE PROJECT GUTENBERG EBOOK",
         ),
         (
-            "<><><><><><><><><><><><><><><><><><><><><><><><><><><><>" "<><><><><><>",
-            "<><><><><><><><><><><><><><><><><><><><><><><><><><><><>" "<><><><><><>",
+            "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>",
+            "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>",
         ),
         # ePub only
         ("*** START OF THIS PROJECT GUTENBERG EBOOK", "*** START: FULL LICENSE ***"),
@@ -446,13 +431,19 @@ def update_html_for_static(book, html_content, formats, epub=False):
         ),
         ("Project Gutenberg Etext", "End of Project Gutenberg Etext"),
         ("Text encoding is iso-8859-1", "Fin de Project Gutenberg Etext"),
-        ("—————————————————-", "Encode an ISO 8859/1 " "Etext into LaTeX or HTML"),
+        ("—————————————————-", "Encode an ISO 8859/1 Etext into LaTeX or HTML"),
     ]
 
     body = soup.find("body")
     try:
         is_encapsulated_in_div = (
-            sum([1 for e in body.children if not isinstance(e, bs4.NavigableString)])
+            sum(
+                [
+                    1
+                    for e in body.children  # type: ignore
+                    if not isinstance(e, bs4.NavigableString)
+                ]
+            )
             == 1
         )
     except Exception:
@@ -463,45 +454,48 @@ def update_html_for_static(book, html_content, formats, epub=False):
 
     if not is_encapsulated_in_div:
         for start_of_text, end_of_text in patterns:
-            if start_of_text not in body.text and end_of_text not in body.text:
+            if (
+                start_of_text not in body.text  # type: ignore
+                and end_of_text not in body.text  # type: ignore
+            ):
                 continue
 
-            if start_of_text in body.text and end_of_text in body.text:
+            if start_of_text in body.text and end_of_text in body.text:  # type: ignore
                 remove = True
-                for child in body.children:
+                for child in body.children:  # type: ignore
                     if isinstance(child, bs4.NavigableString):
                         continue
                     if end_of_text in getattr(child, "text", ""):
                         remove = True
                     if start_of_text in getattr(child, "text", ""):
-                        child.decompose()
+                        child.decompose()  # type: ignore
                         remove = False
                     if remove:
-                        child.decompose()
+                        child.decompose()  # type: ignore
                 break
 
-            elif start_of_text in body.text:
+            elif start_of_text in body.text:  # type: ignore
                 # logger.debug("FOUND START: {}".format(start_of_text))
                 remove = True
-                for child in body.children:
+                for child in body.children:  # type: ignore
                     if isinstance(child, bs4.NavigableString):
                         continue
                     if start_of_text in getattr(child, "text", ""):
-                        child.decompose()
+                        child.decompose()  # type: ignore
                         remove = False
                     if remove:
-                        child.decompose()
+                        child.decompose()  # type: ignore
                 break
-            elif end_of_text in body.text:
+            elif end_of_text in body.text:  # type: ignore
                 # logger.debug("FOUND END: {}".format(end_of_text))
                 remove = False
-                for child in body.children:
+                for child in body.children:  # type: ignore
                     if isinstance(child, bs4.NavigableString):
                         continue
                     if end_of_text in getattr(child, "text", ""):
                         remove = True
                     if remove:
-                        child.decompose()
+                        child.decompose()  # type: ignore
                 break
 
     # build infobox
@@ -509,22 +503,22 @@ def update_html_for_static(book, html_content, formats, epub=False):
         infobox = jinja_env.get_template("book_infobox.html")
         infobox_html = infobox.render({"book": book, "formats": formats})
         info_soup = BeautifulSoup(infobox_html, "lxml-html")
-        body.insert(0, info_soup.find("div"))
+        body.insert(0, info_soup.find("div"))  # type: ignore
 
     # if there is no charset, set it to utf8
     if not epub:
         meta = BeautifulSoup(
-            '<meta http-equiv="Content-Type" ' 'content="text/html; charset=UTF-8" />',
+            '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />',
             "lxml-html",
         )
         head = soup.find("head")
         html = soup.find("html")
         if head:
-            head.insert(0, meta.head.contents[0])
+            head.insert(0, meta.head.contents[0])  # type: ignore
         elif html:
-            html.insert(0, meta.head)
+            html.insert(0, meta.head)  # type: ignore
         else:
-            soup.insert(0, meta.head)
+            soup.insert(0, meta.head)  # type: ignore
 
         return html
 
@@ -534,15 +528,15 @@ def update_html_for_static(book, html_content, formats, epub=False):
 def cover_html_content_for(
     book, optimized_files_dir, books, project_id, title_search, add_bookshelves, formats
 ):
-    cover_img = "{id}_cover_image.jpg".format(id=book.id)
+    cover_img = f"{book.id}_cover_image.jpg"
     cover_img = cover_img if optimized_files_dir.joinpath(cover_img).exists() else None
     translate_author = (
-        ' data-l10n-id="author-{id}"'.format(id=book.author.name().lower())
+        f' data-l10n-id="author-{book.author.name().lower()}"'
         if book.author.name() in ["Anonymous", "Various"]
         else ""
     )
     translate_license = (
-        ' data-l10n-id="license-{id}"'.format(id=book.license.slug.lower())
+        f' data-l10n-id="license-{book.license.slug.lower()}"'
         if book.license.slug in ["PD", "Copyright"]
         else ""
     )
@@ -569,11 +563,11 @@ def author_html_content_for(author, books, project_id):
     return template.render(**context)
 
 
-def save_author_file(author, books, project_id, force=False):
-    logger.debug("\t\tSaving author file {} (ID {})".format(author.name(), author))
+def save_author_file(author, books, project_id):
+    logger.debug(f"\t\tSaving author file {author.name()} (ID {author})")
     Global.add_item_for(
-        path="{}.html".format(author.fname()),
-        content=author_html_content_for(author, books, project_id),
+        path=f"{author.fname()}.html",
+        content=author_html_content_for(author, books, project_id),  # type: ignore
         mimetype="text/html",
         is_front=True,
     )
@@ -582,7 +576,6 @@ def save_author_file(author, books, project_id, force=False):
 def export_book(
     book,
     book_dir,
-    languages,
     formats,
     books,
     project_id,
@@ -602,13 +595,8 @@ def export_book(
         handle_unoptimized_files(
             book=book,
             src_dir=unoptimized_files_dir,
-            languages=languages,
             formats=formats,
-            books=books,
-            project_id=project_id,
             force=force,
-            title_search=title_search,
-            add_bookshelves=add_bookshelves,
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
         )
@@ -628,24 +616,19 @@ def export_book(
 def handle_unoptimized_files(
     book,
     src_dir,
-    languages,
     formats,
-    books,
-    project_id,
     optimizer_version,
-    force=False,
-    title_search=False,
-    add_bookshelves=False,
-    s3_storage=None,
+    force,
+    s3_storage,
 ):
     def copy_file(src, dst):
-        logger.info("\t\tCopying from {} to {}".format(src, dst))
+        logger.info(f"\t\tCopying from {src} to {dst}")
         try:
             shutil.copy2(src, dst)
-        except IOError:
-            logger.error("/!\\ Unable to copy missing file {}".format(src))
+        except OSError:
+            logger.error(f"/!\\ Unable to copy missing file {src}")
             for line in traceback.format_stack():
-                print(line.strip())
+                print(line.strip())  # noqa: T201
             return
 
     def update_download_cache(unoptimized_file, optimized_file):
@@ -657,10 +640,10 @@ def handle_unoptimized_files(
         dst = optimized_dir.joinpath(optimized_file.name)
         os.unlink(unoptimized_file)
         copy_file(optimized_file.resolve(), dst.resolve())
-        if not [fpath for fpath in unoptimized_dir.iterdir()]:
+        if not list(unoptimized_dir.iterdir()):
             unoptimized_dir.rmdir()
 
-    logger.info("\tExporting Book #{id}.".format(id=book.id))
+    logger.info(f"\tExporting Book #{book.id}.")
 
     # actual book content, as HTML
     html, _ = html_content_for(book=book, src_dir=src_dir)
@@ -669,7 +652,7 @@ def handle_unoptimized_files(
         article_name = article_name_for(book)
         article_fpath = TMP_FOLDER_PATH.joinpath(article_name)
         if not article_fpath.exists() or force:
-            logger.info("\t\tExporting to {}".format(article_fpath))
+            logger.info(f"\t\tExporting to {article_fpath}")
             try:
                 new_html = update_html_for_static(
                     book=book, html_content=html, formats=formats
@@ -684,14 +667,14 @@ def handle_unoptimized_files(
             if not src_dir.exists():
                 return
         else:
-            logger.info("\t\tSkipping HTML article {}".format(article_fpath))
+            logger.info(f"\t\tSkipping HTML article {article_fpath}")
         Global.add_item_for(path=article_name, fpath=article_fpath)
 
-    def optimize_image(src, dst, force=False):
+    def optimize_image(src, dst, *, force=False):
         if dst.exists() and not force:
-            logger.info("\tSkipping image optimization for {}".format(dst))
+            logger.info(f"\tSkipping image optimization for {dst}")
             return dst
-        logger.info("\tOptimizing image {}".format(dst))
+        logger.info(f"\tOptimizing image {dst}")
         if src.suffix == ".png":
             return optimize_png(str(src.resolve()), str(dst.resolve()))
         if src.suffix in (".jpg", ".jpeg"):
@@ -713,7 +696,7 @@ def handle_unoptimized_files(
         exec_cmd(["jpegoptim", "--strip-all", "-m50", dst])
 
     def optimize_epub(src, dst):
-        logger.info("\t\tCreating ePUB off {} at {}".format(src, dst))
+        logger.info(f"\t\tCreating ePUB off {src} at {dst}")
         zipped_files = []
         # create temp directory to extract to
         tmpd = tempfile.mkdtemp(dir=TMP_FOLDER)
@@ -729,8 +712,7 @@ def handle_unoptimized_files(
         remove_cover = False
         for fname in zipped_files:
             fnp = os.path.join(tmpd, fname)
-            if path(fname).ext in (".png", ".jpeg", ".jpg", ".gif"):
-
+            if Path(fname).ext in (".png", ".jpeg", ".jpg", ".gif"):
                 # special case to remove ugly cover
                 if fname.endswith("cover.jpg") and is_bad_cover(fnp):
                     zipped_files.remove(fname)
@@ -738,14 +720,14 @@ def handle_unoptimized_files(
                 else:
                     optimize_image(pathlib.Path(fnp), pathlib.Path(fnp), force=True)
 
-            if path(fname).ext in (".htm", ".html"):
+            if Path(fname).ext in (".htm", ".html"):
                 html_content, _ = read_file(fnp)
                 html = update_html_for_static(
                     book=book, html_content=html_content, formats=formats, epub=True
                 )
                 save_bs_output(html, fnp, UTF8)
 
-            if path(fname).ext == ".ncx":
+            if Path(fname).ext == ".ncx":
                 pattern = "*** START: FULL LICENSE ***"
                 ncx, _ = read_file(fnp)
                 soup = BeautifulSoup(ncx, "lxml-xml")
@@ -753,17 +735,16 @@ def handle_unoptimized_files(
                     if pattern in tag.text:
                         s = tag.parent.parent
                         s.decompose()
-                        for s in s.next_siblings:
+                        for s in s.next_siblings:  # noqa: B020
                             s.decompose()
-                        s.next_sibling
+                        s.next_sibling  # noqa: B018
 
                 save_bs_output(soup, fnp, UTF8)
 
         # delete {id}/cover.jpg if exist and update {id}/content.opf
         if remove_cover:
-
             # remove cover
-            path(os.path.join(tmpd, text_type(book.id), "cover.jpg")).unlink_p()
+            Path(os.path.join(tmpd, text_type(book.id), "cover.jpg")).unlink_p()
 
             soup = None
             opff = os.path.join(tmpd, text_type(book.id), "content.opf")
@@ -780,12 +761,13 @@ def handle_unoptimized_files(
         # bundle epub as zip
         zip_epub(epub_fpath=dst, root_folder=tmpd, fpaths=zipped_files)
 
-        path(tmpd).rmtree_p()
+        Path(tmpd).rmtree_p()
 
     def handle_companion_file(
         fname,
+        book: Book,
         dstfname=None,
-        book=None,
+        *,
         force=False,
         as_ext=None,
         html_file_list=None,
@@ -797,13 +779,13 @@ def handle_unoptimized_files(
             dstfname = fname.name
         dst = TMP_FOLDER_PATH.joinpath(dstfname)
         if dst.exists() and not force:
-            logger.debug("\t\tSkipping already optimized companion {}".format(dstfname))
+            logger.debug(f"\t\tSkipping already optimized companion {dstfname}")
             Global.add_item_for(path=dstfname, fpath=dst)
             return
 
         # optimization based on mime/extension
         if ext in (".png", ".jpg", ".jpeg", ".gif"):
-            logger.info("\tCopying and optimizing image companion {}".format(fname))
+            logger.info(f"\tCopying and optimizing image companion {fname}")
             optimize_image(src, dst)
             Global.add_item_for(path=dstfname, fpath=dst)
             if dst.name == (f"{book.id}_cover_image.jpg"):
@@ -821,7 +803,7 @@ def handle_unoptimized_files(
                 html_file_list.append(dst)
                 update_download_cache(src, dst)
         elif ext == ".epub":
-            logger.info("\tCreating optimized EPUB file {}".format(fname))
+            logger.info(f"\tCreating optimized EPUB file {fname}")
             tmp_epub = tempfile.NamedTemporaryFile(suffix=".epub", dir=TMP_FOLDER)
             tmp_epub.close()
             try:
@@ -831,9 +813,15 @@ def handle_unoptimized_files(
                     "\t\tBad zip file. "
                     "Copying as it might be working{}".format(fname)
                 )
-                handle_companion_file(fname, dstfname, book, force, as_ext=".zip")
+                handle_companion_file(
+                    fname=fname,
+                    dstfname=dstfname,
+                    book=book,
+                    force=force,
+                    as_ext=".zip",
+                )
             else:
-                path(tmp_epub.name).move(dst)
+                Path(tmp_epub.name).move(str(dst))
                 Global.add_item_for(path=dstfname, fpath=dst)
                 if s3_storage:
                     upload_to_cache(
@@ -850,7 +838,7 @@ def handle_unoptimized_files(
             if src.name.endswith("_Thumbs.db"):
                 return
             # copy otherwise (PDF mostly)
-            logger.info("\tCopying companion file from {} to {}".format(src, dst))
+            logger.info(f"\tCopying companion file from {src} to {dst}")
             copy_file(src, dst)
             Global.add_item_for(path=dstfname, fpath=dst)
             if ext != ".pdf" and ext != ".zip" and html_file_list:
@@ -864,11 +852,11 @@ def handle_unoptimized_files(
                 src = fpath
                 dst = TMP_FOLDER_PATH.joinpath(fpath.name)
                 if dst.exists() and not force:
-                    logger.debug("\t\tSkipping already optimized HTML {}".format(dst))
+                    logger.debug(f"\t\tSkipping already optimized HTML {dst}")
                     Global.add_item_for(path=fpath.name, fpath=dst)
                     continue
 
-                logger.info("\tExporting HTML file to {}".format(dst))
+                logger.info(f"\tExporting HTML file to {dst}")
                 html, _ = read_file(src)
                 new_html = update_html_for_static(
                     book=book, html_content=html, formats=formats
@@ -879,7 +867,7 @@ def handle_unoptimized_files(
             else:
                 try:
                     handle_companion_file(
-                        fpath,
+                        fname=fpath,
                         force=force,
                         html_file_list=html_book_optimized_files,
                         s3_storage=s3_storage,
@@ -887,9 +875,7 @@ def handle_unoptimized_files(
                     )
                 except Exception as e:
                     logger.exception(e)
-                    logger.error(
-                        "\t\tException while handling companion file: {}".format(e)
-                    )
+                    logger.error(f"\t\tException while handling companion file: {e}")
     if s3_storage and html_book_optimized_files:
         upload_to_cache(
             asset=html_book_optimized_files,
@@ -901,24 +887,22 @@ def handle_unoptimized_files(
         )
 
     # other formats
-    for format in formats:
-        if format not in book.formats() or format == "html":
+    for other_format in formats:
+        if other_format not in book.formats() or other_format == "html":
             continue
-        book_file = src_dir.joinpath(fname_for(book, format))
+        book_file = src_dir.joinpath(fname_for(book, other_format))
         if book_file.exists():
             try:
                 handle_companion_file(
-                    book_file,
-                    archive_name_for(book, format),
+                    fname=book_file,
+                    dstfname=archive_name_for(book, other_format),
                     force=force,
                     book=book,
                     s3_storage=s3_storage,
                 )
             except Exception as e:
                 logger.exception(e)
-                logger.error(
-                    "\t\tException while handling companion file: {}".format(e)
-                )
+                logger.error(f"\t\tException while handling companion file: {e}")
 
 
 def write_book_presentation_article(
@@ -934,7 +918,7 @@ def write_book_presentation_article(
     article_name = article_name_for(book=book, cover=True)
     cover_fpath = TMP_FOLDER_PATH.joinpath(article_name)
     if not cover_fpath.exists() or force:
-        logger.info("\t\tExporting article presentation to {}".format(cover_fpath))
+        logger.info(f"\t\tExporting article presentation to {cover_fpath}")
         html = cover_html_content_for(
             book=book,
             optimized_files_dir=optimized_files_dir,
@@ -945,12 +929,9 @@ def write_book_presentation_article(
             formats=formats,
         )
         with open(cover_fpath, "w") as f:
-            if six.PY2:
-                f.write(html.encode(UTF8))
-            else:
-                f.write(html)
+            f.write(html)
     else:
-        logger.info("\t\tSkipping already optimized cover {}".format(cover_fpath))
+        logger.info(f"\t\tSkipping already optimized cover {cover_fpath}")
 
     Global.add_item_for(path=article_name, fpath=cover_fpath)
 
@@ -995,13 +976,11 @@ def bookshelf_list_language(books, lang):
     ]
 
 
-def export_to_json_helpers(
-    books, languages, formats, project_id, title_search, add_bookshelves
-):
+def export_to_json_helpers(books, formats, project_id, add_bookshelves):
     def dumpjs(col, fn, var="json_data"):
         Global.add_item_for(
             path=fn,
-            content="var {var} = {content};".format(var=var, content=json.dumps(col)),
+            content=f"var {var} = {json.dumps(col)};",  # type: ignore
             mimetype="text/javascript",
             is_front=False,
         )
@@ -1031,16 +1010,16 @@ def export_to_json_helpers(
     all_filtered_authors = []
 
     # language-specific collections
-    for lang_name, lang, lang_count in avail_langs:
+    for _lang_name, lang, _lang_count in avail_langs:
         lang_filtered_authors = list(
-            set([book.author.gut_id for book in books.filter(language=lang)])
+            {book.author.gut_id for book in books.filter(language=lang)}
         )
         for aid in lang_filtered_authors:
             if aid not in all_filtered_authors:
                 all_filtered_authors.append(aid)
 
         # by popularity
-        logger.info("\t\tDumping lang_{}_by_popularity.js".format(lang))
+        logger.info(f"\t\tDumping lang_{lang}_by_popularity.js")
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
@@ -1048,10 +1027,10 @@ def export_to_json_helpers(
                     Book.downloads.desc()
                 )
             ],
-            "lang_{}_by_popularity.js".format(lang),
+            f"lang_{lang}_by_popularity.js",
         )
         # by title
-        logger.info("\t\tDumping lang_{}_by_title.js".format(lang))
+        logger.info(f"\t\tDumping lang_{lang}_by_title.js")
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
@@ -1059,14 +1038,14 @@ def export_to_json_helpers(
                     Book.title.asc()
                 )
             ],
-            "lang_{}_by_title.js".format(lang),
+            f"lang_{lang}_by_title.js",
         )
 
         authors = authors_from_ids(lang_filtered_authors)
-        logger.info("\t\tDumping authors_lang_{}.js".format(lang))
+        logger.info(f"\t\tDumping authors_lang_{lang}.js")
         dumpjs(
             [author.to_array() for author in authors],
-            "authors_lang_{}.js".format(lang),
+            f"authors_lang_{lang}.js",
             "authors_json_data",
         )
 
@@ -1079,7 +1058,7 @@ def export_to_json_helpers(
             # dumpjs for bookshelf by popularity
             # this will allow the popularity button to use this js on the
             # particular bookshelf page
-            logger.info("\t\tDumping bookshelf_{}_by_popularity.js".format(bookshelf))
+            logger.info(f"\t\tDumping bookshelf_{bookshelf}_by_popularity.js")
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
@@ -1087,11 +1066,11 @@ def export_to_json_helpers(
                     .where(Book.bookshelf == bookshelf)
                     .order_by(Book.downloads.desc())
                 ],
-                "bookshelf_{}_by_popularity.js".format(bookshelf),
+                f"bookshelf_{bookshelf}_by_popularity.js",
             )
 
             # by title
-            logger.info("\t\tDumping bookshelf_{}_by_title.js".format(bookshelf))
+            logger.info(f"\t\tDumping bookshelf_{bookshelf}_by_title.js")
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
@@ -1099,13 +1078,11 @@ def export_to_json_helpers(
                     .where(Book.bookshelf == bookshelf)
                     .order_by(Book.title.asc())
                 ],
-                "bookshelf_{}_by_title.js".format(bookshelf),
+                f"bookshelf_{bookshelf}_by_title.js",
             )
             # by language
-            for lang_name, lang, lang_count in avail_langs:
-                logger.info(
-                    "\t\tDumping bookshelf_{}_by_lang_{}.js".format(bookshelf, lang)
-                )
+            for _lang_name, lang, _lang_count in avail_langs:
+                logger.info(f"\t\tDumping bookshelf_{bookshelf}_by_lang_{lang}.js")
                 dumpjs(
                     [
                         book.to_array(all_requested_formats=formats)
@@ -1114,7 +1091,7 @@ def export_to_json_helpers(
                         .where(Book.bookshelf == bookshelf)
                         .order_by(Book.downloads.desc())
                     ],
-                    "bookshelf_{}_lang_{}_by_popularity.js".format(bookshelf, lang),
+                    f"bookshelf_{bookshelf}_lang_{lang}_by_popularity.js",
                 )
 
                 dumpjs(
@@ -1125,14 +1102,14 @@ def export_to_json_helpers(
                         .where(Book.bookshelf == bookshelf)
                         .order_by(Book.title.asc())
                     ],
-                    "bookshelf_{}_lang_{}_by_title.js".format(bookshelf, lang),
+                    f"bookshelf_{bookshelf}_lang_{lang}_by_title.js",
                 )
 
         # dump all bookshelves from any given language
-        for lang_name, lang, lang_count in avail_langs:
-            logger.info("\t\tDumping bookshelves_lang_{}.js".format(lang))
+        for _lang_name, lang, _lang_count in avail_langs:
+            logger.info(f"\t\tDumping bookshelves_lang_{lang}.js")
             temp = bookshelf_list_language(books, lang)
-            dumpjs(temp, "bookshelves_lang_{}.js".format(lang))
+            dumpjs(temp, f"bookshelves_lang_{lang}.js")
 
         logger.info("\t\tDumping bookshelves.js")
         dumpjs(bookshelves, "bookshelves.js", "bookshelves_json_data")
@@ -1144,7 +1121,7 @@ def export_to_json_helpers(
         rendered = template.render(**context)
         Global.add_item_for(
             path="bookshelf_home.html",
-            content=rendered,
+            content=rendered,  # type: ignore
             mimetype="text/html",
             is_front=False,
         )
@@ -1165,8 +1142,8 @@ def export_to_json_helpers(
             template = jinja_env.get_template("bookshelf.html")
             rendered = template.render(**context)
             Global.add_item_for(
-                path="{}.html".format(bookshelf),
-                content=rendered,
+                path=f"{bookshelf}.html",
+                content=rendered,  # type: ignore
                 mimetype="text/html",
                 is_front=False,
             )
@@ -1174,10 +1151,9 @@ def export_to_json_helpers(
     # author specific collections
     authors = authors_from_ids(all_filtered_authors)
     for author in authors:
-
         # all_filtered_authors.remove(author.gut_id)
         # by popularity
-        logger.info("\t\tDumping auth_{}_by_popularity.js".format(author.gut_id))
+        logger.info(f"\t\tDumping auth_{author.gut_id}_by_popularity.js")
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
@@ -1185,10 +1161,10 @@ def export_to_json_helpers(
                     Book.downloads.desc()
                 )
             ],
-            "auth_{}_by_popularity.js".format(author.gut_id),
+            f"auth_{author.gut_id}_by_popularity.js",
         )
         # by title
-        logger.info("\t\tDumping auth_{}_by_title.js".format(author.gut_id))
+        logger.info(f"\t\tDumping auth_{author.gut_id}_by_title.js")
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
@@ -1196,11 +1172,11 @@ def export_to_json_helpers(
                     Book.title.asc()
                 )
             ],
-            "auth_{}_by_title.js".format(author.gut_id),
+            f"auth_{author.gut_id}_by_title.js",
         )
         # by language
-        for lang_name, lang, lang_count in avail_langs:
-            logger.info("\t\tDumping auth_{}_by_lang_{}.js".format(author.gut_id, lang))
+        for _lang_name, lang, _lang_count in avail_langs:
+            logger.info(f"\t\tDumping auth_{author.gut_id}_by_lang_{lang}.js")
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
@@ -1208,7 +1184,7 @@ def export_to_json_helpers(
                     .where(Book.author == author)
                     .order_by(Book.downloads.desc())
                 ],
-                "auth_{}_lang_{}_by_popularity.js".format(author.gut_id, lang),
+                f"auth_{author.gut_id}_lang_{lang}_by_popularity.js",
             )
 
             dumpjs(
@@ -1218,11 +1194,11 @@ def export_to_json_helpers(
                     .where(Book.author == author)
                     .order_by(Book.title.asc())
                 ],
-                "auth_{}_lang_{}_by_title.js".format(author.gut_id, lang),
+                f"auth_{author.gut_id}_lang_{lang}_by_title.js",
             )
 
         # author HTML redirect file
-        save_author_file(author, books, project_id, force=True)
+        save_author_file(author, books, project_id)
 
     # authors list sorted by name
     logger.info("\t\tDumping authors.js")

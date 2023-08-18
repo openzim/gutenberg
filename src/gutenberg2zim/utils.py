@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 import collections
 import hashlib
 import os
@@ -13,10 +9,10 @@ import zipfile
 import chardet
 import requests
 import six
-from path import Path as path
+from path import Path
 from zimscraperlib.download import save_large_file
 
-from gutenberg2zim import logger
+from gutenberg2zim.constants import logger
 from gutenberg2zim.database import Book, BookFormat
 from gutenberg2zim.iso639 import language_name
 
@@ -42,10 +38,10 @@ def book_name_for_fs(book):
     return book.title.strip().replace("/", "-")[:230]
 
 
-def article_name_for(book, cover=False):
+def article_name_for(book, *, cover=False):
     cover = "_cover" if cover else ""
     title = book_name_for_fs(book)
-    return "{title}{cover}.{id}.html".format(title=title, cover=cover, id=book.id)
+    return f"{title}{cover}.{book.id}.html"
 
 
 def archive_name_for(book, book_format):
@@ -58,7 +54,9 @@ def fname_for(book, book_format):
 
 def get_etag_from_url(url):
     try:
-        response_headers = requests.head(url=url, allow_redirects=True).headers
+        response_headers = requests.head(  # noqa: S113
+            url=url, allow_redirects=True
+        ).headers
     except Exception as e:
         logger.error(url + " > Problem while head request\n" + str(e) + "\n")
         return None
@@ -67,7 +65,7 @@ def get_etag_from_url(url):
 
 
 def critical_error(message):
-    logger.critical("ERROR: {}".format(message))
+    logger.critical(f"ERROR: {message}")
     sys.exit(1)
 
 
@@ -75,8 +73,7 @@ def normalize(text=None):
     return None if text is None else unicodedata.normalize("NFC", text)
 
 
-def get_project_id(languages=[], formats=[], only_books=[]):
-
+def get_project_id(languages, formats, only_books):
     parts = ["gutenberg"]
     parts.append("mul" if len(languages) > 1 else languages[0])
     if len(formats) < len(FORMAT_MATRIX):
@@ -86,15 +83,12 @@ def get_project_id(languages=[], formats=[], only_books=[]):
 
 
 def exec_cmd(cmd):
-    if isinstance(cmd, (tuple, list)):
+    if isinstance(cmd, tuple | list):
         args = cmd
     else:
         args = cmd.split(" ")
     logger.debug(" ".join(args))
-    if six.PY3:
-        return subprocess.run(args).returncode
-    else:
-        return subprocess.call(args)
+    return subprocess.run(args).returncode
 
 
 def download_file(url, fpath):
@@ -120,7 +114,7 @@ def main_formats_for(book):
     return [k for k, v in FORMAT_MATRIX.items() if v in fmts]
 
 
-def get_list_of_filtered_books(languages, formats, only_books=[]):
+def get_list_of_filtered_books(languages, formats, only_books):
     if len(formats):
         qs = (
             Book.select()
@@ -166,14 +160,14 @@ def get_lang_groups(books):
 
 
 def md5sum(fpath):
-    return hashlib.md5(read_file(fpath)[0].encode("utf-8")).hexdigest()
+    return hashlib.md5(read_file(fpath)[0].encode("utf-8")).hexdigest()  # noqa: S324
 
 
 def is_bad_cover(fpath):
     bad_sizes = [19263]
     bad_sums = ["a059007e7a2e86f2bf92e4070b3e5c73"]
 
-    if path(fpath).size not in bad_sizes:
+    if Path(fpath).size not in bad_sizes:
         return False
 
     return md5sum(fpath) in bad_sums
@@ -181,12 +175,8 @@ def is_bad_cover(fpath):
 
 def read_file_as(fpath, encoding="utf-8"):
     # logger.debug("opening `{}` as `{}`".format(fpath, encoding))
-    if six.PY2:
-        with open(fpath, "r") as f:
-            return f.read().decode(encoding)
-    else:
-        with open(fpath, "r", encoding=encoding) as f:
-            return f.read()
+    with open(fpath, encoding=encoding) as f:
+        return f.read()
 
 
 def guess_file_encoding(fpath):
@@ -203,16 +193,12 @@ def read_file(fpath):
 
     # common encoding failed. try with chardet
     encoding = guess_file_encoding(fpath)
-    return read_file_as(fpath, encoding), encoding
+    return read_file_as(fpath, encoding), encoding  # type: ignore
 
 
 def save_file(content, fpath, encoding=UTF8):
-    if six.PY2:
-        with open(fpath, "w") as f:
-            f.write(content.encode(encoding))
-    else:
-        with open(fpath, "w", encoding=encoding) as f:
-            f.write(content)
+    with open(fpath, "w", encoding=encoding) as f:
+        f.write(content)
 
 
 def zip_epub(epub_fpath, root_folder, fpaths):
@@ -222,6 +208,4 @@ def zip_epub(epub_fpath, root_folder, fpaths):
 
 
 def ensure_unicode(v):
-    if six.PY2 and isinstance(v, str):
-        v = v.decode("utf8")
     return six.text_type(v)
