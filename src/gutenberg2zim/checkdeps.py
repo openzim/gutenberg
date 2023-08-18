@@ -1,10 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 import subprocess
 
-from gutenbergtozim import logger
+from gutenberg2zim.constants import logger
 
 
 def check_dependencies():
@@ -34,9 +30,9 @@ def check_dependencies():
 
     all_good = True
     has_zimwriter = True
-    for bin, msg in all_bins.items():
-        if not bin_is_present(bin):
-            logger.error("\t*{}* binary missing. {}".format(bin, msg))
+    for binary, msg in all_bins.items():
+        if not bin_is_present(binary):
+            logger.error(f"\t*{binary}* binary missing. {msg}")
             all_good = False
 
     return all_good, has_zimwriter

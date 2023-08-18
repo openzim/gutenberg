@@ -1,4 +1,4 @@
-name: Docker
+name: Publish Docker dev image
 
 on:
   push:
@@ -6,18 +6,18 @@ on:
       - main
 
 jobs:
-  build-and-push:
-    name: Deploy Docker Image
+  publish:
     runs-on: ubuntu-22.04
+
     steps:
-      - uses: actions/checkout@v3.4.0
-      - name: Build and push
+      - uses: actions/checkout@v3
+
+      - name: Build and push Docker image
         uses: openzim/docker-publish-action@v10
         with:
           image-name: openzim/gutenberg
-          on-master: dev
-          tag-pattern: /^v([0-9.]+)$/
-          latest-on-tag: true
+          manual-tag: dev
+          latest-on-tag: false
           restrict-to: openzim/gutenberg
           registries: ghcr.io
           credentials:

@@ -1,17 +1,16 @@
 import pathlib
 import threading
 from datetime import date
-from typing import Any, Optional, Tuple, Union
 
 from zimscraperlib.zim.creator import Creator
 
-from gutenbergtozim import VERSION, logger
+from gutenberg2zim.constants import VERSION, logger
 
 
 class Global:
     """Shared context accross all scraper components"""
 
-    creator = None
+    creator: Creator
     _lock = threading.Lock()
 
     total = 0
@@ -41,27 +40,27 @@ class Global:
             workaround_nocancel=False,
             title=title,
             description=description,
-            creator="gutenberg.org",
-            publisher="Kiwix",
+            creator="gutenberg.org",  # type: ignore
+            publisher="Kiwix",  # type: ignore
             name=name,
-            tags="_category:gutenberg;gutenberg",
-            scraper="gutengergtozim-{v}".format(v=VERSION),
-            date=date.today(),
+            tags="_category:gutenberg;gutenberg",  # type: ignore
+            scraper=f"gutengergtozim-{VERSION}",  # type: ignore
+            date=date.today(),  # type: ignore
         ).config_verbose(True)
 
     @staticmethod
     def add_item_for(
         path: str,
-        title: Optional[str] = None,
-        fpath: Optional[pathlib.Path] = None,
-        content: Optional[bytes] = None,
-        mimetype: Optional[str] = None,
-        is_front: Optional[bool] = None,
-        should_compress: Optional[bool] = None,
-        delete_fpath: Optional[bool] = False,
-        callback: Optional[Union[callable, Tuple[callable, Any]]] = None,
+        title: str | None = None,
+        fpath: pathlib.Path | None = None,
+        content: bytes | None = None,
+        mimetype: str | None = None,
+        is_front: bool | None = None,
+        should_compress: bool | None = None,
+        *,
+        delete_fpath: bool | None = False,
     ):
-        logger.debug("\t\tAdding ZIM item at {}".format(path))
+        logger.debug(f"\t\tAdding ZIM item at {path}")
         if not mimetype and path.endswith(".epub"):
             mimetype = "application/epub+zip"
         with Global._lock:
@@ -74,7 +73,6 @@ class Global:
                 is_front=is_front,
                 should_compress=should_compress,
                 delete_fpath=delete_fpath,
-                callback=callback,
             )
 
     @staticmethod

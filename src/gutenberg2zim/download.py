@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 import os
 import pathlib
 import shutil
@@ -12,14 +8,15 @@ from pprint import pprint as pp
 
 import apsw
 import backoff
-from path import Path as path
+from kiwixstorage import KiwixStorage
+from path import Path
 
-from gutenbergtozim import TMP_FOLDER, logger
-from gutenbergtozim.database import Book, BookFormat
-from gutenbergtozim.export import fname_for, get_list_of_filtered_books
-from gutenbergtozim.s3 import download_from_cache
-from gutenbergtozim.urls import get_urls
-from gutenbergtozim.utils import (
+from gutenberg2zim.constants import TMP_FOLDER, logger
+from gutenberg2zim.database import Book, BookFormat
+from gutenberg2zim.export import fname_for, get_list_of_filtered_books
+from gutenberg2zim.s3 import download_from_cache
+from gutenberg2zim.urls import get_urls
+from gutenberg2zim.utils import (
     FORMAT_MATRIX,
     archive_name_for,
     download_file,
@@ -39,15 +36,15 @@ IMAGE_BASE = "http://aleph.pglaf.org/cache/epub/"
 #         return False
 
 
-def handle_zipped_epub(zippath, book, dst_dir):
+def handle_zipped_epub(zippath, book, dst_dir: pathlib.Path):
     def clfn(fn):
         return os.path.join(*os.path.split(fn)[1:])
 
     def is_safe(fname):
         fname = ensure_unicode(clfn(fname))
-        if path(fname).basename() == fname:
+        if Path(fname).basename() == fname:
             return True
-        return fname == os.path.join("images", path(fname).splitpath()[-1])
+        return fname == os.path.join("images", Path(fname).splitpath()[-1])
 
     zipped_files = []
     # create temp directory to extract to
@@ -56,7 +53,7 @@ def handle_zipped_epub(zippath, book, dst_dir):
         with zipfile.ZipFile(zippath, "r") as zf:
             # check that there is no insecure data (absolute names)
             if sum([1 for n in zf.namelist() if not is_safe(ensure_unicode(n))]):
-                path(tmpd).rmtree_p()
+                Path(tmpd).rmtree_p()
                 return False
             # zipped_files = [clfn(fn) for fn in zf.namelist()]
             zipped_files = zf.namelist()
@@ -74,18 +71,18 @@ def handle_zipped_epub(zippath, book, dst_dir):
         sum([1 for f in zipped_files if f.endswith("html") or f.endswith(".htm")]) > 1
     )
     # move all extracted files to proper locations
-    for fname in zipped_files:
+    for zipped_file in zipped_files:
         # skip folders
-        if not path(fname).ext:
+        if not Path(zipped_file).ext:
             continue
 
-        src = os.path.join(tmpd, fname)
+        src = os.path.join(tmpd, zipped_file)
         if os.path.exists(src):
-            fname = path(fname).basename()
+            fname = Path(zipped_file).basename()
 
             if fname.endswith(".html") or fname.endswith(".htm"):
                 if mhtml:
-                    if fname.startswith("{}-h.".format(book.id)):
+                    if fname.startswith(f"{book.id}-h."):
                         dst = dst_dir.joinpath(f"{book.id}.html")
                     else:
                         dst = dst_dir.joinpath(f"{book.id}_{fname}")
@@ -94,29 +91,34 @@ def handle_zipped_epub(zippath, book, dst_dir):
             else:
                 dst = dst_dir.joinpath(f"{book.id}_{fname}")
             try:
-                path(src).move(dst)
+                Path(src).move(str(dst))
             except Exception as e:
                 import traceback
 
-                print(e)
-                print("".join(traceback.format_exc()))
+                print(e)  # noqa: T201
+                print("".join(traceback.format_exc()))  # noqa: T201
                 raise
-                # import ipdb; ipdb.set_trace()
 
     # delete temp directory and zipfile
-    if path(zippath).exists():
+    if Path(zippath).exists():
         os.unlink(zippath)
-    path(tmpd).rmtree_p()
+    Path(tmpd).rmtree_p()
 
 
 def download_book(
-    book, download_cache, languages, formats, force, s3_storage, optimizer_version
+    book: Book,
+    download_cache: str,
+    formats: list[str],
+    *,
+    force: bool,
+    s3_storage: KiwixStorage | None,
+    optimizer_version: dict[str, str] | None,
 ):
-    logger.info("\tDownloading content files for Book #{id}".format(id=book.id))
+    logger.info(f"\tDownloading content files for Book #{book.id}")
 
     # apply filters
     if not formats:
-        formats = FORMAT_MATRIX.keys()
+        formats = list(FORMAT_MATRIX.keys())
 
     # HTML is our base for ZIM for add it if not present
     if "html" not in formats:
@@ -127,7 +129,6 @@ def download_book(
     unoptimized_dir = book_dir.joinpath("unoptimized")
     unsuccessful_formats = []
     for book_format in formats:
-
         unoptimized_fpath = unoptimized_dir.joinpath(fname_for(book, book_format))
         optimized_fpath = optimized_dir.joinpath(archive_name_for(book, book_format))
 
@@ -185,53 +186,37 @@ def download_book(
             bfso = bfs
             bfs = bfs.filter(BookFormat.pattern << patterns)
             if not bfs.count():
-                pp(
-                    list(
-                        [
-                            (bf.mime, bf.images, bf.pattern)
-                            for bf in bfs
-                        ]
-                    )
-                )
-                pp(
-                    list(
-                        [
-                            (bf.mime, bf.images, bf.pattern)
-                            for bf in bfso
-                        ]
-                    )
-                )
+                pp([(bf.mime, bf.images, bf.pattern) for bf in bfs])  # noqa: T203
+                pp([(bf.mime, bf.images, bf.pattern) for bf in bfso])  # noqa: T203
                 logger.error("html not found")
                 unsuccessful_formats.append(book_format)
                 continue
         else:
-            bfs = bfs.filter(mime=FORMAT_MATRIX.get(book_format))
+            bfs = bfs.filter(mime=FORMAT_MATRIX.get(book_format))  # type: ignore
 
         if not bfs.count():
-            logger.debug(
-                "[{}] not avail. for #{}# {}".format(book_format, book.id, book.title)
-            )
+            logger.debug(f"[{book_format}] not avail. for #{book.id}# {book.title}")
             unsuccessful_formats.append(book_format)
             continue
 
         if bfs.count() > 1:
             try:
-                bf = bfs.filter(images).get()
+                bf = bfs.filter(bfs.images).get()
             except Exception:
                 bf = bfs.get()
         else:
             bf = bfs.get()
 
-        logger.debug(
-            "[{}] Requesting URLs for #{}# {}".format(book_format, book.id, book.title)
-        )
+        logger.debug(f"[{book_format}] Requesting URLs for #{book.id}# {book.title}")
 
         # retrieve list of URLs for format unless we have it in DB
         if bf.downloaded_from and not force:
             urls = [bf.downloaded_from]
         else:
             urld = get_urls(book)
-            urls = list(reversed(urld.get(FORMAT_MATRIX.get(book_format))))
+            urls = list(
+                reversed(urld.get(FORMAT_MATRIX.get(book_format)))  # type: ignore
+            )
 
         import copy
 
@@ -263,10 +248,10 @@ def download_book(
                         downloaded_from_cache = True
                         break
                 if not download_file(url, zpath):
-                    logger.error("ZIP file download failed: {}".format(zpath))
+                    logger.error(f"ZIP file download failed: {zpath}")
                     continue
                 # save etag
-                book.html_etag = etag
+                book.html_etag = etag  # type: ignore
                 book.save()
                 # extract zipfile
                 handle_zipped_epub(zippath=zpath, book=book, dst_dir=unoptimized_dir)
@@ -293,7 +278,7 @@ def download_book(
                             downloaded_from_cache = True
                             break
                 if not download_file(url, unoptimized_fpath):
-                    logger.error("file donwload failed: {}".format(unoptimized_fpath))
+                    logger.error(f"file donwload failed: {unoptimized_fpath}")
                     continue
                 # save etag if html or epub if download is successful
                 if (
@@ -302,11 +287,11 @@ def download_book(
                     or url.endswith(".html.utf8")
                 ):
                     logger.debug(f"Saving html ETag for {book.id}")
-                    book.html_etag = etag
+                    book.html_etag = etag  # type: ignore
                     book.save()
                 elif url.endswith(".epub"):
                     logger.debug(f"Saving epub ETag for {book.id}")
-                    book.epub_etag = etag
+                    book.epub_etag = etag  # type: ignore
                     book.save()
 
             # store working URL in DB
@@ -316,18 +301,18 @@ def download_book(
             break
 
         if not bf.downloaded_from and not downloaded_from_cache:
-            logger.error("NO FILE FOR #{}/{}".format(book.id, book_format))
+            logger.error(f"NO FILE FOR #{book.id}/{book_format}")
             # delete instance from DB if download failed
             logger.info("Deleting instance from DB")
             bf.delete_instance()
             unsuccessful_formats.append(book_format)
-            pp(allurls)
+            pp(allurls)  # noqa: T203
 
     # delete book from DB if not downloaded in any format
     if len(unsuccessful_formats) == len(formats):
         logger.debug(
             f"Book #{book.id} could not be downloaded in any format. "
-            + "Deleting from DB ..."
+            "Deleting from DB ..."
         )
         book.delete_instance()
         if book_dir.exists():
@@ -340,10 +325,10 @@ def download_cover(book, book_dir, s3_storage, optimizer_version):
     has_cover = Book.select(Book.cover_page).where(Book.id == book.id)
     if has_cover:
         # try to download optimized cover from cache if s3_storage
-        url = "{}{}/pg{}.cover.medium.jpg".format(IMAGE_BASE, book.id, book.id)
+        url = f"{IMAGE_BASE}{book.id}/pg{book.id}.cover.medium.jpg"
         etag = get_etag_from_url(url)
         downloaded_from_cache = False
-        cover = "{}_cover_image.jpg".format(book.id)
+        cover = f"{book.id}_cover_image.jpg"
         if (
             book_dir.joinpath("optimized").joinpath(cover).exists()
             or book_dir.joinpath("unoptimized").joinpath(cover).exists()
@@ -363,30 +348,31 @@ def download_cover(book, book_dir, s3_storage, optimizer_version):
                 optimizer_version=optimizer_version,
             )
         if not downloaded_from_cache:
-            logger.debug("Downloading {}".format(url))
+            logger.debug(f"Downloading {url}")
             if download_file(url, book_dir.joinpath("unoptimized").joinpath(cover)):
                 book.cover_etag = etag
                 book.save()
     else:
-        logger.debug("No Book Cover found for Book #{}".format(book.id))
+        logger.debug(f"No Book Cover found for Book #{book.id}")
 
 
 def download_all_books(
-    download_cache,
-    concurrency,
-    languages=[],
-    formats=[],
-    only_books=[],
-    force=False,
-    s3_storage=None,
-    optimizer_version=None,
+    download_cache: str,
+    concurrency: int,
+    languages: list[str],
+    formats: list[str],
+    only_books: list[str],
+    *,
+    force: bool,
+    s3_storage: KiwixStorage | None,
+    optimizer_version: dict[str, str] | None,
 ):
     available_books = get_list_of_filtered_books(
         languages=languages, formats=formats, only_books=only_books
     )
 
     # ensure dir exist
-    path(download_cache).mkdir_p()
+    Path(download_cache).mkdir_p()
 
     def backoff_busy_error_hdlr(details):
         logger.warning(
@@ -403,7 +389,12 @@ def download_all_books(
     )
     def dlb(b):
         return download_book(
-            b, download_cache, languages, formats, force, s3_storage, optimizer_version
+            book=b,
+            download_cache=download_cache,
+            formats=formats,
+            force=force,
+            s3_storage=s3_storage,
+            optimizer_version=optimizer_version,
         )
 
     Pool(concurrency).map(dlb, available_books)

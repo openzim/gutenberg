@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 l10n_strings = {
     "default_locale": "en",
     "locales": {
@@ -44,10 +40,10 @@ l10n_strings = {
             "table-previous": {"textContent": "Previous"},
             "table-next": {"textContent": "Next"},
             "about-1": {
-                "textContent": "Project Gutenberg offers over " "60,000 free ebooks"
+                "textContent": "Project Gutenberg offers over 60,000 free ebooks"
             },
             "about-2": {
-                "textContent": "Choose among free epub books, " "free kindle books."
+                "textContent": "Choose among free epub books, free kindle books."
             },
             "about-3": {"textContent": "Download them or read them online."},
             "about-4": {"textContent": "We carry high quality ebooks"},
@@ -68,9 +64,9 @@ l10n_strings = {
         "fr": {
             "isocode": {"textContent": "fr"},
             "autonym": {"textContent": "Français"},
-            "homepage": {"alt": "Page d’accueil", "title": "Page d’accueil"},
+            "homepage": {"alt": "Page d`accueil", "title": "Page d`accueil"},
             "choose-language": {"placeholder": "Choisissez une langue..."},
-            "ui-language-switcher": {"title": "Langue de l’interface"},
+            "ui-language-switcher": {"title": "Langue de l`interface"},
             "search": {"textContent": "Rechercher"},
             "author": {
                 "textContent": "Auteur",
@@ -102,14 +98,14 @@ l10n_strings = {
             "license-pd": {"textContent": "Domaine public aux États-Unis."},
             "nb-downloads": {"textContent": "{[ plural(nb) ]}"},
             "nb-downloads[one]": {
-                "textContent": "1 téléchargement au cours des " "30 derniers jours."
+                "textContent": "1 téléchargement au cours des 30 derniers jours."
             },
             "nb-downloads[other]": {
                 "textContent": "{{nb}} téléchargements au cours des "
                 "30 derniers jours."
             },
             "top-title": {"textContent": "Bibliothèque du projet Gutenberg"},
-            "sub-title": {"textContent": "Premier producteur d’ebooks gratuits"},
+            "sub-title": {"textContent": "Premier producteur d`ebooks gratuits"},
             "table-previous": {"textContent": "Prédédent"},
             "table-next": {"textContent": "Suivant"},
             "about-1": {
@@ -117,11 +113,11 @@ l10n_strings = {
                 "60 000 ebooks gratuits"
             },
             "about-2": {
-                "textContent": "Choisissez parmi les livres epub ou " "kindle gratuits."
+                "textContent": "Choisissez parmi les livres epub ou kindle gratuits."
             },
             "about-3": {"textContent": "Téléchargez-les ou lisez-les en ligne."},
             "about-4": {
-                "textContent": "Nous attachons beaucoup d’importance "
+                "textContent": "Nous attachons beaucoup d`importance "
                 "à la qualité des ebooks"
             },
             "about-5": {
@@ -131,7 +127,7 @@ l10n_strings = {
             },
             "about-6": {
                 "textContent": "Nous les numérisons et les relisons "
-                "soigneusement avec l’aide de milliers "
+                "soigneusement avec l`aide de milliers "
                 "de volontaires."
             },
             "bookshelves_title": {"textContent": "Rayons (A-Z)"},
@@ -250,7 +246,7 @@ l10n_strings = {
                 "60,000 ebooks gratuiti"
             },
             "about-2": {
-                "textContent": "Scegli fra file epub gratuiti, " "file kindle gratuiti."
+                "textContent": "Scegli fra file epub gratuiti, file kindle gratuiti."
             },
             "about-3": {"textContent": "Scaricali o leggili online."},
             "about-4": {"textContent": "Noi forniamo ebook di alta qualità"},
@@ -314,13 +310,11 @@ l10n_strings = {
                 "textContent": "مشروع Gutenberg يوفر أكثر من"
                 "60,000 كتاب ألكتروني مجاني"
             },
-            "about-2": {
-                "textContent": "أختر من ضمن كتب ال epub, " "كتب kindle مجانية."
-            },
+            "about-2": {"textContent": "أختر من ضمن كتب ال epub, كتب kindle مجانية."},
             "about-3": {"textContent": "قم بتنزيلهم او قرائتهم عبر الأنترنت."},
             "about-4": {"textContent": "نحن لدينا كتب ألكترونية عالية الجودة"},
             "about-5": {
-                "textContent": "كل كتبنا كانت مسبقا " "منشورة من قبل ناشرين bona fide."
+                "textContent": "كل كتبنا كانت مسبقا منشورة من قبل ناشرين bona fide."
             },
             "about-6": {
                 "textContent": "لقد رقمناهم و قرأناهم "
@@ -380,7 +374,7 @@ l10n_strings = {
                 "60,000 gratis eboeken"
             },
             "about-2": {
-                "textContent": "Kies uit gratis epub boeken, " "gratis kindle boeken."
+                "textContent": "Kies uit gratis epub boeken, gratis kindle boeken."
             },
             "about-3": {"textContent": "Download ze of lees ze online."},
             "about-4": {"textContent": "Wij bieden eboeken van hoge kwaliteit"},
@@ -589,7 +583,7 @@ metadata_translations = {
         "title": "Projekt Gutenberg-Bibliothek - Bücher auf Deutsch",
     },
     "ell": {
-        "description": "Ο πρώτος παραγωγός δωρεάν ηλεκτρονικών βιβλίων",
+        "description": "O πρώτος παραγωγός δωρεάν ηλεκτρονικών βιβλίων",
         "title": "Project Gutenberg Library - Βιβλία στα Ελληνικά",
     },
     "eng": {
@@ -606,7 +600,7 @@ metadata_translations = {
     },
     "est": {
         "description": "Esimene tasuta e-raamatute tootja",
-        "title": "Projekt Gutenbergi raamatukogu – eestikeelsed raamatud",
+        "title": "Projekt Gutenbergi raamatukogu - eestikeelsed raamatud",
     },
     "fas": {
         "description": "اولین تولید کننده کتاب های الکترونیکی رایگان",
@@ -629,7 +623,7 @@ metadata_translations = {
         "title": "Project Gutenberg Library - Books in Friulian",
     },
     "gla": {
-        "description": "A ' chiad neach-dèanaidh leabhraichean-d a saor an " "asgaidh",
+        "description": "A ' chiad neach-dèanaidh leabhraichean-d a saor an asgaidh",
         "title": "Leabharlann Pròiseact Gutenberg - Leabhraichean ann an "
         "Gàidhlig na h-Alba",
     },
@@ -678,7 +672,7 @@ metadata_translations = {
         "title": "Project Gutenberg Library - Books in Latin",
     },
     "mri": {
-        "description": "Ko te kaihanga tuatahi o nga pukapuka pukapuka kore " "utu",
+        "description": "Ko te kaihanga tuatahi o nga pukapuka pukapuka kore utu",
         "title": "Project Gutenberg Library - Books in Māori",
     },
     "myn": {
@@ -738,7 +732,7 @@ metadata_translations = {
         "title": "Biblioteca Proyecto Gutenberg - Libros en español",
     },
     "srp": {
-        "description": "Први произвођач бесплатних е-књига",
+        "description": "Први произвођач бесплатних e-књига",
         "title": "Пројекат Библиотека Гутенберг - Књиге на српском",
     },
     "swe": {

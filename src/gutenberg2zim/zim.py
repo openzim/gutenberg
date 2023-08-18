@@ -1,37 +1,33 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# vim: ai ts=4 sts=4 et sw=4 nu
-
 import datetime
-from path import Path as path
 
+from path import Path
 from peewee import fn
 
-from gutenbergtozim import logger
-from gutenbergtozim.database import Book
-from gutenbergtozim.export import export_all_books
-from gutenbergtozim.iso639 import ISO_MATRIX
-from gutenbergtozim.l10n import metadata_translations
-from gutenbergtozim.shared import Global
-from gutenbergtozim.utils import get_project_id
+from gutenberg2zim.constants import logger
+from gutenberg2zim.database import Book
+from gutenberg2zim.export import export_all_books
+from gutenberg2zim.iso639 import ISO_MATRIX
+from gutenberg2zim.l10n import metadata_translations
+from gutenberg2zim.shared import Global
+from gutenberg2zim.utils import get_project_id
 
 
 def build_zimfile(
     output_folder,
-    download_cache=None,
-    concurrency=None,
-    languages=[],
-    formats=[],
-    only_books=[],
-    force=False,
-    title_search=False,
-    add_bookshelves=False,
-    s3_storage=None,
-    optimizer_version=None,
-    zim_name=None,
-    title=None,
-    description=None,
-    stats_filename=None,
+    download_cache,
+    concurrency,
+    languages,
+    formats,
+    only_books,
+    force,
+    title_search,
+    add_bookshelves,
+    s3_storage,
+    optimizer_version,
+    zim_name,
+    title,
+    description,
+    stats_filename,
 ):
     # actual list of languages with books sorted by most used
     nb = fn.COUNT(Book.language).alias("nb")
@@ -57,22 +53,22 @@ def build_zimfile(
     description = description or metadata_translations.get(iso_languages[0], {}).get(
         "description", "The first producer of Free Ebooks"
     )
-    logger.info("\tWritting ZIM for {}".format(title))
+    logger.info(f"\tWritting ZIM for {title}")
 
     project_id = get_project_id(languages, formats, only_books)
 
     if zim_name is None:
         zim_name = "{}_{}.zim".format(
-            project_id, datetime.datetime.now().strftime("%Y-%m")
+            project_id, datetime.datetime.now().strftime("%Y-%m")  # noqa: DTZ005
         )
     zim_path = output_folder.joinpath(zim_name)
 
-    if path(zim_name).exists() and not force:
-        logger.info("ZIM file `{}` already exist.".format(zim_name))
+    if Path(zim_name).exists() and not force:
+        logger.info(f"ZIM file `{zim_name}` already exist.")
         return
-    elif path(zim_name).exists():
+    elif Path(zim_name).exists():
         logger.info(f"Removing existing ZIM file {zim_name}")
-        path(zim_name).unlink()
+        Path(zim_name).unlink()
 
     Global.setup(
         filename=zim_path,
