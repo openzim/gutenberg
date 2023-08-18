@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from path import Path
 
-from gutenberg2zim.constants import logger
+from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
 from gutenberg2zim.database import Book, BookFormat, Url
 from gutenberg2zim.utils import FORMAT_MATRIX, exec_cmd
 
@@ -230,9 +230,9 @@ def build_html(files):
 
 
 def setup_urls(force):
-    file_with_url = os.path.join("tmp", f"file_on_{UrlBuilder.SERVER_NAME}")
+    file_with_url = TMP_FOLDER_PATH.joinpath(f"file_on_{UrlBuilder.SERVER_NAME}")
 
-    if Path(file_with_url).exists() and not force:
+    if file_with_url.exists() and not force:
         logger.info(
             "\tUrls rsync result {} already exists, processing existing file".format(
                 file_with_url

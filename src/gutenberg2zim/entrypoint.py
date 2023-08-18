@@ -5,7 +5,7 @@ from docopt import docopt
 from path import Path
 
 from gutenberg2zim.checkdeps import check_dependencies
-from gutenberg2zim.constants import VERSION, logger
+from gutenberg2zim.constants import TMP_FOLDER_PATH, VERSION, logger
 from gutenberg2zim.database import setup_database
 from gutenberg2zim.download import download_all_books
 from gutenberg2zim.rdf import download_rdf_file, get_rdf_fpath, parse_and_fill
@@ -111,7 +111,7 @@ def main():
         logger.info("S3 Credentials OK. Continuing ... ")
 
     # create tmp dir
-    Path("tmp").mkdir_p()
+    TMP_FOLDER_PATH.mkdir(parents=True)
 
     languages = [
         x.strip().lower()
