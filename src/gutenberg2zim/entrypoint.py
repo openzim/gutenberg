@@ -131,13 +131,13 @@ def main():
             }
         )
 
+    books = []
     try:
         books_csv = books_csv.split(",")
 
         def f(x):
             return list(map(int, [i for i in x.split("-") if i.isdigit()]))
 
-        books = []
         for i in books_csv:
             blst = f(i)
             if len(blst) > 1:
