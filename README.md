@@ -1,22 +1,22 @@
 # Gutenberg Offline
-
 This scraper downloads the whole [Project
 Gutenberg](https://www.gutenberg.org) library and puts it in a
 [ZIM](https://openzim.org) file, a clean and user friendly format for
 storing content for offline usage.
 
-[![Python package](https://img.shields.io/pypi/v/gutenberg2zim.svg)](https://pypi.python.org/pypi/gutenberg2zim)
-[![Docker](https://ghcr-badge.deta.dev/openzim/gutenberg/latest_tag?label=docker)](https://ghcr.io/openzim/gutenberg)
 [![CodeFactor](https://www.codefactor.io/repository/github/openzim/gutenberg/badge)](https://www.codefactor.io/repository/github/openzim/gutenberg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![codecov](https://codecov.io/gh/openzim/gutenberg/branch/main/graph/badge.svg)](https://codecov.io/gh/openzim/gutenberg)
+[![PyPI version shields.io](https://img.shields.io/pypi/v/gutenberg2zim.svg)](https://pypi.org/project/gutenberg2zim/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gutenberg2zim.svg)](https://pypi.org/project/gutenberg2zim/)
+[![Docker](https://ghcr-badge.deta.dev/openzim/gutenberg/latest_tag?label=docker)](https://ghcr.io/openzim/gutenberg)
 
 ## Coding guidelines
 Main coding guidelines comes from the [openZIM Wiki](https://github.com/openzim/overview/wiki)
 
 ## Setting up the environment
 
-It's recommended that you use `virtualenv` and `py3.6+`.
+It's recommended that you use `virtualenv`.
 
 ### Install the dependencies
 
