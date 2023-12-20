@@ -1,6 +1,6 @@
 import json
 import os
-import pathlib
+from pathlib import Path
 import shutil
 import tempfile
 import traceback
@@ -11,7 +11,6 @@ from multiprocessing.dummy import Pool
 import bs4
 from bs4 import BeautifulSoup
 from jinja2 import Environment, PackageLoader
-from path import Path
 from schedule import every
 from six import text_type
 from zimscraperlib.image.transformation import resize_image
@@ -95,7 +94,7 @@ jinja_env.filters["urlencode"] = urlencode
 
 
 def tmpl_path():
-    return os.path.join(Path(gutenberg2zim.__file__).parent, "templates")
+    return Path(gutenberg2zim.__file__).parent / "templates"
 
 
 def get_list_of_all_languages():
@@ -105,8 +104,8 @@ def get_list_of_all_languages():
 def export_illustration():
     logger.info("Adding illustration")
 
-    src_illus_fpath = pathlib.Path(tmpl_path(), "favicon.png")
-    tmp_illus_fpath = pathlib.Path(TMP_FOLDER_PATH, "illustration.png")
+    src_illus_fpath = Path(tmpl_path(), "favicon.png")
+    tmp_illus_fpath = Path(TMP_FOLDER_PATH, "illustration.png")
 
     shutil.copy(src_illus_fpath, tmp_illus_fpath)
 
@@ -152,10 +151,10 @@ def export_skeleton(
         "datatables",
         "fonts",
     ):
-        src = os.path.join(src_folder, fname)
+        src = Path(src_folder) / fname
 
         # recursively add our assets, at a path identical to position in repo
-        assets_root = pathlib.Path(src)
+        assets_root = Path(src)
         if assets_root.is_file():
             Global.add_item_for(path=fname, fpath=assets_root)
         else:
@@ -163,7 +162,7 @@ def export_skeleton(
                 if not fpath.is_file() or fpath.name == "l10n.js":
                     continue
                 path = str(fpath.relative_to(src))
-                Global.add_item_for(path=os.path.join(fname, path), fpath=fpath)
+                Global.add_item_for(path=str(Path(fname) / path), fpath=fpath)
 
     # export homepage
     tpl_path = "Home.html"
@@ -273,7 +272,7 @@ def export_all_books(
     def dlb(b):
         export_book(
             b,
-            book_dir=pathlib.Path(download_cache).joinpath(str(b.id)),
+            book_dir=Path(download_cache).joinpath(str(b.id)),
             formats=formats,
             books=books,
             project_id=project_id,
@@ -711,23 +710,23 @@ def handle_unoptimized_files(
 
         remove_cover = False
         for fname in zipped_files:
-            fnp = os.path.join(tmpd, fname)
-            if Path(fname).ext in (".png", ".jpeg", ".jpg", ".gif"):
+            fnp = Path(tmpd) / fname
+            if Path(fname).suffix in (".png", ".jpeg", ".jpg", ".gif"):
                 # special case to remove ugly cover
                 if fname.endswith("cover.jpg") and is_bad_cover(fnp):
                     zipped_files.remove(fname)
                     remove_cover = True
                 else:
-                    optimize_image(pathlib.Path(fnp), pathlib.Path(fnp), force=True)
+                    optimize_image(Path(fnp), Path(fnp), force=True)
 
-            if Path(fname).ext in (".htm", ".html"):
+            if Path(fname).suffix in (".htm", ".html"):
                 html_content, _ = read_file(fnp)
                 html = update_html_for_static(
                     book=book, html_content=html_content, formats=formats, epub=True
                 )
                 save_bs_output(html, fnp, UTF8)
 
-            if Path(fname).ext == ".ncx":
+            if Path(fname).suffix == ".ncx":
                 pattern = "*** START: FULL LICENSE ***"
                 ncx, _ = read_file(fnp)
                 soup = BeautifulSoup(ncx, "lxml-xml")
@@ -744,11 +743,15 @@ def handle_unoptimized_files(
         # delete {id}/cover.jpg if exist and update {id}/content.opf
         if remove_cover:
             # remove cover
-            Path(os.path.join(tmpd, text_type(book.id), "cover.jpg")).unlink_p()
+            file_path = Path(tmpd) / text_type(book.id) / "cover.jpg"
+            try:
+                file_path.unlink()
+            except FileNotFoundError:
+                pass
 
             soup = None
-            opff = os.path.join(tmpd, text_type(book.id), "content.opf")
-            if os.path.exists(opff):
+            opff = Path(tmpd) / text_type(book.id) / "content.opf"
+            if Path(opff).exists():
                 opff_content, _ = read_file(opff)
                 soup = BeautifulSoup(opff_content, "lxml-xml")
 
@@ -761,7 +764,7 @@ def handle_unoptimized_files(
         # bundle epub as zip
         zip_epub(epub_fpath=dst, root_folder=tmpd, fpaths=zipped_files)
 
-        Path(tmpd).rmtree_p()
+        shutil.rmtree(tmpd)
 
     def handle_companion_file(
         fname,
@@ -821,7 +824,7 @@ def handle_unoptimized_files(
                     as_ext=".zip",
                 )
             else:
-                Path(tmp_epub.name).move(str(dst))
+                tmp_epub.rename(Path(dst) / tmp_epub.name)
                 Global.add_item_for(path=dstfname, fpath=dst)
                 if s3_storage:
                     upload_to_cache(

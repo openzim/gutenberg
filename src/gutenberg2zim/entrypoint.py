@@ -1,8 +1,7 @@
 import os
 import sys
-
+from pathlib import Path
 from docopt import docopt
-from path import Path
 
 from gutenberg2zim.checkdeps import check_dependencies
 from gutenberg2zim.constants import TMP_FOLDER_PATH, VERSION, logger
@@ -90,7 +89,7 @@ def main():
         arguments.get("--rdf-url")
         or "http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2"
     )
-    dl_cache = arguments.get("--dl-folder") or os.path.join("dl-cache")
+    dl_cache = arguments.get("--dl-folder") or "dl-cache"
     books_csv = arguments.get("--books") or ""
     zim_title = arguments.get("--zim-title")
     zim_desc = arguments.get("--zim-desc")
@@ -209,7 +208,7 @@ def main():
         if do_zim:
             logger.info("BUILDING ZIM dynamically")
             build_zimfile(
-                output_folder=Path(one_lang_one_zim_folder or ".").abspath(),
+                output_folder=Path(one_lang_one_zim_folder or ".").resolve(),
                 download_cache=dl_cache,
                 concurrency=concurrency,
                 languages=zim_lang,

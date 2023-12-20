@@ -1,6 +1,6 @@
 import datetime
 
-from path import Path
+from pathlib import Path
 from peewee import fn
 
 from gutenberg2zim.constants import logger

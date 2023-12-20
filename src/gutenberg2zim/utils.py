@@ -9,7 +9,7 @@ import zipfile
 import chardet
 import requests
 import six
-from path import Path
+from pathlib import Path
 from zimscraperlib.download import save_large_file
 
 from gutenberg2zim.constants import logger
@@ -167,7 +167,7 @@ def is_bad_cover(fpath):
     bad_sizes = [19263]
     bad_sums = ["a059007e7a2e86f2bf92e4070b3e5c73"]
 
-    if Path(fpath).size not in bad_sizes:
+    if Path(fpath).stat().st_size not in bad_sizes:
         return False
 
     return md5sum(fpath) in bad_sums
@@ -204,7 +204,7 @@ def save_file(content, fpath, encoding=UTF8):
 def zip_epub(epub_fpath, root_folder, fpaths):
     with zipfile.ZipFile(epub_fpath, "w", zipfile.ZIP_DEFLATED) as zf:
         for fpath in fpaths:
-            zf.write(os.path.join(root_folder, fpath), fpath)
+            zf.write(Path(root_folder, fpath), fpath)
 
 
 def ensure_unicode(v):

@@ -1,6 +1,7 @@
 import os
 import urllib.parse as urlparse
 from collections import defaultdict
+from pathlib import Path
 
 from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
 from gutenberg2zim.database import Book, BookFormat, Url
@@ -41,14 +42,12 @@ class UrlBuilder:
         """
         if self.base == self.BASE_ONE:
             if int(self.b_id) > 10:  # noqa: PLR2004
-                base_url = os.path.join(
-                    os.path.join(*list(str(self.b_id))[:-1]), str(self.b_id)
-                )
+                base_url = Path(*list(str(self.b_id)[:-1])) / str(self.b_id)
             else:
-                base_url = os.path.join(os.path.join("0", str(self.b_id)))
-            url = os.path.join(self.base, base_url)
+                base_url = Path("0") / str(self.b_id)
+            url = Path(self.base) / base_url
         elif self.base == self.BASE_TWO:
-            url = os.path.join(self.base, str(self.b_id))
+            url = Path(self.base) / str(self.b_id)
         elif self.base == self.BASE_THREE:
             url = self.base
         return url  # type: ignore
@@ -146,9 +145,9 @@ def build_epub(files):
         return []
 
     name = "".join(["pg", b_id])
-    url = os.path.join(u.build(), name + ".epub")
-    url_images = os.path.join(u.build(), name + "-images.epub")
-    url_noimages = os.path.join(u.build(), name + "-noimages.epub")
+    url = Path(u.build()) / f"{name}.epub"
+    url_images = Path(u.build()) / f"{name}-images.epub"
+    url_noimages = Path(u.build()) / f"{name}-noimages.epub"
     urls.extend([url, url_images, url_noimages])
     return urls
 
@@ -172,13 +171,13 @@ def build_pdf(files):
 
     for i in files:
         if "images" not in i["name"]:
-            url = os.path.join(u.build(), i["name"])
+            url = Path(u.build()) / i["name"]
             urls.append(url)
 
-    url_dash1 = os.path.join(u1.build(), b_id + "-" + "pdf" + ".pdf")
-    url_dash = os.path.join(u.build(), b_id + "-" + "pdf" + ".pdf")
-    url_normal = os.path.join(u.build(), b_id + ".pdf")
-    url_pg = os.path.join(u.build(), "pg" + b_id + ".pdf")
+    url_dash1 = Path(u1.build()) / f"{b_id}-pdf.pdf"
+    url_dash = Path(u.build()) / f"{b_id}-pdf.pdf"
+    url_normal = Path(u.build()) / f"{b_id}.pdf"
+    url_pg = Path(u.build()) / f"pg{b_id}.pdf"
 
     urls.extend([url_dash, url_normal, url_pg, url_dash1])
     return list(set(urls))
@@ -199,17 +198,17 @@ def build_html(files):
 
     if all(["-h.html" not in file_names, "-h.zip" in file_names]):
         for i in files:
-            url = os.path.join(u.build(), i["name"])
+            url = Path(u.build()) / i["name"]
             urls.append(url)
 
-    url_zip = os.path.join(u.build(), b_id + "-h" + ".zip")
-    # url_utf8 = os.path.join(u.build(), b_id + '-8' + '.zip')
-    url_html = os.path.join(u.build(), b_id + "-h" + ".html")
-    url_htm = os.path.join(u.build(), b_id + "-h" + ".htm")
+    url_zip = Path(u.build()) / f"{b_id}-h.zip"
+    # url_utf8 = Path(u.build()) / f"{b_id}-8.zip"
+    url_html = Path(u.build()) / f"{b_id}-h.html"
+    url_htm = Path(u.build()) / f"{b_id}-h.htm"
 
     u.with_base(UrlBuilder.BASE_TWO)
     name = "".join(["pg", b_id])
-    html_utf8 = os.path.join(u.build(), name + ".html.utf8")
+    html_utf8 = Path(u.build()) / f"{name}.html.utf8"
 
     u.with_base(UrlBuilder.BASE_THREE)
     file_index = index_of_substring(files, ["html", "htm"])
@@ -220,7 +219,7 @@ def build_html(files):
     etext_names = [f"{i:0=2d}" for i in etext_nums]
     etext_urls = []
     for i in etext_names:
-        etext_urls.append(os.path.join(u.build() + i, file_name))
+        etext_urls.append(Path(u.build(), i, file_name))
 
     urls.extend([url_zip, url_htm, url_html, html_utf8])
     urls.extend(etext_urls)
