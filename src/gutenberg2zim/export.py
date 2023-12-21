@@ -744,10 +744,7 @@ def handle_unoptimized_files(
         if remove_cover:
             # remove cover
             file_path = Path(tmpd) / text_type(book.id) / "cover.jpg"
-            try:
-                file_path.unlink()
-            except FileNotFoundError:
-                pass
+            file_path.unlink(missing_ok=True)
 
             soup = None
             opff = Path(tmpd) / text_type(book.id) / "content.opf"
