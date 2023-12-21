@@ -47,11 +47,11 @@ def download_from_cache(
         return False
     dest_dir.mkdir(parents=True, exist_ok=True)
     if book_format == "cover":
-        fpath = dest_dir.joinpath(f"{book.id}_cover_image.jpg")
+        fpath = dest_dir / f"{book.id}_cover_image.jpg"
     else:
         if book_format == "html":
             book_format = "zip"
-        fpath = dest_dir.joinpath(archive_name_for(book, book_format))
+        fpath = dest_dir / archive_name_for(book, book_format)
     try:
         s3_storage.download_file(key, fpath)
         if book_format == "zip":

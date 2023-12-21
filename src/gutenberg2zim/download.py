@@ -82,13 +82,13 @@ def handle_zipped_epub(zippath, book, dst_dir: Path):
             if fname.endswith(".html") or fname.endswith(".htm"):
                 if mhtml:
                     if fname.startswith(f"{book.id}-h."):
-                        dst = dst_dir.joinpath(f"{book.id}.html")
+                        dst = dst_dir / f"{book.id}.html"
                     else:
-                        dst = dst_dir.joinpath(f"{book.id}_{fname}")
+                        dst = dst_dir / f"{book.id}_{fname}"
                 else:
-                    dst = dst_dir.joinpath(f"{book.id}.html")
+                    dst = dst_dir / f"{book.id}.html"
             else:
-                dst = dst_dir.joinpath(f"{book.id}_{fname}")
+                dst = dst_dir / f"{book.id}_{fname}"
             try:
                 src.rename(dst)
             except Exception as e:
@@ -123,13 +123,14 @@ def download_book(
     if "html" not in formats:
         formats.append("html")
 
-    book_dir = download_cache.joinpath(str(book.id))
-    optimized_dir = book_dir.joinpath("optimized")
-    unoptimized_dir = book_dir.joinpath("unoptimized")
+    book_dir = download_cache / str(book.id)
+    optimized_dir = book_dir / "optimized"
+    unoptimized_dir = book_dir / "unoptimized"
     unsuccessful_formats = []
+
     for book_format in formats:
-        unoptimized_fpath = unoptimized_dir.joinpath(fname_for(book, book_format))
-        optimized_fpath = optimized_dir.joinpath(archive_name_for(book, book_format))
+        unoptimized_fpath = unoptimized_dir / fname_for(book, book_format)
+        optimized_fpath = optimized_dir / archive_name_for(book, book_format)
 
         # check if already downloaded
         if (unoptimized_fpath.exists() or optimized_fpath.exists()) and not force:
@@ -232,7 +233,7 @@ def download_book(
 
             # HTML files are *sometime* available as ZIP files
             if url.endswith(".zip"):
-                zpath = unoptimized_dir.joinpath(f"{fname_for(book, book_format)}.zip")
+                zpath = unoptimized_dir / f"{fname_for(book, book_format)}.zip"
 
                 etag = get_etag_from_url(url)
                 if s3_storage:
@@ -328,10 +329,9 @@ def download_cover(book, book_dir, s3_storage, optimizer_version):
         etag = get_etag_from_url(url)
         downloaded_from_cache = False
         cover = f"{book.id}_cover_image.jpg"
-        if (
-            book_dir.joinpath("optimized").joinpath(cover).exists()
-            or book_dir.joinpath("unoptimized").joinpath(cover).exists()
-        ):
+        if (book_dir / "optimized" / cover).exists() or (
+            book_dir / "unoptimized" / cover
+        ).exists():
             logger.debug(f"Cover already exists for book #{book.id}")
             return
         if s3_storage:
@@ -342,13 +342,13 @@ def download_cover(book, book_dir, s3_storage, optimizer_version):
                 book=book,
                 etag=etag,
                 book_format="cover",
-                dest_dir=book_dir.joinpath("optimized"),
+                dest_dir=book_dir / "optimized",
                 s3_storage=s3_storage,
                 optimizer_version=optimizer_version,
             )
         if not downloaded_from_cache:
             logger.debug(f"Downloading {url}")
-            if download_file(url, book_dir.joinpath("unoptimized").joinpath(cover)):
+            if download_file(url, book_dir / "unoptimized" / cover):
                 book.cover_etag = etag
                 book.save()
     else:

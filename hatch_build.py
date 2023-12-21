@@ -20,18 +20,13 @@ class GetJsDepsHook(BuildHookInterface):
             logger.info("JS dependencies are already installed, skipping it")
             return
         subprocess.run(
-            str(Path(self.root).joinpath("get_js_deps.sh")),
+            str(Path(self.root) / "get_js_deps.sh"),
             check=True,
         )
         return super().initialize(version, build_data)
 
     def deps_already_installed(self) -> bool:
         for dep in JS_DEPS:
-            if (
-                not Path(self.root)
-                .joinpath("gutebergtozim/templates")
-                .joinpath(dep)
-                .exists()
-            ):
+            if not Path(self.root, "gutebergtozim/templates", dep).exists():
                 return False
         return True

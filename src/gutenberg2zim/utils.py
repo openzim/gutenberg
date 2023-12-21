@@ -5,11 +5,11 @@ import subprocess
 import sys
 import unicodedata
 import zipfile
+from pathlib import Path
 
 import chardet
 import requests
 import six
-from pathlib import Path
 from zimscraperlib.download import save_large_file
 
 from gutenberg2zim.constants import logger

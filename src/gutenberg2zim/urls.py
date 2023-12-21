@@ -1,4 +1,3 @@
-import os
 import urllib.parse as urlparse
 from collections import defaultdict
 from pathlib import Path
@@ -227,7 +226,7 @@ def build_html(files):
 
 
 def setup_urls(force):
-    file_with_url = TMP_FOLDER_PATH.joinpath(f"file_on_{UrlBuilder.SERVER_NAME}")
+    file_with_url = TMP_FOLDER_PATH / f"file_on_{UrlBuilder.SERVER_NAME}"
 
     if file_with_url.exists() and not force:
         logger.info(

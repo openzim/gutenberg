@@ -1,7 +1,7 @@
-import os
 import re
 import tarfile
 from pathlib import Path
+
 import peewee
 from bs4 import BeautifulSoup
 
@@ -70,7 +70,7 @@ def parse_and_process_file(rdf_tarfile, rdf_member):
 
     if parser.license == "None":
         logger.info(f"\tWARN: Unusable book without any information {gid}")
-    elif parser.title == "":
+    elif not parser.title:
         logger.info(f"\tWARN: Unusable book without title {gid}")
     else:
         save_rdf_in_database(parser)

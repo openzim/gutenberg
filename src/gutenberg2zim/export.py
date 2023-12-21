@@ -272,7 +272,7 @@ def export_all_books(
     def dlb(b):
         export_book(
             b,
-            book_dir=download_cache.joinpath(str(b.id)),
+            book_dir=download_cache / str(b.id),
             formats=formats,
             books=books,
             project_id=project_id,
@@ -302,7 +302,7 @@ def report_progress(stats_filename=None):
 
 
 def html_content_for(book, src_dir):
-    html_fpath = src_dir.joinpath(fname_for(book, "html"))
+    html_fpath = src_dir / fname_for(book, "html")
 
     # is HTML file present?
     if not html_fpath.exists():
@@ -528,7 +528,8 @@ def cover_html_content_for(
     book, optimized_files_dir, books, project_id, title_search, add_bookshelves, formats
 ):
     cover_img = f"{book.id}_cover_image.jpg"
-    cover_img = cover_img if optimized_files_dir.joinpath(cover_img).exists() else None
+    cover_img = cover_img if (optimized_files_dir / cover_img).exists() else None
+
     translate_author = (
         f' data-l10n-id="author-{book.author.name().lower()}"'
         if book.author.name() in ["Anonymous", "Various"]
@@ -584,12 +585,12 @@ def export_book(
     s3_storage,
     optimizer_version,
 ):
-    optimized_files_dir = book_dir.joinpath("optimized")
+    optimized_files_dir = book_dir / "optimized"
     if optimized_files_dir.exists():
         for fpath in optimized_files_dir.iterdir():
             path = str(fpath.relative_to(optimized_files_dir))
             Global.add_item_for(path=path, fpath=fpath)
-    unoptimized_files_dir = book_dir.joinpath("unoptimized")
+    unoptimized_files_dir = book_dir / "unoptimized"
     if unoptimized_files_dir.exists():
         handle_unoptimized_files(
             book=book,
@@ -632,11 +633,11 @@ def handle_unoptimized_files(
 
     def update_download_cache(unoptimized_file, optimized_file):
         book_dir = unoptimized_file.parents[1]
-        optimized_dir = book_dir.joinpath("optimized")
-        unoptimized_dir = book_dir.joinpath("unoptimized")
+        optimized_dir = book_dir / "optimized"
+        unoptimized_dir = book_dir / "unoptimized"
         if not optimized_dir.exists():
             optimized_dir.mkdir()
-        dst = optimized_dir.joinpath(optimized_file.name)
+        dst = optimized_dir / optimized_file.name
         os.unlink(unoptimized_file)
         copy_file(optimized_file.resolve(), dst.resolve())
         if not list(unoptimized_dir.iterdir()):
@@ -649,7 +650,7 @@ def handle_unoptimized_files(
     html_book_optimized_files = []
     if html:
         article_name = article_name_for(book)
-        article_fpath = TMP_FOLDER_PATH.joinpath(article_name)
+        article_fpath = TMP_FOLDER_PATH / article_name
         if not article_fpath.exists() or force:
             logger.info(f"\t\tExporting to {article_fpath}")
             try:
@@ -660,9 +661,7 @@ def handle_unoptimized_files(
                 raise
             save_bs_output(new_html, article_fpath, UTF8)
             html_book_optimized_files.append(article_fpath)
-            update_download_cache(
-                src_dir.joinpath(fname_for(book, "html")), article_fpath
-            )
+            update_download_cache(src_dir / fname_for(book, "html"), article_fpath)
             if not src_dir.exists():
                 return
         else:
@@ -777,7 +776,7 @@ def handle_unoptimized_files(
         src = fname
         if dstfname is None:
             dstfname = fname.name
-        dst = TMP_FOLDER_PATH.joinpath(dstfname)
+        dst = TMP_FOLDER_PATH / dstfname
         if dst.exists() and not force:
             logger.debug(f"\t\tSkipping already optimized companion {dstfname}")
             Global.add_item_for(path=dstfname, fpath=dst)
@@ -850,7 +849,7 @@ def handle_unoptimized_files(
         if fpath.is_file() and fpath.name.startswith(f"{book.id}_"):
             if fpath.suffix in (".html", ".htm"):
                 src = fpath
-                dst = TMP_FOLDER_PATH.joinpath(fpath.name)
+                dst = TMP_FOLDER_PATH / fpath.name
                 if dst.exists() and not force:
                     logger.debug(f"\t\tSkipping already optimized HTML {dst}")
                     Global.add_item_for(path=fpath.name, fpath=dst)
@@ -890,7 +889,7 @@ def handle_unoptimized_files(
     for other_format in formats:
         if other_format not in book.formats() or other_format == "html":
             continue
-        book_file = src_dir.joinpath(fname_for(book, other_format))
+        book_file = src_dir / fname_for(book, other_format)
         if book_file.exists():
             try:
                 handle_companion_file(
@@ -916,7 +915,7 @@ def write_book_presentation_article(
     formats,
 ):
     article_name = article_name_for(book=book, cover=True)
-    cover_fpath = TMP_FOLDER_PATH.joinpath(article_name)
+    cover_fpath = TMP_FOLDER_PATH / article_name
     if not cover_fpath.exists() or force:
         logger.info(f"\t\tExporting article presentation to {cover_fpath}")
         html = cover_html_content_for(

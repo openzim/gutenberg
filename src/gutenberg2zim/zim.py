@@ -1,6 +1,6 @@
 import datetime
-
 from pathlib import Path
+
 from peewee import fn
 
 from gutenberg2zim.constants import logger
@@ -61,7 +61,7 @@ def build_zimfile(
         zim_name = "{}_{}.zim".format(
             project_id, datetime.datetime.now().strftime("%Y-%m")  # noqa: DTZ005
         )
-    zim_path = output_folder.joinpath(zim_name)
+    zim_path = output_folder / zim_name
 
     if Path(zim_name).exists() and not force:
         logger.info(f"ZIM file `{zim_name}` already exist.")
