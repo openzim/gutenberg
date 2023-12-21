@@ -1,9 +1,9 @@
 import os
-from pathlib import Path
 import shutil
 import tempfile
 import zipfile
 from multiprocessing.dummy import Pool
+from pathlib import Path
 from pprint import pprint as pp
 
 import apsw
@@ -76,7 +76,7 @@ def handle_zipped_epub(zippath, book, dst_dir: Path):
             continue
 
         src = Path(tmpd) / zipped_file
-        if Path(src).exists():
+        if src.exists():
             fname = Path(zipped_file).name
 
             if fname.endswith(".html") or fname.endswith(".htm"):
@@ -90,7 +90,7 @@ def handle_zipped_epub(zippath, book, dst_dir: Path):
             else:
                 dst = dst_dir.joinpath(f"{book.id}_{fname}")
             try:
-                Path(src).rename(dst)
+                src.rename(dst)
             except Exception as e:
                 import traceback
 
@@ -104,10 +104,9 @@ def handle_zipped_epub(zippath, book, dst_dir: Path):
     shutil.rmtree(tmpd)
 
 
-
 def download_book(
     book: Book,
-    download_cache: str,
+    download_cache: Path,
     formats: list[str],
     *,
     force: bool,
@@ -124,7 +123,7 @@ def download_book(
     if "html" not in formats:
         formats.append("html")
 
-    book_dir = Path(download_cache).joinpath(str(book.id))
+    book_dir = download_cache.joinpath(str(book.id))
     optimized_dir = book_dir.joinpath("optimized")
     unoptimized_dir = book_dir.joinpath("unoptimized")
     unsuccessful_formats = []
@@ -357,7 +356,7 @@ def download_cover(book, book_dir, s3_storage, optimizer_version):
 
 
 def download_all_books(
-    download_cache: str,
+    download_cache: Path,
     concurrency: int,
     languages: list[str],
     formats: list[str],
@@ -372,7 +371,7 @@ def download_all_books(
     )
 
     # ensure dir exist
-    Path(download_cache).mkdir(parents=True, exist_ok=True)
+    download_cache.mkdir(parents=True, exist_ok=True)
 
     def backoff_busy_error_hdlr(details):
         logger.warning(

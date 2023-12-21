@@ -1,12 +1,12 @@
 import json
 import os
-from pathlib import Path
 import shutil
 import tempfile
 import traceback
 import urllib.parse
 import zipfile
 from multiprocessing.dummy import Pool
+from pathlib import Path
 
 import bs4
 from bs4 import BeautifulSoup
@@ -272,7 +272,7 @@ def export_all_books(
     def dlb(b):
         export_book(
             b,
-            book_dir=Path(download_cache).joinpath(str(b.id)),
+            book_dir=download_cache.joinpath(str(b.id)),
             formats=formats,
             books=books,
             project_id=project_id,
@@ -748,7 +748,7 @@ def handle_unoptimized_files(
 
             soup = None
             opff = Path(tmpd) / text_type(book.id) / "content.opf"
-            if Path(opff).exists():
+            if opff.exists():
                 opff_content, _ = read_file(opff)
                 soup = BeautifulSoup(opff_content, "lxml-xml")
 
@@ -821,7 +821,7 @@ def handle_unoptimized_files(
                     as_ext=".zip",
                 )
             else:
-                tmp_epub.rename(Path(dst) / tmp_epub.name)
+                tmp_epub.rename(dst / tmp_epub.name)
                 Global.add_item_for(path=dstfname, fpath=dst)
                 if s3_storage:
                     upload_to_cache(

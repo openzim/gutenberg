@@ -1,6 +1,6 @@
-import os
 import sys
 from pathlib import Path
+
 from docopt import docopt
 
 from gutenberg2zim.checkdeps import check_dependencies
@@ -89,7 +89,7 @@ def main():
         arguments.get("--rdf-url")
         or "http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2"
     )
-    dl_cache = arguments.get("--dl-folder") or "dl-cache"
+    dl_cache = Path(arguments.get("--dl-folder") or "dl-cache")
     books_csv = arguments.get("--books") or ""
     zim_title = arguments.get("--zim-title")
     zim_desc = arguments.get("--zim-desc")
