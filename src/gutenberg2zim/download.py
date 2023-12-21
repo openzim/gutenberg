@@ -72,7 +72,7 @@ def handle_zipped_epub(zippath, book, dst_dir: Path):
     # move all extracted files to proper locations
     for zipped_file in zipped_files:
         # skip folders
-        if not Path(zipped_file).suffix:
+        if not Path(zipped_file).is_file:
             continue
 
         src = Path(tmpd) / zipped_file
