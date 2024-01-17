@@ -28,6 +28,7 @@ def build_zimfile(
     title,
     description,
     stats_filename,
+    publisher,
 ):
     # actual list of languages with books sorted by most used
     nb = fn.COUNT(Book.language).alias("nb")
@@ -76,6 +77,7 @@ def build_zimfile(
         title=title,
         description=description,
         name=project_id,
+        publisher=publisher,
     )
 
     Global.start()

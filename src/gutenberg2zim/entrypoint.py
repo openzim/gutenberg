@@ -22,7 +22,7 @@ help_info = (
     """[--prepare] [--parse] [--download] [--export] [--dev] """
     """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
     """[--title-search] [--bookshelves] [--optimization-cache S3URL] """
-    """[--stats-filename STATS_FILENAME]"""
+    """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER]"""
     """
 
 -h --help                       Display this help message
@@ -63,6 +63,7 @@ help_info = (
 --use-any-optimized-version     Try to use any optimized version found on """
     """optimization cache
 --stats-filename=<filename>  Path to store the progress JSON file to
+--publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
 
 This script is used to produce a ZIM file (and any intermediate state)
 of Gutenberg repository using a mirror."""
@@ -102,6 +103,7 @@ def main():
     optimization_cache = arguments.get("--optimization-cache") or None
     use_any_optimized_version = arguments.get("--use-any-optimized-version", False)
     stats_filename = arguments.get("--stats-filename") or None
+    publisher = arguments.get("--publisher") or "openZIM"
 
     s3_storage = None
     if optimization_cache:
@@ -224,4 +226,5 @@ def main():
                 title=zim_title,
                 description=zim_desc,
                 stats_filename=stats_filename,
+                publisher=publisher,
             )

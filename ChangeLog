@@ -8,6 +8,12 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+### Added
+- `Publisher` ZIM metadata can now be customized at CLI (#210)
+
+### Changed
+- `Publisher` ZIM metadata default value is changed to `openZIM` intead of `Kiwix` (#210)
+
 ### Fixed
 - Do not fail if temporary directory already exists (#207)
 - Typo in `Scraper` ZIM metadata (#212)
