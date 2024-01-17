@@ -44,7 +44,7 @@ class Global:
             publisher="Kiwix",  # type: ignore
             name=name,
             tags="_category:gutenberg;gutenberg",  # type: ignore
-            scraper=f"gutengergtozim-{VERSION}",  # type: ignore
+            scraper=f"gutenberg2zim-{VERSION}",  # type: ignore
             date=date.today(),  # type: ignore
         ).config_verbose(True)
 
