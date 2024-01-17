@@ -69,6 +69,9 @@ exclude = ["/.github"]
 path = "hatch_build.py"
 dependencies = ["zimscraperlib==3.1.1"]
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/gutenberg2zim"]
+
 [tool.hatch.envs.default]
 features = ["dev"]
 
