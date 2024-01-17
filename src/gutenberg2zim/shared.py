@@ -32,7 +32,7 @@ class Global:
             Global.progress += 1
 
     @staticmethod
-    def setup(filename, language, title, description, name):
+    def setup(filename, language, title, description, name, publisher):
         Global.creator = Creator(
             filename=filename,
             main_path="Home.html",
@@ -41,10 +41,10 @@ class Global:
             title=title,
             description=description,
             creator="gutenberg.org",  # type: ignore
-            publisher="Kiwix",  # type: ignore
+            publisher=publisher,  # type: ignore
             name=name,
             tags="_category:gutenberg;gutenberg",  # type: ignore
-            scraper=f"gutengergtozim-{VERSION}",  # type: ignore
+            scraper=f"gutenberg2zim-{VERSION}",  # type: ignore
             date=date.today(),  # type: ignore
         ).config_verbose(True)
 
