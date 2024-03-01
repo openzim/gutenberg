@@ -14,40 +14,50 @@ storing content for offline usage.
 ## Coding guidelines
 Main coding guidelines comes from the [openZIM Wiki](https://github.com/openzim/overview/wiki)
 
-## Setting up the environment
+### Setting up the environment
 
-It's recommended that you use `virtualenv`.
+Here we will setup everything needed to run the source version from your machine, supposing you want to modify it. If you simply want to run the tool, you should either install the PyPi package or use the Docker image. Docker image can also be used for development but needs a bit of tweaking for live reload of your code modifications.
 
 ### Install the dependencies
 
+First, ensure you use the proper Python version, inline with the requirement of `pyproject.toml` (you might for instance use `pyenv` to manage multiple Python versions in parallel).
+
+You then need to install the various tools/libraries needed by the scraper.
+
 #### GNU/Linux
 
-```bash
+```
 sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle curl zip zim-tools
-sudo pip install virtualenv
 ```
 
 #### macOS
 
-```bash
-sudo easy_install pip
-sudo pip install virtualenv
+```
 brew install advancecomp jpegoptim pngquant p7zip gifsicle
 ```
 
-### Set up the project
+### Setup the package
+
+First, clone this repository.
 
 ```bash
 git clone git@github.com:kiwix/gutenberg.git
 cd gutenberg
-virtualenv gut-env (or any name you want)
-./gut-env/bin/pip install -r requirements.pip
 ```
 
-### Working in the environment
+If you do not already have it on your system, install `hatch` to build the software and manage virtual environments (you might be interested by our detailed [Developer Setup](https://github.com/openzim/_python-bootstrap/wiki/Developer-Setup) as well).
 
-* Activate the environment:  `source gut-env/bin/activate`
-* Quit the environment: `deactivate`
+```bash
+pip3 install hatch
+```
+
+Start a hatch shell: this will install software including dependencies in an isolated virtual environment.
+
+```bash
+hatch shell
+```
+
+That's it. You can now run `gutenberg2zim` from your terminal.
 
 ## Getting started
 
