@@ -190,9 +190,9 @@ def main():
             only_books=books,
             force=force,
             s3_storage=s3_storage,
-            optimizer_version=optimizer_version
-            if not use_any_optimized_version
-            else None,
+            optimizer_version=(
+                optimizer_version if not use_any_optimized_version else None
+            ),
         )
     if one_lang_one_zim_folder:
         if languages == []:

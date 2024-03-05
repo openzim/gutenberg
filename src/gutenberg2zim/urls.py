@@ -8,7 +8,6 @@ from gutenberg2zim.utils import FORMAT_MATRIX, exec_cmd
 
 
 class UrlBuilder:
-
     """
     Url builder for the files of a Gutenberg book.
     Example:
