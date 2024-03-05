@@ -178,7 +178,7 @@ def main():
         logger.info(f"PARSING rdf-files in {rdf_path}")
         parse_and_fill(rdf_path=rdf_path, only_books=books)
         logger.info("Add possible url to db")
-        setup_urls(force=force)
+        setup_urls(force=force, books=books)
 
     if do_download:
         logger.info("DOWNLOADING ebooks from mirror using filters")

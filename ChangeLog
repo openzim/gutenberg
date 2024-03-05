@@ -8,6 +8,10 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Insert as few rsync URLs as possible in DB when a book selection is made (#220)
+
 ## [2.1.1] - 2024-01-17
 
 ### Added
