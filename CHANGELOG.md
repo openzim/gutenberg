@@ -15,12 +15,15 @@ as of 2.0.0.
 ## [2.1.1] - 2024-01-17
 
 ### Added
+
 - `Publisher` ZIM metadata can now be customized at CLI (#210)
 
 ### Changed
+
 - `Publisher` ZIM metadata default value is changed to `openZIM` intead of `Kiwix` (#210)
 
 ### Fixed
+
 - Do not fail if temporary directory already exists (#207)
 - Typo in `Scraper` ZIM metadata (#212)
 - Adapt to hatchling v1.19.0 which mandates packages setting (#211)
@@ -39,11 +42,13 @@ as of 2.0.0.
 - Removed inline Javascript in HTML files (#145)
 
 ### Fixed
+
 - Support single quotes in author names (#162)
 - Migrated to another Gutenberg server (#187)
 - Removed useless file languages_06_2018 (#180)
 
 ### Removed
+
 - Removed Datatables JS code from repository, fetch online now (#116)
 - Dropped Python 2 support (#191)
 
