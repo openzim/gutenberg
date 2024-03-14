@@ -8,7 +8,6 @@ from gutenberg2zim.utils import FORMAT_MATRIX, exec_cmd
 
 
 class UrlBuilder:
-
     """
     Url builder for the files of a Gutenberg book.
     Example:
@@ -227,7 +226,7 @@ def build_html(files):
     return list(set(urls))
 
 
-def setup_urls(force):
+def setup_urls(force, books):
     file_with_url = TMP_FOLDER_PATH.joinpath(f"file_on_{UrlBuilder.SERVER_NAME}")
 
     if file_with_url.exists() and not force:
@@ -261,10 +260,34 @@ def setup_urls(force):
     qry.execute()
 
     logger.info("\tAppending urls in DB from rsync result")
-    # strip rsync file to only contain relative path
+    count_dir = count_old = count_added = count_processed = 0
     with open(file_with_url, errors="replace") as src:
+        # show progress in debug mode, we expect about 5.4M lines as of early 2024
+        if count_processed and count_processed % 100000 == 0:
+            logger.debug(f"\t{count_processed} rsync results processed")
         for line in src.readlines():
+            count_processed += 1
+            # ignore all directory entries
+            if line.startswith("d"):
+                count_dir += 1
+                continue
+            # ignore all entries in an /old/ subfolder
+            if "/old/" in line:
+                count_old += 1
+                continue
+            # take into account the book selection which might have been passed ;
+            # this not does completely filter-out useless urls for books IDs 1 to 9
+            # but still makes the scraper way faster for all other selections
+            if books:
+                if not any(f"/{book}/" in line for book in books):
+                    continue
+            # strip rsync file to only contain relative path
             Url.create(url=line[start_rel_path_idx:].strip())  # type: ignore
+            count_added += 1
+    logger.info(
+        f"\tDB is ready, {count_added} URLs have been added ({count_dir} dirs ignored, "
+        f"{count_old} old stuff ignored, {count_processed} lines processed)"
+    )
 
 
 if __name__ == "__main__":
