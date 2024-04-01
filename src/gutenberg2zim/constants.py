@@ -18,7 +18,7 @@ JS_DEPS: list[str] = [
     "datatables/datatables.min.js",
 ]
 
-logger = getLogger(__name__, level=logging.DEBUG)
+logger = getLogger(NAME, level=logging.INFO)
 
 TMP_FOLDER = "tmp"
 TMP_FOLDER_PATH = pathlib.Path(TMP_FOLDER)
