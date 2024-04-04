@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -22,7 +23,8 @@ help_info = (
     """[--prepare] [--parse] [--download] [--export] [--dev] """
     """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
     """[--title-search] [--bookshelves] [--optimization-cache S3URL] """
-    """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER]"""
+    """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
+    """[--debug]"""
     """
 
 -h --help                       Display this help message
@@ -64,6 +66,7 @@ help_info = (
     """optimization cache
 --stats-filename=<filename>  Path to store the progress JSON file to
 --publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
+--debug                         Enable verbose output
 
 This script is used to produce a ZIM file (and any intermediate state)
 of Gutenberg repository using a mirror."""
@@ -104,6 +107,11 @@ def main():
     use_any_optimized_version = arguments.get("--use-any-optimized-version", False)
     stats_filename = arguments.get("--stats-filename") or None
     publisher = arguments.get("--publisher") or "openZIM"
+    debug = arguments.get("--debug") or False
+
+    if debug:
+        for handler in logger.handlers:
+            handler.setLevel(logging.DEBUG)
 
     s3_storage = None
     if optimization_cache:

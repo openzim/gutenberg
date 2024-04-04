@@ -8,9 +8,17 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Add support for `--debug` flag to output debug logs
+
 ### Changed
 
 - Insert as few rsync URLs as possible in DB when a book selection is made (#220)
+
+### Fixed
+
+- Simplify the logger named (used `gutenberg2zim` instead of `gutenberg2zim.constants`) (#206)
 
 ## [2.1.1] - 2024-01-17
 
