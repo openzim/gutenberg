@@ -18,6 +18,8 @@ class UrlBuilder:
 
     SERVER_NAME = "aleph_pglaf_org"
     RSYNC = "rsync://aleph.pglaf.org/gutenberg/"
+    # NOTE: All urls below should not end with a trailing slash
+    # as they will be added while building the urls for a book.
     BASE_ONE = "http://aleph.pglaf.org"
     BASE_TWO = "http://aleph.pglaf.org/cache/epub"
     BASE_THREE = "http://aleph.pglaf.org/etext"
