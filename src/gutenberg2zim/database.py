@@ -211,7 +211,7 @@ def load_fixtures(model):
         logger.debug(f"[fixtures] Created {f}")
 
 
-def setup_database(*, wipe=False):
+def setup_database(*, wipe: bool = False) -> None:
     logger.info("Setting up the database")
 
     for model in (License, Author, Book, BookFormat, Url):

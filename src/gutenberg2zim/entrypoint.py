@@ -1,9 +1,8 @@
 import logging
-import os
 import sys
+from pathlib import Path
 
 from docopt import docopt
-from path import Path
 
 from gutenberg2zim.checkdeps import check_dependencies
 from gutenberg2zim.constants import TMP_FOLDER_PATH, VERSION, logger
@@ -94,7 +93,12 @@ def main():
         arguments.get("--rdf-url")
         or "http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2"
     )
-    dl_cache = arguments.get("--dl-folder") or os.path.join("dl-cache")
+
+    if dl_folder := arguments.get("--dl-folder"):
+        dl_cache = Path(dl_folder).resolve()
+    else:
+        dl_cache = Path("dl-cache").resolve()
+
     books_csv = arguments.get("--books") or ""
     zim_title = arguments.get("--zim-title")
     zim_desc = arguments.get("--zim-desc")
@@ -141,7 +145,7 @@ def main():
             }
         )
 
-    books = []
+    books: list[int] = []
     try:
         books_csv = books_csv.split(",")
 
@@ -151,7 +155,7 @@ def main():
         for i in books_csv:
             blst = f(i)
             if len(blst) > 1:
-                blst = range(blst[0], blst[1] + 1)
+                blst = list(range(blst[0], blst[1] + 1))
             books.extend(blst)
         books_csv = list(set(books))
     except Exception as e:
@@ -218,16 +222,17 @@ def main():
     for zim_lang in zims:
         if do_zim:
             logger.info("BUILDING ZIM dynamically")
+            if one_lang_one_zim_folder:
+                output_folder = Path(one_lang_one_zim_folder).resolve()
+            else:
+                output_folder = Path(".").resolve()
             build_zimfile(
-                output_folder=Path(one_lang_one_zim_folder or ".").abspath(),
+                output_folder=output_folder,
                 download_cache=dl_cache,
                 concurrency=concurrency,
                 languages=zim_lang,
                 formats=formats,
                 only_books=books,
-                force=force,
-                title_search=title_search,
-                add_bookshelves=bookshelves,
                 s3_storage=s3_storage,
                 optimizer_version=optimizer_version,
                 zim_name=Path(zim_name).name if zim_name else None,
@@ -235,4 +240,7 @@ def main():
                 description=zim_desc,
                 stats_filename=stats_filename,
                 publisher=publisher,
+                force=force,
+                title_search=title_search,
+                add_bookshelves=bookshelves,
             )

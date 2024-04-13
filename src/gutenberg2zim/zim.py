@@ -1,6 +1,7 @@
 import datetime
+import pathlib
 
-from path import Path
+from kiwixstorage import KiwixStorage
 from peewee import fn
 
 from gutenberg2zim.constants import logger
@@ -13,23 +14,24 @@ from gutenberg2zim.utils import get_project_id
 
 
 def build_zimfile(
-    output_folder,
-    download_cache,
-    concurrency,
-    languages,
-    formats,
-    only_books,
-    force,
-    title_search,
-    add_bookshelves,
-    s3_storage,
-    optimizer_version,
-    zim_name,
-    title,
-    description,
-    stats_filename,
-    publisher,
-):
+    output_folder: pathlib.Path,
+    download_cache: pathlib.Path,
+    concurrency: int,
+    languages: list[str],
+    formats: list[str],
+    only_books: list[int],
+    s3_storage: KiwixStorage | None,
+    optimizer_version: dict[str, str],
+    zim_name: str | None,
+    title: str | None,
+    description: str | None,
+    stats_filename: str | None,
+    publisher: str,
+    *,
+    force: bool,
+    title_search: bool,
+    add_bookshelves: bool,
+) -> None:
     # actual list of languages with books sorted by most used
     nb = fn.COUNT(Book.language).alias("nb")
     db_languages = [
@@ -62,14 +64,14 @@ def build_zimfile(
         zim_name = "{}_{}.zim".format(
             project_id, datetime.datetime.now().strftime("%Y-%m")  # noqa: DTZ005
         )
-    zim_path = output_folder.joinpath(zim_name)
+    zim_path = output_folder / zim_name
 
-    if Path(zim_name).exists() and not force:
+    if zim_path.exists() and not force:
         logger.info(f"ZIM file `{zim_name}` already exist.")
         return
-    elif Path(zim_name).exists():
+    elif zim_path.exists():
         logger.info(f"Removing existing ZIM file {zim_name}")
-        Path(zim_name).unlink()
+        zim_path.unlink(missing_ok=True)
 
     Global.setup(
         filename=zim_path,
@@ -90,12 +92,12 @@ def build_zimfile(
             languages=languages,
             formats=formats,
             only_books=only_books,
-            force=force,
-            title_search=title_search,
-            add_bookshelves=add_bookshelves,
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
             stats_filename=stats_filename,
+            force=force,
+            title_search=title_search,
+            add_bookshelves=add_bookshelves,
         )
 
     except Exception as exc:

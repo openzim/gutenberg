@@ -15,6 +15,7 @@ as of 2.0.0.
 ### Changed
 
 - Insert as few rsync URLs as possible in DB when a book selection is made (#220)
+- Replace usage of os.path and path.py with pathlib.Path (#195)
 
 ### Fixed
 
@@ -102,7 +103,7 @@ as of 2.0.0.
 ## [1.1.6]
 
 - removed duplicate dependencies
-- Added tag _category:gutenberg which was missing
+- Added tag \_category:gutenberg which was missing
 - docker-only release with updated zimwriterfs (2.1.0-1)
 
 ## [1.1.5]

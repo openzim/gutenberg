@@ -1,23 +1,22 @@
 import json
-import os
-import pathlib
 import shutil
 import tempfile
 import traceback
 import urllib.parse
 import zipfile
 from multiprocessing.dummy import Pool
+from pathlib import Path
 
 import bs4
 from bs4 import BeautifulSoup
 from jinja2 import Environment, PackageLoader
-from path import Path
+from kiwixstorage import KiwixStorage
 from schedule import every
 from six import text_type
 from zimscraperlib.image.transformation import resize_image
 
 import gutenberg2zim
-from gutenberg2zim.constants import TMP_FOLDER, TMP_FOLDER_PATH, logger
+from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
 from gutenberg2zim.database import Author, Book, BookFormat
 from gutenberg2zim.iso639 import language_name
 from gutenberg2zim.l10n import l10n_strings
@@ -94,8 +93,8 @@ jinja_env.filters["fa_for_format"] = fa_for_format
 jinja_env.filters["urlencode"] = urlencode
 
 
-def tmpl_path():
-    return os.path.join(Path(gutenberg2zim.__file__).parent, "templates")
+def tmpl_path() -> Path:
+    return (Path(gutenberg2zim.__file__).parent / "templates").resolve()
 
 
 def get_list_of_all_languages():
@@ -105,8 +104,8 @@ def get_list_of_all_languages():
 def export_illustration():
     logger.info("Adding illustration")
 
-    src_illus_fpath = pathlib.Path(tmpl_path(), "favicon.png")
-    tmp_illus_fpath = pathlib.Path(TMP_FOLDER_PATH, "illustration.png")
+    src_illus_fpath = tmpl_path() / "favicon.png"
+    tmp_illus_fpath = TMP_FOLDER_PATH / "illustration.png"
 
     shutil.copy(src_illus_fpath, tmp_illus_fpath)
 
@@ -152,18 +151,17 @@ def export_skeleton(
         "datatables",
         "fonts",
     ):
-        src = os.path.join(src_folder, fname)
+        assets_root = src_folder / fname
 
         # recursively add our assets, at a path identical to position in repo
-        assets_root = pathlib.Path(src)
         if assets_root.is_file():
             Global.add_item_for(path=fname, fpath=assets_root)
         else:
             for fpath in assets_root.glob("**/*"):
                 if not fpath.is_file() or fpath.name == "l10n.js":
                     continue
-                path = str(fpath.relative_to(src))
-                Global.add_item_for(path=os.path.join(fname, path), fpath=fpath)
+                path = str(fpath.relative_to(assets_root))
+                Global.add_item_for(path=str(Path(fname) / path), fpath=fpath)
 
     # export homepage
     tpl_path = "Home.html"
@@ -178,19 +176,20 @@ def export_skeleton(
 
 
 def export_all_books(
-    project_id,
-    download_cache,
-    concurrency,
-    languages,
-    formats,
-    only_books,
-    force,
-    title_search,
-    add_bookshelves,
-    s3_storage,
-    optimizer_version,
-    stats_filename,
-):
+    project_id: str,
+    download_cache: Path,
+    concurrency: int,
+    languages: list[str],
+    formats: list[str],
+    only_books: list[int],
+    s3_storage: KiwixStorage | None,
+    optimizer_version: dict[str, str],
+    stats_filename: str | None,
+    *,
+    force: bool,
+    title_search: bool,
+    add_bookshelves: bool,
+) -> None:
     books = get_list_of_filtered_books(
         languages=languages, formats=formats, only_books=only_books
     )
@@ -273,15 +272,15 @@ def export_all_books(
     def dlb(b):
         export_book(
             b,
-            book_dir=pathlib.Path(download_cache).joinpath(str(b.id)),
+            book_dir=download_cache / str(b.id),
             formats=formats,
             books=books,
             project_id=project_id,
+            s3_storage=s3_storage,
+            optimizer_version=optimizer_version,
             force=force,
             title_search=title_search,
             add_bookshelves=add_bookshelves,
-            s3_storage=s3_storage,
-            optimizer_version=optimizer_version,
         )
         Global.inc_progress()
 
@@ -302,8 +301,8 @@ def report_progress(stats_filename=None):
         json.dump(progress, outfile, indent=2)
 
 
-def html_content_for(book, src_dir):
-    html_fpath = src_dir.joinpath(fname_for(book, "html"))
+def html_content_for(book: Book, src_dir):
+    html_fpath = src_dir / fname_for(book, "html")
 
     # is HTML file present?
     if not html_fpath.exists():
@@ -529,7 +528,7 @@ def cover_html_content_for(
     book, optimized_files_dir, books, project_id, title_search, add_bookshelves, formats
 ):
     cover_img = f"{book.id}_cover_image.jpg"
-    cover_img = cover_img if optimized_files_dir.joinpath(cover_img).exists() else None
+    cover_img = cover_img if (optimized_files_dir / cover_img).exists() else None
     translate_author = (
         f' data-l10n-id="author-{book.author.name().lower()}"'
         if book.author.name() in ["Anonymous", "Various"]
@@ -574,23 +573,24 @@ def save_author_file(author, books, project_id):
 
 
 def export_book(
-    book,
-    book_dir,
-    formats,
-    books,
-    project_id,
-    force,
-    title_search,
-    add_bookshelves,
-    s3_storage,
-    optimizer_version,
+    book: Book,
+    book_dir: Path,
+    formats: list[str],
+    books: list[Book],
+    project_id: str,
+    s3_storage: KiwixStorage | None,
+    optimizer_version: dict[str, str],
+    *,
+    force: bool,
+    title_search: bool,
+    add_bookshelves: bool,
 ):
-    optimized_files_dir = book_dir.joinpath("optimized")
+    optimized_files_dir = book_dir / "optimized"
     if optimized_files_dir.exists():
         for fpath in optimized_files_dir.iterdir():
             path = str(fpath.relative_to(optimized_files_dir))
             Global.add_item_for(path=path, fpath=fpath)
-    unoptimized_files_dir = book_dir.joinpath("unoptimized")
+    unoptimized_files_dir = book_dir / "unoptimized"
     if unoptimized_files_dir.exists():
         handle_unoptimized_files(
             book=book,
@@ -614,14 +614,15 @@ def export_book(
 
 
 def handle_unoptimized_files(
-    book,
-    src_dir,
-    formats,
-    optimizer_version,
-    force,
-    s3_storage,
+    book: Book,
+    src_dir: Path,
+    formats: list[str],
+    optimizer_version: dict[str, str],
+    s3_storage: KiwixStorage | None,
+    *,
+    force: bool,
 ):
-    def copy_file(src, dst):
+    def copy_file(src: Path, dst: Path):
         logger.info(f"\t\tCopying from {src} to {dst}")
         try:
             shutil.copy2(src, dst)
@@ -631,14 +632,13 @@ def handle_unoptimized_files(
                 print(line.strip())  # noqa: T201
             return
 
-    def update_download_cache(unoptimized_file, optimized_file):
+    def update_download_cache(unoptimized_file: Path, optimized_file: Path):
         book_dir = unoptimized_file.parents[1]
-        optimized_dir = book_dir.joinpath("optimized")
-        unoptimized_dir = book_dir.joinpath("unoptimized")
-        if not optimized_dir.exists():
-            optimized_dir.mkdir()
-        dst = optimized_dir.joinpath(optimized_file.name)
-        os.unlink(unoptimized_file)
+        optimized_dir = book_dir / "optimized"
+        unoptimized_dir = book_dir / "unoptimized"
+        optimized_dir.mkdir(exist_ok=True, parents=True)
+        dst = optimized_dir / optimized_file.name
+        unoptimized_file.unlink(missing_ok=True)
         copy_file(optimized_file.resolve(), dst.resolve())
         if not list(unoptimized_dir.iterdir()):
             unoptimized_dir.rmdir()
@@ -650,7 +650,7 @@ def handle_unoptimized_files(
     html_book_optimized_files = []
     if html:
         article_name = article_name_for(book)
-        article_fpath = TMP_FOLDER_PATH.joinpath(article_name)
+        article_fpath = TMP_FOLDER_PATH / article_name
         if not article_fpath.exists() or force:
             logger.info(f"\t\tExporting to {article_fpath}")
             try:
@@ -661,16 +661,14 @@ def handle_unoptimized_files(
                 raise
             save_bs_output(new_html, article_fpath, UTF8)
             html_book_optimized_files.append(article_fpath)
-            update_download_cache(
-                src_dir.joinpath(fname_for(book, "html")), article_fpath
-            )
+            update_download_cache(src_dir / fname_for(book, "html"), article_fpath)
             if not src_dir.exists():
                 return
         else:
             logger.info(f"\t\tSkipping HTML article {article_fpath}")
         Global.add_item_for(path=article_name, fpath=article_fpath)
 
-    def optimize_image(src, dst, *, force=False):
+    def optimize_image(src: Path, dst: Path, *, force: bool = False) -> Path | None:
         if dst.exists() and not force:
             logger.info(f"\tSkipping image optimization for {dst}")
             return dst
@@ -699,7 +697,7 @@ def handle_unoptimized_files(
         logger.info(f"\t\tCreating ePUB off {src} at {dst}")
         zipped_files = []
         # create temp directory to extract to
-        tmpd = tempfile.mkdtemp(dir=TMP_FOLDER)
+        tmpd = Path(tempfile.mkdtemp(dir=TMP_FOLDER_PATH)).resolve()
 
         try:
             with zipfile.ZipFile(src, "r") as zf:
@@ -711,23 +709,23 @@ def handle_unoptimized_files(
 
         remove_cover = False
         for fname in zipped_files:
-            fnp = os.path.join(tmpd, fname)
-            if Path(fname).ext in (".png", ".jpeg", ".jpg", ".gif"):
+            fnp = tmpd / fname
+            if fnp.suffix in (".png", ".jpeg", ".jpg", ".gif"):
                 # special case to remove ugly cover
                 if fname.endswith("cover.jpg") and is_bad_cover(fnp):
                     zipped_files.remove(fname)
                     remove_cover = True
                 else:
-                    optimize_image(pathlib.Path(fnp), pathlib.Path(fnp), force=True)
+                    optimize_image(fnp, fnp, force=True)
 
-            if Path(fname).ext in (".htm", ".html"):
+            if fnp.suffix in (".htm", ".html"):
                 html_content, _ = read_file(fnp)
                 html = update_html_for_static(
                     book=book, html_content=html_content, formats=formats, epub=True
                 )
                 save_bs_output(html, fnp, UTF8)
 
-            if Path(fname).ext == ".ncx":
+            if fnp.suffix == ".ncx":
                 pattern = "*** START: FULL LICENSE ***"
                 ncx, _ = read_file(fnp)
                 soup = BeautifulSoup(ncx, "lxml-xml")
@@ -744,11 +742,11 @@ def handle_unoptimized_files(
         # delete {id}/cover.jpg if exist and update {id}/content.opf
         if remove_cover:
             # remove cover
-            Path(os.path.join(tmpd, text_type(book.id), "cover.jpg")).unlink_p()
+            (tmpd / text_type(book.id) / "cover.jpg").unlink(missing_ok=True)
 
             soup = None
-            opff = os.path.join(tmpd, text_type(book.id), "content.opf")
-            if os.path.exists(opff):
+            opff = tmpd / text_type(book.id) / "content.opf"
+            if opff.exists():
                 opff_content, _ = read_file(opff)
                 soup = BeautifulSoup(opff_content, "lxml-xml")
 
@@ -761,14 +759,14 @@ def handle_unoptimized_files(
         # bundle epub as zip
         zip_epub(epub_fpath=dst, root_folder=tmpd, fpaths=zipped_files)
 
-        Path(tmpd).rmtree_p()
+        shutil.rmtree(tmpd, ignore_errors=True)
 
     def handle_companion_file(
-        fname,
+        fname: Path,
         book: Book,
-        dstfname=None,
+        dstfname: str | None = None,
         *,
-        force=False,
+        force: bool = False,
         as_ext=None,
         html_file_list=None,
         s3_storage=None,
@@ -777,7 +775,7 @@ def handle_unoptimized_files(
         src = fname
         if dstfname is None:
             dstfname = fname.name
-        dst = TMP_FOLDER_PATH.joinpath(dstfname)
+        dst = TMP_FOLDER_PATH / dstfname
         if dst.exists() and not force:
             logger.debug(f"\t\tSkipping already optimized companion {dstfname}")
             Global.add_item_for(path=dstfname, fpath=dst)
@@ -804,7 +802,7 @@ def handle_unoptimized_files(
                 update_download_cache(src, dst)
         elif ext == ".epub":
             logger.info(f"\tCreating optimized EPUB file {fname}")
-            tmp_epub = tempfile.NamedTemporaryFile(suffix=".epub", dir=TMP_FOLDER)
+            tmp_epub = tempfile.NamedTemporaryFile(suffix=".epub", dir=TMP_FOLDER_PATH)
             tmp_epub.close()
             try:
                 optimize_epub(src, tmp_epub.name)
@@ -821,7 +819,7 @@ def handle_unoptimized_files(
                     as_ext=".zip",
                 )
             else:
-                Path(tmp_epub.name).move(str(dst))
+                Path(tmp_epub.name).resolve().rename(dst)
                 Global.add_item_for(path=dstfname, fpath=dst)
                 if s3_storage:
                     upload_to_cache(
@@ -850,7 +848,7 @@ def handle_unoptimized_files(
         if fpath.is_file() and fpath.name.startswith(f"{book.id}_"):
             if fpath.suffix in (".html", ".htm"):
                 src = fpath
-                dst = TMP_FOLDER_PATH.joinpath(fpath.name)
+                dst = TMP_FOLDER_PATH / fpath.name
                 if dst.exists() and not force:
                     logger.debug(f"\t\tSkipping already optimized HTML {dst}")
                     Global.add_item_for(path=fpath.name, fpath=dst)
@@ -890,7 +888,7 @@ def handle_unoptimized_files(
     for other_format in formats:
         if other_format not in book.formats() or other_format == "html":
             continue
-        book_file = src_dir.joinpath(fname_for(book, other_format))
+        book_file = src_dir / fname_for(book, other_format)
         if book_file.exists():
             try:
                 handle_companion_file(
@@ -916,7 +914,7 @@ def write_book_presentation_article(
     formats,
 ):
     article_name = article_name_for(book=book, cover=True)
-    cover_fpath = TMP_FOLDER_PATH.joinpath(article_name)
+    cover_fpath = TMP_FOLDER_PATH / article_name
     if not cover_fpath.exists() or force:
         logger.info(f"\t\tExporting article presentation to {cover_fpath}")
         html = cover_html_content_for(

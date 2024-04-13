@@ -21,4 +21,4 @@ JS_DEPS: list[str] = [
 logger = getLogger(NAME, level=logging.INFO)
 
 TMP_FOLDER = "tmp"
-TMP_FOLDER_PATH = pathlib.Path(TMP_FOLDER)
+TMP_FOLDER_PATH = pathlib.Path(TMP_FOLDER).resolve()
