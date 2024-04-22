@@ -222,12 +222,10 @@ def main():
     for zim_lang in zims:
         if do_zim:
             logger.info("BUILDING ZIM dynamically")
-            if one_lang_one_zim_folder:
-                output_folder = Path(one_lang_one_zim_folder).resolve()
-            else:
-                output_folder = Path(".").resolve()
             build_zimfile(
-                output_folder=output_folder,
+                output_folder=Path(one_lang_one_zim_folder).resolve()
+                if one_lang_one_zim_folder
+                else Path(".").resolve(),
                 download_cache=dl_cache,
                 concurrency=concurrency,
                 languages=zim_lang,

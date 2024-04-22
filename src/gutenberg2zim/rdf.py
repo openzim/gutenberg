@@ -305,7 +305,7 @@ if __name__ == "__main__":
     nums = [f"{i:0=5d}" for i in range(21000, 40000)]
     for num in nums:
         print(num)  # noqa: T201
-        curd = Path(__file__).resolve().parent
+        curd = Path(__file__).parent
         rdf = curd.parent / "rdf-files" / num / f"pg{num}.rdf"
         if rdf.is_file():
             data = ""

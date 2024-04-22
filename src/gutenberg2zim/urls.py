@@ -290,5 +290,5 @@ def setup_urls(force, books):
 
 
 if __name__ == "__main__":
-    book = Book.get(id=84)
+    book = Book.get(id=9)
     print(get_urls(book))  # noqa: T201

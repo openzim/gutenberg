@@ -94,7 +94,7 @@ jinja_env.filters["urlencode"] = urlencode
 
 
 def tmpl_path() -> Path:
-    return (Path(gutenberg2zim.__file__).parent / "templates").resolve()
+    return Path(gutenberg2zim.__file__).parent / "templates"
 
 
 def get_list_of_all_languages():
