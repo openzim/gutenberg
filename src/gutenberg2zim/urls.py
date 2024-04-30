@@ -1,4 +1,3 @@
-import os
 import urllib.parse as urlparse
 from collections import defaultdict
 
@@ -19,14 +18,16 @@ class UrlBuilder:
 
     SERVER_NAME = "aleph_pglaf_org"
     RSYNC = "rsync://aleph.pglaf.org/gutenberg/"
-    BASE_ONE = "http://aleph.pglaf.org/"
-    BASE_TWO = "http://aleph.pglaf.org/cache/epub/"
+    # NOTE: All urls below should not end with a trailing slash
+    # as they will be added while building the urls for a book.
+    BASE_ONE = "http://aleph.pglaf.org"
+    BASE_TWO = "http://aleph.pglaf.org/cache/epub"
     BASE_THREE = "http://aleph.pglaf.org/etext"
 
     def __init__(self):
         self.base = self.BASE_ONE
 
-    def build(self):
+    def build(self) -> str:
         """
         Build either an url depending on whether the base url
         is `BASE_ONE` or `BASE_TWO`.
@@ -40,25 +41,24 @@ class UrlBuilder:
         """
         if self.base == self.BASE_ONE:
             if int(self.b_id) > 10:  # noqa: PLR2004
-                base_url = os.path.join(
-                    os.path.join(*list(str(self.b_id))[:-1]), str(self.b_id)
-                )
+                components = "/".join(self.b_id[:-1])
+                base_url = f"{components}/{self.b_id}"
             else:
-                base_url = os.path.join(os.path.join("0", str(self.b_id)))
-            url = os.path.join(self.base, base_url)
+                base_url = f"0/{self.b_id}"
+            url = f"{self.base}/{base_url}"
         elif self.base == self.BASE_TWO:
-            url = os.path.join(self.base, str(self.b_id))
+            url = f"{self.base}/{self.b_id}"
         elif self.base == self.BASE_THREE:
             url = self.base
         return url  # type: ignore
 
-    def with_base(self, base):
+    def with_base(self, base: str) -> None:
         self.base = base
 
-    def with_id(self, b_id):
-        self.b_id = b_id
+    def with_id(self, b_id: str | int) -> None:
+        self.b_id = str(b_id)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.build_url()  # type: ignore
 
 
@@ -145,9 +145,9 @@ def build_epub(files):
         return []
 
     name = "".join(["pg", b_id])
-    url = os.path.join(u.build(), name + ".epub")
-    url_images = os.path.join(u.build(), name + "-images.epub")
-    url_noimages = os.path.join(u.build(), name + "-noimages.epub")
+    url = f"{u.build()}/{name}.epub"
+    url_images = f"{u.build()}/{name}-images.epub"
+    url_noimages = f"{u.build()}/{name}-noimages.epub"
     urls.extend([url, url_images, url_noimages])
     return urls
 
@@ -171,13 +171,13 @@ def build_pdf(files):
 
     for i in files:
         if "images" not in i["name"]:
-            url = os.path.join(u.build(), i["name"])
+            url = f'{u.build()}/{i["name"]}'
             urls.append(url)
 
-    url_dash1 = os.path.join(u1.build(), b_id + "-" + "pdf" + ".pdf")
-    url_dash = os.path.join(u.build(), b_id + "-" + "pdf" + ".pdf")
-    url_normal = os.path.join(u.build(), b_id + ".pdf")
-    url_pg = os.path.join(u.build(), "pg" + b_id + ".pdf")
+    url_dash1 = f"{u1.build()}/{b_id}-pdf.pdf"
+    url_dash = f"{u.build()}/{b_id}-pdf.pdf"
+    url_normal = f"{u.build()}/{b_id}.pdf"
+    url_pg = f"{u.build()}/pg{b_id}.pdf"
 
     urls.extend([url_dash, url_normal, url_pg, url_dash1])
     return list(set(urls))
@@ -198,17 +198,16 @@ def build_html(files):
 
     if all(["-h.html" not in file_names, "-h.zip" in file_names]):
         for i in files:
-            url = os.path.join(u.build(), i["name"])
+            url = f'{u.build()}/{i["name"]}'
             urls.append(url)
 
-    url_zip = os.path.join(u.build(), b_id + "-h" + ".zip")
-    # url_utf8 = os.path.join(u.build(), b_id + '-8' + '.zip')
-    url_html = os.path.join(u.build(), b_id + "-h" + ".html")
-    url_htm = os.path.join(u.build(), b_id + "-h" + ".htm")
+    url_zip = f"{u.build()}/{b_id}-h.zip"
+    url_html = f"{u.build()}/{b_id}-h.html"
+    url_htm = f"{u.build()}/{b_id}-h.htm"
 
     u.with_base(UrlBuilder.BASE_TWO)
     name = "".join(["pg", b_id])
-    html_utf8 = os.path.join(u.build(), name + ".html.utf8")
+    html_utf8 = f"{u.build()}/{name}.html.utf8"
 
     u.with_base(UrlBuilder.BASE_THREE)
     file_index = index_of_substring(files, ["html", "htm"])
@@ -219,7 +218,7 @@ def build_html(files):
     etext_names = [f"{i:0=2d}" for i in etext_nums]
     etext_urls = []
     for i in etext_names:
-        etext_urls.append(os.path.join(u.build() + i, file_name))
+        etext_urls.append(f"{u.build()}{i}/{file_name}")
 
     urls.extend([url_zip, url_htm, url_html, html_utf8])
     urls.extend(etext_urls)
@@ -227,7 +226,7 @@ def build_html(files):
 
 
 def setup_urls(force, books):
-    file_with_url = TMP_FOLDER_PATH.joinpath(f"file_on_{UrlBuilder.SERVER_NAME}")
+    file_with_url = TMP_FOLDER_PATH / f"file_on_{UrlBuilder.SERVER_NAME}"
 
     if file_with_url.exists() and not force:
         logger.info(

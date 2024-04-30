@@ -1,11 +1,11 @@
-import os
-import pathlib
 import zipfile
+from pathlib import Path
 
 from kiwixstorage import KiwixStorage
 from pif import get_public_ip
 
 from gutenberg2zim.constants import TMP_FOLDER, logger
+from gutenberg2zim.database import Book
 from gutenberg2zim.utils import archive_name_for
 
 
@@ -25,20 +25,26 @@ def s3_credentials_ok(s3_url_with_credentials):
 
 
 def download_from_cache(
-    book, etag, book_format, dest_dir, s3_storage, optimizer_version
-):
+    book: Book,
+    etag: str | None,
+    book_format: str,
+    dest_dir: Path,
+    s3_storage: KiwixStorage,
+    optimizer_version: dict[str, str] | None,
+) -> bool:
     """whether it successfully downloaded from cache"""
     key = f"{book.id}/{book_format}"
     if not s3_storage.has_object(key):
         return False
     meta = s3_storage.get_object_stat(key).meta
-    if meta.get("etag") != etag:
+    if meta.get("etag") != etag:  # type: ignore
         logger.error(
-            f"etag doesn't match for {key}. Expected {etag}, got {meta.get('etag')}"
+            f"etag doesn't match for {key}. "
+            f"Expected {etag}, got {meta.get('etag')}"  # type: ignore
         )
         return False
     if optimizer_version is not None and (
-        meta.get("optimizer_version") != optimizer_version[book_format]
+        meta.get("optimizer_version") != optimizer_version[book_format]  # type: ignore
     ):
         logger.error(
             f"optimizer version doesn't match for {key}. Expected "
@@ -47,17 +53,17 @@ def download_from_cache(
         return False
     dest_dir.mkdir(parents=True, exist_ok=True)
     if book_format == "cover":
-        fpath = dest_dir.joinpath(f"{book.id}_cover_image.jpg")
+        fpath = dest_dir / f"{book.id}_cover_image.jpg"
     else:
         if book_format == "html":
             book_format = "zip"
-        fpath = dest_dir.joinpath(archive_name_for(book, book_format))
+        fpath = dest_dir / archive_name_for(book, book_format)
     try:
         s3_storage.download_file(key, fpath)
         if book_format == "zip":
             with zipfile.ZipFile(fpath, "r") as zipfl:
                 zipfl.extractall(dest_dir)
-            os.unlink(fpath)
+            fpath.unlink(missing_ok=True)
     except Exception as exc:
         logger.error(f"{key} failed to download from cache: {exc}")
         return False
@@ -69,7 +75,7 @@ def upload_to_cache(book_id, asset, etag, book_format, s3_storage, optimizer_ver
     """whether it successfully uploaded to cache"""
     fpath = asset
     key = f"{book_id}/{book_format}"
-    zippath = pathlib.Path(f"{TMP_FOLDER}/{book_id}.zip")
+    zippath = Path(f"{TMP_FOLDER}/{book_id}.zip")
     if isinstance(asset, list):
         with zipfile.ZipFile(zippath, "w") as zipfl:
             for fl in asset:
@@ -88,7 +94,6 @@ def upload_to_cache(book_id, asset, etag, book_format, s3_storage, optimizer_ver
         logger.error(f"{key} failed to upload to cache: {exc}")
         return False
     finally:
-        if zippath.exists():
-            os.unlink(zippath)
+        zippath.unlink(missing_ok=True)
     logger.info(f"uploaded {fpath} to cache at {key}")
     return True

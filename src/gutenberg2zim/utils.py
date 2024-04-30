@@ -1,15 +1,14 @@
 import collections
 import hashlib
-import os
 import subprocess
 import sys
 import unicodedata
 import zipfile
+from pathlib import Path
 
 import chardet
 import requests
 import six
-from path import Path
 from zimscraperlib.download import save_large_file
 
 from gutenberg2zim.constants import logger
@@ -34,25 +33,25 @@ BAD_BOOKS_FORMATS = {
 NB_MAIN_LANGS = 5
 
 
-def book_name_for_fs(book):
-    return book.title.strip().replace("/", "-")[:230]
+def book_name_for_fs(book: Book) -> str:
+    return book.title.strip().replace("/", "-")[:230]  # type: ignore
 
 
-def article_name_for(book, *, cover=False):
-    cover = "_cover" if cover else ""
+def article_name_for(book: Book, *, cover: bool = False) -> str:
+    cover_suffix = "_cover" if cover else ""
     title = book_name_for_fs(book)
-    return f"{title}{cover}.{book.id}.html"
+    return f"{title}{cover_suffix}.{book.id}.html"
 
 
-def archive_name_for(book, book_format):
+def archive_name_for(book: Book, book_format: str) -> str:
     return f"{book_name_for_fs(book)}.{book.id}.{book_format}"
 
 
-def fname_for(book, book_format):
+def fname_for(book: Book, book_format: str) -> str:
     return f"{book.id}.{book_format}"
 
 
-def get_etag_from_url(url):
+def get_etag_from_url(url: str) -> str | None:
     try:
         response_headers = requests.head(  # noqa: S113
             url=url, allow_redirects=True
@@ -69,7 +68,7 @@ def critical_error(message):
     sys.exit(1)
 
 
-def normalize(text=None):
+def normalize(text: str | None = None) -> str | None:
     return None if text is None else unicodedata.normalize("NFC", text)
 
 
@@ -91,15 +90,14 @@ def exec_cmd(cmd):
     return subprocess.run(args).returncode
 
 
-def download_file(url, fpath):
+def download_file(url: str, fpath: Path) -> bool:
     fpath.parent.mkdir(parents=True, exist_ok=True)
     try:
         save_large_file(url, fpath)
         return True
     except Exception as exc:
         logger.error(f"Error while downloading from {url}: {exc}")
-        if fpath.exists():
-            os.unlink(fpath)
+        fpath.unlink(missing_ok=True)
         return False
 
 
@@ -163,28 +161,28 @@ def md5sum(fpath):
     return hashlib.md5(read_file(fpath)[0].encode("utf-8")).hexdigest()  # noqa: S324
 
 
-def is_bad_cover(fpath):
+def is_bad_cover(fpath: Path) -> bool:
     bad_sizes = [19263]
     bad_sums = ["a059007e7a2e86f2bf92e4070b3e5c73"]
 
-    if Path(fpath).size not in bad_sizes:
+    if fpath.stat().st_size not in bad_sizes:
         return False
 
     return md5sum(fpath) in bad_sums
 
 
-def read_file_as(fpath, encoding="utf-8"):
+def read_file_as(fpath: Path, encoding="utf-8") -> str:
     # logger.debug("opening `{}` as `{}`".format(fpath, encoding))
     with open(fpath, encoding=encoding) as f:
         return f.read()
 
 
-def guess_file_encoding(fpath):
+def guess_file_encoding(fpath: Path) -> str | None:
     with open(fpath, "rb") as f:
         return chardet.detect(f.read()).get("encoding")
 
 
-def read_file(fpath):
+def read_file(fpath: Path):
     for encoding in ["utf-8", "iso-8859-1"]:
         try:
             return read_file_as(fpath, encoding), encoding
@@ -201,10 +199,10 @@ def save_file(content, fpath, encoding=UTF8):
         f.write(content)
 
 
-def zip_epub(epub_fpath, root_folder, fpaths):
+def zip_epub(epub_fpath: Path, root_folder: Path, fpaths: list[str]) -> None:
     with zipfile.ZipFile(epub_fpath, "w", zipfile.ZIP_DEFLATED) as zf:
         for fpath in fpaths:
-            zf.write(os.path.join(root_folder, fpath), fpath)
+            zf.write(root_folder / fpath, fpath)
 
 
 def ensure_unicode(v):

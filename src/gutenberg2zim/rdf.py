@@ -1,7 +1,7 @@
-import os
-import pathlib
 import re
 import tarfile
+from pathlib import Path
+from tarfile import TarFile, TarInfo
 
 import peewee
 from bs4 import BeautifulSoup
@@ -16,13 +16,13 @@ from gutenberg2zim.utils import (
 )
 
 
-def get_rdf_fpath():
+def get_rdf_fpath() -> Path:
     fname = "rdf-files.tar.bz2"
-    fpath = pathlib.Path(fname).resolve()
+    fpath = Path(fname).resolve()
     return fpath
 
 
-def download_rdf_file(rdf_path, rdf_url):
+def download_rdf_file(rdf_path: Path, rdf_url: str) -> None:
     """Download rdf-files archive"""
     if rdf_path.exists():
         logger.info(f"\trdf-files archive already exists in {rdf_path}")
@@ -32,13 +32,13 @@ def download_rdf_file(rdf_path, rdf_url):
     download_file(rdf_url, rdf_path)
 
 
-def parse_and_fill(rdf_path, only_books):
+def parse_and_fill(rdf_path: Path, only_books: list[int]) -> None:
     logger.info(f"\tLooping throught RDF files in {rdf_path}")
 
     rdf_tarfile = tarfile.open(name=rdf_path, mode="r|bz2")
 
     for rdf_member in rdf_tarfile:
-        rdf_member_path = pathlib.Path(rdf_member.name)
+        rdf_member_path = Path(rdf_member.name)
 
         # skip books outside of requested list
         if (
@@ -51,13 +51,13 @@ def parse_and_fill(rdf_path, only_books):
         if rdf_member_path.name == "pg0.rdf":
             continue
 
-        if not str(rdf_member_path.name).endswith(".rdf"):
+        if not rdf_member_path.name.endswith(".rdf"):
             continue
 
         parse_and_process_file(rdf_tarfile, rdf_member)
 
 
-def parse_and_process_file(rdf_tarfile, rdf_member):
+def parse_and_process_file(rdf_tarfile: TarFile, rdf_member: TarInfo) -> None:
     gid = re.match(r".*/pg([0-9]+).rdf", rdf_member.name).groups()[0]  # type: ignore
 
     if Book.get_or_none(id=int(gid)):
@@ -67,11 +67,19 @@ def parse_and_process_file(rdf_tarfile, rdf_member):
         return
 
     logger.info(f"\tParsing file {rdf_member.name} for book id {gid}")
-    parser = RdfParser(rdf_tarfile.extractfile(rdf_member).read(), gid).parse()
+    rdf_data = rdf_tarfile.extractfile(rdf_member)
+    if rdf_data is None:
+        logger.warning(
+            f"Unable to extract member '{rdf_member.name}' from archive "
+            f"'{rdf_member.name}'"
+        )
+        return
+
+    parser = RdfParser(rdf_data.read(), gid).parse()
 
     if parser.license == "None":
         logger.info(f"\tWARN: Unusable book without any information {gid}")
-    elif parser.title == "":
+    elif not parser.title:
         logger.info(f"\tWARN: Unusable book without title {gid}")
     else:
         save_rdf_in_database(parser)
@@ -96,8 +104,8 @@ class RdfParser:
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.
         # If it is, then we will just split the title.
-        self.title = soup.find("dcterms:title")
-        self.title = self.title.text if self.title else "- No Title -"
+        title = soup.find("dcterms:title")
+        self.title = title.text if title else "- No Title -"
         self.title = self.title.split("\n")[0]
         self.subtitle = " ".join(self.title.split("\n")[1:])
         self.author_id = None
@@ -174,7 +182,7 @@ class RdfParser:
         return self
 
 
-def save_rdf_in_database(parser):
+def save_rdf_in_database(parser: RdfParser) -> None:
     # Insert author, if it not exists
     if parser.author_id:
         try:
@@ -276,7 +284,7 @@ def save_rdf_in_database(parser):
         )
 
 
-def get_formatted_number(num):
+def get_formatted_number(num: str | None) -> str | None:
     """
     Get a formatted string of a number from a not-predictable-string
     that may or may not actually contain a number.
@@ -297,9 +305,9 @@ if __name__ == "__main__":
     nums = [f"{i:0=5d}" for i in range(21000, 40000)]
     for num in nums:
         print(num)  # noqa: T201
-        curd = os.path.dirname(os.path.realpath(__file__))
-        rdf = os.path.join(curd, "..", "rdf-files", num, "pg" + num + ".rdf")
-        if os.path.isfile(rdf):
+        curd = Path(__file__).parent
+        rdf = curd.parent / "rdf-files" / num / f"pg{num}.rdf"
+        if rdf.is_file():
             data = ""
             with open(rdf) as f:
                 data = f.read()
