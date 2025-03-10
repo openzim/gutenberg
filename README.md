@@ -48,7 +48,7 @@ git clone git@github.com:kiwix/gutenberg.git
 cd gutenberg
 ```
 
-If you do not already have it on your system, install `hatch` to build the software and manage virtual environments (you might be interested by our detailed [Developer Setup](https://github.com/openzim/_python-bootstrap/wiki/Developer-Setup) as well).
+If you do not already have it on your system, install `hatch` to build the software and manage virtual environments (you might be interested by our detailed [Developer Setup](https://github.com/openzim/_python-bootstrap/blob/main/docs/Developer-Setup.md) as well).
 
 ```bash
 pip3 install hatch
