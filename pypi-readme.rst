@@ -11,13 +11,26 @@ user friendly format for storing content for offline usage.
 Dependencies
 ------------
 
-Ubuntu/debian
+Ubuntu/Debian
 -------------
 
 .. code-block:: sh
 
-    python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle
+    sudo apt update && sudo apt install -y python3-pip libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle curl zip zim-tools
 
+Fedora
+------
+
+.. code-block:: sh
+
+    sudo dnf install -y python3-pip libxml2-devel libxslt-devel advancecomp jpegoptim pngquant p7zip gifsicle curl zip zim-tools
+
+Arch Linux
+----------
+
+.. code-block:: sh
+
+    sudo pacman -Syu python-pip libxml2 libxslt advancecomp jpegoptim pngquant p7zip gifsicle curl zip zim-tools
 
 macOS
 -----

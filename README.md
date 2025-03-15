@@ -36,6 +36,7 @@ To view all the available options for `gutenberg2zim`, run:
 docker run ghcr.io/openzim/gutenberg:latest gutenberg2zim --help
 ```
 
+
 ### Arguments
 
 Customize the content download with the following options. For example, to download books in English or French with IDs 100 to 200 and only in PDF format:
@@ -96,16 +97,30 @@ First, ensure you use the proper Python version, inline with the requirement of 
 
 You then need to install the various tools/libraries needed by the scraper.
 
+
 #### GNU/Linux
 
 ```
-sudo apt-get install python-pip python-dev libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle curl zip zim-tools
+sudo apt update && sudo apt install -y python3-pip libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle curl zip zim-tools
+
 ```
 
 #### macOS
 
 ```
-brew install advancecomp jpegoptim pngquant p7zip gifsicle
+brew install advancecomp jpegoptim pngquant p7zip gifsicle curl zip zim-tools
+
+```
+
+### Fedora for non debian users
+```
+sudo dnf install -y python3-pip libxml2-devel libxslt-devel advancecomp jpegoptim pngquant p7zip gifsicle curl zip zim-tools
+
+```
+### Arch linux
+```
+sudo pacman -S python-pip libxml2 libxslt advancecomp jpegoptim pngquant p7zip gifsicle curl zip zim-tools
+
 ```
 
 ### Setup the package
@@ -113,7 +128,7 @@ brew install advancecomp jpegoptim pngquant p7zip gifsicle
 First, clone this repository.
 
 ```bash
-git clone git@github.com:kiwix/gutenberg.git
+git clone git@github.com:openzim/gutenberg.git
 cd gutenberg
 ```
 
