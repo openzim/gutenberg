@@ -98,30 +98,46 @@ First, ensure you use the proper Python version, inline with the requirement of 
 You then need to install the various tools/libraries needed by the scraper.
 
 
+The setup is divided into two categories: one for simply running the scraper and another for setting up a development environment for contributing and making improvements
+
+**For Users Running the Scraper**:
+
+### GNU/Linux 
+```
+sudo apt update && sudo apt install -y python3-pip p7zip-full zip zim-tools curl jpegoptim pngquant
+```
+### Fedora 
+```
+sudo dnf install -y python3-pip jpegoptim pngquant p7zip curl zip zim-tools
+```
+### Arch linux 
+```
+sudo pacman -S python-pip libxml2 jpegoptim pngquant p7zip curl zip zim-tools
+```
+#### macOS
+```
+brew install jpegoptim pngquant p7zip curl zip zim-tools
+```
+**For Developers Contributing & Modifying**;
+
 #### GNU/Linux
 
 ```
-sudo apt update && sudo apt install -y python3-pip libxml2-dev libxslt-dev advancecomp jpegoptim pngquant p7zip-full gifsicle curl zip zim-tools
-
+sudo apt update && sudo apt install -y python3-pip libxml2-dev libxslt-dev jpegoptim pngquant p7zip-full curl zip zim-tools
 ```
-
+### Fedora 
+```
+sudo dnf install -y python3-pip libxml2-devel libxslt-devel jpegoptim pngquant p7zip curl zip zim-tools
+```
+### Arch linux 
+```
+sudo pacman -S python-pip libxml2 libxslt jpegoptim pngquant p7zip curl zip zim-tools
+```
 #### macOS
-
 ```
-brew install advancecomp jpegoptim pngquant p7zip gifsicle curl zip zim-tools
-
+brew install libxml2 libxslt jpegoptim pngquant p7zip curl zip zim-tools
 ```
 
-### Fedora for non debian users
-```
-sudo dnf install -y python3-pip libxml2-devel libxslt-devel advancecomp jpegoptim pngquant p7zip gifsicle curl zip zim-tools
-
-```
-### Arch linux
-```
-sudo pacman -S python-pip libxml2 libxslt advancecomp jpegoptim pngquant p7zip gifsicle curl zip zim-tools
-
-```
 
 ### Setup the package
 
