@@ -27,3 +27,8 @@ echo "getting datatables.min.css"
 curl -L -O https://cdn.datatables.net/v/dt/dt-1.13.6/r-2.5.0/datatables.min.css
 rm -rf $ASSETS_PATH/datatables/datatables.min.css
 mv datatables.min.css $ASSETS_PATH/datatables/datatables.min.css
+
+echo "getting jquery-1.11.1.min.js"
+curl -L -O https://code.jquery.com/jquery-1.11.1.min.js
+rm -rf $ASSETS_PATH/jquery/jquery-1.11.1.min.js
+mv jquery-1.11.1.min.js $ASSETS_PATH/jquery/jquery-1.11.1.min.js
