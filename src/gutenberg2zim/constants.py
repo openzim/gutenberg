@@ -16,6 +16,7 @@ SCRAPER = f"{NAME} {VERSION}"
 JS_DEPS: list[str] = [
     "datatables/datatables.min.css",
     "datatables/datatables.min.js",
+    "jquery/jquery-1.11.1.min.js",
 ]
 
 logger = getLogger(NAME, level=logging.INFO)
