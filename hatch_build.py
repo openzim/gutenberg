@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 JS_DEPS = [
     "datatables/datatables.min.css",
     "datatables/datatables.min.js",
+    "jquery/jquery-1.11.1.min.js",
 ]
 
 
@@ -29,7 +30,7 @@ class GetJsDepsHook(BuildHookInterface):
         for dep in JS_DEPS:
             if (
                 not Path(self.root)
-                .joinpath("gutebergtozim/templates")
+                .joinpath("gutenberg2zim/templates")
                 .joinpath(dep)
                 .exists()
             ):
