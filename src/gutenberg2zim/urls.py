@@ -16,6 +16,7 @@ class UrlBuilder:
         >>> url = builder.build()
     """
 
+    MIN_PROJECT_GUTENBERG_ID = 10
     SERVER_NAME = "aleph_pglaf_org"
     RSYNC = "rsync://aleph.pglaf.org/gutenberg/"
     # NOTE: All urls below should not end with a trailing slash
@@ -35,12 +36,11 @@ class UrlBuilder:
             id: 10023 -> pattern: <base-url>/1/0/0/2/10023
         The latter generates urls according to the Url pattern:
             id: 10023 -> pattern: <base-url>/10023
-        There's no implementation for the book Id's 0-10, because
-        these books do not exist.
-
+        Special case for book IDs 0-9:
+            They are stored under /0/<id>/ (e.g., /0/2/ for book 2)
         """
         if self.base == self.BASE_ONE:
-            if int(self.b_id) > 10:  # noqa: PLR2004
+            if int(self.b_id) > self.MIN_PROJECT_GUTENBERG_ID:
                 components = "/".join(self.b_id[:-1])
                 base_url = f"{components}/{self.b_id}"
             else:

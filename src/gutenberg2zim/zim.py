@@ -50,12 +50,18 @@ def build_zimfile(
 
     formats.sort()
 
-    title = title or metadata_translations.get(iso_languages[0], {}).get(
+    metadata_lang = "mul" if len(iso_languages) > 1 else iso_languages[0]
+
+    title = title or metadata_translations.get(metadata_lang, {}).get(
         "title", "Project Gutenberg Library"
     )
-    description = description or metadata_translations.get(iso_languages[0], {}).get(
-        "description", "The first producer of Free Ebooks"
+
+    description = description or metadata_translations.get(metadata_lang, {}).get(
+        "description",
+        f'All books in "{iso_languages[0]}" language '
+        "from the first producer of free Ebooks",
     )
+
     logger.info(f"\tWritting ZIM for {title}")
 
     project_id = get_project_id(languages, formats, only_books)
