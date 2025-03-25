@@ -534,221 +534,279 @@ l10n_strings = {
 
 
 metadata_translations = {
+    "mul": {
+        "title": "Project Gutenberg Library",
+        "description": "All books in all languages "
+        "from the first producer of free Ebooks",
+    },
     "afr": {
-        "description": "Die eerste vervaardiger van gratis e-boeke",
-        "title": "Projek Gutenberg-biblioteek - Boeke in Afrikaans ",
+        "title": "Projek Gutenberg-biblioteek",
+        "description": "Alle boeke in Afrikaans "
+        "van die eerste vervaardiger van gratis e-boeke",
     },
     "ara": {
-        "description": "أول منتج للكتب الإلكترونية المجانية",
-        "title": "مكتبة مشروع جوتنبرج - كتب باللغة العربية",
+        "title": "مكتبة مشروع جوتنبرج",
+        "description": "جميع الكتب باللغة العربية من أول منتج للكتب"
+        " الإلكترونية المجانية",
     },
     "arp": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Arapaho",
+        "title": "Project Gutenberg Nookóó",
+        "description": "Nii'eihi' núhu' núunóbe3en Arapaho nih'iitíínoo, "
+        "nih'iitokúuti' free Ebooks",
     },
     "bod": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Tibetan",
+        "title": "པར་གཏོགས་གུ་ཐེན་བར་དང་མཉམ་མཁན་མཛོད་ཀྱི་དཔེ་མཛོད།",
+        "description": "རིགས་ཀྱི་དཔེ་དེབ་ཚུ་གཞན་དབྱེ་ཡོད་པའི་དཔེ་མཛོད་མགོ་བསྐྲུན་པས་"
+        "བོད་ཡིག་དེབ་ཚུ།",
     },
     "bre": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Breton",
+        "title": "Levraoueg Raktres Gutenberg",
+        "description": "An holl levrioù e brezhoneg digant kentañ produer al levrioù "
+        "elekronik digoust",
     },
     "bul": {
-        "description": "Първият производител на безплатни електронни книги",
-        "title": "Проект Библиотека Гутенберг - Книги на български",
+        "title": "Библиотека на проект Гутенберг",
+        "description": "Всички книги на български от първия производител на "
+        "безплатни електронни книги",
     },
     "cat": {
-        "description": "El primer productor de llibres electrònics gratuïts",
-        "title": "Biblioteca Project Gutenberg - Llibres en català",
+        "title": "Biblioteca Project Gutenberg",
+        "description": "Tots els llibres en català del primer productor de llibres "
+        "electrònics gratuïts",
     },
     "ceb": {
-        "description": "Ang una nga prodyuser sa Libre nga mga Ebook",
-        "title": "Project Gutenberg Library - Libro sa Cebuano",
+        "title": "Librarya sa Proyekto Gutenberg",
+        "description": "Tanang mga libro sa Cebuano gikan sa unang prodyuser sa "
+        "libre nga mga Ebook",
     },
     "ces": {
-        "description": "První výrobce bezplatných e-knih",
-        "title": "Projekt Gutenbergova knihovna - Knihy v češtině",
+        "title": "Projekt Gutenbergova knihovna",
+        "description": "Všechny knihy v češtině od prvního výrobce bezplatných e-knih",
     },
     "cym": {
-        "description": "Cynhyrchydd cyntaf E-lyfrau Rhad ac Am Ddim",
-        "title": "Llyfrgell Prosiect Gutenberg - Llyfrau Cymraeg",
+        "title": "Llyfrgell Prosiect Gutenberg",
+        "description": "Holl lyfrau Cymraeg gan y "
+        "cynhyrchydd cyntaf o E-lyfrau rhad ac am ddim",
     },
     "dan": {
-        "description": "Den første producent af gratis e-bøger",
-        "title": "Project Gutenberg Library - Bøger på dansk",
+        "title": "Projekt Gutenbergs Bibliotek",
+        "description": "Alle bøger på dansk fra den første producent af gratis e-bøger",
     },
     "deu": {
-        "description": "Der erste Produzent von kostenlosen Ebooks",
-        "title": "Projekt Gutenberg-Bibliothek - Bücher auf Deutsch",
+        "title": "Projekt Gutenberg-Bibliothek",
+        "description": "Alle Bücher auf Deutsch "
+        "vom ersten Produzenten kostenloser Ebooks",
     },
     "ell": {
-        "description": "O πρώτος παραγωγός δωρεάν ηλεκτρονικών βιβλίων",
-        "title": "Project Gutenberg Library - Βιβλία στα Ελληνικά",
+        "title": "Βιβλιοθήκη Project Gutenberg",
+        "description": "Όλα τα βιβλία στα Ελληνικά από τον πρώτο παραγωγό δωρεάν "
+        "ηλεκτρονικών βιβλίων",
     },
     "eng": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in English",
+        "title": "Project Gutenberg Library",
+        "description": "All books in English from the first producer of free Ebooks",
     },
     "enm": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Middle English",
+        "title": "Proiecte Gutenberge Libraire",
+        "description": "Alle bokis in Middel Englisshe "
+        "fro þe firste maker of free Ebooks",
     },
     "epo": {
-        "description": "La unua produktanto de Senpagaj Ebooks",
-        "title": "Projekto Biblioteko Gutenberg - Libroj en Esperanto",
+        "title": "Projekto Biblioteko Gutenberg",
+        "description": "Ĉiuj libroj en Esperanto de la "
+        "unua produktanto de senpagaj Ebooks",
     },
     "est": {
-        "description": "Esimene tasuta e-raamatute tootja",
-        "title": "Projekt Gutenbergi raamatukogu - eestikeelsed raamatud",
+        "title": "Projekt Gutenbergi raamatukogu",
+        "description": "Kõik eestikeelsed raamatud "
+        "esimeselt tasuta e-raamatute tootjalt",
     },
     "fas": {
-        "description": "اولین تولید کننده کتاب های الکترونیکی رایگان",
-        "title": "پروژه کتابخانه گوتنبرگ - کتابهای فارسی",
+        "title": "پروژه کتابخانه گوتنبرگ",
+        "description": "همه کتاب‌های فارسی از اولین تولید کننده"
+        " کتاب‌های الکترونیکی رایگان",
     },
     "fin": {
-        "description": "Ensimmäinen ilmaisten e-kirjojen tuottaja",
-        "title": "Project Gutenberg Library - Kirjat suomeksi",
+        "title": "Project Gutenbergin Kirjasto",
+        "description": "Kaikki suomenkieliset kirjat "
+        "ensimmäiseltä ilmaisten e-kirjojen tuottajalta",
     },
     "fra": {
-        "description": "Le premier producteur d'ebooks gratuits",
-        "title": "Projet Bibliothèque Gutenberg - Livres en français",
+        "title": "Projet Bibliothèque Gutenberg",
+        "description": "Tous les livres en français "
+        "du premier producteur d'ebooks gratuits",
     },
     "fry": {
-        "description": "De earste produsint fan Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Western Frisian",
+        "title": "Project Gutenberg Bibleteek",
+        "description": "Alle boeken yn it Frysk fan de "
+        "earste produsint fan fergese e-boeken",
     },
     "fur": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Friulian",
+        "title": "Biblioteche dal Progjèt Gutenberg",
+        "description": "Ducj i libris in furlan dal prin produtôr di Ebooks gratis",
     },
     "gla": {
-        "description": "A ' chiad neach-dèanaidh leabhraichean-d a saor an asgaidh",
-        "title": "Leabharlann Pròiseact Gutenberg - Leabhraichean ann an "
-        "Gàidhlig na h-Alba",
+        "title": "Leabharlann Pròiseact Gutenberg",
+        "description": "A h-uile leabhar ann an Gàidhlig "
+        "na h-Alba bhon chiad neach-dèanaidh "
+        "leabhraichean-d saor an asgaidh",
     },
     "gle": {
-        "description": "An chéad léiritheoir leabhar-saor in aisce,",
-        "title": "Leabharlann Tionscadal Gutenberg - Leabhair Ghaeilge",
+        "title": "Leabharlann Tionscadal Gutenberg",
+        "description": "Gach leabhar i nGaeilge ón "
+        "gcéad léiritheoir leabhar-saor in aisce",
     },
     "glg": {
-        "description": "O primeiro produtor de libros electrónicos gratuítos",
-        "title": "Biblioteca Proxecto Gutenberg - Libros en Galego",
+        "title": "Biblioteca Proxecto Gutenberg",
+        "description": "Todos os libros en galego do "
+        "primeiro produtor de libros electrónicos gratuítos",
     },
     "heb": {
-        "description": "המפיק הראשון של ספרים אלקטרוניים בחינם",
-        "title": "ספריית פרוייקט גוטנברג - ספרים בעברית",
+        "title": "ספריית פרוייקט גוטנברג",
+        "description": "כל הספרים בעברית מהמפיק הראשון של ספרים אלקטרוניים בחינם",
     },
     "hun": {
-        "description": "Az ingyenes e-könyvek első gyártója",
-        "title": "Projekt Gutenberg Könyvtár - Magyar nyelvű könyvek",
+        "title": "Projekt Gutenberg Könyvtár",
+        "description": "Minden magyar nyelvű könyv "
+        "az ingyenes e-könyvek első gyártójától",
     },
     "iku": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Inuktitut",
+        "title": "ᐱᕙᓪᓕᐊᔪᖅ ᐃᓄᒃᑎᑐᑦ ᒪᓕᒐᖃᑎᒌᖕᒥ",
+        "description": "ᐃᓄᒃᑎᑐᑦ ᐊᑐᐃᓐᓇᕐᓂᖅ ᒪᓕᒐᖃᑎᒌᖕᒥ ᐱᕙᓪᓕᐊᔪᖅ ᐊᑐᐃᓐᓇᖅᑐᓂᖅ",
     },
     "ilo": {
-        "description": "Ti immuna a producer ti Free Ebooks",
-        "title": "Proyekto Gutenberg Library - Libro iti Iloko",
+        "title": "Libroyan ti Proyekto Gutenberg",
+        "description": "Amin a libro iti Iloko manipud "
+        "ti immuna a producer ti libre nga Ebooks",
     },
     "ina": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Interlingua",
+        "title": "Bibliotheca del Projecto Gutenberg",
+        "description": "Omne libros in Interlingua "
+        "ab le prime productor de Ebooks gratuite",
     },
     "isl": {
-        "description": "Fyrsti framleiðandi ókeypis rafbóka",
-        "title": "Project Gutenberg Library - Bækur á íslensku",
+        "title": "Gutenberg Verkefnisbókasafnið",
+        "description": "Allar bækur á íslensku frá "
+        "fyrsta framleiðanda ókeypis rafbóka",
     },
     "ita": {
-        "description": "Il primo produttore di ebook gratuiti",
-        "title": "Biblioteca Progetto Gutenberg - Libri in italiano",
+        "title": "Biblioteca Progetto Gutenberg",
+        "description": "Tutti i libri in italiano "
+        "dal primo produttore di ebook gratuiti",
     },
     "jpn": {
-        "description": "無料の電子ブックの最初のプロデューサー",
-        "title": "Project Gutenberg Library - 日本語の書籍",
+        "title": "プロジェクト・グーテンベルク・ライブラリー",
+        "description": "無料電子書籍の初めての製作者による日本語のすべての本",
     },
     "lat": {
-        "description": "Primum Producentis Liberi Ebooks",
-        "title": "Project Gutenberg Library - Books in Latin",
+        "title": "Bibliotheca Projecti Gutenberg",
+        "description": "Omnes libri Latine a primo "
+        "creatore Librorum Digitalium Gratuitorum",
     },
     "mri": {
-        "description": "Ko te kaihanga tuatahi o nga pukapuka pukapuka kore utu",
-        "title": "Project Gutenberg Library - Books in Māori",
+        "title": "Te Pātaka Pukapuka a Project Gutenberg",
+        "description": "Ngā pukapuka katoa i te "
+        "reo Māori nō te kaihanga tuatahi o ngā "
+        "pukapuka matihiko kore utu",
     },
     "myn": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Mayan languages",
+        "title": "Cholnajil Project Gutenberg",
+        "description": "Na'atik k'uj cha'ajil "
+        "tzijob'al Mayaj a ruwäch q'ij chi k'ax "
+        "tzij e-book cha'ajil",
     },
     "nah": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Nahuatl languages",
+        "title": "Amoxcalli Project Gutenberg",
+        "description": "Nej tlahcuilolli Nahuatl ik "
+        "ne zān chicahuac tlamaniliztli e-books",
     },
     "nap": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Neapolitan",
+        "title": "Libbraria d'o Progetto Gutenberg",
+        "description": "Tutti `e libbre in napulitano "
+        "d``o primmo produttore `e e-book gratuite",
     },
     "nld": {
-        "description": "De eerste producent van gratis e-boeken",
-        "title": "Project Gutenberg Library - Boeken in het Nederlands",
+        "title": "Project Gutenberg-bibliotheek",
+        "description": "Alle boeken in het Nederlands "
+        "van de eerste producent van "
+        "gratis e-boeken",
     },
     "nor": {
-        "description": "Den første produsenten av gratis e-bøker",
-        "title": "Prosjekt Gutenberg bibliotek - Bøker på norsk",
+        "title": "Prosjekt Gutenberg bibliotek",
+        "description": "Alle bøker på norsk fra den "
+        "første produsenten av gratis e-bøker",
     },
     "oci": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Occitan",
+        "title": "Bibliotèca del Projècte Gutenberg",
+        "description": "Totes los libres en occitan del "
+        "primièr productor de libres "
+        "electronics gratuïts",
     },
     "oji": {
-        "description": "The first producer of Free Ebooks",
-        "title": "Project Gutenberg Library - Books in Ojibwa",
+        "title": "Ogimaawintamowin Gutenberg Makazin",
+        "description": "Awenen mazina`iganan Ojibwemowin "
+        "gaye ogii-miinigoowizid "
+        "free e-book ogimaa",
     },
     "pol": {
-        "description": "Pierwszy producent darmowych ebooków",
-        "title": "Biblioteka Projektu Gutenberg - Książki w języku polskim",
+        "title": "Biblioteka Projektu Gutenberg",
+        "description": "Wszystkie książki po polsku od pierwszego producenta "
+        "darmowych ebooków",
     },
     "por": {
-        "description": "O primeiro produtor de Ebooks Gratuitos",
-        "title": "Biblioteca Projeto Gutenberg - Livros em Português",
+        "title": "Biblioteca Projeto Gutenberg",
+        "description": "Todos os livros em português "
+        "do primeiro produtor de Ebooks Gratuitos",
     },
     "ron": {
-        "description": "Primul producător de cărți electronice gratuite",
-        "title": "Biblioteca Proiect Gutenberg - Cărți în limba română",
+        "title": "Biblioteca Proiect Gutenberg",
+        "description": "Toate cărțile în limba română de "
+        "la primul producător de cărți "
+        "electronice gratuite",
     },
     "rus": {
-        "description": "Первый производитель бесплатных электронных книг",
-        "title": "Project Gutenberg Library - Книги на русском языке",
+        "title": "Библиотека Проекта Гутенберг",
+        "description": "Bce книги на русском языке от "
+        "первого производителя бесплатных "
+        "электронных книг",
     },
     "san": {
-        "description": "Free Ebooks इत्यस्य प्रथमः निर्माता",
-        "title": "परियोजना गुटेनबर्ग पुस्तकालय - संस्कृतभाषायां पुस्तकानि",
+        "title": "परियोजना गुटेनबर्ग पुस्तकालय",
+        "description": "Free Ebooks इत्यस्य प्रथमः निर्माता संस्कृतभाषायां पुस्तकानि",
     },
     "slv": {
-        "description": "Prvi proizvajalec brezplačnih e-knjig",
-        "title": "Projekt Gutenbergova knjižnica - Knjige v slovenščini",
+        "title": "Projekt Gutenbergova knjižnica",
+        "description": "Vse knjige v slovenščini prvega "
+        "proizvajalca brezplačnih e-knjig",
     },
     "spa": {
-        "description": "El primer productor de libros electrónicos gratuitos",
-        "title": "Biblioteca Proyecto Gutenberg - Libros en español",
+        "title": "Biblioteca Proyecto Gutenberg",
+        "description": "Todos los libros en español del "
+        "primer productor de libros "
+        "electrónicos gratuitos",
     },
     "srp": {
-        "description": "Први произвођач бесплатних e-књига",
-        "title": "Пројекат Библиотека Гутенберг - Књиге на српском",
+        "title": "Пројекат Библиотека Гутенберг",
+        "description": "Све књиге на српском од првог "
+        "произвођача бесплатних e-књига",
     },
     "swe": {
-        "description": "Den första producenten av gratis e-böcker",
-        "title": "Project Gutenberg Library - Böcker på svenska",
+        "title": "Projekt Gutenbergs Bibliotek",
+        "description": "Alla böcker på svenska från den "
+        "första producenten av gratis e-böcker",
     },
     "tel": {
-        "description": "ఉచిత ఈబుక్స్ యొక్క మొదటి నిర్మాత",
-        "title": "ప్రాజెక్ట్ గుటెన్\u200cబర్గ్ లైబ్రరీ - తెలుగులో పుస్తకాలు",
+        "title": "ప్రాజెక్ట్ గుటెన్‌బర్గ్ లైబ్రరీ",
+        "description": "ఉచిత ఈబుక్స్ యొక్క మొదటి "
+        "నిర్మాత నుండి తెలుగులో ఉన్న అన్ని పుస్తకాలు",
     },
     "tgl": {
-        "description": "Ang unang producer ng Libreng Ebooks",
-        "title": "Project Gutenberg Library - Mga Aklat sa Filipino",
+        "title": "Aklatan ng Proyektong Gutenberg",
+        "description": "Lahat ng aklat sa Filipino mula "
+        "sa unang tagalikha ng mga Libreng Ebooks",
     },
     "zho": {
-        "description": "第一个免费电子书制作人",
-        "title": "Project Gutenberg Library - 中文书籍",
+        "title": "古腾堡图书馆项目",
+        "description": "来自免费电子书首位制作人的所有中文书籍",
     },
 }

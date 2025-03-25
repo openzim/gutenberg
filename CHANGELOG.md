@@ -16,6 +16,8 @@ as of 2.0.0.
 
 - Insert as few rsync URLs as possible in DB when a book selection is made (#220)
 - Replace usage of os.path and path.py with pathlib.Path (#195)
+- Finalize ZIM metadata title translations and multilingual detection (#229)
+- Replaced magic number with named constant and clarified comment regarding book ID URL rules (#196)
 
 ### Fixed
 
