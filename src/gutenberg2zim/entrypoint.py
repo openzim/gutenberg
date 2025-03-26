@@ -206,6 +206,8 @@ def main():
                 optimizer_version if not use_any_optimized_version else None
             ),
         )
+        logger.info("Finished downloading all books.")
+
     if one_lang_one_zim_folder:
         if languages == []:
             zims = []
