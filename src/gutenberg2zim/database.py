@@ -1,11 +1,9 @@
 from peewee import (
-    BooleanField,
     CharField,
     DoesNotExist,
     ForeignKeyField,
     IntegerField,
     Model,
-    TextField,
 )
 from playhouse.apsw_ext import APSWDatabase
 
@@ -134,6 +132,7 @@ class Book(BaseModel):
     html_etag = CharField(max_length=500, null=True)
     epub_etag = CharField(max_length=500, null=True)
     cover_etag = CharField(max_length=500, null=True)
+    unsupported_formats = CharField(max_length=500, null=True)
 
     def __str__(self):
         return f"{self.id}/{self.title}/{self.bookshelf}"
@@ -149,6 +148,13 @@ class Book(BaseModel):
             "bookshelf": self.bookshelf,
             "cover_page": self.cover_page,
         }
+
+    def requested_formats(self, all_requested_formats):
+        return [
+            fmt
+            for fmt in all_requested_formats
+            if fmt not in str(self.unsupported_formats).split(",")
+        ]
 
     def to_array(self, all_requested_formats):
         fmts = self.requested_formats(all_requested_formats)
@@ -168,40 +174,6 @@ class Book(BaseModel):
             self.bookshelf,
         ]
 
-    def formats(self):
-        from gutenberg2zim.utils import main_formats_for
-
-        return main_formats_for(self)
-
-    def requested_formats(self, all_requested_formats):
-        fmts = self.formats()
-        requested_formats = [fmt for fmt in fmts if fmt in all_requested_formats]
-        return requested_formats
-
-
-class BookFormat(BaseModel):
-    class Meta:
-        database = db
-
-    book = ForeignKeyField(Book, related_name="bookformats")
-    mime = CharField(max_length=100)
-    images = BooleanField(default=True)
-    pattern = CharField(max_length=100)
-    downloaded_from = CharField(max_length=300, null=True)
-
-    def __str__(self):
-        return f"[{self.mime}] {self.book.title}"
-
-
-class Url(BaseModel):
-    class Meta:
-        database = db
-
-    url = TextField(index=True)
-
-    def __str__(self):
-        return self.url
-
 
 def load_fixtures(model):
     logger.info(f"Loading fixtures for {model._meta.name}")
@@ -214,7 +186,7 @@ def load_fixtures(model):
 def setup_database(*, wipe: bool = False) -> None:
     logger.info("Setting up the database")
 
-    for model in (License, Author, Book, BookFormat, Url):
+    for model in (License, Author, Book):
         if wipe:
             model.drop_table(fail_silently=True)
         if not model.table_exists():

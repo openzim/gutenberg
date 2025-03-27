@@ -1,9 +1,9 @@
-import collections
 import hashlib
 import subprocess
 import sys
 import unicodedata
 import zipfile
+from functools import reduce
 from pathlib import Path
 
 import chardet
@@ -12,23 +12,11 @@ import six
 from zimscraperlib.download import save_large_file
 
 from gutenberg2zim.constants import logger
-from gutenberg2zim.database import Book, BookFormat
+from gutenberg2zim.database import Book
 from gutenberg2zim.iso639 import language_name
 
 UTF8 = "utf-8"
-FORMAT_MATRIX = collections.OrderedDict(
-    [
-        ("html", "text/html"),
-        ("epub", "application/epub+zip"),
-        ("pdf", "application/pdf"),
-    ]
-)
-
-BAD_BOOKS_FORMATS = {
-    39765: ["pdf"],
-    40194: ["pdf"],
-}
-
+ALL_FORMATS = ["epub", "pdf", "html"]
 
 NB_MAIN_LANGS = 5
 
@@ -75,7 +63,7 @@ def normalize(text: str | None = None) -> str | None:
 def get_project_id(languages, formats, only_books):
     parts = ["gutenberg"]
     parts.append("mul" if len(languages) > 1 else languages[0])
-    if len(formats) < len(FORMAT_MATRIX):
+    if len(formats) < len(ALL_FORMATS):
         parts.append("-".join(formats))
     parts.append("selection" if only_books else "all")
     return "_".join(parts)
@@ -101,30 +89,22 @@ def download_file(url: str, fpath: Path) -> bool:
         return False
 
 
-def main_formats_for(book):
-    fmts = [
-        fmt.mime
-        for fmt in BookFormat.select(BookFormat, Book)
-        .join(Book)
-        .switch(BookFormat)
-        .where(Book.id == book.id)
-    ]
-    return [k for k, v in FORMAT_MATRIX.items() if v in fmts]
-
-
 def get_list_of_filtered_books(languages, formats, only_books):
+    qs = Book.select()
+
     if len(formats):
-        qs = (
-            Book.select()
-            .join(BookFormat)
-            .where(BookFormat.mime << [FORMAT_MATRIX.get(f) for f in formats])
-            .group_by(Book.id)
+        qs = qs.where(
+            Book.unsupported_formats.is_null(True)
+            | reduce(
+                lambda x, y: x | y,
+                [
+                    ~Book.unsupported_formats.contains(book_format)
+                    for book_format in formats
+                ],
+            )
         )
-    else:
-        qs = Book.select()
 
     if len(only_books):
-        # print(only_books)
         qs = qs.where(Book.id << only_books)
 
     if len(languages) and languages[0] != "mul":
