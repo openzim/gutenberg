@@ -202,6 +202,7 @@ dataTables_wrapper.dataTables_length,
 .table-icons {
     text-align: right;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
@@ -606,5 +607,3 @@ body.cover .content h2 {
         font-size: 2em;
     }
 }
-
-

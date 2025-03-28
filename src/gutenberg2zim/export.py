@@ -17,13 +17,12 @@ from zimscraperlib.image.transformation import resize_image
 
 import gutenberg2zim
 from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
-from gutenberg2zim.database import Author, Book, BookFormat
+from gutenberg2zim.database import Author, Book
 from gutenberg2zim.iso639 import language_name
 from gutenberg2zim.l10n import l10n_strings
 from gutenberg2zim.s3 import upload_to_cache
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import (
-    FORMAT_MATRIX,
     UTF8,
     archive_name_for,
     article_name_for,
@@ -199,27 +198,6 @@ def export_all_books(
             "Unable to proceed. Combination of languages, "
             "books and formats has no result."
         )
-
-    # sz = len(list(books))
-    # logger.debug("\tFiltered book collection size: {}".format(sz))
-
-    def nb_by_fmt(fmt):
-        return sum(
-            [
-                1
-                for book in books
-                if BookFormat.select(BookFormat, Book)
-                .join(Book)
-                .switch(BookFormat)
-                .where(Book.id == book.id)
-                .where(BookFormat.mime == FORMAT_MATRIX.get(fmt))
-                .count()
-            ]
-        )
-
-    logger.debug("\tFiltered book collection, PDF: {}".format(nb_by_fmt("pdf")))
-    logger.debug("\tFiltered book collection, ePUB: {}".format(nb_by_fmt("epub")))
-    logger.debug("\tFiltered book collection, HTML: {}".format(nb_by_fmt("html")))
 
     # export illustation
     export_illustration()
@@ -885,9 +863,11 @@ def handle_unoptimized_files(
         )
 
     # other formats
-    for other_format in formats:
-        if other_format not in book.formats() or other_format == "html":
-            continue
+    for other_format in [
+        fmt
+        for fmt in formats
+        if fmt != "html" and fmt not in str(book.unsupported_formats).split(",")
+    ]:
         book_file = src_dir / fname_for(book, other_format)
         if book_file.exists():
             try:

@@ -3,38 +3,47 @@ import tempfile
 import zipfile
 from multiprocessing.dummy import Pool
 from pathlib import Path
-from pprint import pformat
 
 import apsw
 import backoff
+import requests
 from kiwixstorage import KiwixStorage
 
 from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
-from gutenberg2zim.database import Book, BookFormat
+from gutenberg2zim.database import Book
 from gutenberg2zim.export import fname_for, get_list_of_filtered_books
+from gutenberg2zim.pg_archive_urls import url_for_type
 from gutenberg2zim.s3 import download_from_cache
-from gutenberg2zim.urls import get_urls
 from gutenberg2zim.utils import (
-    FORMAT_MATRIX,
+    ALL_FORMATS,
     archive_name_for,
     download_file,
     ensure_unicode,
     get_etag_from_url,
 )
 
+# map of preferred document type for every format
+PG_PREFERRED_TYPES = {
+    "html": ["zip", "html.images", "html.noimages"],
+    "epub": ["epub3.images", "epub.images", "epub.noimages"],
+    "pdf": ["pdf.images", "pdf.noimages"],
+}
+
 IMAGE_BASE = "http://aleph.pglaf.org/cache/epub/"
 
-# for development
-# def resource_exists(url):
-#     try:
-#         r = requests.get(url, stream=True, timeout=20)  # in seconds
-#         return r.status_code == requests.codes.ok
-#     except Exception as exc:
-#         logger.error(f"Exception occurred while testing {url}\n {exc}")
-#         return False
+DL_CHUNCK_SIZE = 8192
 
 
-def handle_zipped_epub(zippath: Path, book: Book, dst_dir: Path) -> bool:
+def resource_exists(url):
+    try:
+        r = requests.get(url, stream=True, timeout=20)  # in seconds
+        return r.status_code == requests.codes.ok
+    except Exception as exc:
+        logger.error(f"Exception occurred while testing {url}\n {exc}")
+        return False
+
+
+def handle_zipped_html(zippath: Path, book: Book, dst_dir: Path) -> bool:
     def clfn(fn):
         return Path(fn).name
 
@@ -70,11 +79,16 @@ def handle_zipped_epub(zippath: Path, book: Book, dst_dir: Path) -> bool:
     )
     # move all extracted files to proper locations
     for zipped_file in zipped_files:
+        src = Path(tmpd) / zipped_file
+
         # skip folders
-        if not Path(zipped_file).is_file():
+        if not Path(src).is_file():
             continue
 
-        src = Path(tmpd) / zipped_file
+        # skip cover images
+        if "cover" in zipped_file:
+            continue
+
         if src.exists():
             fname = Path(zipped_file).name
 
@@ -90,6 +104,7 @@ def handle_zipped_epub(zippath: Path, book: Book, dst_dir: Path) -> bool:
                 dst = dst_dir / f"{book.id}_{fname}"
             dst = dst.resolve()
             try:
+                logger.debug(f"Moving from {src} to {dst}")
                 src.rename(dst)
             except Exception:
                 logger.error(f"Failed to move extracted file: {src} -> {dst}")
@@ -114,7 +129,7 @@ def download_book(
 
     # apply filters
     if not formats:
-        formats = list(FORMAT_MATRIX.keys())
+        formats = ALL_FORMATS
 
     # HTML is our base for ZIM for add it if not present
     if "html" not in formats:
@@ -124,197 +139,117 @@ def download_book(
     optimized_dir = book_dir / "optimized"
     unoptimized_dir = book_dir / "unoptimized"
 
-    unsuccessful_formats = []
+    if force:
+        shutil.rmtree(book_dir)
+
+    unoptimized_dir.mkdir(parents=True, exist_ok=True)
+    optimized_dir.mkdir(parents=True, exist_ok=True)
+
+    unsupported_formats = []
     for book_format in formats:
-        unoptimized_fpath = unoptimized_dir / fname_for(book, book_format)
+        logger.debug(f"Processing {book_format}")
+
+        # if we already know (e.g. due to a former pass) that this book format is not
+        # supported, no need to retry
+        if book.unsupported_formats and book_format in book.unsupported_formats:
+            logger.debug(f"\t\tNo file available for {book_format} of #{book.id}")
+            continue
+
         unoptimized_fpath = unoptimized_dir / fname_for(book, book_format)
         optimized_fpath = optimized_dir / archive_name_for(book, book_format)
 
         # check if already downloaded
         if (unoptimized_fpath.exists() or optimized_fpath.exists()) and not force:
-            logger.debug(f"\t\t{book_format} already exists for book #{book.id}")
-            continue
-
-        if force:
-            if book_format == "html":
-                for fpath in book_dir.iterdir():
-                    if fpath.is_file() and fpath.suffix not in [".pdf", ".epub"]:
-                        fpath.unlink(missing_ok=True)
-            else:
-                unoptimized_fpath.unlink(missing_ok=True)
-                optimized_fpath.unlink(missing_ok=True)
-            # delete dirs which are empty
-            for dir_name in [optimized_dir, unoptimized_dir]:
-                if not dir_name.exists():
-                    continue
-                if not list(dir_name.iterdir()):
-                    dir_name.rmdir()
-
-        # retrieve corresponding BookFormat
-        bfs = BookFormat.filter(book=book)
-
-        if book_format == "html":
-            patterns = [
-                "mnsrb10h.htm",
-                "8ledo10h.htm",
-                "tycho10f.htm",
-                "8ledo10h.zip",
-                "salme10h.htm",
-                "8nszr10h.htm",
-                "{id}-h.html",
-                "{id}.html.gen",
-                "{id}-h.htm",
-                "8regr10h.zip",
-                "{id}.html.noimages",
-                "8lgme10h.htm",
-                "tycho10h.htm",
-                "tycho10h.zip",
-                "8lgme10h.zip",
-                "8indn10h.zip",
-                "8resp10h.zip",
-                "20004-h.htm",
-                "8indn10h.htm",
-                "8memo10h.zip",
-                "fondu10h.zip",
-                "{id}-h.zip",
-                "8mort10h.zip",
-            ]
-            bfso = bfs
-            bfs = bfs.filter(BookFormat.pattern << patterns)
-            if not bfs.count():
-                logger.debug(pformat([(bf.mime, bf.images, bf.pattern) for bf in bfs]))
-                logger.debug(pformat([(bf.mime, bf.images, bf.pattern) for bf in bfso]))
-                logger.error("html not found")
-                unsuccessful_formats.append(book_format)
-                continue
-        else:
-            bfs = bfs.filter(mime=FORMAT_MATRIX.get(book_format))  # type: ignore
-
-        if not bfs.count():
-            logger.debug(f"[{book_format}] not avail. for #{book.id}# {book.title}")
-            unsuccessful_formats.append(book_format)
-            continue
-
-        if bfs.count() > 1:
-            try:
-                bf = bfs.filter(bfs.images).get()
-            except Exception:
-                bf = bfs.get()
-        else:
-            bf = bfs.get()
-
-        logger.debug(f"[{book_format}] Requesting URLs for #{book.id}# {book.title}")
-
-        # retrieve list of URLs for format unless we have it in DB
-        if bf.downloaded_from and not force:
-            urls = [bf.downloaded_from]
-        else:
-            urld = get_urls(book)
-            urls = list(
-                reversed(urld.get(FORMAT_MATRIX.get(book_format)))  # type: ignore
+            logger.debug(
+                f"\t\t{book_format} already exists for book #{book.id}, "
+                "reusing existing file"
             )
+            continue
 
-        import copy
-
-        allurls = copy.copy(urls)
-        downloaded_from_cache = False
-
-        while urls:
-            url = urls.pop()
-
-            # for development
-            # if len(allurls) != 1:
-            #     if not resource_exists(url):
-            #         continue
-
-            # HTML files are *sometime* available as ZIP files
-            if url.endswith(".zip"):
-                zpath = unoptimized_dir / f"{fname_for(book, book_format)}.zip"
-
-                etag = get_etag_from_url(url)
-                if s3_storage:
-                    if download_from_cache(
-                        book=book,
-                        etag=etag,
-                        book_format=book_format,
-                        dest_dir=optimized_dir,
-                        s3_storage=s3_storage,
-                        optimizer_version=optimizer_version,
-                    ):
-                        downloaded_from_cache = True
-                        break
-                if not download_file(url, zpath):
-                    logger.error(f"ZIP file download failed: {zpath}")
-                    continue
-                # save etag
-                book.html_etag = etag  # type: ignore
-                book.save()
-                # extract zipfile
-                handle_zipped_epub(
-                    zippath=zpath,
-                    book=book,
-                    dst_dir=unoptimized_dir,
+        pg_type_to_use = None
+        pg_resp = None
+        url = None
+        for pg_type in PG_PREFERRED_TYPES[book_format]:
+            url = url_for_type(pg_type, book.id)
+            if not url:
+                # not supposed to happen, this is a bug
+                raise Exception(
+                    f"Unsupported {pg_type} pg_type for {book_format} of #{book.id}"
                 )
-            else:
-                if (
-                    url.endswith(".htm")
-                    or url.endswith(".html")
-                    or url.endswith(".html.utf8")
-                    or url.endswith(".epub")
-                ):
-                    etag = get_etag_from_url(url)
-                    if s3_storage:
-                        logger.info(
-                            f"Trying to download {book.id} from optimization cache"
-                        )
-                        if download_from_cache(
-                            book=book,
-                            etag=etag,
-                            book_format=book_format,
-                            dest_dir=optimized_dir,
-                            s3_storage=s3_storage,
-                            optimizer_version=optimizer_version,
-                        ):
-                            downloaded_from_cache = True
-                            break
-                if not download_file(url, unoptimized_fpath):
-                    logger.error(f"file donwload failed: {unoptimized_fpath}")
-                    continue
-                # save etag if html or epub if download is successful
-                if (
-                    url.endswith(".htm")
-                    or url.endswith(".html")
-                    or url.endswith(".html.utf8")
-                ):
-                    logger.debug(f"Saving html ETag for {book.id}")
-                    book.html_etag = etag  # type: ignore
-                    book.save()
-                elif url.endswith(".epub"):
-                    logger.debug(f"Saving epub ETag for {book.id}")
-                    book.epub_etag = etag  # type: ignore
-                    book.save()
 
-            # store working URL in DB
-            bf.downloaded_from = url
-            bf.save()
-            # break as we got a working URL
-            break
+            pg_resp = requests.get(url, stream=True, timeout=20)  # in seconds
 
-        if not bf.downloaded_from and not downloaded_from_cache:
-            logger.error(
-                "No file found for book #%d in format %s", book.id, book_format
+            if pg_resp.status_code == requests.codes.ok:
+                pg_type_to_use = pg_type
+                break
+
+            pg_resp.close()
+
+        if not url or not pg_type_to_use:
+            logger.debug(f"\t\tNo file available for {book_format} of #{book.id}")
+            unsupported_formats.append(book_format)
+            continue
+
+        if not pg_resp:
+            # not supposed to happen, this is a bug
+            raise Exception(
+                f"Missing streamed response for {book_format} of #{book.id}"
             )
 
-            # delete instance from DB if download failed
-            logger.info("Deleting instance from DB")
-            bf.delete_instance()
-            unsuccessful_formats.append(book_format)
-            logger.debug("Tried all URLs:\n%s", pformat(allurls))
+        etag = pg_resp.headers.get("Etag", None)
+
+        if s3_storage and download_from_cache(
+            book=book,
+            etag=etag,
+            book_format=book_format,
+            dest_dir=optimized_dir,
+            s3_storage=s3_storage,
+            optimizer_version=optimizer_version,
+        ):
+            # explicitely close the response since we will not consume the stream
+            pg_resp.close()
+        elif url.endswith(".zip"):
+            zpath = unoptimized_dir / f"{fname_for(book, book_format)}.zip"
+            with open(zpath, "wb") as fh:
+                for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
+                    if chunk:
+                        fh.write(chunk)
+            # extract zipfile
+            handle_zipped_html(
+                zippath=zpath,
+                book=book,
+                dst_dir=unoptimized_dir,
+            )
+        else:
+            with open(unoptimized_fpath, "wb") as fh:
+                for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
+                    if chunk:
+                        fh.write(chunk)
+
+        # save etag for optimized formats
+        if book_format == "html":
+            book.html_etag = etag  # type: ignore
+        elif book_format == "epub":
+            book.epub_etag = etag  # type: ignore
+
+    # update list of unsupported formats based on the union of format already known to
+    # not be supported and new ones
+    book.unsupported_formats = ",".join(  # type: ignore
+        set(
+            unsupported_formats
+            + (
+                str(book.unsupported_formats).split(",")
+                if book.unsupported_formats
+                else []
+            )
+        )
+    )
+    book.save()
 
     # delete book from DB if not downloaded in any format
-    if len(unsuccessful_formats) == len(formats):
-        logger.debug(
-            f"Book #{book.id} could not be downloaded in any format. "
+    if len(unsupported_formats) == len(formats):
+        logger.warning(
+            f"\t\tBook #{book.id} could not be downloaded in any format. "
             "Deleting from DB ..."
         )
         book.delete_instance()

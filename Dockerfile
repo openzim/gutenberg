@@ -7,7 +7,6 @@ RUN apt-get update \
       libxml2-dev \
       libxslt-dev \
       python3-pillow \
-      rsync \
       libjpeg-dev \
       libpng-dev \
       libmagic1 \

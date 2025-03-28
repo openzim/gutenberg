@@ -7,10 +7,8 @@ import peewee
 from bs4 import BeautifulSoup
 
 from gutenberg2zim.constants import logger
-from gutenberg2zim.database import Author, Book, BookFormat, License
+from gutenberg2zim.database import Author, Book, License
 from gutenberg2zim.utils import (
-    BAD_BOOKS_FORMATS,
-    FORMAT_MATRIX,
     download_file,
     normalize,
 )
@@ -243,45 +241,6 @@ def save_rdf_in_database(parser: RdfParser) -> None:
         book_record.language = parser.language.strip()
         book_record.downloads = parser.downloads
         book_record.save()
-
-    # insert pdf if not exists in parser.file_types
-    # this is done as presence of PDF on server and RDF is inconsistent
-    if not [
-        key
-        for key in parser.file_types
-        if parser.file_types[key].startswith("application/pdf")
-    ]:
-        parser.file_types.update({"{id}-pdf.pdf": "application/pdf"})
-
-    # Insert formats
-    for file_type in parser.file_types:
-        # Sanitize MIME
-        mime = parser.file_types[file_type]
-        if not mime.startswith("text/plain"):
-            mime = re.sub(r"; charset=[a-z0-9-]+", "", mime)
-        # else:
-        #    charset = re.match(r'; charset=([a-z0-9-]+)', mime).groups()[0]
-
-        # Insert format type
-        pattern = re.sub(r"" + parser.gid, "{id}", file_type)
-        pattern = pattern.split("/")[-1]
-
-        bid = int(book_record.id)
-
-        if bid in BAD_BOOKS_FORMATS.keys() and mime in [
-            FORMAT_MATRIX.get(f) for f in BAD_BOOKS_FORMATS.get(bid)  # type: ignore
-        ]:
-            logger.error(f"\t**** EXCLUDING **** {mime} for book #{bid} from list.")
-            continue
-
-        # Insert book format
-        BookFormat.create(
-            book=book_record,
-            mime=mime,
-            images=file_type.endswith(".images")
-            or parser.file_types[file_type] == "application/pdf",
-            pattern=pattern,
-        )
 
 
 def get_formatted_number(num: str | None) -> str | None:
