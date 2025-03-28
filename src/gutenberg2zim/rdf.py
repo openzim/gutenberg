@@ -304,7 +304,7 @@ if __name__ == "__main__":
     # Bacic Test with a sample rdf file
     nums = [f"{i:0=5d}" for i in range(21000, 40000)]
     for num in nums:
-        print(num)  # noqa: T201
+        logger.debug(f"Testing RDF: {num}")
         curd = Path(__file__).parent
         rdf = curd.parent / "rdf-files" / num / f"pg{num}.rdf"
         if rdf.is_file():
@@ -313,4 +313,4 @@ if __name__ == "__main__":
                 data = f.read()
 
             parser = RdfParser(data, num).parse()
-            print(parser.first_name, parser.last_name)  # noqa: T201
+            logger.info(f"Parsed name: {parser.first_name} {parser.last_name}")

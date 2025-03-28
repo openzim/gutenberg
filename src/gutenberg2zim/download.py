@@ -3,7 +3,7 @@ import tempfile
 import zipfile
 from multiprocessing.dummy import Pool
 from pathlib import Path
-from pprint import pprint as pp
+from pprint import pformat
 
 import apsw
 import backoff
@@ -91,11 +91,8 @@ def handle_zipped_epub(zippath: Path, book: Book, dst_dir: Path) -> bool:
             dst = dst.resolve()
             try:
                 src.rename(dst)
-            except Exception as e:
-                import traceback
-
-                print(e)  # noqa: T201
-                print("".join(traceback.format_exc()))  # noqa: T201
+            except Exception:
+                logger.error(f"Failed to move extracted file: {src} -> {dst}")
                 raise
 
     # delete temp directory and zipfile
@@ -185,8 +182,8 @@ def download_book(
             bfso = bfs
             bfs = bfs.filter(BookFormat.pattern << patterns)
             if not bfs.count():
-                pp([(bf.mime, bf.images, bf.pattern) for bf in bfs])  # noqa: T203
-                pp([(bf.mime, bf.images, bf.pattern) for bf in bfso])  # noqa: T203
+                logger.debug(pformat([(bf.mime, bf.images, bf.pattern) for bf in bfs]))
+                logger.debug(pformat([(bf.mime, bf.images, bf.pattern) for bf in bfso]))
                 logger.error("html not found")
                 unsuccessful_formats.append(book_format)
                 continue
@@ -304,12 +301,15 @@ def download_book(
             break
 
         if not bf.downloaded_from and not downloaded_from_cache:
-            logger.error(f"NO FILE FOR #{book.id}/{book_format}")
+            logger.error(
+                "No file found for book #%d in format %s", book.id, book_format
+            )
+
             # delete instance from DB if download failed
             logger.info("Deleting instance from DB")
             bf.delete_instance()
             unsuccessful_formats.append(book_format)
-            pp(allurls)  # noqa: T203
+            logger.debug("Tried all URLs:\n%s", pformat(allurls))
 
     # delete book from DB if not downloaded in any format
     if len(unsuccessful_formats) == len(formats):

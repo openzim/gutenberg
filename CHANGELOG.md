@@ -18,6 +18,7 @@ as of 2.0.0.
 - Replace usage of os.path and path.py with pathlib.Path (#195)
 - Finalize ZIM metadata title translations and multilingual detection (#229)
 - Replaced magic number with named constant and clarified comment regarding book ID URL rules (#196)
+- Replace print and pp calls with logger (#192)
 
 ### Fixed
 
