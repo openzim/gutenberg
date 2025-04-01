@@ -10,7 +10,7 @@ from gutenberg2zim.database import setup_database
 from gutenberg2zim.download import download_all_books
 from gutenberg2zim.rdf import download_rdf_file, get_rdf_fpath, parse_and_fill
 from gutenberg2zim.s3 import s3_credentials_ok
-from gutenberg2zim.urls import setup_urls
+from gutenberg2zim.utils import ALL_FORMATS
 from gutenberg2zim.zim import build_zimfile
 
 help_info = (
@@ -135,7 +135,7 @@ def main():
     # special shortcuts for "all"
     formats: list[str]
     if arguments.get("--formats") in ["all", None]:
-        formats = ["epub", "pdf", "html"]
+        formats = ALL_FORMATS
     else:
         formats = list(
             {
@@ -189,8 +189,6 @@ def main():
     if do_parse:
         logger.info(f"PARSING rdf-files in {rdf_path}")
         parse_and_fill(rdf_path=rdf_path, only_books=books)
-        logger.info("Add possible url to db")
-        setup_urls(force=force, books=books)
 
     if do_download:
         logger.info("DOWNLOADING ebooks from mirror using filters")
@@ -225,9 +223,11 @@ def main():
         if do_zim:
             logger.info("BUILDING ZIM dynamically")
             build_zimfile(
-                output_folder=Path(one_lang_one_zim_folder).resolve()
-                if one_lang_one_zim_folder
-                else Path(".").resolve(),
+                output_folder=(
+                    Path(one_lang_one_zim_folder).resolve()
+                    if one_lang_one_zim_folder
+                    else Path(".").resolve()
+                ),
                 download_cache=dl_cache,
                 concurrency=concurrency,
                 languages=zim_lang,
