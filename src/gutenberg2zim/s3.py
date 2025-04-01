@@ -33,7 +33,7 @@ def download_from_cache(
     optimizer_version: dict[str, str] | None,
 ) -> bool:
     """whether it successfully downloaded from cache"""
-    key = f"{book.id}/{book_format}"
+    key = f"{book.book_id}/{book_format}"
     if not s3_storage.has_object(key):
         return False
     meta = s3_storage.get_object_stat(key).meta
@@ -53,7 +53,7 @@ def download_from_cache(
         return False
     dest_dir.mkdir(parents=True, exist_ok=True)
     if book_format == "cover":
-        fpath = dest_dir / f"{book.id}_cover_image.jpg"
+        fpath = dest_dir / f"{book.book_id}_cover_image.jpg"
     else:
         if book_format == "html":
             book_format = "zip"
