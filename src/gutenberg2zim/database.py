@@ -97,7 +97,7 @@ class Author(BaseModel):
     def to_dict(self):
         return {
             "label": self.name(),
-            "id": self.gut_id,
+            "book_id": self.gut_id,
             "last_name": self.last_name,
             "first_names": self.first_names,
             "birth_year": self.birth_year,
@@ -119,30 +119,31 @@ class Book(BaseModel):
     class Meta:
         database = db
 
-    id = IntegerField(primary_key=True)  # noqa: A003
+    book_id = IntegerField(primary_key=True)
     title = CharField(max_length=500)
     subtitle = CharField(max_length=500, null=True)
     author = ForeignKeyField(Author, related_name="books")
-    license = ForeignKeyField(License, related_name="books")  # noqa: A003
+    book_license = ForeignKeyField(License, related_name="books")
     language = CharField(max_length=10)
     downloads = IntegerField(default=0)
     bookshelf = CharField(max_length=500, null=True)
     cover_page = IntegerField(default=0)
     popularity = 0
+
     html_etag = CharField(max_length=500, null=True)
     epub_etag = CharField(max_length=500, null=True)
     cover_etag = CharField(max_length=500, null=True)
     unsupported_formats = CharField(max_length=500, null=True)
 
     def __str__(self):
-        return f"{self.id}/{self.title}/{self.bookshelf}"
+        return f"{self.book_id}/{self.title}/{self.bookshelf}"
 
     def to_dict(self):
         return {
             "title": self.title,
             "subtitle": self.subtitle,
             "author": self.author.name(),
-            "license": self.license,
+            "license": self.book_license,
             "language": self.language,
             "downloads": self.downloads,
             "bookshelf": self.bookshelf,
@@ -170,7 +171,7 @@ class Book(BaseModel):
                 epub=int("epub" in fmts),
                 pdf=int("pdf" in fmts),
             ),
-            self.id,
+            self.book_id,
             self.bookshelf,
         ]
 

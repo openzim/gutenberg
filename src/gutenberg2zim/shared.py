@@ -3,8 +3,22 @@ import threading
 from datetime import date
 
 from zimscraperlib.zim.creator import Creator
+from zimscraperlib.zim.metadata import (
+    CreatorMetadata,
+    DateMetadata,
+    DefaultIllustrationMetadata,
+    DescriptionMetadata,
+    LanguageMetadata,
+    LongDescriptionMetadata,
+    NameMetadata,
+    PublisherMetadata,
+    ScraperMetadata,
+    StandardMetadataList,
+    TagsMetadata,
+    TitleMetadata,
+)
 
-from gutenberg2zim.constants import VERSION, logger
+from gutenberg2zim.constants import FAVICON_BYTES, VERSION, logger
 
 
 class Global:
@@ -32,21 +46,36 @@ class Global:
             Global.progress += 1
 
     @staticmethod
-    def setup(filename, language, title, description, name, publisher):
-        Global.creator = Creator(
-            filename=filename,
-            main_path="Home.html",
-            language=language,
-            workaround_nocancel=False,
-            title=title,
-            description=description,
-            creator="gutenberg.org",  # type: ignore
-            publisher=publisher,  # type: ignore
-            name=name,
-            tags="_category:gutenberg;gutenberg",  # type: ignore
-            scraper=f"gutenberg2zim-{VERSION}",  # type: ignore
-            date=date.today(),  # type: ignore
-        ).config_verbose(True)
+    def setup(
+        filename, language, title, description, long_description, name, publisher
+    ):
+        Global.creator = (
+            Creator(
+                filename=filename,
+                main_path="Home.html",
+                workaround_nocancel=False,
+            )
+            .config_metadata(
+                std_metadata=StandardMetadataList(
+                    Title=TitleMetadata(title),
+                    Description=DescriptionMetadata(description),
+                    LongDescription=(
+                        LongDescriptionMetadata(long_description)
+                        if long_description and long_description.strip()
+                        else None
+                    ),
+                    Creator=CreatorMetadata("gutenberg.org"),
+                    Publisher=PublisherMetadata(publisher),
+                    Name=NameMetadata(name),
+                    Language=LanguageMetadata(language),
+                    Tags=TagsMetadata("_category:gutenberg;gutenberg"),
+                    Scraper=ScraperMetadata(f"gutenberg2zim-{VERSION}"),
+                    Date=DateMetadata(date.today()),
+                    Illustration_48x48_at_1=DefaultIllustrationMetadata(FAVICON_BYTES),
+                )
+            )
+            .config_verbose(True)
+        )
 
     @staticmethod
     def add_item_for(

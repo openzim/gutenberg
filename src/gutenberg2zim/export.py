@@ -13,7 +13,6 @@ from jinja2 import Environment, PackageLoader
 from kiwixstorage import KiwixStorage
 from schedule import every
 from six import text_type
-from zimscraperlib.image.transformation import resize_image
 
 import gutenberg2zim
 from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
@@ -98,20 +97,6 @@ def tmpl_path() -> Path:
 
 def get_list_of_all_languages():
     return list({b.language for b in Book.select(Book.language)})
-
-
-def export_illustration():
-    logger.info("Adding illustration")
-
-    src_illus_fpath = tmpl_path() / "favicon.png"
-    tmp_illus_fpath = TMP_FOLDER_PATH / "illustration.png"
-
-    shutil.copy(src_illus_fpath, tmp_illus_fpath)
-
-    # resize to appropriate size (ZIM uses 48x48 so we double for retina)
-    for size in (96, 48):
-        resize_image(tmp_illus_fpath, width=size, height=size, method="thumbnail")
-        Global.add_illustration(tmp_illus_fpath, size)
 
 
 def export_skeleton(
@@ -199,9 +184,6 @@ def export_all_books(
             "books and formats has no result."
         )
 
-    # export illustation
-    export_illustration()
-
     # export to JSON helpers
     export_to_json_helpers(
         books=books,
@@ -250,7 +232,7 @@ def export_all_books(
     def dlb(b):
         export_book(
             b,
-            book_dir=download_cache / str(b.id),
+            book_dir=download_cache / str(b.book_id),
             formats=formats,
             books=books,
             project_id=project_id,
@@ -284,7 +266,7 @@ def html_content_for(book: Book, src_dir):
 
     # is HTML file present?
     if not html_fpath.exists():
-        logger.warn(f"Missing HTML content for #{book.id} at {html_fpath}")
+        logger.warn(f"Missing HTML content for #{book.book_id} at {html_fpath}")
         return None, None
 
     try:
@@ -323,7 +305,9 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
     if not epub:
         for img in soup.findAll("img"):
             if "src" in img.attrs:
-                img.attrs["src"] = img.attrs["src"].replace("images/", f"{book.id}_")
+                img.attrs["src"] = img.attrs["src"].replace(
+                    "images/", f"{book.book_id}_"
+                )
 
     # update all <a> links to internal HTML pages
     # should only apply to relative URLs to HTML files.
@@ -338,7 +322,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
             return None
 
         if len(urlp.strip()):
-            nurl = f"{book.id}_{urlp}"
+            nurl = f"{book.book_id}_{urlp}"
         else:
             nurl = ""
 
@@ -427,7 +411,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
         is_encapsulated_in_div = False
 
     if is_encapsulated_in_div and not epub:
-        DEBUG_COUNT.append((book.id, book.title))
+        DEBUG_COUNT.append((book.book_id, book.title))
 
     if not is_encapsulated_in_div:
         for start_of_text, end_of_text in patterns:
@@ -505,16 +489,18 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
 def cover_html_content_for(
     book, optimized_files_dir, books, project_id, title_search, add_bookshelves, formats
 ):
-    cover_img = f"{book.id}_cover_image.jpg"
+    cover_img = f"{book.book_id}_cover_image.jpg"
     cover_img = cover_img if (optimized_files_dir / cover_img).exists() else None
+
     translate_author = (
         f' data-l10n-id="author-{book.author.name().lower()}"'
         if book.author.name() in ["Anonymous", "Various"]
         else ""
     )
+
     translate_license = (
-        f' data-l10n-id="license-{book.license.slug.lower()}"'
-        if book.license.slug in ["PD", "Copyright"]
+        f' data-l10n-id="license-{book.book_license.slug.lower()}"'
+        if book.book_license.slug in ["PD", "Copyright"]
         else ""
     )
     context = get_default_context(project_id=project_id, books=books)
@@ -621,7 +607,7 @@ def handle_unoptimized_files(
         if not list(unoptimized_dir.iterdir()):
             unoptimized_dir.rmdir()
 
-    logger.info(f"\tExporting Book #{book.id}.")
+    logger.info(f"\tExporting Book #{book.book_id}.")
 
     # actual book content, as HTML
     html, _ = html_content_for(book=book, src_dir=src_dir)
@@ -720,10 +706,10 @@ def handle_unoptimized_files(
         # delete {id}/cover.jpg if exist and update {id}/content.opf
         if remove_cover:
             # remove cover
-            (tmpd / text_type(book.id) / "cover.jpg").unlink(missing_ok=True)
+            (tmpd / text_type(book.book_id) / "cover.jpg").unlink(missing_ok=True)
 
             soup = None
-            opff = tmpd / text_type(book.id) / "content.opf"
+            opff = tmpd / text_type(book.book_id) / "content.opf"
             if opff.exists():
                 opff_content, _ = read_file(opff)
                 soup = BeautifulSoup(opff_content, "lxml-xml")
@@ -764,12 +750,12 @@ def handle_unoptimized_files(
             logger.info(f"\tCopying and optimizing image companion {fname}")
             optimize_image(src, dst)
             Global.add_item_for(path=dstfname, fpath=dst)
-            if dst.name == (f"{book.id}_cover_image.jpg"):
+            if dst.name == (f"{book.book_id}_cover_image.jpg"):
                 if s3_storage:
                     upload_to_cache(
                         asset=dst,
                         book_format="cover",
-                        book_id=book.id,
+                        book_id=book.book_id,
                         etag=book.cover_etag,
                         s3_storage=s3_storage,
                         optimizer_version=optimizer_version,
@@ -785,10 +771,7 @@ def handle_unoptimized_files(
             try:
                 optimize_epub(src, tmp_epub.name)
             except zipfile.BadZipFile:
-                logger.warn(
-                    "\t\tBad zip file. "
-                    "Copying as it might be working{}".format(fname)
-                )
+                logger.warn("\t\tBad zip file. Copying as it might be working{fname}")
                 handle_companion_file(
                     fname=fname,
                     dstfname=dstfname,
@@ -803,7 +786,7 @@ def handle_unoptimized_files(
                     upload_to_cache(
                         asset=dst,
                         book_format="epub",
-                        book_id=book.id,
+                        book_id=book.book_id,
                         etag=book.epub_etag,
                         s3_storage=s3_storage,
                         optimizer_version=optimizer_version,
@@ -817,13 +800,13 @@ def handle_unoptimized_files(
             logger.info(f"\tCopying companion file from {src} to {dst}")
             copy_file(src, dst)
             Global.add_item_for(path=dstfname, fpath=dst)
-            if ext != ".pdf" and ext != ".zip" and html_file_list:
+            if ext not in {".pdf", ".zip"} and html_file_list:
                 html_file_list.append(dst)
                 update_download_cache(src, dst)
 
     # associated files (images, etc)
     for fpath in src_dir.iterdir():
-        if fpath.is_file() and fpath.name.startswith(f"{book.id}_"):
+        if fpath.is_file() and fpath.name.startswith(f"{book.book_id}_"):
             if fpath.suffix in (".html", ".htm"):
                 src = fpath
                 dst = TMP_FOLDER_PATH / fpath.name
@@ -857,7 +840,7 @@ def handle_unoptimized_files(
             asset=html_book_optimized_files,
             book_format="html",
             etag=book.html_etag,
-            book_id=book.id,
+            book_id=book.book_id,
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
         )

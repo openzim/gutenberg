@@ -69,3 +69,5 @@ dl-cache
 tmp/
 *.zim
 .venv
+
+src/gutenberg2zim/templates/jquery/jquery-1.11.1.min.js
