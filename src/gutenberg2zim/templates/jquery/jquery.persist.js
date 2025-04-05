@@ -1,16 +1,16 @@
 /*
 	jquery-persist 201203*pike
-	
+
 	persist form values in cookies
-	
+
 	example usage:
-	
+
 		$('input,select,textarea').persist(options);
-		
+
 		$('input,select,textarea').unpersist(options);
-		
+
 	options
-	
+
 		context 	: 'def',		// a context or namespace for each field
 		replace		: true,			// replace existing field contents if any
 		cookie		: 'jqpersist',	// cookies basename
@@ -72,7 +72,7 @@ jQuery.fn.persist = function(options) {
 							$(this).val(val);
 						}
 					}
-					break;	
+					break;
 				default:
 					// if we can replace it or it is empty or 0
 					if (options['replace']||!$(this).val()) {
@@ -127,17 +127,17 @@ jQuery.persistValue = function (key, value, options) {
 
 	options = jQuery.extend({}, jQuery.persist.defaults, options);
 	var ctx = options['context'];
-	
+
 	if (!jQuery.persist.keys.length) {
 		if (!jQuery.persistInit(options)) return false;
 	}
 	var idx = jQuery.inArray(ctx+jQuery.persist.ctxsep+key,jQuery.persist.keys);
-	if (idx!=-1) {	
+	if (idx!=-1) {
 		if (value === null || value === undefined) {
 			// remove value
 			if (jQuery.persist.debug) console.log('unpersist '+key);
-			jQuery.persist.keys.splice(idx,1);	
-			jQuery.persist.vals.splice(idx,1);	
+			jQuery.persist.keys.splice(idx,1);
+			jQuery.persist.vals.splice(idx,1);
 		} else {
 			if (jQuery.persist.debug) console.log('persist '+key+':'+value);
 			jQuery.persist.vals[idx]=value;
@@ -159,20 +159,20 @@ jQuery.persistValue = function (key, value, options) {
 		jQuery.cookie(options.cookie+'_keys','',options);
 		jQuery.cookie(options.cookie+'_vals','',options);
 	}
-} 
+}
 
-	
+
 jQuery.persistedValue = function(key,options) {
 
 	options = jQuery.extend({}, jQuery.persist.defaults, options);
 	var ctx = options['context'];
-	
+
 	if (!jQuery.persist.keys.length) {
 		if (!jQuery.persistInit(options)) return false;
 	}
-	
+
 	var idx = jQuery.inArray(ctx+jQuery.persist.ctxsep+key,jQuery.persist.keys);
-	if (idx!=-1) {	
+	if (idx!=-1) {
 		if (jQuery.persist.debug) console.log('persisted '+key+':'+ jQuery.persist.vals[idx]);
 		return jQuery.persist.vals[idx];
 	} else {
@@ -183,11 +183,11 @@ jQuery.persistedValue = function(key,options) {
 }
 
 jQuery.persistInit = function(options) {
-	if (jQuery.persist.debug) console.log('persist init ');	
+	if (jQuery.persist.debug) console.log('persist init ');
 	options = jQuery.extend({}, jQuery.persist.defaults, options);
 	var skeys = jQuery.cookie(options.cookie+'_keys') || '';
 	var svals = jQuery.cookie(options.cookie+'_vals') || '';
-	jQuery.persist.keys = skeys.split(jQuery.persist.elmsep); 
+	jQuery.persist.keys = skeys.split(jQuery.persist.elmsep);
 	jQuery.persist.vals = svals.split(jQuery.persist.elmsep);
 	if (jQuery.persist.keys.length!=jQuery.persist.vals.length) {
 		// this should never happen
@@ -195,8 +195,8 @@ jQuery.persistInit = function(options) {
 		options['expire']=null;
 		jQuery.cookie(options.cookie+'_keys',null,options);
 		jQuery.cookie(options.cookie+'_vals',null,options);
-		jQuery.persist.keys = []; 
-		jQuery.persist.vals = []; 
+		jQuery.persist.keys = [];
+		jQuery.persist.vals = [];
 		return false;
 	}
 	if (jQuery.persist.debug) console.log(jQuery.persist.keys);

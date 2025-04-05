@@ -11,6 +11,7 @@ as of 2.0.0.
 ### Added
 
 - Add support for `--debug` flag to output debug logs
+- Add support for `-L` long_description flags
 
 ### Changed
 
@@ -19,6 +20,9 @@ as of 2.0.0.
 - Finalize ZIM metadata title translations and multilingual detection (#229)
 - Replaced magic number with named constant and clarified comment regarding book ID URL rules (#196)
 - Replace print and pp calls with logger (#192)
+- Update to Python3.13
+- Update python-scraperlib to 5.1.1 and dependencies (#188)
+- Rename Book DB table fields (#199)
 
 ### Fixed
 

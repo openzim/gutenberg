@@ -1,12 +1,12 @@
 <div>
     <link rel="stylesheet" href="fonts/font-awesome/css/font-awesome.css">
     <span class="zim_info">
-    <a title="{{ book.title }}" href="{{ book|book_name_for_fs|urlencode }}_cover.{{ book.id }}.html"><i class="fa fa-info-circle fa-2x"></i></a>
+    <a title="{{ book.title }}" href="{{ book|book_name_for_fs|urlencode }}_cover.{{ book.book_id }}.html"><i class="fa fa-info-circle fa-2x"></i></a>
     </span>
     {% for format in book.requested_formats(formats) %}
         {% if not format == 'html' %}
             <span class="zim_{{ format }}">
-            <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs|urlencode }}.{{ book.id }}.{{ format }}">
+            <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.{{ format }}">
             <i class="fa fa-2x {{ format|fa_for_format }}"></i></a>
             </span>
         {% endif %}
