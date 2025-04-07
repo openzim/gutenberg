@@ -17,7 +17,7 @@ classifiers = [
 ]
 dependencies = [
   "beautifulsoup4==4.9.3",
-  "Jinja2==3.1.2",
+  "Jinja2==3.1.6",
   "peewee==3.17.9",
   "types-peewee==3.17.9.20250401",
   "path.py==12.5.0",
