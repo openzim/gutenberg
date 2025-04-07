@@ -58,7 +58,7 @@ def parse_and_fill(rdf_path: Path, only_books: list[int]) -> None:
 def parse_and_process_file(rdf_tarfile: TarFile, rdf_member: TarInfo) -> None:
     gid = re.match(r".*/pg([0-9]+).rdf", rdf_member.name).groups()[0]  # type: ignore
 
-    if Book.get_or_none(id=int(gid)):
+    if Book.get_or_none(book_id=int(gid)):
         logger.info(
             f"\tSkipping already parsed file {rdf_member.name} for book id {gid}"
         )
@@ -220,14 +220,14 @@ def save_rdf_in_database(parser: RdfParser) -> None:
     # Insert book
 
     try:
-        book_record = Book.get(id=parser.gid)
+        book_record = Book.get(book_id=parser.gid)
     except peewee.DoesNotExist:
         book_record = Book.create(
-            id=parser.gid,
+            book_id=parser.gid,
             title=normalize(parser.title.strip()),
             subtitle=normalize(parser.subtitle.strip()),
             author=author_record,  # foreign key
-            license=license_record,  # foreign key
+            book_license=license_record,  # foreign key
             language=parser.language.strip(),
             downloads=parser.downloads,
             bookshelf=parser.bookshelf,

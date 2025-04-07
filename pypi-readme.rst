@@ -24,7 +24,7 @@ Fedora for scraper
 .. code-block:: sh
 	sudo dnf install -y python3-pip jpegoptim pngquant p7zip curl zip zim-tools
 
-Arch Linux 
+Arch Linux
 ----------
 .. code-block:: sh
 	sudo pacman -S python-pip libxml2 jpegoptim pngquant p7zip curl zip zim-tools
@@ -39,13 +39,13 @@ macOS
 
  For Developers: Contributing & Modifying
 -------------
-Ubuntu 
+Ubuntu
 -------------
 .. code-block:: sh
 
     sudo apt update && sudo apt install -y python3-pip libxml2-dev libxslt-dev jpegoptim pngquant p7zip-full curl zip zim-tools
 
-Fedora 
+Fedora
 ------
 .. code-block:: sh
 
@@ -75,7 +75,7 @@ Usage
 By default (no argument), it runs all the steps: download, parse, export and zim.
 
 .. code-block:: sh
-    
+
 	-h --help                       Display this help message
 	-y --wipe-db                    Do not wipe the DB during parse stage
 	-F --force                      Redo step even if target already exist
@@ -87,6 +87,7 @@ By default (no argument), it runs all the steps: download, parse, export and zim
 	-z --zim-file=<file>            Write ZIM into this file path
 	-t --zim-title=<title>          Set ZIM title
 	-n --zim-desc=<description>     Set ZIM description
+	-L --zim-long-desc=<description> Set ZIM long description
 	-d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 	-u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 	-b --books=<ids>                Execute the processes for specific books, separated by commas, or dashes for intervals
