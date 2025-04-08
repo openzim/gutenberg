@@ -124,7 +124,6 @@ class Book(BaseModel):
     subtitle = CharField(max_length=500, null=True)
     author = ForeignKeyField(Author, related_name="books")
     book_license = ForeignKeyField(License, related_name="books")
-    language = CharField(max_length=10)
     downloads = IntegerField(default=0)
     bookshelf = CharField(max_length=500, null=True)
     cover_page = IntegerField(default=0)
@@ -144,7 +143,6 @@ class Book(BaseModel):
             "subtitle": self.subtitle,
             "author": self.author.name(),
             "license": self.book_license,
-            "language": self.language,
             "downloads": self.downloads,
             "bookshelf": self.bookshelf,
             "cover_page": self.cover_page,
@@ -187,7 +185,7 @@ def load_fixtures(model):
 def setup_database(*, wipe: bool = False) -> None:
     logger.info("Setting up the database")
 
-    for model in (License, Author, Book):
+    for model in (License, Author, Book, BookLanguage):
         if wipe:
             model.drop_table(fail_silently=True)
         if not model.table_exists():
@@ -196,3 +194,14 @@ def setup_database(*, wipe: bool = False) -> None:
             load_fixtures(model)
         else:
             logger.debug(f"{model._meta.name} table already exists.")  # type: ignore
+
+
+class BookLanguage(BaseModel):
+    class Meta:
+        database = db
+
+    book = ForeignKeyField(Book, backref="languages")
+    language_code = CharField(max_length=10)
+
+    def __str__(self):
+        return f"{self.book.book_id} → {self.language_code}"

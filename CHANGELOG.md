@@ -12,6 +12,8 @@ as of 2.0.0.
 
 - Add support for `--debug` flag to output debug logs
 - Add support for `-L` long_description flags
+- Add request timeout for util.py (#197)
+- Add Booklanguage DB to support multi-languages books (#218)
 
 ### Changed
 
@@ -23,6 +25,7 @@ as of 2.0.0.
 - Update to Python3.13
 - Update python-scraperlib to 5.1.1 and dependencies (#188)
 - Rename Book DB table fields (#199)
+
 
 ### Fixed
 

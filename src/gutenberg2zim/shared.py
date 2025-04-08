@@ -26,7 +26,6 @@ class Global:
 
     creator: Creator
     _lock = threading.Lock()
-
     total = 0
     progress = 0
 
@@ -90,9 +89,12 @@ class Global:
         delete_fpath: bool | None = False,
     ):
         logger.debug(f"\t\tAdding ZIM item at {path}")
+
         if not mimetype and path.endswith(".epub"):
             mimetype = "application/epub+zip"
+
         with Global._lock:
+
             Global.creator.add_item_for(
                 path=path,
                 title=title,

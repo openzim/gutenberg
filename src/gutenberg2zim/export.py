@@ -16,7 +16,7 @@ from six import text_type
 
 import gutenberg2zim
 from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
-from gutenberg2zim.database import Author, Book
+from gutenberg2zim.database import Author, Book, BookLanguage
 from gutenberg2zim.iso639 import language_name
 from gutenberg2zim.l10n import l10n_strings
 from gutenberg2zim.s3 import upload_to_cache
@@ -96,7 +96,9 @@ def tmpl_path() -> Path:
 
 
 def get_list_of_all_languages():
-    return list({b.language for b in Book.select(Book.language)})
+    return list(
+        {bl.language_code for bl in BookLanguage.select(BookLanguage.language_code)}
+    )
 
 
 def export_skeleton(
@@ -177,6 +179,8 @@ def export_all_books(
     books = get_list_of_filtered_books(
         languages=languages, formats=formats, only_books=only_books
     )
+
+    logger.info(f"Found {books.count()} books for export")
 
     if not len(get_langs_with_count(books=books)):
         critical_error(
@@ -503,11 +507,17 @@ def cover_html_content_for(
         if book.book_license.slug in ["PD", "Copyright"]
         else ""
     )
+
+    book_languages = [
+        lang.language_code for lang in book.languages.order_by(BookLanguage.id)  # type: ignore
+    ]
+
     context = get_default_context(project_id=project_id, books=books)
     context.update(
         {
             "book": book,
             "cover_img": cover_img,
+            "book_languages": book_languages,
             "formats": book.requested_formats(formats),
             "translate_author": translate_author,
             "translate_license": translate_license,
@@ -927,13 +937,15 @@ def bookshelf_list(books):
     ]
 
 
-def bookshelf_list_language(books, lang):
+def bookshelf_list_language(lang):
     return [
-        bookshelf.bookshelf
-        for bookshelf in books.select()
-        .where(Book.language == lang)
-        .order_by(Book.bookshelf.asc())
+        book.bookshelf
+        for book in Book.select(Book.bookshelf)
+        .join(BookLanguage)
+        .where(BookLanguage.language_code == lang)
+        .where(Book.bookshelf.is_null(False))
         .group_by(Book.bookshelf)
+        .order_by(Book.bookshelf.asc())
     ]
 
 
@@ -967,13 +979,17 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
     )
 
     avail_langs = get_langs_with_count(books=books)
-
     all_filtered_authors = []
 
     # language-specific collections
     for _lang_name, lang, _lang_count in avail_langs:
         lang_filtered_authors = list(
-            {book.author.gut_id for book in books.filter(language=lang)}
+            {
+                book.author.gut_id
+                for book in Book.select()
+                .join(BookLanguage)
+                .where(BookLanguage.language_code == lang)
+            }
         )
         for aid in lang_filtered_authors:
             if aid not in all_filtered_authors:
@@ -984,9 +1000,10 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
-                for book in books.where(Book.language == lang).order_by(
-                    Book.downloads.desc()
-                )
+                for book in Book.select()
+                .join(BookLanguage)
+                .where(BookLanguage.language_code == lang)
+                .order_by(Book.downloads.desc())
             ],
             f"lang_{lang}_by_popularity.js",
         )
@@ -995,9 +1012,10 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
-                for book in books.where(Book.language == lang).order_by(
-                    Book.title.asc()
-                )
+                for book in Book.select()
+                .join(BookLanguage)
+                .where(BookLanguage.language_code == lang)
+                .order_by(Book.title.asc())
             ],
             f"lang_{lang}_by_title.js",
         )
@@ -1044,11 +1062,13 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
             # by language
             for _lang_name, lang, _lang_count in avail_langs:
                 logger.info(f"\t\tDumping bookshelf_{bookshelf}_by_lang_{lang}.js")
+
                 dumpjs(
                     [
                         book.to_array(all_requested_formats=formats)
-                        for book in books.select()
-                        .where(Book.language == lang)
+                        for book in Book.select()
+                        .join(BookLanguage)
+                        .where(BookLanguage.language_code == lang)
                         .where(Book.bookshelf == bookshelf)
                         .order_by(Book.downloads.desc())
                     ],
@@ -1058,8 +1078,9 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
                 dumpjs(
                     [
                         book.to_array(all_requested_formats=formats)
-                        for book in books.select()
-                        .where(Book.language == lang)
+                        for book in Book.select()
+                        .join(BookLanguage)
+                        .where(BookLanguage.language_code == lang)
                         .where(Book.bookshelf == bookshelf)
                         .order_by(Book.title.asc())
                     ],
@@ -1069,7 +1090,7 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
         # dump all bookshelves from any given language
         for _lang_name, lang, _lang_count in avail_langs:
             logger.info(f"\t\tDumping bookshelves_lang_{lang}.js")
-            temp = bookshelf_list_language(books, lang)
+            temp = bookshelf_list_language(lang)
             dumpjs(temp, f"bookshelves_lang_{lang}.js")
 
         logger.info("\t\tDumping bookshelves.js")
@@ -1138,10 +1159,13 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
         # by language
         for _lang_name, lang, _lang_count in avail_langs:
             logger.info(f"\t\tDumping auth_{author.gut_id}_by_lang_{lang}.js")
+
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
-                    for book in books.where(Book.language == lang)
+                    for book in Book.select()
+                    .join(BookLanguage)
+                    .where(BookLanguage.language_code == lang)
                     .where(Book.author == author)
                     .order_by(Book.downloads.desc())
                 ],
@@ -1151,7 +1175,9 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
-                    for book in books.where(Book.language == lang)
+                    for book in Book.select()
+                    .join(BookLanguage)
+                    .where(BookLanguage.language_code == lang)
                     .where(Book.author == author)
                     .order_by(Book.title.asc())
                 ],
