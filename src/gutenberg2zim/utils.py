@@ -11,8 +11,8 @@ import requests
 import six
 from zimscraperlib.download import save_large_file
 
-from gutenberg2zim.constants import logger
-from gutenberg2zim.database import Book
+from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, logger
+from gutenberg2zim.database import Book, BookLanguage
 from gutenberg2zim.iso639 import language_name
 
 UTF8 = "utf-8"
@@ -41,9 +41,10 @@ def fname_for(book: Book, book_format: str) -> str:
 
 def get_etag_from_url(url: str) -> str | None:
     try:
-        response_headers = requests.head(  # noqa: S113
-            url=url, allow_redirects=True
+        response_headers = requests.head(
+            url=url, allow_redirects=True, timeout=DEFAULT_HTTP_TIMEOUT
         ).headers
+
     except Exception as e:
         logger.error(url + " > Problem while head request\n" + str(e) + "\n")
         return None
@@ -108,17 +109,21 @@ def get_list_of_filtered_books(languages, formats, only_books):
         qs = qs.where(Book.book_id << only_books)
 
     if len(languages) and languages[0] != "mul":
-        qs = qs.where(Book.language << languages)
+        qs = qs.join(BookLanguage).where(BookLanguage.language_code << languages)
 
+    qs = qs.group_by(Book.book_id)
     return qs
 
 
 def get_langs_with_count(books):
     lang_count = {}
+
     for book in books:
-        if book.language not in lang_count:
-            lang_count[book.language] = 0
-        lang_count[book.language] += 1
+        for lang in book.languages:
+            code = lang.language_code
+            if code not in lang_count:
+                lang_count[code] = 0
+            lang_count[code] += 1
 
     return [
         (language_name(lang), lang, nb)

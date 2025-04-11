@@ -5,7 +5,7 @@ from kiwixstorage import KiwixStorage
 from peewee import fn
 
 from gutenberg2zim.constants import logger
-from gutenberg2zim.database import Book
+from gutenberg2zim.database import BookLanguage
 from gutenberg2zim.export import export_all_books
 from gutenberg2zim.iso639 import ISO_MATRIX
 from gutenberg2zim.l10n import metadata_translations
@@ -34,11 +34,11 @@ def build_zimfile(
     add_bookshelves: bool,
 ) -> None:
     # actual list of languages with books sorted by most used
-    nb = fn.COUNT(Book.language).alias("nb")
+    nb = fn.COUNT(BookLanguage.book).alias("nb")
     db_languages = [
-        book.language
-        for book in Book.select(Book.language, nb)
-        .group_by(Book.language)
+        lang.language_code
+        for lang in BookLanguage.select(BookLanguage.language_code, nb)
+        .group_by(BookLanguage.language_code)
         .order_by(nb.desc())
     ]
 

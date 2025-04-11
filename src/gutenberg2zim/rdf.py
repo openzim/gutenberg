@@ -7,7 +7,7 @@ import peewee
 from bs4 import BeautifulSoup
 
 from gutenberg2zim.constants import logger
-from gutenberg2zim.database import Author, Book, License
+from gutenberg2zim.database import Author, Book, BookLanguage, License
 from gutenberg2zim.utils import (
     download_file,
     normalize,
@@ -156,9 +156,11 @@ class RdfParser:
         self.death_year = get_formatted_number(self.death_year)
 
         # ISO 639-3 language codes that consist of 2 or 3 letters
-        self.language = (
-            soup.find("dcterms:language").find("rdf:value").text  # type: ignore
-        )
+        self.languages = [
+            node.find("rdf:value").text  # type: ignore
+            for node in soup.find_all("dcterms:language")
+            if node.find("rdf:value") is not None  # type: ignore
+        ]
 
         # The download count of the books on www.gutenberg.org.
         # This will be used to determine the popularity of the book.
@@ -180,7 +182,7 @@ class RdfParser:
         return self
 
 
-def save_rdf_in_database(parser: RdfParser) -> None:
+def get_or_create_author(parser: RdfParser) -> Author:
     # Insert author, if it not exists
     if parser.author_id:
         try:
@@ -210,15 +212,21 @@ def save_rdf_in_database(parser: RdfParser) -> None:
     else:
         # No author, set Anonymous
         author_record = Author.get(gut_id="216")
+    return author_record
 
+
+def get_license(parser: RdfParser) -> License | None:
     # Get license
     try:
-        license_record = License.get(name=parser.license)
+        return License.get(name=parser.license)
     except Exception:
-        license_record = None
+        return None
 
+
+def get_or_create_book(
+    parser: RdfParser, author: Author, license_record: License | None
+) -> Book:
     # Insert book
-
     try:
         book_record = Book.get(book_id=parser.gid)
     except peewee.DoesNotExist:
@@ -226,9 +234,8 @@ def save_rdf_in_database(parser: RdfParser) -> None:
             book_id=parser.gid,
             title=normalize(parser.title.strip()),
             subtitle=normalize(parser.subtitle.strip()),
-            author=author_record,  # foreign key
+            author=author,  # foreign key
             book_license=license_record,  # foreign key
-            language=parser.language.strip(),
             downloads=parser.downloads,
             bookshelf=parser.bookshelf,
             cover_page=parser.cover_image,
@@ -236,11 +243,30 @@ def save_rdf_in_database(parser: RdfParser) -> None:
     else:
         book_record.title = normalize(parser.title.strip())
         book_record.subtitle = normalize(parser.subtitle.strip())
-        book_record.author = author_record  # foreign key
-        book_record.license = license_record  # foreign key
-        book_record.language = parser.language.strip()
+        book_record.author = author  # foreign key
+        book_record.book_license = license_record  # foreign key
         book_record.downloads = parser.downloads
         book_record.save()
+    return book_record
+
+
+def update_book_languages(book: Book, languages: list[str]) -> None:
+    if not languages:
+        return
+    try:
+        # delete old language records
+        BookLanguage.delete().where(BookLanguage.book == book).execute()
+        for lang in languages:
+            BookLanguage.create(book=book, language_code=lang.strip())
+    except Exception as e:
+        logger.warning(f"Failed to update languages for book {book.book_id}: {e}")
+
+
+def save_rdf_in_database(parser: RdfParser) -> None:
+    author_record = get_or_create_author(parser)
+    license_record = get_license(parser)
+    book_record = get_or_create_book(parser, author_record, license_record)
+    update_book_languages(book_record, parser.languages)
 
 
 def get_formatted_number(num: str | None) -> str | None:

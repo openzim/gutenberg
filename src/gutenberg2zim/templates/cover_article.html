@@ -22,8 +22,16 @@
 
             <div class="cover-detail language">
                 <p class="label" data-l10n-id="language">Language</p>
-                <p class="label-value"{{ translate_language}}>{{ book.language|language_name|title }}</p>
+                <p class="label-value">
+                    {% for code in book_languages %}
+                        <span data-l10n-id="language-{{ code|lower }}">{{ code|language_name|title }}</span>{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
             </div>
+
+
+
+
 
             <div class="cover-detail license">
                 <p class="label" data-l10n-id="license">License</p>

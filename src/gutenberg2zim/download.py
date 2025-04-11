@@ -9,7 +9,7 @@ import backoff
 import requests
 from kiwixstorage import KiwixStorage
 
-from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
+from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, TMP_FOLDER_PATH, logger
 from gutenberg2zim.database import Book
 from gutenberg2zim.export import fname_for, get_list_of_filtered_books
 from gutenberg2zim.pg_archive_urls import url_for_type
@@ -36,7 +36,7 @@ DL_CHUNCK_SIZE = 8192
 
 def resource_exists(url):
     try:
-        r = requests.get(url, stream=True, timeout=20)  # in seconds
+        r = requests.get(url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT)  # in seconds
         return r.status_code == requests.codes.ok
     except Exception as exc:
         logger.error(f"Exception occurred while testing {url}\n {exc}")
@@ -177,7 +177,9 @@ def download_book(
                     f"Unsupported {pg_type} pg_type for {book_format} #{book.book_id}"
                 )
 
-            pg_resp = requests.get(url, stream=True, timeout=20)  # in seconds
+            pg_resp = requests.get(
+                url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT
+            )  # in seconds
 
             if pg_resp.status_code == requests.codes.ok:
                 pg_type_to_use = pg_type

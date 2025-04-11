@@ -28,3 +28,5 @@ TMP_FOLDER_PATH = pathlib.Path(TMP_FOLDER).resolve()
 FAVICON_PATH = ROOT_DIR / "templates" / "favicon.png"
 with open(FAVICON_PATH, "rb") as f:
     FAVICON_BYTES = f.read()
+
+DEFAULT_HTTP_TIMEOUT = 10

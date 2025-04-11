@@ -219,12 +219,13 @@ def main():
         logger.info("Finished downloading all books.")
 
     if one_lang_one_zim_folder:
-        if languages == []:
-            zims = []
-            from gutenberg2zim.database import Book
+        from gutenberg2zim.database import BookLanguage
 
-            for book in Book.select(Book.language).distinct():
-                zims.append([book.language])
+        if languages == []:
+            zims = [
+                [lang.language_code]
+                for lang in BookLanguage.select(BookLanguage.language_code).distinct()
+            ]
             zims.append([])
         else:
             zims = [[lang] for lang in languages] + [languages]
