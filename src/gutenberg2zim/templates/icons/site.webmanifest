@@ -1,0 +1,21 @@
+{
+  "name": "Project Gutenberg",
+  "short_name": "Gutenburg",
+  "icons": [
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#dadada",
+  "background_color": "#d0d0d0",
+  "display": "standalone"
+}

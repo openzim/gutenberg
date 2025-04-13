@@ -120,7 +120,7 @@ def export_skeleton(
     rendered = jinja_env.get_template("js/l10n.js").render(**context)
     Global.add_item_for(
         path="js/l10n.js",
-        content=rendered,  # type: ignore
+        content=rendered,
         mimetype="text/javascript",
         is_front=True,
     )
@@ -155,7 +155,7 @@ def export_skeleton(
     rendered = template.render(**context)
     Global.add_item_for(
         path=tpl_path,
-        content=rendered,  # type: ignore
+        content=rendered,
         mimetype="text/html",
         is_front=True,
     )
@@ -540,7 +540,7 @@ def save_author_file(author, books, project_id):
     logger.debug(f"\t\tSaving author file {author.name()} (ID {author})")
     Global.add_item_for(
         path=f"{author.fname()}.html",
-        content=author_html_content_for(author, books, project_id),  # type: ignore
+        content=author_html_content_for(author, books, project_id),
         mimetype="text/html",
         is_front=True,
     )
@@ -953,7 +953,7 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
     def dumpjs(col, fn, var="json_data"):
         Global.add_item_for(
             path=fn,
-            content=f"var {var} = {json.dumps(col)};",  # type: ignore
+            content=f"var {var} = {json.dumps(col)};",
             mimetype="text/javascript",
             is_front=False,
         )
@@ -1103,7 +1103,7 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
         rendered = template.render(**context)
         Global.add_item_for(
             path="bookshelf_home.html",
-            content=rendered,  # type: ignore
+            content=rendered,
             mimetype="text/html",
             is_front=False,
         )
@@ -1125,7 +1125,7 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
             rendered = template.render(**context)
             Global.add_item_for(
                 path=f"{bookshelf}.html",
-                content=rendered,  # type: ignore
+                content=rendered,
                 mimetype="text/html",
                 is_front=False,
             )

@@ -25,6 +25,7 @@ as of 2.0.0.
 - Update to Python3.13
 - Update python-scraperlib to 5.1.1 and dependencies (#188)
 - Rename Book DB table fields (#199)
+- Update multi-resolution favicons (#165)
 
 
 ### Fixed
