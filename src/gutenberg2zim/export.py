@@ -707,9 +707,8 @@ def handle_unoptimized_files(
                     if pattern in tag.text:
                         s = tag.parent.parent
                         s.decompose()
-                        for s in s.next_siblings:  # noqa: B020
-                            s.decompose()
-                        s.next_sibling  # noqa: B018
+                        for sibling in s.next_siblings:
+                            sibling.decompose()
 
                 save_bs_output(soup, fnp, UTF8)
 
