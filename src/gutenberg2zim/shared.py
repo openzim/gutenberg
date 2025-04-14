@@ -81,7 +81,7 @@ class Global:
         path: str,
         title: str | None = None,
         fpath: pathlib.Path | None = None,
-        content: bytes | None = None,
+        content: str | None = None,
         mimetype: str | None = None,
         is_front: bool | None = None,
         should_compress: bool | None = None,
