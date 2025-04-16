@@ -191,6 +191,7 @@ def export_all_books(
     # export to JSON helpers
     export_to_json_helpers(
         books=books,
+        languages=languages,
         formats=formats,
         project_id=project_id,
         add_bookshelves=add_bookshelves,
@@ -949,7 +950,7 @@ def bookshelf_list_language(lang):
     ]
 
 
-def export_to_json_helpers(books, formats, project_id, add_bookshelves):
+def export_to_json_helpers(books, languages, formats, project_id, add_bookshelves):
     def dumpjs(col, fn, var="json_data"):
         Global.add_item_for(
             path=fn,
@@ -978,7 +979,7 @@ def export_to_json_helpers(books, formats, project_id, add_bookshelves):
         "full_by_title.js",
     )
 
-    avail_langs = get_langs_with_count(books=books)
+    avail_langs = get_langs_with_count(books, languages)
     all_filtered_authors = []
 
     # language-specific collections
