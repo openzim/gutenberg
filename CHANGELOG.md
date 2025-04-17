@@ -34,6 +34,7 @@ as of 2.0.0.
 ### Fixed
 
 - Simplify the logger named (used `gutenberg2zim` instead of `gutenberg2zim.constants`) (#206)
+- Add retry logic on book downloads (#254)
 
 
 ## [2.1.1] - 2024-01-17
