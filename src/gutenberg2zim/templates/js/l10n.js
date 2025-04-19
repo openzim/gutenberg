@@ -1186,6 +1186,12 @@ document.webL10n = (function(window, document, undefined) {
       return (rtlList.indexOf(gLanguage) >= 0) ? 'rtl' : 'ltr';
     },
 
+    // set the page direction (ltr|rtl) based on current language
+    setDirection: function() {
+      var isRTL = this.getDirection() === 'rtl';
+      document.body.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+    },
+
     // translate an element or document fragment
     translate: translateFragment,
 

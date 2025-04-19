@@ -115,12 +115,15 @@ def get_list_of_filtered_books(languages, formats, only_books):
     return qs
 
 
-def get_langs_with_count(books):
+def get_langs_with_count(books, languages=None):
     lang_count = {}
 
     for book in books:
         for lang in book.languages:
             code = lang.language_code
+            # if not appear in user request languages list, skip counting
+            if languages and code not in languages:
+                continue
             if code not in lang_count:
                 lang_count[code] = 0
             lang_count[code] += 1
