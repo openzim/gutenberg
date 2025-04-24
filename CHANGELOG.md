@@ -14,6 +14,8 @@ as of 2.0.0.
 - Add support for `-L` long_description flags
 - Add request timeout for util.py (#197)
 - Add Booklanguage DB to support multi-languages books (#218)
+- Add RTL support to UI (#248)
+- Add language filter to combobox for requested languages (#249)
 
 ### Changed
 
@@ -28,9 +30,11 @@ as of 2.0.0.
 - Update multi-resolution favicons (#165)
 
 
+
 ### Fixed
 
 - Simplify the logger named (used `gutenberg2zim` instead of `gutenberg2zim.constants`) (#206)
+
 
 ## [2.1.1] - 2024-01-17
 
