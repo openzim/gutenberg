@@ -1,6 +1,8 @@
 import shutil
 import tempfile
 import zipfile
+from functools import partial
+from http import HTTPStatus
 from multiprocessing.dummy import Pool
 from pathlib import Path
 
@@ -320,6 +322,30 @@ def download_all_books(
             "{kwargs} due to apsw.BusyError".format(**details)
         )
 
+    def backoff_request_error_hdlr(details):
+        logger.warning(
+            "Backing off {wait:0.1f} seconds after {tries} tries "
+            "calling function {target} with args {args} and kwargs "
+            "{kwargs} due to requests error".format(**details)
+        )
+
+    def fatal_code(e):
+        """Give up on errors codes 400-499 except 429"""
+        logger.warning(f"Fatal code {e.response.status_code}")
+        return (
+            HTTPStatus.BAD_REQUEST
+            <= e.response.status_code
+            < HTTPStatus.INTERNAL_SERVER_ERROR
+            and e.response.status_code != HTTPStatus.TOO_MANY_REQUESTS
+        )
+
+    @backoff.on_exception(
+        partial(backoff.expo, base=3, factor=2),
+        requests.exceptions.RequestException,
+        max_time=30,  # secs
+        on_backoff=backoff_request_error_hdlr,
+        giveup=fatal_code,
+    )
     @backoff.on_exception(
         backoff.constant,
         apsw.BusyError,
