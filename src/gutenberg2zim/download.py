@@ -331,13 +331,18 @@ def download_all_books(
 
     def fatal_code(e):
         """Give up on errors codes 400-499 except 429"""
-        logger.warning(f"Fatal code {e.response.status_code}")
-        return (
+        if isinstance(e, requests.HTTPError) and (
             HTTPStatus.BAD_REQUEST
             <= e.response.status_code
             < HTTPStatus.INTERNAL_SERVER_ERROR
             and e.response.status_code != HTTPStatus.TOO_MANY_REQUESTS
-        )
+        ):
+            logger.warning(
+                f"{e.request.url} returned a non-retryable HTTP error code "
+                f"{e.response.status_code}"
+            )
+            return True
+        return False
 
     @backoff.on_exception(
         partial(backoff.expo, base=3, factor=2),
