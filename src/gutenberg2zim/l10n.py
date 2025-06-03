@@ -646,9 +646,8 @@ metadata_translations = {
     },
     "gla": {
         "title": "Leabharlann Pròiseact Gutenberg",
-        "description": "A h-uile leabhar ann an Gàidhlig "
-        "na h-Alba bhon chiad neach-dèanaidh "
-        "leabhraichean-d saor an asgaidh",
+        "description": "A h-uile leabhar sa Bheurla bho a` chiad neach a rinn "
+        "leabhraichean-d an-asgaidh",
     },
     "gle": {
         "title": "Leabharlann Tionscadal Gutenberg",
@@ -704,15 +703,12 @@ metadata_translations = {
     },
     "mri": {
         "title": "Te Pātaka Pukapuka a Project Gutenberg",
-        "description": "Ngā pukapuka katoa i te "
-        "reo Māori nō te kaihanga tuatahi o ngā "
-        "pukapuka matihiko kore utu",
+        "description": "Ngā pukapuka i te Reo Pākehā nā te kaihanga tuatahi o ngā kore "
+        "utu",
     },
     "myn": {
         "title": "Cholnajil Project Gutenberg",
-        "description": "Na'atik k'uj cha'ajil "
-        "tzijob'al Mayaj a ruwäch q'ij chi k'ax "
-        "tzij e-book cha'ajil",
+        "description": "Pob llyfr yn Saxoneg gan gynhyrchydd cyntaf llyfrau rhad",
     },
     "nah": {
         "title": "Amoxcalli Project Gutenberg",
@@ -759,8 +755,7 @@ metadata_translations = {
     },
     "ron": {
         "title": "Biblioteca Proiect Gutenberg",
-        "description": "Toate cărțile în limba română de "
-        "la primul producător de cărți "
+        "description": "Toate cărțile în română de la primul producător de cărți "
         "electronice gratuite",
     },
     "rus": {
@@ -780,8 +775,7 @@ metadata_translations = {
     },
     "spa": {
         "title": "Biblioteca Proyecto Gutenberg",
-        "description": "Todos los libros en español del "
-        "primer productor de libros "
+        "description": "Los libros en español del primer productor de libros "
         "electrónicos gratuitos",
     },
     "srp": {
