@@ -72,7 +72,6 @@ You can find the full arguments list below:
 --dlc=<nb>                      Number of concurrent *download* process for download (overwrites --concurrency). if server blocks high rate requests
 -m --one-language-one-zim=<folder> When more than 1 language, do one zim for each   language (and one with all)
 --no-index                      Do NOT create full-text index within ZIM file
---check                         Check dependencies
 --prepare                       Download rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
@@ -105,38 +104,38 @@ The setup is divided into two categories: one for simply running the scraper and
 
 ### GNU/Linux
 ```
-sudo apt update && sudo apt install -y python3-pip p7zip-full zip zim-tools curl jpegoptim pngquant
+sudo apt update && sudo apt install -y python3-pip zim-tools
 ```
 ### Fedora
 ```
-sudo dnf install -y python3-pip jpegoptim pngquant p7zip curl zip zim-tools
+sudo dnf install -y python3-pip zim-tools
 ```
 ### Arch linux
 ```
-sudo pacman -S python-pip libxml2 jpegoptim pngquant p7zip curl zip zim-tools
+sudo pacman -S python-pip zim-tools
 ```
 #### macOS
 ```
-brew install jpegoptim pngquant p7zip curl zip zim-tools
+brew install zim-tools
 ```
 **For Developers Contributing & Modifying**;
 
 #### GNU/Linux
 
 ```
-sudo apt update && sudo apt install -y python3-pip libxml2-dev libxslt-dev jpegoptim pngquant p7zip-full curl zip zim-tools
+sudo apt update && sudo apt install -y python3-pip zim-tools
 ```
 ### Fedora
 ```
-sudo dnf install -y python3-pip libxml2-devel libxslt-devel jpegoptim pngquant p7zip curl zip zim-tools
+sudo dnf install -y python3-pip zim-tools
 ```
 ### Arch linux
 ```
-sudo pacman -S python-pip libxml2 libxslt jpegoptim pngquant p7zip curl zip zim-tools
+sudo pacman -S python-pip zim-tools
 ```
 #### macOS
 ```
-brew install libxml2 libxslt jpegoptim pngquant p7zip curl zip zim-tools
+brew install zim-tools
 ```
 
 

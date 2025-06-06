@@ -13,6 +13,7 @@ from jinja2 import Environment, PackageLoader
 from kiwixstorage import KiwixStorage
 from schedule import every
 from six import text_type
+from zimscraperlib.image import optimize_image as scraperlib_optimize_image
 
 import gutenberg2zim
 from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
@@ -27,7 +28,6 @@ from gutenberg2zim.utils import (
     article_name_for,
     book_name_for_fs,
     critical_error,
-    exec_cmd,
     fname_for,
     get_lang_groups,
     get_langs_with_count,
@@ -647,26 +647,8 @@ def handle_unoptimized_files(
         if dst.exists() and not force:
             logger.info(f"\tSkipping image optimization for {dst}")
             return dst
-        logger.info(f"\tOptimizing image {dst}")
-        if src.suffix == ".png":
-            return optimize_png(str(src.resolve()), str(dst.resolve()))
-        if src.suffix in (".jpg", ".jpeg"):
-            return optimize_jpeg(str(src.resolve()), str(dst.resolve()))
-        if src.suffix == ".gif":
-            return optimize_gif(str(src.resolve()), str(dst.resolve()))
-        return dst
-
-    def optimize_gif(src, dst):
-        exec_cmd(["gifsicle", "-O3", src, "-o", dst])
-
-    def optimize_png(src, dst):
-        exec_cmd(["pngquant", "--nofs", "--force", "--output", dst, src])
-        exec_cmd(["advdef", "-z", "-4", "-i", "5", dst])
-
-    def optimize_jpeg(src, dst):
-        if src != dst:
-            copy_file(src, dst)
-        exec_cmd(["jpegoptim", "--strip-all", "-m50", dst])
+        logger.info(f"\tOptimizing image {src} to {dst}")
+        scraperlib_optimize_image(src, dst)
 
     def optimize_epub(src, dst):
         logger.info(f"\t\tCreating ePUB off {src} at {dst}")

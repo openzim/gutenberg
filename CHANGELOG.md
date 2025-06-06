@@ -34,6 +34,7 @@ as of 2.0.0.
 - Simplify the logger named (used `gutenberg2zim` instead of `gutenberg2zim.constants`) (#206)
 - Add retry logic on book downloads (#254)
 - Fix UI and navigation glitches on bookshelves (#262)
+- Remove dependencies on binaries + buggy pngquant (#257)
 
 ## [2.1.1] - 2024-01-17
 

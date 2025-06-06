@@ -1,11 +1,9 @@
 import logging
-import sys
 from pathlib import Path
 
 from docopt import docopt
 from zimscraperlib.inputs import compute_descriptions
 
-from gutenberg2zim.checkdeps import check_dependencies
 from gutenberg2zim.constants import TMP_FOLDER_PATH, VERSION, logger
 from gutenberg2zim.database import setup_database
 from gutenberg2zim.download import download_all_books
@@ -54,7 +52,6 @@ help_info = (
 -m --one-language-one-zim=<folder> When more than 1 language, do one zim for each """
     """language (and one with all)
 --no-index                      Do NOT create full-text index within ZIM file
---check                         Check dependencies
 --prepare                       Download rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
 --download                      Download ebooks based on filters
@@ -86,7 +83,6 @@ def main():
     do_parse = arguments.get("--parse", False)
     do_download = arguments.get("--download", False)
     do_zim = arguments.get("--zim", False)
-    do_checkdeps = arguments.get("--check", False)
     one_lang_one_zim_folder = arguments.get("--one-language-one-zim") or None
     complete_dump = arguments.get("--complete", False)
 
@@ -179,13 +175,7 @@ def main():
         complete_dump = True
 
     if complete_dump:
-        do_checkdeps = do_prepare = do_parse = do_download = do_zim = True
-
-    if do_checkdeps:
-        logger.info("CHECKING for dependencies on the system")
-        if not check_dependencies()[0]:
-            logger.error("Exiting...")
-            sys.exit(1)
+        do_prepare = do_parse = do_download = do_zim = True
 
     rdf_path = get_rdf_fpath()
 

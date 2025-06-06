@@ -9,9 +9,8 @@ from pathlib import Path
 import chardet
 import requests
 import six
-from zimscraperlib.download import save_large_file
 
-from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, logger
+from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, DL_CHUNCK_SIZE, logger
 from gutenberg2zim.database import Book, BookLanguage
 from gutenberg2zim.iso639 import language_name
 
@@ -82,7 +81,14 @@ def exec_cmd(cmd):
 def download_file(url: str, fpath: Path) -> bool:
     fpath.parent.mkdir(parents=True, exist_ok=True)
     try:
-        save_large_file(url, fpath)
+        resp = requests.get(
+            url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT
+        )  # in seconds
+        resp.raise_for_status()
+        with open(fpath, "wb") as fh:
+            for chunk in resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
+                if chunk:
+                    fh.write(chunk)
         return True
     except Exception as exc:
         logger.error(f"Error while downloading from {url}: {exc}")

@@ -115,6 +115,8 @@ target-version = ['py313']
 target-version = "py313"
 line-length = 88
 src = ["src"]
+
+[tool.ruff.lint]
 select = [
   "A", # flake8-builtins
   # "ANN",  # flake8-annotations
