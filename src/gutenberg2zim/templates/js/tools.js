@@ -830,9 +830,9 @@ function showBookshelfSearchResults(value) {
     });
 
     $('#bookShelfTable tbody').on('click', 'tr', function() {
-      let data = $('span', this)[0].innerHTML;
+      let data = encodeURI($('span', this)[0].innerHTML);
       console.log(data);
-      $(location).attr('href', data + '.html');
+      $(location).attr('href', './' + data + '.html');
 
     });
     $("#bookShelfTable_previous").attr("data-l10n-id", "table-previous");
