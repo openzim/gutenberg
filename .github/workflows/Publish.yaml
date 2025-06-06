@@ -6,15 +6,15 @@ on:
 
 jobs:
   publish:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       id-token: write  # mandatory for PyPI trusted publishing
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version-file: pyproject.toml
           architecture: x64
@@ -25,7 +25,7 @@ jobs:
           python -m build --sdist --wheel
 
       - name: Upload to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1.8
+        uses: pypa/gh-action-pypi-publish@release/v1.9
 
       - name: Build and push Docker image
         uses: openzim/docker-publish-action@v10

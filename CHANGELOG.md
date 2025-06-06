@@ -8,7 +8,7 @@ as of 2.0.0.
 
 ## [Unreleased]
 
-### Added
+### Added
 
 - Add support for `--debug` flag to output debug logs
 - Add support for `-L` long_description flags
