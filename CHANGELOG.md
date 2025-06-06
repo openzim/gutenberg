@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 as of 2.0.0.
 
-## [Unreleased]
+## [2.2.0] - 2025-06-06
 
 ### Added
 
@@ -19,7 +19,9 @@ as of 2.0.0.
 
 ### Changed
 
-- Insert as few rsync URLs as possible in DB when a book selection is made (#220)
+- Simplify Gutenberg scraping (no more rsync, no more fallback URLs / filenames) (#97)
+- Prefer EPUB 3 to EPUB (#235)
+- Do not force the presence of PDF format for all books (#160)
 - Replace usage of os.path and path.py with pathlib.Path (#195)
 - Finalize ZIM metadata title translations and multilingual detection (#229)
 - Replaced magic number with named constant and clarified comment regarding book ID URL rules (#196)
@@ -31,7 +33,8 @@ as of 2.0.0.
 
 ### Fixed
 
-- Simplify the logger named (used `gutenberg2zim` instead of `gutenberg2zim.constants`) (#206)
+- Fix regression on missing HTML content (#219)
+- Simplify the logger name (used `gutenberg2zim` instead of `gutenberg2zim.constants`) (#206)
 - Add retry logic on book downloads (#254)
 - Fix UI and navigation glitches on bookshelves (#262)
 - Remove dependencies on binaries + buggy pngquant (#257)
