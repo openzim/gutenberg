@@ -29,13 +29,11 @@ as of 2.0.0.
 - Rename Book DB table fields (#199)
 - Update multi-resolution favicons (#165)
 
-
-
 ### Fixed
 
 - Simplify the logger named (used `gutenberg2zim` instead of `gutenberg2zim.constants`) (#206)
 - Add retry logic on book downloads (#254)
-
+- Fix UI and navigation glitches on bookshelves (#262)
 
 ## [2.1.1] - 2024-01-17
 

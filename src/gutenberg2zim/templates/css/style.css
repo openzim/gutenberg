@@ -182,9 +182,7 @@ tr td.table-icons:hover {
 
 .book-item {
     display: flex;
-    align-items: flex-start;
-
-  }
+}
 
 .book-item > .pure-g {
     flex: 1;
