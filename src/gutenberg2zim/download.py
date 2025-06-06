@@ -11,7 +11,12 @@ import backoff
 import requests
 from kiwixstorage import KiwixStorage
 
-from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, TMP_FOLDER_PATH, logger
+from gutenberg2zim.constants import (
+    DEFAULT_HTTP_TIMEOUT,
+    DL_CHUNCK_SIZE,
+    TMP_FOLDER_PATH,
+    logger,
+)
 from gutenberg2zim.database import Book
 from gutenberg2zim.export import fname_for, get_list_of_filtered_books
 from gutenberg2zim.pg_archive_urls import url_for_type
@@ -32,8 +37,6 @@ PG_PREFERRED_TYPES = {
 }
 
 IMAGE_BASE = "http://aleph.pglaf.org/cache/epub/"
-
-DL_CHUNCK_SIZE = 8192
 
 
 def resource_exists(url):

@@ -3,17 +3,7 @@ FROM python:3.13.2-bookworm
 # Install necessary packages
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-      advancecomp \
-      libxml2-dev \
-      libxslt-dev \
-      python3-pillow \
-      libjpeg-dev \
-      libpng-dev \
-      libmagic1 \
       locales \
-      jpegoptim \
-      pngquant \
-      gifsicle \
  && rm -rf /var/lib/apt/lists/* \
  && python -m pip install --no-cache-dir -U \
       pip \

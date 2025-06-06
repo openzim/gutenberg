@@ -17,23 +17,23 @@ Ubuntu/Debian for scraper only
 -------------
 
  .. code-block:: sh
-	sudo apt update && sudo apt install -y python3-pip p7zip-full zip zim-tools curl jpegoptim pngquant
+	sudo apt update && sudo apt install -y python3-pip zim-tools
 
 Fedora for scraper
 ------
 .. code-block:: sh
-	sudo dnf install -y python3-pip jpegoptim pngquant p7zip curl zip zim-tools
+	sudo dnf install -y python3-pip zim-tools
 
 Arch Linux
 ----------
 .. code-block:: sh
-	sudo pacman -S python-pip libxml2 jpegoptim pngquant p7zip curl zip zim-tools
+	sudo pacman -S python-pip zim-tools
 macOS
 -----
 
 .. code-block:: sh
 
-    brew install advancecomp jpegoptim pngquant p7zip gifsicle
+    brew install zim-tools
 
 ------
 
@@ -43,26 +43,26 @@ Ubuntu
 -------------
 .. code-block:: sh
 
-    sudo apt update && sudo apt install -y python3-pip libxml2-dev libxslt-dev jpegoptim pngquant p7zip-full curl zip zim-tools
+    sudo apt update && sudo apt install -y python3-pip zim-tools
 
 Fedora
 ------
 .. code-block:: sh
 
-    sudo dnf install -y python3-pip libxml2-devel libxslt-devel jpegoptim pngquant p7zip curl zip zim-tools
+    sudo dnf install -y python3-pip zim-tools
 
 Arch Linux
 ----------
 .. code-block:: sh
 
-    sudo pacman -Syu python-pip libxml2 libxslt jpegoptim pngquant p7zip curl zip zim-tools
+    sudo pacman -Syu python-pip zim-tools
 
 macOS
 -----
 
 .. code-block:: sh
 
-    brew install  libxml2 libxslt advancecomp jpegoptim pngquant p7zip gifsicle
+    brew install zim-tools
 
 ------
 Usage
@@ -94,7 +94,6 @@ By default (no argument), it runs all the steps: download, parse, export and zim
 	-c --concurrency=<nb>           Number of concurrent process for download and parsing tasks
 	-x --zim-title=<title>          Custom title for the ZIM file
 	-q --zim-desc=<desc>            Custom description for the ZIM file
-	--check                         Check dependencies
 	--prepare                       Download & extract rdf-files.tar.bz2
 	--parse                         Parse all RDF files and fill-up the DB
 	--download                      Download ebooks based on filters
