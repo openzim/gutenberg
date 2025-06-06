@@ -435,7 +435,7 @@ function showBookshelf(bookshelfURL) {
                   '<span class="table-author">' + full[1] + '</span>';
                 infoContainer = '<div class="pure-u-7-8">' + title + '<br>' + author + '</div>';
                 innerGrid = '<div class="pure-g">' + img + infoContainer + '</div>';
-                return div + '<div>' + innerGrid + '</div';
+                return '<div class="book-item">' + div + '<div>' + innerGrid + '</div></div>';
               }
             },
             {
@@ -811,9 +811,9 @@ function showBookshelfSearchResults(value) {
       }
 
       if (bookshelves_json_data[i].match(pattern)) {
-        table += '<tr  ><td><div class="list-stripe"></div><div class = "pure-g"><div class = "pure-u-7-8"> <span class="table-title">' +
+        table += '<tr  ><td><div class="book-item"><div class="list-stripe"></div><div class = "pure-g"><div class = "pure-u-7-8"> <span class="table-title">' +
           bookshelves_json_data[i] +
-          '</span></div></div></td></tr>';
+          '</span></div></div></div></td></tr>';
       }
     }
     table += "</tbody></table>";
