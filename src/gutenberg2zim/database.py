@@ -126,6 +126,7 @@ class Book(BaseModel):
     book_license = ForeignKeyField(License, related_name="books")
     downloads = IntegerField(default=0)
     bookshelf = CharField(max_length=500, null=True)
+    lcc = CharField(max_length=10, null=True)
     cover_page = IntegerField(default=0)
     popularity = 0
 

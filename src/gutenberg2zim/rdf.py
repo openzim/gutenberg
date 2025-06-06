@@ -94,6 +94,7 @@ class RdfParser:
         self.last_name = None
 
         self.bookshelf = None
+        self.lcc = None
         self.cover_image = 0
 
     def parse(self):
@@ -112,6 +113,13 @@ class RdfParser:
         self.bookshelf = soup.find("pgterms:bookshelf")
         if self.bookshelf:
             self.bookshelf = self.bookshelf.find("rdf:value").text  # type: ignore
+
+        # Parsing for the Library of Congress Classification
+        subjects = soup.find_all("dcterms:subject")
+        for subject in subjects:
+            member = subject.find("dcam:memberof")
+            if member and member.get("rdf:resource") == "http://purl.org/dc/terms/LCC":
+                self.lcc = subject.find("rdf:value").text
 
         # Search rdf to see if the image exists at the hard link
         # https://www.gutenberg.ord/cache/epub/id/pg{id}.cover.medium.jpg
@@ -238,6 +246,7 @@ def get_or_create_book(
             book_license=license_record,  # foreign key
             downloads=parser.downloads,
             bookshelf=parser.bookshelf,
+            lcc=parser.lcc,
             cover_page=parser.cover_image,
         )
     else:
