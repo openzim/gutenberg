@@ -1,3 +1,9 @@
+#zimui
+zimui/node_modules/
+zimui/dist/
+zimui/src/types
+zimui/src/dist
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -35,6 +41,7 @@ htmlcov/
 .tox/
 .coverage
 .cache
+.ruff_cache
 nosetests.xml
 coverage.xml
 
@@ -69,5 +76,4 @@ dl-cache
 tmp/
 *.zim
 .venv
-
-src/gutenberg2zim/templates/jquery/jquery-1.11.1.min.js
+*.wasm

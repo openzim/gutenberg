@@ -1,0 +1,5 @@
+src/assets
+dist
+public
+node_modules
+src/**/*.md

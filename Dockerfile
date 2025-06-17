@@ -1,3 +1,12 @@
+#build frontend
+FROM node:20-alpine AS zimui
+
+WORKDIR /src
+COPY zimui /src
+RUN yarn install --frozen-lockfile
+RUN yarn build
+
+# Backend base
 FROM python:3.13.2-bookworm
 
 # Install necessary packages
@@ -10,20 +19,23 @@ RUN apt-get update \
  && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
  && locale-gen "en_US.UTF-8"
 
+# Copy global files
+COPY README.md scraper/pyproject.toml /src/scraper/
+COPY README.md scraper/
+
 # Copy code + associated artifacts
-COPY src /src/src
-COPY pyproject.toml *.md *.rst get_js_deps.sh LICENSE *.py /src/
+COPY scraper/src /src/scraper/src
+
+
 
 # Install + cleanup
-RUN pip install --no-cache-dir /src \
- && rm -rf /src
+RUN pip install --no-cache-dir /src/scraper \
+ && rm -rf /src/scraper
 
-# default output directory
-RUN mkdir -p /output
+# Copy zimui build output
+COPY --from=zimui /src/dist /src/zimui
+
+ENV GUTENBURG_ZIMUI_DIST=/src/zimui
+
 WORKDIR /output
-
-ENV LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:en \
-    LC_ALL=en_US.UTF-8
-
 CMD ["gutenberg2zim", "--help"]
