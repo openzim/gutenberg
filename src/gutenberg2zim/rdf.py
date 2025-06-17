@@ -95,6 +95,7 @@ class RdfParser:
 
         self.bookshelf = None
         self.cover_image = 0
+        self.description = None
 
     def parse(self):
         soup = BeautifulSoup(self.rdf_data, "lxml")
@@ -179,6 +180,9 @@ class RdfParser:
                 v = x.find("rdf:value").text
                 self.file_types.update({k: v})
 
+        desc_node = soup.find("pgterms:marc520")
+        self.description = desc_node.text.strip() if desc_node else None
+
         return self
 
 
@@ -239,6 +243,7 @@ def get_or_create_book(
             downloads=parser.downloads,
             bookshelf=parser.bookshelf,
             cover_page=parser.cover_image,
+            description=normalize(parser.description or ""),
         )
     else:
         book_record.title = normalize(parser.title.strip())
@@ -246,6 +251,7 @@ def get_or_create_book(
         book_record.author = author  # foreign key
         book_record.book_license = license_record  # foreign key
         book_record.downloads = parser.downloads
+        book_record.description = normalize(parser.description or "")
         book_record.save()
     return book_record
 

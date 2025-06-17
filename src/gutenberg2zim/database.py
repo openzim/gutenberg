@@ -3,6 +3,7 @@ from peewee import (
     DoesNotExist,
     ForeignKeyField,
     IntegerField,
+    TextField,
     Model,
 )
 from playhouse.apsw_ext import APSWDatabase
@@ -128,6 +129,7 @@ class Book(BaseModel):
     bookshelf = CharField(max_length=500, null=True)
     cover_page = IntegerField(default=0)
     popularity = 0
+    description = TextField(null=True)
 
     html_etag = CharField(max_length=500, null=True)
     epub_etag = CharField(max_length=500, null=True)
