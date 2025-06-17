@@ -1,3 +1,9 @@
+#frontend
+frontend/node_modules/
+frontend/covers/
+frontend/dl-cache/
+frontend/vite.config.js
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

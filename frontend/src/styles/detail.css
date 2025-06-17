@@ -1,0 +1,113 @@
+/* This is for single book detail info page ->thinking about use tailwind css */
+
+/* General container */
+.book-detail {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f9f9f9;
+}
+
+/* Page+ right info section */
+.book-container {
+  display: flex;
+  gap: 2em;
+  max-width: 960px;
+  margin: 2em auto;
+  padding: 1em;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+
+.book-cover {
+  flex: 0 0 35%;     
+  width: 35%;        
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+/* Right Info: 4 lines + description */
+.details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+
+.book-title {
+  font-size: 1.8em;
+  font-weight: bold;
+  margin: 0;
+}
+
+
+.book-author {
+  margin: 0 0 0.5em;
+  font-size: 1em;
+  color: #333;
+}
+
+/* Language and lisence -> haven't test about long lisence performance */
+.book-meta {
+  display: flex;
+  align-items: center;
+  margin: 0 0 1em;
+  font-size: 0.95em;
+  color: #666;
+}
+
+.book-meta .sep {
+  margin: 0 0.5em;
+  color: #999;
+}
+
+
+/* Rating and download */
+.book-footer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+
+.book-rating {
+  font-size: 1.2em;
+  color: #AA873B;
+}
+
+
+.book-rating .empty {
+  color: #ccc;
+}
+
+
+.book-buttons {
+  margin-left: auto;
+  display: flex;
+  gap: 0.5em;
+}
+
+/* TODO: Could be better -> use standard tools */
+.book-buttons button {
+  padding: 0.5em 1em;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+
+.book-description {
+  margin-top: 1em;
+  padding-right: 0.5em;    
+  max-height: 200px;       
+  overflow-y: auto;        
+  line-height: 1.6;
+  color: #333;
+}
+
