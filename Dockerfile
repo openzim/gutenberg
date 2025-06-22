@@ -12,8 +12,8 @@ RUN apt-get update \
 
 # Copy code + associated artifacts
 COPY src /src/src
-COPY scraper/pyproject.toml *.md *.rst get_js_deps.sh LICENSE *.py /src/
-
+COPY scraper/ /src/
+COPY *.md *.rst LICENSE /src/
 # Install + cleanup
 RUN pip install --no-cache-dir /src \
  && rm -rf /src

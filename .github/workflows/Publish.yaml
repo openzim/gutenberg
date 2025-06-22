@@ -23,6 +23,7 @@ jobs:
         run: |
           pip install -U pip build
           python -m build --sdist --wheel
+        working-directory: scraper
 
       - name: Upload to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1.12

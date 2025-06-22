@@ -16,19 +16,23 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version-file: pyproject.toml
+          python-version-file: scraper/pyproject.toml
           architecture: x64
 
       - name: Install dependencies (and project)
         run: |
           pip install -U pip
           pip install -e .[lint,scripts,test,check]
+        working-directory: scraper
 
       - name: Check black formatting
         run: inv lint-black
+        working-directory: scraper
 
       - name: Check ruff
         run: inv lint-ruff
+        working-directory: scraper
 
       - name: Check pyright
         run: inv check-pyright
+        working-directory: scraper
