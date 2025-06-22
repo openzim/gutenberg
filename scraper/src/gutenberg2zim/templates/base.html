@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title {% if show_books %} data-l10n-id="top-title"{% endif %}>{% block title %}Project Gutenberg Library{% endblock %}</title>
+        <meta name="description" content="Project Gutenberg Ebooks." />
+        <meta name="show_books" content="{% if show_books %}true{% else %}false{% endif %}" />
+        <meta name="bookshelf_home" content="{% if bookshelf_home %}true{% else %}false{% endif %}" />
+        <meta name="bookshelf" content="{% if bookshelf is defined %}{{ bookshelf }}{% endif %}" />
+        <link rel="icon" type="image/png" href="icons/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="icons/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/svg+xml" href="icons/favicon.svg" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-title" content="Project Gutenberg" />
+        <link rel="manifest" href="icons/site.webmanifest" />
+        <link rel="stylesheet" href="css/pure-min.css" type="text/css" />
+        <link rel="stylesheet" href="css/grids-responsive-min.css" type="text/css" />
+        <link rel="stylesheet" href="css/pure-skin-gutenberg.css" type="text/css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="jquery-ui/jquery-ui.min.css" media="screen, projection" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="datatables/datatables.min.css" />
+        <link rel="stylesheet" href="css/style.css" type="text/css" />
+        <link rel="stylesheet" href="fonts/font-awesome/css/font-awesome.css" />
+        <script src="jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="jquery/jquery.cookie.js"></script>
+        <script type="text/javascript" src="jquery/jquery.persist.js"></script>
+        <script src="jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+        <script type="text/javascript" charset="utf8" src="datatables/datatables.min.js"></script>
+        <script type="application/l10n">{{ l10n_strings }}</script>
+        <script src="js/l10n.js" type="text/javascript"></script>
+        <script src="js/tools.js" type="text/javascript"></script>
+        <script src="languages.js" type="text/javascript"></script>
+        <script src="main_languages.js" type="text/javascript"></script>
+        <script src="other_languages.js" type="text/javascript"></script>
+    </head>
+
+<body class="pure-skin-gutenberg {%if bookshelf_home%}bookshelf_home{%endif%}  {%if individual_book_shelf%}individual_book_shelf{%endif%}  {% if not show_books %}cover{% else %}home{% endif %}">
+    <div id="spinner" class="spinner" style="display:none;" >
+        <img id="img-spinner" src="css/spinner.gif" alt="Loading" />
+    </div>
+    <input type="hidden" id="hide-precontent" />
+    <input type="hidden" id="page_record" name="page_record" />
+    <div class="l10nselector">
+        <select id="l10nselect" name="l10nselect" class="filter_ui" title="Interface language" data-l10n-id="ui-language-switcher" {% if ui_languages|length < 2 %}style="display:none;"{% endif %}>
+        {% for lang in ui_languages %}
+            <option value="{{ lang }}" label="{{ lang|language_name }}">{{ lang|language_name }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <header>
+        <div class="main_title">
+            <h1><a href="Home.html" data-l10n-id="top-title">Project Gutenberg Library</a></h1>
+            <h2><a href="Home.html" data-l10n-id="sub-title">The first producer of free ebooks</a></h2>
+        </div>
+
+        <div class="pure-form filter">
+        <div class="pure-g">
+            {% if languages|length > 1 %}
+            <div class="pure-u-1 pure-u-sm-1-5 pure-u-md-1-5 languages-filter">
+                <select id="language_filter" name="language_filter" data-l10n-id="choose-language" class="filter_ui pure-input" placeholder="Choose a language..."><option data-l10n-id="any-languages" value="" label="Any languages">Any languages</option></select>
+            </div>
+            <div class="pure-u-1 pure-u-md-1-5 pure-u-sm-1-5">
+            {% else %}
+            <div class="pure-u-1 pure-u-sm-2-5 pure-u-md-2-5">
+                <input type="hidden" id="language_filter" value="{{ languages[0][1] }}" />
+            {% endif %}
+                <section class="filter-container">
+                        {% if not no_filters %}
+                            {% if bookshelf_home %}
+                                <input type="text" name="bookshelf_filter" id="bookshelf_filter" data-l10n-id="bookshelf" placeholder="Bookshelf Search" class="pure-input-rounded clearable" />
+                            {% else %}
+                                <input type="text" name="author_filter" id="author_filter" data-l10n-id="author" placeholder="Author" class="pure-input-rounded clearable" />
+
+                                {% if title_search %}
+                                    <input type="text" name="title_filter" id="title_filter" data-l10n-id="title" placeholder="Search by title" class="pure-input-rounded clearable" />
+                                {% endif %}
+
+                            {% endif %}
+                        {% endif %}
+
+                        {% if add_bookshelves %}
+                            {% if individual_book_shelf or show_books %}
+                                <a class="nav-link" href="bookshelf_home.html" data-l10n-id="bookshelf_link">Browse by Bookshelf</a>
+                            {% else %}
+                                <a class="nav-link" href="Home.html" data-l10n-id="home_link"> Go Home</a>
+                            {% endif %}
+                        {% else %}
+                            {% if not show_books %}
+                                <a class="nav-link" href="Home.html" data-l10n-id="home_link"> Go Home</a>
+                            {% endif %}
+                        {% endif %}
+                </section>
+            </div>
+            {% if show_books %}
+            <div class="pure-u-1 pure-u-sm-3-5 pure-u-md-3-5 sort">
+		<input type="hidden" id="default-sort" name="default-sort" value="popularity" />
+                <i class="fa fa-heart fa-2x" title="Sort by popularity" id="popularity_sort" />&nbsp;</i>
+                <i class="fa fa-sort-alpha-asc fa-2x" title="Sort by title" id="alpha_sort" >&nbsp;</i>
+            </div>
+            {% endif %}
+        </div>
+        </div>
+
+    </header>
+
+    {% block precontent %}{% endblock %}
+    <div id="content" class="content">
+    {% block content %}
+    {% endblock %}
+    </div>
+</body>
+</html>

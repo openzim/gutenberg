@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }} (cover){% endblock %}
+{% block content %}
+    <h1>{{ book.title }}</h1>
+    {% if book.subtitle %}
+    <h2>{{ book.subtitle }}</h2>
+    {% endif %}
+    <div class="pure-g cover-content">
+
+        {% if cover_img %}
+        <div class="pure-u-1 pure-u-md-1-2 cover-image">
+            <img data-l10n-id="cover-img" class="cover-art" src="{{ cover_img }}" title="Book Cover" alt="Book Cover" />
+        </div>
+        <div class="pure-u-1 pure-u-md-1-2 bibrec sidedimg">
+        {% else %}
+        <div class="pure-u-1 bibrec">
+        {% endif %}
+            <div class="cover-detail author">
+                <p class="label" data-l10n-id="author">Author</p>
+                <p class="label-value author-btn"{{ translate_author}}><a class="author-btn" data-author-name="{{ book.author.name() }}">{{ book.author.name() }}</a></p>
+            </div>
+
+            <div class="cover-detail language">
+                <p class="label" data-l10n-id="language">Language</p>
+                <p class="label-value">
+                    {% for code in book_languages %}
+                        <span data-l10n-id="language-{{ code|lower }}">{{ code|language_name|title }}</span>{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+
+            <div class="cover-detail license">
+                <p class="label" data-l10n-id="license">License</p>
+                <p class="label-value"{{ translate_license}}>{{ book.book_license.name }}</p>
+            </div>
+
+            <div class="cover-detail popularity">
+                <p class="label" data-l10n-id="popularity">Popularity</p>
+                <p class="label-value">{% for n in range(1, 6) %}<i class="fa fa-heart{% if n > book.popularity %}-o{% endif %}"></i> {% endfor %}</p>
+            </div>
+
+
+            {% if formats %}
+            <div class="cover-detail icons-footer">
+                {% for format in formats %}
+                <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.{{ format }}">
+                    {% if format == "html" %}
+                    <i class="fa fa-html5 fa-6x"></i>
+                    {% endif %}
+                    {% if format == "epub" %}
+                    <i class="fa fa-download fa-6x"></i>
+                    {% endif %}
+                    {% if format == "pdf" %}
+                    <i class="fa fa-file-pdf-o fa-6x"></i>
+                    {% endif %}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

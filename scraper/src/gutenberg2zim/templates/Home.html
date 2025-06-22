@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}The Gutenberg Project{% endblock %}
+{% block precontent %}
+    <div class="precontent">
+        <p><strong data-l10n-id="about-1">Project Gutenberg offers over 60,000 free ebooks</strong></p>
+        <p>
+            <span data-l10n-id="about-2">choose among free epub books, free kindle books.</span>
+            <br />
+            <span data-l10n-id="about-3">Download them or read them online.</span
+        ></p>
+        <p><strong data-l10n-id="about-4">We carry high quality ebooks</strong></p>
+        <p>
+            <span data-l10n-id="about-5">All our ebooks were previously published by bona fide publishers.</span>
+            <br />
+            <span data-l10n-id="about-6">We digitized and diligently proofread them with the help of thousands of volunteers.</span>
+        </p>
+    </div>
+{% endblock %}
+{% block content %}
+<table class="data-table display" cellpadding="0" cellspacing="0" border="0" id="books_table"></table>
+{% endblock %}

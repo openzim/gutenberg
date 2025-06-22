@@ -1,0 +1,239 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gutenberg2zim"
+authors = [{ name = "Kiwix", email = "dev@kiwix.org" }]
+keywords = ["kiwix", "zim", "offline", "gutenberg"]
+requires-python = ">=3.13,<3.14"
+description = "Make ZIM file from Gutenberg books"
+readme = "README.md"
+license = { text = "GPL-3.0-or-later" }
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.13",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+]
+dependencies = [
+  "beautifulsoup4==4.9.3",
+  "Jinja2==3.1.2",
+  "peewee==3.17.9",
+  "types-peewee==3.17.9.20250401",
+  "path.py==12.5.0",
+  "Babel==2.11.0",
+  "lxml == 5.3.1",
+  "docopt==0.6.2",
+  "chardet==5.1.0",
+  "apsw==3.40.0.0",
+  "kiwixstorage==0.8.3",
+  "requests==2.31.0",
+  "pif==0.8.2",
+  "zimscraperlib==5.1.1",
+  "schedule==1.1.0",
+  "backoff==2.2.1",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+scripts = ["invoke==2.2.0"]
+lint = ["black==25.1.0", "ruff==0.11.3"]
+check = ["pyright==1.1.398"]
+test = ["pytest==7.4.0", "coverage==7.3.0"]
+dev = [
+  "pre-commit==3.3.3",
+  "debugpy==1.6.7",
+  "ipdb==0.13.13",
+  "ipython==8.14.0",
+  "gutenberg2zim[scripts]",
+  "gutenberg2zim[lint]",
+  "gutenberg2zim[test]",
+  "gutenberg2zim[check]",
+  # hatchling is a dev dependency only needed for hook development on developer machine
+  "hatchling==1.18.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/openzim/kolibri"
+Donate = "https://www.kiwix.org/en/support-us/"
+
+[project.scripts]
+gutenberg2zim = "gutenberg2zim:entrypoint.main"
+
+[tool.hatch.version]
+path = "src/gutenberg2zim/__about__.py"
+
+[tool.hatch.build]
+exclude = ["/.github"]
+
+[tool.hatch.build.hooks.custom]
+path = "hatch_build.py"
+dependencies = ["zimscraperlib==5.1.1"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gutenberg2zim"]
+
+[tool.hatch.envs.default]
+features = ["dev"]
+
+[tool.hatch.envs.test]
+features = ["scripts", "test"]
+
+[tool.hatch.envs.test.scripts]
+run = "inv test --args '{args}'"
+run-cov = "inv test-cov --args '{args}'"
+report-cov = "inv report-cov"
+coverage = "inv coverage --args '{args}'"
+html = "inv coverage --html --args '{args}'"
+
+[tool.hatch.envs.lint]
+template = "lint"
+python = "py313"
+skip-install = false
+features = ["scripts", "lint"]
+
+[tool.hatch.envs.lint.scripts]
+black = "inv lint-black --args '{args}'"
+ruff = "inv lint-ruff --args '{args}'"
+all = "inv lintall --args '{args}'"
+fix-black = "inv fix-black --args '{args}'"
+fix-ruff = "inv fix-ruff --args '{args}'"
+fixall = "inv fixall --args '{args}'"
+
+[tool.hatch.envs.check]
+features = ["scripts", "check"]
+
+[tool.hatch.envs.check.scripts]
+pyright = "inv check-pyright --args '{args}'"
+all = "inv checkall --args '{args}'"
+
+[tool.black]
+line-length = 88
+target-version = ['py313']
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+  "A", # flake8-builtins
+  # "ANN",  # flake8-annotations
+  "ARG", # flake8-unused-arguments
+  # "ASYNC",  # flake8-async
+  "B", # flake8-bugbear
+  # "BLE",  # flake8-blind-except
+  "C4",  # flake8-comprehensions
+  "C90", # mccabe
+  # "COM",  # flake8-commas
+  # "D",  # pydocstyle
+  # "DJ",  # flake8-django
+  "DTZ", # flake8-datetimez
+  "E",   # pycodestyle (default)
+  "EM",  # flake8-errmsg
+  # "ERA",  # eradicate
+  # "EXE",  # flake8-executable
+  "F", # Pyflakes (default)
+  # "FA",  # flake8-future-annotations
+  "FBT", # flake8-boolean-trap
+  # "FLY",  # flynt
+  # "G",  # flake8-logging-format
+  "I",   # isort
+  "ICN", # flake8-import-conventions
+  # "INP",  # flake8-no-pep420
+  # "INT",  # flake8-gettext
+  "ISC", # flake8-implicit-str-concat
+  "N",   # pep8-naming
+  # "NPY",  # NumPy-specific rules
+  # "PD",  # pandas-vet
+  # "PGH",  # pygrep-hooks
+  # "PIE",  # flake8-pie
+  # "PL",  # Pylint
+  "PLC", # Pylint: Convention
+  "PLE", # Pylint: Error
+  "PLR", # Pylint: Refactor
+  "PLW", # Pylint: Warning
+  # "PT",  # flake8-pytest-style
+  # "PTH",  # flake8-use-pathlib
+  # "PYI",  # flake8-pyi
+  "Q", # flake8-quotes
+  # "RET",  # flake8-return
+  # "RSE",  # flake8-raise
+  "RUF", # Ruff-specific rules
+  "S",   # flake8-bandit
+  # "SIM",  # flake8-simplify
+  # "SLF",  # flake8-self
+  "T10", # flake8-debugger
+  "T20", # flake8-print
+  # "TCH",  # flake8-type-checking
+  # "TD",  # flake8-todos
+  "TID", # flake8-tidy-imports
+  # "TRY",  # tryceratops
+  "UP",  # pyupgrade
+  "W",   # pycodestyle
+  "YTT", # flake8-2020
+]
+ignore = [
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Allow use of date.today
+  "DTZ011",
+  # Remove flake8-errmsg since we consider they bloat the code and provide limited value
+  "EM",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105",
+  "S106",
+  "S107",
+  # Ignore warnings on subprocess.run / popen
+  "S603",
+  # Ignore complexity
+  "C901",
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR0915",
+]
+unfixable = [
+  # Don't touch unused imports
+  "F401",
+]
+
+[tool.ruff.isort]
+known-first-party = ["gutenberg2zim"]
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.pytest.ini_options]
+minversion = "7.3"
+testpaths = ["tests"]
+pythonpath = [".", "src"]
+
+[tool.coverage.paths]
+great_project = ["src/gutenberg2zim"]
+tests = ["tests"]
+
+[tool.coverage.run]
+source_pkgs = ["gutenberg2zim"]
+branch = true
+parallel = true
+omit = ["src/gutenberg2zim/__about__.py"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+
+[tool.pyright]
+include = ["src", "tests", "tasks.py"]
+exclude = ["**/node_modules", "**/__pycache__", "src/gutenberg2zim/templates"]
+extraPaths = ["src"]
+pythonVersion = "3.13"
+pythonPlatform = "All"
+typeCheckingMode = "basic"
+typeStubs = ["types-peewee"]
