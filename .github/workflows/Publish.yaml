@@ -16,14 +16,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version-file: scraper/pyproject.toml
+          python-version-file: pyproject.toml
           architecture: x64
 
       - name: Build packages
         run: |
           pip install -U pip build
           python -m build --sdist --wheel
-        working-directory: scraper
 
       - name: Upload to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1.12

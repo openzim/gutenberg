@@ -15,18 +15,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version-file: scraper/pyproject.toml
+          python-version-file: pyproject.toml
           architecture: x64
 
       - name: Install dependencies (and project)
         run: |
           pip install -U pip
           pip install -e .[test,scripts]
-        working-directory: scraper
 
       - name: Run the tests
         run: inv coverage --args "-vvv"
-        working-directory: scraper
 
       - name: Upload coverage report to codecov
         uses: codecov/codecov-action@v3
@@ -41,14 +39,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version-file: scraper/pyproject.toml
+          python-version-file: pyproject.toml
           architecture: x64
 
       - name: Ensure we can build Python targets
         run: |
           pip install -U pip build
           python3 -m build --sdist --wheel
-        working-directory: scraper
 
   build_docker:
     runs-on: ubuntu-24.04
