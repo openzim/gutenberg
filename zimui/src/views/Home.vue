@@ -1,37 +1,27 @@
 <template>
   <div>
     <div class="app-container">
-    <AppHeader />
-  
-    <div class="scroll-container">
-      <Sort />
+      <AppHeader />
 
-      <div class="book-list">
-        <BookCard
-          v-for="book in booksToDisplay"
-          :key="book.id"
-          v-bind="book"
-        />
+      <div class="scroll-container">
+        <Sort />
+
+        <div class="book-list">
+          <BookCard v-for="book in booksToDisplay" :key="book.id" v-bind="book" />
+        </div>
+
+        <!-- Loading -->
+        <div v-if="isLoading" class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Loading...</p>
+        </div>
+        <div ref="loadMoreTrigger" class="load-trigger"></div>
       </div>
-
-      <!-- Loading -->
-      <div v-if="isLoading" class="loading-spinner">
-        <div class="spinner"></div>
-        <p>Loading...</p>
-      </div>
-      <div ref="loadMoreTrigger" class="load-trigger"></div>
-
     </div>
-
-  </div>
-  <!-- Scroll to Top -->
-  <button class="back-to-top" @click="scrollToTop">
-    ↑ Top
-  </button>
+    <!-- Scroll to Top -->
+    <button class="back-to-top" @click="scrollToTop">↑ Top</button>
   </div>
 </template>
-
-
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
@@ -76,5 +66,3 @@ onMounted(() => {
   }
 })
 </script>
-
-  

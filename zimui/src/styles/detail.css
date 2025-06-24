@@ -17,13 +17,12 @@
   padding: 1em;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
-
 .book-cover {
-  flex: 0 0 35%;     
-  width: 35%;        
+  flex: 0 0 35%;
+  width: 35%;
   height: auto;
   border-radius: 4px;
   object-fit: cover;
@@ -37,13 +36,11 @@
   gap: 1em;
 }
 
-
 .book-title {
   font-size: 1.8em;
   font-weight: bold;
   margin: 0;
 }
-
 
 .book-author {
   margin: 0 0 0.5em;
@@ -65,7 +62,6 @@
   color: #999;
 }
 
-
 /* Rating and download */
 .book-footer {
   display: flex;
@@ -73,17 +69,14 @@
   gap: 1em;
 }
 
-
 .book-rating {
   font-size: 1.2em;
-  color: #AA873B;
+  color: #aa873b;
 }
-
 
 .book-rating .empty {
   color: #ccc;
 }
-
 
 .book-buttons {
   margin-left: auto;
@@ -101,13 +94,11 @@
   font-family: inherit;
 }
 
-
 .book-description {
   margin-top: 1em;
-  padding-right: 0.5em;    
-  max-height: 200px;       
-  overflow-y: auto;        
+  padding-right: 0.5em;
+  max-height: 200px;
+  overflow-y: auto;
   line-height: 1.6;
   color: #333;
 }
-

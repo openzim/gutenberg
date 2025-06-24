@@ -8,7 +8,6 @@
 
       <!-- Info -->
       <div class="details">
-      
         <h1 class="book-title">{{ book.title }}</h1>
 
         <p class="book-author">{{ book.author }}</p>
@@ -22,7 +21,7 @@
         <div class="book-footer">
           <div class="book-rating">
             <span v-for="n in book.rating" :key="`f-${n}`">★</span>
-            <span v-for="n in (5 - book.rating)" :key="`e-${n}`" class="empty">★</span>
+            <span v-for="n in 5 - book.rating" :key="`e-${n}`" class="empty">★</span>
           </div>
           <div class="book-buttons">
             <button>Download HTML</button>
@@ -35,8 +34,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
@@ -53,7 +50,6 @@ interface Book {
   description: string
 }
 
-
 const route = useRoute()
 const bookId = parseInt(route.params.id as string)
 
@@ -69,6 +65,3 @@ const book: Book = books.find((b: Book) => b.id === bookId) || {
 </script>
 
 <style scoped src="@/styles/detail.css" />
-
-
-  

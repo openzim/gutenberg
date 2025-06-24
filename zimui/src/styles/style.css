@@ -1,6 +1,5 @@
 /* This is for home page */
 
-
 /* focus for all */
 input:focus,
 select:focus,
@@ -9,7 +8,7 @@ button:focus,
 a:focus {
   outline: none !important;
   border-color: #999 !important;
-  box-shadow: 0 0 0 2px #AA873B !important;
+  box-shadow: 0 0 0 2px #aa873b !important;
 }
 
 button,
@@ -23,8 +22,8 @@ button,
 /* ——— Section 1: Header ——— */
 .app-header {
   box-sizing: border-box;
-  background-color: #7EBED0;
-  font-family: "RobotoThin", sans-serif;
+  background-color: #7ebed0;
+  font-family: 'RobotoThin', sans-serif;
   color: rgb(255, 255, 255);
   text-align: start;
   padding: 1em 0;
@@ -33,10 +32,10 @@ button,
 /* Include logo-title and lang-select */
 .app-header .header-inner {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
   position: relative;
-  padding: 0 1em;              
+  padding: 0 1em;
   margin: 0 auto;
 }
 
@@ -48,28 +47,27 @@ button,
 .header-logo {
   flex: none;
   height: auto;
-  margin-right: 0.75em; 
+  margin-right: 0.75em;
   vertical-align: middle;
 }
 
 .title-desc {
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .app-header .title-desc h1 {
-    margin: 0;
-    font-size: 2em;
+  margin: 0;
+  font-size: 2em;
 }
 
 .app-header .title-desc h2 {
-    margin: 0.1em 0 1em;
-    font-size: 1.2em;
-    font-weight: normal;
-    color: rgba(255,255,255,0.9);
+  margin: 0.1em 0 1em;
+  font-size: 1.2em;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.9);
 }
-
 
 .about-link-plain {
   margin-left: 12px;
@@ -84,15 +82,13 @@ button,
   color: #fffa;
 }
 
-
 /* Language change */
 .app-header .lang-select {
-    position: absolute;
-    border: 1px solid #ccc;
-    top: 1em;   
-    right: 1em; 
-  }
-
+  position: absolute;
+  border: 1px solid #ccc;
+  top: 1em;
+  right: 1em;
+}
 
 /* Search bar */
 .app-header .search-bar {
@@ -102,7 +98,7 @@ button,
   justify-content: center;
   align-items: center;
   gap: 0.3em;
-  background: #7EBED0;
+  background: #7ebed0;
   padding: 0 1em;
 }
 
@@ -122,36 +118,34 @@ button,
 }
 
 .app-header .search-bar .search-btn {
-    padding: 0.5em;
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: inherit;
-  }
-
+  padding: 0.5em;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+}
 
 /* ——— Section 2: Info-banner ——— */
 .info-banner {
-    text-align: center;
-    padding: 2em 0;
+  text-align: center;
+  padding: 2em 0;
 }
-  
+
 /* Same as existing gutenburg design */
 .precontent {
   margin: 0 1em;
   text-align: center;
 }
 .precontent p {
-  font-family: "RobotoThin";
+  font-family: 'RobotoThin';
   font-size: 1.2em;
 }
 .precontent strong {
-  font-family: "RobotoBold";
+  font-family: 'RobotoBold';
   font-size: 1.5em;
-  color: #AA873B;
-} 
-  
+  color: #aa873b;
+}
 
 /* Sort section */
 .sort-bar {
@@ -168,9 +162,6 @@ button,
   cursor: pointer;
 }
 
-
-
-
 .app-container {
   height: 100vh;
   display: flex;
@@ -184,17 +175,17 @@ button,
   padding: 1rem 0;
 }
 
- .back-to-top {
+.back-to-top {
   position: fixed;
   bottom: 30px;
   right: 30px;
   padding: 10px 14px;
   font-size: 1rem;
   border: none;
-  background-color: #7EBED0;
+  background-color: #7ebed0;
   color: white;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   z-index: 999;
   transition: opacity 0.3s ease;
@@ -202,11 +193,6 @@ button,
 .back-to-top:hover {
   background-color: #005a99;
 }
- 
-
-
-  
-
 
 /* ——— Section 3: Bookshelf ——— */
 
@@ -236,18 +222,16 @@ button,
   }
 }
 
-
 /* Container for all bookcards */
 .book-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.5em;
   padding: 1.5em;
-  align-items: stretch; 
-  width:70%;
+  align-items: stretch;
+  width: 70%;
   justify-self: center;
 }
-
 
 .book-card {
   display: flex;
@@ -258,7 +242,7 @@ button,
   border-radius: 6px;
   background: #fff;
   padding: 1em;
-  height: 200px;        
+  height: 200px;
   box-sizing: border-box;
 }
 
@@ -270,10 +254,9 @@ button,
 .book-stripe {
   width: 6px;
   height: 100%;
-  background-color: #7EBED0; 
+  background-color: #7ebed0;
   border-radius: 2px;
 }
-
 
 .book-cover {
   width: 96px;
@@ -304,10 +287,9 @@ button,
 
 .book-rating {
   font-size: 1em;
-  color: #AA873B;
+  color: #aa873b;
 }
 
 .book-rating .empty {
   color: #ccc;
 }
-
