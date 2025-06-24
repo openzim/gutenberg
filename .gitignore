@@ -1,9 +1,9 @@
-#frontend
-frontend/node_modules/
-frontend/covers/
-frontend/dl-cache/
-frontend/dist/
-frontend/vite.config.js
+#zimui
+zimui/node_modules/
+zimui/covers/
+zimui/dl-cache/
+zimui/dist/
+zimui/yarn.lock
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

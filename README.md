@@ -157,6 +157,7 @@ pip3 install hatch
 Start a hatch shell: this will install software including dependencies in an isolated virtual environment.
 
 ```bash
+cd scraper
 hatch shell
 ```
 
