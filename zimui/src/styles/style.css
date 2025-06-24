@@ -1,0 +1,313 @@
+/* This is for home page */
+
+
+/* focus for all */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus,
+a:focus {
+  outline: none !important;
+  border-color: #999 !important;
+  box-shadow: 0 0 0 2px #AA873B !important;
+}
+
+button,
+.page-btn,
+.search-btn {
+  cursor: pointer;
+}
+
+/* ——— TODO: Filter hover/select effect: :now is default grey ——— */
+
+/* ——— Section 1: Header ——— */
+.app-header {
+  box-sizing: border-box;
+  background-color: #7EBED0;
+  font-family: "RobotoThin", sans-serif;
+  color: rgb(255, 255, 255);
+  text-align: start;
+  padding: 1em 0;
+}
+
+/* Include logo-title and lang-select */
+.app-header .header-inner {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  position: relative;
+  padding: 0 1em;              
+  margin: 0 auto;
+}
+
+.logo-title {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  flex: none;
+  height: auto;
+  margin-right: 0.75em; 
+  vertical-align: middle;
+}
+
+.title-desc {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.app-header .title-desc h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.app-header .title-desc h2 {
+    margin: 0.1em 0 1em;
+    font-size: 1.2em;
+    font-weight: normal;
+    color: rgba(255,255,255,0.9);
+}
+
+
+.about-link-plain {
+  margin-left: 12px;
+  font-size: 1rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.about-link-plain:hover {
+  text-decoration: underline;
+  color: #fffa;
+}
+
+
+/* Language change */
+.app-header .lang-select {
+    position: absolute;
+    border: 1px solid #ccc;
+    top: 1em;   
+    right: 1em; 
+  }
+
+
+/* Search bar */
+.app-header .search-bar {
+  display: flex;
+  width: 60%;
+  max-width: 60%;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3em;
+  background: #7EBED0;
+  padding: 0 1em;
+}
+
+.app-header .search-bar .search-input {
+  flex: 1;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.app-header .search-bar .search-filter {
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.app-header .search-bar .search-btn {
+    padding: 0.5em;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+  }
+
+
+/* ——— Section 2: Info-banner ——— */
+.info-banner {
+    text-align: center;
+    padding: 2em 0;
+}
+  
+/* Same as existing gutenburg design */
+.precontent {
+  margin: 0 1em;
+  text-align: center;
+}
+.precontent p {
+  font-family: "RobotoThin";
+  font-size: 1.2em;
+}
+.precontent strong {
+  font-family: "RobotoBold";
+  font-size: 1.5em;
+  color: #AA873B;
+} 
+  
+
+/* Sort section */
+.sort-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1.5em 2em 0;
+}
+
+.sort-select {
+  padding: 0.5em 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+
+
+
+.app-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+ .back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: none;
+  background-color: #7EBED0;
+  color: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 999;
+  transition: opacity 0.3s ease;
+}
+.back-to-top:hover {
+  background-color: #005a99;
+}
+ 
+
+
+  
+
+
+/* ——— Section 3: Bookshelf ——— */
+
+.load-trigger {
+  height: 1px;
+}
+
+.loading-spinner {
+  text-align: center;
+  margin: 1rem 0;
+  color: #666;
+}
+
+.spinner {
+  margin: 0 auto 0.5rem;
+  border: 4px solid #eee;
+  border-top: 4px solid #007acc;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* Container for all bookcards */
+.book-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5em;
+  padding: 1.5em;
+  align-items: stretch; 
+  width:70%;
+  justify-self: center;
+}
+
+
+.book-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  padding: 1em;
+  height: 200px;        
+  box-sizing: border-box;
+}
+
+.book-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.book-stripe {
+  width: 6px;
+  height: 100%;
+  background-color: #7EBED0; 
+  border-radius: 2px;
+}
+
+
+.book-cover {
+  width: 96px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Book info container */
+.book-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.book-title {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin: 0;
+}
+
+.book-author {
+  font-size: 0.95em;
+  color: #666;
+  margin: 0.3em 0;
+}
+
+.book-rating {
+  font-size: 1em;
+  color: #AA873B;
+}
+
+.book-rating .empty {
+  color: #ccc;
+}
+
