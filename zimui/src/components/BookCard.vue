@@ -12,7 +12,7 @@
         <p class="book-author">{{ author }}</p>
         <div class="book-rating">
           <span v-for="n in rating" :key="`f-${n}`">★</span>
-          <span v-for="n in 5 - rating" :key="`e-${n}`" class="empty">★</span>
+          <span v-for="n in 5 - Number(book.rating)" :key="`e-${n}`" class="empty">★</span>
         </div>
       </div>
     </div>

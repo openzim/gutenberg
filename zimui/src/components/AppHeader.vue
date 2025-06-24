@@ -34,3 +34,5 @@
     </div>
   </header>
 </template>
+
+<style scoped src="@/styles/style.css" />

@@ -40,28 +40,30 @@ import { useRoute } from 'vue-router'
 import books from '@/assets/books.json'
 import AppHeader from '@/components/AppHeader.vue'
 
-// Book
 interface Book {
   id: number
   title: string
   author: string
   cover: string
-  rating: string
+  rating: number
   description: string
+  language?: string         
+  license?: string        
 }
 
 const route = useRoute()
 const bookId = parseInt(route.params.id as string)
 
-// if not found
-const book: Book = books.find((b: Book) => b.id === bookId) || {
+const fallbackBook: Book = {
   id: -1,
   title: 'Not found',
   author: '',
   cover: '',
-  rating: '',
+  rating: 0,
   description: ''
 }
+
+const book: Book = books.find((b: Book) => b.id === bookId) || fallbackBook
 </script>
 
 <style scoped src="@/styles/detail.css" />
