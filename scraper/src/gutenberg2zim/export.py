@@ -576,18 +576,19 @@ def export_book(
             optimizer_version=optimizer_version,
         )
 
-    write_book_presentation_article(
-        book=book,
-        optimized_files_dir=optimized_files_dir,
-        force=force,
-        project_id=project_id,
-        title_search=title_search,
-        add_bookshelves=add_bookshelves,
-        books=books,
-        formats=formats,
-    )
+    # write_book_presentation_article(
+    #     book=book,
+    #     optimized_files_dir=optimized_files_dir,
+    #     force=force,
+    #     project_id=project_id,
+    #     title_search=title_search,
+    #     add_bookshelves=add_bookshelves,
+    #     books=books,
+    #     formats=formats,
+    # )
 
 
+#still need this one
 def handle_unoptimized_files(
     book: Book,
     src_dir: Path,
