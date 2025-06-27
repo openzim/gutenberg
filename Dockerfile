@@ -29,7 +29,7 @@ COPY scraper/pyproject.toml /src/scraper/
 
 # Copy global files
 COPY README.md LICENSE pyproject.toml /src/
-
+COPY README.md scraper/
 
 # Install + cleanup
 RUN pip install --no-cache-dir /src/scraper \
