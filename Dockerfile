@@ -27,6 +27,7 @@ COPY scraper/src /src/scraper/src
 COPY scraper/pyproject.toml scraper/openzim.toml /src/scraper/
 
 # Copy markdown / reStructuredText, LICENSE、*.py
+cp README.md scraper/
 COPY README.md *.md *.rst LICENSE scraper/*.py /src/scraper/
 
 
