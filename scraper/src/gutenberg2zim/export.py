@@ -38,9 +38,7 @@ from gutenberg2zim.utils import (
     zip_epub,
 )
 
-jinja_env = Environment(  # noqa: S701
-    loader=PackageLoader("gutenberg2zim", "templates")
-)
+
 
 DEBUG_COUNT = []
 NB_POPULARITY_STARS = 5
@@ -84,11 +82,7 @@ def save_bs_output(soup, fpath, encoding=UTF8):
     save_file(str(soup), fpath, encoding)
 
 
-jinja_env.filters["book_name_for_fs"] = book_name_for_fs
-jinja_env.filters["zim_link_prefix"] = zim_link_prefix
-jinja_env.filters["language_name"] = language_name
-jinja_env.filters["fa_for_format"] = fa_for_format
-jinja_env.filters["urlencode"] = urlencode
+
 
 
 def tmpl_path() -> Path:
@@ -101,64 +95,7 @@ def get_list_of_all_languages():
     )
 
 
-def export_skeleton(
-    project_id,
-    books,
-    title_search,
-    add_bookshelves,
-):
-    context = get_default_context(project_id, books=books)
-    context.update(
-        {
-            "show_books": True,
-            "title_search": title_search,
-            "add_bookshelves": add_bookshelves,
-        }
-    )
 
-    # js/l10n.js is a template (includes list of avail languages)
-    rendered = jinja_env.get_template("js/l10n.js").render(**context)
-    Global.add_item_for(
-        path="js/l10n.js",
-        content=rendered,
-        mimetype="text/javascript",
-        is_front=True,
-    )
-
-    # add CSS/JS/* to zim
-    src_folder = tmpl_path()
-    for fname in (
-        "css",
-        "js",
-        "jquery",
-        "favicon.ico",
-        "favicon.png",
-        "jquery-ui",
-        "datatables",
-        "fonts",
-    ):
-        assets_root = src_folder / fname
-
-        # recursively add our assets, at a path identical to position in repo
-        if assets_root.is_file():
-            Global.add_item_for(path=fname, fpath=assets_root)
-        else:
-            for fpath in assets_root.glob("**/*"):
-                if not fpath.is_file() or fpath.name == "l10n.js":
-                    continue
-                path = str(fpath.relative_to(assets_root))
-                Global.add_item_for(path=str(Path(fname) / path), fpath=fpath)
-
-    # export homepage
-    tpl_path = "Home.html"
-    template = jinja_env.get_template(tpl_path)
-    rendered = template.render(**context)
-    Global.add_item_for(
-        path=tpl_path,
-        content=rendered,
-        mimetype="text/html",
-        is_front=True,
-    )
 
 
 def export_all_books(
@@ -188,45 +125,37 @@ def export_all_books(
             "books and formats has no result."
         )
 
-    # export to JSON helpers
-    export_to_json_helpers(
-        books=books,
-        languages=languages,
-        formats=formats,
-        project_id=project_id,
-        add_bookshelves=add_bookshelves,
-    )
 
     # export HTML index and other static files
-    export_skeleton(
-        books=books,
-        project_id=project_id,
-        title_search=title_search,
-        add_bookshelves=add_bookshelves,
-    )
+    # export_skeleton(
+    #     books=books,
+    #     project_id=project_id,
+    #     title_search=title_search,
+    #     add_bookshelves=add_bookshelves,
+    # )
 
     # Compute popularity
-    popbooks = books.order_by(Book.downloads.desc())
-    popbooks_count = popbooks.count()
-    stars_limits = [0] * NB_POPULARITY_STARS
-    stars = NB_POPULARITY_STARS
-    nb_downloads = popbooks[0].downloads
-    for ibook in range(0, popbooks.count(), 1):
-        if (
-            ibook
-            > float(NB_POPULARITY_STARS - stars + 1)
-            / NB_POPULARITY_STARS
-            * popbooks_count
-            and popbooks[ibook].downloads < nb_downloads
-        ):
-            stars_limits[stars - 1] = nb_downloads
-            stars = stars - 1
-        nb_downloads = popbooks[ibook].downloads
+    # popbooks = books.order_by(Book.downloads.desc())
+    # popbooks_count = popbooks.count()
+    # stars_limits = [0] * NB_POPULARITY_STARS
+    # stars = NB_POPULARITY_STARS
+    # nb_downloads = popbooks[0].downloads
+    # for ibook in range(0, popbooks.count(), 1):
+    #     if (
+    #         ibook
+    #         > float(NB_POPULARITY_STARS - stars + 1)
+    #         / NB_POPULARITY_STARS
+    #         * popbooks_count
+    #         and popbooks[ibook].downloads < nb_downloads
+    #     ):
+    #         stars_limits[stars - 1] = nb_downloads
+    #         stars = stars - 1
+    #     nb_downloads = popbooks[ibook].downloads
 
-    for book in books:
-        book.popularity = sum(
-            [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
-        )
+    # for book in books:
+    #     book.popularity = sum(
+    #         [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
+    #     )
 
     Global.set_total(len(books))
     Global.reset_progress()
@@ -464,12 +393,6 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
                         child.decompose()  # type: ignore
                 break
 
-    # build infobox
-    if not epub:
-        infobox = jinja_env.get_template("book_infobox.html")
-        infobox_html = infobox.render({"book": book, "formats": formats})
-        info_soup = BeautifulSoup(infobox_html, "lxml-html")
-        body.insert(0, info_soup.find("div"))  # type: ignore
 
     # if there is no charset, set it to utf8
     if not epub:
@@ -491,60 +414,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
     return soup
 
 
-def cover_html_content_for(
-    book, optimized_files_dir, books, project_id, title_search, add_bookshelves, formats
-):
-    cover_img = f"{book.book_id}_cover_image.jpg"
-    cover_img = cover_img if (optimized_files_dir / cover_img).exists() else None
 
-    translate_author = (
-        f' data-l10n-id="author-{book.author.name().lower()}"'
-        if book.author.name() in ["Anonymous", "Various"]
-        else ""
-    )
-
-    translate_license = (
-        f' data-l10n-id="license-{book.book_license.slug.lower()}"'
-        if book.book_license.slug in ["PD", "Copyright"]
-        else ""
-    )
-
-    book_languages = [
-        lang.language_code for lang in book.languages.order_by(BookLanguage.id)  # type: ignore
-    ]
-
-    context = get_default_context(project_id=project_id, books=books)
-    context.update(
-        {
-            "book": book,
-            "cover_img": cover_img,
-            "book_languages": book_languages,
-            "formats": book.requested_formats(formats),
-            "translate_author": translate_author,
-            "translate_license": translate_license,
-            "title_search": title_search,
-            "add_bookshelves": add_bookshelves,
-        }
-    )
-    template = jinja_env.get_template("cover_article.html")
-    return template.render(**context)
-
-
-def author_html_content_for(author, books, project_id):
-    context = get_default_context(project_id=project_id, books=books)
-    context.update({"author": author})
-    template = jinja_env.get_template("author.html")
-    return template.render(**context)
-
-
-def save_author_file(author, books, project_id):
-    logger.debug(f"\t\tSaving author file {author.name()} (ID {author})")
-    Global.add_item_for(
-        path=f"{author.fname()}.html",
-        content=author_html_content_for(author, books, project_id),
-        mimetype="text/html",
-        is_front=True,
-    )
 
 
 def export_book(
@@ -860,36 +730,6 @@ def handle_unoptimized_files(
                 logger.error(f"\t\tException while handling companion file: {e}")
 
 
-def write_book_presentation_article(
-    book,
-    optimized_files_dir,
-    force,
-    project_id,
-    title_search,
-    add_bookshelves,
-    books,
-    formats,
-):
-    article_name = article_name_for(book=book, cover=True)
-    cover_fpath = TMP_FOLDER_PATH / article_name
-    if not cover_fpath.exists() or force:
-        logger.info(f"\t\tExporting article presentation to {cover_fpath}")
-        html = cover_html_content_for(
-            book=book,
-            optimized_files_dir=optimized_files_dir,
-            books=books,
-            project_id=project_id,
-            title_search=title_search,
-            add_bookshelves=add_bookshelves,
-            formats=formats,
-        )
-        with open(cover_fpath, "w") as f:
-            f.write(html)
-    else:
-        logger.info(f"\t\tSkipping already optimized cover {cover_fpath}")
-
-    Global.add_item_for(path=article_name, fpath=cover_fpath)
-
 
 def authors_from_ids(idlist):
     """build a list of Author objects based on a list of author.gut_id
@@ -932,255 +772,3 @@ def bookshelf_list_language(lang):
         .order_by(Book.bookshelf.asc())
     ]
 
-
-def export_to_json_helpers(books, languages, formats, project_id, add_bookshelves):
-    def dumpjs(col, fn, var="json_data"):
-        Global.add_item_for(
-            path=fn,
-            content=f"var {var} = {json.dumps(col)};",
-            mimetype="text/javascript",
-            is_front=False,
-        )
-
-    # all books sorted by popularity
-    logger.info("\t\tDumping full_by_popularity.js")
-    dumpjs(
-        [
-            book.to_array(all_requested_formats=formats)
-            for book in books.order_by(Book.downloads.desc())
-        ],
-        "full_by_popularity.js",
-    )
-
-    # all books sorted by title
-    logger.info("\t\tDumping full_by_title.js")
-    dumpjs(
-        [
-            book.to_array(all_requested_formats=formats)
-            for book in books.order_by(Book.title.asc())
-        ],
-        "full_by_title.js",
-    )
-
-    avail_langs = get_langs_with_count(books, languages)
-    all_filtered_authors = []
-
-    # language-specific collections
-    for _lang_name, lang, _lang_count in avail_langs:
-        lang_filtered_authors = list(
-            {
-                book.author.gut_id
-                for book in Book.select()
-                .join(BookLanguage)
-                .where(BookLanguage.language_code == lang)
-            }
-        )
-        for aid in lang_filtered_authors:
-            if aid not in all_filtered_authors:
-                all_filtered_authors.append(aid)
-
-        # by popularity
-        logger.info(f"\t\tDumping lang_{lang}_by_popularity.js")
-        dumpjs(
-            [
-                book.to_array(all_requested_formats=formats)
-                for book in Book.select()
-                .join(BookLanguage)
-                .where(BookLanguage.language_code == lang)
-                .order_by(Book.downloads.desc())
-            ],
-            f"lang_{lang}_by_popularity.js",
-        )
-        # by title
-        logger.info(f"\t\tDumping lang_{lang}_by_title.js")
-        dumpjs(
-            [
-                book.to_array(all_requested_formats=formats)
-                for book in Book.select()
-                .join(BookLanguage)
-                .where(BookLanguage.language_code == lang)
-                .order_by(Book.title.asc())
-            ],
-            f"lang_{lang}_by_title.js",
-        )
-
-        authors = authors_from_ids(lang_filtered_authors)
-        logger.info(f"\t\tDumping authors_lang_{lang}.js")
-        dumpjs(
-            [author.to_array() for author in authors],
-            f"authors_lang_{lang}.js",
-            "authors_json_data",
-        )
-
-    if add_bookshelves:
-        bookshelves = bookshelf_list(books)
-        for bookshelf in bookshelves:
-            # exclude the books with no bookshelf data
-            if bookshelf is None:
-                continue
-            # dumpjs for bookshelf by popularity
-            # this will allow the popularity button to use this js on the
-            # particular bookshelf page
-            logger.info(f"\t\tDumping bookshelf_{bookshelf}_by_popularity.js")
-            dumpjs(
-                [
-                    book.to_array(all_requested_formats=formats)
-                    for book in books.select()
-                    .where(Book.bookshelf == bookshelf)
-                    .order_by(Book.downloads.desc())
-                ],
-                f"bookshelf_{bookshelf}_by_popularity.js",
-            )
-
-            # by title
-            logger.info(f"\t\tDumping bookshelf_{bookshelf}_by_title.js")
-            dumpjs(
-                [
-                    book.to_array(all_requested_formats=formats)
-                    for book in books.select()
-                    .where(Book.bookshelf == bookshelf)
-                    .order_by(Book.title.asc())
-                ],
-                f"bookshelf_{bookshelf}_by_title.js",
-            )
-            # by language
-            for _lang_name, lang, _lang_count in avail_langs:
-                logger.info(f"\t\tDumping bookshelf_{bookshelf}_by_lang_{lang}.js")
-
-                dumpjs(
-                    [
-                        book.to_array(all_requested_formats=formats)
-                        for book in Book.select()
-                        .join(BookLanguage)
-                        .where(BookLanguage.language_code == lang)
-                        .where(Book.bookshelf == bookshelf)
-                        .order_by(Book.downloads.desc())
-                    ],
-                    f"bookshelf_{bookshelf}_lang_{lang}_by_popularity.js",
-                )
-
-                dumpjs(
-                    [
-                        book.to_array(all_requested_formats=formats)
-                        for book in Book.select()
-                        .join(BookLanguage)
-                        .where(BookLanguage.language_code == lang)
-                        .where(Book.bookshelf == bookshelf)
-                        .order_by(Book.title.asc())
-                    ],
-                    f"bookshelf_{bookshelf}_lang_{lang}_by_title.js",
-                )
-
-        # dump all bookshelves from any given language
-        for _lang_name, lang, _lang_count in avail_langs:
-            logger.info(f"\t\tDumping bookshelves_lang_{lang}.js")
-            temp = bookshelf_list_language(lang)
-            dumpjs(temp, f"bookshelves_lang_{lang}.js")
-
-        logger.info("\t\tDumping bookshelves.js")
-        dumpjs(bookshelves, "bookshelves.js", "bookshelves_json_data")
-
-        # Create the bookshelf home page
-        context = get_default_context(project_id=project_id, books=books)
-        context.update({"bookshelf_home": True, "add_bookshelves": True})
-        template = jinja_env.get_template("bookshelf_home.html")
-        rendered = template.render(**context)
-        Global.add_item_for(
-            path="bookshelf_home.html",
-            content=rendered,
-            mimetype="text/html",
-            is_front=False,
-        )
-
-        # add individual bookshelf pages
-        for bookshelf in bookshelves:
-            if bookshelf is None:
-                continue
-            context["bookshelf"] = bookshelf
-            context.update(
-                {
-                    "bookshelf_home": False,
-                    "individual_book_shelf": True,
-                    "no_filters": True,
-                    "add_bookshelves": True,
-                }
-            )
-            template = jinja_env.get_template("bookshelf.html")
-            rendered = template.render(**context)
-            Global.add_item_for(
-                path=f"{bookshelf}.html",
-                content=rendered,
-                mimetype="text/html",
-                is_front=False,
-            )
-
-    # author specific collections
-    authors = authors_from_ids(all_filtered_authors)
-    for author in authors:
-        # all_filtered_authors.remove(author.gut_id)
-        # by popularity
-        logger.info(f"\t\tDumping auth_{author.gut_id}_by_popularity.js")
-        dumpjs(
-            [
-                book.to_array(all_requested_formats=formats)
-                for book in books.where(Book.author == author).order_by(
-                    Book.downloads.desc()
-                )
-            ],
-            f"auth_{author.gut_id}_by_popularity.js",
-        )
-        # by title
-        logger.info(f"\t\tDumping auth_{author.gut_id}_by_title.js")
-        dumpjs(
-            [
-                book.to_array(all_requested_formats=formats)
-                for book in books.where(Book.author == author).order_by(
-                    Book.title.asc()
-                )
-            ],
-            f"auth_{author.gut_id}_by_title.js",
-        )
-        # by language
-        for _lang_name, lang, _lang_count in avail_langs:
-            logger.info(f"\t\tDumping auth_{author.gut_id}_by_lang_{lang}.js")
-
-            dumpjs(
-                [
-                    book.to_array(all_requested_formats=formats)
-                    for book in Book.select()
-                    .join(BookLanguage)
-                    .where(BookLanguage.language_code == lang)
-                    .where(Book.author == author)
-                    .order_by(Book.downloads.desc())
-                ],
-                f"auth_{author.gut_id}_lang_{lang}_by_popularity.js",
-            )
-
-            dumpjs(
-                [
-                    book.to_array(all_requested_formats=formats)
-                    for book in Book.select()
-                    .join(BookLanguage)
-                    .where(BookLanguage.language_code == lang)
-                    .where(Book.author == author)
-                    .order_by(Book.title.asc())
-                ],
-                f"auth_{author.gut_id}_lang_{lang}_by_title.js",
-            )
-
-        # author HTML redirect file
-        save_author_file(author, books, project_id)
-
-    # authors list sorted by name
-    logger.info("\t\tDumping authors.js")
-    dumpjs([author.to_array() for author in authors], "authors.js", "authors_json_data")
-
-    # languages list sorted by code
-    logger.info("\t\tDumping languages.js")
-    dumpjs(avail_langs, "languages.js", "languages_json_data")
-
-    # languages by weight
-    main_languages, other_languages = get_lang_groups(books)
-    logger.info("\t\tDumping main_languages.js")
-    dumpjs(main_languages, "main_languages.js", "main_languages_json_data")
-    dumpjs(other_languages, "other_languages.js", "other_languages_json_data")

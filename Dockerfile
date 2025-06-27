@@ -18,13 +18,13 @@ RUN apt-get update \
 
 # Copy code + associated artifacts
 COPY src /src/src
-COPY pyproject.toml *.md *.rst get_js_deps.sh LICENSE *.py /src/
+COPY pyproject.toml *.md *.rst LICENSE *.py /src/
 
 # Copy backend source code
 COPY scraper/src /src/scraper/src
 
 # Copy pyproject.toml, openzim.toml, *.sh
-COPY scraper/pyproject.toml scraper/openzim.toml scraper/get_js_deps.sh /src/scraper/
+COPY scraper/pyproject.toml scraper/openzim.toml /src/scraper/
 
 # Copy markdown / reStructuredText, LICENSE、*.py
 COPY README.md *.md *.rst LICENSE scraper/*.py /src/scraper/

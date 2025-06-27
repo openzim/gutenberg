@@ -12,12 +12,10 @@ VERSION = __version__
 
 SCRAPER = f"{NAME} {VERSION}"
 
-# when modifiying this list, update list in hatch_build.py as well
-JS_DEPS: list[str] = [
-    "datatables/datatables.min.css",
-    "datatables/datatables.min.js",
-    "jquery/jquery-1.11.1.min.js",
-]
+#check
+FAVICON_PATH = ROOT_DIR.parent.parent.parent / "zimui" / "public" / "favicon.png"
+with open(FAVICON_PATH, "rb") as f:
+    FAVICON_BYTES = f.read()
 
 logger = getLogger(NAME, level=logging.INFO)
 
@@ -25,9 +23,6 @@ TMP_FOLDER = "tmp"
 TMP_FOLDER_PATH = pathlib.Path(TMP_FOLDER).resolve()
 
 
-FAVICON_PATH = ROOT_DIR / "templates" / "favicon.png"
-with open(FAVICON_PATH, "rb") as f:
-    FAVICON_BYTES = f.read()
 
 DEFAULT_HTTP_TIMEOUT = 10
 DL_CHUNCK_SIZE = 8192
