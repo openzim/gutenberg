@@ -1,9 +1,12 @@
+#build frontend
 FROM node:20-alpine as zimui
 
 WORKDIR /src
 COPY zimui /src
 RUN yarn install --frozen-lockfile
 RUN yarn build
+
+# Backend base
 FROM python:3.13.2-bookworm
 
 # Install necessary packages
@@ -16,19 +19,16 @@ RUN apt-get update \
  && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
  && locale-gen "en_US.UTF-8"
 
+# Set workdir
+WORKDIR /src
+
 # Copy code + associated artifacts
-COPY src /src/src
-COPY pyproject.toml *.md *.rst LICENSE *.py /src/
-
-# Copy backend source code
 COPY scraper/src /src/scraper/src
+COPY scraper/*.py /src/scraper/
+COPY scraper/pyproject.toml /src/scraper/
 
-# Copy pyproject.toml, openzim.toml, *.sh
-COPY scraper/pyproject.toml scraper/openzim.toml /src/scraper/
-
-# Copy markdown / reStructuredText, LICENSE、*.py
-COPY README.md scraper/
-COPY README.md *.md *.rst LICENSE scraper/*.py /src/scraper/
+# Copy global files
+COPY README.md LICENSE pyproject.toml /src/
 
 
 # Install + cleanup
