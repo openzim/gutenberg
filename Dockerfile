@@ -1,5 +1,5 @@
 #build frontend
-FROM node:20-alpine as zimui
+FROM node:20-alpine AS zimui
 
 WORKDIR /src
 COPY zimui /src
@@ -20,16 +20,16 @@ RUN apt-get update \
  && locale-gen "en_US.UTF-8"
 
 # Copy global files
-COPY README.md /src/
+COPY README.md scraper/pyproject.toml /src/scraper/
 
 # Copy code + associated artifacts
-COPY scraper/pyproject.toml /src/scraper/
 COPY scraper/src /src/scraper/src
 
 
+
 # Install + cleanup
-RUN pip install --no-cache-dir /src/scraper/src \
- && rm -rf /src/scraper/src
+RUN pip install --no-cache-dir /src/scraper \
+ && rm -rf /src/scraper
 
 # Copy zimui build output
 COPY --from=zimui /src/dist /src/zimui
