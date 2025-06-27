@@ -28,8 +28,8 @@ COPY scraper/src /src/scraper/src
 
 
 # Install + cleanup
-RUN pip install --no-cache-dir /src/scraper \
- && rm -rf /src/scraper
+RUN pip install --no-cache-dir /src/scraper/src \
+ && rm -rf /src/scraper/src
 
 # Copy zimui build output
 COPY --from=zimui /src/dist /src/zimui
