@@ -12,8 +12,8 @@ VERSION = __version__
 
 SCRAPER = f"{NAME} {VERSION}"
 
-#check
-FAVICON_PATH = ROOT_DIR.parent.parent.parent / "zimui" / "public" / "favicon.png"
+#check-> this is for only temporary used.
+FAVICON_PATH = ROOT_DIR.parent.parent / "favicon_temp.png"
 with open(FAVICON_PATH, "rb") as f:
     FAVICON_BYTES = f.read()
 

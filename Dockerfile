@@ -21,6 +21,7 @@ RUN apt-get update \
 
 # Copy global files
 COPY README.md scraper/pyproject.toml /src/scraper/
+COPY README.md scraper/
 
 # Copy code + associated artifacts
 COPY scraper/src /src/scraper/src
