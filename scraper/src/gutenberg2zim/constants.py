@@ -12,8 +12,8 @@ VERSION = __version__
 
 SCRAPER = f"{NAME} {VERSION}"
 
-#check-> this is for only temporary used.
-FAVICON_PATH = ROOT_DIR.parent.parent / "favicon_temp.png"
+# check-> this is for only temporary used.?
+FAVICON_PATH = pathlib.Path(__file__).parent / "public" / "favicon_temp.png"
 with open(FAVICON_PATH, "rb") as f:
     FAVICON_BYTES = f.read()
 
@@ -21,7 +21,6 @@ logger = getLogger(NAME, level=logging.INFO)
 
 TMP_FOLDER = "tmp"
 TMP_FOLDER_PATH = pathlib.Path(TMP_FOLDER).resolve()
-
 
 
 DEFAULT_HTTP_TIMEOUT = 10

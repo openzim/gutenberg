@@ -3,8 +3,8 @@ from peewee import (
     DoesNotExist,
     ForeignKeyField,
     IntegerField,
-    TextField,
     Model,
+    TextField,
 )
 from playhouse.apsw_ext import APSWDatabase
 

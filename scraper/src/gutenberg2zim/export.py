@@ -38,8 +38,6 @@ from gutenberg2zim.utils import (
     zip_epub,
 )
 
-
-
 DEBUG_COUNT = []
 NB_POPULARITY_STARS = 5
 
@@ -82,9 +80,6 @@ def save_bs_output(soup, fpath, encoding=UTF8):
     save_file(str(soup), fpath, encoding)
 
 
-
-
-
 def tmpl_path() -> Path:
     return Path(gutenberg2zim.__file__).parent / "templates"
 
@@ -93,9 +88,6 @@ def get_list_of_all_languages():
     return list(
         {bl.language_code for bl in BookLanguage.select(BookLanguage.language_code)}
     )
-
-
-
 
 
 def export_all_books(
@@ -124,7 +116,6 @@ def export_all_books(
             "Unable to proceed. Combination of languages, "
             "books and formats has no result."
         )
-
 
     # export HTML index and other static files
     # export_skeleton(
@@ -393,7 +384,6 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
                         child.decompose()  # type: ignore
                 break
 
-
     # if there is no charset, set it to utf8
     if not epub:
         meta = BeautifulSoup(
@@ -412,9 +402,6 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
         return html
 
     return soup
-
-
-
 
 
 def export_book(
@@ -458,7 +445,7 @@ def export_book(
     # )
 
 
-#still need this one
+# still need this one
 def handle_unoptimized_files(
     book: Book,
     src_dir: Path,
@@ -730,7 +717,6 @@ def handle_unoptimized_files(
                 logger.error(f"\t\tException while handling companion file: {e}")
 
 
-
 def authors_from_ids(idlist):
     """build a list of Author objects based on a list of author.gut_id
 
@@ -771,4 +757,3 @@ def bookshelf_list_language(lang):
         .group_by(Book.bookshelf)
         .order_by(Book.bookshelf.asc())
     ]
-
