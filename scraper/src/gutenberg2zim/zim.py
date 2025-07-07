@@ -1,17 +1,16 @@
 import datetime
+import os
 import pathlib
-import shutil
-import subprocess
 
 from kiwixstorage import KiwixStorage
 from peewee import fn
 
 from gutenberg2zim.constants import PROJECT_ROOT, logger
 from gutenberg2zim.database import BookLanguage
-from gutenberg2zim.export import export_all_books
+from gutenberg2zim.export import export_all_books, export_database, export_folder
 from gutenberg2zim.iso639 import ISO_MATRIX
 from gutenberg2zim.l10n import metadata_translations
-from gutenberg2zim.shared import Global, add_dist_folder_to_zim
+from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import get_project_id
 
 
@@ -90,9 +89,6 @@ def build_zimfile(
         publisher=publisher,
     )
 
-    # zim dis resource
-    dist_dir = pathlib.Path(PROJECT_ROOT / "zimui" / "dist")
-
     Global.start()
 
     try:
@@ -110,21 +106,11 @@ def build_zimfile(
             force=force,
         )
 
-        # Trigger `yarn build` in the zimui frontend directory
-        zimui_path = PROJECT_ROOT / "zimui"
-
-        logger.info("Starting frontend build.")
-        yarn_path = shutil.which("yarn")
-        if yarn_path is None:
-            raise RuntimeError("yarn not found")
-
-        subprocess.run([yarn_path, "install"], cwd=zimui_path, check=True)
-        logger.info("Dependencies installed.")
-
-        subprocess.run([yarn_path, "build"], cwd=zimui_path, check=True)
-        logger.info("Frontend build completed.")
-
-        add_dist_folder_to_zim(dist_dir)
+        dist_dir = pathlib.Path(
+            os.environ.get("GUTENBERG_ZIMUI_DIST", str(PROJECT_ROOT / "zimui" / "dist"))
+        )
+        export_folder(dist_dir)
+        export_database()
 
     except Exception as exc:
         # request Creator not to create a ZIM file on finish

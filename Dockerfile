@@ -19,14 +19,20 @@ RUN apt-get update \
  && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
  && locale-gen "en_US.UTF-8"
 
-# Copy global files
-COPY README.md scraper/pyproject.toml /src/scraper/
-COPY README.md scraper/
+RUN mkdir -p /output
+WORKDIR /output
+
+# Copy pyproject.toml and its dependencies
+COPY README.md /src/
+COPY scraper/pyproject.toml /src/scraper/
+COPY scraper/src/gutenberg2zim/__about__.py /src/scraper/src/gutenberg2zim/__about__.py
+
+# Install Python dependencies
+RUN pip install --no-cache-dir /src/scraper
 
 # Copy code + associated artifacts
 COPY scraper/src /src/scraper/src
-
-
+COPY *.md LICENSE CHANGELOG.md /src/
 
 # Install + cleanup
 RUN pip install --no-cache-dir /src/scraper \
@@ -35,7 +41,6 @@ RUN pip install --no-cache-dir /src/scraper \
 # Copy zimui build output
 COPY --from=zimui /src/dist /src/zimui
 
-ENV GUTENBURG_ZIMUI_DIST=/src/zimui
+ENV GUTENBERG_ZIMUI_DIST=/src/zimui
 
-WORKDIR /output
 CMD ["gutenberg2zim", "--help"]

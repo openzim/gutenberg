@@ -8,14 +8,11 @@ from peewee import (
 )
 from playhouse.apsw_ext import APSWDatabase
 
-from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
+from gutenberg2zim.constants import logger
 
-# check if folder not exist
-TMP_FOLDER_PATH.mkdir(parents=True, exist_ok=True)
-db_path = TMP_FOLDER_PATH / "gutenberg.db"
 timeout = 10
 db = APSWDatabase(
-    str(db_path),
+    "gutenberg.db",
     pragmas=(
         ("journal_mode", "WAL"),
         ("cache_size", 10000),

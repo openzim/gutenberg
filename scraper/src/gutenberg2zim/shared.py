@@ -1,7 +1,6 @@
 import pathlib
 import threading
 from datetime import date
-from mimetypes import guess_type
 
 from zimscraperlib.zim.creator import Creator
 from zimscraperlib.zim.metadata import (
@@ -20,21 +19,6 @@ from zimscraperlib.zim.metadata import (
 )
 
 from gutenberg2zim.constants import FAVICON_BYTES, VERSION, logger
-
-
-def add_dist_folder_to_zim(dist_folder: pathlib.Path):
-    for file_path in dist_folder.rglob("*"):
-        if file_path.is_file():
-            relative_path = file_path.relative_to(dist_folder).as_posix()
-            mime, _ = guess_type(str(file_path))
-
-            Global.add_item_for(
-                path=relative_path,
-                title=None,
-                fpath=file_path,
-                mimetype=mime or "application/octet-stream",
-                should_compress=True,
-            )
 
 
 class Global:

@@ -69,7 +69,7 @@ onMounted(async () => {
     locateFile: (file) => new URL(file, document.baseURI).href
   })
 
-  const dbUrl = new URL('tmp/gutenberg.db', document.baseURI).href
+  const dbUrl = new URL('gutenberg.db', document.baseURI).href
   const res = await fetch(dbUrl)
   const buffer = await res.arrayBuffer()
   const db = new SQL.Database(new Uint8Array(buffer))

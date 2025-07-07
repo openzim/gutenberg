@@ -126,7 +126,7 @@ def main():
             raise ValueError("Unable to connect to Optimization Cache. Check its URL.")
         logger.info("S3 Credentials OK. Continuing ... ")
 
-    # create tmp dir -> check if deletable
+    # create tmp dir
     TMP_FOLDER_PATH.mkdir(parents=True, exist_ok=True)
 
     languages = [

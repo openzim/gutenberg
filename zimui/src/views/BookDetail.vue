@@ -43,10 +43,10 @@
 
               <!-- Download buttons -->
               <div class="d-flex mb-4">
-                <a :href="`/tmp/${book.title}.${book.id}.html`" download>
+                <a :href="htmlDownloadUrl" download>
                   <v-btn color="primary" variant="outlined" class="me-4">Download HTML</v-btn>
                 </a>
-                <a :href="`/tmp/${book.title}.${book.id}.epub`" download>
+                <a :href="epubDownloadUrl" download>
                   <v-btn color="primary" variant="outlined">Download EPUB</v-btn>
                 </a>
               </div>
@@ -103,7 +103,7 @@ onMounted(async () => {
     locateFile: (file) => new URL(file, document.baseURI).href
   })
 
-  const dbUrl = new URL('tmp/gutenberg.db', document.baseURI).href
+  const dbUrl = new URL('gutenberg.db', document.baseURI).href
   const res = await fetch(dbUrl)
 
   const buffer = await res.arrayBuffer()
@@ -153,8 +153,16 @@ onMounted(async () => {
 })
 
 const coverPath = computed(() => {
-  return new URL(`tmp/${book.value!.id}_cover_image.jpg`, document.baseURI).href
+  return new URL(`${book.value!.id}_cover_image.jpg`, document.baseURI).href
 })
+
+const htmlDownloadUrl = computed(
+  () => new URL(`${book.value!.title}.${book.value!.id}.html`, document.baseURI).href
+)
+
+const epubDownloadUrl = computed(
+  () => new URL(`${book.value!.title}.${book.value!.id}.epub`, document.baseURI).href
+)
 </script>
 
 <style scoped>

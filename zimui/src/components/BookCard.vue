@@ -50,9 +50,7 @@ import type { Book } from '@/types/books'
 
 const props = defineProps<{ book: Book }>()
 
-const coverPath = computed(
-  () => new URL(`tmp/${props.book.id}_cover_image.jpg`, document.baseURI).href
-)
+const coverPath = computed(() => new URL(`${props.book.id}_cover_image.jpg`, document.baseURI).href)
 
 const { isFavorite, toggleFavorite } = useFavorites()
 </script>

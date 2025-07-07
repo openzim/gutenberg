@@ -4,6 +4,7 @@ import tempfile
 import traceback
 import urllib.parse
 import zipfile
+from mimetypes import guess_type
 from multiprocessing.dummy import Pool
 from pathlib import Path
 
@@ -83,6 +84,38 @@ def tmpl_path() -> Path:
 def get_list_of_all_languages():
     return list(
         {bl.language_code for bl in BookLanguage.select(BookLanguage.language_code)}
+    )
+
+
+def export_folder(folder: Path):
+    for file_path in folder.rglob("*"):
+        if file_path.is_file():
+            relative_path = file_path.relative_to(folder).as_posix()
+            mime, _ = guess_type(str(file_path))
+            Global.add_item_for(
+                path=relative_path,
+                title=None,
+                fpath=file_path,
+                mimetype=mime or "application/octet-stream",
+                should_compress=True,
+            )
+
+
+def export_database():
+    fname = "gutenberg.db"
+    db_path = Path(fname).resolve()
+
+    if not db_path.exists():
+        raise FileNotFoundError(f"Database file not found: {db_path}")
+
+    relative_path = fname
+
+    Global.add_item_for(
+        path=relative_path,
+        title=None,
+        fpath=db_path,
+        mimetype="application/octet-stream",
+        should_compress=True,
     )
 
 

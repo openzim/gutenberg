@@ -8,7 +8,7 @@ authors = [{ name = "Kiwix", email = "dev@kiwix.org" }]
 keywords = ["kiwix", "zim", "offline", "gutenberg"]
 requires-python = ">=3.13,<3.14"
 description = "Make ZIM file from Gutenberg books"
-readme = "README.md"
+readme = "../README.md"
 license = { text = "GPL-3.0-or-later" }
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -68,6 +68,9 @@ exclude = ["/.github"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/gutenberg2zim"]
+artifacts = [
+  "src/gutenberg2zim/assets/**",
+]
 
 [tool.hatch.envs.default]
 features = ["dev"]
@@ -227,7 +230,7 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [tool.pyright]
 include = ["src", "tests", "tasks.py"]
-exclude = ["**/node_modules", "**/__pycache__", "src/gutenberg2zim/templates"]
+exclude = ["**/node_modules", "**/__pycache__"]
 extraPaths = ["src"]
 pythonVersion = "3.13"
 pythonPlatform = "All"

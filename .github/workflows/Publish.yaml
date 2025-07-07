@@ -28,7 +28,6 @@ jobs:
       - name: Upload to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1.12
         with:
-          packages-dir: dist/
           packages-dir: scraper/dist/
 
       - name: Build and push Docker image
