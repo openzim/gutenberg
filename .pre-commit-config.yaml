@@ -6,6 +6,26 @@ repos:
   hooks:
   -   id: trailing-whitespace
   -   id: end-of-file-fixer
+
+- repo: https://github.com/pre-commit/mirrors-prettier
+  rev: v3.0.3
+  hooks:
+  - id: prettier
+    files: zimui\/.*$ # files in zimui folder
+- repo: https://github.com/pre-commit/mirrors-eslint
+  rev: v8.51.0
+  hooks:
+  - id: eslint
+    types: [file]
+    files: zimui\/src\/.*(?:\.[jt]sx?|\.vue)$ # *.js, *.jsx, *.ts, *.tsx, *.vue in zimui/src folder
+    args:
+    - --ignore-path
+    - zimui/.eslintignore
+    - --config
+    - zimui/.eslintrc.cjs
+    - --fix
+
+
 - repo: https://github.com/psf/black
   rev: "25.1.0"
   hooks:
@@ -15,7 +35,7 @@ repos:
   hooks:
   - id: ruff
 - repo: https://github.com/RobertCraigie/pyright-python
-  rev: v1.1.391
+  rev: v1.1.402
   hooks:
   - id: pyright
     name: pyright (system)
