@@ -15,10 +15,6 @@
             <v-list-item to="/about" link>
               <v-list-item-title>About</v-list-item-title>
             </v-list-item>
-
-            <v-list-item to="/favorite" link>
-              <v-list-item-title>Favorite</v-list-item-title>
-            </v-list-item>
           </v-list>
         </v-menu>
 

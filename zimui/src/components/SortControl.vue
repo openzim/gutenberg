@@ -15,8 +15,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+
+const emit = defineEmits(['sort-changed'])
 
 const selectedSort = ref('By popularity')
 const sortOptions = ['By popularity', 'By title', 'By author']
+
+watch(selectedSort, (newVal) => {
+  emit('sort-changed', newVal)
+})
 </script>
