@@ -7,7 +7,7 @@ from peewee import fn
 
 from gutenberg2zim.constants import PROJECT_ROOT, logger
 from gutenberg2zim.database import BookLanguage
-from gutenberg2zim.export import export_all_books, export_database, export_folder
+from gutenberg2zim.export import export_all_books, export_folder
 from gutenberg2zim.iso639 import ISO_MATRIX
 from gutenberg2zim.l10n import metadata_translations
 from gutenberg2zim.shared import Global
@@ -92,8 +92,6 @@ def build_zimfile(
     Global.start()
 
     try:
-
-        # unoptimized->optimized
         export_all_books(
             download_cache=download_cache,
             concurrency=concurrency,
@@ -110,7 +108,6 @@ def build_zimfile(
             os.environ.get("GUTENBERG_ZIMUI_DIST", str(PROJECT_ROOT / "zimui" / "dist"))
         )
         export_folder(dist_dir)
-        export_database()
 
     except Exception as exc:
         # request Creator not to create a ZIM file on finish

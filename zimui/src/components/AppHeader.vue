@@ -15,10 +15,6 @@
             <v-list-item to="/about" link>
               <v-list-item-title>About</v-list-item-title>
             </v-list-item>
-
-            <v-list-item to="/favorite" link>
-              <v-list-item-title>Favorite</v-list-item-title>
-            </v-list-item>
           </v-list>
         </v-menu>
 
@@ -71,14 +67,15 @@
   </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
 const searchQuery = ref('')
+const emit = defineEmits<{
+  (e: 'search', value: string): void
+}>()
 
 function handleSearch() {
-  console.log('Searching for:', searchQuery.value)
-  // Check: Search Logic
-  // router.push(`/search?query=${searchQuery.value}`)
+  emit('search', searchQuery.value)
 }
 </script>

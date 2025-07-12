@@ -8,6 +8,11 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+- Implement basic sort logic
+- Split DB into lightweight homepage DB + per-book JSON files
+- Move scraper files to `scraper` subfolder and update workflows
+- Initialize new Vue.js project in `zimui` subfolder
+
 ## [2.2.0] - 2025-06-06
 
 ### Added
@@ -20,8 +25,7 @@ as of 2.0.0.
 - Add language filter to combobox for requested languages (#249)
 
 ### Changed
-- Move scraper files to `scraper` subfolder and update workflows
-- Initialize new Vue.js project in `zimui` subfolder
+
 - Simplify Gutenberg scraping (no more rsync, no more fallback URLs / filenames) (#97)
 - Prefer EPUB 3 to EPUB (#235)
 - Do not force the presence of PDF format for all books (#160)
