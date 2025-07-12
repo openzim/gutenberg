@@ -67,14 +67,15 @@
   </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
 const searchQuery = ref('')
+const emit = defineEmits<{
+  (e: 'search', value: string): void
+}>()
 
 function handleSearch() {
-  console.log('Searching for:', searchQuery.value)
-  // Check: Search Logic
-  // router.push(`/search?query=${searchQuery.value}`)
+  emit('search', searchQuery.value)
 }
 </script>
