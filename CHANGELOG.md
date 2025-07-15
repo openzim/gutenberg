@@ -8,6 +8,8 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+- Fix long title/long author name issues
+- Change to pouchDB with a single json(homepage) + per-book JSON files
 - Implement basic sort logic
 - Split DB into lightweight homepage DB + per-book JSON files
 - Move scraper files to `scraper` subfolder and update workflows
