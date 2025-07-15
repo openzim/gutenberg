@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "cp node_modules/sql.js/dist/sql-wasm.wasm public/",
     "build": "run-s type-check build-only",
     "preview": "vite preview",
     "test:unit": "vitest",
@@ -15,8 +14,12 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@types/pouchdb-browser": "^6.1.5",
+    "@types/pouchdb-find": "^7.3.3",
+    "events": "^3.3.0",
     "pinia": "^2.1.7",
-    "sql.js": "^1.13.0",
+    "pouchdb-browser": "^9.0.0",
+    "pouchdb-find": "^9.0.0",
     "vite-plugin-vuetify": "^2.0.3",
     "vue": "^3.4.21",
     "vue-router": "4",

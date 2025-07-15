@@ -1,6 +1,5 @@
 import json
 import shutil
-import sqlite3
 import tempfile
 import traceback
 import urllib.parse
@@ -107,62 +106,37 @@ def compute_downloads_rating(books, nb_stars=NB_POPULARITY_STARS):
     return books
 
 
-def export_homepage_db(books):
+def export_homepage_json(books):
     """
-    Generate a simplified SQLite database and register it for ZIM
+    Export books into homepage.json format for PouchDB frontend
     """
-    output_path = TMP_FOLDER_PATH / "homepage.db"
-    conn = sqlite3.connect(output_path)
-    cursor = conn.cursor()
+    output_path = TMP_FOLDER_PATH / "homepage.json"
 
-    cursor.execute("DROP TABLE IF EXISTS homepage")
-    cursor.execute("DROP TABLE IF EXISTS book_language")
-
-    cursor.execute(
-        """
-    CREATE TABLE IF NOT EXISTS homepage (
-        book_id INTEGER PRIMARY KEY,
-        title TEXT,
-        author TEXT,
-        rating INTEGER
-    )
-    """
-    )
-
-    cursor.execute(
-        """
-    CREATE TABLE IF NOT EXISTS book_language (
-        book_id INTEGER,
-        lang TEXT,
-        PRIMARY KEY (book_id, lang)
-    )
-    """
-    )
+    json_books = []
 
     for book in books:
-        cursor.execute(
-            """
-            INSERT INTO homepage (book_id, title, author, rating)
-            VALUES (?, ?, ?, ?)
-            """,
-            (book.book_id, book.title, book.author.name(), book.rating),
-        )
+        book_id = book.book_id
+        title = book.title
+        author = book.author.name()
+        rating = book.rating
+        langs = list({lang.language_code for lang in book.languages})  # 去重
 
-        langs = [lang.language_code for lang in book.languages]
-        for lang in set(langs):
-            cursor.execute(
-                """
-                INSERT OR IGNORE INTO book_language (book_id, lang)
-                VALUES (?, ?)
-                """,
-                (book.book_id, lang),
-            )
+        doc = {
+            "_id": f"book_{book_id}",  # PouchDB 用的主键
+            "id": book_id,
+            "title": title,
+            "author": author,
+            "rating": rating,
+            "lang": langs,
+        }
 
-    conn.commit()
-    conn.close()
+        json_books.append(doc)
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(json_books, f, ensure_ascii=False, indent=2)
 
     export_single_file(output_path)
-    logger.info("Exporting Homepage database")
+    # logger.info(" Exported homepage.json for PouchDB")
 
 
 def export_book_details_to_json(books):
@@ -252,7 +226,7 @@ def export_all_books(
 
     logger.info(f"Found {books.count()} books for export")
 
-    export_homepage_db(books)
+    export_homepage_json(books)
 
     export_book_details_to_json(books)
 

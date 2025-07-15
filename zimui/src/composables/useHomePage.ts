@@ -1,18 +1,20 @@
 import { ref, onMounted, onUnmounted } from 'vue'
-import initSqlJs from 'sql.js/dist/sql-wasm.js'
+import PouchDB from 'pouchdb-browser'
+import PouchFind from 'pouchdb-find'
 import type { Book } from '@/types/books'
+
+PouchDB.plugin(PouchFind)
 
 export function useHomePage() {
   const selectedSort = ref('By popularity')
-  const searchQuery = ref('')
   const booksToDisplay = ref<Book[]>([])
   const loadMoreTrigger = ref<HTMLElement | null>(null)
   const showTopButton = ref(false)
   const isLoading = ref(false)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let db: any = null
-  let loadedCount = 0
+
   const pageSize = 12
+  let loadedCount = 0
+  let db: PouchDB.Database<Book>
   let observer: IntersectionObserver | null = null
 
   const scrollToTop = () => {
@@ -23,66 +25,42 @@ export function useHomePage() {
     showTopButton.value = window.scrollY > 300
   }
 
-  // fuzzy search
-  const buildQuery = () => {
-    const baseQuery = ['SELECT book_id AS id, title, author, rating', 'FROM homepage']
-    const where: string[] = []
-    const params: (string | number)[] = []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const buildQuery = (): any => {
+  const selector: Record<string, unknown> = {}
 
-    const q = searchQuery.value.trim().toLowerCase()
-    if (q) {
-      where.push('(LOWER(title) LIKE ? OR LOWER(author) LIKE ?)')
-      params.push(`%${q}%`, `%${q}%`)
-    }
+  let sort: Array<string | Record<string, 'asc' | 'desc'>> = []
 
-    if (where.length > 0) {
-      baseQuery.push('WHERE ' + where.join(' AND '))
-    }
-
-    if (selectedSort.value === 'By title') {
-      baseQuery.push('ORDER BY title ASC')
+  if (selectedSort.value === 'By title') {
+      sort = ['title']
     } else if (selectedSort.value === 'By author') {
-      baseQuery.push('ORDER BY author ASC')
+      sort = ['author']
     } else {
-      baseQuery.push('ORDER BY rating DESC')
+      sort = [{ rating: 'desc' }]
     }
 
-    baseQuery.push('LIMIT ? OFFSET ?')
-    params.push(pageSize, loadedCount)
-
-    return { sql: baseQuery.join(' '), params }
+    return {
+      selector,
+      sort,
+      skip: loadedCount,
+      limit: pageSize
+    }
   }
 
-  // pagination control
-  const loadNextBooks = () => {
-    if (isLoading.value || !db) return
+
+  const loadNextBooks = async () => {
+    if (isLoading.value) return
     isLoading.value = true
 
-    const { sql, params } = buildQuery()
-    const stmt = db.prepare(sql)
-    stmt.bind(params)
+    const query = buildQuery()
+    const result = await db.find(query)
 
-    const newBooks: Book[] = []
-    while (stmt.step()) {
-      newBooks.push(stmt.getAsObject() as Book)
-    }
-
-    stmt.free()
-
-    // load more books and add to front page
-    booksToDisplay.value.push(...newBooks)
+    booksToDisplay.value.push(...result.docs)
     loadedCount += pageSize
     isLoading.value = false
   }
 
-  function onSearch(query: string) {
-    searchQuery.value = query
-    loadedCount = 0
-    booksToDisplay.value = []
-    loadNextBooks()
-  }
-
-  function onSortChanged(sortKey: string) {
+  const onSortChanged = (sortKey: string) => {
     selectedSort.value = sortKey
     loadedCount = 0
     booksToDisplay.value = []
@@ -90,14 +68,18 @@ export function useHomePage() {
   }
 
   onMounted(async () => {
-    const SQL = await initSqlJs({
-      locateFile: (file) => new URL(file, document.baseURI).href
-    })
+    db = new PouchDB('homepage')
+    await db.destroy()
+    db = new PouchDB('homepage')
 
-    const dbUrl = new URL('homepage.db', document.baseURI).href
-    const res = await fetch(dbUrl)
-    const buffer = await res.arrayBuffer()
-    db = new SQL.Database(new Uint8Array(buffer))
+    const jsonUrl = new URL('homepage.json', document.baseURI).href
+    const res = await fetch(jsonUrl)
+    const data = await res.json()
+    await db.bulkDocs(data)
+
+    await db.createIndex({ index: { fields: ['title'] } })
+    await db.createIndex({ index: { fields: ['author'] } })
+    await db.createIndex({ index: { fields: ['rating'] } })
 
     loadNextBooks()
 
@@ -124,7 +106,6 @@ export function useHomePage() {
   return {
     booksToDisplay,
     onSortChanged,
-    onSearch,
     loadMoreTrigger,
     showTopButton,
     scrollToTop

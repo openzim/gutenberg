@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <AppHeader @search="onSearch" />
+    <AppHeader />
 
     <v-container class="pt-4">
       <Sort @sort-changed="onSortChanged" />
@@ -37,6 +37,6 @@ import AppHeader from '@/components/AppHeader.vue'
 import Sort from '@/components/SortControl.vue'
 import BookCard from '@/components/BookCard.vue'
 
-const { booksToDisplay, onSortChanged, onSearch, loadMoreTrigger, showTopButton, scrollToTop } =
+const { booksToDisplay, onSortChanged, loadMoreTrigger, showTopButton, scrollToTop } =
   useHomePage()
 </script>
