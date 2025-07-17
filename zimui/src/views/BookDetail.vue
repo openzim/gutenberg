@@ -82,6 +82,7 @@ import AppHeader from '@/components/AppHeader.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Book } from '@/types/books'
+import axios from 'axios'
 
 const book = ref<Book | null>(null)
 const fontSize = ref(16)
@@ -98,10 +99,10 @@ const decreaseFontSize = () => {
 
 onMounted(async () => {
   try {
-    const res = await fetch(new URL(`${bookId}.json`, document.baseURI).href)
-    if (!res.ok) throw new Error('Book not found')
+    const url = new URL(`${bookId}.json`, document.baseURI).href
+    const res = await axios.get(url)
 
-    const data = await res.json()
+    const data = await res.data
     book.value = {
       id: data.book_id,
       title: data.title,

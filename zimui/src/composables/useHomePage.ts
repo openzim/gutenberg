@@ -2,6 +2,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import PouchDB from 'pouchdb-browser'
 import PouchFind from 'pouchdb-find'
 import type { Book } from '@/types/books'
+import axios from 'axios'
 
 PouchDB.plugin(PouchFind)
 
@@ -27,11 +28,11 @@ export function useHomePage() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const buildQuery = (): any => {
-  const selector: Record<string, unknown> = {}
+    const selector: Record<string, unknown> = {}
 
-  let sort: Array<string | Record<string, 'asc' | 'desc'>> = []
+    let sort: Array<string | Record<string, 'asc' | 'desc'>> = []
 
-  if (selectedSort.value === 'By title') {
+    if (selectedSort.value === 'By title') {
       sort = ['title']
     } else if (selectedSort.value === 'By author') {
       sort = ['author']
@@ -46,7 +47,6 @@ export function useHomePage() {
       limit: pageSize
     }
   }
-
 
   const loadNextBooks = async () => {
     if (isLoading.value) return
@@ -73,8 +73,8 @@ export function useHomePage() {
     db = new PouchDB('homepage')
 
     const jsonUrl = new URL('homepage.json', document.baseURI).href
-    const res = await fetch(jsonUrl)
-    const data = await res.json()
+    const res = await axios.get(jsonUrl)
+    const data = await res.data
     await db.bulkDocs(data)
 
     await db.createIndex({ index: { fields: ['title'] } })

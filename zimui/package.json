@@ -16,6 +16,7 @@
   "dependencies": {
     "@types/pouchdb-browser": "^6.1.5",
     "@types/pouchdb-find": "^7.3.3",
+    "axios": "^1.10.0",
     "events": "^3.3.0",
     "pinia": "^2.1.7",
     "pouchdb-browser": "^9.0.0",
