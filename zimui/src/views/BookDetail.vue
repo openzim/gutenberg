@@ -79,11 +79,10 @@
 
 <script setup lang="ts">
 import AppHeader from '@/components/AppHeader.vue'
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import initSqlJs from 'sql.js/dist/sql-wasm.js'
-import { computed } from 'vue'
 import type { Book } from '@/types/books'
+import axios from 'axios'
 
 const book = ref<Book | null>(null)
 const fontSize = ref(16)
@@ -99,45 +98,21 @@ const decreaseFontSize = () => {
 }
 
 onMounted(async () => {
-  const SQL = await initSqlJs({
-    locateFile: (file) => new URL(file, document.baseURI).href
-  })
+  try {
+    const url = new URL(`${bookId}.json`, document.baseURI).href
+    const res = await axios.get(url)
 
-  const dbUrl = new URL('gutenberg.db', document.baseURI).href
-  const res = await fetch(dbUrl)
-
-  const buffer = await res.arrayBuffer()
-  const db = new SQL.Database(new Uint8Array(buffer))
-
-  const stmt = db.prepare(`
-    SELECT
-      b.book_id AS id,
-      b.title,
-      b.description,
-      -- check -> better solution
-      CASE
-      WHEN b.downloads >= 1000 THEN 5
-      WHEN b.downloads >= 750 THEN 4
-      WHEN b.downloads >= 500 THEN 3
-      WHEN b.downloads >= 250 THEN 2
-      WHEN b.downloads >= 100 THEN 1
-      ELSE 0
-      END AS rating,
-      a.first_names || ' ' || a.last_name AS author,
-      bl.language_code AS language,
-      l.name AS license
-    FROM book b
-    LEFT JOIN author a ON b.author_id = a.gut_id
-    LEFT JOIN booklanguage bl ON b.book_id = bl.book_id
-    LEFT JOIN license l ON b.book_license_id = l.slug
-    WHERE b.book_id = ?
-  `)
-  stmt.bind([bookId])
-
-  if (stmt.step()) {
-    book.value = stmt.getAsObject()
-    console.log('Result:', book.value)
-  } else {
+    const data = await res.data
+    book.value = {
+      id: data.book_id,
+      title: data.title,
+      author: data.author,
+      rating: data.rating,
+      description: data.description || '',
+      language: data.languages?.join(', '),
+      license: data.license
+    }
+  } catch (err) {
     book.value = {
       id: -1,
       title: 'Not Found',
@@ -145,11 +120,8 @@ onMounted(async () => {
       rating: 0,
       description: ''
     }
-    console.warn('Not found book_id:', bookId)
+    console.warn('Book not found:', bookId)
   }
-
-  stmt.free()
-  db.close()
 })
 
 const coverPath = computed(() => {

@@ -15,7 +15,6 @@ from schedule import every
 from six import text_type
 from zimscraperlib.image import optimize_image as scraperlib_optimize_image
 
-import gutenberg2zim
 from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
 from gutenberg2zim.database import Author, Book, BookLanguage, close_db
 from gutenberg2zim.l10n import l10n_strings
@@ -77,14 +76,102 @@ def save_bs_output(soup, fpath, encoding=UTF8):
     save_file(str(soup), fpath, encoding)
 
 
-def tmpl_path() -> Path:
-    return Path(gutenberg2zim.__file__).parent / "templates"
-
-
 def get_list_of_all_languages():
     return list(
         {bl.language_code for bl in BookLanguage.select(BookLanguage.language_code)}
     )
+
+
+def compute_downloads_rating(books, nb_stars=NB_POPULARITY_STARS):
+    popbooks = sorted(books, key=lambda b: b.downloads, reverse=True)
+    popbooks_count = len(popbooks)
+
+    stars_limits = [0] * nb_stars
+    stars = nb_stars
+    nb_downloads = popbooks[0].downloads
+
+    for ibook in range(popbooks_count):
+        if (
+            ibook > (nb_stars - stars + 1) / nb_stars * popbooks_count
+            and popbooks[ibook].downloads < nb_downloads
+        ):
+            stars_limits[stars - 1] = nb_downloads
+            stars -= 1
+        nb_downloads = popbooks[ibook].downloads
+
+    for book in books:
+        rating = sum([book.downloads >= stars_limits[i] for i in range(nb_stars)])
+        book.rating = rating
+
+    return books
+
+
+def export_homepage_json(books):
+    """
+    Export books into homepage.json format for PouchDB frontend
+    """
+    output_path = TMP_FOLDER_PATH / "homepage.json"
+
+    json_books = []
+
+    for book in books:
+        book_id = book.book_id
+        title = book.title
+        author = book.author.name()
+        rating = book.rating
+        langs = list({lang.language_code for lang in book.languages})  # 去重
+
+        doc = {
+            "_id": f"book_{book_id}",  # PouchDB 用的主键
+            "id": book_id,
+            "title": title,
+            "author": author,
+            "rating": rating,
+            "lang": langs,
+        }
+
+        json_books.append(doc)
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(json_books, f, ensure_ascii=False, indent=2)
+
+    export_single_file(output_path)
+    # logger.info(" Exported homepage.json for PouchDB")
+
+
+def export_book_details_to_json(books):
+    """
+    Save each book's details to a JSON file in tmp_dir,
+    then add the file using Global.add_item_for via fpath.
+    """
+    count = 0
+
+    for book in books:
+        langs = [lang.language_code for lang in book.languages]
+        data = {
+            "book_id": book.book_id,
+            "title": book.title,
+            "subtitle": book.subtitle,
+            "author": book.author.name(),
+            "license": str(book.book_license),
+            "downloads": book.downloads,
+            "rating": book.rating,
+            "bookshelf": book.bookshelf,
+            "cover_page": book.cover_page,
+            "languages": langs,
+            "description": book.description,
+        }
+
+        fpath = TMP_FOLDER_PATH / f"{book.book_id}.json"
+
+        with open(fpath, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+
+        export_single_file(fpath)
+        logger.info(f"Exporting {book.book_id}.json")
+        count += 1
+
+    logger.info(f"Finished exporting and adding {count} book JSON files.")
 
 
 def export_folder(folder: Path):
@@ -101,25 +188,23 @@ def export_folder(folder: Path):
             )
 
 
-def export_database():
-    fname = "gutenberg.db"
-    db_path = Path(fname).resolve()
+def export_single_file(file: Path):
+    fpath = Path(file).resolve()
 
-    if not db_path.exists():
-        raise FileNotFoundError(f"Database file not found: {db_path}")
+    if not fpath.exists():
+        raise FileNotFoundError(f"{file} file not found: {fpath}")
 
-    relative_path = fname
+    relative_path = fpath.name
 
     Global.add_item_for(
         path=relative_path,
         title=None,
-        fpath=db_path,
+        fpath=fpath,
         mimetype="application/octet-stream",
         should_compress=True,
     )
 
 
-# check
 def export_all_books(
     download_cache: Path,
     concurrency: int,
@@ -137,8 +222,13 @@ def export_all_books(
     books = get_list_of_filtered_books(
         languages=languages, formats=formats, only_books=only_books
     )
+    books = compute_downloads_rating(books)
 
     logger.info(f"Found {books.count()} books for export")
+
+    export_homepage_json(books)
+
+    export_book_details_to_json(books)
 
     if not len(get_langs_with_count(books=books)):
         critical_error(
@@ -165,8 +255,6 @@ def export_all_books(
         Global.inc_progress()
 
     Pool(concurrency).map(dlb, books)
-
-    # must close database for later safe file move
     close_db()
 
 
@@ -423,17 +511,6 @@ def export_book(
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
         )
-
-    # write_book_presentation_article(
-    #     book=book,
-    #     optimized_files_dir=optimized_files_dir,
-    #     force=force,
-    #     project_id=project_id,
-    #     title_search=title_search,
-    #     add_bookshelves=add_bookshelves,
-    #     books=books,
-    #     formats=formats,
-    # )
 
 
 # still need this one

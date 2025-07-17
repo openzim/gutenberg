@@ -3,25 +3,16 @@
     <!-- Book Cover Section (relative container) -->
     <div class="position-relative">
       <v-img :src="coverPath" height="280" cover style="border: 1px solid #ccc" />
-
-      <!-- Floating Favorite Button -->
-      <v-btn
-        icon
-        :color="isFavorite(book.id) ? 'red' : 'grey'"
-        class="position-absolute"
-        style="top: 8px; right: 8px; z-index: 1"
-        @click.stop="toggleFavorite(book.id)"
-      >
-        <v-icon>{{ isFavorite(book.id) ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
-      </v-btn>
     </div>
 
     <!-- Book Info Section wrapped with router-link -->
     <router-link :to="`/book/${book.id}`" class="text-decoration-none flex-grow-1">
       <v-card-text class="d-flex flex-column justify-space-between flex-grow-1">
         <div>
-          <h3 class="text-h6 font-weight-bold mb-1">{{ book.title }}</h3>
-          <p class="text-subtitle-2 mb-1">{{ book.author }}</p>
+          <h3 class="book-title text-h6 font-weight-bold mb-1" :title="book.title">
+            {{ book.title }}
+          </h3>
+          <p class="author-name text-subtitle-2 mb-1">{{ book.author }}</p>
         </div>
 
         <!-- Rating Stars -->
@@ -45,12 +36,26 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useFavorites } from '@/composables/useFavorites'
 import type { Book } from '@/types/books'
 
 const props = defineProps<{ book: Book }>()
 
 const coverPath = computed(() => new URL(`${props.book.id}_cover_image.jpg`, document.baseURI).href)
-
-const { isFavorite, toggleFavorite } = useFavorites()
 </script>
+
+<style scoped>
+.book-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.author-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
