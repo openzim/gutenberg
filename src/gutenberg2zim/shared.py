@@ -26,23 +26,6 @@ class Global:
 
     creator: Creator
     _lock = threading.Lock()
-    total = 0
-    progress = 0
-
-    @staticmethod
-    def set_total(total):
-        with Global._lock:
-            Global.total = total
-
-    @staticmethod
-    def reset_progress():
-        with Global._lock:
-            Global.progress = 0
-
-    @staticmethod
-    def inc_progress():
-        with Global._lock:
-            Global.progress += 1
 
     @staticmethod
     def setup(
@@ -83,9 +66,9 @@ class Global:
         fpath: pathlib.Path | None = None,
         content: str | None = None,
         mimetype: str | None = None,
+        *,
         is_front: bool | None = None,
         should_compress: bool | None = None,
-        *,
         delete_fpath: bool | None = False,
     ):
         logger.debug(f"\t\tAdding ZIM item at {path}")

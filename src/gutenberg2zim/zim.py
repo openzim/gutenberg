@@ -9,8 +9,31 @@ from gutenberg2zim.database import BookLanguage
 from gutenberg2zim.export import export_all_books
 from gutenberg2zim.iso639 import ISO_MATRIX
 from gutenberg2zim.l10n import metadata_translations
+from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import get_project_id
+
+
+def existing_and_sorted_languages(languages: list[str] | None) -> list[str]:
+
+    # actual list of languages with books sorted by most used
+    nb = fn.COUNT(BookLanguage.book).alias("nb")
+    db_languages: list[str] = [
+        lang.language_code
+        for lang in BookLanguage.select(BookLanguage.language_code, nb)
+        .group_by(BookLanguage.language_code)
+        .order_by(nb.desc())
+    ]
+
+    if languages:
+        # user requested some languages, limit db-collected ones to matching
+        existing_and_sorted_languages = [
+            lang for lang in db_languages if lang in languages
+        ]
+    else:
+        existing_and_sorted_languages = db_languages
+
+    return existing_and_sorted_languages
 
 
 def build_zimfile(
@@ -26,27 +49,13 @@ def build_zimfile(
     title: str | None,
     description: str | None,
     long_description: str | None,
-    stats_filename: str | None,
     publisher: str,
     *,
     force: bool,
     title_search: bool,
     add_bookshelves: bool,
+    progress: ScraperProgress,
 ) -> None:
-    # actual list of languages with books sorted by most used
-    nb = fn.COUNT(BookLanguage.book).alias("nb")
-    db_languages = [
-        lang.language_code
-        for lang in BookLanguage.select(BookLanguage.language_code, nb)
-        .group_by(BookLanguage.language_code)
-        .order_by(nb.desc())
-    ]
-
-    if languages:
-        # user requested some languages, limit db-collected ones to matching
-        languages = [lang for lang in db_languages if lang in languages]
-    else:
-        languages = db_languages
     iso_languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
 
     formats.sort()
@@ -102,7 +111,7 @@ def build_zimfile(
             only_books=only_books,
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
-            stats_filename=stats_filename,
+            progress=progress,
             force=force,
             title_search=title_search,
             add_bookshelves=add_bookshelves,

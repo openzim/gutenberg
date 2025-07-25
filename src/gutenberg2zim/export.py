@@ -11,7 +11,6 @@ import bs4
 from bs4 import BeautifulSoup
 from jinja2 import Environment, PackageLoader
 from kiwixstorage import KiwixStorage
-from schedule import every
 from six import text_type
 from zimscraperlib.image import optimize_image as scraperlib_optimize_image
 
@@ -21,6 +20,7 @@ from gutenberg2zim.database import Author, Book, BookLanguage
 from gutenberg2zim.iso639 import language_name
 from gutenberg2zim.l10n import l10n_strings
 from gutenberg2zim.s3 import upload_to_cache
+from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import (
     UTF8,
@@ -170,7 +170,7 @@ def export_all_books(
     only_books: list[int],
     s3_storage: KiwixStorage | None,
     optimizer_version: dict[str, str],
-    stats_filename: str | None,
+    progress: ScraperProgress,
     *,
     force: bool,
     title_search: bool,
@@ -228,12 +228,6 @@ def export_all_books(
             [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
         )
 
-    Global.set_total(len(books))
-    Global.reset_progress()
-
-    # set a timer to report progress only every 10 seconds, no need to do it more often
-    every(10).seconds.do(report_progress, stats_filename=stats_filename)
-
     def dlb(b):
         export_book(
             b,
@@ -247,23 +241,9 @@ def export_all_books(
             title_search=title_search,
             add_bookshelves=add_bookshelves,
         )
-        Global.inc_progress()
+        progress.increase_progress()
 
     Pool(concurrency).map(dlb, books)
-
-    # do it one more time at the end to indicate completion
-    report_progress(stats_filename=stats_filename)
-
-
-def report_progress(stats_filename=None):
-    if not stats_filename:
-        return
-    progress = {
-        "done": Global.progress,
-        "total": Global.total,
-    }
-    with open(stats_filename, "w") as outfile:
-        json.dump(progress, outfile, indent=2)
 
 
 def html_content_for(book: Book, src_dir):
