@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 
 from gutenberg2zim.constants import logger
 from gutenberg2zim.database import Author, Book, BookLanguage, License
+from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.utils import (
     download_file,
     normalize,
@@ -30,12 +31,22 @@ def download_rdf_file(rdf_path: Path, rdf_url: str) -> None:
     download_file(rdf_url, rdf_path)
 
 
-def parse_and_fill(rdf_path: Path, only_books: list[int]) -> None:
-    logger.info(f"\tLooping throught RDF files in {rdf_path}")
+def parse_and_fill(
+    rdf_path: Path, only_books: list[int], progress: ScraperProgress
+) -> None:
 
+    logger.info(f"\tCounting number of RDF files in {rdf_path}")
     rdf_tarfile = tarfile.open(name=rdf_path, mode="r|bz2")
+    progress.increase_total(len(rdf_tarfile.getnames()))
 
+    logger.info(f"\tLooping throught RDF files in {rdf_path}")
+    rdf_tarfile = tarfile.open(name=rdf_path, mode="r|bz2")
     for rdf_member in rdf_tarfile:
+        # increase progress at the beginning for simplicity given the potential
+        # conditions which might lead to skip some members ; this is off only
+        # by 1 out of 70k+ items
+        progress.increase_progress()
+
         rdf_member_path = Path(rdf_member.name)
 
         # skip books outside of requested list

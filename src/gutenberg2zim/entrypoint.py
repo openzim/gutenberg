@@ -2,15 +2,17 @@ import logging
 from pathlib import Path
 
 from docopt import docopt
+from schedule import run_all, run_pending
 from zimscraperlib.inputs import compute_descriptions
 
 from gutenberg2zim.constants import TMP_FOLDER_PATH, VERSION, logger
-from gutenberg2zim.database import setup_database
+from gutenberg2zim.database import BookLanguage, setup_database
 from gutenberg2zim.download import download_all_books
 from gutenberg2zim.rdf import download_rdf_file, get_rdf_fpath, parse_and_fill
 from gutenberg2zim.s3 import s3_credentials_ok
-from gutenberg2zim.utils import ALL_FORMATS
-from gutenberg2zim.zim import build_zimfile
+from gutenberg2zim.scraper_progress import ScraperProgress
+from gutenberg2zim.utils import ALL_FORMATS, get_list_of_filtered_books
+from gutenberg2zim.zim import build_zimfile, existing_and_sorted_languages
 
 help_info = (
     """Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
@@ -111,7 +113,7 @@ def main():
     bookshelves = arguments.get("--bookshelves", False)
     optimization_cache = arguments.get("--optimization-cache") or None
     use_any_optimized_version = arguments.get("--use-any-optimized-version", False)
-    stats_filename = arguments.get("--stats-filename") or None
+    stats_filename: str | None = arguments.get("--stats-filename") or None
     publisher = arguments.get("--publisher") or "openZIM"
     debug = arguments.get("--debug") or False
 
@@ -179,6 +181,8 @@ def main():
 
     rdf_path = get_rdf_fpath()
 
+    progress = ScraperProgress(stats_filename)
+
     if do_prepare:
         logger.info(f"PREPARING rdf-files cache from {rdf_url}")
         download_rdf_file(rdf_url=rdf_url, rdf_path=rdf_path)
@@ -190,7 +194,8 @@ def main():
 
     if do_parse:
         logger.info(f"PARSING rdf-files in {rdf_path}")
-        parse_and_fill(rdf_path=rdf_path, only_books=books)
+        parse_and_fill(rdf_path=rdf_path, only_books=books, progress=progress)
+        run_pending()
 
     if do_download:
         logger.info("DOWNLOADING ebooks from mirror using filters")
@@ -205,25 +210,45 @@ def main():
             optimizer_version=(
                 optimizer_version if not use_any_optimized_version else None
             ),
+            progress=progress,
         )
+        run_pending()
         logger.info("Finished downloading all books.")
 
-    if one_lang_one_zim_folder:
-        from gutenberg2zim.database import BookLanguage
+    if do_zim:
 
-        if languages == []:
-            zims = [
-                [lang.language_code]
-                for lang in BookLanguage.select(BookLanguage.language_code).distinct()
-            ]
-            zims.append([])
+        # compute the list of languages we want in every zim we will create
+        if one_lang_one_zim_folder:
+
+            if languages == []:
+                zims_languages = [
+                    [lang.language_code]
+                    for lang in BookLanguage.select(
+                        BookLanguage.language_code
+                    ).distinct()
+                ]
+                zims_languages.append([])
+            else:
+                zims_languages = [[lang] for lang in languages] + [languages]
         else:
-            zims = [[lang] for lang in languages] + [languages]
-    else:
-        zims = [languages]
+            zims_languages = [languages]
 
-    for zim_lang in zims:
-        if do_zim:
+        # filter requested languages and sort them
+        zims_languages = [
+            existing_and_sorted_languages(zim_lang) for zim_lang in zims_languages
+        ]
+
+        # compute number of books per zim to create and update scraper progress counters
+        for zim_lang in zims_languages:
+            progress.increase_total(
+                len(
+                    get_list_of_filtered_books(
+                        languages=zim_lang, formats=formats, only_books=books
+                    )
+                )
+            )
+
+        for zim_lang in zims_languages:
             logger.info("BUILDING ZIM dynamically")
 
             build_zimfile(
@@ -243,9 +268,13 @@ def main():
                 title=zim_title,
                 description=description,
                 long_description=long_description,
-                stats_filename=stats_filename,
                 publisher=publisher,
                 force=force,
                 title_search=title_search,
                 add_bookshelves=bookshelves,
+                progress=progress,
             )
+
+    # Final increase to indicate we are done
+    progress.increase_progress()
+    run_all()  # force flushing scraper progress to file

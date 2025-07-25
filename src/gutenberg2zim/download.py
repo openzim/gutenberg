@@ -21,6 +21,7 @@ from gutenberg2zim.database import Book
 from gutenberg2zim.export import fname_for, get_list_of_filtered_books
 from gutenberg2zim.pg_archive_urls import url_for_type
 from gutenberg2zim.s3 import download_from_cache
+from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.utils import (
     ALL_FORMATS,
     archive_name_for,
@@ -310,10 +311,12 @@ def download_all_books(
     force: bool,
     s3_storage: KiwixStorage | None,
     optimizer_version: dict[str, str] | None,
+    progress: ScraperProgress,
 ):
     available_books = get_list_of_filtered_books(
         languages=languages, formats=formats, only_books=only_books
     )
+    progress.increase_total(len(available_books))
 
     # ensure dir exist
     download_cache.mkdir(parents=True, exist_ok=True)
@@ -347,6 +350,10 @@ def download_all_books(
             return True
         return False
 
+    def dlb(b, progress: ScraperProgress):
+        dlb_inner(b)
+        progress.increase_progress()
+
     @backoff.on_exception(
         partial(backoff.expo, base=3, factor=2),
         requests.exceptions.RequestException,
@@ -360,7 +367,7 @@ def download_all_books(
         max_time=3,
         on_backoff=backoff_busy_error_hdlr,
     )
-    def dlb(b):
+    def dlb_inner(b):
         return download_book(
             book=b,
             download_cache=download_cache,
@@ -370,4 +377,4 @@ def download_all_books(
             optimizer_version=optimizer_version,
         )
 
-    Pool(concurrency).map(dlb, available_books)
+    Pool(concurrency).map(partial(dlb, progress=progress), available_books)

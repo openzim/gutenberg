@@ -8,6 +8,10 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Finalize implementation of scraper progress (#289)
+
 ## [2.2.0] - 2025-06-06
 
 ### Added
