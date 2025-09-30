@@ -1,7 +1,6 @@
 import datetime
 import pathlib
 
-from kiwixstorage import KiwixStorage
 from peewee import fn
 
 from gutenberg2zim.constants import logger
@@ -43,8 +42,6 @@ def build_zimfile(
     languages: list[str],
     formats: list[str],
     only_books: list[int],
-    s3_storage: KiwixStorage | None,
-    optimizer_version: dict[str, str],
     zim_name: str | None,
     title: str | None,
     description: str | None,
@@ -109,8 +106,6 @@ def build_zimfile(
             languages=languages,
             formats=formats,
             only_books=only_books,
-            s3_storage=s3_storage,
-            optimizer_version=optimizer_version,
             progress=progress,
             force=force,
             title_search=title_search,

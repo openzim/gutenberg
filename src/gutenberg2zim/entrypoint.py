@@ -9,7 +9,6 @@ from gutenberg2zim.constants import TMP_FOLDER_PATH, VERSION, logger
 from gutenberg2zim.database import BookLanguage, setup_database
 from gutenberg2zim.download import download_all_books
 from gutenberg2zim.rdf import download_rdf_file, get_rdf_fpath, parse_and_fill
-from gutenberg2zim.s3 import s3_credentials_ok
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.utils import ALL_FORMATS, get_list_of_filtered_books
 from gutenberg2zim.zim import build_zimfile, existing_and_sorted_languages
@@ -22,7 +21,7 @@ help_info = (
     """[-c CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
     """[--prepare] [--parse] [--download] [--export] [--dev] """
     """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
-    """[--title-search] [--bookshelves] [--optimization-cache S3URL] """
+    """[--title-search] [--bookshelves] """
     """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
     """[--debug]"""
     """
@@ -61,10 +60,6 @@ help_info = (
 --title-search                  Add field to search a book by title and directly """
     """jump to it
 --bookshelves                   Add bookshelves
---optimization-cache=<url>      URL with credentials to S3 bucket for using as """
-    """optimization cache
---use-any-optimized-version     Try to use any optimized version found on """
-    """optimization cache
 --stats-filename=<filename>  Path to store the progress JSON file to
 --publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
 --debug                         Enable verbose output
@@ -76,9 +71,6 @@ of Gutenberg repository using a mirror."""
 
 def main():
     arguments = docopt(help_info, version=VERSION)
-
-    # optimizer version to use
-    optimizer_version = {"html": "v1", "epub": "v1", "cover": "v1"}
 
     # actions constants
     do_prepare = arguments.get("--prepare", False)
@@ -111,8 +103,6 @@ def main():
     force = arguments.get("--force", False)
     title_search = arguments.get("--title-search", False)
     bookshelves = arguments.get("--bookshelves", False)
-    optimization_cache = arguments.get("--optimization-cache") or None
-    use_any_optimized_version = arguments.get("--use-any-optimized-version", False)
     stats_filename: str | None = arguments.get("--stats-filename") or None
     publisher = arguments.get("--publisher") or "openZIM"
     debug = arguments.get("--debug") or False
@@ -120,13 +110,6 @@ def main():
     if debug:
         for handler in logger.handlers:
             handler.setLevel(logging.DEBUG)
-
-    s3_storage = None
-    if optimization_cache:
-        s3_storage = s3_credentials_ok(optimization_cache)
-        if not s3_storage:
-            raise ValueError("Unable to connect to Optimization Cache. Check its URL.")
-        logger.info("S3 Credentials OK. Continuing ... ")
 
     # create tmp dir
     TMP_FOLDER_PATH.mkdir(parents=True, exist_ok=True)
@@ -206,10 +189,6 @@ def main():
             formats=formats,
             only_books=books,
             force=force,
-            s3_storage=s3_storage,
-            optimizer_version=(
-                optimizer_version if not use_any_optimized_version else None
-            ),
             progress=progress,
         )
         run_pending()
@@ -262,8 +241,6 @@ def main():
                 languages=zim_lang,
                 formats=formats,
                 only_books=books,
-                s3_storage=s3_storage,
-                optimizer_version=optimizer_version,
                 zim_name=Path(zim_name).name if zim_name else None,
                 title=zim_title,
                 description=description,
