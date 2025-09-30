@@ -85,10 +85,6 @@ def handle_zipped_html(zippath: Path, book: Book, dst_dir: Path) -> bool:
         if not Path(src).is_file():
             continue
 
-        # skip cover images
-        if "cover" in zipped_file:
-            continue
-
         if src.exists():
             fname = Path(zipped_file).name
 
@@ -135,11 +131,13 @@ def download_book(
         formats.append("html")
 
     book_dir = download_cache / str(book.book_id)
+    cover_dir = download_cache / "covers"
 
     if force:
         shutil.rmtree(book_dir)
 
     book_dir.mkdir(parents=True, exist_ok=True)
+    cover_dir.mkdir(parents=True, exist_ok=True)
 
     unsupported_formats = []
     for book_format in formats:
@@ -237,22 +235,20 @@ def download_book(
         if book_dir.exists():
             shutil.rmtree(book_dir, ignore_errors=True)
         return
-    download_cover(mirror_url, book, book_dir)
 
-
-def download_cover(mirror_url, book, book_dir):
+    # download cover image
     has_cover = Book.select(Book.cover_page).where(Book.book_id == book.book_id)
     if has_cover:
         url = (
             f"{mirror_url}/cache/epub/{book.book_id}/pg{book.book_id}.cover.medium.jpg"
         )
         cover = f"{book.book_id}_cover_image.jpg"
-        if (book_dir / cover).exists():
+        if (cover_dir / cover).exists():
             logger.debug(f"Cover already exists for book #{book.book_id}")
             return
 
         logger.debug(f"Downloading {url}")
-        download_file(url, book_dir / cover)
+        download_file(url, cover_dir / cover)
     else:
         logger.debug(f"No Book Cover found for Book #{book.book_id}")
 

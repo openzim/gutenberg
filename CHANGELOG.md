@@ -19,6 +19,10 @@ as of 2.0.0.
 - Move to another default mirror + add CLI flag to select mirror to use (#301)
 - Split build logic in Dockerfile to separate dependencies layer from scraper code layer (#302)
 
+### Fixed
+
+- Stop ignoring HTML illustrations containing cover in their name (#270)
+
 ## [2.2.0] - 2025-06-06
 
 ### Added

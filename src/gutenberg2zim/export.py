@@ -526,16 +526,18 @@ def export_book(
 ):
     logger.debug(f"Exporting book {book.book_id}")
     book_dir = download_cache / str(book.book_id)
+    cover_dir = download_cache / "covers"
     handle_book_files(
         book=book,
         src_dir=book_dir,
+        cover_dir=cover_dir,
         formats=formats,
         force=force,
     )
 
     write_book_presentation_article(
         book=book,
-        optimized_files_dir=book_dir,
+        cover_dir=cover_dir,
         force=force,
         project_id=project_id,
         title_search=title_search,
@@ -548,6 +550,7 @@ def export_book(
 def handle_book_files(
     book: Book,
     src_dir: Path,
+    cover_dir: Path,
     formats: list[str],
     *,
     force: bool,
@@ -626,10 +629,18 @@ def handle_book_files(
                 logger.exception(e)
                 logger.error(f"\t\tException while handling companion file: {e}")
 
+    # cover image
+    cover_img = cover_dir / f"{book.book_id}_cover_image.jpg"
+    if cover_img.exists():
+        handle_companion_file(
+            fname=cover_img,
+            dstfname=f"covers/{book.book_id}_cover_image.jpg",
+        )
+
 
 def write_book_presentation_article(
     book,
-    optimized_files_dir,
+    cover_dir,
     force,
     project_id,
     title_search,
@@ -643,7 +654,7 @@ def write_book_presentation_article(
         logger.info(f"\t\tExporting article presentation to {cover_fpath}")
         html = cover_html_content_for(
             book=book,
-            cover_dir=optimized_files_dir,
+            cover_dir=cover_dir,
             books=books,
             project_id=project_id,
             title_search=title_search,
