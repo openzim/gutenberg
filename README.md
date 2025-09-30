@@ -66,7 +66,6 @@ You can find the full arguments list below:
 -n --zim-desc=<description>     Set ZIM description
 -L --zim-long-desc=<description> Set ZIM long description
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
--u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for processing tasks
 --dlc=<nb>                      Number of concurrent *download* process for download (overwrites --concurrency). if server blocks high rate requests

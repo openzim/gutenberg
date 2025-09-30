@@ -2,6 +2,7 @@
 
 # This file has been retrieved from https://github.com/gutenbergtools/libgutenberg/blob/master/pg_archive_urls.py
 # and should be kept in sync manually
+# Last sync: March 29 2025 with https://github.com/gutenbergtools/libgutenberg/commit/be9866b9c2c97b41983265636bd2fa988f159faa
 
 """
 
@@ -63,7 +64,7 @@ def archive_dir(ebook):
     return "/".join(a)
 
 
-def archive_url(pg_url, netloc="aleph.pglaf.org", scheme="http"):
+def archive_url(pg_url, mirror_url):
     """translate pg canonical url to an archive url"""
     if not pg_url:
         return None
@@ -71,17 +72,17 @@ def archive_url(pg_url, netloc="aleph.pglaf.org", scheme="http"):
     matched = MATCH_TYPE.search(path)
     if matched and matched.group(2) in FILENAMES:
         fn = FILENAMES[matched.group(2)].format(id=matched.group(1))
-        return f"{scheme}://{netloc}/cache/epub/{matched.group(1)}/{fn}"
+        return f"{mirror_url}/cache/epub/{matched.group(1)}/{fn}"
     matched = MATCH_DIRS.search(path)
     if matched:
-        return f"{scheme}://{netloc}/{archive_dir(matched.group(1))}/{matched.group(2)}"
-    return f"{scheme}://{netloc}{path}"
+        return f"{mirror_url}/{archive_dir(matched.group(1))}/{matched.group(2)}"
+    return f"{mirror_url}{path}"
 
 
-def url_for_type(pg_type, book_id, netloc="aleph.pglaf.org", scheme="http"):
+def url_for_type(pg_type, book_id, mirror_url):
     if pg_type in FILENAMES:
         fn = FILENAMES[pg_type].format(book_id=book_id)
-        return f"{scheme}://{netloc}/cache/epub/{book_id}/{fn}"
+        return f"{mirror_url}/cache/epub/{book_id}/{fn}"
 
 
 # example1 = "https://www.gutenberg.org/ebooks/12345.html.images"
