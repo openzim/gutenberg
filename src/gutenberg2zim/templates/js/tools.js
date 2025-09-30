@@ -811,7 +811,8 @@ function showBookshelfSearchResults(value) {
       }
 
       if (bookshelves_json_data[i].match(pattern)) {
-        table += '<tr  ><td><div class="book-item"><div class="list-stripe"></div><div class = "pure-g"><div class = "pure-u-7-8"> <span class="table-title">' +
+        table += '<tr  ><td><div class="book-item"><div class="list-stripe"></div><div class = "pure-g"><div class = "pure-u-7-8"> <span class="table-title"' +
+          ' data-target="' + bookshelves_json_data[i] + '">' +
           bookshelves_json_data[i] +
           '</span></div></div></div></td></tr>';
       }
@@ -830,7 +831,7 @@ function showBookshelfSearchResults(value) {
     });
 
     $('#bookShelfTable tbody').on('click', 'tr', function() {
-      let data = encodeURI($('span', this)[0].innerHTML);
+      let data = encodeURI($('span', this).attr('data-target'));
       console.log(data);
       $(location).attr('href', './' + data + '.html');
 
