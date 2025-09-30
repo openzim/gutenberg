@@ -184,6 +184,7 @@ def export_all_books(
         )
 
     # export to JSON helpers
+    logger.info("Exporting JSON helpers")
     export_to_json_helpers(
         books_ids=books_ids,
         languages=languages,
@@ -193,6 +194,7 @@ def export_all_books(
     )
 
     # export HTML index and other static files
+    logger.info("Exporting HTML skeleton")
     export_skeleton(
         books_ids=books_ids,
         project_id=project_id,
@@ -201,6 +203,7 @@ def export_all_books(
     )
 
     # Compute popularity
+    logger.info("Computing book popularity")
     popbooks = (
         Book.select()
         .where(not books_ids or Book.book_id << books_ids)
@@ -226,6 +229,8 @@ def export_all_books(
         book.popularity = sum(
             [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
         )
+
+    logger.info(f"Exporting books with {concurrency} (parallel) worker(s)")
 
     def dlb(b):
         export_book(
@@ -578,7 +583,7 @@ def handle_book_files(
         article_name = article_name_for(book)
         article_fpath = TMP_FOLDER_PATH / article_name
         if not article_fpath.exists() or force:
-            logger.info(f"\t\tExporting to {article_fpath}")
+            logger.debug(f"\t\tExporting to {article_fpath}")
             try:
                 new_html = update_html_for_static(
                     book=book, html_content=html, formats=formats
@@ -664,7 +669,7 @@ def write_book_presentation_article(
     article_name = article_name_for(book=book, cover=True)
     cover_fpath = TMP_FOLDER_PATH / article_name
     if not cover_fpath.exists() or force:
-        logger.info(f"\t\tExporting article presentation to {cover_fpath}")
+        logger.debug(f"\t\tExporting article presentation to {cover_fpath}")
         html = cover_html_content_for(
             book=book,
             cover_dir=cover_dir,
@@ -677,7 +682,7 @@ def write_book_presentation_article(
         with open(cover_fpath, "w") as f:
             f.write(html)
     else:
-        logger.info(f"\t\tSkipping already optimized cover {cover_fpath}")
+        logger.debug(f"\t\tSkipping already optimized cover {cover_fpath}")
 
     Global.add_item_for(path=article_name, fpath=cover_fpath)
 
@@ -719,7 +724,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
         )
 
     # all books sorted by popularity
-    logger.info("\t\tDumping full_by_popularity.js")
+    logger.info("\tDumping full_by_popularity.js")
     dumpjs(
         [
             book.to_array(all_requested_formats=formats)
@@ -731,7 +736,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
     )
 
     # all books sorted by title
-    logger.info("\t\tDumping full_by_title.js")
+    logger.info("\tDumping full_by_title.js")
     dumpjs(
         [
             book.to_array(all_requested_formats=formats)
@@ -746,7 +751,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
     logger.info("\tDumping lang_xxx and authors_lang_xxx files")
     for lang in languages:
         # by popularity
-        logger.info(f"\t\tDumping lang_{lang}_by_popularity.js")
+        logger.debug(f"\t\tDumping lang_{lang}_by_popularity.js")
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
@@ -759,11 +764,12 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
             f"lang_{lang}_by_popularity.js",
         )
         # by title
-        logger.info(f"\t\tDumping lang_{lang}_by_title.js")
+        logger.debug(f"\t\tDumping lang_{lang}_by_title.js")
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
                 for book in Book.select()
+                .where(not books_ids or Book.book_id << books_ids)
                 .join(BookLanguage)
                 .where(BookLanguage.language_code == lang)
                 .order_by(Book.title.asc())
@@ -771,7 +777,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
             f"lang_{lang}_by_title.js",
         )
 
-        logger.info(f"\t\tDumping authors_lang_{lang}.js")
+        logger.debug(f"\t\tDumping authors_lang_{lang}.js")
         dumpjs(
             [
                 author.to_array()
@@ -787,6 +793,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
         )
 
     if add_bookshelves:
+        logger.info("\tDumping bookshelves_xxx JS and HTML files")
         bookshelves = bookshelf_list(books_ids)
         for bookshelf in bookshelves:
             # exclude the books with no bookshelf data
@@ -795,7 +802,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
             # dumpjs for bookshelf by popularity
             # this will allow the popularity button to use this js on the
             # particular bookshelf page
-            logger.info(f"\t\tDumping bookshelf_{bookshelf}_by_popularity.js")
+            logger.debug(f"\t\tDumping bookshelf_{bookshelf}_by_popularity.js")
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
@@ -808,7 +815,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
             )
 
             # by title
-            logger.info(f"\t\tDumping bookshelf_{bookshelf}_by_title.js")
+            logger.debug(f"\t\tDumping bookshelf_{bookshelf}_by_title.js")
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
@@ -821,7 +828,9 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
             )
             # by language
             for lang in languages:
-                logger.info(f"\t\tDumping bookshelf_{bookshelf}_by_lang_{lang}.js")
+                logger.debug(
+                    f"\t\tDumping bookshelf_{bookshelf}_lang_{lang}_by_popularity.js"
+                )
 
                 dumpjs(
                     [
@@ -834,6 +843,10 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
                         .order_by(Book.downloads.desc())
                     ],
                     f"bookshelf_{bookshelf}_lang_{lang}_by_popularity.js",
+                )
+
+                logger.debug(
+                    f"\t\tDumping bookshelf_{bookshelf}_lang_{lang}_by_title.js"
                 )
 
                 dumpjs(
@@ -851,14 +864,15 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
 
         # dump all bookshelves from any given language
         for lang in languages:
-            logger.info(f"\t\tDumping bookshelves_lang_{lang}.js")
+            logger.debug(f"\t\tDumping bookshelves_lang_{lang}.js")
             temp = bookshelf_list_language(lang, books_ids)
             dumpjs(temp, f"bookshelves_lang_{lang}.js")
 
-        logger.info("\t\tDumping bookshelves.js")
+        logger.debug("\t\tDumping bookshelves.js")
         dumpjs(bookshelves, "bookshelves.js", "bookshelves_json_data")
 
         # Create the bookshelf home page
+        logger.debug("\t\tDumping bookshelf_home.html")
         context = get_default_context(project_id=project_id, books_ids=books_ids)
         context.update({"bookshelf_home": True, "add_bookshelves": True})
         template = jinja_env.get_template("bookshelf_home.html")
@@ -874,6 +888,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
         for bookshelf in bookshelves:
             if bookshelf is None:
                 continue
+            logger.debug(f"Dumping {bookshelf}.html")
             context["bookshelf"] = bookshelf
             context.update(
                 {
@@ -893,6 +908,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
             )
 
     # author specific collections
+    logger.info("\tDumping authors_xxx JS files")
     authors = (
         Author.select()
         .join(Book)
@@ -903,7 +919,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
     )
     for author in authors:
         # by popularity
-        logger.info(f"\t\tDumping auth_{author.gut_id}_by_popularity.js")
+        logger.debug(f"\t\tDumping auth_{author.gut_id}_by_popularity.js")
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
@@ -915,7 +931,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
             f"auth_{author.gut_id}_by_popularity.js",
         )
         # by title
-        logger.info(f"\t\tDumping auth_{author.gut_id}_by_title.js")
+        logger.debug(f"\t\tDumping auth_{author.gut_id}_by_title.js")
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
@@ -928,7 +944,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
         )
         # by language
         for lang in languages:
-            logger.info(f"\t\tDumping auth_{author.gut_id}_by_lang_{lang}.js")
+            logger.debug(f"\t\tDumping auth_{author.gut_id}_by_lang_{lang}.js")
 
             dumpjs(
                 [
@@ -960,16 +976,16 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
         save_author_file(author, books_ids, project_id)
 
     # authors list sorted by name
-    logger.info("\t\tDumping authors.js")
+    logger.info("\tDumping authors.js")
     dumpjs([author.to_array() for author in authors], "authors.js", "authors_json_data")
 
     # languages list sorted by code
-    logger.info("\t\tDumping languages.js")
+    logger.info("\tDumping languages.js")
     avail_langs = get_langs_with_count(books_ids, languages)
     dumpjs(avail_langs, "languages.js", "languages_json_data")
 
     # languages by weight
     main_languages, other_languages = get_lang_groups(books_ids)
-    logger.info("\t\tDumping main_languages.js")
+    logger.info("\tDumping main_languages.js and other_languages.js")
     dumpjs(main_languages, "main_languages.js", "main_languages_json_data")
     dumpjs(other_languages, "other_languages.js", "other_languages_json_data")

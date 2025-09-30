@@ -120,7 +120,7 @@ def download_book(
     *,
     force: bool,
 ):
-    logger.info(f"\tDownloading content files for Book #{book.book_id}")
+    logger.debug(f"\tDownloading content files for Book #{book.book_id}")
 
     # apply filters
     if not formats:
