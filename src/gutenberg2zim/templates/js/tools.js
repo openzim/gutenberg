@@ -420,7 +420,7 @@ function showBookshelf(bookshelfURL) {
               render: function(data, type, full) {
                 img = '<img class="pure-u-1-8 book-cover-pre" src= "./covers/' + full[3] + '_cover_image.jpg"' +
                   'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + 'favicon.png\'" >';
-                div = '<div class="list-stripe"></div>';
+                stripe = '<div class="list-stripe"></div>';
                 title = '<span style="display: none">' + full[3] + '</span>';
                 title += ' <span class = "table-title">' + full[0] + '</span>';
                 author =
@@ -435,7 +435,7 @@ function showBookshelf(bookshelfURL) {
                   '<span class="table-author">' + full[1] + '</span>';
                 infoContainer = '<div class="pure-u-7-8">' + title + '<br>' + author + '</div>';
                 innerGrid = '<div class="pure-g">' + img + infoContainer + '</div>';
-                return '<div class="book-item">' + div + '<div>' + innerGrid + '</div></div>';
+                return '<div class="book-item">' + stripe + innerGrid + '</div>';
               }
             },
             {
