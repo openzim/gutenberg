@@ -213,7 +213,8 @@ def main():
 
         # filter requested languages and sort them
         zims_languages = [
-            existing_and_sorted_languages(zim_lang) for zim_lang in zims_languages
+            existing_and_sorted_languages(zim_lang, books)
+            for zim_lang in zims_languages
         ]
 
         # compute number of books per zim to create and update scraper progress counters
