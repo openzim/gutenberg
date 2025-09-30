@@ -17,6 +17,7 @@ as of 2.0.0.
 
 - Finalize implementation of scraper progress (#289)
 - Move to another default mirror + add CLI flag to select mirror to use (#301)
+- Split build logic in Dockerfile to separate dependencies layer from scraper code layer (#302)
 
 ## [2.2.0] - 2025-06-06
 
