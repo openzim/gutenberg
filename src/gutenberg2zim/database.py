@@ -129,9 +129,6 @@ class Book(BaseModel):
     cover_page = IntegerField(default=0)
     popularity = 0
 
-    html_etag = CharField(max_length=500, null=True)
-    epub_etag = CharField(max_length=500, null=True)
-    cover_etag = CharField(max_length=500, null=True)
     unsupported_formats = CharField(max_length=500, null=True)
 
     def __str__(self):

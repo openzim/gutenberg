@@ -78,7 +78,6 @@ You can find the full arguments list below:
 --zim                           Create a ZIM file
 --title-search                  Add field to search a book by title and directly jump to it
 --bookshelves                   Add bookshelves
---optimization-cache=<url>      URL with credentials to S3 bucket for using as optimization cache
 --use-any-optimized-version     Try to use any optimized version found on optimization cache
 ```
 

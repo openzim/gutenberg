@@ -8,6 +8,10 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+### Breaking
+
+- Remove any optimization logic + use of S3 cache (#300)
+
 ### Changed
 
 - Finalize implementation of scraper progress (#289)

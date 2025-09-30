@@ -9,7 +9,6 @@ from pathlib import Path
 import apsw
 import backoff
 import requests
-from kiwixstorage import KiwixStorage
 
 from gutenberg2zim.constants import (
     DEFAULT_HTTP_TIMEOUT,
@@ -20,14 +19,11 @@ from gutenberg2zim.constants import (
 from gutenberg2zim.database import Book
 from gutenberg2zim.export import fname_for, get_list_of_filtered_books
 from gutenberg2zim.pg_archive_urls import url_for_type
-from gutenberg2zim.s3 import download_from_cache
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.utils import (
     ALL_FORMATS,
-    archive_name_for,
     download_file,
     ensure_unicode,
-    get_etag_from_url,
 )
 
 # map of preferred document type for every format
@@ -128,8 +124,6 @@ def download_book(
     formats: list[str],
     *,
     force: bool,
-    s3_storage: KiwixStorage | None,
-    optimizer_version: dict[str, str] | None,
 ):
     logger.info(f"\tDownloading content files for Book #{book.book_id}")
 
@@ -142,14 +136,11 @@ def download_book(
         formats.append("html")
 
     book_dir = download_cache / str(book.book_id)
-    optimized_dir = book_dir / "optimized"
-    unoptimized_dir = book_dir / "unoptimized"
 
     if force:
         shutil.rmtree(book_dir)
 
-    unoptimized_dir.mkdir(parents=True, exist_ok=True)
-    optimized_dir.mkdir(parents=True, exist_ok=True)
+    book_dir.mkdir(parents=True, exist_ok=True)
 
     unsupported_formats = []
     for book_format in formats:
@@ -161,11 +152,10 @@ def download_book(
             logger.debug(f"\t\tNo file available for {book_format} of #{book.book_id}")
             continue
 
-        unoptimized_fpath = unoptimized_dir / fname_for(book, book_format)
-        optimized_fpath = optimized_dir / archive_name_for(book, book_format)
+        fpath = book_dir / fname_for(book, book_format)
 
         # check if already downloaded
-        if (unoptimized_fpath.exists() or optimized_fpath.exists()) and not force:
+        if fpath.exists() and not force:
             logger.debug(
                 f"\t\t{book_format} already exists for book #{book.book_id}, "
                 "reusing existing file"
@@ -204,20 +194,8 @@ def download_book(
                 f"Missing streamed response for {book_format} of #{book.book_id}"
             )
 
-        etag = pg_resp.headers.get("Etag", None)
-
-        if s3_storage and download_from_cache(
-            book=book,
-            etag=etag,
-            book_format=book_format,
-            dest_dir=optimized_dir,
-            s3_storage=s3_storage,
-            optimizer_version=optimizer_version,
-        ):
-            # explicitely close the response since we will not consume the stream
-            pg_resp.close()
-        elif url.endswith(".zip"):
-            zpath = unoptimized_dir / f"{fname_for(book, book_format)}.zip"
+        if url.endswith(".zip"):
+            zpath = book_dir / f"{fname_for(book, book_format)}.zip"
             with open(zpath, "wb") as fh:
                 for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
                     if chunk:
@@ -226,19 +204,13 @@ def download_book(
             handle_zipped_html(
                 zippath=zpath,
                 book=book,
-                dst_dir=unoptimized_dir,
+                dst_dir=book_dir,
             )
         else:
-            with open(unoptimized_fpath, "wb") as fh:
+            with open(fpath, "wb") as fh:
                 for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
                     if chunk:
                         fh.write(chunk)
-
-        # save etag for optimized formats
-        if book_format == "html":
-            book.html_etag = etag  # type: ignore
-        elif book_format == "epub":
-            book.epub_etag = etag  # type: ignore
 
     # update list of unsupported formats based on the union of format already known to
     # not be supported and new ones
@@ -264,39 +236,20 @@ def download_book(
         if book_dir.exists():
             shutil.rmtree(book_dir, ignore_errors=True)
         return
-    download_cover(book, book_dir, s3_storage, optimizer_version)
+    download_cover(book, book_dir)
 
 
-def download_cover(book, book_dir, s3_storage, optimizer_version):
+def download_cover(book, book_dir):
     has_cover = Book.select(Book.cover_page).where(Book.book_id == book.book_id)
     if has_cover:
-        # try to download optimized cover from cache if s3_storage
         url = f"{IMAGE_BASE}{book.book_id}/pg{book.book_id}.cover.medium.jpg"
-        etag = get_etag_from_url(url)
-        downloaded_from_cache = False
         cover = f"{book.book_id}_cover_image.jpg"
-        if (book_dir / "optimized" / cover).exists() or (
-            book_dir / "unoptimized" / cover
-        ).exists():
+        if (book_dir / cover).exists():
             logger.debug(f"Cover already exists for book #{book.book_id}")
             return
-        if s3_storage:
-            logger.info(
-                f"Trying to download cover for {book.book_id} from optimization cache"
-            )
-            downloaded_from_cache = download_from_cache(
-                book=book,
-                etag=etag,
-                book_format="cover",
-                dest_dir=book_dir / "optimized",
-                s3_storage=s3_storage,
-                optimizer_version=optimizer_version,
-            )
-        if not downloaded_from_cache:
-            logger.debug(f"Downloading {url}")
-            if download_file(url, book_dir / "unoptimized" / cover):
-                book.cover_etag = etag
-                book.save()
+
+        logger.debug(f"Downloading {url}")
+        download_file(url, book_dir / cover)
     else:
         logger.debug(f"No Book Cover found for Book #{book.book_id}")
 
@@ -309,8 +262,6 @@ def download_all_books(
     only_books: list[int],
     *,
     force: bool,
-    s3_storage: KiwixStorage | None,
-    optimizer_version: dict[str, str] | None,
     progress: ScraperProgress,
 ):
     available_books = get_list_of_filtered_books(
@@ -373,8 +324,6 @@ def download_all_books(
             download_cache=download_cache,
             formats=formats,
             force=force,
-            s3_storage=s3_storage,
-            optimizer_version=optimizer_version,
         )
 
     Pool(concurrency).map(partial(dlb, progress=progress), available_books)
