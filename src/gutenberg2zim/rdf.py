@@ -70,12 +70,12 @@ def parse_and_process_file(rdf_tarfile: TarFile, rdf_member: TarInfo) -> None:
     gid = re.match(r".*/pg([0-9]+).rdf", rdf_member.name).groups()[0]  # type: ignore
 
     if Book.get_or_none(book_id=int(gid)):
-        logger.info(
+        logger.debug(
             f"\tSkipping already parsed file {rdf_member.name} for book id {gid}"
         )
         return
 
-    logger.info(f"\tParsing file {rdf_member.name} for book id {gid}")
+    logger.debug(f"\tParsing file {rdf_member.name} for book id {gid}")
     rdf_data = rdf_tarfile.extractfile(rdf_member)
     if rdf_data is None:
         logger.warning(

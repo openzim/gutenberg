@@ -121,10 +121,10 @@ def get_list_of_filtered_books(languages, formats, only_books):
     return qs
 
 
-def get_langs_with_count(books, languages=None):
+def get_langs_with_count(books_ids, languages=None):
     lang_count = {}
 
-    for book in books:
+    for book in Book.select().where(not books_ids or Book.book_id << books_ids):
         for lang in book.languages:
             code = lang.language_code
             # if not appear in user request languages list, skip counting
@@ -140,8 +140,8 @@ def get_langs_with_count(books, languages=None):
     ]
 
 
-def get_lang_groups(books):
-    langs_wt_count = get_langs_with_count(books)
+def get_lang_groups(books_ids):
+    langs_wt_count = get_langs_with_count(books_ids)
     if len(langs_wt_count) <= NB_MAIN_LANGS:
         return langs_wt_count, []
     else:

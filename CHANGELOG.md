@@ -22,6 +22,7 @@ as of 2.0.0.
 ### Fixed
 
 - Stop ignoring HTML illustrations containing cover in their name (#270)
+- Fix JS/JSON files generation (#297, #298)
 
 ## [2.2.0] - 2025-06-06
 

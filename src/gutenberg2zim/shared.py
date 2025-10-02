@@ -1,6 +1,7 @@
 import pathlib
 import threading
 from datetime import date
+from typing import Any
 
 from zimscraperlib.zim.creator import Creator
 from zimscraperlib.zim.metadata import (
@@ -25,12 +26,17 @@ class Global:
     """Shared context accross all scraper components"""
 
     creator: Creator
+    default_context: dict[str, Any] | None
+    default_context_project_id: str | None
+
     _lock = threading.Lock()
 
     @staticmethod
     def setup(
         filename, language, title, description, long_description, name, publisher
     ):
+        Global.default_context = None
+        Global.default_context_project_id = None
         Global.creator = (
             Creator(
                 filename=filename,
