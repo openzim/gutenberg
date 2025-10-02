@@ -23,7 +23,7 @@ help_info = (
     """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
     """[--title-search] [--bookshelves] """
     """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
-    """[--debug]"""
+    """[--mirror-url MIRROR_URL] [--debug] """
     """
 
 -h --help                       Display this help message
@@ -42,7 +42,6 @@ help_info = (
 -L --zim-long-desc=<description>   Set ZIM long description
 
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
--u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, """
     """separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for processing """
@@ -62,6 +61,7 @@ help_info = (
 --bookshelves                   Add bookshelves
 --stats-filename=<filename>  Path to store the progress JSON file to
 --publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
+--mirror_url=<mirror_url>       Optional custom url of mirror hosting Gutenberg files
 --debug                         Enable verbose output
 
 This script is used to produce a ZIM file (and any intermediate state)
@@ -82,10 +82,7 @@ def main():
 
     zim_name = arguments.get("--zim-file")
     wipe_db = arguments.get("--wipe-db") or False
-    rdf_url = (
-        arguments.get("--rdf-url")
-        or "http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2"
-    )
+    mirror_url = arguments.get("--mirror-url") or "https://gutenberg.mirror.driftle.ss"
 
     if dl_folder := arguments.get("--dl-folder"):
         dl_cache = Path(dl_folder).resolve()
@@ -167,6 +164,7 @@ def main():
     progress = ScraperProgress(stats_filename)
 
     if do_prepare:
+        rdf_url = f"{mirror_url}/cache/epub/feeds/rdf-files.tar.bz2"
         logger.info(f"PREPARING rdf-files cache from {rdf_url}")
         download_rdf_file(rdf_url=rdf_url, rdf_path=rdf_path)
 
@@ -183,6 +181,7 @@ def main():
     if do_download:
         logger.info("DOWNLOADING ebooks from mirror using filters")
         download_all_books(
+            mirror_url=mirror_url,
             download_cache=dl_cache,
             concurrency=dl_concurrency,
             languages=languages,

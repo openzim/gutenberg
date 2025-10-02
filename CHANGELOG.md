@@ -10,11 +10,13 @@ as of 2.0.0.
 
 ### Breaking
 
-- Remove any optimization logic + use of S3 cache (#300)
+- Remove any optimization logic + use of S3 cache, dropping `--optimization-cache` and `--use-any-optimized-version` flags (#300)
+- Move to another default mirror + add CLI flag to select mirror to use, dropping `--rdf-url` flag and adding `--mirror_url` CLI flag (#301)
 
 ### Changed
 
 - Finalize implementation of scraper progress (#289)
+- Move to another default mirror + add CLI flag to select mirror to use (#301)
 
 ## [2.2.0] - 2025-06-06
 

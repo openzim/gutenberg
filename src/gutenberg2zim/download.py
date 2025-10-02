@@ -33,8 +33,6 @@ PG_PREFERRED_TYPES = {
     "pdf": ["pdf.images", "pdf.noimages"],
 }
 
-IMAGE_BASE = "http://aleph.pglaf.org/cache/epub/"
-
 
 def resource_exists(url):
     try:
@@ -119,6 +117,7 @@ def handle_zipped_html(zippath: Path, book: Book, dst_dir: Path) -> bool:
 
 
 def download_book(
+    mirror_url: str,
     book: Book,
     download_cache: Path,
     formats: list[str],
@@ -166,7 +165,9 @@ def download_book(
         pg_resp = None
         url = None
         for pg_type in PG_PREFERRED_TYPES[book_format]:
-            url = url_for_type(pg_type, book.book_id)
+            url = url_for_type(
+                pg_type=pg_type, book_id=book.book_id, mirror_url=mirror_url
+            )
             if not url:
                 # not supposed to happen, this is a bug
                 raise Exception(
@@ -236,13 +237,15 @@ def download_book(
         if book_dir.exists():
             shutil.rmtree(book_dir, ignore_errors=True)
         return
-    download_cover(book, book_dir)
+    download_cover(mirror_url, book, book_dir)
 
 
-def download_cover(book, book_dir):
+def download_cover(mirror_url, book, book_dir):
     has_cover = Book.select(Book.cover_page).where(Book.book_id == book.book_id)
     if has_cover:
-        url = f"{IMAGE_BASE}{book.book_id}/pg{book.book_id}.cover.medium.jpg"
+        url = (
+            f"{mirror_url}/cache/epub/{book.book_id}/pg{book.book_id}.cover.medium.jpg"
+        )
         cover = f"{book.book_id}_cover_image.jpg"
         if (book_dir / cover).exists():
             logger.debug(f"Cover already exists for book #{book.book_id}")
@@ -255,6 +258,7 @@ def download_cover(book, book_dir):
 
 
 def download_all_books(
+    mirror_url: str,
     download_cache: Path,
     concurrency: int,
     languages: list[str],
@@ -320,6 +324,7 @@ def download_all_books(
     )
     def dlb_inner(b):
         return download_book(
+            mirror_url=mirror_url,
             book=b,
             download_cache=download_cache,
             formats=formats,
