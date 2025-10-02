@@ -225,7 +225,7 @@ function showBooks() {
             {
               targets: 0,
               render: function(data, type, full) {
-                img = '<img class="pure-u-1-8 book-cover-pre" src= "' + full[3] + '_cover_image.jpg"' +
+                img = '<img class="pure-u-1-8 book-cover-pre" src= "./covers/' + full[3] + '_cover_image.jpg"' +
                   'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + 'favicon.png\'" >';
                 stripe = '<div class="list-stripe"></div>';
                 title = '<span style="display: none">' + full[3] + '</span>';
@@ -418,7 +418,7 @@ function showBookshelf(bookshelfURL) {
             {
               targets: 0,
               render: function(data, type, full) {
-                img = '<img class="pure-u-1-8 book-cover-pre" src= "' + full[3] + '_cover_image.jpg"' +
+                img = '<img class="pure-u-1-8 book-cover-pre" src= "./covers/' + full[3] + '_cover_image.jpg"' +
                   'onerror="this.onerror=null;this.style.height=\'50px\';this.src=\'' + 'favicon.png\'" >';
                 div = '<div class="list-stripe"></div>';
                 title = '<span style="display: none">' + full[3] + '</span>';
