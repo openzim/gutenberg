@@ -23,6 +23,8 @@ as of 2.0.0.
 
 - Stop ignoring HTML illustrations containing cover in their name (#270)
 - Fix JS/JSON files generation (#297, #298)
+- Fix navigation to bookshelves with special characters (#305)
+- Bookshelves with special characters cannot be opened (#306)
 
 ## [2.2.0] - 2025-06-06
 

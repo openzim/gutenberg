@@ -892,6 +892,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
             context["bookshelf"] = bookshelf
             context.update(
                 {
+                    "show_books": True,
                     "bookshelf_home": False,
                     "individual_book_shelf": True,
                     "no_filters": True,
