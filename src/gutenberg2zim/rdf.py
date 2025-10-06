@@ -4,7 +4,7 @@ from pathlib import Path
 from tarfile import TarFile, TarInfo
 
 import peewee
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from gutenberg2zim.constants import logger
 from gutenberg2zim.database import Author, Book, BookLanguage, License
@@ -67,7 +67,10 @@ def parse_and_fill(
 
 
 def parse_and_process_file(rdf_tarfile: TarFile, rdf_member: TarInfo) -> None:
-    gid = re.match(r".*/pg([0-9]+).rdf", rdf_member.name).groups()[0]  # type: ignore
+    member_match = re.match(r".*/pg([0-9]+).rdf", rdf_member.name)
+    if not member_match:
+        raise Exception(f"RDF member should match expected regex: {rdf_member.name}")
+    gid = member_match.groups()[0]
 
     if Book.get_or_none(book_id=int(gid)):
         logger.debug(
@@ -100,7 +103,6 @@ class RdfParser:
         self.gid = gid
 
         self.author_id = None
-        self.author_name = None
         self.first_name = None
         self.last_name = None
 
@@ -114,20 +116,33 @@ class RdfParser:
         # into a new-line-seperated title and subtitle.
         # If it is, then we will just split the title.
         title = soup.find("dcterms:title")
-        self.title = title.text if title else "- No Title -"
-        self.title = self.title.split("\n")[0]
-        self.subtitle = " ".join(self.title.split("\n")[1:])
-        self.author_id = None
+        full_title = title.text if title else "- No Title -"
+        title_elements = full_title.split("\n")
+        self.title = title_elements[0]
+        self.subtitle = " ".join(title_elements[1:])
 
         # Parsing for the bookshelf name
-        self.bookshelf = soup.find("pgterms:bookshelf")
-        if self.bookshelf:
-            self.bookshelf = self.bookshelf.find("rdf:value").text  # type: ignore
+        bookshelf_tag = soup.find("pgterms:bookshelf")
+        if bookshelf_tag:
+            rdf_value = bookshelf_tag.find("rdf:value")
+            if isinstance(rdf_value, Tag):  # pragma: no branch
+                self.bookshelf = rdf_value.text
 
         # Search rdf to see if the image exists at the hard link
-        # https://www.gutenberg.ord/cache/epub/id/pg{id}.cover.medium.jpg
-        if soup.find("cover.medium.jpg"):
-            self.cover_image = 1
+        # /cache/epub/{id}/pg{id}.cover.medium.jpg
+        self.cover_image = (
+            1
+            if soup.find(
+                "pgterms:file",
+                attrs={
+                    "rdf:about": lambda v: v
+                    and v.endswith(
+                        f"/cache/epub/{self.gid}/pg{self.gid}.cover.medium.jpg"
+                    )
+                },
+            )
+            else 0
+        )
 
         # Parsing the name of the Author. Sometimes it's the name of
         # an organization or the name is not known and therefore
@@ -139,57 +154,58 @@ class RdfParser:
         # has more than one comma we will join the first name in reverse,
         # starting
         # with the second item.
-        self.author = soup.find("dcterms:creator") or soup.find("marcrel:com")
-        if self.author:
-            self.author_id = self.author.find("pgterms:agent")
+        author_tag = soup.find("dcterms:creator") or soup.find("marcrel:com")
+        if author_tag:
+            author_about_tag = author_tag.find("pgterms:agent")
             self.author_id = (
-                self.author_id.attrs["rdf:about"].split("/")[-1]  # type: ignore
-                if "rdf:about" in getattr(self.author_id, "attrs", "")
+                author_about_tag.attrs["rdf:about"].split("/")[-1]
+                if isinstance(author_about_tag, Tag)
+                and "rdf:about" in getattr(author_about_tag, "attrs", "")
                 else None
             )
 
-            if self.author.find("pgterms:name"):
-                self.author_name = self.author.find("pgterms:name")
-                self.author_name = self.author_name.text.split(",")  # type: ignore
+            author_name_tag = author_tag.find("pgterms:name")
+            if isinstance(author_name_tag, Tag):  # pragma: no branch
+                author_name_elements = author_name_tag.text.split(",")
 
-                if len(self.author_name) > 1:
-                    self.first_name = " ".join(self.author_name[::-2]).strip()
-                self.last_name = self.author_name[0]
+                if len(author_name_elements) > 1:
+                    self.first_name = " ".join(
+                        [element.strip() for element in author_name_elements[:0:-1]]
+                    )
+                self.last_name = author_name_elements[0]
 
         # Parsing the birth and (death, if the case) year of the author.
         # These values are likely to be null.
         self.birth_year = soup.find("pgterms:birthdate")
-        self.birth_year = self.birth_year.text if self.birth_year else None
-        self.birth_year = get_formatted_number(self.birth_year)
+        self.birth_year = (
+            get_formatted_number(self.birth_year.text) if self.birth_year else None
+        )
 
         self.death_year = soup.find("pgterms:deathdate")
-        self.death_year = self.death_year.text if self.death_year else None
-        self.death_year = get_formatted_number(self.death_year)
+        self.death_year = (
+            get_formatted_number(self.death_year.text) if self.death_year else None
+        )
 
         # ISO 639-3 language codes that consist of 2 or 3 letters
         self.languages = [
-            node.find("rdf:value").text  # type: ignore
+            node.find("rdf:value").text
             for node in soup.find_all("dcterms:language")
-            if node.find("rdf:value") is not None  # type: ignore
+            if node.find("rdf:value") is not None
         ]
 
         # The download count of the books on www.gutenberg.org.
         # This will be used to determine the popularity of the book.
-        self.downloads = soup.find("pgterms:downloads").text  # type: ignore
+        downloads_tag = soup.find("pgterms:downloads")
+        if not isinstance(downloads_tag, Tag):
+            raise Exception(f"Impossible to find download tag in book {self.gid} RDF")
+        self.downloads = downloads_tag.text
 
         # The book might be licensed under GPL, public domain
         # or might be copyrighted
-        self.license = soup.find("dcterms:rights").text  # type: ignore
-
-        # Finding out all the file types this book is available in
-        file_types = soup.find_all("pgterms:file")
-        self.file_types = {}
-        for x in file_types:
-            if not x.find("rdf:value").text.endswith("application/zip"):
-                k = x.attrs["rdf:about"].split("/")[-1]
-                v = x.find("rdf:value").text
-                self.file_types.update({k: v})
-
+        license_tag = soup.find("dcterms:rights")
+        if not isinstance(license_tag, Tag):
+            raise Exception(f"Impossible to find license tag in book {self.gid} RDF")
+        self.license = license_tag.text
         return self
 
 
