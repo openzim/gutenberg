@@ -185,7 +185,9 @@ def read_file(fpath: Path):
 
     # common encoding failed. try with chardet
     encoding = guess_file_encoding(fpath)
-    return read_file_as(fpath, encoding), encoding  # type: ignore
+    if not encoding:
+        raise Exception(f"Impossible to guess encoding for {fpath}")
+    return read_file_as(fpath, encoding), encoding
 
 
 def save_file(content, fpath, encoding=UTF8):

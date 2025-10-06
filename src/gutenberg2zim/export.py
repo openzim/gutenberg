@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import bs4
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from jinja2 import Environment, PackageLoader
 
 import gutenberg2zim
@@ -331,12 +331,15 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
         if soup.title:
             soup.title.string = book.title
         else:
+            if not soup.html:
+                raise Exception("HTML should be set")
             head = soup.find("head")
             if not head:
                 head = soup.new_tag("head")
-                soup.html.insert(0, head)  # type: ignore
-            head.append(soup.new_tag("title"))
-            soup.title.string = book.title  # type: ignore
+                soup.html.insert(0, head)
+            title_tag = soup.new_tag("title")
+            title_tag.string = book.title
+            head.append(title_tag)
 
     patterns = [
         (
@@ -385,15 +388,11 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
     ]
 
     body = soup.find("body")
+    if not isinstance(body, Tag):
+        return
     try:
         is_encapsulated_in_div = (
-            sum(
-                [
-                    1
-                    for e in body.children  # type: ignore
-                    if not isinstance(e, bs4.NavigableString)
-                ]
-            )
+            sum([1 for e in body.children if not isinstance(e, bs4.NavigableString)])
             == 1
         )
     except Exception:
@@ -404,48 +403,43 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
 
     if not is_encapsulated_in_div:
         for start_of_text, end_of_text in patterns:
-            if (
-                start_of_text not in body.text  # type: ignore
-                and end_of_text not in body.text  # type: ignore
-            ):
+            if start_of_text not in body.text and end_of_text not in body.text:
                 continue
 
-            if start_of_text in body.text and end_of_text in body.text:  # type: ignore
+            if start_of_text in body.text and end_of_text in body.text:
                 remove = True
-                for child in body.children:  # type: ignore
-                    if isinstance(child, bs4.NavigableString):
+                for child in body.children:
+                    if not isinstance(child, bs4.Tag):
                         continue
                     if end_of_text in getattr(child, "text", ""):
                         remove = True
                     if start_of_text in getattr(child, "text", ""):
-                        child.decompose()  # type: ignore
+                        child.decompose()
                         remove = False
                     if remove:
-                        child.decompose()  # type: ignore
+                        child.decompose()
                 break
 
-            elif start_of_text in body.text:  # type: ignore
-                # logger.debug("FOUND START: {}".format(start_of_text))
+            elif start_of_text in body.text:
                 remove = True
-                for child in body.children:  # type: ignore
-                    if isinstance(child, bs4.NavigableString):
-                        continue
+                for child in body.children:
+                    if not isinstance(child, bs4.Tag):
+                        raise Exception("start_of_text child should be a Tag class")
                     if start_of_text in getattr(child, "text", ""):
-                        child.decompose()  # type: ignore
+                        child.decompose()
                         remove = False
                     if remove:
-                        child.decompose()  # type: ignore
+                        child.decompose()
                 break
-            elif end_of_text in body.text:  # type: ignore
-                # logger.debug("FOUND END: {}".format(end_of_text))
+            elif end_of_text in body.text:
                 remove = False
-                for child in body.children:  # type: ignore
-                    if isinstance(child, bs4.NavigableString):
-                        continue
+                for child in body.children:
+                    if not isinstance(child, bs4.Tag):
+                        raise Exception("end_of_text child should be a Tag class")
                     if end_of_text in getattr(child, "text", ""):
                         remove = True
                     if remove:
-                        child.decompose()  # type: ignore
+                        child.decompose()
                 break
 
     # build infobox
@@ -453,7 +447,10 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
         infobox = jinja_env.get_template("book_infobox.html")
         infobox_html = infobox.render({"book": book, "formats": formats})
         info_soup = BeautifulSoup(infobox_html, "lxml-html")
-        body.insert(0, info_soup.find("div"))  # type: ignore
+        info_box = info_soup.find("div")
+        if not isinstance(info_box, Tag):
+            raise Exception("info_box div should be a Tag class")
+        body.insert(0, info_box)
 
     # if there is no charset, set it to utf8
     if not epub:
@@ -463,12 +460,18 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
         )
         head = soup.find("head")
         html = soup.find("html")
+        if not isinstance(head, Tag):
+            raise Exception("head should be a Tag class")
+        if not isinstance(html, Tag):
+            raise Exception("html should be a Tag class")
+        if not isinstance(meta.head, Tag):
+            raise Exception("meta.head should be a Tag class")
         if head:
-            head.insert(0, meta.head.contents[0])  # type: ignore
+            head.insert(0, meta.head.contents[0])
         elif html:
-            html.insert(0, meta.head)  # type: ignore
+            html.insert(0, meta.head)
         else:
-            soup.insert(0, meta.head)  # type: ignore
+            soup.insert(0, meta.head)
 
         return html
 
@@ -494,7 +497,8 @@ def cover_html_content_for(
     )
 
     book_languages = [
-        lang.language_code for lang in book.languages.order_by(BookLanguage.id)  # type: ignore
+        lang.language_code
+        for lang in book.languages.order_by(BookLanguage.language_code)
     ]
 
     context = get_default_context(project_id=project_id, books_ids=books_ids)
