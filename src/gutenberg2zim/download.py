@@ -237,8 +237,7 @@ def download_book(
         return
 
     # download cover image
-    has_cover = Book.select(Book.cover_page).where(Book.book_id == book.book_id)
-    if has_cover:
+    if book.cover_page:
         url = (
             f"{mirror_url}/cache/epub/{book.book_id}/pg{book.book_id}.cover.medium.jpg"
         )
