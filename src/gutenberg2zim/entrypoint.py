@@ -5,6 +5,7 @@ from docopt import docopt
 from schedule import run_all, run_pending
 from zimscraperlib.inputs import compute_descriptions
 
+from gutenberg2zim import i18n
 from gutenberg2zim.constants import TMP_FOLDER_PATH, VERSION, logger
 from gutenberg2zim.database import BookLanguage, setup_database
 from gutenberg2zim.download import download_all_books
@@ -110,6 +111,8 @@ def main():
 
     # create tmp dir
     TMP_FOLDER_PATH.mkdir(parents=True, exist_ok=True)
+
+    i18n.setup_i18n()
 
     languages = [
         x.strip().lower()

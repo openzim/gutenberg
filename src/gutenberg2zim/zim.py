@@ -3,11 +3,11 @@ import pathlib
 
 from peewee import fn
 
+from gutenberg2zim import i18n
 from gutenberg2zim.constants import logger
 from gutenberg2zim.database import Book, BookLanguage
 from gutenberg2zim.export import export_all_books
-from gutenberg2zim.iso639 import ISO_MATRIX
-from gutenberg2zim.l10n import metadata_translations
+from gutenberg2zim.iso639 import ISO_MATRIX, ISO_MATRIX_REV
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import get_project_id
@@ -61,17 +61,15 @@ def build_zimfile(
 
     metadata_lang = "mul" if len(iso_languages) > 1 else iso_languages[0]
 
-    title = title or metadata_translations.get(metadata_lang, {}).get(
-        "title", "Project Gutenberg Library"
-    )
-    # check if user has description input otherwise assign default description
-    description = description or metadata_translations.get(metadata_lang, {}).get(
-        "description",
-        f'All books in "{iso_languages[0]}" language '
-        "from the first producer of free Ebooks",
-    )
+    metadata_locales_lang = ISO_MATRIX_REV.get(metadata_lang, metadata_lang)
 
-    logger.info(f"\tWritting ZIM for {title}")
+    i18n.change_locale(metadata_locales_lang)
+
+    title = title or i18n.t("metadata_defaults.title")
+    # check if user has description input otherwise assign default description
+    description = description or i18n.t("metadata_defaults.description", f'All books in "{iso_languages[0]}" language from the first producer of free Ebooks')
+
+    logger.info(f"\tWriting {metadata_lang} ZIM for {title}")
 
     project_id = get_project_id(languages, formats, only_books)
 

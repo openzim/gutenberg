@@ -9,10 +9,9 @@ from bs4 import BeautifulSoup, Tag
 from jinja2 import Environment, PackageLoader
 
 import gutenberg2zim
-from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
+from gutenberg2zim.constants import LOCALES_LOCATION, TMP_FOLDER_PATH, logger
 from gutenberg2zim.database import Author, Book, BookLanguage
 from gutenberg2zim.iso639 import language_name
-from gutenberg2zim.l10n import l10n_strings
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import (
@@ -48,6 +47,14 @@ def get_ui_languages_for(books_ids):
 def get_default_context(project_id, books_ids):
     if not Global.default_context or Global.default_context_project_id != project_id:
         Global.default_context_project_id = project_id
+        l10n_strings = {"default_locale": "en", "locales": {}}
+        for file in LOCALES_LOCATION.glob("*.json"):
+            if not file.is_file():
+                continue
+            locale_data = json.loads(file.read_bytes())
+            if not "ui_strings" in locale_data:
+                continue
+            l10n_strings["locales"][file.stem] = locale_data["ui_strings"]
         Global.default_context = {
             "l10n_strings": json.dumps(l10n_strings),
             "ui_languages": get_ui_languages_for(books_ids=books_ids),

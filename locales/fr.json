@@ -1,0 +1,147 @@
+{
+    "ui_strings": {
+        "isocode": {
+            "textContent": "fr"
+        },
+        "autonym": {
+            "textContent": "Français"
+        },
+        "homepage": {
+            "alt": "Page d`accueil",
+            "title": "Page d`accueil"
+        },
+        "choose-language": {
+            "placeholder": "Choisissez une langue..."
+        },
+        "ui-language-switcher": {
+            "title": "Langue de l`interface"
+        },
+        "search": {
+            "textContent": "Rechercher"
+        },
+        "author": {
+            "textContent": "Auteur",
+            "placeholder": "Rechercher par nom d'auteur"
+        },
+        "cover-img": {
+            "title": "Couverture du livre",
+            "alt": "Couverture du livre"
+        },
+        "cover": {
+            "textContent": "(couverture)"
+        },
+        "filter": {
+            "textContent": "Filtrer :"
+        },
+        "popularity": {
+            "textContent": "Popularité"
+        },
+        "sort": {
+            "textContent": "Trier :"
+        },
+        "sort-popularity": {
+            "textContent": "Trier les livres par popularité"
+        },
+        "sort-title": {
+            "textContent": "Trier les livres par titre"
+        },
+        "title": {
+            "textContent": "Titre",
+            "placeholder": "Rechercher des livres par titre "
+        },
+        "format": {
+            "textContent": "Format"
+        },
+        "loading": {
+            "textContent": "Chargement..."
+        },
+        "no-data": {
+            "textContent": "Pas de données disponibles"
+        },
+        "prev": {
+            "textContent": "Précédent"
+        },
+        "next": {
+            "textContent": "Suivant"
+        },
+        "language": {
+            "textContent": "Langue"
+        },
+        "any-languages": {
+            "textContent": "Choisir le catalogue"
+        },
+        "main-languages": {
+            "textContent": "Langues principales"
+        },
+        "other-languages": {
+            "textContent": "Autres langues"
+        },
+        "author-anonymous": {
+            "textContent": "Anonyme"
+        },
+        "author-various": {
+            "textContent": "Plusieurs"
+        },
+        "license": {
+            "textContent": "Licence"
+        },
+        "license-pd": {
+            "textContent": "Domaine public aux États-Unis."
+        },
+        "nb-downloads": {
+            "textContent": "{[ plural(nb) ]}"
+        },
+        "nb-downloads[one]": {
+            "textContent": "1 téléchargement au cours des 30 derniers jours."
+        },
+        "nb-downloads[other]": {
+            "textContent": "{{nb}} téléchargements au cours des 30 derniers jours."
+        },
+        "top-title": {
+            "textContent": "Bibliothèque du projet Gutenberg"
+        },
+        "sub-title": {
+            "textContent": "Premier producteur d`ebooks gratuits"
+        },
+        "table-previous": {
+            "textContent": "Prédédent"
+        },
+        "table-next": {
+            "textContent": "Suivant"
+        },
+        "about-1": {
+            "textContent": "Le Projet Gutenberg offre plus de 60 000 ebooks gratuits"
+        },
+        "about-2": {
+            "textContent": "Choisissez parmi les livres epub ou kindle gratuits."
+        },
+        "about-3": {
+            "textContent": "Téléchargez-les ou lisez-les en ligne."
+        },
+        "about-4": {
+            "textContent": "Nous attachons beaucoup d`importance à la qualité des ebooks"
+        },
+        "about-5": {
+            "textContent": "Tous nos livres électroniques ont été auparavant publiés par des éditeurs classiques."
+        },
+        "about-6": {
+            "textContent": "Nous les numérisons et les relisons soigneusement avec l`aide de milliers de volontaires."
+        },
+        "bookshelves_title": {
+            "textContent": "Rayons (A-Z)"
+        },
+        "bookshelf_link": {
+            "textContent": "Parcourir par rayon"
+        },
+        "home_link": {
+            "textContent": "Retour"
+        },
+        "bookshelf": {
+            "placeholder": "Recherche de rayon"
+        }
+    },
+    "metadata_defaults": {
+        "title": "Projet Bibliothèque Gutenberg",
+        "description": "Tous les livres en français du premier producteur d'ebooks gratuits"
+    }
+}

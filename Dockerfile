@@ -19,6 +19,8 @@ COPY src/gutenberg2zim/templates /scraper/src/gutenberg2zim/templates
 RUN pip install --no-cache-dir /scraper 
 
 # Copy code + remaining artifacts
+ENV LOCALES_LOCATION /locales
+COPY locales /locales
 COPY *.md *.rst get_js_deps.sh LICENSE *.py /scraper/
 COPY src /scraper/src
 

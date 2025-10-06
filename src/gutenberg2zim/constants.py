@@ -1,4 +1,5 @@
 import logging
+import os
 import pathlib
 
 from zimscraperlib.logging import getLogger
@@ -31,3 +32,5 @@ with open(FAVICON_PATH, "rb") as f:
 
 DEFAULT_HTTP_TIMEOUT = 10
 DL_CHUNCK_SIZE = 8192
+
+LOCALES_LOCATION = pathlib.Path(os.getenv("LOCALES_LOCATION", "./locales"))

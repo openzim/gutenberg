@@ -230,3 +230,5 @@ ISO_MATRIX = {
     "zh": "zho",
     "zu": "zul",
 }
+
+ISO_MATRIX_REV = {value: key for key, value in ISO_MATRIX.items()}
