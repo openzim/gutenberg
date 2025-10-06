@@ -213,16 +213,16 @@ def download_book(
 
     # update list of unsupported formats based on the union of format already known to
     # not be supported and new ones
-    book.unsupported_formats = ",".join(  # type: ignore
-        set(
-            unsupported_formats
-            + (
-                str(book.unsupported_formats).split(",")
-                if book.unsupported_formats
-                else []
+    book.unsupported_formats = ",".join( # pyright: ignore[reportAttributeAccessIssue]
+            set(
+                unsupported_formats
+                + (
+                    str(book.unsupported_formats).split(",")
+                    if book.unsupported_formats
+                    else []
+                )
             )
         )
-    )
     book.save()
 
     # delete book from DB if not downloaded in any format
