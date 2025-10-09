@@ -35,35 +35,24 @@ def parse_and_fill(
     rdf_path: Path, only_books: list[int], progress: ScraperProgress
 ) -> None:
 
-    logger.info(f"\tCounting number of RDF files in {rdf_path}")
-    rdf_tarfile = tarfile.open(name=rdf_path, mode="r|bz2")
-    progress.increase_total(len(rdf_tarfile.getnames()))
+    logger.info(f"\tExtracting RDF files for {len(only_books)} books from {rdf_path}")
+    progress.increase_total(len(only_books))
 
-    logger.info(f"\tLooping throught RDF files in {rdf_path}")
-    rdf_tarfile = tarfile.open(name=rdf_path, mode="r|bz2")
-    for rdf_member in rdf_tarfile:
-        # increase progress at the beginning for simplicity given the potential
-        # conditions which might lead to skip some members ; this is off only
-        # by 1 out of 70k+ items
-        progress.increase_progress()
+    # Open the tar file for random access
+    with tarfile.open(name=rdf_path, mode="r:bz2") as rdf_tarfile:
+        for book_id in only_books:
+            progress.increase_progress()
 
-        rdf_member_path = Path(rdf_member.name)
+            # RDF files are organized as cache/epub/{book_id}/pg{book_id}.rdf
+            rdf_member_path = f"cache/epub/{book_id}/pg{book_id}.rdf"
 
-        # skip books outside of requested list
-        if (
-            only_books
-            and int(rdf_member_path.stem.replace("pg", "").replace(".rdf", ""))
-            not in only_books
-        ):
-            continue
+            try:
+                rdf_member = rdf_tarfile.getmember(rdf_member_path)
+            except KeyError:
+                logger.warning(f"\tCould not find RDF file for book {book_id}")
+                continue
 
-        if rdf_member_path.name == "pg0.rdf":
-            continue
-
-        if not rdf_member_path.name.endswith(".rdf"):
-            continue
-
-        parse_and_process_file(rdf_tarfile, rdf_member)
+            parse_and_process_file(rdf_tarfile, rdf_member)
 
 
 def parse_and_process_file(rdf_tarfile: TarFile, rdf_member: TarInfo) -> None:

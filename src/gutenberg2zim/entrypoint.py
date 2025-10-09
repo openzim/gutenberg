@@ -7,6 +7,12 @@ from zimscraperlib.inputs import compute_descriptions
 
 from gutenberg2zim import i18n
 from gutenberg2zim.constants import TMP_FOLDER_PATH, VERSION, logger
+from gutenberg2zim.csv_catalog import (
+    download_csv_file,
+    filter_books,
+    get_csv_fpath,
+    load_catalog,
+)
 from gutenberg2zim.database import BookLanguage, setup_database
 from gutenberg2zim.download import download_all_books
 from gutenberg2zim.rdf import download_rdf_file, get_rdf_fpath, parse_and_fill
@@ -163,10 +169,17 @@ def main():
         do_prepare = do_parse = do_download = do_zim = True
 
     rdf_path = get_rdf_fpath()
+    csv_path = get_csv_fpath()
 
     progress = ScraperProgress(stats_filename)
 
     if do_prepare:
+        # Download CSV catalog
+        csv_url = f"{mirror_url}/cache/epub/feeds/pg_catalog.csv.gz"
+        logger.info(f"PREPARING CSV catalog from {csv_url}")
+        download_csv_file(csv_path=csv_path, csv_url=csv_url)
+
+        # Download RDF files
         rdf_url = f"{mirror_url}/cache/epub/feeds/rdf-files.tar.bz2"
         logger.info(f"PREPARING rdf-files cache from {rdf_url}")
         download_rdf_file(rdf_url=rdf_url, rdf_path=rdf_path)
@@ -177,8 +190,20 @@ def main():
     setup_database(wipe=wipe_db)
 
     if do_parse:
-        logger.info(f"PARSING rdf-files in {rdf_path}")
-        parse_and_fill(rdf_path=rdf_path, only_books=books, progress=progress)
+        # Load catalog and filter books
+        logger.info(f"LOADING catalog from {csv_path}")
+        catalog = load_catalog(csv_path)
+
+        # Filter books based on languages and specific book IDs
+        filtered_books = filter_books(
+            catalog=catalog,
+            languages=languages if languages else None,
+            only_books=books if books else None,
+        )
+
+        # Parse only the filtered books from RDF
+        logger.info(f"PARSING {len(filtered_books)} filtered books from {rdf_path}")
+        parse_and_fill(rdf_path=rdf_path, only_books=filtered_books, progress=progress)
         run_pending()
 
     if do_download:
