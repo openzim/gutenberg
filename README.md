@@ -54,7 +54,6 @@ You can find the full arguments list below:
 
 ```bash
 -h --help                       Display this help message
--y --wipe-db                    Empty cached book metadata
 -F --force                      Redo step even if target already exist
 
 -l --languages=<list>           Comma-separated list of lang codes to filter export to (preferably ISO 639-1, else ISO 639-3)
@@ -70,14 +69,15 @@ You can find the full arguments list below:
 -c --concurrency=<nb>           Number of concurrent process for processing tasks
 --dlc=<nb>                      Number of concurrent *download* process for download (overwrites --concurrency). if server blocks high rate requests
 --no-index                      Do NOT create full-text index within ZIM file
---prepare                       Download rdf-files.tar.bz2
---parse                         Parse all RDF files and fill-up the DB
---download                      Download ebooks based on filters
---zim                           Create a ZIM file
 --title-search                  Add field to search a book by title and directly jump to it
 --bookshelves                   Add bookshelves
---use-any-optimized-version     Try to use any optimized version found on optimization cache
+--stats-filename=<filename>     Path to store the progress JSON file to
+--publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
+--mirror-url=<mirror_url>       Optional custom url of mirror hosting Gutenberg files
+--debug                         Enable verbose output
 ```
+
+The scraper will automatically perform all steps: download catalog and RDF files, parse metadata, download books, and create the ZIM file.
 
 
 ## Contributing Code
