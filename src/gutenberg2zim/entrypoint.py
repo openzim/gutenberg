@@ -13,7 +13,7 @@ from gutenberg2zim.csv_catalog import (
     get_csv_fpath,
     load_catalog,
 )
-from gutenberg2zim.database import BookLanguage, setup_database
+from gutenberg2zim.database import setup_database
 from gutenberg2zim.download import download_all_books
 from gutenberg2zim.rdf import download_rdf_file, get_rdf_fpath, parse_and_fill
 from gutenberg2zim.scraper_progress import ScraperProgress
@@ -27,7 +27,7 @@ help_info = (
     """[-t ZIM_TITLE] [-n ZIM_DESC] [-L ZIM_LONG_DESC]"""
     """[-c CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
     """[--prepare] [--parse] [--download] [--export] [--dev] """
-    """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
+    """[--zim] [--complete] """
     """[--title-search] [--bookshelves] """
     """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
     """[--mirror-url MIRROR_URL] [--debug] """
@@ -56,8 +56,6 @@ help_info = (
 --dlc=<nb>                      Number of concurrent *download* process for """
     """download (overwrites --concurrency). """
     """if server blocks high rate requests
--m --one-language-one-zim=<folder> When more than 1 language, do one zim for each """
-    """language (and one with all)
 --no-index                      Do NOT create full-text index within ZIM file
 --prepare                       Download rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
@@ -84,7 +82,6 @@ def main():
     do_parse = arguments.get("--parse", False)
     do_download = arguments.get("--download", False)
     do_zim = arguments.get("--zim", False)
-    one_lang_one_zim_folder = arguments.get("--one-language-one-zim") or None
     complete_dump = arguments.get("--complete", False)
 
     zim_name = arguments.get("--zim-file")
@@ -222,63 +219,37 @@ def main():
         logger.info("Finished downloading all books.")
 
     if do_zim:
+        logger.info("BUILDING ZIM dynamically")
 
-        # compute the list of languages we want in every zim we will create
-        if one_lang_one_zim_folder:
+        # Filter and sort requested languages
+        sorted_languages = existing_and_sorted_languages(languages, books)
 
-            if languages == []:
-                zims_languages = [
-                    [lang.language_code]
-                    for lang in BookLanguage.select(
-                        BookLanguage.language_code
-                    ).distinct()
-                ]
-                zims_languages.append([])
-            else:
-                zims_languages = [[lang] for lang in languages] + [languages]
-        else:
-            zims_languages = [languages]
-
-        # filter requested languages and sort them
-        zims_languages = [
-            existing_and_sorted_languages(zim_lang, books)
-            for zim_lang in zims_languages
-        ]
-
-        # compute number of books per zim to create and update scraper progress counters
-        for zim_lang in zims_languages:
-            progress.increase_total(
-                len(
-                    get_list_of_filtered_books(
-                        languages=zim_lang, formats=formats, only_books=books
-                    )
+        # Compute number of books and update scraper progress counter
+        progress.increase_total(
+            len(
+                get_list_of_filtered_books(
+                    languages=sorted_languages, formats=formats, only_books=books
                 )
             )
+        )
 
-        for zim_lang in zims_languages:
-            logger.info("BUILDING ZIM dynamically")
-
-            build_zimfile(
-                output_folder=(
-                    Path(one_lang_one_zim_folder).resolve()
-                    if one_lang_one_zim_folder
-                    else Path(".").resolve()
-                ),
-                download_cache=dl_cache,
-                concurrency=concurrency,
-                languages=zim_lang,
-                formats=formats,
-                only_books=books,
-                zim_name=Path(zim_name).name if zim_name else None,
-                title=zim_title,
-                description=description,
-                long_description=long_description,
-                publisher=publisher,
-                force=force,
-                title_search=title_search,
-                add_bookshelves=bookshelves,
-                progress=progress,
-            )
+        build_zimfile(
+            output_folder=Path(".").resolve(),
+            download_cache=dl_cache,
+            concurrency=concurrency,
+            languages=sorted_languages,
+            formats=formats,
+            only_books=books,
+            zim_name=Path(zim_name).name if zim_name else None,
+            title=zim_title,
+            description=description,
+            long_description=long_description,
+            publisher=publisher,
+            force=force,
+            title_search=title_search,
+            add_bookshelves=bookshelves,
+            progress=progress,
+        )
 
     # Final increase to indicate we are done
     progress.increase_progress()

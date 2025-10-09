@@ -69,7 +69,6 @@ You can find the full arguments list below:
 -b --books=<ids>                Execute the processes for specific books, separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for processing tasks
 --dlc=<nb>                      Number of concurrent *download* process for download (overwrites --concurrency). if server blocks high rate requests
--m --one-language-one-zim=<folder> When more than 1 language, do one zim for each   language (and one with all)
 --no-index                      Do NOT create full-text index within ZIM file
 --prepare                       Download rdf-files.tar.bz2
 --parse                         Parse all RDF files and fill-up the DB
