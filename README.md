@@ -59,12 +59,10 @@ You can find the full arguments list below:
 -l --languages=<list>           Comma-separated list of lang codes to filter export to (preferably ISO 639-1, else ISO 639-3)
 -f --formats=<list>             Comma-separated list of formats to filter export to (epub, html, pdf, all)
 
--e --static-folder=<folder>     Use-as/Write-to this folder static HTML
 -z --zim-file=<file>            Write ZIM into this file path
 -t --zim-title=<title>          Set ZIM title
 -n --zim-desc=<description>     Set ZIM description
 -L --zim-long-desc=<description> Set ZIM long description
--d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -b --books=<ids>                Execute the processes for specific books, separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for processing tasks
 --no-index                      Do NOT create full-text index within ZIM file

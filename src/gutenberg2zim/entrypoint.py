@@ -6,7 +6,7 @@ from schedule import run_all
 from zimscraperlib.inputs import compute_descriptions
 
 from gutenberg2zim import i18n
-from gutenberg2zim.constants import TMP_FOLDER_PATH, VERSION, logger
+from gutenberg2zim.constants import VERSION, logger
 from gutenberg2zim.csv_catalog import (
     download_csv_file,
     filter_books,
@@ -36,13 +36,11 @@ help_info = (
 -f --formats=<list>             Comma-separated list of formats to filter """
     """export to (epub, html, pdf, all)
 
--e --static-folder=<folder>     Use-as/Write-to this folder static HTML
 -z --zim-file=<file>            Write ZIM into this file path
 -t --zim-title=<title>          Set ZIM title
 -n --zim-desc=<description>         Set ZIM description
 -L --zim-long-desc=<description>   Set ZIM long description
 
--d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -b --books=<ids>                Execute the processes for specific books, """
     """separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for processing """
@@ -85,9 +83,6 @@ def main():
     if debug:
         for handler in logger.handlers:
             handler.setLevel(logging.DEBUG)
-
-    # create tmp dir
-    TMP_FOLDER_PATH.mkdir(parents=True, exist_ok=True)
 
     i18n.setup_i18n()
 
