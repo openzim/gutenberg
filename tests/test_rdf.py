@@ -2,6 +2,18 @@ import pytest
 
 from gutenberg2zim.rdf import RdfParser
 
+RDF_HEADER ="""
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xml:base="http://www.gutenberg.org/"
+  xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:cc="http://web.resource.org/cc/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dcam="http://purl.org/dc/dcam/"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+>
+"""
+
 BOOK_22094 = """
 <?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF xml:base="http://www.gutenberg.org/"
@@ -118,8 +130,8 @@ def test_rdf_parser():
 
 def test_rdf_parser_minimal():
     rdf = RdfParser(
-        """
-<rdf:RDF>
+        f"""
+  {RDF_HEADER}
   <pgterms:ebook rdf:about="ebooks/22094">
     <dcterms:rights>Public domain in the USA.</dcterms:rights>
     <pgterms:downloads>548</pgterms:downloads>
@@ -143,8 +155,8 @@ def test_rdf_parser_minimal():
 
 def test_rdf_parser_multi_languages():
     rdf = RdfParser(
-        """
-<rdf:RDF>
+        f"""
+  {RDF_HEADER}
   <pgterms:ebook rdf:about="ebooks/22094">
     <dcterms:rights>Public domain in the USA.</dcterms:rights>
     <pgterms:downloads>548</pgterms:downloads>
@@ -200,7 +212,7 @@ def test_rdf_parser_multi_languages():
 def test_rdf_parser_cover(cover_url: str, expected_cover: int):
     rdf = RdfParser(
         f"""
-<rdf:RDF>
+  {RDF_HEADER}
   <pgterms:ebook rdf:about="ebooks/22094">
     <dcterms:rights>Public domain in the USA.</dcterms:rights>
     <pgterms:downloads>548</pgterms:downloads>
@@ -228,8 +240,8 @@ def test_rdf_parser_cover(cover_url: str, expected_cover: int):
 
 def test_rdf_parser_title_subtitle():
     rdf = RdfParser(
-        """
-<rdf:RDF>
+        f"""
+  {RDF_HEADER}
   <pgterms:ebook rdf:about="ebooks/22094">
     <dcterms:title>Travels in the Great Desert of Sahara, in the Years of 1845 and 1846&#xA;This is a subtitle&#xA;Under two lines</dcterms:title>
     <dcterms:rights>Public domain in the USA.</dcterms:rights>
@@ -277,8 +289,7 @@ def test_rdf_parser_title_subtitle():
 def test_rdf_parser_author(name, author_id, expected_first_name, expected_last_name):
     rdf = RdfParser(
         f"""
-<rdf:RDF>
-  <pgterms:ebook rdf:about="ebooks/22094">
+    {RDF_HEADER}
     <dcterms:creator>
       <pgterms:agent rdf:about="2009/agents/{author_id}">
         <pgterms:name>{name}</pgterms:name>
@@ -304,8 +315,8 @@ def test_rdf_parser_author(name, author_id, expected_first_name, expected_last_n
 
 def test_rdf_parser_title_missing_license():
     rdf = RdfParser(
-        """
-<rdf:RDF>
+        f"""
+  {RDF_HEADER}
   <pgterms:ebook rdf:about="ebooks/22094">
     <dcterms:title>Travels in the Great Desert of Sahara, in the Years of 1845 and 1846</dcterms:title>
     <pgterms:downloads>548</pgterms:downloads>
@@ -322,8 +333,8 @@ def test_rdf_parser_title_missing_license():
 
 def test_rdf_parser_title_missing_downloads():
     rdf = RdfParser(
-        """
-<rdf:RDF>
+        f"""
+  {RDF_HEADER}
   <pgterms:ebook rdf:about="ebooks/22094">
     <dcterms:title>Travels in the Great Desert of Sahara, in the Years of 1845 and 1846</dcterms:title>
     <dcterms:rights>Public domain in the USA.</dcterms:rights>
