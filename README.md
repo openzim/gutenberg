@@ -71,6 +71,7 @@ You can find the full arguments list below:
 --stats-filename=<filename>     Path to store the progress JSON file to
 --publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
 --mirror-url=<mirror_url>       Optional custom url of mirror hosting Gutenberg files
+--output=<output_folder>        Output folder for ZIMs. Default: /output
 --debug                         Enable verbose output
 ```
 

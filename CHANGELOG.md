@@ -21,6 +21,8 @@ as of 2.0.0.
   - Get rid of the "steps" approach, not used (anymore?) in production and difficult to maintain
   - Many CLI options removed: --use-any-optimized-version, --zim, --download, --parse, --prepare, -m/--one-language-one-zim, --dlc, -d/--dl-folder, -e/--static-folder
 
+### Added
+- Add standard `--output` option to control where ZIM files are written (#xxx)
 
 ### Changed
 
