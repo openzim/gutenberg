@@ -2,8 +2,8 @@ import datetime
 import pathlib
 
 from gutenberg2zim import i18n
-from gutenberg2zim.constants import logger
 from gutenberg2zim.book_processor import process_all_books
+from gutenberg2zim.constants import logger
 from gutenberg2zim.iso639 import ISO_MATRIX, ISO_MATRIX_REV
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.shared import Global
@@ -102,4 +102,3 @@ def build_zimfile(
         return
     else:
         Global.finish()
-

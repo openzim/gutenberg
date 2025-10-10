@@ -1,7 +1,6 @@
 import json
 import urllib.parse
 from collections.abc import Iterable
-from multiprocessing.dummy import Pool
 from pathlib import Path
 
 import bs4
@@ -157,6 +156,7 @@ def export_skeleton(
         mimetype="text/html",
         is_front=True,
     )
+
 
 def html_content_for(book: Book, src_dir):
     html_fpath = src_dir / fname_for(book, "html")
