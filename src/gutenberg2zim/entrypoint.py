@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 from docopt import docopt
@@ -25,7 +26,7 @@ help_info = (
     """[-c CONCURRENCY] [--no-index] """
     """[--title-search] [--bookshelves] """
     """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
-    """[--mirror-url MIRROR_URL] [--debug] """
+    """[--mirror-url MIRROR_URL] [--output OUTPUT_FOLDER][--debug] """
     """
 
 -h --help                       Display this help message
@@ -52,6 +53,7 @@ help_info = (
 --stats-filename=<filename>  Path to store the progress JSON file to
 --publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
 --mirror_url=<mirror_url>       Optional custom url of mirror hosting Gutenberg files
+--output=<output_folder>        Output folder for ZIMs. Default: ./output
 --debug                         Enable verbose output
 
 This script is used to produce a ZIM file of Gutenberg repository using a mirror.
@@ -79,6 +81,9 @@ def main():
     stats_filename: str | None = arguments.get("--stats-filename") or None
     publisher = arguments.get("--publisher") or "openZIM"
     debug = arguments.get("--debug") or False
+    output_folder = Path(
+        arguments.get("--output") or os.getenv("GUTENBERG_OUTPUT", "./output")
+    )
 
     if debug:
         for handler in logger.handlers:
@@ -155,7 +160,7 @@ def main():
     logger.info("BUILDING ZIM")
 
     build_zimfile(
-        output_folder=Path(".").resolve(),
+        output_folder=output_folder,
         book_ids=book_ids,
         mirror_url=mirror_url,
         concurrency=concurrency,
