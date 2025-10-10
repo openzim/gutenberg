@@ -1,6 +1,6 @@
 {
   "offliner_id": "gutenberg",
-  "stdOutput": false,
+  "stdOutput": true,
   "stdStats": true,
   "flags": {
     "languages": {
@@ -44,25 +44,6 @@
       "description": "Number of concurrent threads to use",
       "min": 1
     },
-    "dlc": {
-      "type": "integer",
-      "required": false,
-      "title": "Download Concurrency",
-      "description": "Number of parallel downloads to run (overrides concurrency)",
-      "min": 1
-    },
-    "one_language_one_zim": {
-      "type": "boolean",
-      "required": false,
-      "title": "Multiple ZIMs",
-      "description": "Create one ZIM per language"
-    },
-    "no_index": {
-      "type": "boolean",
-      "required": false,
-      "title": "No Index",
-      "description": "Do not create full-text index within ZIM file"
-    },
     "title_search": {
       "type": "boolean",
       "required": false,
@@ -74,19 +55,6 @@
       "required": false,
       "title": "Bookshelves",
       "description": "Browse by bookshelves feature"
-    },
-    "optimization_cache": {
-      "type": "url",
-      "required": false,
-      "secret": true,
-      "title": "Optimization Cache URL",
-      "description": "S3 Storage URL including credentials and bucket"
-    },
-    "use_any_optimized_version": {
-      "type": "boolean",
-      "required": false,
-      "title": "Use any optimized version",
-      "description": "Use any optimized version"
     },
     "publisher": {
       "type": "string",
@@ -101,6 +69,13 @@
       "title": "Stats filename",
       "description": "Scraping progress file. Leave it as `/output/task_progress.json`",
       "pattern": "^/output/task_progress\\.json$"
+    },
+    "output": {
+      "type": "string",
+      "required": false,
+      "title": "Output folder",
+      "description": "Output folder for ZIM file(s). Leave it as `/output`",
+      "pattern": "^/output$"
     }
   }
 }
