@@ -144,7 +144,7 @@ def main():
             "Unable to proceed. Combination of languages, "
             "books and formats has no result."
         )
-    book_languages = list(
+    book_languages = languages if languages else list(
         {languages for book_id in book_ids for languages in catalog[book_id]}
     )
     progress.increase_progress()
