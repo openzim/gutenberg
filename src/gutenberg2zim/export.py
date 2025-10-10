@@ -509,10 +509,34 @@ def handle_book_files(
             mimetype="text/html",
         )
 
+    # Handle other formats (epub, pdf)
+    other_filenames = []
+    for other_format in [
+        fmt
+        for fmt in formats
+        if fmt != "html" and fmt not in str(book.unsupported_formats).split(",")
+    ]:
+        book_filename = fname_for(book, other_format)
+        if book_filename in book_files:
+            other_filenames.append(book_filename)
+            try:
+                archive_name = archive_name_for(book, other_format)
+                Global.add_item_for(
+                    path=archive_name,
+                    content=book_files[book_filename],
+                )
+            except Exception as e:
+                logger.exception(e)
+                logger.error(f"\t\tException while handling {other_format}: {e}")
+
     # Process all associated files (images, companion HTML files, etc)
     for filename, file_content in book_files.items():
         # Skip the main HTML file as it's already processed
         if filename == main_html_filename:
+            continue
+
+        # Skip files matching a specific format since they have already been processed
+        if filename in other_filenames:
             continue
 
         if filename.endswith((".html", ".htm")):
@@ -541,24 +565,6 @@ def handle_book_files(
             except Exception as e:
                 logger.exception(e)
                 logger.error(f"\t\tException while handling file {filename}: {e}")
-
-    # Handle other formats (epub, pdf)
-    for other_format in [
-        fmt
-        for fmt in formats
-        if fmt != "html" and fmt not in str(book.unsupported_formats).split(",")
-    ]:
-        book_filename = fname_for(book, other_format)
-        if book_filename in book_files:
-            try:
-                archive_name = archive_name_for(book, other_format)
-                Global.add_item_for(
-                    path=archive_name,
-                    content=book_files[book_filename],
-                )
-            except Exception as e:
-                logger.exception(e)
-                logger.error(f"\t\tException while handling {other_format}: {e}")
 
 
 def write_book_presentation_article(
