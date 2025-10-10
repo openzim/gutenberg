@@ -88,6 +88,9 @@
         "license-pd": {
             "textContent": "Public domain in the USA."
         },
+        "license-copyright": {
+            "textContent": "Copyrighted. Read the copyright notice inside this book for details."
+        },
         "nb-downloads": {
             "textContent": "{[ plural(nb) ]}"
         },

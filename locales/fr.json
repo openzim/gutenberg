@@ -88,6 +88,9 @@
         "license-pd": {
             "textContent": "Domaine public aux États-Unis."
         },
+        "license-copyright": {
+            "textContent": "Protégé par le droit d'auteur. Consultez la mention de droit d'auteur à l'intérieur de ce livre pour plus de détails."
+        },
         "nb-downloads": {
             "textContent": "{[ plural(nb) ]}"
         },
