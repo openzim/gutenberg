@@ -21,7 +21,7 @@ class RdfParser:
         self.cover_image = 0
 
     def parse(self):
-        soup = BeautifulSoup(self.rdf_data, "lxml")
+        soup = BeautifulSoup(self.rdf_data, "lxml-xml")
 
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.

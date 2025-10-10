@@ -174,7 +174,7 @@ def html_content_for(book: Book, src_dir):
 
 
 def update_html_for_static(book, html_content, formats, *, epub=False):
-    soup = BeautifulSoup(html_content, "lxml-html")
+    soup = BeautifulSoup(html_content, "lxml")
 
     # remove encoding as we're saving to UTF8 anyway
     encoding_specified = False
@@ -354,7 +354,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
     if not epub:
         infobox = jinja_env.get_template("book_infobox.html")
         infobox_html = infobox.render({"book": book, "formats": formats})
-        info_soup = BeautifulSoup(infobox_html, "lxml-html")
+        info_soup = BeautifulSoup(infobox_html, "lxml")
         info_box = info_soup.find("div")
         if not isinstance(info_box, Tag):
             raise Exception("info_box div should be a Tag class")
@@ -364,7 +364,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
     if not epub:
         meta = BeautifulSoup(
             '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />',
-            "lxml-html",
+            "lxml",
         )
         head = soup.find("head")
         html = soup.find("html")
