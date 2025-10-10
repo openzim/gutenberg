@@ -1,0 +1,147 @@
+{
+    "ui_strings": {
+        "isocode": {
+            "textContent": "ar"
+        },
+        "autonym": {
+            "textContent": "العربية"
+        },
+        "homepage": {
+            "alt": "الصفحة الرئيسية",
+            "title": "الصفحة الرئيسية"
+        },
+        "choose-language": {
+            "placeholder": "أختر لغة..."
+        },
+        "ui-language-switcher": {
+            "title": "لغة الواجهة"
+        },
+        "search": {
+            "textContent": "بحث"
+        },
+        "author": {
+            "textContent": "المؤلف",
+            "placeholder": "جدولة كتب أحد المؤلفين"
+        },
+        "cover-img": {
+            "alt": "غلاف الكتاب",
+            "title": "غلاف الكتاب"
+        },
+        "cover": {
+            "textContent": "(الغلاف)"
+        },
+        "filter": {
+            "textContent": "فلتر:"
+        },
+        "popularity": {
+            "textContent": "الشعبية"
+        },
+        "sort": {
+            "textContent": "ترتيب:"
+        },
+        "sort-popularity": {
+            "textContent": "رتب الكتب بحسب الشعبية"
+        },
+        "sort-title": {
+            "textContent": "رتب الكتب بحسب العنوان"
+        },
+        "title": {
+            "textContent": "العنوان",
+            "placeholder": "ابحث عن الكتب حسب العنوان"
+        },
+        "format": {
+            "textContent": "الصيغة"
+        },
+        "loading": {
+            "textContent": "جار التحميل..."
+        },
+        "no-data": {
+            "textContent": "لا توجد معلومات في الجدول"
+        },
+        "prev": {
+            "textContent": "السابق"
+        },
+        "next": {
+            "textContent": "التالي"
+        },
+        "language": {
+            "textContent": "اللغة"
+        },
+        "any-languages": {
+            "textContent": "أختر قائمة"
+        },
+        "main-languages": {
+            "textContent": "اللغات الأساسية"
+        },
+        "other-languages": {
+            "textContent": "اللغات الأخرى"
+        },
+        "author-anonymous": {
+            "textContent": "مجهول"
+        },
+        "author-various": {
+            "textContent": "متنوع"
+        },
+        "license": {
+            "textContent": "الرخصة"
+        },
+        "license-pd": {
+            "textContent": "مجال عام في الولايات المتحدة الأمريكية."
+        },
+        "nb-downloads": {
+            "textContent": "{[ plural(nb) ]}"
+        },
+        "nb-downloads[one]": {
+            "textContent": "تحميل واحد ضمن آخر 30 يوم."
+        },
+        "nb-downloads[other]": {
+            "textContent": "{{nb}} تحميل ضمن آخر 30 يوم."
+        },
+        "top-title": {
+            "textContent": "مشروع مكتبة Gutenberg"
+        },
+        "sub-title": {
+            "textContent": "المصنع الأول للكتب الأكترونية المجانية"
+        },
+        "table-previous": {
+            "textContent": "السابق"
+        },
+        "table-next": {
+            "textContent": "التالي"
+        },
+        "about-1": {
+            "textContent": "مشروع Gutenberg يوفر أكثر من60,000 كتاب ألكتروني مجاني"
+        },
+        "about-2": {
+            "textContent": "أختر من ضمن كتب ال epub, كتب kindle مجانية."
+        },
+        "about-3": {
+            "textContent": "قم بتنزيلهم او قرائتهم عبر الأنترنت."
+        },
+        "about-4": {
+            "textContent": "نحن لدينا كتب ألكترونية عالية الجودة"
+        },
+        "about-5": {
+            "textContent": "كل كتبنا كانت مسبقا منشورة من قبل ناشرين bona fide."
+        },
+        "about-6": {
+            "textContent": "لقد رقمناهم و قرأناهم بجد و ذلك بمساعدة من الآلاف من المتطوعين."
+        },
+        "bookshelves_title": {
+            "textContent": "أرفف الكتب (أ-ي)"
+        },
+        "bookshelf_link": {
+            "textContent": "تصفح حسب رف الكتب"
+        },
+        "home_link": {
+            "textContent": "اذهب للمنزل"
+        },
+        "bookshelf": {
+            "placeholder": "بحث رف الكتب"
+        }
+    },
+    "metadata_defaults": {
+        "title": "مكتبة مشروع جوتنبرج",
+        "description": "جميع الكتب باللغة العربية من أول منتج للكتب الإلكترونية المجانية"
+    }
+}

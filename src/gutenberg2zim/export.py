@@ -1,30 +1,25 @@
 import json
 import urllib.parse
-from multiprocessing.dummy import Pool
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any
 
 import bs4
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from jinja2 import Environment, PackageLoader
 
 import gutenberg2zim
-from gutenberg2zim.constants import TMP_FOLDER_PATH, logger
-from gutenberg2zim.database import Author, Book, BookLanguage
+from gutenberg2zim.constants import LOCALES_LOCATION, logger
 from gutenberg2zim.iso639 import language_name
-from gutenberg2zim.l10n import l10n_strings
-from gutenberg2zim.scraper_progress import ScraperProgress
+from gutenberg2zim.models import Book, repository
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import (
     UTF8,
     archive_name_for,
     article_name_for,
     book_name_for_fs,
-    critical_error,
     fname_for,
     get_lang_groups,
     get_langs_with_count,
-    get_list_of_filtered_books,
     read_file,
     save_file,
 )
@@ -34,24 +29,31 @@ jinja_env = Environment(  # noqa: S701
 )
 
 DEBUG_COUNT = []
-NB_POPULARITY_STARS = 5
 
 
-def get_ui_languages_for(books_ids):
+def get_ui_languages_for():
     ui_languages = ["en", "fr", "de", "it", "ar", "nl", "es", "pt"]
-    languages = get_langs_with_count(books_ids=books_ids)
+    languages = get_langs_with_count(languages=None)
     if len(languages) == 1 and languages[-1][1] in ui_languages:
         return [languages[-1][1]]
     return ui_languages
 
 
-def get_default_context(project_id, books_ids):
+def get_default_context(project_id):
     if not Global.default_context or Global.default_context_project_id != project_id:
         Global.default_context_project_id = project_id
+        l10n_strings = {"default_locale": "en", "locales": {}}
+        for file in LOCALES_LOCATION.glob("*.json"):
+            if not file.is_file():
+                continue
+            locale_data = json.loads(file.read_bytes())
+            if "ui_strings" not in locale_data:
+                continue
+            l10n_strings["locales"][file.stem] = locale_data["ui_strings"]
         Global.default_context = {
             "l10n_strings": json.dumps(l10n_strings),
-            "ui_languages": get_ui_languages_for(books_ids=books_ids),
-            "languages": get_langs_with_count(books_ids=books_ids),
+            "ui_languages": get_ui_languages_for(),
+            "languages": get_langs_with_count(languages=None),
             "project_id": project_id,
         }
     return Global.default_context.copy()
@@ -90,18 +92,19 @@ def tmpl_path() -> Path:
 
 
 def get_list_of_all_languages():
-    return list(
-        {bl.language_code for bl in BookLanguage.select(BookLanguage.language_code)}
-    )
+    # Get all unique languages from all books
+    languages = set()
+    for book in repository.books.values():
+        languages.update(book.languages)
+    return list(languages)
 
 
 def export_skeleton(
     project_id,
-    books_ids,
     title_search,
     add_bookshelves,
 ):
-    context = get_default_context(project_id, books_ids)
+    context = get_default_context(project_id)
     context.update(
         {
             "show_books": True,
@@ -155,101 +158,6 @@ def export_skeleton(
     )
 
 
-def export_all_books(
-    project_id: str,
-    download_cache: Path,
-    concurrency: int,
-    languages: list[str],
-    formats: list[str],
-    only_books: list[int],
-    progress: ScraperProgress,
-    *,
-    force: bool,
-    title_search: bool,
-    add_bookshelves: bool,
-) -> None:
-    books_ids: Any = [
-        book.book_id
-        for book in get_list_of_filtered_books(
-            languages=languages, formats=formats, only_books=only_books
-        )
-    ]
-
-    logger.info(f"Found {len(books_ids)} books for export")
-
-    if not len(get_langs_with_count(books_ids=books_ids)):
-        critical_error(
-            "Unable to proceed. Combination of languages, "
-            "books and formats has no result."
-        )
-
-    # export to JSON helpers
-    logger.info("Exporting JSON helpers")
-    export_to_json_helpers(
-        books_ids=books_ids,
-        languages=languages,
-        formats=formats,
-        project_id=project_id,
-        add_bookshelves=add_bookshelves,
-    )
-
-    # export HTML index and other static files
-    logger.info("Exporting HTML skeleton")
-    export_skeleton(
-        books_ids=books_ids,
-        project_id=project_id,
-        title_search=title_search,
-        add_bookshelves=add_bookshelves,
-    )
-
-    # Compute popularity
-    logger.info("Computing book popularity")
-    popbooks = (
-        Book.select()
-        .where(not books_ids or Book.book_id << books_ids)
-        .order_by(Book.downloads.desc())
-    )
-    popbooks_count = popbooks.count()
-    stars_limits = [0] * NB_POPULARITY_STARS
-    stars = NB_POPULARITY_STARS
-    nb_downloads = popbooks[0].downloads
-    for ibook in range(0, popbooks.count(), 1):
-        if (
-            ibook
-            > float(NB_POPULARITY_STARS - stars + 1)
-            / NB_POPULARITY_STARS
-            * popbooks_count
-            and popbooks[ibook].downloads < nb_downloads
-        ):
-            stars_limits[stars - 1] = nb_downloads
-            stars = stars - 1
-        nb_downloads = popbooks[ibook].downloads
-
-    for book in Book.select().where(not books_ids or Book.book_id << books_ids):
-        book.popularity = sum(
-            [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
-        )
-
-    logger.info(f"Exporting books with {concurrency} (parallel) worker(s)")
-
-    def dlb(b):
-        export_book(
-            b,
-            download_cache=download_cache,
-            formats=formats,
-            books_ids=books_ids,
-            project_id=project_id,
-            force=force,
-            title_search=title_search,
-            add_bookshelves=add_bookshelves,
-        )
-        progress.increase_progress()
-
-    Pool(concurrency).map(
-        dlb, Book.select().where(not books_ids or Book.book_id << books_ids)
-    )
-
-
 def html_content_for(book: Book, src_dir):
     html_fpath = src_dir / fname_for(book, "html")
 
@@ -266,7 +174,7 @@ def html_content_for(book: Book, src_dir):
 
 
 def update_html_for_static(book, html_content, formats, *, epub=False):
-    soup = BeautifulSoup(html_content, "lxml-html")
+    soup = BeautifulSoup(html_content, "lxml")
 
     # remove encoding as we're saving to UTF8 anyway
     encoding_specified = False
@@ -331,12 +239,15 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
         if soup.title:
             soup.title.string = book.title
         else:
+            if not soup.html:
+                raise Exception("HTML should be set")
             head = soup.find("head")
             if not head:
                 head = soup.new_tag("head")
-                soup.html.insert(0, head)  # type: ignore
-            head.append(soup.new_tag("title"))
-            soup.title.string = book.title  # type: ignore
+                soup.html.insert(0, head)
+            title_tag = soup.new_tag("title")
+            title_tag.string = book.title
+            head.append(title_tag)
 
     patterns = [
         (
@@ -385,15 +296,11 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
     ]
 
     body = soup.find("body")
+    if not isinstance(body, Tag):
+        return
     try:
         is_encapsulated_in_div = (
-            sum(
-                [
-                    1
-                    for e in body.children  # type: ignore
-                    if not isinstance(e, bs4.NavigableString)
-                ]
-            )
+            sum([1 for e in body.children if not isinstance(e, bs4.NavigableString)])
             == 1
         )
     except Exception:
@@ -404,71 +311,75 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
 
     if not is_encapsulated_in_div:
         for start_of_text, end_of_text in patterns:
-            if (
-                start_of_text not in body.text  # type: ignore
-                and end_of_text not in body.text  # type: ignore
-            ):
+            if start_of_text not in body.text and end_of_text not in body.text:
                 continue
 
-            if start_of_text in body.text and end_of_text in body.text:  # type: ignore
+            if start_of_text in body.text and end_of_text in body.text:
                 remove = True
-                for child in body.children:  # type: ignore
-                    if isinstance(child, bs4.NavigableString):
+                for child in body.children:
+                    if not isinstance(child, bs4.Tag):
                         continue
                     if end_of_text in getattr(child, "text", ""):
                         remove = True
                     if start_of_text in getattr(child, "text", ""):
-                        child.decompose()  # type: ignore
+                        child.decompose()
                         remove = False
                     if remove:
-                        child.decompose()  # type: ignore
+                        child.decompose()
                 break
 
-            elif start_of_text in body.text:  # type: ignore
-                # logger.debug("FOUND START: {}".format(start_of_text))
+            elif start_of_text in body.text:
                 remove = True
-                for child in body.children:  # type: ignore
-                    if isinstance(child, bs4.NavigableString):
-                        continue
+                for child in body.children:
+                    if not isinstance(child, bs4.Tag):
+                        raise Exception("start_of_text child should be a Tag class")
                     if start_of_text in getattr(child, "text", ""):
-                        child.decompose()  # type: ignore
+                        child.decompose()
                         remove = False
                     if remove:
-                        child.decompose()  # type: ignore
+                        child.decompose()
                 break
-            elif end_of_text in body.text:  # type: ignore
-                # logger.debug("FOUND END: {}".format(end_of_text))
+            elif end_of_text in body.text:
                 remove = False
-                for child in body.children:  # type: ignore
-                    if isinstance(child, bs4.NavigableString):
-                        continue
+                for child in body.children:
+                    if not isinstance(child, bs4.Tag):
+                        raise Exception("end_of_text child should be a Tag class")
                     if end_of_text in getattr(child, "text", ""):
                         remove = True
                     if remove:
-                        child.decompose()  # type: ignore
+                        child.decompose()
                 break
 
     # build infobox
     if not epub:
         infobox = jinja_env.get_template("book_infobox.html")
         infobox_html = infobox.render({"book": book, "formats": formats})
-        info_soup = BeautifulSoup(infobox_html, "lxml-html")
-        body.insert(0, info_soup.find("div"))  # type: ignore
+        info_soup = BeautifulSoup(infobox_html, "lxml")
+        info_box = info_soup.find("div")
+        if not isinstance(info_box, Tag):
+            raise Exception("info_box div should be a Tag class")
+        body.insert(0, info_box)
 
     # if there is no charset, set it to utf8
     if not epub:
         meta = BeautifulSoup(
             '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />',
-            "lxml-html",
+            "lxml",
         )
         head = soup.find("head")
         html = soup.find("html")
+        if not isinstance(head, Tag):
+            raise Exception("head should be a Tag class")
+        if not isinstance(html, Tag):
+            raise Exception("html should be a Tag class")
+        if not isinstance(meta.head, Tag):
+            raise Exception("meta.head should be a Tag class")
         if head:
-            head.insert(0, meta.head.contents[0])  # type: ignore
+            head.insert(0, meta.head.contents[0])
         elif html:
-            html.insert(0, meta.head)  # type: ignore
+            html.insert(0, meta.head)
         else:
-            soup.insert(0, meta.head)  # type: ignore
+            soup.insert(0, meta.head)
 
         return html
 
@@ -476,10 +387,15 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
 
 
 def cover_html_content_for(
-    book, cover_dir, books_ids, project_id, title_search, add_bookshelves, formats
+    book,
+    project_id,
+    title_search,
+    add_bookshelves,
+    formats,
+    *,
+    has_cover: bool,
 ):
-    cover_img = f"{book.book_id}_cover_image.jpg"
-    cover_img = cover_img if (cover_dir / cover_img).exists() else None
+    cover_img = f"{book.book_id}_cover_image.jpg" if has_cover else None
 
     translate_author = (
         f' data-l10n-id="author-{book.author.name().lower()}"'
@@ -487,17 +403,19 @@ def cover_html_content_for(
         else ""
     )
 
+    # Convert license string to slug format for translation
+    # "Public domain in the USA." -> "PD", "Copyright" -> "Copyright"
+    license_slug = "PD" if "public domain" in book.license.lower() else "Copyright"
     translate_license = (
-        f' data-l10n-id="license-{book.book_license.slug.lower()}"'
-        if book.book_license.slug in ["PD", "Copyright"]
+        f' data-l10n-id="license-{license_slug.lower()}"'
+        if license_slug in ["PD", "Copyright"]
         else ""
     )
 
-    book_languages = [
-        lang.language_code for lang in book.languages.order_by(BookLanguage.id)  # type: ignore
-    ]
+    # book.languages is now a list[str] directly
+    book_languages = sorted(book.languages)
 
-    context = get_default_context(project_id=project_id, books_ids=books_ids)
+    context = get_default_context(project_id=project_id)
     context.update(
         {
             "book": book,
@@ -514,18 +432,18 @@ def cover_html_content_for(
     return template.render(**context)
 
 
-def author_html_content_for(author, books_ids, project_id):
-    context = get_default_context(project_id=project_id, books_ids=books_ids)
+def author_html_content_for(author, project_id):
+    context = get_default_context(project_id=project_id)
     context.update({"author": author})
     template = jinja_env.get_template("author.html")
     return template.render(**context)
 
 
-def save_author_file(author, books_ids, project_id):
+def save_author_file(author, project_id):
     logger.debug(f"\t\tSaving author file {author.name()} (ID {author})")
     Global.add_item_for(
         path=f"{author.fname()}.html",
-        content=author_html_content_for(author, books_ids, project_id),
+        content=author_html_content_for(author, project_id),
         mimetype="text/html",
         is_front=True,
     )
@@ -533,188 +451,168 @@ def save_author_file(author, books_ids, project_id):
 
 def export_book(
     book: Book,
-    download_cache: Path,
+    book_files: dict[str, bytes],
+    cover_image: bytes | None,
     formats: list[str],
-    books_ids: list[int],
     project_id: str,
     *,
-    force: bool,
     title_search: bool,
     add_bookshelves: bool,
 ):
+    """Export book to ZIM using in-memory content"""
     logger.debug(f"Exporting book {book.book_id}")
-    book_dir = download_cache / str(book.book_id)
-    cover_dir = download_cache / "covers"
     handle_book_files(
         book=book,
-        src_dir=book_dir,
-        cover_dir=cover_dir,
+        book_files=book_files,
         formats=formats,
-        force=force,
     )
 
     write_book_presentation_article(
         book=book,
-        cover_dir=cover_dir,
-        force=force,
+        cover_image=cover_image,
         project_id=project_id,
         title_search=title_search,
         add_bookshelves=add_bookshelves,
-        books_ids=books_ids,
         formats=formats,
     )
 
 
 def handle_book_files(
     book: Book,
-    src_dir: Path,
-    cover_dir: Path,
+    book_files: dict[str, bytes],
     formats: list[str],
-    *,
-    force: bool,
 ):
-
+    """Handle book files from in-memory content and add to ZIM"""
     logger.debug(f"\tExporting Book #{book.book_id}.")
 
-    # actual book content, as HTML
-    html, _ = html_content_for(book=book, src_dir=src_dir)
-    html_book_optimized_files = []
-    if html:
+    # Find the main HTML file
+    main_html_filename = f"{book.book_id}.html"
+    html_content = None
+
+    if main_html_filename in book_files:
+        html_content = book_files[main_html_filename].decode("utf-8", errors="replace")
+
+    if html_content:
         article_name = article_name_for(book)
-        article_fpath = TMP_FOLDER_PATH / article_name
-        if not article_fpath.exists() or force:
-            logger.debug(f"\t\tExporting to {article_fpath}")
+        logger.debug(f"\t\tProcessing HTML content for {article_name}")
+        try:
+            new_html = update_html_for_static(
+                book=book, html_content=html_content, formats=formats
+            )
+        except Exception:
+            raise
+
+        # Add the optimized HTML directly to ZIM
+        Global.add_item_for(
+            path=article_name,
+            content=str(new_html),
+            mimetype="text/html",
+        )
+
+    # Process all associated files (images, companion HTML files, etc)
+    for filename, file_content in book_files.items():
+        # Skip the main HTML file as it's already processed
+        if filename == main_html_filename:
+            continue
+
+        if filename.endswith((".html", ".htm")):
+            # Process companion HTML files
+            logger.debug(f"\t\tProcessing companion HTML: {filename}")
             try:
+                html_str = file_content.decode("utf-8", errors="replace")
                 new_html = update_html_for_static(
-                    book=book, html_content=html, formats=formats
+                    book=book, html_content=html_str, formats=formats
                 )
-            except Exception:
-                raise
-            save_bs_output(new_html, article_fpath, UTF8)
-            html_book_optimized_files.append(article_fpath)
+                Global.add_item_for(
+                    path=filename,
+                    content=str(new_html),
+                    mimetype="text/html",
+                )
+            except Exception as e:
+                logger.exception(e)
+                logger.error(f"\t\tException while handling companion HTML: {e}")
         else:
-            logger.info(f"\t\tSkipping HTML article {article_fpath}")
-        Global.add_item_for(path=article_name, fpath=article_fpath)
-
-    def handle_companion_file(
-        fname: Path,
-        dstfname: str | None = None,
-    ):
-        src = fname
-        if dstfname is None:
-            dstfname = fname.name
-        Global.add_item_for(path=dstfname, fpath=src)
-
-    # associated files (images, etc)
-    for fpath in src_dir.iterdir():
-        if fpath.is_file() and fpath.name.startswith(f"{book.book_id}_"):
-            if fpath.suffix in (".html", ".htm"):
-                src = fpath
-                dst = TMP_FOLDER_PATH / fpath.name
-                if dst.exists() and not force:
-                    logger.debug(f"\t\tSkipping already optimized HTML {dst}")
-                    Global.add_item_for(path=fpath.name, fpath=dst)
-                    continue
-
-                logger.info(f"\tExporting HTML file to {dst}")
-                html, _ = read_file(src)
-                new_html = update_html_for_static(
-                    book=book, html_content=html, formats=formats
+            # Add other files (images, etc) directly
+            try:
+                Global.add_item_for(
+                    path=filename,
+                    content=file_content,
                 )
-                save_bs_output(new_html, dst, UTF8)
-                html_book_optimized_files.append(dst)
-            else:
-                try:
-                    handle_companion_file(fname=fpath)
-                except Exception as e:
-                    logger.exception(e)
-                    logger.error(f"\t\tException while handling companion file: {e}")
+            except Exception as e:
+                logger.exception(e)
+                logger.error(f"\t\tException while handling file {filename}: {e}")
 
-    # other formats
+    # Handle other formats (epub, pdf)
     for other_format in [
         fmt
         for fmt in formats
         if fmt != "html" and fmt not in str(book.unsupported_formats).split(",")
     ]:
-        book_file = src_dir / fname_for(book, other_format)
-        if book_file.exists():
+        book_filename = fname_for(book, other_format)
+        if book_filename in book_files:
             try:
-                handle_companion_file(
-                    fname=book_file,
-                    dstfname=archive_name_for(book, other_format),
+                archive_name = archive_name_for(book, other_format)
+                Global.add_item_for(
+                    path=archive_name,
+                    content=book_files[book_filename],
                 )
             except Exception as e:
                 logger.exception(e)
-                logger.error(f"\t\tException while handling companion file: {e}")
-
-    # cover image
-    cover_img = cover_dir / f"{book.book_id}_cover_image.jpg"
-    if cover_img.exists():
-        handle_companion_file(
-            fname=cover_img,
-            dstfname=f"covers/{book.book_id}_cover_image.jpg",
-        )
+                logger.error(f"\t\tException while handling {other_format}: {e}")
 
 
 def write_book_presentation_article(
     book,
-    cover_dir,
-    force,
+    cover_image: bytes | None,
     project_id,
     title_search,
     add_bookshelves,
-    books_ids,
     formats,
 ):
+    """Write book presentation article directly to ZIM"""
     article_name = article_name_for(book=book, cover=True)
-    cover_fpath = TMP_FOLDER_PATH / article_name
-    if not cover_fpath.exists() or force:
-        logger.debug(f"\t\tExporting article presentation to {cover_fpath}")
-        html = cover_html_content_for(
-            book=book,
-            cover_dir=cover_dir,
-            books_ids=books_ids,
-            project_id=project_id,
-            title_search=title_search,
-            add_bookshelves=add_bookshelves,
-            formats=formats,
+    logger.debug("\t\tExporting article presentation")
+
+    # Add cover image to ZIM if available
+    if cover_image:
+        cover_path = f"covers/{book.book_id}_cover_image.jpg"
+        Global.add_item_for(
+            path=cover_path,
+            content=cover_image,
+            mimetype="image/jpeg",
         )
-        with open(cover_fpath, "w") as f:
-            f.write(html)
-    else:
-        logger.debug(f"\t\tSkipping already optimized cover {cover_fpath}")
 
-    Global.add_item_for(path=article_name, fpath=cover_fpath)
+    html = cover_html_content_for(
+        book=book,
+        has_cover=cover_image is not None,
+        project_id=project_id,
+        title_search=title_search,
+        add_bookshelves=add_bookshelves,
+        formats=formats,
+    )
 
-
-# Returns the list of all Bookshelves
-# Ex: [None, u'Adventure', u"Children's Literature", u'Christianity',
-# u'Detective Fiction', u'Gothic Fiction', u'Harvard Classics', u'Historical Fiction',
-# u'Mathematics', u'Plays', u'School Stories', u'Science Fiction']
-def bookshelf_list(books_ids):
-    return [
-        bookshelf.bookshelf
-        for bookshelf in Book.select()
-        .where(not books_ids or Book.book_id << books_ids)
-        .order_by(Book.bookshelf.asc())
-        .group_by(Book.bookshelf)
-    ]
+    Global.add_item_for(
+        path=article_name,
+        content=html,
+        mimetype="text/html",
+    )
 
 
-def bookshelf_list_language(lang, books_ids):
-    return [
-        book.bookshelf
-        for book in Book.select(Book.bookshelf)
-        .where(not books_ids or Book.book_id << books_ids)
-        .join(BookLanguage)
-        .where(BookLanguage.language_code == lang)
-        .where(Book.bookshelf.is_null(False))
-        .group_by(Book.bookshelf)
-        .order_by(Book.bookshelf.asc())
-    ]
+def _bookshelf_list_for_books(books: Iterable[Book]):
+    return sorted({book.bookshelf for book in books if book.bookshelf})
 
 
-def export_to_json_helpers(books_ids, languages, formats, project_id, add_bookshelves):
+def bookshelf_list():
+    return _bookshelf_list_for_books(repository.get_all_books())
+
+
+def bookshelf_list_language(lang):
+    return _bookshelf_list_for_books(
+        filter(lambda book: lang in book.languages, repository.get_all_books())
+    )
+
+
+def export_to_json_helpers(languages, formats, project_id, add_bookshelves):
     def dumpjs(col, fn, var="json_data"):
         Global.add_item_for(
             path=fn,
@@ -728,9 +626,11 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
     dumpjs(
         [
             book.to_array(all_requested_formats=formats)
-            for book in Book.select()
-            .where(not books_ids or Book.book_id << books_ids)
-            .order_by(Book.downloads.desc())
+            for book in sorted(
+                repository.get_all_books(),
+                key=lambda book: book.downloads,
+                reverse=True,
+            )
         ],
         "full_by_popularity.js",
     )
@@ -740,9 +640,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
     dumpjs(
         [
             book.to_array(all_requested_formats=formats)
-            for book in Book.select()
-            .where(not books_ids or Book.book_id << books_ids)
-            .order_by(Book.title.asc())
+            for book in sorted(repository.get_all_books(), key=lambda book: book.title)
         ],
         "full_by_title.js",
     )
@@ -752,41 +650,46 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
     for lang in languages:
         # by popularity
         logger.debug(f"\t\tDumping lang_{lang}_by_popularity.js")
+
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
-                for book in Book.select()
-                .where(not books_ids or Book.book_id << books_ids)
-                .join(BookLanguage)
-                .where(BookLanguage.language_code == lang)
-                .order_by(Book.downloads.desc())
+                for book in sorted(
+                    filter(
+                        lambda book: lang in book.languages, repository.get_all_books()
+                    ),
+                    key=lambda book: book.downloads,
+                    reverse=True,
+                )
             ],
             f"lang_{lang}_by_popularity.js",
         )
+
         # by title
         logger.debug(f"\t\tDumping lang_{lang}_by_title.js")
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
-                for book in Book.select()
-                .where(not books_ids or Book.book_id << books_ids)
-                .join(BookLanguage)
-                .where(BookLanguage.language_code == lang)
-                .order_by(Book.title.asc())
+                for book in sorted(
+                    filter(
+                        lambda book: lang in book.languages, repository.get_all_books()
+                    ),
+                    key=lambda book: book.title,
+                )
             ],
             f"lang_{lang}_by_title.js",
         )
 
+        # Get unique authors for books in this language
         logger.debug(f"\t\tDumping authors_lang_{lang}.js")
         dumpjs(
             [
                 author.to_array()
-                for author in Author.select()
-                .join(Book)
-                .where(not books_ids or Book.book_id << books_ids)
-                .join(BookLanguage)
-                .where(BookLanguage.language_code == lang)
-                .distinct()
+                for author in {
+                    book.author
+                    for book in repository.get_all_books()
+                    if lang in book.languages
+                }
             ],
             f"authors_lang_{lang}.js",
             "authors_json_data",
@@ -794,11 +697,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
 
     if add_bookshelves:
         logger.info("\tDumping bookshelves_xxx JS and HTML files")
-        bookshelves = bookshelf_list(books_ids)
-        for bookshelf in bookshelves:
-            # exclude the books with no bookshelf data
-            if bookshelf is None:
-                continue
+        for bookshelf in bookshelf_list():
             # dumpjs for bookshelf by popularity
             # this will allow the popularity button to use this js on the
             # particular bookshelf page
@@ -806,10 +705,15 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
-                    for book in Book.select()
-                    .where(not books_ids or Book.book_id << books_ids)
-                    .where(Book.bookshelf == bookshelf)
-                    .order_by(Book.downloads.desc())
+                    for book in sorted(
+                        [
+                            book
+                            for book in repository.get_all_books()
+                            if book.bookshelf == bookshelf
+                        ],
+                        key=lambda b: b.downloads,
+                        reverse=True,
+                    )
                 ],
                 f"bookshelf_{bookshelf}_by_popularity.js",
             )
@@ -819,28 +723,36 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
-                    for book in Book.select()
-                    .where(not books_ids or Book.book_id << books_ids)
-                    .where(Book.bookshelf == bookshelf)
-                    .order_by(Book.title.asc())
+                    for book in sorted(
+                        [
+                            book
+                            for book in repository.get_all_books()
+                            if book.bookshelf == bookshelf
+                        ],
+                        key=lambda b: b.title,
+                    )
                 ],
                 f"bookshelf_{bookshelf}_by_title.js",
             )
+
             # by language
             for lang in languages:
                 logger.debug(
                     f"\t\tDumping bookshelf_{bookshelf}_lang_{lang}_by_popularity.js"
                 )
-
                 dumpjs(
                     [
                         book.to_array(all_requested_formats=formats)
-                        for book in Book.select()
-                        .where(not books_ids or Book.book_id << books_ids)
-                        .join(BookLanguage)
-                        .where(BookLanguage.language_code == lang)
-                        .where(Book.bookshelf == bookshelf)
-                        .order_by(Book.downloads.desc())
+                        for book in sorted(
+                            [
+                                book
+                                for book in repository.get_all_books()
+                                if book.bookshelf == bookshelf
+                                and lang in book.languages
+                            ],
+                            key=lambda b: b.downloads,
+                            reverse=True,
+                        )
                     ],
                     f"bookshelf_{bookshelf}_lang_{lang}_by_popularity.js",
                 )
@@ -848,16 +760,18 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
                 logger.debug(
                     f"\t\tDumping bookshelf_{bookshelf}_lang_{lang}_by_title.js"
                 )
-
                 dumpjs(
                     [
                         book.to_array(all_requested_formats=formats)
-                        for book in Book.select()
-                        .where(not books_ids or Book.book_id << books_ids)
-                        .join(BookLanguage)
-                        .where(BookLanguage.language_code == lang)
-                        .where(Book.bookshelf == bookshelf)
-                        .order_by(Book.title.asc())
+                        for book in sorted(
+                            [
+                                book
+                                for book in repository.get_all_books()
+                                if book.bookshelf == bookshelf
+                                and lang in book.languages
+                            ],
+                            key=lambda b: b.title,
+                        )
                     ],
                     f"bookshelf_{bookshelf}_lang_{lang}_by_title.js",
                 )
@@ -865,15 +779,14 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
         # dump all bookshelves from any given language
         for lang in languages:
             logger.debug(f"\t\tDumping bookshelves_lang_{lang}.js")
-            temp = bookshelf_list_language(lang, books_ids)
-            dumpjs(temp, f"bookshelves_lang_{lang}.js")
+            dumpjs(bookshelf_list_language(lang), f"bookshelves_lang_{lang}.js")
 
         logger.debug("\t\tDumping bookshelves.js")
-        dumpjs(bookshelves, "bookshelves.js", "bookshelves_json_data")
+        dumpjs(bookshelf_list(), "bookshelves.js", "bookshelves_json_data")
 
         # Create the bookshelf home page
         logger.debug("\t\tDumping bookshelf_home.html")
-        context = get_default_context(project_id=project_id, books_ids=books_ids)
+        context = get_default_context(project_id=project_id)
         context.update({"bookshelf_home": True, "add_bookshelves": True})
         template = jinja_env.get_template("bookshelf_home.html")
         rendered = template.render(**context)
@@ -885,7 +798,7 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
         )
 
         # add individual bookshelf pages
-        for bookshelf in bookshelves:
+        for bookshelf in bookshelf_list():
             if bookshelf is None:
                 continue
             logger.debug(f"Dumping {bookshelf}.html")
@@ -910,83 +823,89 @@ def export_to_json_helpers(books_ids, languages, formats, project_id, add_booksh
 
     # author specific collections
     logger.info("\tDumping authors_xxx JS files")
-    authors = (
-        Author.select()
-        .join(Book)
-        .where(not books_ids or Book.book_id << books_ids)
-        .join(BookLanguage)
-        .where(BookLanguage.language_code << languages)
-        .distinct()
-    )
-    for author in authors:
+
+    for author in repository.get_all_authors():
+        # Get all books by this author
+        author_books = [
+            book
+            for book in repository.get_all_books()
+            if book.author.gut_id == author.gut_id
+        ]
+
         # by popularity
         logger.debug(f"\t\tDumping auth_{author.gut_id}_by_popularity.js")
+        author_books_by_pop = sorted(
+            author_books, key=lambda b: b.downloads, reverse=True
+        )
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
-                for book in Book.select()
-                .where(not books_ids or Book.book_id << books_ids)
-                .where(Book.author == author)
-                .order_by(Book.downloads.desc())
+                for book in author_books_by_pop
             ],
             f"auth_{author.gut_id}_by_popularity.js",
         )
+
         # by title
         logger.debug(f"\t\tDumping auth_{author.gut_id}_by_title.js")
+        author_books_by_title = sorted(author_books, key=lambda b: b.title)
         dumpjs(
             [
                 book.to_array(all_requested_formats=formats)
-                for book in Book.select()
-                .where(not books_ids or Book.book_id << books_ids)
-                .where(Book.author == author)
-                .order_by(Book.title.asc())
+                for book in author_books_by_title
             ],
             f"auth_{author.gut_id}_by_title.js",
         )
+
         # by language
         for lang in languages:
             logger.debug(f"\t\tDumping auth_{author.gut_id}_by_lang_{lang}.js")
 
+            author_books_lang = [
+                book
+                for book in repository.get_all_books()
+                if book.author.gut_id == author.gut_id and lang in book.languages
+            ]
+
+            author_books_lang_by_pop = sorted(
+                author_books_lang, key=lambda b: b.downloads, reverse=True
+            )
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
-                    for book in Book.select()
-                    .where(not books_ids or Book.book_id << books_ids)
-                    .join(BookLanguage)
-                    .where(BookLanguage.language_code == lang)
-                    .where(Book.author == author)
-                    .order_by(Book.downloads.desc())
+                    for book in author_books_lang_by_pop
                 ],
                 f"auth_{author.gut_id}_lang_{lang}_by_popularity.js",
             )
 
+            author_books_lang_by_title = sorted(
+                author_books_lang, key=lambda b: b.title
+            )
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
-                    for book in Book.select()
-                    .where(not books_ids or Book.book_id << books_ids)
-                    .join(BookLanguage)
-                    .where(BookLanguage.language_code == lang)
-                    .where(Book.author == author)
-                    .order_by(Book.title.asc())
+                    for book in author_books_lang_by_title
                 ],
                 f"auth_{author.gut_id}_lang_{lang}_by_title.js",
             )
 
         # author HTML redirect file
-        save_author_file(author, books_ids, project_id)
+        save_author_file(author, project_id)
 
     # authors list sorted by name
     logger.info("\tDumping authors.js")
-    dumpjs([author.to_array() for author in authors], "authors.js", "authors_json_data")
+    dumpjs(
+        [author.to_array() for author in repository.get_all_authors()],
+        "authors.js",
+        "authors_json_data",
+    )
 
     # languages list sorted by code
     logger.info("\tDumping languages.js")
-    avail_langs = get_langs_with_count(books_ids, languages)
+    avail_langs = get_langs_with_count(languages)
     dumpjs(avail_langs, "languages.js", "languages_json_data")
 
     # languages by weight
-    main_languages, other_languages = get_lang_groups(books_ids)
+    main_languages, other_languages = get_lang_groups()
     logger.info("\tDumping main_languages.js and other_languages.js")
     dumpjs(main_languages, "main_languages.js", "main_languages_json_data")
     dumpjs(other_languages, "other_languages.js", "other_languages_json_data")

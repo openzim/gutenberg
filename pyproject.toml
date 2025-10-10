@@ -16,22 +16,22 @@ classifiers = [
   "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 ]
 dependencies = [
-  "beautifulsoup4==4.9.3",
+  "beautifulsoup4==4.12.0",
+  "types-beautifulsoup4==4.12.0.20250516",
   "Jinja2==3.1.2",
-  "peewee==3.17.9",
-  "types-peewee==3.17.9.20250401",
   "path.py==12.5.0",
   "Babel==2.11.0",
   "lxml == 5.3.1",
   "docopt==0.6.2",
   "chardet==5.1.0",
-  "apsw==3.40.0.0",
+  "apsw==3.50.4.0",
   "kiwixstorage==0.8.3",
   "requests==2.31.0",
   "pif==0.8.2",
   "zimscraperlib==5.1.1",
   "schedule==1.1.0",
   "backoff==2.2.1",
+  "i18nice==0.16.0",
 ]
 dynamic = ["version"]
 
@@ -236,4 +236,3 @@ extraPaths = ["src"]
 pythonVersion = "3.13"
 pythonPlatform = "All"
 typeCheckingMode = "basic"
-typeStubs = ["types-peewee"]

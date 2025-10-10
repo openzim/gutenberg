@@ -70,7 +70,7 @@ class Global:
         path: str,
         title: str | None = None,
         fpath: pathlib.Path | None = None,
-        content: str | None = None,
+        content: str | bytes | None = None,
         mimetype: str | None = None,
         *,
         is_front: bool | None = None,

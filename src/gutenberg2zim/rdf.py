@@ -1,97 +1,11 @@
-import re
-import tarfile
 from pathlib import Path
-from tarfile import TarFile, TarInfo
 
-import peewee
-from bs4 import BeautifulSoup
+import requests
+from bs4 import BeautifulSoup, Tag
 
-from gutenberg2zim.constants import logger
-from gutenberg2zim.database import Author, Book, BookLanguage, License
-from gutenberg2zim.scraper_progress import ScraperProgress
-from gutenberg2zim.utils import (
-    download_file,
-    normalize,
-)
-
-
-def get_rdf_fpath() -> Path:
-    fname = "rdf-files.tar.bz2"
-    fpath = Path(fname).resolve()
-    return fpath
-
-
-def download_rdf_file(rdf_path: Path, rdf_url: str) -> None:
-    """Download rdf-files archive"""
-    if rdf_path.exists():
-        logger.info(f"\trdf-files archive already exists in {rdf_path}")
-        return
-
-    logger.info(f"\tDownloading {rdf_url} into {rdf_path}")
-    download_file(rdf_url, rdf_path)
-
-
-def parse_and_fill(
-    rdf_path: Path, only_books: list[int], progress: ScraperProgress
-) -> None:
-
-    logger.info(f"\tCounting number of RDF files in {rdf_path}")
-    rdf_tarfile = tarfile.open(name=rdf_path, mode="r|bz2")
-    progress.increase_total(len(rdf_tarfile.getnames()))
-
-    logger.info(f"\tLooping throught RDF files in {rdf_path}")
-    rdf_tarfile = tarfile.open(name=rdf_path, mode="r|bz2")
-    for rdf_member in rdf_tarfile:
-        # increase progress at the beginning for simplicity given the potential
-        # conditions which might lead to skip some members ; this is off only
-        # by 1 out of 70k+ items
-        progress.increase_progress()
-
-        rdf_member_path = Path(rdf_member.name)
-
-        # skip books outside of requested list
-        if (
-            only_books
-            and int(rdf_member_path.stem.replace("pg", "").replace(".rdf", ""))
-            not in only_books
-        ):
-            continue
-
-        if rdf_member_path.name == "pg0.rdf":
-            continue
-
-        if not rdf_member_path.name.endswith(".rdf"):
-            continue
-
-        parse_and_process_file(rdf_tarfile, rdf_member)
-
-
-def parse_and_process_file(rdf_tarfile: TarFile, rdf_member: TarInfo) -> None:
-    gid = re.match(r".*/pg([0-9]+).rdf", rdf_member.name).groups()[0]  # type: ignore
-
-    if Book.get_or_none(book_id=int(gid)):
-        logger.debug(
-            f"\tSkipping already parsed file {rdf_member.name} for book id {gid}"
-        )
-        return
-
-    logger.debug(f"\tParsing file {rdf_member.name} for book id {gid}")
-    rdf_data = rdf_tarfile.extractfile(rdf_member)
-    if rdf_data is None:
-        logger.warning(
-            f"Unable to extract member '{rdf_member.name}' from archive "
-            f"'{rdf_member.name}'"
-        )
-        return
-
-    parser = RdfParser(rdf_data.read(), gid).parse()
-
-    if parser.license == "None":
-        logger.info(f"\tWARN: Unusable book without any information {gid}")
-    elif not parser.title:
-        logger.info(f"\tWARN: Unusable book without title {gid}")
-    else:
-        save_rdf_in_database(parser)
+from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, logger
+from gutenberg2zim.models import Author, Book, repository
+from gutenberg2zim.utils import normalize
 
 
 class RdfParser:
@@ -100,7 +14,6 @@ class RdfParser:
         self.gid = gid
 
         self.author_id = None
-        self.author_name = None
         self.first_name = None
         self.last_name = None
 
@@ -108,26 +21,39 @@ class RdfParser:
         self.cover_image = 0
 
     def parse(self):
-        soup = BeautifulSoup(self.rdf_data, "lxml")
+        soup = BeautifulSoup(self.rdf_data, "lxml-xml")
 
         # The tile of the book: this may or may not be divided
         # into a new-line-seperated title and subtitle.
         # If it is, then we will just split the title.
         title = soup.find("dcterms:title")
-        self.title = title.text if title else "- No Title -"
-        self.title = self.title.split("\n")[0]
-        self.subtitle = " ".join(self.title.split("\n")[1:])
-        self.author_id = None
+        full_title = title.text if title else "- No Title -"
+        title_elements = full_title.split("\n")
+        self.title = title_elements[0]
+        self.subtitle = " ".join(title_elements[1:])
 
         # Parsing for the bookshelf name
-        self.bookshelf = soup.find("pgterms:bookshelf")
-        if self.bookshelf:
-            self.bookshelf = self.bookshelf.find("rdf:value").text  # type: ignore
+        bookshelf_tag = soup.find("pgterms:bookshelf")
+        if bookshelf_tag:
+            rdf_value = bookshelf_tag.find("rdf:value")
+            if isinstance(rdf_value, Tag):  # pragma: no branch
+                self.bookshelf = rdf_value.text
 
         # Search rdf to see if the image exists at the hard link
-        # https://www.gutenberg.ord/cache/epub/id/pg{id}.cover.medium.jpg
-        if soup.find("cover.medium.jpg"):
-            self.cover_image = 1
+        # /cache/epub/{id}/pg{id}.cover.medium.jpg
+        self.cover_image = (
+            1
+            if soup.find(
+                "pgterms:file",
+                attrs={
+                    "rdf:about": lambda v: v
+                    and v.endswith(
+                        f"/cache/epub/{self.gid}/pg{self.gid}.cover.medium.jpg"
+                    )
+                },
+            )
+            else 0
+        )
 
         # Parsing the name of the Author. Sometimes it's the name of
         # an organization or the name is not known and therefore
@@ -139,145 +65,154 @@ class RdfParser:
         # has more than one comma we will join the first name in reverse,
         # starting
         # with the second item.
-        self.author = soup.find("dcterms:creator") or soup.find("marcrel:com")
-        if self.author:
-            self.author_id = self.author.find("pgterms:agent")
+        author_tag = soup.find("dcterms:creator") or soup.find("marcrel:com")
+        if author_tag:
+            author_about_tag = author_tag.find("pgterms:agent")
             self.author_id = (
-                self.author_id.attrs["rdf:about"].split("/")[-1]  # type: ignore
-                if "rdf:about" in getattr(self.author_id, "attrs", "")
+                author_about_tag.attrs["rdf:about"].split("/")[-1]
+                if isinstance(author_about_tag, Tag)
+                and "rdf:about" in getattr(author_about_tag, "attrs", "")
                 else None
             )
 
-            if self.author.find("pgterms:name"):
-                self.author_name = self.author.find("pgterms:name")
-                self.author_name = self.author_name.text.split(",")  # type: ignore
+            author_name_tag = author_tag.find("pgterms:name")
+            if isinstance(author_name_tag, Tag):  # pragma: no branch
+                author_name_elements = author_name_tag.text.split(",")
 
-                if len(self.author_name) > 1:
-                    self.first_name = " ".join(self.author_name[::-2]).strip()
-                self.last_name = self.author_name[0]
+                if len(author_name_elements) > 1:
+                    self.first_name = " ".join(
+                        [element.strip() for element in author_name_elements[:0:-1]]
+                    )
+                self.last_name = author_name_elements[0]
 
         # Parsing the birth and (death, if the case) year of the author.
         # These values are likely to be null.
         self.birth_year = soup.find("pgterms:birthdate")
-        self.birth_year = self.birth_year.text if self.birth_year else None
-        self.birth_year = get_formatted_number(self.birth_year)
+        self.birth_year = (
+            get_formatted_number(self.birth_year.text) if self.birth_year else None
+        )
 
         self.death_year = soup.find("pgterms:deathdate")
-        self.death_year = self.death_year.text if self.death_year else None
-        self.death_year = get_formatted_number(self.death_year)
+        self.death_year = (
+            get_formatted_number(self.death_year.text) if self.death_year else None
+        )
 
         # ISO 639-3 language codes that consist of 2 or 3 letters
         self.languages = [
-            node.find("rdf:value").text  # type: ignore
+            node.find("rdf:value").text
             for node in soup.find_all("dcterms:language")
-            if node.find("rdf:value") is not None  # type: ignore
+            if node.find("rdf:value") is not None
         ]
 
         # The download count of the books on www.gutenberg.org.
         # This will be used to determine the popularity of the book.
-        self.downloads = soup.find("pgterms:downloads").text  # type: ignore
+        downloads_tag = soup.find("pgterms:downloads")
+        if not isinstance(downloads_tag, Tag):
+            raise Exception(f"Impossible to find download tag in book {self.gid} RDF")
+        self.downloads = downloads_tag.text
 
         # The book might be licensed under GPL, public domain
         # or might be copyrighted
-        self.license = soup.find("dcterms:rights").text  # type: ignore
-
-        # Finding out all the file types this book is available in
-        file_types = soup.find_all("pgterms:file")
-        self.file_types = {}
-        for x in file_types:
-            if not x.find("rdf:value").text.endswith("application/zip"):
-                k = x.attrs["rdf:about"].split("/")[-1]
-                v = x.find("rdf:value").text
-                self.file_types.update({k: v})
-
+        license_tag = soup.find("dcterms:rights")
+        if not isinstance(license_tag, Tag):
+            raise Exception(f"Impossible to find license tag in book {self.gid} RDF")
+        self.license = license_tag.text
         return self
 
 
-def get_or_create_author(parser: RdfParser) -> Author:
-    # Insert author, if it not exists
+def _save_rdf_in_repository(parser: RdfParser) -> None:
+    """Save parsed RDF data into the in-memory repository"""
+    # Get or create author
     if parser.author_id:
-        try:
-            author_record = Author.get(gut_id=parser.author_id)
-        except Exception:
-            try:
-                author_record = Author.create(
-                    gut_id=parser.author_id,
-                    last_name=normalize(parser.last_name),
-                    first_names=normalize(parser.first_name),
-                    birth_year=parser.birth_year,
-                    death_year=parser.death_year,
-                )
-            # concurrent workers might colide here so we retry once on IntegrityError
-            except peewee.IntegrityError:
-                author_record = Author.get(gut_id=parser.author_id)
+        author = repository.get_author(parser.author_id)
+        if not author:
+            # Create new author
+            normalized_last = normalize(parser.last_name) if parser.last_name else None
+            author = Author(
+                gut_id=parser.author_id,
+                last_name=normalized_last or "Unknown",
+                first_names=normalize(parser.first_name) if parser.first_name else None,
+                birth_year=str(parser.birth_year) if parser.birth_year else None,
+                death_year=str(parser.death_year) if parser.death_year else None,
+            )
+            repository.add_author(author)
         else:
+            # Update existing author with new data
             if parser.last_name:
-                author_record.last_name = normalize(parser.last_name)
+                normalized_last = normalize(parser.last_name)
+                if normalized_last:
+                    author.last_name = normalized_last
             if parser.first_name:
-                author_record.first_names = normalize(parser.first_name)
+                author.first_names = normalize(parser.first_name)
             if parser.birth_year:
-                author_record.birth_year = parser.birth_year
+                author.birth_year = str(parser.birth_year)
             if parser.death_year:
-                author_record.death_year = parser.death_year
-            author_record.save()
+                author.death_year = str(parser.death_year)
     else:
-        # No author, set Anonymous
-        author_record = Author.get(gut_id="216")
-    return author_record
+        # No author, use Anonymous (gut_id=216)
+        author = repository.get_author("216")
+        if not author:
+            # Should not happen as repository initializes default authors
+            author = Author(gut_id="216", last_name="Anonymous")
+            repository.add_author(author)
+
+    # Create or update book
+    normalized_title = normalize(parser.title.strip()) if parser.title else "Untitled"
+    book = Book(
+        book_id=int(parser.gid),
+        title=normalized_title if normalized_title else "Untitled",
+        subtitle=normalize(parser.subtitle.strip()) if parser.subtitle else None,
+        author=author,
+        languages=[lang.strip() for lang in parser.languages],
+        license=parser.license,
+        downloads=int(parser.downloads),
+        bookshelf=parser.bookshelf,
+        cover_page=parser.cover_image,
+    )
+    repository.add_book(book)
 
 
-def get_license(parser: RdfParser) -> License | None:
-    # Get license
+def download_and_parse_book_rdf(book_id: int, mirror_url: str) -> Book | None:
+    """Download and parse RDF for a single book from the mirror.
+
+    Args:
+        book_id: The Gutenberg book ID
+        mirror_url: The mirror URL (e.g., "https://gutenberg.mirror.driftle.ss")
+
+    Returns:
+        Book object if successful, None if book couldn't be downloaded or parsed
+    """
+    # Construct URL: {mirror_url}/cache/epub/{book_id}/pg{book_id}.rdf
+    rdf_url = f"{mirror_url}/cache/epub/{book_id}/pg{book_id}.rdf"
+
+    logger.debug(f"Downloading RDF for book {book_id} from {rdf_url}")
+
     try:
-        return License.get(name=parser.license)
-    except Exception:
+        response = requests.get(rdf_url, timeout=DEFAULT_HTTP_TIMEOUT)
+        response.raise_for_status()
+        rdf_data = response.content
+    except requests.RequestException as exc:
+        logger.warning(f"Could not download RDF for book {book_id}: {exc}")
         return None
 
-
-def get_or_create_book(
-    parser: RdfParser, author: Author, license_record: License | None
-) -> Book:
-    # Insert book
+    # Parse the RDF data
     try:
-        book_record = Book.get(book_id=parser.gid)
-    except peewee.DoesNotExist:
-        book_record = Book.create(
-            book_id=parser.gid,
-            title=normalize(parser.title.strip()),
-            subtitle=normalize(parser.subtitle.strip()),
-            author=author,  # foreign key
-            book_license=license_record,  # foreign key
-            downloads=parser.downloads,
-            bookshelf=parser.bookshelf,
-            cover_page=parser.cover_image,
-        )
-    else:
-        book_record.title = normalize(parser.title.strip())
-        book_record.subtitle = normalize(parser.subtitle.strip())
-        book_record.author = author  # foreign key
-        book_record.book_license = license_record  # foreign key
-        book_record.downloads = parser.downloads
-        book_record.save()
-    return book_record
+        parser = RdfParser(rdf_data, str(book_id)).parse()
+    except Exception as exc:
+        logger.warning(f"Could not parse RDF for book {book_id}: {exc}")
+        return None
 
+    # Validate the parsed data
+    if parser.license == "None":
+        logger.info(f"\tWARN: Unusable book without any information {book_id}")
+        return None
+    elif not parser.title:
+        logger.info(f"\tWARN: Unusable book without title {book_id}")
+        return None
 
-def update_book_languages(book: Book, languages: list[str]) -> None:
-    if not languages:
-        return
-    try:
-        # delete old language records
-        BookLanguage.delete().where(BookLanguage.book == book).execute()
-        for lang in languages:
-            BookLanguage.create(book=book, language_code=lang.strip())
-    except Exception as e:
-        logger.warning(f"Failed to update languages for book {book.book_id}: {e}")
-
-
-def save_rdf_in_database(parser: RdfParser) -> None:
-    author_record = get_or_create_author(parser)
-    license_record = get_license(parser)
-    book_record = get_or_create_book(parser, author_record, license_record)
-    update_book_languages(book_record, parser.languages)
+    # Save to repository and return the book
+    _save_rdf_in_repository(parser)
+    return repository.get_book(book_id)
 
 
 def get_formatted_number(num: str | None) -> str | None:

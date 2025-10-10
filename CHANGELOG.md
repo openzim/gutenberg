@@ -12,12 +12,22 @@ as of 2.0.0.
 
 - Remove any optimization logic + use of S3 cache, dropping `--optimization-cache` and `--use-any-optimized-version` flags (#300)
 - Move to another default mirror + add CLI flag to select mirror to use, dropping `--rdf-url` flag and adding `--mirror_url` CLI flag (#301)
+- Reengineer the scraper (#312)
+  - Source list of books from CSV at https://gutenberg.pglaf.org/cache/epub/feeds/pg_catalog.csv.gz for quicker startup
+  - Stop downloading big RDF archive and download only needed individual RDF files (saves lot of time when only few books are requested ; looks like negligible penalty when many books are needed)
+  - Get rid of SQLite database used to persist data across runs, too much maintenance effort and impact on the filesystem for limited benefit
+  - Get rid of the option to generate one ZIM per language ; scraper now always produce one single ZIM
+  - Data is now directly transferred to the ZIM, without touching the filesystem
+  - Get rid of the "steps" approach, not used (anymore?) in production and difficult to maintain
+  - Many CLI options removed: --use-any-optimized-version, --zim, --download, --parse, --prepare, -m/--one-language-one-zim, --dlc, -d/--dl-folder, -e/--static-folder
+
 
 ### Changed
 
 - Finalize implementation of scraper progress (#289)
 - Move to another default mirror + add CLI flag to select mirror to use (#301)
 - Split build logic in Dockerfile to separate dependencies layer from scraper code layer (#302)
+- Prepare structure for TranslateWiki (#312)
 
 ### Fixed
 

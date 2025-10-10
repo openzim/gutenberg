@@ -1,7 +1,7 @@
 import babel
 
 
-def language_name(code):
+def language_name(code: str) -> str:
     try:
         return babel.Locale(code).get_language_name(code).title()  # type: ignore
     except Exception:
@@ -230,3 +230,5 @@ ISO_MATRIX = {
     "zh": "zho",
     "zu": "zul",
 }
+
+ISO_MATRIX_REV = {value: key for key, value in ISO_MATRIX.items()}
