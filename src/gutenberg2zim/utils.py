@@ -3,7 +3,6 @@ import subprocess
 import sys
 import unicodedata
 import zipfile
-from functools import reduce
 from pathlib import Path
 
 import chardet
@@ -11,8 +10,8 @@ import requests
 import six
 
 from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, DL_CHUNCK_SIZE, logger
-from gutenberg2zim.database import Book, BookLanguage
 from gutenberg2zim.iso639 import language_name
+from gutenberg2zim.models import Book, repository
 
 UTF8 = "utf-8"
 ALL_FORMATS = ["epub", "pdf", "html"]
@@ -96,37 +95,12 @@ def download_file(url: str, fpath: Path) -> bool:
         return False
 
 
-def get_list_of_filtered_books(languages, formats, only_books):
-    qs = Book.select()
-
-    if len(formats):
-        qs = qs.where(
-            Book.unsupported_formats.is_null(True)
-            | reduce(
-                lambda x, y: x | y,
-                [
-                    ~Book.unsupported_formats.contains(book_format)
-                    for book_format in formats
-                ],
-            )
-        )
-
-    if len(only_books):
-        qs = qs.where(Book.book_id << only_books)
-
-    if len(languages) and languages[0] != "mul":
-        qs = qs.join(BookLanguage).where(BookLanguage.language_code << languages)
-
-    qs = qs.group_by(Book.book_id)
-    return qs
-
-
-def get_langs_with_count(books_ids, languages=None):
+def get_langs_with_count(languages: list[str] | None) -> list[tuple[str, str, int]]:
+    """Get language counts with their names from singleton BookRepository"""
     lang_count = {}
 
-    for book in Book.select().where(not books_ids or Book.book_id << books_ids):
-        for lang in book.languages:
-            code = lang.language_code
+    for book in repository.get_all_books():
+        for code in book.languages:
             # if not appear in user request languages list, skip counting
             if languages and code not in languages:
                 continue
@@ -140,8 +114,9 @@ def get_langs_with_count(books_ids, languages=None):
     ]
 
 
-def get_lang_groups(books_ids):
-    langs_wt_count = get_langs_with_count(books_ids)
+def get_lang_groups() -> tuple[list[tuple[str, str, int]], list[tuple[str, str, int]]]:
+    """Split languages into main and other groups from singleton BookRepository"""
+    langs_wt_count = get_langs_with_count(None)
     if len(langs_wt_count) <= NB_MAIN_LANGS:
         return langs_wt_count, []
     else:

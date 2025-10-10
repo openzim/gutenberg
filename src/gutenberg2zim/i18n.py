@@ -3,8 +3,7 @@ from typing import Any
 
 import i18n
 
-from gutenberg2zim.constants import LOCALES_LOCATION
-from gutenberg2zim.constants import logger
+from gutenberg2zim.constants import LOCALES_LOCATION, logger
 
 
 def setup_i18n() -> None:
@@ -34,8 +33,11 @@ def t(key: str, fallback: str | None = None, **kwargs: Any) -> str:
     return (
         i18n.t(  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
             key, **kwargs
-        ) if not fallback or has_strict_translation(key) else fallback
+        )
+        if not fallback or has_strict_translation(key)
+        else fallback
     )
 
+
 def has_strict_translation(key: str) -> bool:
-    return i18n.translations.has(key, i18n.get('locale'))
+    return i18n.translations.has(key, i18n.get("locale"))

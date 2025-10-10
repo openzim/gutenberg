@@ -3,11 +3,10 @@ import tarfile
 from pathlib import Path
 from tarfile import TarFile, TarInfo
 
-import peewee
 from bs4 import BeautifulSoup, Tag
 
 from gutenberg2zim.constants import logger
-from gutenberg2zim.database import Author, Book, BookLanguage, License
+from gutenberg2zim.models import Author, Book, repository
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.utils import (
     download_file,
@@ -34,7 +33,7 @@ def download_rdf_file(rdf_path: Path, rdf_url: str) -> None:
 def parse_and_fill(
     rdf_path: Path, only_books: list[int], progress: ScraperProgress
 ) -> None:
-
+    """Parse RDF files and populate the singleton BookRepository"""
     logger.info(f"\tExtracting RDF files for {len(only_books)} books from {rdf_path}")
     progress.increase_total(len(only_books))
 
@@ -61,7 +60,7 @@ def parse_and_process_file(rdf_tarfile: TarFile, rdf_member: TarInfo) -> None:
         raise Exception(f"RDF member should match expected regex: {rdf_member.name}")
     gid = member_match.groups()[0]
 
-    if Book.get_or_none(book_id=int(gid)):
+    if repository.get_book(int(gid)):
         logger.debug(
             f"\tSkipping already parsed file {rdf_member.name} for book id {gid}"
         )
@@ -83,7 +82,7 @@ def parse_and_process_file(rdf_tarfile: TarFile, rdf_member: TarInfo) -> None:
     elif not parser.title:
         logger.info(f"\tWARN: Unusable book without title {gid}")
     else:
-        save_rdf_in_database(parser)
+        save_rdf_in_repository(parser)
 
 
 class RdfParser:
@@ -198,91 +197,56 @@ class RdfParser:
         return self
 
 
-def get_or_create_author(parser: RdfParser) -> Author:
-    # Insert author, if it not exists
+def save_rdf_in_repository(parser: RdfParser) -> None:
+    """Save parsed RDF data into the in-memory repository"""
+    # Get or create author
     if parser.author_id:
-        try:
-            author_record = Author.get(gut_id=parser.author_id)
-        except Exception:
-            try:
-                author_record = Author.create(
-                    gut_id=parser.author_id,
-                    last_name=normalize(parser.last_name),
-                    first_names=normalize(parser.first_name),
-                    birth_year=parser.birth_year,
-                    death_year=parser.death_year,
-                )
-            # concurrent workers might colide here so we retry once on IntegrityError
-            except peewee.IntegrityError:
-                author_record = Author.get(gut_id=parser.author_id)
+        author = repository.get_author(parser.author_id)
+        if not author:
+            # Create new author
+            normalized_last = normalize(parser.last_name) if parser.last_name else None
+            author = Author(
+                gut_id=parser.author_id,
+                last_name=normalized_last or "Unknown",
+                first_names=normalize(parser.first_name) if parser.first_name else None,
+                birth_year=str(parser.birth_year) if parser.birth_year else None,
+                death_year=str(parser.death_year) if parser.death_year else None,
+            )
+            repository.add_author(author)
         else:
+            # Update existing author with new data
             if parser.last_name:
-                author_record.last_name = normalize(parser.last_name)
+                normalized_last = normalize(parser.last_name)
+                if normalized_last:
+                    author.last_name = normalized_last
             if parser.first_name:
-                author_record.first_names = normalize(parser.first_name)
+                author.first_names = normalize(parser.first_name)
             if parser.birth_year:
-                author_record.birth_year = parser.birth_year
+                author.birth_year = str(parser.birth_year)
             if parser.death_year:
-                author_record.death_year = parser.death_year
-            author_record.save()
+                author.death_year = str(parser.death_year)
     else:
-        # No author, set Anonymous
-        author_record = Author.get(gut_id="216")
-    return author_record
+        # No author, use Anonymous (gut_id=216)
+        author = repository.get_author("216")
+        if not author:
+            # Should not happen as repository initializes default authors
+            author = Author(gut_id="216", last_name="Anonymous")
+            repository.add_author(author)
 
-
-def get_license(parser: RdfParser) -> License | None:
-    # Get license
-    try:
-        return License.get(name=parser.license)
-    except Exception:
-        return None
-
-
-def get_or_create_book(
-    parser: RdfParser, author: Author, license_record: License | None
-) -> Book:
-    # Insert book
-    try:
-        book_record = Book.get(book_id=parser.gid)
-    except peewee.DoesNotExist:
-        book_record = Book.create(
-            book_id=parser.gid,
-            title=normalize(parser.title.strip()),
-            subtitle=normalize(parser.subtitle.strip()),
-            author=author,  # foreign key
-            book_license=license_record,  # foreign key
-            downloads=parser.downloads,
-            bookshelf=parser.bookshelf,
-            cover_page=parser.cover_image,
-        )
-    else:
-        book_record.title = normalize(parser.title.strip())
-        book_record.subtitle = normalize(parser.subtitle.strip())
-        book_record.author = author  # foreign key
-        book_record.book_license = license_record  # foreign key
-        book_record.downloads = parser.downloads
-        book_record.save()
-    return book_record
-
-
-def update_book_languages(book: Book, languages: list[str]) -> None:
-    if not languages:
-        return
-    try:
-        # delete old language records
-        BookLanguage.delete().where(BookLanguage.book == book).execute()
-        for lang in languages:
-            BookLanguage.create(book=book, language_code=lang.strip())
-    except Exception as e:
-        logger.warning(f"Failed to update languages for book {book.book_id}: {e}")
-
-
-def save_rdf_in_database(parser: RdfParser) -> None:
-    author_record = get_or_create_author(parser)
-    license_record = get_license(parser)
-    book_record = get_or_create_book(parser, author_record, license_record)
-    update_book_languages(book_record, parser.languages)
+    # Create or update book
+    normalized_title = normalize(parser.title.strip()) if parser.title else "Untitled"
+    book = Book(
+        book_id=int(parser.gid),
+        title=normalized_title if normalized_title else "Untitled",
+        subtitle=normalize(parser.subtitle.strip()) if parser.subtitle else None,
+        author=author,
+        languages=[lang.strip() for lang in parser.languages],
+        license=parser.license,
+        downloads=int(parser.downloads),
+        bookshelf=parser.bookshelf,
+        cover_page=parser.cover_image,
+    )
+    repository.add_book(book)
 
 
 def get_formatted_number(num: str | None) -> str | None:

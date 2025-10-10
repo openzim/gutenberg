@@ -13,11 +13,10 @@ from gutenberg2zim.csv_catalog import (
     get_csv_fpath,
     load_catalog,
 )
-from gutenberg2zim.database import setup_database
 from gutenberg2zim.download import download_all_books
 from gutenberg2zim.rdf import download_rdf_file, get_rdf_fpath, parse_and_fill
 from gutenberg2zim.scraper_progress import ScraperProgress
-from gutenberg2zim.utils import ALL_FORMATS, get_list_of_filtered_books
+from gutenberg2zim.utils import ALL_FORMATS
 from gutenberg2zim.zim import build_zimfile, existing_and_sorted_languages
 
 help_info = (
@@ -159,11 +158,6 @@ def main():
     logger.info(f"PREPARING rdf-files cache from {rdf_url}")
     download_rdf_file(rdf_url=rdf_url, rdf_path=rdf_path)
 
-    # Always wipe and setup database
-    logger.info("RESETING DATABASE")
-    logger.info("SETTING UP DATABASE")
-    setup_database(wipe=True)
-
     # Load catalog and filter books
     logger.info(f"LOADING catalog from {csv_path}")
     catalog = load_catalog(csv_path)
@@ -186,9 +180,7 @@ def main():
         mirror_url=mirror_url,
         download_cache=dl_cache,
         concurrency=dl_concurrency,
-        languages=languages,
         formats=formats,
-        only_books=books,
         force=force,
         progress=progress,
     )
@@ -200,15 +192,6 @@ def main():
 
     # Filter and sort requested languages
     sorted_languages = existing_and_sorted_languages(languages, books)
-
-    # Compute number of books and update scraper progress counter
-    progress.increase_total(
-        len(
-            get_list_of_filtered_books(
-                languages=sorted_languages, formats=formats, only_books=books
-            )
-        )
-    )
 
     build_zimfile(
         output_folder=Path(".").resolve(),

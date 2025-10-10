@@ -19,8 +19,6 @@ dependencies = [
   "beautifulsoup4==4.12.0",
   "types-beautifulsoup4==4.12.0.20250516",
   "Jinja2==3.1.2",
-  "peewee==3.18.2",
-  "types-peewee==3.18.2.20250710",
   "path.py==12.5.0",
   "Babel==2.11.0",
   "lxml == 5.3.1",
@@ -238,4 +236,3 @@ extraPaths = ["src"]
 pythonVersion = "3.13"
 pythonPlatform = "All"
 typeCheckingMode = "basic"
-typeStubs = ["types-peewee"]

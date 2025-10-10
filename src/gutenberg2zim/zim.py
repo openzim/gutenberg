@@ -1,30 +1,23 @@
 import datetime
 import pathlib
 
-from peewee import fn
-
 from gutenberg2zim import i18n
 from gutenberg2zim.constants import logger
-from gutenberg2zim.database import Book, BookLanguage
 from gutenberg2zim.export import export_all_books
 from gutenberg2zim.iso639 import ISO_MATRIX, ISO_MATRIX_REV
+from gutenberg2zim.models import repository
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import get_project_id
 
 
-def existing_and_sorted_languages(languages: list[str] | None, books_ids) -> list[str]:
+def existing_and_sorted_languages(
+    languages: list[str] | None, books_ids: list[int] | None
+) -> list[str]:
+    """Get list of languages sorted by number of books from singleton BookRepository"""
 
     # actual list of languages with books sorted by most used
-    nb = fn.COUNT(BookLanguage.book).alias("nb")
-    db_languages: list[str] = [
-        lang.language_code
-        for lang in BookLanguage.select(BookLanguage.language_code, nb)
-        .join(Book)
-        .where(not books_ids or Book.book_id << books_ids)
-        .group_by(BookLanguage.language_code)
-        .order_by(nb.desc())
-    ]
+    db_languages = repository.get_languages_sorted_by_count(only_books=books_ids)
 
     if languages:
         # user requested some languages, limit db-collected ones to matching
@@ -55,6 +48,8 @@ def build_zimfile(
     add_bookshelves: bool,
     progress: ScraperProgress,
 ) -> None:
+    """Build ZIM file using singleton BookRepository"""
+    progress.increase_total(len(repository.books))
     iso_languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
 
     formats.sort()
@@ -67,7 +62,11 @@ def build_zimfile(
 
     title = title or i18n.t("metadata_defaults.title")
     # check if user has description input otherwise assign default description
-    description = description or i18n.t("metadata_defaults.description", f'All books in "{iso_languages[0]}" language from the first producer of free Ebooks')
+    description = description or i18n.t(
+        "metadata_defaults.description",
+        f'All books in "{iso_languages[0]}" language from the first producer of free'
+        " Ebooks",
+    )
 
     logger.info(f"\tWriting {metadata_lang} ZIM for {title}")
 
@@ -105,7 +104,6 @@ def build_zimfile(
             concurrency=concurrency,
             languages=languages,
             formats=formats,
-            only_books=only_books,
             progress=progress,
             force=force,
             title_search=title_search,

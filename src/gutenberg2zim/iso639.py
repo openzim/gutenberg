@@ -1,7 +1,7 @@
 import babel
 
 
-def language_name(code):
+def language_name(code: str) -> str:
     try:
         return babel.Locale(code).get_language_name(code).title()  # type: ignore
     except Exception:

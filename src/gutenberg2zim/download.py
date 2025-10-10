@@ -16,8 +16,8 @@ from gutenberg2zim.constants import (
     TMP_FOLDER_PATH,
     logger,
 )
-from gutenberg2zim.database import Book
-from gutenberg2zim.export import fname_for, get_list_of_filtered_books
+from gutenberg2zim.export import fname_for
+from gutenberg2zim.models import Book, repository
 from gutenberg2zim.pg_archive_urls import url_for_type
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.utils import (
@@ -120,6 +120,7 @@ def download_book(
     *,
     force: bool,
 ):
+    """Download a book in all requested formats using singleton BookRepository"""
     logger.debug(f"\tDownloading content files for Book #{book.book_id}")
 
     # apply filters
@@ -139,15 +140,8 @@ def download_book(
     book_dir.mkdir(parents=True, exist_ok=True)
     cover_dir.mkdir(parents=True, exist_ok=True)
 
-    unsupported_formats = []
     for book_format in formats:
         logger.debug(f"Processing {book_format}")
-
-        # if we already know (e.g. due to a former pass) that this book format is not
-        # supported, no need to retry
-        if book.unsupported_formats and book_format in book.unsupported_formats:
-            logger.debug(f"\t\tNo file available for {book_format} of #{book.book_id}")
-            continue
 
         fpath = book_dir / fname_for(book, book_format)
 
@@ -184,7 +178,7 @@ def download_book(
 
         if not url or not pg_type_to_use:
             logger.debug(f"\t\tNo file available for {book_format} of #{book.book_id}")
-            unsupported_formats.append(book_format)
+            book.unsupported_formats.append(book_format)
             continue
 
         if not pg_resp:
@@ -211,27 +205,13 @@ def download_book(
                     if chunk:
                         fh.write(chunk)
 
-    # update list of unsupported formats based on the union of format already known to
-    # not be supported and new ones
-    book.unsupported_formats = ",".join( # pyright: ignore[reportAttributeAccessIssue]
-            set(
-                unsupported_formats
-                + (
-                    str(book.unsupported_formats).split(",")
-                    if book.unsupported_formats
-                    else []
-                )
-            )
-        )
-    book.save()
-
     # delete book from DB if not downloaded in any format
-    if len(unsupported_formats) == len(formats):
+    if len(book.unsupported_formats) == len(formats):
         logger.warning(
             f"\t\tBook #{book.book_id} could not be downloaded in any format. "
             "Deleting from DB ..."
         )
-        book.delete_instance()
+        repository.remove_book(book.book_id)
         if book_dir.exists():
             shutil.rmtree(book_dir, ignore_errors=True)
         return
@@ -256,17 +236,13 @@ def download_all_books(
     mirror_url: str,
     download_cache: Path,
     concurrency: int,
-    languages: list[str],
     formats: list[str],
-    only_books: list[int],
     *,
     force: bool,
     progress: ScraperProgress,
 ):
-    available_books = get_list_of_filtered_books(
-        languages=languages, formats=formats, only_books=only_books
-    )
-    progress.increase_total(len(available_books))
+    """Download all books using singleton BookRepository"""
+    progress.increase_total(len(repository.get_all_books()))
 
     # ensure dir exist
     download_cache.mkdir(parents=True, exist_ok=True)
@@ -326,4 +302,4 @@ def download_all_books(
             force=force,
         )
 
-    Pool(concurrency).map(partial(dlb, progress=progress), available_books)
+    Pool(concurrency).map(partial(dlb, progress=progress), repository.get_all_books())
