@@ -2,7 +2,7 @@ import pytest
 
 from gutenberg2zim.rdf import RdfParser
 
-RDF_HEADER ="""
+RDF_HEADER = """
 <?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF xml:base="http://www.gutenberg.org/"
   xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"
