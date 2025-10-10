@@ -1,29 +1,21 @@
-import shutil
-import tempfile
+import io
 import zipfile
-from functools import partial
-from http import HTTPStatus
-from multiprocessing.dummy import Pool
+from dataclasses import dataclass, field
 from pathlib import Path
 
-import apsw
-import backoff
 import requests
 
 from gutenberg2zim.constants import (
     DEFAULT_HTTP_TIMEOUT,
     DL_CHUNCK_SIZE,
-    TMP_FOLDER_PATH,
     logger,
 )
-from gutenberg2zim.export import fname_for
 from gutenberg2zim.models import Book, repository
 from gutenberg2zim.pg_archive_urls import url_for_type
-from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.utils import (
     ALL_FORMATS,
-    download_file,
     ensure_unicode,
+    fname_for,
 )
 
 # map of preferred document type for every format
@@ -32,6 +24,17 @@ PG_PREFERRED_TYPES = {
     "epub": ["epub3.images", "epub.images", "epub.noimages"],
     "pdf": ["pdf.images", "pdf.noimages"],
 }
+
+
+@dataclass
+class BookContent:
+    """In-memory storage for downloaded book content"""
+
+    book: Book
+    # Main content files keyed by filename
+    files: dict[str, bytes] = field(default_factory=dict)
+    # Cover image (if available)
+    cover_image: bytes | None = None
 
 
 def resource_exists(url):
@@ -43,7 +46,9 @@ def resource_exists(url):
         return False
 
 
-def handle_zipped_html(zippath: Path, book: Book, dst_dir: Path) -> bool:
+def handle_zipped_html(zip_content: bytes, book: Book) -> dict[str, bytes]:
+    """Extract HTML zip and return files as dict of filename -> bytes"""
+
     def clfn(fn):
         return Path(fn).name
 
@@ -53,74 +58,62 @@ def handle_zipped_html(zippath: Path, book: Book, dst_dir: Path) -> bool:
             return True
         return fname == f"images/{Path(fname).name}"
 
-    zipped_files = []
-    # create temp directory to extract to
-    tmpd = tempfile.mkdtemp(dir=TMP_FOLDER_PATH)
+    result_files = {}
+
     try:
-        with zipfile.ZipFile(zippath, "r") as zf:
+        with zipfile.ZipFile(io.BytesIO(zip_content), "r") as zf:
             # check that there is no insecure data (absolute names)
             if sum([1 for n in zf.namelist() if not is_safe(ensure_unicode(n))]):
-                shutil.rmtree(tmpd, ignore_errors=True)
-                return False
-            # zipped_files = [clfn(fn) for fn in zf.namelist()]
+                return {}
+
             zipped_files = zf.namelist()
 
-            # extract files from zip
-            zf.extractall(tmpd)
+            # is there multiple HTML files in ZIP ? (rare)
+            mhtml = (
+                sum(
+                    [
+                        1
+                        for f in zipped_files
+                        if f.endswith("html") or f.endswith(".htm")
+                    ]
+                )
+                > 1
+            )
+
+            # Process all files from zip
+            for zipped_file in zipped_files:
+                # skip folders
+                if zipped_file.endswith("/"):
+                    continue
+
+                fname = Path(zipped_file).name
+                file_content = zf.read(zipped_file)
+
+                if fname.endswith(".html") or fname.endswith(".htm"):
+                    if mhtml:
+                        if fname.startswith(f"{book.book_id}-h."):
+                            result_files[f"{book.book_id}.html"] = file_content
+                        else:
+                            result_files[f"{book.book_id}_{fname}"] = file_content
+                    else:
+                        result_files[f"{book.book_id}.html"] = file_content
+                else:
+                    result_files[f"{book.book_id}_{fname}"] = file_content
+
     except zipfile.BadZipfile:
         # file is not a zip file when it should be.
-        # don't process it anymore as we don't know what to do.
-        # could this be due to an incorrect/incomplete download?
-        return False
+        logger.warning(f"Bad zip file for book #{book.book_id}")
+        return {}
 
-    # is there multiple HTML files in ZIP ? (rare)
-    mhtml = (
-        sum([1 for f in zipped_files if f.endswith("html") or f.endswith(".htm")]) > 1
-    )
-    # move all extracted files to proper locations
-    for zipped_file in zipped_files:
-        src = Path(tmpd) / zipped_file
-
-        # skip folders
-        if not Path(src).is_file():
-            continue
-
-        if src.exists():
-            fname = Path(zipped_file).name
-
-            if fname.endswith(".html") or fname.endswith(".htm"):
-                if mhtml:
-                    if fname.startswith(f"{book.book_id}-h."):
-                        dst = dst_dir / f"{book.book_id}.html"
-                    else:
-                        dst = dst_dir / f"{book.book_id}_{fname}"
-                else:
-                    dst = dst_dir / f"{book.book_id}.html"
-            else:
-                dst = dst_dir / f"{book.book_id}_{fname}"
-            dst = dst.resolve()
-            try:
-                logger.debug(f"Moving from {src} to {dst}")
-                src.rename(dst)
-            except Exception:
-                logger.error(f"Failed to move extracted file: {src} -> {dst}")
-                raise
-
-    # delete temp directory and zipfile
-    zippath.unlink(missing_ok=True)
-    shutil.rmtree(tmpd, ignore_errors=True)
-    return True
+    return result_files
 
 
 def download_book(
     mirror_url: str,
     book: Book,
-    download_cache: Path,
     formats: list[str],
-    *,
-    force: bool,
-):
-    """Download a book in all requested formats using singleton BookRepository"""
+) -> BookContent | None:
+    """Download a book in all requested formats and return in-memory content"""
     logger.debug(f"\tDownloading content files for Book #{book.book_id}")
 
     # apply filters
@@ -131,27 +124,10 @@ def download_book(
     if "html" not in formats:
         formats.append("html")
 
-    book_dir = download_cache / str(book.book_id)
-    cover_dir = download_cache / "covers"
-
-    if force:
-        shutil.rmtree(book_dir)
-
-    book_dir.mkdir(parents=True, exist_ok=True)
-    cover_dir.mkdir(parents=True, exist_ok=True)
+    book_content = BookContent(book=book)
 
     for book_format in formats:
         logger.debug(f"Processing {book_format}")
-
-        fpath = book_dir / fname_for(book, book_format)
-
-        # check if already downloaded
-        if fpath.exists() and not force:
-            logger.debug(
-                f"\t\t{book_format} already exists for book #{book.book_id}, "
-                "reusing existing file"
-            )
-            continue
 
         pg_type_to_use = None
         pg_resp = None
@@ -187,23 +163,20 @@ def download_book(
                 f"Missing streamed response for {book_format} of #{book.book_id}"
             )
 
+        # Download content to memory
+        content_bytes = b""
+        for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
+            if chunk:
+                content_bytes += chunk
+
         if url.endswith(".zip"):
-            zpath = book_dir / f"{fname_for(book, book_format)}.zip"
-            with open(zpath, "wb") as fh:
-                for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
-                    if chunk:
-                        fh.write(chunk)
-            # extract zipfile
-            handle_zipped_html(
-                zippath=zpath,
-                book=book,
-                dst_dir=book_dir,
-            )
+            # extract zipfile in memory
+            extracted_files = handle_zipped_html(zip_content=content_bytes, book=book)
+            book_content.files.update(extracted_files)
         else:
-            with open(fpath, "wb") as fh:
-                for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
-                    if chunk:
-                        fh.write(chunk)
+            # Store the file directly
+            filename = fname_for(book, book_format)
+            book_content.files[filename] = content_bytes
 
     # delete book from DB if not downloaded in any format
     if len(book.unsupported_formats) == len(formats):
@@ -212,94 +185,21 @@ def download_book(
             "Deleting from DB ..."
         )
         repository.remove_book(book.book_id)
-        if book_dir.exists():
-            shutil.rmtree(book_dir, ignore_errors=True)
-        return
+        return None
 
     # download cover image
     if book.cover_page:
         url = (
             f"{mirror_url}/cache/epub/{book.book_id}/pg{book.book_id}.cover.medium.jpg"
         )
-        cover = f"{book.book_id}_cover_image.jpg"
-        if (cover_dir / cover).exists():
-            logger.debug(f"Cover already exists for book #{book.book_id}")
-            return
-
-        logger.debug(f"Downloading {url}")
-        download_file(url, cover_dir / cover)
+        logger.debug(f"Downloading cover image from {url}")
+        try:
+            resp = requests.get(url, timeout=DEFAULT_HTTP_TIMEOUT)
+            if resp.status_code == requests.codes.ok:
+                book_content.cover_image = resp.content
+        except Exception as exc:
+            logger.warning(f"Failed to download cover for book #{book.book_id}: {exc}")
     else:
         logger.debug(f"No Book Cover found for Book #{book.book_id}")
 
-
-def download_all_books(
-    mirror_url: str,
-    download_cache: Path,
-    concurrency: int,
-    formats: list[str],
-    *,
-    force: bool,
-    progress: ScraperProgress,
-):
-    """Download all books using singleton BookRepository"""
-    progress.increase_total(len(repository.get_all_books()))
-
-    # ensure dir exist
-    download_cache.mkdir(parents=True, exist_ok=True)
-
-    def backoff_busy_error_hdlr(details):
-        logger.warning(
-            "Backing off {wait:0.1f} seconds after {tries} tries "
-            "calling function {target} with args {args} and kwargs "
-            "{kwargs} due to apsw.BusyError".format(**details)
-        )
-
-    def backoff_request_error_hdlr(details):
-        logger.warning(
-            "Backing off {wait:0.1f} seconds after {tries} tries "
-            "calling function {target} with args {args} and kwargs "
-            "{kwargs} due to requests error".format(**details)
-        )
-
-    def fatal_code(e):
-        """Give up on errors codes 400-499 except 429"""
-        if isinstance(e, requests.HTTPError) and (
-            HTTPStatus.BAD_REQUEST
-            <= e.response.status_code
-            < HTTPStatus.INTERNAL_SERVER_ERROR
-            and e.response.status_code != HTTPStatus.TOO_MANY_REQUESTS
-        ):
-            logger.warning(
-                f"{e.request.url} returned a non-retryable HTTP error code "
-                f"{e.response.status_code}"
-            )
-            return True
-        return False
-
-    def dlb(b, progress: ScraperProgress):
-        dlb_inner(b)
-        progress.increase_progress()
-
-    @backoff.on_exception(
-        partial(backoff.expo, base=3, factor=2),
-        requests.exceptions.RequestException,
-        max_time=30,  # secs
-        on_backoff=backoff_request_error_hdlr,
-        giveup=fatal_code,
-    )
-    @backoff.on_exception(
-        backoff.constant,
-        apsw.BusyError,
-        max_time=3,
-        on_backoff=backoff_busy_error_hdlr,
-    )
-    def dlb_inner(b):
-        return download_book(
-            mirror_url=mirror_url,
-            book=b,
-            download_cache=download_cache,
-            formats=formats,
-            force=force,
-        )
-
-    Pool(concurrency).map(partial(dlb, progress=progress), repository.get_all_books())
+    return book_content

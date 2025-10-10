@@ -54,7 +54,7 @@ You can find the full arguments list below:
 
 ```bash
 -h --help                       Display this help message
--F --force                      Redo step even if target already exist
+-F --force                      Overwrite existing ZIM file
 
 -l --languages=<list>           Comma-separated list of lang codes to filter export to (preferably ISO 639-1, else ISO 639-3)
 -f --formats=<list>             Comma-separated list of formats to filter export to (epub, html, pdf, all)
@@ -67,7 +67,6 @@ You can find the full arguments list below:
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -b --books=<ids>                Execute the processes for specific books, separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for processing tasks
---dlc=<nb>                      Number of concurrent *download* process for download (overwrites --concurrency). if server blocks high rate requests
 --no-index                      Do NOT create full-text index within ZIM file
 --title-search                  Add field to search a book by title and directly jump to it
 --bookshelves                   Add bookshelves

@@ -1,15 +1,21 @@
 import json
 import urllib.parse
 from collections.abc import Iterable
+from functools import partial
+from http import HTTPStatus
 from multiprocessing.dummy import Pool
 from pathlib import Path
 
+import apsw
+import backoff
 import bs4
+import requests
 from bs4 import BeautifulSoup, Tag
 from jinja2 import Environment, PackageLoader
 
 import gutenberg2zim
-from gutenberg2zim.constants import LOCALES_LOCATION, TMP_FOLDER_PATH, logger
+from gutenberg2zim.constants import LOCALES_LOCATION, logger
+from gutenberg2zim.download import download_book
 from gutenberg2zim.iso639 import language_name
 from gutenberg2zim.models import Book, repository
 from gutenberg2zim.scraper_progress import ScraperProgress
@@ -164,16 +170,16 @@ def export_skeleton(
 
 def export_all_books(
     project_id: str,
-    download_cache: Path,
+    mirror_url: str,
     concurrency: int,
     languages: list[str],
     formats: list[str],
     progress: ScraperProgress,
     *,
-    force: bool,
     title_search: bool,
     add_bookshelves: bool,
 ) -> None:
+    """Download and export all books directly to ZIM without filesystem cache"""
 
     logger.info(f"Found {len(repository.books)} books for export")
 
@@ -224,21 +230,78 @@ def export_all_books(
             [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
         )
 
-    logger.info(f"Exporting books with {concurrency} (parallel) worker(s)")
+    logger.info(
+        f"Downloading and exporting books with {concurrency} (parallel) worker(s)"
+    )
 
-    def dlb(b):
-        export_book(
-            b,
-            download_cache=download_cache,
-            formats=formats,
-            project_id=project_id,
-            force=force,
-            title_search=title_search,
-            add_bookshelves=add_bookshelves,
+    def backoff_busy_error_hdlr(details):
+        logger.warning(
+            "Backing off {wait:0.1f} seconds after {tries} tries "
+            "calling function {target} with args {args} and kwargs "
+            "{kwargs} due to apsw.BusyError".format(**details)
         )
+
+    def backoff_request_error_hdlr(details):
+        logger.warning(
+            "Backing off {wait:0.1f} seconds after {tries} tries "
+            "calling function {target} with args {args} and kwargs "
+            "{kwargs} due to requests error".format(**details)
+        )
+
+    def fatal_code(e):
+        """Give up on errors codes 400-499 except 429"""
+        if isinstance(e, requests.HTTPError) and (
+            HTTPStatus.BAD_REQUEST
+            <= e.response.status_code
+            < HTTPStatus.INTERNAL_SERVER_ERROR
+            and e.response.status_code != HTTPStatus.TOO_MANY_REQUESTS
+        ):
+            logger.warning(
+                f"{e.request.url} returned a non-retryable HTTP error code "
+                f"{e.response.status_code}"
+            )
+            return True
+        return False
+
+    def process_book(book: Book, progress: ScraperProgress):
+        process_book_inner(book)
         progress.increase_progress()
 
-    Pool(concurrency).map(dlb, repository.get_all_books())
+    @backoff.on_exception(
+        partial(backoff.expo, base=3, factor=2),
+        requests.exceptions.RequestException,
+        max_time=30,  # secs
+        on_backoff=backoff_request_error_hdlr,
+        giveup=fatal_code,
+    )
+    @backoff.on_exception(
+        backoff.constant,
+        apsw.BusyError,
+        max_time=3,
+        on_backoff=backoff_busy_error_hdlr,
+    )
+    def process_book_inner(book: Book):
+        """Download book content and export directly to ZIM with retry logic"""
+        book_content = download_book(
+            mirror_url=mirror_url,
+            book=book,
+            formats=formats,
+        )
+
+        if book_content:
+            export_book(
+                book=book,
+                book_files=book_content.files,
+                cover_image=book_content.cover_image,
+                formats=formats,
+                project_id=project_id,
+                title_search=title_search,
+                add_bookshelves=add_bookshelves,
+            )
+
+    Pool(concurrency).map(
+        partial(process_book, progress=progress), repository.get_all_books()
+    )
 
 
 def html_content_for(book: Book, src_dir):
@@ -470,10 +533,15 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
 
 
 def cover_html_content_for(
-    book, cover_dir, project_id, title_search, add_bookshelves, formats
+    book,
+    project_id,
+    title_search,
+    add_bookshelves,
+    formats,
+    *,
+    has_cover: bool,
 ):
-    cover_img = f"{book.book_id}_cover_image.jpg"
-    cover_img = cover_img if (cover_dir / cover_img).exists() else None
+    cover_img = f"{book.book_id}_cover_image.jpg" if has_cover else None
 
     translate_author = (
         f' data-l10n-id="author-{book.author.name().lower()}"'
@@ -529,29 +597,25 @@ def save_author_file(author, project_id):
 
 def export_book(
     book: Book,
-    download_cache: Path,
+    book_files: dict[str, bytes],
+    cover_image: bytes | None,
     formats: list[str],
     project_id: str,
     *,
-    force: bool,
     title_search: bool,
     add_bookshelves: bool,
 ):
+    """Export book to ZIM using in-memory content"""
     logger.debug(f"Exporting book {book.book_id}")
-    book_dir = download_cache / str(book.book_id)
-    cover_dir = download_cache / "covers"
     handle_book_files(
         book=book,
-        src_dir=book_dir,
-        cover_dir=cover_dir,
+        book_files=book_files,
         formats=formats,
-        force=force,
     )
 
     write_book_presentation_article(
         book=book,
-        cover_dir=cover_dir,
-        force=force,
+        cover_image=cover_image,
         project_id=project_id,
         title_search=title_search,
         add_bookshelves=add_bookshelves,
@@ -561,122 +625,123 @@ def export_book(
 
 def handle_book_files(
     book: Book,
-    src_dir: Path,
-    cover_dir: Path,
+    book_files: dict[str, bytes],
     formats: list[str],
-    *,
-    force: bool,
 ):
-
+    """Handle book files from in-memory content and add to ZIM"""
     logger.debug(f"\tExporting Book #{book.book_id}.")
 
-    # actual book content, as HTML
-    html, _ = html_content_for(book=book, src_dir=src_dir)
-    html_book_optimized_files = []
-    if html:
+    # Find the main HTML file
+    main_html_filename = f"{book.book_id}.html"
+    html_content = None
+
+    if main_html_filename in book_files:
+        html_content = book_files[main_html_filename].decode("utf-8", errors="replace")
+
+    if html_content:
         article_name = article_name_for(book)
-        article_fpath = TMP_FOLDER_PATH / article_name
-        if not article_fpath.exists() or force:
-            logger.debug(f"\t\tExporting to {article_fpath}")
+        logger.debug(f"\t\tProcessing HTML content for {article_name}")
+        try:
+            new_html = update_html_for_static(
+                book=book, html_content=html_content, formats=formats
+            )
+        except Exception:
+            raise
+
+        # Add the optimized HTML directly to ZIM
+        Global.add_item_for(
+            path=article_name,
+            content=str(new_html),
+            mimetype="text/html",
+        )
+
+    # Process all associated files (images, companion HTML files, etc)
+    for filename, file_content in book_files.items():
+        # Skip the main HTML file as it's already processed
+        if filename == main_html_filename:
+            continue
+
+        if filename.endswith((".html", ".htm")):
+            # Process companion HTML files
+            logger.debug(f"\t\tProcessing companion HTML: {filename}")
             try:
+                html_str = file_content.decode("utf-8", errors="replace")
                 new_html = update_html_for_static(
-                    book=book, html_content=html, formats=formats
+                    book=book, html_content=html_str, formats=formats
                 )
-            except Exception:
-                raise
-            save_bs_output(new_html, article_fpath, UTF8)
-            html_book_optimized_files.append(article_fpath)
+                Global.add_item_for(
+                    path=filename,
+                    content=str(new_html),
+                    mimetype="text/html",
+                )
+            except Exception as e:
+                logger.exception(e)
+                logger.error(f"\t\tException while handling companion HTML: {e}")
         else:
-            logger.info(f"\t\tSkipping HTML article {article_fpath}")
-        Global.add_item_for(path=article_name, fpath=article_fpath)
-
-    def handle_companion_file(
-        fname: Path,
-        dstfname: str | None = None,
-    ):
-        src = fname
-        if dstfname is None:
-            dstfname = fname.name
-        Global.add_item_for(path=dstfname, fpath=src)
-
-    # associated files (images, etc)
-    for fpath in src_dir.iterdir():
-        if fpath.is_file() and fpath.name.startswith(f"{book.book_id}_"):
-            if fpath.suffix in (".html", ".htm"):
-                src = fpath
-                dst = TMP_FOLDER_PATH / fpath.name
-                if dst.exists() and not force:
-                    logger.debug(f"\t\tSkipping already optimized HTML {dst}")
-                    Global.add_item_for(path=fpath.name, fpath=dst)
-                    continue
-
-                logger.info(f"\tExporting HTML file to {dst}")
-                html, _ = read_file(src)
-                new_html = update_html_for_static(
-                    book=book, html_content=html, formats=formats
+            # Add other files (images, etc) directly
+            try:
+                Global.add_item_for(
+                    path=filename,
+                    content=file_content,
                 )
-                save_bs_output(new_html, dst, UTF8)
-                html_book_optimized_files.append(dst)
-            else:
-                try:
-                    handle_companion_file(fname=fpath)
-                except Exception as e:
-                    logger.exception(e)
-                    logger.error(f"\t\tException while handling companion file: {e}")
+            except Exception as e:
+                logger.exception(e)
+                logger.error(f"\t\tException while handling file {filename}: {e}")
 
-    # other formats
+    # Handle other formats (epub, pdf)
     for other_format in [
         fmt
         for fmt in formats
         if fmt != "html" and fmt not in str(book.unsupported_formats).split(",")
     ]:
-        book_file = src_dir / fname_for(book, other_format)
-        if book_file.exists():
+        book_filename = fname_for(book, other_format)
+        if book_filename in book_files:
             try:
-                handle_companion_file(
-                    fname=book_file,
-                    dstfname=archive_name_for(book, other_format),
+                archive_name = archive_name_for(book, other_format)
+                Global.add_item_for(
+                    path=archive_name,
+                    content=book_files[book_filename],
                 )
             except Exception as e:
                 logger.exception(e)
-                logger.error(f"\t\tException while handling companion file: {e}")
-
-    # cover image
-    cover_img = cover_dir / f"{book.book_id}_cover_image.jpg"
-    if cover_img.exists():
-        handle_companion_file(
-            fname=cover_img,
-            dstfname=f"covers/{book.book_id}_cover_image.jpg",
-        )
+                logger.error(f"\t\tException while handling {other_format}: {e}")
 
 
 def write_book_presentation_article(
     book,
-    cover_dir,
-    force,
+    cover_image: bytes | None,
     project_id,
     title_search,
     add_bookshelves,
     formats,
 ):
+    """Write book presentation article directly to ZIM"""
     article_name = article_name_for(book=book, cover=True)
-    cover_fpath = TMP_FOLDER_PATH / article_name
-    if not cover_fpath.exists() or force:
-        logger.debug(f"\t\tExporting article presentation to {cover_fpath}")
-        html = cover_html_content_for(
-            book=book,
-            cover_dir=cover_dir,
-            project_id=project_id,
-            title_search=title_search,
-            add_bookshelves=add_bookshelves,
-            formats=formats,
-        )
-        with open(cover_fpath, "w") as f:
-            f.write(html)
-    else:
-        logger.debug(f"\t\tSkipping already optimized cover {cover_fpath}")
+    logger.debug("\t\tExporting article presentation")
 
-    Global.add_item_for(path=article_name, fpath=cover_fpath)
+    # Add cover image to ZIM if available
+    if cover_image:
+        cover_path = f"covers/{book.book_id}_cover_image.jpg"
+        Global.add_item_for(
+            path=cover_path,
+            content=cover_image,
+            mimetype="image/jpeg",
+        )
+
+    html = cover_html_content_for(
+        book=book,
+        has_cover=cover_image is not None,
+        project_id=project_id,
+        title_search=title_search,
+        add_bookshelves=add_bookshelves,
+        formats=formats,
+    )
+
+    Global.add_item_for(
+        path=article_name,
+        content=html,
+        mimetype="text/html",
+    )
 
 
 def _bookshelf_list_for_books(books: Iterable[Book]):

@@ -13,7 +13,6 @@ from gutenberg2zim.csv_catalog import (
     get_csv_fpath,
     load_catalog,
 )
-from gutenberg2zim.download import download_all_books
 from gutenberg2zim.rdf import download_rdf_file, get_rdf_fpath, parse_and_fill
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.utils import ALL_FORMATS
@@ -24,7 +23,7 @@ help_info = (
     """[-d CACHE_PATH] [-e STATIC_PATH] """
     """[-z ZIM_PATH] [-b BOOKS] """
     """[-t ZIM_TITLE] [-n ZIM_DESC] [-L ZIM_LONG_DESC] """
-    """[-c CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
+    """[-c CONCURRENCY] [--no-index] """
     """[--title-search] [--bookshelves] """
     """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
     """[--mirror-url MIRROR_URL] [--debug] """
@@ -49,9 +48,6 @@ help_info = (
     """separated by commas, or dashes for intervals
 -c --concurrency=<nb>           Number of concurrent process for processing """
     """tasks
---dlc=<nb>                      Number of concurrent *download* process for """
-    """download (overwrites --concurrency). """
-    """if server blocks high rate requests
 --no-index                      Do NOT create full-text index within ZIM file
 --title-search                  Add field to search a book by title and directly """
     """jump to it
@@ -73,11 +69,6 @@ def main():
     zim_name = arguments.get("--zim-file")
     mirror_url = arguments.get("--mirror-url") or "https://gutenberg.mirror.driftle.ss"
 
-    if dl_folder := arguments.get("--dl-folder"):
-        dl_cache = Path(dl_folder).resolve()
-    else:
-        dl_cache = Path("dl-cache").resolve()
-
     books_csv = arguments.get("--books") or ""
     zim_title = arguments.get("--zim-title")
 
@@ -85,7 +76,6 @@ def main():
     zim_long_description = arguments.get("--zim-long-desc")
 
     concurrency = int(arguments.get("--concurrency") or 16)
-    dl_concurrency = int(arguments.get("--dlc") or concurrency)
     force = arguments.get("--force", False)
     title_search = arguments.get("--title-search", False)
     bookshelves = arguments.get("--bookshelves", False)
@@ -175,17 +165,16 @@ def main():
     run_pending()
 
     # Download ebooks
-    logger.info("DOWNLOADING ebooks from mirror using filters")
-    download_all_books(
-        mirror_url=mirror_url,
-        download_cache=dl_cache,
-        concurrency=dl_concurrency,
-        formats=formats,
-        force=force,
-        progress=progress,
-    )
-    run_pending()
-    logger.info("Finished downloading all books.")
+    # logger.info("DOWNLOADING ebooks from mirror using filters")
+    # download_all_books(
+    #     mirror_url=mirror_url,
+    #     concurrency=dl_concurrency,
+    #     formats=formats,
+    #     force=force,
+    #     progress=progress,
+    # )
+    # run_pending()
+    # logger.info("Finished downloading all books.")
 
     # Build ZIM file
     logger.info("BUILDING ZIM dynamically")
@@ -195,7 +184,7 @@ def main():
 
     build_zimfile(
         output_folder=Path(".").resolve(),
-        download_cache=dl_cache,
+        mirror_url=mirror_url,
         concurrency=concurrency,
         languages=sorted_languages,
         formats=formats,

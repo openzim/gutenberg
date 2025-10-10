@@ -32,7 +32,7 @@ def existing_and_sorted_languages(
 
 def build_zimfile(
     output_folder: pathlib.Path,
-    download_cache: pathlib.Path,
+    mirror_url: str,
     concurrency: int,
     languages: list[str],
     formats: list[str],
@@ -100,12 +100,11 @@ def build_zimfile(
     try:
         export_all_books(
             project_id=project_id,
-            download_cache=download_cache,
+            mirror_url=mirror_url,
             concurrency=concurrency,
             languages=languages,
             formats=formats,
             progress=progress,
-            force=force,
             title_search=title_search,
             add_bookshelves=add_bookshelves,
         )
