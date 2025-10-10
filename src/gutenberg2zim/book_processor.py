@@ -29,10 +29,7 @@ def process_all_books(
 ) -> None:
     """Download and export all books directly to ZIM without filesystem cache"""
 
-    logger.info(f"Found {len(book_ids)} books for export")
-
-    logger.info(
-        f"Downloading and exporting books with {concurrency} (parallel) worker(s)"
+    logger.info(f"Processing {len(book_ids)} books with {concurrency} (parallel) worker(s)"
     )
 
     def backoff_busy_error_hdlr(details):
