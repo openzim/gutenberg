@@ -3,40 +3,20 @@ import pathlib
 
 from gutenberg2zim import i18n
 from gutenberg2zim.constants import logger
-from gutenberg2zim.export import export_all_books
+from gutenberg2zim.book_processor import process_all_books
 from gutenberg2zim.iso639 import ISO_MATRIX, ISO_MATRIX_REV
-from gutenberg2zim.models import repository
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import get_project_id
 
 
-def existing_and_sorted_languages(
-    languages: list[str] | None, books_ids: list[int] | None
-) -> list[str]:
-    """Get list of languages sorted by number of books from singleton BookRepository"""
-
-    # actual list of languages with books sorted by most used
-    db_languages = repository.get_languages_sorted_by_count(only_books=books_ids)
-
-    if languages:
-        # user requested some languages, limit db-collected ones to matching
-        existing_and_sorted_languages = [
-            lang for lang in db_languages if lang in languages
-        ]
-    else:
-        existing_and_sorted_languages = db_languages
-
-    return existing_and_sorted_languages
-
-
 def build_zimfile(
     output_folder: pathlib.Path,
+    book_ids: list[int],
     mirror_url: str,
     concurrency: int,
     languages: list[str],
     formats: list[str],
-    only_books: list[int],
     zim_name: str | None,
     title: str | None,
     description: str | None,
@@ -44,12 +24,13 @@ def build_zimfile(
     publisher: str,
     *,
     force: bool,
+    is_selection: bool,
     title_search: bool,
     add_bookshelves: bool,
     progress: ScraperProgress,
 ) -> None:
     """Build ZIM file using singleton BookRepository"""
-    progress.increase_total(len(repository.books))
+    progress.increase_total(len(book_ids))
     iso_languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
 
     formats.sort()
@@ -70,7 +51,7 @@ def build_zimfile(
 
     logger.info(f"\tWriting {metadata_lang} ZIM for {title}")
 
-    project_id = get_project_id(languages, formats, only_books)
+    project_id = get_project_id(languages, formats, is_selection)
 
     if zim_name is None:
         zim_name = "{}_{}.zim".format(
@@ -98,7 +79,8 @@ def build_zimfile(
     Global.start()
 
     try:
-        export_all_books(
+        process_all_books(
+            book_ids=book_ids,
             project_id=project_id,
             mirror_url=mirror_url,
             concurrency=concurrency,
@@ -121,4 +103,3 @@ def build_zimfile(
     else:
         Global.finish()
 
-    logger.info("Scraper has finished normally")

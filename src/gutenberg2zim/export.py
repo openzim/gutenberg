@@ -1,31 +1,23 @@
 import json
 import urllib.parse
 from collections.abc import Iterable
-from functools import partial
-from http import HTTPStatus
 from multiprocessing.dummy import Pool
 from pathlib import Path
 
-import apsw
-import backoff
 import bs4
-import requests
 from bs4 import BeautifulSoup, Tag
 from jinja2 import Environment, PackageLoader
 
 import gutenberg2zim
 from gutenberg2zim.constants import LOCALES_LOCATION, logger
-from gutenberg2zim.download import download_book
 from gutenberg2zim.iso639 import language_name
 from gutenberg2zim.models import Book, repository
-from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import (
     UTF8,
     archive_name_for,
     article_name_for,
     book_name_for_fs,
-    critical_error,
     fname_for,
     get_lang_groups,
     get_langs_with_count,
@@ -38,7 +30,6 @@ jinja_env = Environment(  # noqa: S701
 )
 
 DEBUG_COUNT = []
-NB_POPULARITY_STARS = 5
 
 
 def get_ui_languages_for():
@@ -166,143 +157,6 @@ def export_skeleton(
         mimetype="text/html",
         is_front=True,
     )
-
-
-def export_all_books(
-    project_id: str,
-    mirror_url: str,
-    concurrency: int,
-    languages: list[str],
-    formats: list[str],
-    progress: ScraperProgress,
-    *,
-    title_search: bool,
-    add_bookshelves: bool,
-) -> None:
-    """Download and export all books directly to ZIM without filesystem cache"""
-
-    logger.info(f"Found {len(repository.books)} books for export")
-
-    if not len(get_langs_with_count(languages=None)):
-        critical_error(
-            "Unable to proceed. Combination of languages, "
-            "books and formats has no result."
-        )
-
-    # export to JSON helpers
-    logger.info("Exporting JSON helpers")
-    export_to_json_helpers(
-        languages=languages,
-        formats=formats,
-        project_id=project_id,
-        add_bookshelves=add_bookshelves,
-    )
-
-    # export HTML index and other static files
-    logger.info("Exporting HTML skeleton")
-    export_skeleton(
-        project_id=project_id,
-        title_search=title_search,
-        add_bookshelves=add_bookshelves,
-    )
-
-    # Compute popularity
-    logger.info("Computing book popularity")
-    popbooks = repository.get_all_books()
-    popbooks_count = len(popbooks)
-    stars_limits = [0] * NB_POPULARITY_STARS
-    stars = NB_POPULARITY_STARS
-    nb_downloads = popbooks[0].downloads
-    for ibook in range(0, len(popbooks), 1):
-        if (
-            ibook
-            > float(NB_POPULARITY_STARS - stars + 1)
-            / NB_POPULARITY_STARS
-            * popbooks_count
-            and popbooks[ibook].downloads < nb_downloads
-        ):
-            stars_limits[stars - 1] = nb_downloads
-            stars = stars - 1
-        nb_downloads = popbooks[ibook].downloads
-
-    for book in repository.get_all_books():
-        book.popularity = sum(
-            [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
-        )
-
-    logger.info(
-        f"Downloading and exporting books with {concurrency} (parallel) worker(s)"
-    )
-
-    def backoff_busy_error_hdlr(details):
-        logger.warning(
-            "Backing off {wait:0.1f} seconds after {tries} tries "
-            "calling function {target} with args {args} and kwargs "
-            "{kwargs} due to apsw.BusyError".format(**details)
-        )
-
-    def backoff_request_error_hdlr(details):
-        logger.warning(
-            "Backing off {wait:0.1f} seconds after {tries} tries "
-            "calling function {target} with args {args} and kwargs "
-            "{kwargs} due to requests error".format(**details)
-        )
-
-    def fatal_code(e):
-        """Give up on errors codes 400-499 except 429"""
-        if isinstance(e, requests.HTTPError) and (
-            HTTPStatus.BAD_REQUEST
-            <= e.response.status_code
-            < HTTPStatus.INTERNAL_SERVER_ERROR
-            and e.response.status_code != HTTPStatus.TOO_MANY_REQUESTS
-        ):
-            logger.warning(
-                f"{e.request.url} returned a non-retryable HTTP error code "
-                f"{e.response.status_code}"
-            )
-            return True
-        return False
-
-    def process_book(book: Book, progress: ScraperProgress):
-        process_book_inner(book)
-        progress.increase_progress()
-
-    @backoff.on_exception(
-        partial(backoff.expo, base=3, factor=2),
-        requests.exceptions.RequestException,
-        max_time=30,  # secs
-        on_backoff=backoff_request_error_hdlr,
-        giveup=fatal_code,
-    )
-    @backoff.on_exception(
-        backoff.constant,
-        apsw.BusyError,
-        max_time=3,
-        on_backoff=backoff_busy_error_hdlr,
-    )
-    def process_book_inner(book: Book):
-        """Download book content and export directly to ZIM with retry logic"""
-        book_content = download_book(
-            mirror_url=mirror_url,
-            book=book,
-            formats=formats,
-        )
-
-        if book_content:
-            export_book(
-                book=book,
-                book_files=book_content.files,
-                cover_image=book_content.cover_image,
-                formats=formats,
-                project_id=project_id,
-                title_search=title_search,
-                add_bookshelves=add_bookshelves,
-            )
-
-    Pool(concurrency).map(
-        partial(process_book, progress=progress), repository.get_all_books()
-    )
-
 
 def html_content_for(book: Book, src_dir):
     html_fpath = src_dir / fname_for(book, "html")

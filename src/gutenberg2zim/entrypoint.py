@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 
 from docopt import docopt
-from schedule import run_all, run_pending
+from schedule import run_all
 from zimscraperlib.inputs import compute_descriptions
 
 from gutenberg2zim import i18n
@@ -13,10 +13,9 @@ from gutenberg2zim.csv_catalog import (
     get_csv_fpath,
     load_catalog,
 )
-from gutenberg2zim.rdf import download_rdf_file, get_rdf_fpath, parse_and_fill
 from gutenberg2zim.scraper_progress import ScraperProgress
-from gutenberg2zim.utils import ALL_FORMATS
-from gutenberg2zim.zim import build_zimfile, existing_and_sorted_languages
+from gutenberg2zim.utils import ALL_FORMATS, critical_error
+from gutenberg2zim.zim import build_zimfile
 
 help_info = (
     """Usage: gutenberg2zim [-F] [-l LANGS] [-f FORMATS] """
@@ -116,79 +115,56 @@ def main():
         zim_long_description,
     )
 
-    books: list[int] = []
-    try:
-        books_csv = books_csv.split(",")
+    only_books_ids: list[int] = []
+    books_csv = books_csv.split(",")
+    for books_value in books_csv:
+        blst = list(map(int, [i for i in books_value.split("-") if i.isdigit()]))
+        if len(blst) > 1:
+            blst = list(range(blst[0], blst[1] + 1))
+        only_books_ids.extend(blst)
+    only_books_ids = list(set(only_books_ids))
 
-        def f(x):
-            return list(map(int, [i for i in x.split("-") if i.isdigit()]))
-
-        for i in books_csv:
-            blst = f(i)
-            if len(blst) > 1:
-                blst = list(range(blst[0], blst[1] + 1))
-            books.extend(blst)
-        books_csv = list(set(books))
-    except Exception as e:
-        logger.error(e)
-        books_csv = []
-
-    rdf_path = get_rdf_fpath()
     csv_path = get_csv_fpath()
 
     progress = ScraperProgress(stats_filename)
+    progress.increase_total(1)
 
     # Download CSV catalog
     csv_url = f"{mirror_url}/cache/epub/feeds/pg_catalog.csv.gz"
     logger.info(f"PREPARING CSV catalog from {csv_url}")
     download_csv_file(csv_path=csv_path, csv_url=csv_url)
 
-    # Download RDF files
-    rdf_url = f"{mirror_url}/cache/epub/feeds/rdf-files.tar.bz2"
-    logger.info(f"PREPARING rdf-files cache from {rdf_url}")
-    download_rdf_file(rdf_url=rdf_url, rdf_path=rdf_path)
-
     # Load catalog and filter books
     logger.info(f"LOADING catalog from {csv_path}")
     catalog = load_catalog(csv_path)
 
     # Filter books based on languages and specific book IDs
-    filtered_books = filter_books(
+    book_ids = filter_books(
         catalog=catalog,
         languages=languages if languages else None,
-        only_books=books if books else None,
+        only_books=only_books_ids if only_books_ids else None,
     )
-
-    # Parse only the filtered books from RDF
-    logger.info(f"PARSING {len(filtered_books)} filtered books from {rdf_path}")
-    parse_and_fill(rdf_path=rdf_path, only_books=filtered_books, progress=progress)
-    run_pending()
-
-    # Download ebooks
-    # logger.info("DOWNLOADING ebooks from mirror using filters")
-    # download_all_books(
-    #     mirror_url=mirror_url,
-    #     concurrency=dl_concurrency,
-    #     formats=formats,
-    #     force=force,
-    #     progress=progress,
-    # )
-    # run_pending()
-    # logger.info("Finished downloading all books.")
+    if not len(book_ids):
+        critical_error(
+            "Unable to proceed. Combination of languages, "
+            "books and formats has no result."
+        )
+    book_languages = list(
+        {languages for book_id in book_ids for languages in catalog[book_id]}
+    )
+    progress.increase_progress()
 
     # Build ZIM file
-    logger.info("BUILDING ZIM dynamically")
-
-    # Filter and sort requested languages
-    sorted_languages = existing_and_sorted_languages(languages, books)
+    logger.info("BUILDING ZIM")
 
     build_zimfile(
         output_folder=Path(".").resolve(),
+        book_ids=book_ids,
         mirror_url=mirror_url,
         concurrency=concurrency,
-        languages=sorted_languages,
+        languages=book_languages,
         formats=formats,
-        only_books=books,
+        is_selection=len(only_books_ids) > 0,
         zim_name=Path(zim_name).name if zim_name else None,
         title=zim_title,
         description=description,
@@ -203,3 +179,5 @@ def main():
     # Final increase to indicate we are done
     progress.increase_progress()
     run_all()  # force flushing scraper progress to file
+
+    logger.info("Scraper has finished normally")

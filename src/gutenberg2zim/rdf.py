@@ -1,88 +1,11 @@
-import re
-import tarfile
 from pathlib import Path
-from tarfile import TarFile, TarInfo
 
+import requests
 from bs4 import BeautifulSoup, Tag
 
-from gutenberg2zim.constants import logger
+from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, logger
 from gutenberg2zim.models import Author, Book, repository
-from gutenberg2zim.scraper_progress import ScraperProgress
-from gutenberg2zim.utils import (
-    download_file,
-    normalize,
-)
-
-
-def get_rdf_fpath() -> Path:
-    fname = "rdf-files.tar.bz2"
-    fpath = Path(fname).resolve()
-    return fpath
-
-
-def download_rdf_file(rdf_path: Path, rdf_url: str) -> None:
-    """Download rdf-files archive"""
-    if rdf_path.exists():
-        logger.info(f"\trdf-files archive already exists in {rdf_path}")
-        return
-
-    logger.info(f"\tDownloading {rdf_url} into {rdf_path}")
-    download_file(rdf_url, rdf_path)
-
-
-def parse_and_fill(
-    rdf_path: Path, only_books: list[int], progress: ScraperProgress
-) -> None:
-    """Parse RDF files and populate the singleton BookRepository"""
-    logger.info(f"\tExtracting RDF files for {len(only_books)} books from {rdf_path}")
-    progress.increase_total(len(only_books))
-
-    # Open the tar file for random access
-    with tarfile.open(name=rdf_path, mode="r:bz2") as rdf_tarfile:
-        for book_id in only_books:
-            progress.increase_progress()
-
-            # RDF files are organized as cache/epub/{book_id}/pg{book_id}.rdf
-            rdf_member_path = f"cache/epub/{book_id}/pg{book_id}.rdf"
-
-            try:
-                rdf_member = rdf_tarfile.getmember(rdf_member_path)
-            except KeyError:
-                logger.warning(f"\tCould not find RDF file for book {book_id}")
-                continue
-
-            parse_and_process_file(rdf_tarfile, rdf_member)
-
-
-def parse_and_process_file(rdf_tarfile: TarFile, rdf_member: TarInfo) -> None:
-    member_match = re.match(r".*/pg([0-9]+).rdf", rdf_member.name)
-    if not member_match:
-        raise Exception(f"RDF member should match expected regex: {rdf_member.name}")
-    gid = member_match.groups()[0]
-
-    if repository.get_book(int(gid)):
-        logger.debug(
-            f"\tSkipping already parsed file {rdf_member.name} for book id {gid}"
-        )
-        return
-
-    logger.debug(f"\tParsing file {rdf_member.name} for book id {gid}")
-    rdf_data = rdf_tarfile.extractfile(rdf_member)
-    if rdf_data is None:
-        logger.warning(
-            f"Unable to extract member '{rdf_member.name}' from archive "
-            f"'{rdf_member.name}'"
-        )
-        return
-
-    parser = RdfParser(rdf_data.read(), gid).parse()
-
-    if parser.license == "None":
-        logger.info(f"\tWARN: Unusable book without any information {gid}")
-    elif not parser.title:
-        logger.info(f"\tWARN: Unusable book without title {gid}")
-    else:
-        save_rdf_in_repository(parser)
+from gutenberg2zim.utils import normalize
 
 
 class RdfParser:
@@ -197,7 +120,7 @@ class RdfParser:
         return self
 
 
-def save_rdf_in_repository(parser: RdfParser) -> None:
+def _save_rdf_in_repository(parser: RdfParser) -> None:
     """Save parsed RDF data into the in-memory repository"""
     # Get or create author
     if parser.author_id:
@@ -247,6 +170,49 @@ def save_rdf_in_repository(parser: RdfParser) -> None:
         cover_page=parser.cover_image,
     )
     repository.add_book(book)
+
+
+def download_and_parse_book_rdf(book_id: int, mirror_url: str) -> Book | None:
+    """Download and parse RDF for a single book from the mirror.
+
+    Args:
+        book_id: The Gutenberg book ID
+        mirror_url: The mirror URL (e.g., "https://gutenberg.mirror.driftle.ss")
+
+    Returns:
+        Book object if successful, None if book couldn't be downloaded or parsed
+    """
+    # Construct URL: {mirror_url}/cache/epub/{book_id}/pg{book_id}.rdf
+    rdf_url = f"{mirror_url}/cache/epub/{book_id}/pg{book_id}.rdf"
+
+    logger.debug(f"Downloading RDF for book {book_id} from {rdf_url}")
+
+    try:
+        response = requests.get(rdf_url, timeout=DEFAULT_HTTP_TIMEOUT)
+        response.raise_for_status()
+        rdf_data = response.content
+    except requests.RequestException as exc:
+        logger.warning(f"Could not download RDF for book {book_id}: {exc}")
+        return None
+
+    # Parse the RDF data
+    try:
+        parser = RdfParser(rdf_data, str(book_id)).parse()
+    except Exception as exc:
+        logger.warning(f"Could not parse RDF for book {book_id}: {exc}")
+        return None
+
+    # Validate the parsed data
+    if parser.license == "None":
+        logger.info(f"\tWARN: Unusable book without any information {book_id}")
+        return None
+    elif not parser.title:
+        logger.info(f"\tWARN: Unusable book without title {book_id}")
+        return None
+
+    # Save to repository and return the book
+    _save_rdf_in_repository(parser)
+    return repository.get_book(book_id)
 
 
 def get_formatted_number(num: str | None) -> str | None:
