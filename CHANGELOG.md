@@ -41,6 +41,7 @@ as of 2.0.0.
 - Fix navigation to bookshelves with special characters (#305)
 - Bookshelves with special characters cannot be opened (#306)
 - Fix internationalization of the "Copyrighted" license label (#253)
+- Properly compute (including sorting) ZIM Language items + allow to override with --zim-languages (#323)
 
 ## [2.2.0] - 2025-06-06
 

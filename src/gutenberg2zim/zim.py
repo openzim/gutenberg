@@ -4,15 +4,26 @@ import pathlib
 from gutenberg2zim import i18n
 from gutenberg2zim.book_processor import process_all_books
 from gutenberg2zim.constants import logger
-from gutenberg2zim.iso639 import ISO_MATRIX, ISO_MATRIX_REV
+from gutenberg2zim.csv_catalog import CatalogEntry
+from gutenberg2zim.iso639 import ISO_MATRIX, ISO_MATRIX_REV, ZIM_LANGUAGES_MAP
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import get_project_id
 
 
+def get_zim_language_metadata(languages: list[str], books: list[CatalogEntry]):
+    language_counts = {
+        zim_lang: sum(lang in book.languages for book in books)
+        for lang in languages
+        for zim_lang in ZIM_LANGUAGES_MAP.get(lang, [ISO_MATRIX.get(lang, None)])
+        if zim_lang
+    }
+    return sorted(language_counts, key=lambda lang: language_counts[lang], reverse=True)
+
+
 def build_zimfile(
+    books: list[CatalogEntry],
     output_folder: pathlib.Path,
-    book_ids: list[int],
     mirror_url: str,
     concurrency: int,
     languages: list[str],
@@ -21,6 +32,7 @@ def build_zimfile(
     title: str | None,
     description: str | None,
     long_description: str | None,
+    zim_languages: list[str] | None,
     publisher: str,
     *,
     force: bool,
@@ -30,7 +42,7 @@ def build_zimfile(
     progress: ScraperProgress,
 ) -> None:
     """Build ZIM file using singleton BookRepository"""
-    progress.increase_total(len(book_ids))
+    progress.increase_total(len(books))
     iso_languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
 
     formats.sort()
@@ -68,7 +80,7 @@ def build_zimfile(
 
     Global.setup(
         filename=zim_path,
-        language=iso_languages,
+        language=zim_languages or get_zim_language_metadata(languages, books),
         title=title,
         description=description,
         long_description=long_description,
@@ -80,7 +92,7 @@ def build_zimfile(
 
     try:
         process_all_books(
-            book_ids=book_ids,
+            book_ids=[book.book_id for book in books],
             project_id=project_id,
             mirror_url=mirror_url,
             concurrency=concurrency,

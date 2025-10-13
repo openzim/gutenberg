@@ -76,6 +76,14 @@
       "title": "Output folder",
       "description": "Output folder for ZIM file(s). Leave it as `/output`",
       "pattern": "^/output$"
+    },
+    "zim_languages": {
+      "type": "string",
+      "required": false,
+      "title": "ZIM Languages",
+      "description": "ZIM Language metadata; comma separated ISO-639-3 language codes expected",
+      "pattern": "^[a-z]{3}(,[a-z]{3})*$",
+      "customValidator": "language_code"
     }
   }
 }

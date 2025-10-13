@@ -232,3 +232,12 @@ ISO_MATRIX = {
 }
 
 ISO_MATRIX_REV = {value: key for key, value in ISO_MATRIX.items()}
+
+ZIM_LANGUAGES_MAP: dict[str, list[str]] = {
+    # no idea how to map `myn` and `nai` in ZIM Language metadata for now
+    # do not block if these are parts of another language but refuse to create ZIM
+    # if only this language is requested and --zim-lang is not passed
+    "myn": [],
+    "nai": [],
+    "nah": ["nhe"],
+}
