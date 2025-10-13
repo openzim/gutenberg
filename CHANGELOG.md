@@ -32,6 +32,7 @@ as of 2.0.0.
 - Move to another default mirror + add CLI flag to select mirror to use (#301)
 - Split build logic in Dockerfile to separate dependencies layer from scraper code layer (#302)
 - Prepare structure for TranslateWiki (#312)
+- Remove « .html » extension (#166)
 
 ### Fixed
 
