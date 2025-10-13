@@ -60,16 +60,20 @@ class RdfParser:
 
         # Search rdf to see if the image exists at the hard link
         # /cache/epub/{id}/pg{id}.cover.medium.jpg
+        def is_cover_node(node: Tag):
+            if not node:
+                return False
+            for about_value in node.get_attribute_list("rdf:about"):
+                if about_value.endswith(
+                    f"/cache/epub/{self.gid}/pg{self.gid}.cover.medium.jpg"
+                ):
+                    return True
+            return False
+
         self.cover_image = (
             1
-            if soup.find(
-                "pgterms:file",
-                attrs={
-                    "rdf:about": lambda v: v
-                    and v.endswith(
-                        f"/cache/epub/{self.gid}/pg{self.gid}.cover.medium.jpg"
-                    )
-                },
+            if any(
+                is_cover_node(file_node) for file_node in soup.find_all("pgterms:file")
             )
             else 0
         )
@@ -88,7 +92,7 @@ class RdfParser:
         if author_tag:
             author_about_tag = author_tag.find("pgterms:agent")
             self.author_id = (
-                author_about_tag.attrs["rdf:about"].split("/")[-1]
+                author_about_tag.get_attribute_list("rdf:about")[0].split("/")[-1]
                 if isinstance(author_about_tag, Tag)
                 and "rdf:about" in getattr(author_about_tag, "attrs", "")
                 else None
@@ -118,9 +122,9 @@ class RdfParser:
 
         # ISO 639-3 language codes that consist of 2 or 3 letters
         self.languages = [
-            node.find("rdf:value").text
+            val.text
             for node in soup.find_all("dcterms:language")
-            if node.find("rdf:value") is not None
+            if (val := node.find("rdf:value")) is not None
         ]
 
         # The download count of the books on www.gutenberg.org.
