@@ -20,9 +20,11 @@ as of 2.0.0.
   - Data is now directly transferred to the ZIM, without touching the filesystem
   - Get rid of the "steps" approach, not used (anymore?) in production and difficult to maintain
   - Many CLI options removed: --use-any-optimized-version, --zim, --download, --parse, --prepare, -m/--one-language-one-zim, --dlc, -d/--dl-folder, -e/--static-folder
+- Drop support for Gutenberg bookshelves and add support for LibraryOfCongress (#265)
 
 ### Added
-- Add standard `--output` option to control where ZIM files are written (#xxx)
+- Add standard `--output` option to control where ZIM files are written (#314)
+- Add ability to generate smaller selection (#184)
 
 ### Changed
 

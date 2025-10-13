@@ -127,16 +127,16 @@
         "about-6": {
             "textContent": "لقد رقمناهم و قرأناهم بجد و ذلك بمساعدة من الآلاف من المتطوعين."
         },
-        "bookshelves_title": {
+        "lcc_shelves_title": {
             "textContent": "أرفف الكتب (أ-ي)"
         },
-        "bookshelf_link": {
+        "lcc_shelf_link": {
             "textContent": "تصفح حسب رف الكتب"
         },
         "home_link": {
             "textContent": "اذهب للمنزل"
         },
-        "bookshelf": {
+        "lcc_shelf": {
             "placeholder": "بحث رف الكتب"
         }
     },

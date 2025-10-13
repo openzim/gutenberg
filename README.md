@@ -42,7 +42,7 @@ docker run ghcr.io/openzim/gutenberg:latest gutenberg2zim --help
 Customize the content download with the following options. For example, to download books in English or French with IDs 100 to 200 and only in PDF format:
 
 ```bash
-docker run -it --rm -v $(pwd)/output:/output ghcr.io/openzim/gutenberg:latest gutenberg2zim -l en,fr -f pdf --books 100-200 --bookshelves --title-search
+docker run -it --rm -v $(pwd)/output:/output ghcr.io/openzim/gutenberg:latest gutenberg2zim -l en,fr -f pdf --books 100-200 --lcc-shelves all --title-search
 ```
 
 This will download books in English and French that have the Id 100 to
@@ -67,7 +67,8 @@ You can find the full arguments list below:
 -c --concurrency=<nb>           Number of concurrent process for processing tasks
 --no-index                      Do NOT create full-text index within ZIM file
 --title-search                  Add field to search a book by title and directly jump to it
---bookshelves                   Add bookshelves
+--lcc-shelves=<shelves>         Comma-separated list of LCC shelf codes to include
+                                (e.g., P,PR,Q). Use 'all' to generate all shelves. If omitted, no shelf generated.
 --stats-filename=<filename>     Path to store the progress JSON file to
 --publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
 --mirror-url=<mirror_url>       Optional custom url of mirror hosting Gutenberg files

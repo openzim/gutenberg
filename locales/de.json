@@ -127,16 +127,16 @@
         "about-6": {
             "textContent": "Wir digitalisierten und prüften sie sorgfältig mit der Hilfe von tausenden Freiwilligen."
         },
-        "bookshelves_title": {
+        "lcc_shelves_title": {
             "textContent": "Bücherregale (A-Z)"
         },
-        "bookshelf_link": {
+        "lcc_shelf_link": {
             "textContent": "Durchsuchen Sie das Bücherregal"
         },
         "home_link": {
             "textContent": "Nach Hause gehen"
         },
-        "bookshelf": {
+        "lcc_shelf": {
             "placeholder": "Bücherregalsuche"
         }
     },

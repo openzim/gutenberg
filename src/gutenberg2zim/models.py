@@ -53,7 +53,7 @@ class Book:
     license: str = "Public domain in the USA."
     subtitle: str | None = None
     downloads: int = 0
-    bookshelf: str | None = None
+    lcc_shelf: str | None = None
     cover_page: int = 0
     unsupported_formats: list[str] = field(default_factory=list)
     popularity: int = 0  # Computed field for star rating
@@ -76,7 +76,7 @@ class Book:
                 pdf=int("pdf" in fmts),
             ),
             self.book_id,
-            self.bookshelf,
+            self.lcc_shelf,
         ]
 
 
@@ -175,10 +175,10 @@ class BookRepository:
         """Get list of authors for the given books"""
         return list(self.authors.values())
 
-    def get_bookshelves(self) -> list[str]:
-        """Get unique list of bookshelves"""
+    def get_lcc_shelves(self) -> list[str]:
+        """Get unique list of LCC shelves"""
         return sorted(
-            {book.bookshelf for book in self.books.values() if book.bookshelf}
+            {book.lcc_shelf for book in self.books.values() if book.lcc_shelf}
         )
 
     def remove_book(self, book_id: int) -> None:

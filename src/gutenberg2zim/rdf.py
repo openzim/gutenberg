@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup, Tag
 
 from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, logger
+from gutenberg2zim.csv_catalog import transform_locc_code
 from gutenberg2zim.models import Author, Book, repository
 from gutenberg2zim.utils import normalize
 
@@ -18,6 +19,7 @@ class RdfParser:
         self.last_name = None
 
         self.bookshelf = None
+        self.lcc_shelf = None
         self.cover_image = 0
 
     def parse(self):
@@ -32,12 +34,29 @@ class RdfParser:
         self.title = title_elements[0]
         self.subtitle = " ".join(title_elements[1:])
 
-        # Parsing for the bookshelf name
+        # Parsing for the bookshelf name (deprecated, kept for compatibility)
         bookshelf_tag = soup.find("pgterms:bookshelf")
         if bookshelf_tag:
             rdf_value = bookshelf_tag.find("rdf:value")
             if isinstance(rdf_value, Tag):  # pragma: no branch
                 self.bookshelf = rdf_value.text
+
+        # Parsing for the LoCC (Library of Congress Classification)
+        # Transform it to a shelf identifier
+        subject_tags = soup.find_all("dcterms:subject")
+        for subject_tag in subject_tags:
+            description = subject_tag.find("rdf:Description")
+            if description:
+                # Check if this is LCC by looking for the exact resource URL
+                member_of = description.find("dcam:memberOf")
+                if member_of:
+                    resource = member_of.get("rdf:resource", "")
+                    if resource == "http://purl.org/dc/terms/LCC":
+                        value_tag = description.find("rdf:value")
+                        if isinstance(value_tag, Tag):
+                            locc_str = value_tag.text.strip()
+                            self.lcc_shelf = transform_locc_code(locc_str)
+                            break
 
         # Search rdf to see if the image exists at the hard link
         # /cache/epub/{id}/pg{id}.cover.medium.jpg
@@ -166,7 +185,7 @@ def _save_rdf_in_repository(parser: RdfParser) -> None:
         languages=[lang.strip() for lang in parser.languages],
         license=parser.license,
         downloads=int(parser.downloads),
-        bookshelf=parser.bookshelf,
+        lcc_shelf=parser.lcc_shelf,
         cover_page=parser.cover_image,
     )
     repository.add_book(book)

@@ -102,14 +102,14 @@ def get_list_of_all_languages():
 def export_skeleton(
     project_id,
     title_search,
-    add_bookshelves,
+    add_lcc_shelves,
 ):
     context = get_default_context(project_id)
     context.update(
         {
             "show_books": True,
             "title_search": title_search,
-            "add_bookshelves": add_bookshelves,
+            "add_lcc_shelves": add_lcc_shelves,
         }
     )
 
@@ -390,7 +390,7 @@ def cover_html_content_for(
     book,
     project_id,
     title_search,
-    add_bookshelves,
+    add_lcc_shelves,
     formats,
     *,
     has_cover: bool,
@@ -425,7 +425,7 @@ def cover_html_content_for(
             "translate_author": translate_author,
             "translate_license": translate_license,
             "title_search": title_search,
-            "add_bookshelves": add_bookshelves,
+            "add_lcc_shelves": add_lcc_shelves,
         }
     )
     template = jinja_env.get_template("cover_article.html")
@@ -457,7 +457,7 @@ def export_book(
     project_id: str,
     *,
     title_search: bool,
-    add_bookshelves: bool,
+    add_lcc_shelves: bool,
 ):
     """Export book to ZIM using in-memory content"""
     logger.debug(f"Exporting book {book.book_id}")
@@ -472,7 +472,7 @@ def export_book(
         cover_image=cover_image,
         project_id=project_id,
         title_search=title_search,
-        add_bookshelves=add_bookshelves,
+        add_lcc_shelves=add_lcc_shelves,
         formats=formats,
     )
 
@@ -572,7 +572,7 @@ def write_book_presentation_article(
     cover_image: bytes | None,
     project_id,
     title_search,
-    add_bookshelves,
+    add_lcc_shelves,
     formats,
 ):
     """Write book presentation article directly to ZIM"""
@@ -593,7 +593,7 @@ def write_book_presentation_article(
         has_cover=cover_image is not None,
         project_id=project_id,
         title_search=title_search,
-        add_bookshelves=add_bookshelves,
+        add_lcc_shelves=add_lcc_shelves,
         formats=formats,
     )
 
@@ -604,21 +604,21 @@ def write_book_presentation_article(
     )
 
 
-def _bookshelf_list_for_books(books: Iterable[Book]):
-    return sorted({book.bookshelf for book in books if book.bookshelf})
+def _lcc_shelf_list_for_books(books: Iterable[Book]):
+    return sorted({book.lcc_shelf for book in books if book.lcc_shelf})
 
 
-def bookshelf_list():
-    return _bookshelf_list_for_books(repository.get_all_books())
+def lcc_shelf_list():
+    return _lcc_shelf_list_for_books(repository.get_all_books())
 
 
-def bookshelf_list_language(lang):
-    return _bookshelf_list_for_books(
+def lcc_shelf_list_language(lang):
+    return _lcc_shelf_list_for_books(
         filter(lambda book: lang in book.languages, repository.get_all_books())
     )
 
 
-def export_to_json_helpers(languages, formats, project_id, add_bookshelves):
+def export_to_json_helpers(languages, formats, project_id, add_lcc_shelves):
     def dumpjs(col, fn, var="json_data"):
         Global.add_item_for(
             path=fn,
@@ -701,13 +701,13 @@ def export_to_json_helpers(languages, formats, project_id, add_bookshelves):
             "authors_json_data",
         )
 
-    if add_bookshelves:
-        logger.info("\tDumping bookshelves_xxx JS and HTML files")
-        for bookshelf in bookshelf_list():
-            # dumpjs for bookshelf by popularity
+    if add_lcc_shelves:
+        logger.info("\tDumping LCC shelves_xxx JS and HTML files")
+        for lcc_shelf in lcc_shelf_list():
+            # dumpjs for LCC shelf by popularity
             # this will allow the popularity button to use this js on the
-            # particular bookshelf page
-            logger.debug(f"\t\tDumping bookshelf_{bookshelf}_by_popularity.js")
+            # particular shelf page
+            logger.debug(f"\t\tDumping lcc_shelf_{lcc_shelf}_by_popularity.js")
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
@@ -715,17 +715,17 @@ def export_to_json_helpers(languages, formats, project_id, add_bookshelves):
                         [
                             book
                             for book in repository.get_all_books()
-                            if book.bookshelf == bookshelf
+                            if book.lcc_shelf == lcc_shelf
                         ],
                         key=lambda b: b.downloads,
                         reverse=True,
                     )
                 ],
-                f"bookshelf_{bookshelf}_by_popularity.js",
+                f"lcc_shelf_{lcc_shelf}_by_popularity.js",
             )
 
             # by title
-            logger.debug(f"\t\tDumping bookshelf_{bookshelf}_by_title.js")
+            logger.debug(f"\t\tDumping lcc_shelf_{lcc_shelf}_by_title.js")
             dumpjs(
                 [
                     book.to_array(all_requested_formats=formats)
@@ -733,18 +733,18 @@ def export_to_json_helpers(languages, formats, project_id, add_bookshelves):
                         [
                             book
                             for book in repository.get_all_books()
-                            if book.bookshelf == bookshelf
+                            if book.lcc_shelf == lcc_shelf
                         ],
                         key=lambda b: b.title,
                     )
                 ],
-                f"bookshelf_{bookshelf}_by_title.js",
+                f"lcc_shelf_{lcc_shelf}_by_title.js",
             )
 
             # by language
             for lang in languages:
                 logger.debug(
-                    f"\t\tDumping bookshelf_{bookshelf}_lang_{lang}_by_popularity.js"
+                    f"\t\tDumping lcc_shelf_{lcc_shelf}_lang_{lang}_by_popularity.js"
                 )
                 dumpjs(
                     [
@@ -753,18 +753,18 @@ def export_to_json_helpers(languages, formats, project_id, add_bookshelves):
                             [
                                 book
                                 for book in repository.get_all_books()
-                                if book.bookshelf == bookshelf
+                                if book.lcc_shelf == lcc_shelf
                                 and lang in book.languages
                             ],
                             key=lambda b: b.downloads,
                             reverse=True,
                         )
                     ],
-                    f"bookshelf_{bookshelf}_lang_{lang}_by_popularity.js",
+                    f"lcc_shelf_{lcc_shelf}_lang_{lang}_by_popularity.js",
                 )
 
                 logger.debug(
-                    f"\t\tDumping bookshelf_{bookshelf}_lang_{lang}_by_title.js"
+                    f"\t\tDumping lcc_shelf_{lcc_shelf}_lang_{lang}_by_title.js"
                 )
                 dumpjs(
                     [
@@ -773,55 +773,55 @@ def export_to_json_helpers(languages, formats, project_id, add_bookshelves):
                             [
                                 book
                                 for book in repository.get_all_books()
-                                if book.bookshelf == bookshelf
+                                if book.lcc_shelf == lcc_shelf
                                 and lang in book.languages
                             ],
                             key=lambda b: b.title,
                         )
                     ],
-                    f"bookshelf_{bookshelf}_lang_{lang}_by_title.js",
+                    f"lcc_shelf_{lcc_shelf}_lang_{lang}_by_title.js",
                 )
 
-        # dump all bookshelves from any given language
+        # dump all LCC shelves from any given language
         for lang in languages:
-            logger.debug(f"\t\tDumping bookshelves_lang_{lang}.js")
-            dumpjs(bookshelf_list_language(lang), f"bookshelves_lang_{lang}.js")
+            logger.debug(f"\t\tDumping lcc_shelves_lang_{lang}.js")
+            dumpjs(lcc_shelf_list_language(lang), f"lcc_shelves_lang_{lang}.js")
 
-        logger.debug("\t\tDumping bookshelves.js")
-        dumpjs(bookshelf_list(), "bookshelves.js", "bookshelves_json_data")
+        logger.debug("\t\tDumping lcc_shelves.js")
+        dumpjs(lcc_shelf_list(), "lcc_shelves.js", "lcc_shelves_json_data")
 
-        # Create the bookshelf home page
-        logger.debug("\t\tDumping bookshelf_home.html")
+        # Create the LCC shelf home page
+        logger.debug("\t\tDumping lcc_shelf_home.html")
         context = get_default_context(project_id=project_id)
-        context.update({"bookshelf_home": True, "add_bookshelves": True})
-        template = jinja_env.get_template("bookshelf_home.html")
+        context.update({"lcc_shelf_home": True, "add_lcc_shelves": True})
+        template = jinja_env.get_template("lcc_shelf_home.html")
         rendered = template.render(**context)
         Global.add_item_for(
-            path="bookshelf_home.html",
+            path="lcc_shelf_home.html",
             content=rendered,
             mimetype="text/html",
             is_front=False,
         )
 
-        # add individual bookshelf pages
-        for bookshelf in bookshelf_list():
-            if bookshelf is None:
+        # add individual LCC shelf pages
+        for lcc_shelf in lcc_shelf_list():
+            if lcc_shelf is None:
                 continue
-            logger.debug(f"Dumping {bookshelf}.html")
-            context["bookshelf"] = bookshelf
+            logger.debug(f"Dumping lcc_shelf_{lcc_shelf}.html")
+            context["lcc_shelf"] = lcc_shelf
             context.update(
                 {
                     "show_books": True,
-                    "bookshelf_home": False,
-                    "individual_book_shelf": True,
+                    "lcc_shelf_home": False,
+                    "individual_lcc_shelf": True,
                     "no_filters": True,
-                    "add_bookshelves": True,
+                    "add_lcc_shelves": True,
                 }
             )
-            template = jinja_env.get_template("bookshelf.html")
+            template = jinja_env.get_template("lcc_shelf.html")
             rendered = template.render(**context)
             Global.add_item_for(
-                path=f"{bookshelf}.html",
+                path=f"lcc_shelf_{lcc_shelf}.html",
                 content=rendered,
                 mimetype="text/html",
                 is_front=False,

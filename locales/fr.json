@@ -130,16 +130,16 @@
         "about-6": {
             "textContent": "Nous les numérisons et les relisons soigneusement avec l`aide de milliers de volontaires."
         },
-        "bookshelves_title": {
+        "lcc_shelves_title": {
             "textContent": "Rayons (A-Z)"
         },
-        "bookshelf_link": {
+        "lcc_shelf_link": {
             "textContent": "Parcourir par rayon"
         },
         "home_link": {
             "textContent": "Retour"
         },
-        "bookshelf": {
+        "lcc_shelf": {
             "placeholder": "Recherche de rayon"
         }
     },

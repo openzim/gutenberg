@@ -26,7 +26,7 @@ def build_zimfile(
     force: bool,
     is_selection: bool,
     title_search: bool,
-    add_bookshelves: bool,
+    add_lcc_shelves: bool,
     progress: ScraperProgress,
 ) -> None:
     """Build ZIM file using singleton BookRepository"""
@@ -88,7 +88,7 @@ def build_zimfile(
             formats=formats,
             progress=progress,
             title_search=title_search,
-            add_bookshelves=add_bookshelves,
+            add_lcc_shelves=add_lcc_shelves,
         )
 
     except Exception as exc:

@@ -1,6 +1,6 @@
 var sortMethod = "popularity";
 var booksUrl = "full_by_popularity.js";
-var bookshelves = "bookshelves.js";
+var lcc_shelves = "lcc_shelves.js";
 var booksTable = null;
 var title_dict = null;
 var globalShelvesTable = null;
@@ -125,24 +125,24 @@ function populateFilters(callback) {
     if (lang_id && author_id) {
       // we want a reduce of both
       booksUrl = "auth_" + author_id + "_lang_" + lang_id + "_by_" + sortMethod;
-      bookshelves = "bookshelves_lang_" + lang_id;
+      lcc_shelves = "lcc_shelves_lang_" + lang_id;
     } else if (author_id) {
       // only books by this author
       booksUrl = "auth_" + author_id + "_by_" + sortMethod;
     } else if (lang_id) {
       // all books in this language
       booksUrl = "lang_" + lang_id + "_by_" + sortMethod;
-      bookshelves = "bookshelves_lang_" + lang_id;
+      lcc_shelves = "lcc_shelves_lang_" + lang_id;
     } else {
       // all books, no reduce
       booksUrl = "full_by_" + sortMethod;
-      bookshelves = "bookshelves";
+      lcc_shelves = "lcc_shelves";
     }
     booksUrl += ".js";
-    bookshelves += ".js";
+    lcc_shelves += ".js";
     // console.debug("FILTER: " + "lang: " + lang_id + " auth: " + author_id + " sort: " + sortMethod);
     // console.debug(booksUrl);
-    console.log(bookshelves);
+    console.log(lcc_shelves);
     if (callback) {
       // console.debug("calling callback");
       callback();
@@ -156,8 +156,8 @@ function is_cover_page() {
   return $("body").hasClass("cover");
 }
 
-function is_bookshelves_page() {
-  return $('#bookshelvesDisplay').length != 0;
+function is_lcc_shelves_page() {
+  return $('#lccShelvesDisplay').length != 0;
 }
 
 function showBooks() {
@@ -343,8 +343,8 @@ function showBooks() {
   console.log("after populateFilters");
 }
 
-function showBookshelf(bookshelfURL) {
-  console.log("showBookshelf");
+function showLccShelf(lcc_shelf) {
+  console.log("showLccShelf");
   /* Show spinner if loading takes more than 1 second */
   inBooksLoadingLoop = true;
   setTimeout(function() {
@@ -365,16 +365,15 @@ function showBookshelf(bookshelfURL) {
     // }
 
     console.log("before loadScript");
-    bookshelfURL = jQuery.trim(bookshelfURL);
-    let scriptURL = `bookshelf_${bookshelfURL}_by_title.js`;
+    let scriptURL = `lcc_shelf_${lcc_shelf}_by_title.js`;
     const lang_id = $("#language_filter").val();
     $("#language_filter").hide();
     console.log(`lang_id === ${lang_id}`);
     if (lang_id !== '') {
-      scriptURL = `bookshelf_${bookshelfURL}_lang_${lang_id}_by_title.js`;
+      scriptURL = `lcc_shelf_${lcc_shelf}_lang_${lang_id}_by_title.js`;
     }
-    // const scriptURL = "bookshelf_Adventure_lang_en_by_popularity.js"
-    console.log("loading bookshelf:", scriptURL);
+    // const scriptURL = "lcc_shelf_A_lang_en_by_popularity.js"
+    console.log("loading LCC shelf:", scriptURL);
     loadScript(scriptURL, "books_script", function() {
       if ($("#books_table").attr("filled")) {
         booksTable.fnDestroy();
@@ -588,7 +587,7 @@ function init() {
       var opt = $("<option />");
       opt.val(lang[1]);
       var txt = lang[0] + " (" + lang[2] + ")";
-      if (is_bookshelves_page()) {
+      if (is_lcc_shelves_page()) {
         txt = lang[0];
       }
       opt.text(txt);
@@ -616,7 +615,7 @@ function init() {
     if (globalShelvesTable == null) {
       showBooks();
     } else {
-      showBookshelfSearchResults("");
+      showLccShelfSearchResults("");
     }
   });
   if (languages_json_data.length == 1) {
@@ -728,10 +727,10 @@ function init() {
     }
   });
 
-  $("#bookshelf_filter").keypress(function(event) {
+  $("#lcc_shelf_filter").keypress(function(event) {
     if (event.which == 13) {
-      $.persistValue("author_filter", $(this).val(), persist_options);
-      showBookshelfSearchResults($(this).val());
+      $.persistValue("lcc_shelf_filter", $(this).val(), persist_options);
+      showLccShelfSearchResults($(this).val());
     }
   });
 
@@ -775,51 +774,51 @@ function init() {
     $("#title_filter").addClass("x onX");
     console.log("title filter filled")
   }
-  if ($("#bookshelf_filter").val()) {
-    $("#bookshelf_filter").addClass("x onX");
+  if ($("#lcc_shelf_filter").val()) {
+    $("#lcc_shelf_filter").addClass("x onX");
     console.log("title filter filled")
   } else {
     console.log("not filled")
   }
 }
 
-function showBookshelfSearchResults(value) {
+function showLccShelfSearchResults(value) {
 
   let lang_id = $("#language_filter").val();
-  console.log(lang_id + " for bookshelfresults");
+  console.log(lang_id + " for showLccShelfSearchResults");
   if (lang_id === "") {
-    bookshelves = "bookshelves.js";
+    lcc_shelves = "lcc_shelves.js";
   } else {
-    bookshelves = "bookshelves_lang_" + lang_id + ".js";
+    lcc_shelves = "lcc_shelves_lang_" + lang_id + ".js";
   }
-  console.log(bookshelves + " file");
-  loadScript(bookshelves, "find_bookshelves_" + lang_id, function() {
+  console.log(lcc_shelves + " file");
+  loadScript(lcc_shelves, "find_lcc_shelves_" + lang_id, function() {
     let pattern = new RegExp(value, "i");
     if (lang_id !== "") {
-      bookshelves_json_data = json_data;
+      lcc_shelves_json_data = json_data;
     }
     if (globalShelvesTable != null) {
       globalShelvesTable.destroy();
-      $("#bookShelfTable").remove();
+      $("#lccShelfTable").remove();
     }
-    let table = "<table id = \"bookShelfTable\" class=\" display  no-footer\" role = 'grid' filled ='true' ><thead><tr><th>Bookshelves</th></tr></thead><tbody>";
-    // console.log(bookshelves_lang_en_json_data);
-    // bookshelves_json_data = json_data;
-    for (let i = 0; i < bookshelves_json_data.length; ++i) {
-      if (bookshelves_json_data[i] == null) {
+    let table = "<table id = \"lccShelfTable\" class=\" display  no-footer\" role = 'grid' filled ='true' ><thead><tr><th>Bookshelves</th></tr></thead><tbody>";
+    // console.log(lcc_shelves_lang_en_json_data);
+    // lcc_shelves_json_data = json_data;
+    for (let i = 0; i < lcc_shelves_json_data.length; ++i) {
+      if (lcc_shelves_json_data[i] == null) {
         continue;
       }
 
-      if (bookshelves_json_data[i].match(pattern)) {
+      if (document.webL10n.get('lcc-shelf-' + lcc_shelves_json_data[i]).match(pattern)) {
         table += '<tr  ><td><div class="book-item"><div class="list-stripe"></div><div class = "pure-g"><div class = "pure-u-7-8"> <span class="table-title"' +
-          ' data-target="' + bookshelves_json_data[i] + '">' +
-          bookshelves_json_data[i] +
+          ' data-target="' + lcc_shelves_json_data[i] + '">' +
+          document.webL10n.get('lcc-shelf-' + lcc_shelves_json_data[i]) +
           '</span></div></div></div></td></tr>';
       }
     }
     table += "</tbody></table>";
-    $("#bookshelvesDisplay").append($(table));
-    globalShelvesTable = $("#bookShelfTable").DataTable({
+    $("#lccShelvesDisplay").append($(table));
+    globalShelvesTable = $("#lccShelfTable").DataTable({
       searching: false,
       info: false,
       destroy: true,
@@ -830,16 +829,16 @@ function showBookshelfSearchResults(value) {
       }]
     });
 
-    $('#bookShelfTable tbody').on('click', 'tr', function() {
+    $('#lccShelfTable tbody').on('click', 'tr', function() {
       let data = encodeURI($('span', this).attr('data-target'));
       console.log(data);
-      $(location).attr('href', './' + data + '.html');
+      $(location).attr('href', './lcc_shelf_' + data + '.html');
 
     });
-    $("#bookShelfTable_previous").attr("data-l10n-id", "table-previous");
-    $("#bookShelfTable_previous").html(document.webL10n.get("table-previous"));
-    $("#bookShelfTable_next").attr("data-l10n-id", "table-next");
-    $("#bookShelfTable_next").html(document.webL10n.get("table-next"));
+    $("#lccShelfTable_previous").attr("data-l10n-id", "table-previous");
+    $("#lccShelfTable_previous").html(document.webL10n.get("table-previous"));
+    $("#lccShelfTable_next").attr("data-l10n-id", "table-next");
+    $("#lccShelfTable_next").html(document.webL10n.get("table-next"));
   });
 
   // enable clearable if persisted value
@@ -847,9 +846,9 @@ function showBookshelfSearchResults(value) {
     $("#author_filter").addClass("x onX");
   }
 }
-$('#bookshelf_filter').keypress(function(event) {
+$('#lcc_shelf_filter').keypress(function(event) {
   if (event.which == 13) {
-    showBookshelfSearchResults($(this).val());
+    showLccShelfSearchResults($(this).val());
   }
 });
 
@@ -866,8 +865,8 @@ function author_clicked() {
 
 $(window).on('load', function () {
   const show_books = (document.querySelector('meta[name="show_books"]').content === "true");
-  const bookshelf_home = (document.querySelector('meta[name="bookshelf_home"]').content === "true");
-  const bookshelf = document.querySelector('meta[name="bookshelf"]').content
+  const lcc_shelf_home = (document.querySelector('meta[name="lcc_shelf_home"]').content === "true");
+  const lcc_shelf = document.querySelector('meta[name="lcc_shelf"]').content
 
   init();
 
@@ -877,12 +876,12 @@ $(window).on('load', function () {
     populateFilters();
   }
 
-  if (bookshelf_home) {
-    showBookshelfSearchResults('');
+  if (lcc_shelf_home) {
+    showLccShelfSearchResults('');
   }
 
-  if (bookshelf.length>0) {
-    showBookshelf(bookshelf);
+  if (lcc_shelf.length>0) {
+    showLccShelf(lcc_shelf);
   }
 
   const authorBtns = document.getElementsByClassName("author-btn");
