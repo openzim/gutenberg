@@ -50,11 +50,11 @@
       "title": "Title search",
       "description": "Search by title feature (⚠️ does not scale)"
     },
-    "bookshelves": {
-      "type": "boolean",
+    "lcc_shelves": {
+      "type": "string",
       "required": false,
-      "title": "Bookshelves",
-      "description": "Browse by bookshelves feature"
+      "title": "Library of Congress Shelves",
+      "description": "Comma-separated list of LCC shelf codes to include (e.g., P,PR,Q). Use 'all' to generate all shelves. If omitted, no shelf filtering."
     },
     "publisher": {
       "type": "string",

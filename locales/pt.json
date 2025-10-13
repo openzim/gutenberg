@@ -56,10 +56,10 @@
             "about-6": {
                 "textContent": "Nós digitalizamos e diligentemente os protestamos com a ajuda de milhares de voluntários."
             },
-            "bookshelves_title": {"textContent": "Prateleiras (A-Z)"},
-            "bookshelf_link": {"textContent": "Navegar por Bookshelf"},
+            "lcc_shelves_title": {"textContent": "Prateleiras (A-Z)"},
+            "lcc_shelf_link": {"textContent": "Navegar por Bookshelf"},
             "home_link": {"textContent": "Ir Para Casa"},
-            "bookshelf": {"placeholder": "Pesquisa de Estante"}
+            "lcc_shelf": {"placeholder": "Pesquisa de Estante"}
     },
     "metadata_defaults": {
         "title": "Biblioteca Projeto Gutenberg",

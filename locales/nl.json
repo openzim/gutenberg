@@ -56,10 +56,10 @@
             "about-6": {
                 "textContent": "We hebben ze gedigitaliseerd en zorgvuldig gecorrigeerd met behulp van duizenden vrijwilligers."
             },
-            "bookshelves_title": {"textContent": "Boekenplanken (A-Z)"},
-            "bookshelf_link": {"textContent": "Bladeren op boekenplank"},
+            "lcc_shelves_title": {"textContent": "Boekenplanken (A-Z)"},
+            "lcc_shelf_link": {"textContent": "Bladeren op boekenplank"},
             "home_link": {"textContent": "Ga naar huis"},
-            "bookshelf": {"placeholder": "Boekenplank zoeken"}
+            "lcc_shelf": {"placeholder": "Boekenplank zoeken"}
     },
     "metadata_defaults": {
         "title": "Project Gutenberg-bibliotheek",

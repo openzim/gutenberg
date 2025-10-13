@@ -150,6 +150,7 @@ def test_rdf_parser_minimal():
     assert parsed.birth_year is None
     assert parsed.death_year is None
     assert parsed.bookshelf is None
+    assert parsed.lcc_shelf is None
     assert parsed.languages == []
 
 
@@ -347,3 +348,60 @@ def test_rdf_parser_title_missing_downloads():
         Exception, match="Impossible to find download tag in book 123 RD"
     ):
         rdf.parse()
+
+
+@pytest.mark.parametrize(
+    "input_lcc, expected_lcc",
+    [
+        pytest.param(
+            "A",
+            "A",
+            id="A",
+        ),
+        pytest.param(
+            "a",
+            "A",
+            id="a",
+        ),
+        pytest.param(
+            "A12",
+            "A",
+            id="A12",
+        ),
+        pytest.param(
+            "PL",
+            "PL",
+            id="PL",
+        ),
+        pytest.param(
+            "P99",
+            "P",
+            id="P99",
+        ),
+        pytest.param(
+            "",
+            "",
+            id="empty",
+        ),
+    ],
+)
+def test_rdf_parser_lcc_values(input_lcc, expected_lcc):
+    rdf = RdfParser(
+        f"""
+  {RDF_HEADER}
+  <pgterms:ebook rdf:about="ebooks/22094">
+    <dcterms:rights>Public domain in the USA.</dcterms:rights>
+    <pgterms:downloads>548</pgterms:downloads>
+    <dcterms:subject>
+      <rdf:Description rdf:nodeID="N1d58edfa9dfa44bb8e2eefdbbd54af4b">
+        <dcam:memberOf rdf:resource="http://purl.org/dc/terms/LCC"/>
+        <rdf:value>{input_lcc}</rdf:value>
+      </rdf:Description>
+    </dcterms:subject>
+  </pgterms:ebook>
+</rdf:RDF>
+""",
+        1234,
+    )
+    parsed = rdf.parse()
+    assert parsed.lcc_shelf == expected_lcc

@@ -130,17 +130,134 @@
         "about-6": {
             "textContent": "We digitized and diligently proofread them with the help of thousands of volunteers."
         },
-        "bookshelves_title": {
+        "lcc_shelves_title": {
             "textContent": "Bookshelves (A-Z)"
         },
-        "bookshelf_link": {
+        "lcc_shelf_link": {
             "textContent": "Browse by Bookshelf"
         },
         "home_link": {
             "textContent": "Go Home"
         },
-        "bookshelf": {
+        "lcc_shelf": {
             "placeholder": "Bookshelf Search"
+        },
+        "lcc-shelf-A": {
+            "textContent": "A-General works"
+        },
+        "lcc-shelf-B": {
+            "textContent": "B-Phylosophy, psychology, religion"
+        },
+        "lcc-shelf-C": {
+            "textContent": "C-Auxiliary sciences of history"
+        },
+        "lcc-shelf-D": {
+            "textContent": "D-Worlf history and history of Europe, Asia, Africa, Australia, New Zealand, etc."
+        },
+        "lcc-shelf-E": {
+            "textContent": "E-History of the Americas"
+        },
+        "lcc-shelf-F": {
+            "textContent": "F-History of the Americas"
+        },
+        "lcc-shelf-G": {
+            "textContent": "G-Geography, anthropology, recreation"
+        },
+        "lcc-shelf-H": {
+            "textContent": "H-Social sciences"
+        },
+        "lcc-shelf-J": {
+            "textContent": "J-Political science"
+        },
+        "lcc-shelf-K": {
+            "textContent": "K-Law"
+        },
+        "lcc-shelf-L": {
+            "textContent": "L-Education"
+        },
+        "lcc-shelf-M": {
+            "textContent": "M-Music and books on music"
+        },
+        "lcc-shelf-N": {
+            "textContent": "N-Fine arts"
+        },
+        "lcc-shelf-P": {
+            "textContent": "P-Language and literature"
+        },
+        "lcc-shelf-Q": {
+            "textContent": "Q-Science"
+        },
+        "lcc-shelf-R": {
+            "textContent": "R-Medicine"
+        },
+        "lcc-shelf-S": {
+            "textContent": "S-Agriculture"
+        },
+        "lcc-shelf-T": {
+            "textContent": "T-Technology"
+        },
+        "lcc-shelf-U": {
+            "textContent": "U-Military science"
+        },
+        "lcc-shelf-V": {
+            "textContent": "V-Naval science"
+        },
+        "lcc-shelf-Z": {
+            "textContent": "Z-Bibliography, library science, information resources (general)"
+        },
+        "lcc-shelf-PA": {
+            "textContent": "PA-Greek and latin language and literature"
+        },
+        "lcc-shelf-PB": {
+            "textContent": "PB-Modern and Celtic languages"
+        },
+        "lcc-shelf-PC": {
+            "textContent": "PC-Romance languages"
+        },
+        "lcc-shelf-PD": {
+            "textContent": "PD-Germanic and Scandinavian languages"
+        },
+        "lcc-shelf-PE": {
+            "textContent": "PE-English language"
+        },
+        "lcc-shelf-PF": {
+            "textContent": "PF-West Germanic languages"
+        },
+        "lcc-shelf-PG": {
+            "textContent": "PG-Slavic, Baltic and Albanian languages"
+        },
+        "lcc-shelf-PH": {
+            "textContent": "PH-Uralic and Basque languages"
+        },
+        "lcc-shelf-PJ": {
+            "textContent": "PJ-Oriental languages and literatures"
+        },
+        "lcc-shelf-PK": {
+            "textContent": "PK-Indo-Iranian languages and literatures"
+        },
+        "lcc-shelf-PL": {
+            "textContent": "PL-Languages and literatures of Eastern Asia, Africa, Oceania"
+        },
+        "lcc-shelf-PM": {
+            "textContent": "PM-Hyperborean, Indian, and artificial languages"
+        },
+        "lcc-shelf-PN": {
+            "textContent": "PN-Literature (General)"
+        },
+        "lcc-shelf-PQ": {
+            "textContent": "PQ-French, Italian, Spanish, Portuguese literature"
+        },
+        "lcc-shelf-PR": {
+            "textContent": "PR-English literature"
+        },
+        "lcc-shelf-PS": {
+            "textContent": "PS-American literature"
+        },
+        "lcc-shelf-PT": {
+            "textContent": "PT-German, Dutch, Flemish, Afrikaans, Scandinavian, Old Norse, Old Iceland, Old Norwegian, Modern Icelandic, Faroese, Danish, Norwegian and Swedish Literature"
+        },
+        "lcc-shelf-PZ": {
+            "textContent": "PZ-Fiction and juvenile belles lettres"
         }
     },
     "metadata_defaults": {

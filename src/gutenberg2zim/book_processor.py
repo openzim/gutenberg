@@ -26,7 +26,7 @@ def process_all_books(
     progress: ScraperProgress,
     *,
     title_search: bool,
-    add_bookshelves: bool,
+    add_lcc_shelves: bool,
 ) -> None:
     """Download and export all books directly to ZIM without filesystem cache"""
 
@@ -101,7 +101,7 @@ def process_all_books(
                 formats=formats,
                 project_id=project_id,
                 title_search=title_search,
-                add_bookshelves=add_bookshelves,
+                add_lcc_shelves=add_lcc_shelves,
             )
 
     Pool(concurrency).map(partial(process_book, progress=progress), book_ids)
@@ -137,7 +137,7 @@ def process_all_books(
         languages=languages,
         formats=formats,
         project_id=project_id,
-        add_bookshelves=add_bookshelves,
+        add_lcc_shelves=add_lcc_shelves,
     )
 
     # export HTML index and other static files
@@ -145,5 +145,5 @@ def process_all_books(
     export_skeleton(
         project_id=project_id,
         title_search=title_search,
-        add_bookshelves=add_bookshelves,
+        add_lcc_shelves=add_lcc_shelves,
     )

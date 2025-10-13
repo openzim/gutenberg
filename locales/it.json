@@ -127,16 +127,16 @@
         "about-6": {
             "textContent": "Li abbiamo digitalizzati e verificati diligentemente con l'aiuto di migliaia di volontari."
         },
-        "bookshelves_title": {
+        "lcc_shelves_title": {
             "textContent": "Scaffali per libri (A-Z)"
         },
-        "bookshelf_link": {
+        "lcc_shelf_link": {
             "textContent": "Sfoglia per libreria"
         },
         "home_link": {
             "textContent": "Andare a casa"
         },
-        "bookshelf": {
+        "lcc_shelf": {
             "placeholder": "Ricerca in libreria"
         }
     },

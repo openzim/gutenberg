@@ -127,16 +127,16 @@
         "about-6": {
             "textContent": "Los digitalizamos y comprobamos cuidadosamente con la ayuda de miles de voluntarios."
         },
-        "bookshelves_title": {
+        "lcc_shelves_title": {
             "textContent": "Estantes (A-Z)"
         },
-        "bookshelf_link": {
+        "lcc_shelf_link": {
             "textContent": "Buscar por estantería"
         },
         "home_link": {
             "textContent": "Vete a casa"
         },
-        "bookshelf": {
+        "lcc_shelf": {
             "placeholder": "Búsqueda de estantería"
         }
     },

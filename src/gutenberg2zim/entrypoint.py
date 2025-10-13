@@ -24,7 +24,7 @@ help_info = (
     """[-z ZIM_PATH] [-b BOOKS] """
     """[-t ZIM_TITLE] [-n ZIM_DESC] [-L ZIM_LONG_DESC] """
     """[-c CONCURRENCY] [--no-index] """
-    """[--title-search] [--bookshelves] """
+    """[--title-search] [--lcc-shelves SHELVES] """
     """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
     """[--mirror-url MIRROR_URL] [--output OUTPUT_FOLDER][--debug] """
     """
@@ -49,7 +49,8 @@ help_info = (
 --no-index                      Do NOT create full-text index within ZIM file
 --title-search                  Add field to search a book by title and directly """
     """jump to it
---bookshelves                   Add bookshelves
+--lcc-shelves=<shelves>         Comma-separated list of LCC shelf codes to include """
+    """(e.g., P,PR,Q). Use 'all' to generate all shelves. If omitted, no shelf generated
 --stats-filename=<filename>  Path to store the progress JSON file to
 --publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
 --mirror_url=<mirror_url>       Optional custom url of mirror hosting Gutenberg files
@@ -77,7 +78,66 @@ def main():
     concurrency = int(arguments.get("--concurrency") or 16)
     force = arguments.get("--force", False)
     title_search = arguments.get("--title-search", False)
-    bookshelves = arguments.get("--bookshelves", False)
+
+    # Parse --lcc-shelves argument
+    # None = not passed (don't filter by shelves, don't generate shelf pages)
+    # "all" = generate all shelves
+    # "P,PR,Q" = filter and generate only these shelves
+    supported_shelves = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "P",
+        "PA",
+        "PB",
+        "PC",
+        "PD",
+        "PE",
+        "PF",
+        "PG",
+        "PH",
+        "PJ",
+        "PK",
+        "PL",
+        "PM",
+        "PN",
+        "PQ",
+        "PR",
+        "PS",
+        "PT",
+        "PZ",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "Z",
+    ]
+    lcc_shelves_arg = arguments.get("--lcc-shelves")
+    lcc_shelves: list[str] | None = None
+    add_lcc_shelves = False
+    if lcc_shelves_arg is not None:
+        add_lcc_shelves = True
+        if lcc_shelves_arg.strip().lower() == "all":
+            lcc_shelves = []  # Empty list means all shelves
+        else:
+            lcc_shelves = [
+                s.strip().upper()
+                for s in lcc_shelves_arg.split(",")
+                if s.strip().upper() in supported_shelves
+            ]
+
     stats_filename: str | None = arguments.get("--stats-filename") or None
     publisher = arguments.get("--publisher") or "openZIM"
     debug = arguments.get("--debug") or False
@@ -138,21 +198,31 @@ def main():
     logger.info(f"LOADING catalog from {csv_path}")
     catalog = load_catalog(csv_path)
 
-    # Filter books based on languages and specific book IDs
+    # Filter books based on languages, specific book IDs, and LCC shelves
     book_ids = filter_books(
         catalog=catalog,
         languages=languages if languages else None,
         only_books=only_books_ids if only_books_ids else None,
+        lcc_shelves=lcc_shelves,
     )
     if not len(book_ids):
         critical_error(
             "Unable to proceed. Combination of languages, "
-            "books and formats has no result."
+            "books, formats and LCC shelves has no result."
         )
+
+    # Get list of languages from catalog entries
     book_languages = (
         languages
         if languages
-        else list({languages for book_id in book_ids for languages in catalog[book_id]})
+        else list(
+            {
+                lang
+                for entry in catalog
+                for lang in entry.languages
+                if entry.book_id in book_ids
+            }
+        )
     )
     progress.increase_progress()
 
@@ -166,7 +236,7 @@ def main():
         concurrency=concurrency,
         languages=book_languages,
         formats=formats,
-        is_selection=len(only_books_ids) > 0,
+        is_selection=len(only_books_ids) > 0 or len(lcc_shelves or []) > 0,
         zim_name=Path(zim_name).name if zim_name else None,
         title=zim_title,
         description=description,
@@ -174,7 +244,7 @@ def main():
         publisher=publisher,
         force=force,
         title_search=title_search,
-        add_bookshelves=bookshelves,
+        add_lcc_shelves=add_lcc_shelves,
         progress=progress,
     )
 
