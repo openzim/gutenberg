@@ -16,41 +16,38 @@ classifiers = [
   "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 ]
 dependencies = [
-  "beautifulsoup4==4.12.0",
-  "types-beautifulsoup4==4.12.0.20250516",
-  "Jinja2==3.1.2",
+  "beautifulsoup4==4.14.2",
+  "Jinja2==3.1.6",
   "path.py==12.5.0",
-  "Babel==2.11.0",
-  "lxml == 5.3.1",
+  "Babel==2.17.0",
+  "lxml==6.0.2",
   "docopt==0.6.2",
-  "chardet==5.1.0",
+  "chardet==5.2.0",
   "apsw==3.50.4.0",
-  "kiwixstorage==0.8.3",
-  "requests==2.31.0",
+  "kiwixstorage==0.9.0",
+  "requests==2.32.5",
   "pif==0.8.2",
-  "zimscraperlib==5.1.1",
-  "schedule==1.1.0",
+  "zimscraperlib==5.2.0",
+  "schedule==1.2.2",
   "backoff==2.2.1",
   "i18nice==0.16.0",
 ]
 dynamic = ["version"]
 
 [project.optional-dependencies]
-scripts = ["invoke==2.2.0"]
-lint = ["black==25.1.0", "ruff==0.12.5"]
-check = ["pyright==1.1.398"]
-test = ["pytest==7.4.0", "coverage==7.3.0"]
+scripts = ["invoke==2.2.1"]
+lint = ["black==25.9.0", "ruff==0.14.0"]
+check = ["pyright==1.1.406"]
+test = ["pytest==8.4.2", "coverage==7.10.7"]
 dev = [
-  "pre-commit==3.3.3",
-  "debugpy==1.6.7",
+  "pre-commit==4.3.0",
+  "debugpy==1.8.17",
   "ipdb==0.13.13",
-  "ipython==8.14.0",
+  "ipython==9.6.0",
   "gutenberg2zim[scripts]",
   "gutenberg2zim[lint]",
   "gutenberg2zim[test]",
   "gutenberg2zim[check]",
-  # hatchling is a dev dependency only needed for hook development on developer machine
-  "hatchling==1.18.0",
 ]
 
 [project.urls]

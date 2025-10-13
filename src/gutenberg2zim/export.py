@@ -177,15 +177,17 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
 
     # remove encoding as we're saving to UTF8 anyway
     encoding_specified = False
-    for meta in soup.findAll("meta"):
+    for meta in soup.find_all("meta"):
         if "charset" in meta.attrs:
             encoding_specified = True
             # logger.debug("found <meta> tag with charset `{}`"
             #              .format(meta.attrs.get('charset')))
             del meta.attrs["charset"]
-        elif "content" in meta.attrs and "charset=" in meta.attrs.get("content"):
+        elif "content" in meta.attrs and "charset=" in meta.get_attribute_list(
+            "content"
+        ):
             try:
-                ctype, _ = meta.attrs.get("content").split(";", 1)
+                ctype, _ = meta.get_attribute_list("content")[0].split(";", 1)
             except Exception:  # noqa: S112
                 continue
             else:
@@ -199,9 +201,9 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
 
     # update all <img> links from images/xxx.xxx to {id}_xxx.xxx
     if not epub:
-        for img in soup.findAll("img"):
+        for img in soup.find_all("img"):
             if "src" in img.attrs:
-                img.attrs["src"] = img.attrs["src"].replace(
+                img.attrs["src"] = img.attrs["src"][0].replace(
                     "images/", f"{book.book_id}_"
                 )
 
@@ -228,7 +230,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
         return nurl
 
     if not epub:
-        for link in soup.findAll("a"):
+        for link in soup.find_all("a"):
             new_link = replacablement_link(book=book, url=link.attrs.get("href", ""))
             if new_link is not None:
                 link.attrs["href"] = new_link
@@ -299,7 +301,13 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
         return
     try:
         is_encapsulated_in_div = (
-            sum([1 for e in body.children if not isinstance(e, bs4.NavigableString)])
+            sum(
+                [
+                    1
+                    for e in body.children
+                    if not isinstance(e, bs4.element.NavigableString)
+                ]
+            )
             == 1
         )
     except Exception:
