@@ -50,8 +50,8 @@
     </div>
     <header>
         <div class="main_title">
-            <h1><a href="Home.html" data-l10n-id="top-title">Project Gutenberg Library</a></h1>
-            <h2><a href="Home.html" data-l10n-id="sub-title">The first producer of free ebooks</a></h2>
+            <h1><a href="./Home" data-l10n-id="top-title">Project Gutenberg Library</a></h1>
+            <h2><a href="./Home" data-l10n-id="sub-title">The first producer of free ebooks</a></h2>
         </div>
 
         <div class="pure-form filter">
@@ -81,13 +81,13 @@
 
                         {% if add_lcc_shelves %}
                             {% if show_books %}
-                                <a class="nav-link" href="lcc_shelf_home.html" data-l10n-id="lcc_shelf_link">Browse by Bookshelves</a>
+                                <a class="nav-link" href="./lcc_shelf_home" data-l10n-id="lcc_shelf_link">Browse by Bookshelves</a>
                             {% else %}
-                                <a class="nav-link" href="Home.html" data-l10n-id="home_link"> Go Home</a>
+                                <a class="nav-link" href="./Home" data-l10n-id="home_link"> Go Home</a>
                             {% endif %}
                         {% else %}
                             {% if not show_books %}
-                                <a class="nav-link" href="Home.html" data-l10n-id="home_link"> Go Home</a>
+                                <a class="nav-link" href="./Home" data-l10n-id="home_link"> Go Home</a>
                             {% endif %}
                         {% endif %}
                 </section>

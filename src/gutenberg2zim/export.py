@@ -147,11 +147,10 @@ def export_skeleton(
                 Global.add_item_for(path=str(Path(fname) / path), fpath=fpath)
 
     # export homepage
-    tpl_path = "Home.html"
-    template = jinja_env.get_template(tpl_path)
+    template = jinja_env.get_template("Home.html")
     rendered = template.render(**context)
     Global.add_item_for(
-        path=tpl_path,
+        path="Home",
         content=rendered,
         mimetype="text/html",
         is_front=True,
@@ -442,7 +441,7 @@ def author_html_content_for(author, project_id):
 def save_author_file(author, project_id):
     logger.debug(f"\t\tSaving author file {author.name()} (ID {author})")
     Global.add_item_for(
-        path=f"{author.fname()}.html",
+        path=f"{author.fname()}",
         content=author_html_content_for(author, project_id),
         mimetype="text/html",
         is_front=True,
@@ -791,13 +790,13 @@ def export_to_json_helpers(languages, formats, project_id, add_lcc_shelves):
         dumpjs(lcc_shelf_list(), "lcc_shelves.js", "lcc_shelves_json_data")
 
         # Create the LCC shelf home page
-        logger.debug("\t\tDumping lcc_shelf_home.html")
+        logger.debug("\t\tDumping lcc_shelf_home (HTML)")
         context = get_default_context(project_id=project_id)
         context.update({"lcc_shelf_home": True, "add_lcc_shelves": True})
         template = jinja_env.get_template("lcc_shelf_home.html")
         rendered = template.render(**context)
         Global.add_item_for(
-            path="lcc_shelf_home.html",
+            path="lcc_shelf_home",
             content=rendered,
             mimetype="text/html",
             is_front=False,
@@ -807,7 +806,7 @@ def export_to_json_helpers(languages, formats, project_id, add_lcc_shelves):
         for lcc_shelf in lcc_shelf_list():
             if lcc_shelf is None:
                 continue
-            logger.debug(f"Dumping lcc_shelf_{lcc_shelf}.html")
+            logger.debug(f"Dumping lcc_shelf_{lcc_shelf} (HTML)")
             context["lcc_shelf"] = lcc_shelf
             context.update(
                 {
@@ -821,7 +820,7 @@ def export_to_json_helpers(languages, formats, project_id, add_lcc_shelves):
             template = jinja_env.get_template("lcc_shelf.html")
             rendered = template.render(**context)
             Global.add_item_for(
-                path=f"lcc_shelf_{lcc_shelf}.html",
+                path=f"lcc_shelf_{lcc_shelf}",
                 content=rendered,
                 mimetype="text/html",
                 is_front=False,

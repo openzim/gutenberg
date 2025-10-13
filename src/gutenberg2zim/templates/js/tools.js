@@ -176,7 +176,7 @@ function showBooks() {
     // redirect to home page
     if (is_cover_page()) {
       console.log("Cover page, redirecting");
-      $(location).attr("href", "Home.html");
+      $(location).attr("href", "Home");
     } else {
       console.log("NOT COVER PAGE");
     }
@@ -263,15 +263,15 @@ function showBooks() {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': HTML" href="' +
+                    ': HTML" href="./' +
                     urlBase +
-                    '.html"><i class="fa fa-html5 fa-3x"></i></a>';
+                    '"><i class="fa fa-html5 fa-3x"></i></a>';
                 }
                 if (data[1] == 1) {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': EPUB" href="' +
+                    ': EPUB" href="./' +
                     urlBase +
                     '.epub"><i class="fa fa-download fa-3x"></i></a>';
                 }
@@ -279,7 +279,7 @@ function showBooks() {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': PDF" href="' +
+                    ': PDF" href="./' +
                     urlBase +
                     '.pdf"><i class="fa fa-file-pdf-o fa-3x"></i></a>';
                 }
@@ -303,8 +303,7 @@ function showBooks() {
             "href",
             encodeURIComponent(titre.replace("/", "-").substring(0, 230)) +
             "_cover." +
-            id +
-            ".html"
+            id
           );
         } else if (event.which == 2) {
           /* Middle click */
@@ -313,7 +312,6 @@ function showBooks() {
             encodeURIComponent(titre.replace("/", "-").substring(0, 230)) +
             "_cover." +
             id +
-            ".html" +
             "' />"
           );
           link.attr("target", "_blank");
@@ -359,7 +357,7 @@ function showLccShelf(lcc_shelf) {
     // redirect to home page
     // if (is_cover_page()) {
     //   console.log("Cover page, redirecting");
-    //   $(location).attr("href", "Home.html");
+    //   $(location).attr("href", "Home");
     // } else {
     //   console.log("NOT COVER PAGE");
     // }
@@ -455,15 +453,15 @@ function showLccShelf(lcc_shelf) {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': HTML" href="' +
+                    ': HTML" href="./' +
                     urlBase +
-                    '.html"><i class="fa fa-html5 fa-3x"></i></a>';
+                    '"><i class="fa fa-html5 fa-3x"></i></a>';
                 }
                 if (data[1] == 1) {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': EPUB" href="' +
+                    ': EPUB" href="./' +
                     urlBase +
                     '.epub"><i class="fa fa-download fa-3x"></i></a>';
                 }
@@ -471,7 +469,7 @@ function showLccShelf(lcc_shelf) {
                   html +=
                     '<a class="home-icon" title="' +
                     full[0] +
-                    ': PDF" href="' +
+                    ': PDF" href="./' +
                     urlBase +
                     '.pdf"><i class="fa fa-file-pdf-o fa-3x"></i></a>';
                 }
@@ -495,8 +493,7 @@ function showLccShelf(lcc_shelf) {
             "href",
             encodeURIComponent(titre.replace("/", "-").substring(0, 230)) +
             "_cover." +
-            id +
-            ".html"
+            id
           );
         } else if (event.which == 2) {
           /* Middle click */
@@ -505,7 +502,6 @@ function showLccShelf(lcc_shelf) {
             encodeURIComponent(titre.replace("/", "-").substring(0, 230)) +
             "_cover." +
             id +
-            ".html" +
             "' />"
           );
           link.attr("target", "_blank");
@@ -710,7 +706,7 @@ function init() {
     },
     select: function(event, ui) {
       minimizeUI();
-      let url = "./" + encodeURIComponent(ui.item.value.replace(/\//g, "-")) + "_cover." + title_dict[ui.item.value] + ".html";
+      let url = "./" + encodeURIComponent(ui.item.value.replace(/\//g, "-")) + "_cover." + title_dict[ui.item.value];
       $(location).attr("href", url);
     }
   });
@@ -722,7 +718,7 @@ function init() {
         return;
       }
 
-      let url = "./" + encodeURIComponent($(this).val().replace(/\//g, "-")) + "_cover." + title_dict[$(this).val()] + ".html";
+      let url = "./" + encodeURIComponent($(this).val().replace(/\//g, "-")) + "_cover." + title_dict[$(this).val()];
       $(location).attr("href", url);
     }
   });
@@ -832,7 +828,7 @@ function showLccShelfSearchResults(value) {
     $('#lccShelfTable tbody').on('click', 'tr', function() {
       let data = encodeURI($('span', this).attr('data-target'));
       console.log(data);
-      $(location).attr('href', './lcc_shelf_' + data + '.html');
+      $(location).attr('href', './lcc_shelf_' + data );
 
     });
     $("#lccShelfTable_previous").attr("data-l10n-id", "table-previous");

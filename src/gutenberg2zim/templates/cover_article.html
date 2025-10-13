@@ -43,7 +43,11 @@
             {% if formats %}
             <div class="cover-detail icons-footer">
                 {% for format in formats %}
+                    {% if format == "html" %}
+                <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}">
+                    {% else %}
                 <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.{{ format }}">
+                    {% endif %}
                     {% if format == "html" %}
                     <i class="fa fa-html5 fa-6x"></i>
                     {% endif %}

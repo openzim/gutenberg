@@ -26,7 +26,7 @@ def book_name_for_fs(book: Book) -> str:
 def article_name_for(book: Book, *, cover: bool = False) -> str:
     cover_suffix = "_cover" if cover else ""
     title = book_name_for_fs(book)
-    return f"{title}{cover_suffix}.{book.book_id}.html"
+    return f"{title}{cover_suffix}.{book.book_id}"
 
 
 def archive_name_for(book: Book, book_format: str) -> str:

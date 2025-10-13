@@ -40,7 +40,7 @@ class Global:
         Global.creator = (
             Creator(
                 filename=filename,
-                main_path="Home.html",
+                main_path="Home",
                 workaround_nocancel=False,
             )
             .config_metadata(
