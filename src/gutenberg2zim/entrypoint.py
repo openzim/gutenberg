@@ -23,7 +23,7 @@ help_info = (
     """[-d CACHE_PATH] [-e STATIC_PATH] """
     """[-z ZIM_PATH] [-b BOOKS] """
     """[-t ZIM_TITLE] [-n ZIM_DESC] [-L ZIM_LONG_DESC] """
-    """[-c CONCURRENCY] [--no-index] """
+    """[--zim-languages LANGUAGES] [-c CONCURRENCY] [--no-index] """
     """[--title-search] [--lcc-shelves SHELVES] """
     """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
     """[--mirror-url MIRROR_URL] [--output OUTPUT_FOLDER][--debug] """
@@ -41,6 +41,7 @@ help_info = (
 -t --zim-title=<title>          Set ZIM title
 -n --zim-desc=<description>         Set ZIM description
 -L --zim-long-desc=<description>   Set ZIM long description
+--zim-languages=<languages>          Set ZIM Language metadata
 
 -b --books=<ids>                Execute the processes for specific books, """
     """separated by commas, or dashes for intervals
@@ -199,13 +200,13 @@ def main():
     catalog = load_catalog(csv_path)
 
     # Filter books based on languages, specific book IDs, and LCC shelves
-    book_ids = filter_books(
+    filtered_books = filter_books(
         catalog=catalog,
         languages=languages if languages else None,
         only_books=only_books_ids if only_books_ids else None,
         lcc_shelves=lcc_shelves,
     )
-    if not len(book_ids):
+    if not len(filtered_books):
         critical_error(
             "Unable to proceed. Combination of languages, "
             "books, formats and LCC shelves has no result."
@@ -215,14 +216,7 @@ def main():
     book_languages = (
         languages
         if languages
-        else list(
-            {
-                lang
-                for entry in catalog
-                for lang in entry.languages
-                if entry.book_id in book_ids
-            }
-        )
+        else list({lang for book in filtered_books for lang in book.languages})
     )
     progress.increase_progress()
 
@@ -231,10 +225,15 @@ def main():
 
     build_zimfile(
         output_folder=output_folder,
-        book_ids=book_ids,
+        books=filtered_books,
         mirror_url=mirror_url,
         concurrency=concurrency,
         languages=book_languages,
+        zim_languages=(
+            [lang.strip() for lang in zim_languages.split(",")]
+            if (zim_languages := arguments.get("--zim-languages"))
+            else None
+        ),
         formats=formats,
         is_selection=len(only_books_ids) > 0 or len(lcc_shelves or []) > 0,
         zim_name=Path(zim_name).name if zim_name else None,

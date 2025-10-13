@@ -121,7 +121,7 @@ def filter_books(
     languages: list[str] | None = None,
     only_books: list[int] | None = None,
     lcc_shelves: list[str] | None = None,
-) -> list[int]:
+) -> list[CatalogEntry]:
     """
     Filter books based on languages, book IDs, and LCC shelves.
 
@@ -135,7 +135,7 @@ def filter_books(
     Returns:
         list: List of book IDs that match the filters
     """
-    filtered: list[int] = []
+    filtered: list[CatalogEntry] = []
 
     for entry in catalog:
         # Filter by specific book IDs if requested
@@ -156,7 +156,7 @@ def filter_books(
             if entry.lcc_shelf not in lcc_shelves:
                 continue
 
-        filtered.append(entry.book_id)
+        filtered.append(entry)
 
     logger.info(
         f"\tFiltered to {len(filtered)} books "
