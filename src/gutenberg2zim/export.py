@@ -119,7 +119,7 @@ def export_skeleton(
         path="js/l10n.js",
         content=rendered,
         mimetype="text/javascript",
-        is_front=True,
+        is_front=False,
     )
 
     # add CSS/JS/* to zim
@@ -150,10 +150,7 @@ def export_skeleton(
     template = jinja_env.get_template("Home.html")
     rendered = template.render(**context)
     Global.add_item_for(
-        path="Home",
-        content=rendered,
-        mimetype="text/html",
-        is_front=True,
+        path="Home", content=rendered, mimetype="text/html", is_front=False
     )
 
 
@@ -203,7 +200,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
     if not epub:
         for img in soup.find_all("img"):
             if "src" in img.attrs:
-                img.attrs["src"] = img.attrs["src"][0].replace(
+                img.attrs["src"] = img.get_attribute_list("src")[0].replace(
                     "images/", f"{book.book_id}_"
                 )
 
@@ -452,6 +449,7 @@ def save_author_file(author, project_id):
         path=f"{author.fname()}",
         content=author_html_content_for(author, project_id),
         mimetype="text/html",
+        title=author.name(),
         is_front=True,
     )
 
@@ -514,6 +512,7 @@ def handle_book_files(
             path=article_name,
             content=str(new_html),
             mimetype="text/html",
+            is_front=False,
         )
 
     # Handle other formats (epub, pdf)
@@ -531,6 +530,7 @@ def handle_book_files(
                 Global.add_item_for(
                     path=archive_name,
                     content=book_files[book_filename],
+                    is_front=False,
                 )
             except Exception as e:
                 logger.exception(e)
@@ -558,6 +558,7 @@ def handle_book_files(
                     path=filename,
                     content=str(new_html),
                     mimetype="text/html",
+                    is_front=False,
                 )
             except Exception as e:
                 logger.exception(e)
@@ -568,6 +569,7 @@ def handle_book_files(
                 Global.add_item_for(
                     path=filename,
                     content=file_content,
+                    is_front=False,
                 )
             except Exception as e:
                 logger.exception(e)
@@ -593,6 +595,7 @@ def write_book_presentation_article(
             path=cover_path,
             content=cover_image,
             mimetype="image/jpeg",
+            is_front=False,
         )
 
     html = cover_html_content_for(
@@ -608,6 +611,8 @@ def write_book_presentation_article(
         path=article_name,
         content=html,
         mimetype="text/html",
+        is_front=True,
+        title=book.title,
     )
 
 

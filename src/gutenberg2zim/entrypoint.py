@@ -80,6 +80,8 @@ def main():
     force = arguments.get("--force", False)
     title_search = arguments.get("--title-search", False)
 
+    with_fulltext_index = not arguments.get("--no-index", False)
+
     # Parse --lcc-shelves argument
     # None = not passed (don't filter by shelves, don't generate shelf pages)
     # "all" = generate all shelves
@@ -218,6 +220,12 @@ def main():
         if languages
         else list({lang for book in filtered_books for lang in book.languages})
     )
+    if len(book_languages) > 1 and with_fulltext_index:
+        logger.warning(
+            "Full text index with multiple languages in a single ZIM does not work "
+            "well. You should probably disable full-text index with --no-index "
+            "argument."
+        )
     progress.increase_progress()
 
     # Build ZIM file
@@ -245,6 +253,8 @@ def main():
         title_search=title_search,
         add_lcc_shelves=add_lcc_shelves,
         progress=progress,
+        with_fulltext_index=with_fulltext_index,
+        debug=debug,
     )
 
     # Final increase to indicate we are done

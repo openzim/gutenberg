@@ -33,7 +33,15 @@ class Global:
 
     @staticmethod
     def setup(
-        filename, language, title, description, long_description, name, publisher
+        filename,
+        language,
+        title,
+        description,
+        long_description,
+        name,
+        publisher,
+        with_fulltext_index,
+        debug,
     ):
         Global.default_context = None
         Global.default_context_project_id = None
@@ -62,7 +70,8 @@ class Global:
                     Illustration_48x48_at_1=DefaultIllustrationMetadata(FAVICON_BYTES),
                 )
             )
-            .config_verbose(True)
+            .config_verbose(debug)
+            .config_indexing(with_fulltext_index)
         )
 
     @staticmethod
