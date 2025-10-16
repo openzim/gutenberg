@@ -200,7 +200,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
     if not epub:
         for img in soup.find_all("img"):
             if "src" in img.attrs:
-                img.attrs["src"] = img.attrs["src"][0].replace(
+                img.attrs["src"] = img.get_attribute_list("src")[0].replace(
                     "images/", f"{book.book_id}_"
                 )
 
