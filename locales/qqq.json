@@ -1,0 +1,267 @@
+{
+    "ui_strings": {
+        "isocode": {
+            "textContent": "ISO 639-1 language code for the current language"
+        },
+        "autonym": {
+            "textContent": "Name of the language in its own language (autonym)"
+        },
+        "homepage": {
+            "alt": "Alt text for the homepage link/button",
+            "title": "Title attribute for the homepage link/button"
+        },
+        "choose-language": {
+            "placeholder": "Placeholder text for the language selection dropdown"
+        },
+        "ui-language-switcher": {
+            "title": "Title for the user interface language switcher control"
+        },
+        "search": {
+            "textContent": "Label for the search functionality"
+        },
+        "author": {
+            "textContent": "Label for the author field",
+            "placeholder": "Placeholder text for the author search input field"
+        },
+        "title": {
+            "textContext": "Label for the book title field",
+            "placeholder": "Placeholder text for the title search input field"
+        },
+        "cover-img": {
+            "alt": "Alt text for book cover images",
+            "title": "Title attribute for book cover images"
+        },
+        "cover": {
+            "textContent": "Text label indicating a book cover (used in links or captions)"
+        },
+        "filter": {
+            "textContent": "Label for filter controls"
+        },
+        "popularity": {
+            "textContent": "Label for the popularity metric"
+        },
+        "sort": {
+            "textContent": "Label for sort controls"
+        },
+        "sort-popularity": {
+            "textContent": "Label for the option to sort books by popularity"
+        },
+        "sort-title": {
+            "textContent": "Label for the option to sort books by title"
+        },
+        "format": {
+            "textContent": "Label for the book format field (e.g., EPUB, PDF, HTML)"
+        },
+        "loading": {
+            "textContent": "Message displayed while content is loading"
+        },
+        "no-data": {
+            "textContent": "Message displayed in tables when no data is available"
+        },
+        "prev": {
+            "textContent": "Label for the previous button in navigation"
+        },
+        "next": {
+            "textContent": "Label for the next button in navigation"
+        },
+        "language": {
+            "textContent": "Label for the language field or filter"
+        },
+        "any-languages": {
+            "textContent": "Label for the option to view all language catalogs"
+        },
+        "main-languages": {
+            "textContent": "Label for the main/primary languages section"
+        },
+        "other-languages": {
+            "textContent": "Label for the other/secondary languages section"
+        },
+        "author-anonymous": {
+            "textContent": "Text displayed for books with anonymous authors"
+        },
+        "author-various": {
+            "textContent": "Text displayed for books with various/multiple authors"
+        },
+        "license": {
+            "textContent": "Label for the license field"
+        },
+        "license-pd": {
+            "textContent": "Text describing the public domain license status in the USA"
+        },
+        "license-copyright": {
+            "textContent": "Text describing copyrighted works with a notice to check the book for details"
+        },
+        "nb-downloads": {
+            "textContent": "Plural selector for download count messages."
+        },
+        "nb-downloads[one]": {
+            "textContent": "Message for singular download count (1 download). Part of plural forms."
+        },
+        "nb-downloads[other]": {
+            "textContent": "Message for plural download count (2+ downloads). {{nb}} is replaced with the number. Part of plural forms."
+        },
+        "top-title": {
+            "textContent": "Main title for the Project Gutenberg library site"
+        },
+        "sub-title": {
+            "textContent": "Subtitle/tagline describing Project Gutenberg"
+        },
+        "table-previous": {
+            "textContent": "Label for the previous button in table pagination"
+        },
+        "table-next": {
+            "textContent": "Label for the next button in table pagination"
+        },
+        "about-1": {
+            "textContent": "First sentence in the about section describing the collection size"
+        },
+        "about-2": {
+            "textContent": "Second sentence in the about section describing available formats"
+        },
+        "about-3": {
+            "textContent": "Third sentence in the about section describing how to access books"
+        },
+        "about-4": {
+            "textContent": "Fourth sentence in the about section introducing the quality statement"
+        },
+        "about-5": {
+            "textContent": "Fifth sentence in the about section describing the source of books"
+        },
+        "about-6": {
+            "textContent": "Sixth sentence in the about section describing the digitization process"
+        },
+        "lcc_shelves_title": {
+            "textContent": "Title for the Library of Congress Classification bookshelves page"
+        },
+        "lcc_shelf_link": {
+            "textContent": "Link text to browse books by Library of Congress Classification bookshelf"
+        },
+        "home_link": {
+            "textContent": "Link text to return to the homepage"
+        },
+        "lcc_shelf": {
+            "placeholder": "Placeholder text for the bookshelf search input field"
+        },
+        "lcc-shelf-A": {
+            "textContent": "Library of Congress Classification Shelf A - General works"
+        },
+        "lcc-shelf-B": {
+            "textContent": "Library of Congress Classification Shelf B - Philosophy, psychology, religion"
+        },
+        "lcc-shelf-C": {
+            "textContent": "Library of Congress Classification Shelf C - Auxiliary sciences of history"
+        },
+        "lcc-shelf-D": {
+            "textContent": "Library of Congress Classification Shelf D - World history and history of Europe, Asia, Africa, Australia, New Zealand, etc."
+        },
+        "lcc-shelf-E": {
+            "textContent": "Library of Congress Classification Shelf E - History of the Americas"
+        },
+        "lcc-shelf-F": {
+            "textContent": "Library of Congress Classification Shelf F - History of the Americas"
+        },
+        "lcc-shelf-G": {
+            "textContent": "Library of Congress Classification Shelf G - Geography, anthropology, recreation"
+        },
+        "lcc-shelf-H": {
+            "textContent": "Library of Congress Classification Shelf H - Social sciences"
+        },
+        "lcc-shelf-J": {
+            "textContent": "Library of Congress Classification Shelf J - Political science"
+        },
+        "lcc-shelf-K": {
+            "textContent": "Library of Congress Classification Shelf K - Law"
+        },
+        "lcc-shelf-L": {
+            "textContent": "Library of Congress Classification Shelf L - Education"
+        },
+        "lcc-shelf-M": {
+            "textContent": "Library of Congress Classification Shelf M - Music and books on music"
+        },
+        "lcc-shelf-N": {
+            "textContent": "Library of Congress Classification Shelf N - Fine arts"
+        },
+        "lcc-shelf-P": {
+            "textContent": "Library of Congress Classification Shelf P - Language and literature"
+        },
+        "lcc-shelf-Q": {
+            "textContent": "Library of Congress Classification Shelf Q - Science"
+        },
+        "lcc-shelf-R": {
+            "textContent": "Library of Congress Classification Shelf R - Medicine"
+        },
+        "lcc-shelf-S": {
+            "textContent": "Library of Congress Classification Shelf S - Agriculture"
+        },
+        "lcc-shelf-T": {
+            "textContent": "Library of Congress Classification Shelf T - Technology"
+        },
+        "lcc-shelf-U": {
+            "textContent": "Library of Congress Classification Shelf U - Military science"
+        },
+        "lcc-shelf-V": {
+            "textContent": "Library of Congress Classification Shelf V - Naval science"
+        },
+        "lcc-shelf-Z": {
+            "textContent": "Library of Congress Classification Shelf Z - Bibliography, library science, information resources (general)"
+        },
+        "lcc-shelf-PA": {
+            "textContent": "Library of Congress Classification Shelf PA - Greek and Latin language and literature"
+        },
+        "lcc-shelf-PB": {
+            "textContent": "Library of Congress Classification Shelf PB - Modern and Celtic languages"
+        },
+        "lcc-shelf-PC": {
+            "textContent": "Library of Congress Classification Shelf PC - Romance languages"
+        },
+        "lcc-shelf-PD": {
+            "textContent": "Library of Congress Classification Shelf PD - Germanic and Scandinavian languages"
+        },
+        "lcc-shelf-PE": {
+            "textContent": "Library of Congress Classification Shelf PE - English language"
+        },
+        "lcc-shelf-PF": {
+            "textContent": "Library of Congress Classification Shelf PF - West Germanic languages"
+        },
+        "lcc-shelf-PG": {
+            "textContent": "Library of Congress Classification Shelf PG - Slavic, Baltic and Albanian languages"
+        },
+        "lcc-shelf-PH": {
+            "textContent": "Library of Congress Classification Shelf PH - Uralic and Basque languages"
+        },
+        "lcc-shelf-PJ": {
+            "textContent": "Library of Congress Classification Shelf PJ - Oriental languages and literatures"
+        },
+        "lcc-shelf-PK": {
+            "textContent": "Library of Congress Classification Shelf PK - Indo-Iranian languages and literatures"
+        },
+        "lcc-shelf-PL": {
+            "textContent": "Library of Congress Classification Shelf PL - Languages and literatures of Eastern Asia, Africa, Oceania"
+        },
+        "lcc-shelf-PM": {
+            "textContent": "Library of Congress Classification Shelf PM - Hyperborean, Indian, and artificial languages"
+        },
+        "lcc-shelf-PN": {
+            "textContent": "Library of Congress Classification Shelf PN - Literature (General)"
+        },
+        "lcc-shelf-PQ": {
+            "textContent": "Library of Congress Classification Shelf PQ - French, Italian, Spanish, Portuguese literature"
+        },
+        "lcc-shelf-PR": {
+            "textContent": "Library of Congress Classification Shelf PR - English literature"
+        },
+        "lcc-shelf-PS": {
+            "textContent": "Library of Congress Classification Shelf PS - American literature"
+        },
+        "lcc-shelf-PT": {
+            "textContent": "Library of Congress Classification Shelf PT - German, Dutch, Flemish, Afrikaans, Scandinavian, Old Norse, Old Iceland, Old Norwegian, Modern Icelandic, Faroese, Danish, Norwegian and Swedish Literature"
+        },
+        "lcc-shelf-PZ": {
+            "textContent": "Library of Congress Classification Shelf PZ - Fiction and juvenile belles lettres"
+        }
+    },
+    "metadata_defaults": {
+        "title": "Default ZIM title used in ZIM metadata when no specific ZIM title is set",
+        "description": "Default ZIM description used in ZIM metadata when no specific ZIM description is set"
+    }
+}
