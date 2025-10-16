@@ -182,7 +182,6 @@ def download_book(
     if len(book.unsupported_formats) == len(formats):
         logger.warning(
             f"\t\tBook #{book.book_id} could not be downloaded in any format. "
-            "Deleting from DB ..."
         )
         repository.remove_book(book.book_id)
         return None
