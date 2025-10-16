@@ -42,6 +42,7 @@ as of 2.0.0.
 - Bookshelves with special characters cannot be opened (#306)
 - Fix internationalization of the "Copyrighted" license label (#253)
 - Properly compute (including sorting) ZIM Language items + allow to override with --zim-languages (#323)
+- Fix support for ZIMs without full-text index
 
 ## [2.2.0] - 2025-06-06
 

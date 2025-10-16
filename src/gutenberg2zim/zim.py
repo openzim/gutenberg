@@ -40,6 +40,7 @@ def build_zimfile(
     title_search: bool,
     add_lcc_shelves: bool,
     progress: ScraperProgress,
+    with_fulltext_index: bool,
 ) -> None:
     """Build ZIM file using singleton BookRepository"""
     progress.increase_total(len(books))
@@ -86,6 +87,7 @@ def build_zimfile(
         long_description=long_description,
         name=project_id,
         publisher=publisher,
+        with_fulltext_index=with_fulltext_index,
     )
 
     Global.start()

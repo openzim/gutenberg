@@ -50,6 +50,12 @@
       "title": "Title search",
       "description": "Search by title feature (⚠️ does not scale)"
     },
+    "no_index": {
+      "type": "boolean",
+      "required": false,
+      "title": "No Full-text Index",
+      "description": "Do not create ZIM with full-text index"
+    },
     "lcc_shelves": {
       "type": "string",
       "required": false,

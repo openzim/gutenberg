@@ -33,7 +33,14 @@ class Global:
 
     @staticmethod
     def setup(
-        filename, language, title, description, long_description, name, publisher
+        filename,
+        language,
+        title,
+        description,
+        long_description,
+        name,
+        publisher,
+        with_fulltext_index,
     ):
         Global.default_context = None
         Global.default_context_project_id = None
@@ -63,6 +70,7 @@ class Global:
                 )
             )
             .config_verbose(True)
+            .config_indexing(with_fulltext_index)
         )
 
     @staticmethod
