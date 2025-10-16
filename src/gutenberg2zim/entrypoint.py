@@ -254,6 +254,7 @@ def main():
         add_lcc_shelves=add_lcc_shelves,
         progress=progress,
         with_fulltext_index=with_fulltext_index,
+        debug=debug,
     )
 
     # Final increase to indicate we are done

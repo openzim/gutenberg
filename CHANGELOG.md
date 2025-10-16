@@ -33,6 +33,7 @@ as of 2.0.0.
 - Split build logic in Dockerfile to separate dependencies layer from scraper code layer (#302)
 - Prepare structure for TranslateWiki (#312)
 - Remove « .html » extension (#166)
+- Configure libzim verbosity based on --debug flag
 
 ### Fixed
 
