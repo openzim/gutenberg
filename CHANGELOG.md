@@ -33,7 +33,7 @@ as of 2.0.0.
 - Split build logic in Dockerfile to separate dependencies layer from scraper code layer (#302)
 - Prepare structure for TranslateWiki (#312)
 - Remove « .html » extension (#166)
-- Configure libzim verbosity based on --debug flag
+- Configure libzim verbosity based on `--debug` flag (#326)
 
 ### Fixed
 
@@ -43,7 +43,7 @@ as of 2.0.0.
 - Bookshelves with special characters cannot be opened (#306)
 - Fix internationalization of the "Copyrighted" license label (#253)
 - Properly compute (including sorting) ZIM Language items + allow to override with --zim-languages (#323)
-- Fix support for ZIMs without full-text index
+- Fix support for ZIMs without full-text index (#326)
 
 ## [2.2.0] - 2025-06-06
 
