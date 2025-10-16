@@ -85,6 +85,7 @@ class Global:
         is_front: bool | None = None,
         should_compress: bool | None = None,
         delete_fpath: bool | None = False,
+        auto_index: bool = False,
     ):
         logger.debug(f"\t\tAdding ZIM item at {path}")
 
@@ -102,6 +103,7 @@ class Global:
                 is_front=is_front,
                 should_compress=should_compress,
                 delete_fpath=delete_fpath,
+                auto_index=auto_index,
             )
 
     @staticmethod

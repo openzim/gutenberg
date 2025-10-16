@@ -219,6 +219,7 @@ dataTables_wrapper.dataTables_length,
     text-align: end;
     vertical-align: middle;
     white-space: nowrap;
+    width: 1%; /* use as little space as possible to fit content */
 }
 
 

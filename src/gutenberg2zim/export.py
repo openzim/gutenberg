@@ -513,6 +513,8 @@ def handle_book_files(
             content=str(new_html),
             mimetype="text/html",
             is_front=False,
+            title=book.title,
+            auto_index=True,
         )
 
     # Handle other formats (epub, pdf)
