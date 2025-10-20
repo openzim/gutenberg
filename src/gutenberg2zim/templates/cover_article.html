@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ book.title }} (cover){% endblock %}
+{% block title %}{{ book.title }} <span data-l10n-id="cover">(cover)</span>{% endblock %}
 {% block content %}
     <h1>{{ book.title }}</h1>
     {% if book.subtitle %}

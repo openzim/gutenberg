@@ -32,3 +32,24 @@ jobs:
 
       - name: Check pyright
         run: inv check-pyright
+
+  check-i18n:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Retrieve source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: pyproject.toml
+          architecture: x64
+
+      - name: Install dependencies
+        run: |
+          pip install -U pip
+          pip install -e .
+
+      - name: Validate i18n translations
+        run: python -m gutenberg2zim.scripts.validate_i18n
