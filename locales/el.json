@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "Βιβλιοθήκη Project Gutenberg",
-        "description": "Όλα τα βιβλία στα Ελληνικά από τον πρώτο παραγωγό δωρεάν ηλεκτρονικών βιβλίων"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "Βιβλιοθήκη Project Gutenberg",
+		"description": "Όλα τα βιβλία στα Ελληνικά από τον πρώτο παραγωγό δωρεάν ηλεκτρονικών βιβλίων"
+	}
 }

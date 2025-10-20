@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "Projekt Gutenbergi raamatukogu",
-        "description": "Kõik eestikeelsed raamatud esimeselt tasuta e-raamatute tootjalt"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "Projekt Gutenbergi raamatukogu",
+		"description": "Kõik eestikeelsed raamatud esimeselt tasuta e-raamatute tootjalt"
+	}
 }

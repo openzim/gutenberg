@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "Projekt Gutenbergs Bibliotek",
-        "description": "Alla böcker på svenska från den första producenten av gratis e-böcker"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "Projekt Gutenbergs Bibliotek",
+		"description": "Alla böcker på svenska från den första producenten av gratis e-böcker"
+	}
 }

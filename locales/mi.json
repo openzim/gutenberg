@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "Pukapuka Project Gutenberg",
-        "description": "Ngā pukapuka i te Reo Pākehā nā te kaihanga tuatahi o ngā kore utu"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "Pukapuka Project Gutenberg",
+		"description": "Ngā pukapuka i te Reo Pākehā nā te kaihanga tuatahi o ngā kore utu"
+	}
 }

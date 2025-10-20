@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "परियोजना गुटेनबर्ग पुस्तकालय",
-        "description": "Free Ebooks इत्यस्य प्रथमः निर्माता संस्कृतभाषायां पुस्तकानि"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "परियोजना गुटेनबर्ग पुस्तकालय",
+		"description": "Free Ebooks इत्यस्य प्रथमः निर्माता संस्कृतभाषायां पुस्तकानि"
+	}
 }

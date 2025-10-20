@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-         "title": "古腾堡图书馆项目",
-        "description": "来自免费电子书首位制作人的所有中文书籍"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "古腾堡图书馆项目",
+		"description": "来自免费电子书首位制作人的所有中文书籍"
+	}
 }

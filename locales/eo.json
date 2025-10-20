@@ -1,6 +1,25 @@
 {
-    "metadata_defaults": {
-        "title": "Projekto Biblioteko Gutenberg",
-        "description": "Ĉiuj libroj en Esperanto de la unua produktanto de senpagaj Ebooks"
-    }
+	"@metadata": {
+		"authors": [
+			"Tymewalk"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "eo"
+		},
+		"autonym": {
+			"textContent": "Esperanto"
+		},
+		"author": {
+			"textContent": "Aŭtoro"
+		},
+		"title": {
+			"textContext": "Titolo"
+		}
+	},
+	"metadata_defaults": {
+		"title": "Projekto Biblioteko Gutenberg",
+		"description": "Ĉiuj libroj en Esperanto de la unua produktanto de senpagaj Ebooks"
+	}
 }

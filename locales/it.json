@@ -1,147 +1,205 @@
 {
-    "ui_strings": {
-        "isocode": {
-            "textContent": "it"
-        },
-        "autonym": {
-            "textContent": "Italiano"
-        },
-        "homepage": {
-            "alt": "Homepage",
-            "title": "Homepage"
-        },
-        "choose-language": {
-            "placeholder": "Scegli la lingua..."
-        },
-        "ui-language-switcher": {
-            "title": "Interfaccia lingua"
-        },
-        "search": {
-            "textContent": "Cerca"
-        },
-        "author": {
-            "textContent": "Autore",
-            "placeholder": "Elenca i libri di un singolo Autore"
-        },
-        "cover-img": {
-            "alt": "Copertina del Libro",
-            "title": "Copertina del Libro"
-        },
-        "cover": {
-            "textContent": "(copertina)"
-        },
-        "filter": {
-            "textContent": "Filtro:"
-        },
-        "popularity": {
-            "textContent": "Popolarità"
-        },
-        "sort": {
-            "textContent": "Ordina:"
-        },
-        "sort-popularity": {
-            "textContent": "Ordina libri per popolarità"
-        },
-        "sort-title": {
-            "textContent": "Ordina libri per titolo"
-        },
-        "title": {
-            "textContent": "Titolo",
-            "placeholder": "Cerca libri per titolo"
-        },
-        "format": {
-            "textContent": "Formato"
-        },
-        "loading": {
-            "textContent": "Caricamento in corso..."
-        },
-        "no-data": {
-            "textContent": "Nessun dato disponibile nella tabella"
-        },
-        "prev": {
-            "textContent": "Precedente"
-        },
-        "next": {
-            "textContent": "Successivo"
-        },
-        "language": {
-            "textContent": "Linguaggio"
-        },
-        "any-languages": {
-            "textContent": "Scegli il CatalogoChoose the Catalog"
-        },
-        "main-languages": {
-            "textContent": "Lingue Principali"
-        },
-        "other-languages": {
-            "textContent": "Altre lingue"
-        },
-        "author-anonymous": {
-            "textContent": "Anonimo"
-        },
-        "author-various": {
-            "textContent": "Vari"
-        },
-        "license": {
-            "textContent": "Licenza"
-        },
-        "license-pd": {
-            "textContent": "Di pubblico dominio negli USA."
-        },
-        "nb-downloads": {
-            "textContent": "{[ plurale(nb) ]}"
-        },
-        "nb-downloads[one]": {
-            "textContent": "1 download negli ultimi 30 giorni."
-        },
-        "nb-downloads[other]": {
-            "textContent": "{{nb}} download negli ultimi 30 giorni."
-        },
-        "top-title": {
-            "textContent": "Libreria del Progetto Gutenberg"
-        },
-        "sub-title": {
-            "textContent": "Il primo produttore di ebooks gratuiti"
-        },
-        "table-previous": {
-            "textContent": "Precedente"
-        },
-        "table-next": {
-            "textContent": "Successivo"
-        },
-        "about-1": {
-            "textContent": "Il Progetto Gutenberg offre più di 60,000 ebooks gratuiti"
-        },
-        "about-2": {
-            "textContent": "Scegli fra file epub gratuiti, file kindle gratuiti."
-        },
-        "about-3": {
-            "textContent": "Scaricali o leggili online."
-        },
-        "about-4": {
-            "textContent": "Noi forniamo ebook di alta qualità"
-        },
-        "about-5": {
-            "textContent": "Tutti i nostri ebook erano precedentemente pubblicati da editori."
-        },
-        "about-6": {
-            "textContent": "Li abbiamo digitalizzati e verificati diligentemente con l'aiuto di migliaia di volontari."
-        },
-        "lcc_shelves_title": {
-            "textContent": "Scaffali per libri (A-Z)"
-        },
-        "lcc_shelf_link": {
-            "textContent": "Sfoglia per libreria"
-        },
-        "home_link": {
-            "textContent": "Andare a casa"
-        },
-        "lcc_shelf": {
-            "placeholder": "Ricerca in libreria"
-        }
-    },
-    "metadata_defaults": {
-        "title": "Biblioteca Progetto Gutenberg",
-        "description": "Tutti i libri in italiano dal primo produttore di ebook gratuiti"
-    }
+	"@metadata": {
+		"authors": [
+			"Beta16"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "it"
+		},
+		"autonym": {
+			"textContent": "Italiano"
+		},
+		"homepage": {
+			"alt": "Homepage",
+			"title": "Homepage"
+		},
+		"choose-language": {
+			"placeholder": "Scegli la lingua..."
+		},
+		"ui-language-switcher": {
+			"title": "Interfaccia lingua"
+		},
+		"search": {
+			"textContent": "Cerca"
+		},
+		"author": {
+			"textContent": "Autore",
+			"placeholder": "Elenca i libri di un singolo Autore"
+		},
+		"title": {
+			"placeholder": "Cerca libri per titolo"
+		},
+		"cover-img": {
+			"alt": "Copertina del Libro",
+			"title": "Copertina del Libro"
+		},
+		"cover": {
+			"textContent": "(copertina)"
+		},
+		"filter": {
+			"textContent": "Filtro:"
+		},
+		"popularity": {
+			"textContent": "Popolarità"
+		},
+		"sort": {
+			"textContent": "Ordina:"
+		},
+		"sort-popularity": {
+			"textContent": "Ordina libri per popolarità"
+		},
+		"sort-title": {
+			"textContent": "Ordina libri per titolo"
+		},
+		"format": {
+			"textContent": "Formato"
+		},
+		"loading": {
+			"textContent": "Caricamento in corso..."
+		},
+		"no-data": {
+			"textContent": "Nessun dato disponibile nella tabella"
+		},
+		"prev": {
+			"textContent": "Precedente"
+		},
+		"next": {
+			"textContent": "Successivo"
+		},
+		"language": {
+			"textContent": "Linguaggio"
+		},
+		"any-languages": {
+			"textContent": "Scegli il CatalogoChoose the Catalog"
+		},
+		"main-languages": {
+			"textContent": "Lingue Principali"
+		},
+		"other-languages": {
+			"textContent": "Altre lingue"
+		},
+		"author-anonymous": {
+			"textContent": "Anonimo"
+		},
+		"author-various": {
+			"textContent": "Vari"
+		},
+		"license": {
+			"textContent": "Licenza"
+		},
+		"license-pd": {
+			"textContent": "Di pubblico dominio negli USA."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plurale(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 download negli ultimi 30 giorni."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} download negli ultimi 30 giorni."
+		},
+		"top-title": {
+			"textContent": "Libreria del Progetto Gutenberg"
+		},
+		"sub-title": {
+			"textContent": "Il primo produttore di ebooks gratuiti"
+		},
+		"table-previous": {
+			"textContent": "Precedente"
+		},
+		"table-next": {
+			"textContent": "Successivo"
+		},
+		"about-1": {
+			"textContent": "Il Progetto Gutenberg offre più di 60,000 ebooks gratuiti"
+		},
+		"about-2": {
+			"textContent": "Scegli fra file epub gratuiti, file kindle gratuiti."
+		},
+		"about-3": {
+			"textContent": "Scaricali o leggili online."
+		},
+		"about-4": {
+			"textContent": "Noi forniamo ebook di alta qualità"
+		},
+		"about-5": {
+			"textContent": "Tutti i nostri ebook erano precedentemente pubblicati da editori."
+		},
+		"about-6": {
+			"textContent": "Li abbiamo digitalizzati e verificati diligentemente con l'aiuto di migliaia di volontari."
+		},
+		"lcc_shelves_title": {
+			"textContent": "Scaffali per libri (A-Z)"
+		},
+		"lcc_shelf_link": {
+			"textContent": "Sfoglia per libreria"
+		},
+		"home_link": {
+			"textContent": "Andare a casa"
+		},
+		"lcc_shelf": {
+			"placeholder": "Ricerca in libreria"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B-Filosofia, psicologia, religione"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-Scienze ausiliarie della storia"
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-Storia delle Americhe"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G-Geografia, antropologia, ricreazione"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H-Scienze sociali"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J-Scienze politiche"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P-Lingua e letteratura"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q-Scienza"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S-Agricoltura"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T-Tecnologia"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U-Scienze militari"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V-Scienze navali"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD-Lingue germaniche e scandinave"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE-Lingua inglese"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF-Lingue germaniche occidentali"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH-Lingue uraliche e basche"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR-Letteratura inglese"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS-Letteratura americana"
+		}
+	},
+	"metadata_defaults": {
+		"title": "Biblioteca Progetto Gutenberg",
+		"description": "Tutti i libri in italiano dal primo produttore di ebook gratuiti"
+	}
 }

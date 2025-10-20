@@ -1,6 +1,11 @@
 {
-    "metadata_defaults": {
-        "title": "プロジェクト・グーテンベルク・ライブラリー",
-        "description": "無料電子書籍の初めての製作者による日本語のすべての本"
-    }
+	"@metadata": {
+		"authors": [
+			"Omotecho"
+		]
+	},
+	"metadata_defaults": {
+		"title": "プロジェクト・グーテンベルク・ライブラリー",
+		"description": "無料電子書籍第1号の製作者による全巻日本語の本"
+	}
 }

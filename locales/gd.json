@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "Wigamig Project Gutenberg",
-        "description": "A h-uile leabhar sa Bheurla bho a` chiad neach a rinn leabhraichean-d an-asgaidh"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "Wigamig Project Gutenberg",
+		"description": "A h-uile leabhar sa Bheurla bho a` chiad neach a rinn leabhraichean-d an-asgaidh"
+	}
 }
