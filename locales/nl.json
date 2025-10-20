@@ -1,68 +1,149 @@
 {
-    "ui_strings": {
-        "isocode": {"textContent": "nl"},
-            "autonym": {"textContent": "Nederlands"},
-            "homepage": {"alt": "Startpagina", "title": "Startpagina"},
-            "choose-language": {"placeholder": "Kies een taal..."},
-            "ui-language-switcher": {"title": "Interfacetaal"},
-            "search": {"textContent": "Zoek"},
-            "author": {
-                "textContent": "Auteur",
-                "placeholder": "Lijst van boeken van een enkele auteur"
-            },
-            "cover-img": {"alt": "Boekomslag", "title": "Boekomslag"},
-            "cover": {"textContent": "(omslag)"},
-            "filter": {"textContent": "Filter:"},
-            "popularity": {"textContent": "Populariteit"},
-            "sort": {"textContent": "Sorteer:"},
-            "sort-popularity": {"textContent": "Sorteer boeken op populariteit"},
-            "sort-title": {"textContent": "Sorteer boeken op titel"},
-            "title": {"textContent": "Titel", "placeholder": "Zoek boeken op titel"},
-            "format": {"textContent": "Formaat"},
-            "loading": {"textContent": "Aan het laden..."},
-            "no-data": {"textContent": "Geen gegevens beschikbaar in tabel"},
-            "prev": {"textContent": "Vorige"},
-            "next": {"textContent": "Volgende"},
-            "language": {"textContent": "Taal"},
-            "any-languages": {"textContent": "Selecteer de Catalogus"},
-            "main-languages": {"textContent": "Belangrijkste talen"},
-            "other-languages": {"textContent": "Andere talen"},
-            "author-anonymous": {"textContent": "Anoniem"},
-            "author-various": {"textContent": "Verschillende"},
-            "license": {"textContent": "Licentie"},
-            "license-pd": {"textContent": "Publiek domein in de VS."},
-            "nb-downloads": {"textContent": "{[ plural(nb) ]}"},
-            "nb-downloads[one]": {
-                "textContent": "1 download in de afgelopen 30 dagen."
-            },
-            "nb-downloads[other]": {
-                "textContent": "{{nb}} downloads in de afgelopen 30 dagen."
-            },
-            "top-title": {"textContent": "Project Gutenberg Bibliotheek"},
-            "sub-title": {"textContent": "De eerste producent van gratis eboeken"},
-            "table-previous": {"textContent": "Vorige"},
-            "table-next": {"textContent": "Volgende"},
-            "about-1": {
-                "textContent": "Project Gutenberg bevat meer dan 60,000 gratis eboeken"
-            },
-            "about-2": {
-                "textContent": "Kies uit gratis epub boeken, gratis kindle boeken."
-            },
-            "about-3": {"textContent": "Download ze of lees ze online."},
-            "about-4": {"textContent": "Wij bieden eboeken van hoge kwaliteit"},
-            "about-5": {
-                "textContent": "Al onze eboeken werden oorspronkelijk uitgegeven door bona fide uitgevers."
-            },
-            "about-6": {
-                "textContent": "We hebben ze gedigitaliseerd en zorgvuldig gecorrigeerd met behulp van duizenden vrijwilligers."
-            },
-            "lcc_shelves_title": {"textContent": "Boekenplanken (A-Z)"},
-            "lcc_shelf_link": {"textContent": "Bladeren op boekenplank"},
-            "home_link": {"textContent": "Ga naar huis"},
-            "lcc_shelf": {"placeholder": "Boekenplank zoeken"}
-    },
-    "metadata_defaults": {
-        "title": "Project Gutenberg-bibliotheek",
-        "description": "Alle boeken in het Nederlands van de eerste producent van gratis e-boeken"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "nl"
+		},
+		"autonym": {
+			"textContent": "Nederlands"
+		},
+		"homepage": {
+			"alt": "Startpagina",
+			"title": "Startpagina"
+		},
+		"choose-language": {
+			"placeholder": "Kies een taal..."
+		},
+		"ui-language-switcher": {
+			"title": "Interfacetaal"
+		},
+		"search": {
+			"textContent": "Zoek"
+		},
+		"author": {
+			"textContent": "Auteur",
+			"placeholder": "Lijst van boeken van een enkele auteur"
+		},
+		"title": {
+			"placeholder": "Zoek boeken op titel"
+		},
+		"cover-img": {
+			"alt": "Boekomslag",
+			"title": "Boekomslag"
+		},
+		"cover": {
+			"textContent": "(omslag)"
+		},
+		"filter": {
+			"textContent": "Filter:"
+		},
+		"popularity": {
+			"textContent": "Populariteit"
+		},
+		"sort": {
+			"textContent": "Sorteer:"
+		},
+		"sort-popularity": {
+			"textContent": "Sorteer boeken op populariteit"
+		},
+		"sort-title": {
+			"textContent": "Sorteer boeken op titel"
+		},
+		"format": {
+			"textContent": "Formaat"
+		},
+		"loading": {
+			"textContent": "Aan het laden..."
+		},
+		"no-data": {
+			"textContent": "Geen gegevens beschikbaar in tabel"
+		},
+		"prev": {
+			"textContent": "Vorige"
+		},
+		"next": {
+			"textContent": "Volgende"
+		},
+		"language": {
+			"textContent": "Taal"
+		},
+		"any-languages": {
+			"textContent": "Selecteer de Catalogus"
+		},
+		"main-languages": {
+			"textContent": "Belangrijkste talen"
+		},
+		"other-languages": {
+			"textContent": "Andere talen"
+		},
+		"author-anonymous": {
+			"textContent": "Anoniem"
+		},
+		"author-various": {
+			"textContent": "Verschillende"
+		},
+		"license": {
+			"textContent": "Licentie"
+		},
+		"license-pd": {
+			"textContent": "Publiek domein in de VS."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plural(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 download in de afgelopen 30 dagen."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} downloads in de afgelopen 30 dagen."
+		},
+		"top-title": {
+			"textContent": "Project Gutenberg Bibliotheek"
+		},
+		"sub-title": {
+			"textContent": "De eerste producent van gratis eboeken"
+		},
+		"table-previous": {
+			"textContent": "Vorige"
+		},
+		"table-next": {
+			"textContent": "Volgende"
+		},
+		"about-1": {
+			"textContent": "Project Gutenberg bevat meer dan 60,000 gratis eboeken"
+		},
+		"about-2": {
+			"textContent": "Kies uit gratis epub boeken, gratis kindle boeken."
+		},
+		"about-3": {
+			"textContent": "Download ze of lees ze online."
+		},
+		"about-4": {
+			"textContent": "Wij bieden eboeken van hoge kwaliteit"
+		},
+		"about-5": {
+			"textContent": "Al onze eboeken werden oorspronkelijk uitgegeven door bona fide uitgevers."
+		},
+		"about-6": {
+			"textContent": "We hebben ze gedigitaliseerd en zorgvuldig gecorrigeerd met behulp van duizenden vrijwilligers."
+		},
+		"lcc_shelves_title": {
+			"textContent": "Boekenplanken (A-Z)"
+		},
+		"lcc_shelf_link": {
+			"textContent": "Bladeren op boekenplank"
+		},
+		"home_link": {
+			"textContent": "Ga naar huis"
+		},
+		"lcc_shelf": {
+			"placeholder": "Boekenplank zoeken"
+		}
+	},
+	"metadata_defaults": {
+		"title": "Project Gutenberg-bibliotheek",
+		"description": "Alle boeken in het Nederlands van de eerste producent van gratis e-boeken"
+	}
 }

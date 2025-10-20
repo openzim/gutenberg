@@ -1,0 +1,272 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bjankuloski06"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "mk"
+		},
+		"autonym": {
+			"textContent": "македонски"
+		},
+		"homepage": {
+			"alt": "Почетна страница",
+			"title": "Почетна страница"
+		},
+		"choose-language": {
+			"placeholder": "Изберете јазик..."
+		},
+		"ui-language-switcher": {
+			"title": "Јазик на посредникот"
+		},
+		"search": {
+			"textContent": "Пребарај"
+		},
+		"author": {
+			"textContent": "Автор",
+			"placeholder": "Пребарајте по име на автор"
+		},
+		"title": {
+			"textContext": "Наслов",
+			"placeholder": "Пребарајте по наслов"
+		},
+		"cover-img": {
+			"alt": "Корица",
+			"title": "Корица"
+		},
+		"cover": {
+			"textContent": "(корица)"
+		},
+		"filter": {
+			"textContent": "Филтер:"
+		},
+		"popularity": {
+			"textContent": "Популарност"
+		},
+		"sort": {
+			"textContent": "Подреди:"
+		},
+		"sort-popularity": {
+			"textContent": "Подреди книги по популарност"
+		},
+		"sort-title": {
+			"textContent": "Подреди книги по наслов"
+		},
+		"format": {
+			"textContent": "Формат"
+		},
+		"loading": {
+			"textContent": "Вчитувам..."
+		},
+		"no-data": {
+			"textContent": "Нема расположливи податоци во табелата"
+		},
+		"prev": {
+			"textContent": "Претходно"
+		},
+		"next": {
+			"textContent": "Следно"
+		},
+		"language": {
+			"textContent": "Јазик"
+		},
+		"any-languages": {
+			"textContent": "Изберете каталог"
+		},
+		"main-languages": {
+			"textContent": "Главни јазици"
+		},
+		"other-languages": {
+			"textContent": "Други јазици"
+		},
+		"author-anonymous": {
+			"textContent": "Анонимен"
+		},
+		"author-various": {
+			"textContent": "Разни"
+		},
+		"license": {
+			"textContent": "Лиценца"
+		},
+		"license-pd": {
+			"textContent": "Јавна сопственост во САД."
+		},
+		"license-copyright": {
+			"textContent": "Заштитено со авторски права. За повеќе поединости, прочитајте ја авторскоправната изјава во оваа книга."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plural(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 преземање во изминативе 30 дена."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} преземање во изминативе 30 дена."
+		},
+		"top-title": {
+			"textContent": "Библиотека на Проектот Гутенберг"
+		},
+		"sub-title": {
+			"textContent": "Првиот на изработувач на бесплатни е-книги"
+		},
+		"table-previous": {
+			"textContent": "Претходно"
+		},
+		"table-next": {
+			"textContent": "Следно"
+		},
+		"about-1": {
+			"textContent": "Проектот Гутенберг нуди преку 60.000 бесплатни е-книги"
+		},
+		"about-2": {
+			"textContent": "Изберете од бесплатните EPUB-книги, бесплатни Kindle-книги."
+		},
+		"about-3": {
+			"textContent": "Преземете ги или читајте ги на линија."
+		},
+		"about-4": {
+			"textContent": "Држиме висококвалитетни е-книги"
+		},
+		"about-5": {
+			"textContent": "Сите наши е-книги се претходно објавени од легитимни издавачи."
+		},
+		"about-6": {
+			"textContent": "Ги дигитализиравме и сесрдно коригиравме со помошта на илјадници доброволци."
+		},
+		"lcc_shelves_title": {
+			"textContent": "Полици (A-Z)"
+		},
+		"lcc_shelf_link": {
+			"textContent": "Прелистај по полица"
+		},
+		"home_link": {
+			"textContent": "Оди Дома"
+		},
+		"lcc_shelf": {
+			"placeholder": "Пребарување на полици"
+		},
+		"lcc-shelf-A": {
+			"textContent": "A — Општи дела"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B — Филозофија, психологија, религија"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C — Помошни науки на историјата"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D — Светска историја и историја на Европа, Азија, Африка, Австралија, Нов Зеланд итн."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E — Историја на Америка"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F — Историја на Америка"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G — Географија, антропологија, разонода"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H — Општествени науки"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J — Политикологија"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K — Право"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L — Образование"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M — Музика и книги за музика"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N — Ликовна уметност"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P — Јазици и книжевност"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q — наука"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R — Медицина"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S — Земјоделство"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T — Технологија"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U — Воена наука"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V — Поморска наука"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z — Библиографија, библиотекарство, ресурси на информации (општо)"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA — Старогрчки и латински јазик и книжевност"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB — Современи и келтски јазици"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC — Романски јазици"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD — Германски и скандинавски јазици"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE — Англиски јазик"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF — Западногермански јазици"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG  — Словенски јазици, балтички јазици и албански јазик"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH — Уралски јазици и баскиски јазик"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ — Ориентални јазици и книжевности"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK — Индоирански јазици и книжевности"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL — Јазици и книжевности на Источна Азија, Африка и Океанија"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM — Крајносеверни, индиски и вештачки јазици"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN — Книжевност (општо)"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ — Француска, италијанска, шпанска и португалска книжевност"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR — Англиска книжевност"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS — Американска книжевност"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT — Германска, холандска, фламанска, африканерска, скандинавска, старонордиска, староисландска, старонорвешка, современа исландска, фарска, данска, норвешка и шведска книжевност"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ — Белектристика за возрасни и деца"
+		}
+	},
+	"metadata_defaults": {
+		"title": "Библиотека на Проектот Гутенберг",
+		"description": "Сите книги на англиски од првиот изработувач на бесплатни е-книги"
+	}
+}

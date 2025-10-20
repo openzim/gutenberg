@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "Gutenberg Verkefnisbókasafnið",
-        "description": "Allar bækur á íslensku frá fyrsta framleiðanda ókeypis rafbóka"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "Gutenberg Verkefnisbókasafnið",
+		"description": "Allar bækur á íslensku frá fyrsta framleiðanda ókeypis rafbóka"
+	}
 }

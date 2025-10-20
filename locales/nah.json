@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "Amoxcalli Project Gutenberg",
-        "description": "Nej tlahcuilolli Nahuatl ik ne zān chicahuac tlamaniliztli e-books"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "Amoxcalli Project Gutenberg",
+		"description": "Nej tlahcuilolli Nahuatl ik ne zān chicahuac tlamaniliztli e-books"
+	}
 }

@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "Llyfrgell Prosiect Gutenberg",
-        "description": "Holl lyfrau Cymraeg gan y cynhyrchydd cyntaf o E-lyfrau rhad ac am ddim"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "Llyfrgell Prosiect Gutenberg",
+		"description": "Holl lyfrau Cymraeg gan y cynhyrchydd cyntaf o E-lyfrau rhad ac am ddim"
+	}
 }

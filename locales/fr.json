@@ -1,150 +1,272 @@
 {
-    "ui_strings": {
-        "isocode": {
-            "textContent": "fr"
-        },
-        "autonym": {
-            "textContent": "Français"
-        },
-        "homepage": {
-            "alt": "Page d`accueil",
-            "title": "Page d`accueil"
-        },
-        "choose-language": {
-            "placeholder": "Choisissez une langue..."
-        },
-        "ui-language-switcher": {
-            "title": "Langue de l`interface"
-        },
-        "search": {
-            "textContent": "Rechercher"
-        },
-        "author": {
-            "textContent": "Auteur",
-            "placeholder": "Rechercher par nom d'auteur"
-        },
-        "cover-img": {
-            "title": "Couverture du livre",
-            "alt": "Couverture du livre"
-        },
-        "cover": {
-            "textContent": "(couverture)"
-        },
-        "filter": {
-            "textContent": "Filtrer :"
-        },
-        "popularity": {
-            "textContent": "Popularité"
-        },
-        "sort": {
-            "textContent": "Trier :"
-        },
-        "sort-popularity": {
-            "textContent": "Trier les livres par popularité"
-        },
-        "sort-title": {
-            "textContent": "Trier les livres par titre"
-        },
-        "title": {
-            "textContent": "Titre",
-            "placeholder": "Rechercher des livres par titre "
-        },
-        "format": {
-            "textContent": "Format"
-        },
-        "loading": {
-            "textContent": "Chargement..."
-        },
-        "no-data": {
-            "textContent": "Pas de données disponibles"
-        },
-        "prev": {
-            "textContent": "Précédent"
-        },
-        "next": {
-            "textContent": "Suivant"
-        },
-        "language": {
-            "textContent": "Langue"
-        },
-        "any-languages": {
-            "textContent": "Choisir le catalogue"
-        },
-        "main-languages": {
-            "textContent": "Langues principales"
-        },
-        "other-languages": {
-            "textContent": "Autres langues"
-        },
-        "author-anonymous": {
-            "textContent": "Anonyme"
-        },
-        "author-various": {
-            "textContent": "Plusieurs"
-        },
-        "license": {
-            "textContent": "Licence"
-        },
-        "license-pd": {
-            "textContent": "Domaine public aux États-Unis."
-        },
-        "license-copyright": {
-            "textContent": "Protégé par le droit d'auteur. Consultez la mention de droit d'auteur à l'intérieur de ce livre pour plus de détails."
-        },
-        "nb-downloads": {
-            "textContent": "{[ plural(nb) ]}"
-        },
-        "nb-downloads[one]": {
-            "textContent": "1 téléchargement au cours des 30 derniers jours."
-        },
-        "nb-downloads[other]": {
-            "textContent": "{{nb}} téléchargements au cours des 30 derniers jours."
-        },
-        "top-title": {
-            "textContent": "Bibliothèque du projet Gutenberg"
-        },
-        "sub-title": {
-            "textContent": "Premier producteur d`ebooks gratuits"
-        },
-        "table-previous": {
-            "textContent": "Prédédent"
-        },
-        "table-next": {
-            "textContent": "Suivant"
-        },
-        "about-1": {
-            "textContent": "Le Projet Gutenberg offre plus de 60 000 ebooks gratuits"
-        },
-        "about-2": {
-            "textContent": "Choisissez parmi les livres epub ou kindle gratuits."
-        },
-        "about-3": {
-            "textContent": "Téléchargez-les ou lisez-les en ligne."
-        },
-        "about-4": {
-            "textContent": "Nous attachons beaucoup d`importance à la qualité des ebooks"
-        },
-        "about-5": {
-            "textContent": "Tous nos livres électroniques ont été auparavant publiés par des éditeurs classiques."
-        },
-        "about-6": {
-            "textContent": "Nous les numérisons et les relisons soigneusement avec l`aide de milliers de volontaires."
-        },
-        "lcc_shelves_title": {
-            "textContent": "Rayons (A-Z)"
-        },
-        "lcc_shelf_link": {
-            "textContent": "Parcourir par rayon"
-        },
-        "home_link": {
-            "textContent": "Retour"
-        },
-        "lcc_shelf": {
-            "placeholder": "Recherche de rayon"
-        }
-    },
-    "metadata_defaults": {
-        "title": "Projet Bibliothèque Gutenberg",
-        "description": "Tous les livres en français du premier producteur d'ebooks gratuits"
-    }
+	"@metadata": {
+		"authors": [
+			"Benoit74"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "fr"
+		},
+		"autonym": {
+			"textContent": "Français"
+		},
+		"homepage": {
+			"alt": "Page d`accueil",
+			"title": "Page d`accueil"
+		},
+		"choose-language": {
+			"placeholder": "Choisissez une langue..."
+		},
+		"ui-language-switcher": {
+			"title": "Langue de l`interface"
+		},
+		"search": {
+			"textContent": "Rechercher"
+		},
+		"author": {
+			"textContent": "Auteur",
+			"placeholder": "Rechercher par nom d'auteur"
+		},
+		"title": {
+			"textContext": "Titre",
+			"placeholder": "Rechercher des livres par titre"
+		},
+		"cover-img": {
+			"alt": "Couverture du livre",
+			"title": "Couverture du livre"
+		},
+		"cover": {
+			"textContent": "(couverture)"
+		},
+		"filter": {
+			"textContent": "Filtrer :"
+		},
+		"popularity": {
+			"textContent": "Popularité"
+		},
+		"sort": {
+			"textContent": "Trier :"
+		},
+		"sort-popularity": {
+			"textContent": "Trier les livres par popularité"
+		},
+		"sort-title": {
+			"textContent": "Trier les livres par titre"
+		},
+		"format": {
+			"textContent": "Format"
+		},
+		"loading": {
+			"textContent": "Chargement..."
+		},
+		"no-data": {
+			"textContent": "Pas de données disponibles"
+		},
+		"prev": {
+			"textContent": "Précédent"
+		},
+		"next": {
+			"textContent": "Suivant"
+		},
+		"language": {
+			"textContent": "Langue"
+		},
+		"any-languages": {
+			"textContent": "Choisir le catalogue"
+		},
+		"main-languages": {
+			"textContent": "Langues principales"
+		},
+		"other-languages": {
+			"textContent": "Autres langues"
+		},
+		"author-anonymous": {
+			"textContent": "Anonyme"
+		},
+		"author-various": {
+			"textContent": "Plusieurs"
+		},
+		"license": {
+			"textContent": "Licence"
+		},
+		"license-pd": {
+			"textContent": "Domaine public aux États-Unis."
+		},
+		"license-copyright": {
+			"textContent": "Protégé par le droit d'auteur. Consultez la mention de droit d'auteur à l'intérieur de ce livre pour plus de détails."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plural(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 téléchargement au cours des 30 derniers jours."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} téléchargements au cours des 30 derniers jours."
+		},
+		"top-title": {
+			"textContent": "Bibliothèque du projet Gutenberg"
+		},
+		"sub-title": {
+			"textContent": "Premier producteur d`ebooks gratuits"
+		},
+		"table-previous": {
+			"textContent": "Prédédent"
+		},
+		"table-next": {
+			"textContent": "Suivant"
+		},
+		"about-1": {
+			"textContent": "Le Projet Gutenberg offre plus de 60 000 ebooks gratuits"
+		},
+		"about-2": {
+			"textContent": "Choisissez parmi les livres epub ou kindle gratuits."
+		},
+		"about-3": {
+			"textContent": "Téléchargez-les ou lisez-les en ligne."
+		},
+		"about-4": {
+			"textContent": "Nous attachons beaucoup d`importance à la qualité des ebooks"
+		},
+		"about-5": {
+			"textContent": "Tous nos livres électroniques ont été auparavant publiés par des éditeurs classiques."
+		},
+		"about-6": {
+			"textContent": "Nous les numérisons et les relisons soigneusement avec l`aide de milliers de volontaires."
+		},
+		"lcc_shelves_title": {
+			"textContent": "Rayons (A-Z)"
+		},
+		"lcc_shelf_link": {
+			"textContent": "Parcourir par rayon"
+		},
+		"home_link": {
+			"textContent": "Retour"
+		},
+		"lcc_shelf": {
+			"placeholder": "Recherche de rayon"
+		},
+		"lcc-shelf-A": {
+			"textContent": "A-Généralités"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B-Philosophie, psychologie, religion"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-Sciences auxiliaires de l'histoire"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D-Histoire du monde et histoire de l'Europe, l'Asie, l'Afrique, l'Australie, la Nouvelle-Zélande, etc."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-Histoire des Amériques (généralités et États-Unis)"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F-Histoire des Amériques (autres pays d'Amérique)"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G-Géographie, anthropologie, loisir"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H-Sciences sociales"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J-Sciences politiques"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K-Droit"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L-Éducation"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M-Musique et livres sur la musique"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N-Beaux-Arts"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P-Langage et littérature"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q-Sciences"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R-Médecine"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S-Agriculture"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T-Technologie"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U-Science militaire"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V-Science navale"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z-Bibliographie, bibliothéconomie, ressources d'information"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA-Language et littérature grecques et latines"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB-Langues modernes et celtiques"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC-Langues romanes"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD-Langues germaniques et scandinaves"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE-Langue anglaise"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF-Langues germaniques occidentales"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG-Langues slaves, baltes et albanaises"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH-Langues ouraliennes et basques"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ-Langues et littératures orientales"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK-Langues et littératures indo-iraniennes"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL-Langues et littératures d'Asie de l'Est, d'Afrique et d'Océanie"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM-Langues hyperboréennes, indiennes et artificielles"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN-Littérature (général)"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ-Littérature française, italienne, espagnole et portugaise"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR-Littérature anglaise"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS-Littérature américaine"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT - Littératures allemande, néerlandaise, flamande, afrikaans, scandinave, vieux norrois, ancienne islandaise, vieux norvégien, islandais moderne, féroïen, danois, norvégien et suédois"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ-Fiction et belles lettres pour jeunes"
+		}
+	},
+	"metadata_defaults": {
+		"title": "Projet Bibliothèque Gutenberg",
+		"description": "Tous les livres en français du premier producteur d'ebooks gratuits"
+	}
 }

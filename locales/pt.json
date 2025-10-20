@@ -1,68 +1,152 @@
 {
-    "ui_strings": {
-        "isocode": {"textContent": "pt"},
-            "autonym": {"textContent": "Portuguese"},
-            "homepage": {"alt": "Homepage", "title": "Homepage"},
-            "choose-language": {"placeholder": "Escolha um idioma ..."},
-            "ui-language-switcher": {"title": "Linguagem de interface"},
-            "search": {"textContent": "Pesquisa"},
-            "author": {
-                "textContent": "Autor",
-                "placeholder": "Pesquisar por nome do autor"
-            },
-            "title": {"textContext": "Título", "placeholder": "Pesquisa por título"},
-            "cover-img": {"alt": "Capa De Livro", "title": "Capa De Livro"},
-            "cover": {"textContent": "(capa)"},
-            "filter": {"textContent": "Filtro:"},
-            "popularity": {"textContent": "Popularidade"},
-            "sort": {"textContent": "Classificação:"},
-            "sort-popularity": {
-                "textContent": "Classificação de livros por popularidade"
-            },
-            "sort-title": {"textContent": "Classificação de livros por título"},
-            "format": {"textContent": "Formato"},
-            "loading": {"textContent": "Carregando ..."},
-            "no-data": {"textContent": "Nenhum dado disponível na tabela"},
-            "prev": {"textContent": "Anterior"},
-            "next": {"textContent": "Próximo"},
-            "language": {"textContent": "Idioma"},
-            "any-languages": {"textContent": "Escolha o Catálogo"},
-            "main-languages": {"textContent": "Línguas principais"},
-            "other-languages": {"textContent": "Outras línguas"},
-            "author-anonymous": {"textContent": "Anônimo"},
-            "author-various": {"textContent": "Vários"},
-            "license": {"textContent": "Licença"},
-            "license-pd": {"textContent": "Domínio público nos EUA."},
-            "nb-downloads": {"textContent": "{[ plural (nb) ]}"},
-            "nb-downloads[one]": {"textContent": "1 download nos últimos 30 dias."},
-            "nb-downloads[other]": {
-                "textContent": "{{nb}} downloads nos últimos 30 dias."
-            },
-            "top-title": {"textContent": "Biblioteca do Projeto Gutenberg"},
-            "sub-title": {"textContent": "O primeiro produtor de ebooks gratuos"},
-            "table-previous": {"textContent": "Anterior"},
-            "table-next": {"textContent": "Próximo"},
-            "about-1": {
-                "textContent": "Projeto Gutenberg oferece mais de 60.000 ebooks gratuos"
-            },
-            "about-2": {
-                "textContent": "Escolha entre livros de epub grátis, livros de kindle grátis."
-            },
-            "about-3": {"textContent": "Baixe-os ou leia-os online."},
-            "about-4": {"textContent": "Nós carregamos ebooks de alta qualidade"},
-            "about-5": {
-                "textContent": "Todos os nossos ebooks foram publicados anteriormente por editoras de Bona fide."
-            },
-            "about-6": {
-                "textContent": "Nós digitalizamos e diligentemente os protestamos com a ajuda de milhares de voluntários."
-            },
-            "lcc_shelves_title": {"textContent": "Prateleiras (A-Z)"},
-            "lcc_shelf_link": {"textContent": "Navegar por Bookshelf"},
-            "home_link": {"textContent": "Ir Para Casa"},
-            "lcc_shelf": {"placeholder": "Pesquisa de Estante"}
-    },
-    "metadata_defaults": {
-        "title": "Biblioteca Projeto Gutenberg",
-        "description": "Todos os livros em português do primeiro produtor de Ebooks Gratuitos"
-    }
+	"@metadata": {
+		"authors": [
+			"Mansil alfalb"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "pt"
+		},
+		"autonym": {
+			"textContent": "Portuguese (Portugal)"
+		},
+		"homepage": {
+			"alt": "Página principal",
+			"title": "Página principal"
+		},
+		"choose-language": {
+			"placeholder": "Escolha um idioma..."
+		},
+		"ui-language-switcher": {
+			"title": "Idioma da interface"
+		},
+		"search": {
+			"textContent": "Procurar"
+		},
+		"author": {
+			"textContent": "Autor",
+			"placeholder": "Procurar por nome do autor"
+		},
+		"title": {
+			"textContext": "Título",
+			"placeholder": "Procurar por título"
+		},
+		"cover-img": {
+			"alt": "Capa De Livro",
+			"title": "Capa do Livro"
+		},
+		"cover": {
+			"textContent": "(capa)"
+		},
+		"filter": {
+			"textContent": "Filtro:"
+		},
+		"popularity": {
+			"textContent": "Popularidade"
+		},
+		"sort": {
+			"textContent": "Ordenar:"
+		},
+		"sort-popularity": {
+			"textContent": "Ordenar os livros por popularidade"
+		},
+		"sort-title": {
+			"textContent": "Ordenar os livros por título"
+		},
+		"format": {
+			"textContent": "Formato"
+		},
+		"loading": {
+			"textContent": "A carregar..."
+		},
+		"no-data": {
+			"textContent": "Nenhum dado disponível na tabela"
+		},
+		"prev": {
+			"textContent": "Anterior"
+		},
+		"next": {
+			"textContent": "Seguinte"
+		},
+		"language": {
+			"textContent": "Idioma"
+		},
+		"any-languages": {
+			"textContent": "Escolha o Catálogo"
+		},
+		"main-languages": {
+			"textContent": "Idiomas principais"
+		},
+		"other-languages": {
+			"textContent": "Outros idiomas"
+		},
+		"author-anonymous": {
+			"textContent": "Anónimo"
+		},
+		"author-various": {
+			"textContent": "Vários"
+		},
+		"license": {
+			"textContent": "Licença"
+		},
+		"license-pd": {
+			"textContent": "Domínio público nos EUA."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plural (nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 transferência nos últimos 30 dias."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} transferências nos últimos 30 dias."
+		},
+		"top-title": {
+			"textContent": "Biblioteca do Projeto Gutenberg"
+		},
+		"sub-title": {
+			"textContent": "O primeiro produtor de ebooks gratuitos"
+		},
+		"table-previous": {
+			"textContent": "Anterior"
+		},
+		"table-next": {
+			"textContent": "Seguinte"
+		},
+		"about-1": {
+			"textContent": "O Projeto Gutenberg oferece mais de 60.000 ebooks gratuitos"
+		},
+		"about-2": {
+			"textContent": "Escolha entre livros de epub grátis, livros de kindle grátis."
+		},
+		"about-3": {
+			"textContent": "Transfira-os ou leia-os ''on-line''."
+		},
+		"about-4": {
+			"textContent": "Nós temos ebooks de alta qualidade"
+		},
+		"about-5": {
+			"textContent": "Todos os nossos ebooks foram publicados anteriormente por editoras de Bona fide."
+		},
+		"about-6": {
+			"textContent": "Nós digitalizamos e diligentemente os revemos com a ajuda de milhares de voluntários."
+		},
+		"lcc_shelves_title": {
+			"textContent": "Prateleiras (A-Z)"
+		},
+		"lcc_shelf_link": {
+			"textContent": "Navegar por Bookshelf"
+		},
+		"home_link": {
+			"textContent": "Ir para Início"
+		},
+		"lcc_shelf": {
+			"placeholder": "Pesquisa de Estante"
+		}
+	},
+	"metadata_defaults": {
+		"title": "Biblioteca do Projeto Gutenberg",
+		"description": "Todos os livros em português do primeiro produtor de Ebooks gratuitos"
+	}
 }

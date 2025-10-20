@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "Projek Gutenberg-biblioteek",
-        "description": "Alle boeke in Afrikaans van die eerste vervaardiger van gratis e-boeke"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "Projek Gutenberg-biblioteek",
+		"description": "Alle boeke in Afrikaans van die eerste vervaardiger van gratis e-boeke"
+	}
 }

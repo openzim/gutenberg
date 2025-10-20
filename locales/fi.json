@@ -1,6 +1,9 @@
 {
-    "metadata_defaults": {
-        "title": "Project Gutenbergin Kirjasto",
-        "description": "Kaikki suomenkieliset kirjat ensimmäiseltä ilmaisten e-kirjojen tuottajalta"
-    }
+	"@metadata": {
+		"authors": []
+	},
+	"metadata_defaults": {
+		"title": "Project Gutenbergin Kirjasto",
+		"description": "Kaikki suomenkieliset kirjat ensimmäiseltä ilmaisten e-kirjojen tuottajalta"
+	}
 }
