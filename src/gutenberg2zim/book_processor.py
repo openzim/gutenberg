@@ -64,7 +64,10 @@ def process_all_books(
         return False
 
     def process_book(book_id: int, progress: ScraperProgress):
-        process_book_inner(book_id)
+        try:
+            process_book_inner(book_id)
+        except Exception:
+            logger.error(f"Fatal error received with processing book {book_id}")
         progress.increase_progress()
 
     @backoff.on_exception(

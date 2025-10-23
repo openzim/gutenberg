@@ -25,6 +25,7 @@ as of 2.0.0.
 ### Added
 - Add standard `--output` option to control where ZIM files are written (#314)
 - Add ability to generate smaller selection (#184)
+- Log failing book ID in case of fatal error (#333)
 
 ### Changed
 
