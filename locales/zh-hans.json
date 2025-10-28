@@ -1,0 +1,273 @@
+{
+	"@metadata": {
+		"authors": [
+			"Benoit74",
+			"TFX202X"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "zh-hans"
+		},
+		"autonym": {
+			"textContent": "简体中文"
+		},
+		"homepage": {
+			"alt": "主页",
+			"title": "主页"
+		},
+		"choose-language": {
+			"placeholder": "选择语言..."
+		},
+		"ui-language-switcher": {
+			"title": "界面语言"
+		},
+		"search": {
+			"textContent": "搜索"
+		},
+		"author": {
+			"textContent": "作者",
+			"placeholder": "按作者姓名搜索"
+		},
+		"title": {
+			"textContent": "标题",
+			"placeholder": "按标题搜索"
+		},
+		"cover-img": {
+			"alt": "书籍封面",
+			"title": "书籍封面"
+		},
+		"cover": {
+			"textContent": "（封面）"
+		},
+		"filter": {
+			"textContent": "过滤器："
+		},
+		"popularity": {
+			"textContent": "流行度"
+		},
+		"sort": {
+			"textContent": "排序："
+		},
+		"sort-popularity": {
+			"textContent": "按受欢迎程度对书籍进行排序"
+		},
+		"sort-title": {
+			"textContent": "按标题对书籍进行排序"
+		},
+		"format": {
+			"textContent": "格式"
+		},
+		"loading": {
+			"textContent": "加载中..."
+		},
+		"no-data": {
+			"textContent": "表格内没有可用数据"
+		},
+		"prev": {
+			"textContent": "上一项"
+		},
+		"next": {
+			"textContent": "下一项"
+		},
+		"language": {
+			"textContent": "语言"
+		},
+		"any-languages": {
+			"textContent": "选择目录"
+		},
+		"main-languages": {
+			"textContent": "主要语言"
+		},
+		"other-languages": {
+			"textContent": "其他语言"
+		},
+		"author-anonymous": {
+			"textContent": "匿名用户"
+		},
+		"author-various": {
+			"textContent": "各种各样的"
+		},
+		"license": {
+			"textContent": "许可协议"
+		},
+		"license-pd": {
+			"textContent": "在美国属于公共领域。"
+		},
+		"license-copyright": {
+			"textContent": "受版权保护。详情请阅读本书内的版权声明。"
+		},
+		"nb-downloads": {
+			"textContent": "{[复数(nb)]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "过去30天内下载1次。"
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "过去30天内下载了{{nb}}次。"
+		},
+		"top-title": {
+			"textContent": "古腾堡计划图书馆"
+		},
+		"sub-title": {
+			"textContent": "第一个免费电子书的制作者"
+		},
+		"table-previous": {
+			"textContent": "上一个"
+		},
+		"table-next": {
+			"textContent": "下一个"
+		},
+		"about-1": {
+			"textContent": "古腾堡计划提供超过60,000本免费电子书"
+		},
+		"about-2": {
+			"textContent": "在免费的epub书籍、免费的kindle书籍中进行选择。"
+		},
+		"about-3": {
+			"textContent": "下载它们或在线阅读。"
+		},
+		"about-4": {
+			"textContent": "我们提供高质量的电子书"
+		},
+		"about-5": {
+			"textContent": "我们所有的电子书都是由正规出版商出版的。"
+		},
+		"about-6": {
+			"textContent": "我们在数千名志愿者的帮助下将它们数字化并认真校对。"
+		},
+		"lcc_shelves_title": {
+			"textContent": "书架（A-Z）"
+		},
+		"lcc_shelf_link": {
+			"textContent": "按书架浏览"
+		},
+		"home_link": {
+			"textContent": "回到主页"
+		},
+		"lcc_shelf": {
+			"placeholder": "书架搜索"
+		},
+		"lcc-shelf-A": {
+			"textContent": "A-总类"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B-哲学、心理学、宗教"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-历史辅助科学"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D-世界历史以及欧洲、亚洲、非洲、澳大利亚、新西兰等地的历史"
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-美洲历史"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F-美洲历史"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G-地理学、人类学、娱乐"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H-社会科学"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J-政治学"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K-法律"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L-教育"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M-音乐与音乐类书籍"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N-美术"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P-语言和文学"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q-科学"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R-医学"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S-农业"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T-技术"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U-军事科学"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V-海军科学"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z-书目、图书馆学、信息资源（通用）"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA-希腊语和拉丁语语言与文学"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB-现代和凯尔特语言"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC-罗曼语系"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD-日耳曼语系和斯堪的纳维亚语系"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE-英语语言"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF-西日耳曼语"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG-斯拉夫语、波罗的海语和阿尔巴尼亚语"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH-乌拉尔语和巴斯克语"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ-东方语言和文学"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK-印度-伊朗语言和文学"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL-东亚、非洲、大洋洲语言与文学"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM-极北语言、印度语言和人造语言"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN-文学（总览）"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ-法国、意大利、西班牙、葡萄牙文学"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR-英语文学"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS-美国文学"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT-德语、荷兰语、佛兰德语、南非荷兰语、斯堪的纳维亚语、古挪威语、古冰岛语、古挪威语、现代冰岛语、法罗语、丹麦语、挪威语和瑞典文学"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ-小说和青少年纯文学"
+		}
+	},
+	"metadata_defaults": {
+		"title": "古腾堡计划图书馆",
+		"description": "所有书籍均为简体中文，来自首家免费电子书制作商"
+	}
+}

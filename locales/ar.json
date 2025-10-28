@@ -1,6 +1,8 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Mohammed Qays"
+		]
 	},
 	"ui_strings": {
 		"isocode": {
@@ -127,7 +129,7 @@
 			"textContent": "كل كتبنا كانت مسبقا منشورة من قبل ناشرين bona fide."
 		},
 		"about-6": {
-			"textContent": "لقد رقمناهم و قرأناهم بجد و ذلك بمساعدة من الآلاف من المتطوعين."
+			"textContent": "لقد قمنا برقمنتها ومراجعتها بعناية بمساعدة الآلاف من المتطوعين."
 		},
 		"lcc_shelves_title": {
 			"textContent": "أرفف الكتب (أ-ي)"

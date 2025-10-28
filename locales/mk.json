@@ -29,7 +29,7 @@
 			"placeholder": "Пребарајте по име на автор"
 		},
 		"title": {
-			"textContext": "Наслов",
+			"textContent": "Наслов",
 			"placeholder": "Пребарајте по наслов"
 		},
 		"cover-img": {
