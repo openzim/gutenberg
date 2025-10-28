@@ -27,7 +27,7 @@
 			"placeholder": "Placeholder text for the author search input field"
 		},
 		"title": {
-			"textContext": "Label for the book title field",
+			"textContent": "Label for the book title field",
 			"placeholder": "Placeholder text for the title search input field"
 		},
 		"cover-img": {

@@ -29,7 +29,7 @@
 			"placeholder": "Procurar por nome do autor"
 		},
 		"title": {
-			"textContext": "Título",
+			"textContent": "Título",
 			"placeholder": "Procurar por título"
 		},
 		"cover-img": {

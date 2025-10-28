@@ -30,7 +30,7 @@
 			"placeholder": "按作者姓名搜索"
 		},
 		"title": {
-			"textContext": "标题",
+			"textContent": "标题",
 			"placeholder": "按标题搜索"
 		},
 		"cover-img": {

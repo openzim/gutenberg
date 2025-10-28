@@ -24,7 +24,7 @@
             "placeholder": "Search by author name"
         },
         "title": {
-            "textContext": "Title",
+            "textContent": "Title",
             "placeholder": "Search by title"
         },
         "cover-img": {

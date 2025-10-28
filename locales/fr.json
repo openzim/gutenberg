@@ -29,7 +29,7 @@
 			"placeholder": "Rechercher par nom d'auteur"
 		},
 		"title": {
-			"textContext": "Titre",
+			"textContent": "Titre",
 			"placeholder": "Rechercher des livres par titre"
 		},
 		"cover-img": {
