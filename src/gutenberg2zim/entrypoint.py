@@ -23,8 +23,8 @@ help_info = (
     """[-d CACHE_PATH] [-e STATIC_PATH] """
     """[-z ZIM_PATH] [-b BOOKS] """
     """[-t ZIM_TITLE] [-n ZIM_DESC] [-L ZIM_LONG_DESC] """
-    """[--zim-languages LANGUAGES] [-c CONCURRENCY] [--no-index] """
-    """[--title-search] [--lcc-shelves SHELVES] """
+    """[--zim-languages LANGUAGES] [--zim-name ZIM_NAME] [-c CONCURRENCY]"""
+    """[--no-index] [--title-search] [--lcc-shelves SHELVES] """
     """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
     """[--mirror-url MIRROR_URL] [--output OUTPUT_FOLDER][--debug] """
     """
@@ -37,7 +37,8 @@ help_info = (
 -f --formats=<list>             Comma-separated list of formats to filter """
     """export to (epub, html, pdf, all)
 
--z --zim-file=<file>            Write ZIM into this file path
+-z --zim-file=<file>            Write ZIM into at this file path
+--zim-name=<name>               Set ZIM name (metadata)
 -t --zim-title=<title>          Set ZIM title
 -n --zim-desc=<description>         Set ZIM description
 -L --zim-long-desc=<description>   Set ZIM long description
@@ -67,7 +68,8 @@ and create the ZIM file."""
 def main():
     arguments = docopt(help_info, version=VERSION)
 
-    zim_name = arguments.get("--zim-file")
+    zim_file = arguments.get("--zim-file")
+    zim_name = arguments.get("--zim-name")
     mirror_url = arguments.get("--mirror-url") or "https://gutenberg.mirror.driftle.ss"
 
     books_csv = arguments.get("--books") or ""
@@ -244,7 +246,8 @@ def main():
         ),
         formats=formats,
         is_selection=len(only_books_ids) > 0 or len(lcc_shelves or []) > 0,
-        zim_name=Path(zim_name).name if zim_name else None,
+        zim_file=Path(zim_file).name if zim_file else None,
+        zim_name=zim_name,
         title=zim_title,
         description=description,
         long_description=long_description,

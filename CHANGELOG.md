@@ -8,6 +8,15 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Add CLI flag to customize ZIM Name (#340)
+
+### Fixed
+
+- Add missing flags in offliner definition (#339)
+
+
 ## [3.0.0] - 2025-10-28
 
 ### Breaking

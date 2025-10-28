@@ -18,7 +18,7 @@ NB_POPULARITY_STARS = 5
 
 def process_all_books(
     book_ids: list[int],
-    project_id: str,
+    zim_name: str,
     mirror_url: str,
     concurrency: int,
     languages: list[str],
@@ -102,7 +102,7 @@ def process_all_books(
                 book_files=book_content.files,
                 cover_image=book_content.cover_image,
                 formats=formats,
-                project_id=project_id,
+                zim_name=zim_name,
                 title_search=title_search,
                 add_lcc_shelves=add_lcc_shelves,
             )
@@ -139,14 +139,14 @@ def process_all_books(
     export_to_json_helpers(
         languages=languages,
         formats=formats,
-        project_id=project_id,
+        zim_name=zim_name,
         add_lcc_shelves=add_lcc_shelves,
     )
 
     # export HTML index and other static files
     logger.info("Exporting HTML skeleton")
     export_skeleton(
-        project_id=project_id,
+        zim_name=zim_name,
         title_search=title_search,
         add_lcc_shelves=add_lcc_shelves,
     )

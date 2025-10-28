@@ -59,7 +59,8 @@ You can find the full arguments list below:
 -l --languages=<list>           Comma-separated list of lang codes to filter export to (preferably ISO 639-1, else ISO 639-3)
 -f --formats=<list>             Comma-separated list of formats to filter export to (epub, html, pdf, all)
 
--z --zim-file=<file>            Write ZIM into this file path
+-z --zim-file=<file>            Write ZIM into at this file path
+--zim-name=<name>               Set ZIM name (metadata)
 -t --zim-title=<title>          Set ZIM title
 -n --zim-desc=<description>     Set ZIM description
 -L --zim-long-desc=<description> Set ZIM long description

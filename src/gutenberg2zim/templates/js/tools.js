@@ -6,7 +6,7 @@ var title_dict = null;
 var globalShelvesTable = null;
 var persist_options = {
   context: "gutenberg", // a context or namespace for each field
-  cookie: "{{ project_id }}", // cookies basename
+  cookie: "{{ zim_name }}", // cookies basename
   expires: 1, // cookie expiry (eg 365)
   replace: true,
   debug: true,
