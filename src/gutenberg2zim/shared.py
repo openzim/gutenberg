@@ -27,7 +27,7 @@ class Global:
 
     creator: Creator
     default_context: dict[str, Any] | None
-    default_context_project_id: str | None
+    default_context_zim_name: str | None
 
     _lock = threading.Lock()
 
@@ -44,7 +44,7 @@ class Global:
         debug,
     ):
         Global.default_context = None
-        Global.default_context_project_id = None
+        Global.default_context_zim_name = None
         Global.creator = (
             Creator(
                 filename=filename,

@@ -39,9 +39,9 @@ def get_ui_languages_for():
     return ui_languages
 
 
-def get_default_context(project_id):
-    if not Global.default_context or Global.default_context_project_id != project_id:
-        Global.default_context_project_id = project_id
+def get_default_context(zim_name):
+    if not Global.default_context or Global.default_context_zim_name != zim_name:
+        Global.default_context_zim_name = zim_name
         l10n_strings = {"default_locale": "en", "locales": {}}
         for file in LOCALES_LOCATION.glob("*.json"):
             if not file.is_file():
@@ -54,7 +54,7 @@ def get_default_context(project_id):
             "l10n_strings": json.dumps(l10n_strings),
             "ui_languages": get_ui_languages_for(),
             "languages": get_langs_with_count(languages=None),
-            "project_id": project_id,
+            "zim_name": zim_name,
         }
     return Global.default_context.copy()
 
@@ -100,11 +100,11 @@ def get_list_of_all_languages():
 
 
 def export_skeleton(
-    project_id,
+    zim_name,
     title_search,
     add_lcc_shelves,
 ):
-    context = get_default_context(project_id)
+    context = get_default_context(zim_name)
     context.update(
         {
             "show_books": True,
@@ -392,7 +392,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
 
 def cover_html_content_for(
     book,
-    project_id,
+    zim_name,
     title_search,
     add_lcc_shelves,
     formats,
@@ -419,7 +419,7 @@ def cover_html_content_for(
     # book.languages is now a list[str] directly
     book_languages = sorted(book.languages)
 
-    context = get_default_context(project_id=project_id)
+    context = get_default_context(zim_name=zim_name)
     context.update(
         {
             "book": book,
@@ -436,18 +436,18 @@ def cover_html_content_for(
     return template.render(**context)
 
 
-def author_html_content_for(author, project_id):
-    context = get_default_context(project_id=project_id)
+def author_html_content_for(author, zim_name):
+    context = get_default_context(zim_name=zim_name)
     context.update({"author": author})
     template = jinja_env.get_template("author.html")
     return template.render(**context)
 
 
-def save_author_file(author, project_id):
+def save_author_file(author, zim_name):
     logger.debug(f"\t\tSaving author file {author.name()} (ID {author})")
     Global.add_item_for(
         path=f"{author.fname()}",
-        content=author_html_content_for(author, project_id),
+        content=author_html_content_for(author, zim_name),
         mimetype="text/html",
         title=author.name(),
         is_front=True,
@@ -459,7 +459,7 @@ def export_book(
     book_files: dict[str, bytes],
     cover_image: bytes | None,
     formats: list[str],
-    project_id: str,
+    zim_name: str,
     *,
     title_search: bool,
     add_lcc_shelves: bool,
@@ -475,7 +475,7 @@ def export_book(
     write_book_presentation_article(
         book=book,
         cover_image=cover_image,
-        project_id=project_id,
+        zim_name=zim_name,
         title_search=title_search,
         add_lcc_shelves=add_lcc_shelves,
         formats=formats,
@@ -581,7 +581,7 @@ def handle_book_files(
 def write_book_presentation_article(
     book,
     cover_image: bytes | None,
-    project_id,
+    zim_name,
     title_search,
     add_lcc_shelves,
     formats,
@@ -603,7 +603,7 @@ def write_book_presentation_article(
     html = cover_html_content_for(
         book=book,
         has_cover=cover_image is not None,
-        project_id=project_id,
+        zim_name=zim_name,
         title_search=title_search,
         add_lcc_shelves=add_lcc_shelves,
         formats=formats,
@@ -632,7 +632,7 @@ def lcc_shelf_list_language(lang):
     )
 
 
-def export_to_json_helpers(languages, formats, project_id, add_lcc_shelves):
+def export_to_json_helpers(languages, formats, zim_name, add_lcc_shelves):
     def dumpjs(col, fn, var="json_data"):
         Global.add_item_for(
             path=fn,
@@ -806,7 +806,7 @@ def export_to_json_helpers(languages, formats, project_id, add_lcc_shelves):
 
         # Create the LCC shelf home page
         logger.debug("\t\tDumping lcc_shelf_home (HTML)")
-        context = get_default_context(project_id=project_id)
+        context = get_default_context(zim_name=zim_name)
         context.update({"lcc_shelf_home": True, "add_lcc_shelves": True})
         template = jinja_env.get_template("lcc_shelf_home.html")
         rendered = template.render(**context)
@@ -909,7 +909,7 @@ def export_to_json_helpers(languages, formats, project_id, add_lcc_shelves):
             )
 
         # author HTML redirect file
-        save_author_file(author, project_id)
+        save_author_file(author, zim_name)
 
     # authors list sorted by name
     logger.info("\tDumping authors.js")

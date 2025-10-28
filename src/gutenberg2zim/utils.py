@@ -59,7 +59,7 @@ def normalize(text: str | None = None) -> str | None:
     return None if text is None else unicodedata.normalize("NFC", text)
 
 
-def get_project_id(languages, formats, is_selection):
+def get_zim_name(languages, formats, is_selection):
     parts = ["gutenberg"]
     parts.append("mul" if len(languages) > 1 else languages[0])
     if len(formats) < len(ALL_FORMATS):

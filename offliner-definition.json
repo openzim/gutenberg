@@ -15,6 +15,20 @@
       "title": "Formats",
       "description": "Comma-separated list of formats to filter export to (epub, html, pdf, all) Defaults to all"
     },
+    "zim_file": {
+      "type": "string",
+      "required": false,
+      "title": "ZIM Filename",
+      "description": "Custom ZIM filename; computed from ZIM Name otherwise.",
+      "pattern": "^([a-z0-9\\-\\.]+_)([a-z\\-]+_)([a-z0-9\\-\\.]+_)([a-z0-9\\-\\.]+_|)([\\d]{4}-[\\d]{2}|\\{period\\}).zim$"
+    },
+    "zim_name": {
+      "type": "string",
+      "required": false,
+      "title": "ZIM Name",
+      "description": "Custom ZIM Name metadata.",
+      "pattern": "^([a-z0-9\\-\\.]+_)([a-z\\-]+_)([a-z0-9\\-\\.]+)$"
+    },
     "zim_title": {
       "type": "string",
       "required": false,
@@ -30,6 +44,22 @@
       "description": "Description for ZIM",
       "minLength": 1,
       "maxLength": 80
+    },
+    "zim_long_desc": {
+      "type": "string",
+      "required": false,
+      "title": "Long Description",
+      "description": "Long Description for ZIM",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "zim_languages": {
+      "type": "string",
+      "required": false,
+      "title": "ZIM Languages",
+      "description": "ZIM Language metadata; comma separated ISO-639-3 language codes expected",
+      "pattern": "^[a-z]{3}(,[a-z]{3})*$",
+      "customValidator": "language_code"
     },
     "books": {
       "type": "string",
@@ -83,13 +113,11 @@
       "description": "Output folder for ZIM file(s). Leave it as `/output`",
       "pattern": "^/output$"
     },
-    "zim_languages": {
+    "mirror_url": {
       "type": "string",
       "required": false,
-      "title": "ZIM Languages",
-      "description": "ZIM Language metadata; comma separated ISO-639-3 language codes expected",
-      "pattern": "^[a-z]{3}(,[a-z]{3})*$",
-      "customValidator": "language_code"
+      "title": "Mirror URL",
+      "description": "URL to a specific Gutenberg mirror to use"
     }
   }
 }

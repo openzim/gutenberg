@@ -8,7 +8,7 @@ from gutenberg2zim.csv_catalog import CatalogEntry
 from gutenberg2zim.iso639 import ISO_MATRIX, ISO_MATRIX_REV, ZIM_LANGUAGES_MAP
 from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.shared import Global
-from gutenberg2zim.utils import get_project_id
+from gutenberg2zim.utils import get_zim_name
 
 
 def get_zim_language_metadata(languages: list[str], books: list[CatalogEntry]):
@@ -28,6 +28,7 @@ def build_zimfile(
     concurrency: int,
     languages: list[str],
     formats: list[str],
+    zim_file: str | None,
     zim_name: str | None,
     title: str | None,
     description: str | None,
@@ -65,19 +66,19 @@ def build_zimfile(
 
     logger.info(f"\tWriting {metadata_lang} ZIM for {title}")
 
-    project_id = get_project_id(languages, formats, is_selection)
+    zim_name = zim_name or get_zim_name(languages, formats, is_selection)
 
-    if zim_name is None:
-        zim_name = "{}_{}.zim".format(
-            project_id, datetime.datetime.now().strftime("%Y-%m")  # noqa: DTZ005
+    if zim_file is None:
+        zim_file = "{}_{}.zim".format(
+            zim_name, datetime.datetime.now().strftime("%Y-%m")  # noqa: DTZ005
         )
-    zim_path = output_folder / zim_name
+    zim_path = output_folder / zim_file
 
     if zim_path.exists() and not force:
-        logger.info(f"ZIM file `{zim_name}` already exist.")
+        logger.info(f"ZIM file `{zim_file}` already exist.")
         return
     elif zim_path.exists():
-        logger.info(f"Removing existing ZIM file {zim_name}")
+        logger.info(f"Removing existing ZIM file {zim_file}")
         zim_path.unlink(missing_ok=True)
 
     Global.setup(
@@ -86,7 +87,7 @@ def build_zimfile(
         title=title,
         description=description,
         long_description=long_description,
-        name=project_id,
+        name=zim_name,
         publisher=publisher,
         with_fulltext_index=with_fulltext_index,
         debug=debug,
@@ -97,7 +98,7 @@ def build_zimfile(
     try:
         process_all_books(
             book_ids=[book.book_id for book in books],
-            project_id=project_id,
+            zim_name=zim_name,
             mirror_url=mirror_url,
             concurrency=concurrency,
             languages=languages,
