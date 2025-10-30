@@ -32,7 +32,20 @@ DEBUG_COUNT = []
 
 
 def get_ui_languages_for():
-    ui_languages = ["en", "fr", "de", "it", "ar", "nl", "es", "pt"]
+    ui_languages = [
+        "ar",
+        "de",
+        "en",
+        "eo",
+        "es",
+        "fr",
+        "it",
+        "mk",
+        "nl",
+        "pt",
+        "sv",
+        "zh-hans",
+    ]
     languages = get_langs_with_count(languages=None)
     if len(languages) == 1 and languages[-1][1] in ui_languages:
         return [languages[-1][1]]
