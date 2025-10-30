@@ -1,6 +1,212 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Apq"
+		]
+	},
+	"ui_strings": {
+		"autonym": {
+			"textContent": "English"
+		},
+		"homepage": {
+			"alt": "Hem",
+			"title": "Hem"
+		},
+		"choose-language": {
+			"placeholder": "Välj ett språk..."
+		},
+		"ui-language-switcher": {
+			"title": "Gränssnittsspråk"
+		},
+		"search": {
+			"textContent": "Sök"
+		},
+		"author": {
+			"textContent": "Författare",
+			"placeholder": "Sök efter författare"
+		},
+		"title": {
+			"textContent": "Titel",
+			"placeholder": "Sök efter titel"
+		},
+		"cover-img": {
+			"alt": "Bokomslag",
+			"title": "Bokomslag"
+		},
+		"cover": {
+			"textContent": "(omslag)"
+		},
+		"filter": {
+			"textContent": "Filter:"
+		},
+		"popularity": {
+			"textContent": "Popularitet"
+		},
+		"sort": {
+			"textContent": "Sortering:"
+		},
+		"sort-popularity": {
+			"textContent": "Sortera efter popularitet"
+		},
+		"sort-title": {
+			"textContent": "Sortera efter titel"
+		},
+		"format": {
+			"textContent": "Format"
+		},
+		"loading": {
+			"textContent": "Laddar..."
+		},
+		"no-data": {
+			"textContent": "Ingen data tillgänlig i tabellen"
+		},
+		"prev": {
+			"textContent": "Föregående"
+		},
+		"next": {
+			"textContent": "Nästa"
+		},
+		"language": {
+			"textContent": "Språk"
+		},
+		"any-languages": {
+			"textContent": "Välj Katalogen"
+		},
+		"main-languages": {
+			"textContent": "Huvudspråk"
+		},
+		"other-languages": {
+			"textContent": "Andra språk"
+		},
+		"author-anonymous": {
+			"textContent": "Anonym"
+		},
+		"author-various": {
+			"textContent": "Diverse"
+		},
+		"license": {
+			"textContent": "Licens"
+		},
+		"license-pd": {
+			"textContent": "Public domain i USA."
+		},
+		"license-copyright": {
+			"textContent": "Upphovsrättsskyddad. Läs upphovsrättsmeddelandet i boken för mer information."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plural(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 nedladdning de senaste 30 dagarna."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} nedladdningar de senaste 30 dagarna."
+		},
+		"top-title": {
+			"textContent": "Projekt Gutenberg-biblioteket"
+		},
+		"sub-title": {
+			"textContent": "Den första utgivaren av gratis e-böcker"
+		},
+		"table-previous": {
+			"textContent": "Föregående"
+		},
+		"table-next": {
+			"textContent": "Nästa"
+		},
+		"about-1": {
+			"textContent": "Projekt Gutenberg erbjuder över 60 000 gratis e-böcker"
+		},
+		"about-2": {
+			"textContent": "Välj bland gratis epub-böcker, gratis Kindle-böcker."
+		},
+		"about-3": {
+			"textContent": "Ladda ned dem eller läs dem online."
+		},
+		"about-4": {
+			"textContent": "Vi har e-böcker av hög kvalitet"
+		},
+		"about-5": {
+			"textContent": "Alla våra e-böcker publicerades tidigare av bona fide förlag."
+		},
+		"about-6": {
+			"textContent": "Vi digitaliserade och korrekturläste dem noggrant med hjälp av tusentals volontärer."
+		},
+		"lcc_shelves_title": {
+			"textContent": "Bokhyllor (A-Z)"
+		},
+		"lcc_shelf_link": {
+			"textContent": "Bläddra efter Bokhylla"
+		},
+		"home_link": {
+			"textContent": "Hem"
+		},
+		"lcc_shelf": {
+			"placeholder": "Sök i bokhyllan"
+		},
+		"lcc-shelf-A": {
+			"textContent": "A-Allmänna verk"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B-Filosofi, psykologi, religion"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-Historiska hjälpvetenskaper"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D-Världshistoria och Europas, Asiens, Afrikas, Australiens, Nya Zeelands historia, etc."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-Amerikas historia"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F-Amerikas historia"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G-Geografi, antropologi, rekreation"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H-Samhällsvetenskap"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J-Statsvetenskap"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K-Juridik"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L-Utbildning"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M-Musik och böcker om musik"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N-Konst"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P-Språk och litteratur"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q-Vetenskap"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R-Medicin"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S-Jordbruk"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T-Teknik"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U-Militärvetenskap"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V-Örlogsvetenskap"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z-Bibliografi, biblioteksvetenskap, informationsresurser (allmänt)"
+		}
 	},
 	"metadata_defaults": {
 		"title": "Projekt Gutenbergs Bibliotek",
