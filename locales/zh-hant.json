@@ -1,0 +1,272 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kly"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "zh-hant"
+		},
+		"autonym": {
+			"textContent": "繁體中文"
+		},
+		"homepage": {
+			"alt": "首頁",
+			"title": "首頁"
+		},
+		"choose-language": {
+			"placeholder": "選擇一種語言…"
+		},
+		"ui-language-switcher": {
+			"title": "介面語言"
+		},
+		"search": {
+			"textContent": "搜尋"
+		},
+		"author": {
+			"textContent": "作者",
+			"placeholder": "依照作者名稱搜尋"
+		},
+		"title": {
+			"textContent": "標題",
+			"placeholder": "依照標題搜尋"
+		},
+		"cover-img": {
+			"alt": "書籍封面",
+			"title": "書籍封面"
+		},
+		"cover": {
+			"textContent": "（封面）"
+		},
+		"filter": {
+			"textContent": "篩選："
+		},
+		"popularity": {
+			"textContent": "人氣"
+		},
+		"sort": {
+			"textContent": "排序："
+		},
+		"sort-popularity": {
+			"textContent": "依照人氣排序書籍"
+		},
+		"sort-title": {
+			"textContent": "依照標題排序書籍"
+		},
+		"format": {
+			"textContent": "格式"
+		},
+		"loading": {
+			"textContent": "載入中…"
+		},
+		"no-data": {
+			"textContent": "表格裡沒有可用資料"
+		},
+		"prev": {
+			"textContent": "上一個"
+		},
+		"next": {
+			"textContent": "下一個"
+		},
+		"language": {
+			"textContent": "語言"
+		},
+		"any-languages": {
+			"textContent": "選擇目錄"
+		},
+		"main-languages": {
+			"textContent": "主要語言"
+		},
+		"other-languages": {
+			"textContent": "其他語言"
+		},
+		"author-anonymous": {
+			"textContent": "匿名作者"
+		},
+		"author-various": {
+			"textContent": "多位作者"
+		},
+		"license": {
+			"textContent": "授權條款"
+		},
+		"license-pd": {
+			"textContent": "在美國屬於公有領域。"
+		},
+		"license-copyright": {
+			"textContent": "版權所有。詳情請閱讀本書內的版權聲明。"
+		},
+		"nb-downloads": {
+			"textContent": "{[複數（nb）]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "過去 30 天內下載 1 次。"
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "過去 30 天下載 {{nb}} 次。"
+		},
+		"top-title": {
+			"textContent": "古騰堡計劃文庫"
+		},
+		"sub-title": {
+			"textContent": "首個免費電子書製作者"
+		},
+		"table-previous": {
+			"textContent": "上一個"
+		},
+		"table-next": {
+			"textContent": "下一個"
+		},
+		"about-1": {
+			"textContent": "古騰堡計劃提供超過 6 萬本免費電子書"
+		},
+		"about-2": {
+			"textContent": "在免費 epub 電子書與免費 kindle 電子書中選擇。"
+		},
+		"about-3": {
+			"textContent": "下載或線上閱讀。"
+		},
+		"about-4": {
+			"textContent": "我們提供高品質電子書"
+		},
+		"about-5": {
+			"textContent": "我們所有的電子書都是由正規出版社出版。"
+		},
+		"about-6": {
+			"textContent": "我們在數千名志工的幫助之下，進行了數位化並認真校對資料。"
+		},
+		"lcc_shelves_title": {
+			"textContent": "書架（A 至 Z）"
+		},
+		"lcc_shelf_link": {
+			"textContent": "按書架瀏覽"
+		},
+		"home_link": {
+			"textContent": "返回首頁"
+		},
+		"lcc_shelf": {
+			"placeholder": "書架搜尋"
+		},
+		"lcc-shelf-A": {
+			"textContent": "A-總類"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B-哲學、心理學、宗教"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-歷史輔助科學"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D-世界歷史以及歐洲、亞洲、非洲、澳洲、紐西蘭等地的歷史。"
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-美洲歷史"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F-美洲歷史"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G-地理學、人類學、休閒娛樂"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H-社會科學"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J-政治學"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K-法律"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L-教育"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M-音樂和音樂書籍"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N-美術"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P-語言和文學"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q-科學"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R-醫學"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S-農業"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T-技術"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U-軍事科學"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V-海軍科學"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z-書目學、圖書館學、資訊資源（一般）"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA-希臘語和拉丁語語言文學"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB-現代語和凱爾特語"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC-羅曼語言"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD-日耳曼語和斯堪地那維亞語"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE-英語"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF-西日耳曼語"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG-斯拉夫語、波羅的語和阿爾巴尼亞語"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH-烏拉語和巴斯克語"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ-東方語言和文學"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK-印度-伊朗語和文學"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL-東亞、非洲、大洋洲語言和文學"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM-極北語、印度語和人工語言"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN-文學（一般）"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ-法語、義大利語、西班牙語、葡萄牙語文學"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR-英語文學"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS-美國文學"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT-德語、荷蘭語、佛拉蒙語、南非荷蘭語、斯堪地那維亞語、古諾斯語、古冰島語、古挪威語、現代冰島語、法羅語、丹麥語、挪威語和瑞典語文學"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ-小說和青少年文學"
+		}
+	},
+	"metadata_defaults": {
+		"title": "古騰堡計劃文庫",
+		"description": "所有英文書籍均來自首家免費電子書製作者"
+	}
+}

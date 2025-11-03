@@ -1,6 +1,176 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "ia"
+		},
+		"autonym": {
+			"textContent": "Interlingua"
+		},
+		"homepage": {
+			"alt": "Pagina initial",
+			"title": "Pagina initial"
+		},
+		"choose-language": {
+			"placeholder": "Elige un lingua…"
+		},
+		"ui-language-switcher": {
+			"title": "Lingua del interfacie"
+		},
+		"search": {
+			"textContent": "Cercar"
+		},
+		"author": {
+			"textContent": "Autor",
+			"placeholder": "Cercar per nomine de autor"
+		},
+		"title": {
+			"textContent": "Titulo",
+			"placeholder": "Cercar per titulo"
+		},
+		"cover-img": {
+			"alt": "Copertura de libro",
+			"title": "Copertura de libro"
+		},
+		"cover": {
+			"textContent": "(copertura)"
+		},
+		"filter": {
+			"textContent": "Filtro:"
+		},
+		"popularity": {
+			"textContent": "Popularitate"
+		},
+		"sort": {
+			"textContent": "Ordinar:"
+		},
+		"sort-popularity": {
+			"textContent": "Ordinar libros per popularitate"
+		},
+		"sort-title": {
+			"textContent": "Ordinar libros per titulo"
+		},
+		"format": {
+			"textContent": "Formato"
+		},
+		"loading": {
+			"textContent": "Cargamento…"
+		},
+		"no-data": {
+			"textContent": "Nulle datos disponibile in tabella"
+		},
+		"prev": {
+			"textContent": "Precedente"
+		},
+		"next": {
+			"textContent": "Sequente"
+		},
+		"language": {
+			"textContent": "Lingua"
+		},
+		"any-languages": {
+			"textContent": "Elige le catalogo"
+		},
+		"main-languages": {
+			"textContent": "Linguas principal"
+		},
+		"other-languages": {
+			"textContent": "Altere linguas"
+		},
+		"author-anonymous": {
+			"textContent": "Anonyme"
+		},
+		"author-various": {
+			"textContent": "Plures"
+		},
+		"license": {
+			"textContent": "Licentia"
+		},
+		"license-pd": {
+			"textContent": "De dominio public in le Statos Unite."
+		},
+		"license-copyright": {
+			"textContent": "Protegite per le derecto de autor. Consulta le aviso de derecto de autor in iste libro pro plus detalios."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plural(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 discargamento in le ultime 30 days."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} discargamentos in le ultime 30 days."
+		},
+		"top-title": {
+			"textContent": "Bibliotheca del Projecto Gutenberg"
+		},
+		"sub-title": {
+			"textContent": "Le prime productor de libros electronic gratuite"
+		},
+		"table-previous": {
+			"textContent": "Precedente"
+		},
+		"table-next": {
+			"textContent": "Sequente"
+		},
+		"about-1": {
+			"textContent": "Le Projecto Gutenberg offere plus de 60.000 libros electronic gratuite"
+		},
+		"about-2": {
+			"textContent": "Elige inter libros EPUB o Kindle gratuite."
+		},
+		"about-3": {
+			"textContent": "Discarga los o lege los in linea."
+		},
+		"about-4": {
+			"textContent": "Nos forni libros electronic de alte qualitate"
+		},
+		"about-5": {
+			"textContent": "Tote nostre libros electronic ha essite publicate antea per editores legitime."
+		},
+		"about-6": {
+			"textContent": "Nos los ha digitalisate e diligentemente corrigite con le adjuta de milles de voluntarios."
+		},
+		"lcc_shelves_title": {
+			"textContent": "Plancas de libros (A-Z)"
+		},
+		"lcc_shelf_link": {
+			"textContent": "Percurrer per planca de libros"
+		},
+		"home_link": {
+			"textContent": "Retornar al initio"
+		},
+		"lcc_shelf": {
+			"placeholder": "Cercar in plancas de libros"
+		},
+		"lcc-shelf-A": {
+			"textContent": "A-Obras general"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B-Philosophia, psychologia, religion"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-Scientias auxiliar del historia"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D-Historia del mundo e de Europa, Asia, Africa, Australia, Nove Zelanda, etc."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-Historia del Americas"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F-Historia del Americas"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G-Geographia, anthropologia, recreation"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H-Scientias social"
+		}
 	},
 	"metadata_defaults": {
 		"title": "Bibliotheca Project Gutenberg",

@@ -1,6 +1,8 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Siebrand"
+		]
 	},
 	"ui_strings": {
 		"isocode": {
@@ -27,6 +29,7 @@
 			"placeholder": "Lijst van boeken van een enkele auteur"
 		},
 		"title": {
+			"textContent": "Titel",
 			"placeholder": "Zoek boeken op titel"
 		},
 		"cover-img": {
@@ -90,6 +93,9 @@
 		"license-pd": {
 			"textContent": "Publiek domein in de VS."
 		},
+		"license-copyright": {
+			"textContent": "Auteursrechtelijk beschermd. Lees de copyrightvermelding in dit boek voor meer informatie."
+		},
 		"nb-downloads": {
 			"textContent": "{[ plural(nb) ]}"
 		},
@@ -140,6 +146,123 @@
 		},
 		"lcc_shelf": {
 			"placeholder": "Boekenplank zoeken"
+		},
+		"lcc-shelf-A": {
+			"textContent": "A-Algemene werken"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B-Filosofie, psychologie, religie"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-Historische hulpwetenschappen"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D-Wereldgeschiedenis en geschiedenis van Europa, Azië, Afrika, Australië, Nieuw-Zeeland, enz."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-Geschiedenis van Amerika"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F-Geschiedenis van Amerika"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G-Geografie, antropologie, recreatie"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H-Sociale wetenschappen"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J-Politieke wetenschappen"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K-Rechten"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L-Onderwijs"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M-Muziek en boeken over muziek"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N-Schone kunsten"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P-Taal en literatuur"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q-Wetenschap"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R-Geneeskunde"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S-Landbouw"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T-Technologie"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U-Militaire wetenschap"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V-Marinewetenschap"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z-Bibliografie, bibliotheekwetenschappen, informatiebronnen (algemeen)"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA-Griekse en Latijnse taal- en letterkunde"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB-Moderne en Keltische talen"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC-Romaanse talen"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD-Germaanse en Scandinavische talen"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE-Engelse taal"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF-West-Germaanse talen"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG-Slavische, Baltische en Albanese talen"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH-Oeraalse en Baskische talen"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ-Oosterse talen en literatuur"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK-Indo-Iraanse talen en literatuur"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL-Talen en literatuur van Oost-Azië, Afrika, Oceanië"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM-Hyperboreïsche, Indiaanse en kunstmatige talen"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN-Literatuur (Algemeen)"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ-Franse, Italiaanse, Spaanse, Portugese literatuur"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR-Engelstalige literatuur"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS-Amerikaanse literatuur"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT-Duitse, Nederlandse, Vlaamse, Afrikaanse, Scandinavische, Oudnoorse, Oudijslandse, Modern IJslandse, Faeröerse, Deense, Noorse en Zweedse literatuur"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ-Fictie en jeugdliteratuur"
 		}
 	},
 	"metadata_defaults": {
