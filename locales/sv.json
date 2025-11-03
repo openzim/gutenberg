@@ -5,6 +5,9 @@
 		]
 	},
 	"ui_strings": {
+		"isocode": {
+			"textContent": "sv"
+		},
 		"autonym": {
 			"textContent": "svenska"
 		},
@@ -206,6 +209,60 @@
 		},
 		"lcc-shelf-Z": {
 			"textContent": "Z-Bibliografi, biblioteksvetenskap, informationsresurser (allmänt)"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA-Grekiska och latiniska språk och litteratur"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB-Moderna och keltiska språk"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC-Romanska språk"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD-Germanska och skandinaviska språk"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE-Engelska språket"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF-Västgermanska språk"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG-Slaviska, baltiska och albanska språk"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH-Uraliska och baskiska språk"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ-Orientaliska språk och litteraturer"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK-Indo-iranska språk och litteraturer"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL-Språk och litteraturer i Östasien, Afrika, Oceanien"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM-Hyperboreanska, indiska och artificiella språk"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN-Litteratur (Allmänt)"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ-Fransk, italiensk, spansk, portugisisk litteratur"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR-Engelsk litteratur"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS-Amerikansk litteratur"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT-Tyska, nederländska, flamländska, afrikaans, skandinaviska, fornnordiska, fornisländska, fornnorska, moderna isländska, färöiska, danska, norska och svenska litteraturer"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ-Skönlitteratur och vitterhet"
 		}
 	},
 	"metadata_defaults": {

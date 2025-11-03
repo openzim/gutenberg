@@ -1,13 +1,15 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"McDutchie"
+		]
 	},
 	"ui_strings": {
 		"isocode": {
-			"textContent": "ISO 639-1 language code for the current language"
+			"textContent": "ISO 639-1 language code for the language you're translating into."
 		},
 		"autonym": {
-			"textContent": "Name of the language in its own language (autonym)"
+			"textContent": "Name of the language you're translating into, in its own language (autonym). <span style=\"color: red\">'''Do not translate “English” into your language here!'''</span>"
 		},
 		"homepage": {
 			"alt": "Alt text for the homepage link/button",
