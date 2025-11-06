@@ -43,6 +43,7 @@ def get_ui_languages_for():
         "mk",
         "nl",
         "pt",
+        "sl",
         "sv",
         "zh-hans",
     ]

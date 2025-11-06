@@ -170,6 +170,99 @@
 		},
 		"lcc-shelf-H": {
 			"textContent": "H-Scientias social"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J-Politicologia"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K-Derecto"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L-Education"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M-Musica e libros sur musica"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N-Belle artes"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P-Lingua e litteratura"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q-Scientia"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R-Medicina"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S-Agricultura"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T-Technologia"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U-Scientia militar"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V-Scientia naval"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z-Bibliographia, bibliotheconomia, ressources de information (general)"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA-Lingua e litteratura grec e latin"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB-Linguas moderne e celtic"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC-Linguas romanic"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD-Linguas germanic e scandinave"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE-Lingua anglese"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF-Linguas germanic occidental"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG-Linguas slave, baltic e albanese"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH-Linguas uralic e basc"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ-Linguas e litteraturas oriental"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK-Linguas e litteraturas indo-iranian"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL-Linguas e litteraturas de Asia del Est, Africa, Oceania"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM-Linguas hyperboree, indian e artificial"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN-Litteratura (general)"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ-Litteratura francese, italian, espaniol e portugese"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR-Litteratura anglese"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS-Litteratura american"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT-Litteratura german, nederlandese, flaminge, afrikaans, scandinave, nordico ancian, islandese ancian, norvegiano ancian, islandese moderne, faroese, danese, norvegiano e svedese"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ-Fiction e belle litteras pro juvenes"
 		}
 	},
 	"metadata_defaults": {
