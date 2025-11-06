@@ -1,6 +1,269 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Eleassar"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "sl"
+		},
+		"autonym": {
+			"textContent": "slovenščina"
+		},
+		"homepage": {
+			"alt": "Glavna stran",
+			"title": "Glavna stran"
+		},
+		"choose-language": {
+			"placeholder": "Izberite jezik ..."
+		},
+		"ui-language-switcher": {
+			"title": "Jezik vmesnika"
+		},
+		"search": {
+			"textContent": "Išči"
+		},
+		"author": {
+			"textContent": "Avtor",
+			"placeholder": "Iskanje po imenu avtorja"
+		},
+		"title": {
+			"textContent": "Naslov",
+			"placeholder": "Iskanje po naslovu"
+		},
+		"cover-img": {
+			"alt": "Naslovnica knjige",
+			"title": "Naslovnica knjige"
+		},
+		"cover": {
+			"textContent": "(naslovnica)"
+		},
+		"filter": {
+			"textContent": "Filter:"
+		},
+		"popularity": {
+			"textContent": "Priljubljenost"
+		},
+		"sort": {
+			"textContent": "Razvrsti:"
+		},
+		"sort-popularity": {
+			"textContent": "Razvrsti knjige po priljubljenosti"
+		},
+		"sort-title": {
+			"textContent": "Razvrsti knjige po naslovu"
+		},
+		"format": {
+			"textContent": "Format"
+		},
+		"loading": {
+			"textContent": "Nalaganje ..."
+		},
+		"no-data": {
+			"textContent": "V tabeli ni razpoložljivih podatkov"
+		},
+		"prev": {
+			"textContent": "Nazaj"
+		},
+		"next": {
+			"textContent": "Naprej"
+		},
+		"language": {
+			"textContent": "Jezik"
+		},
+		"any-languages": {
+			"textContent": "Izberite katalog"
+		},
+		"main-languages": {
+			"textContent": "Glavni jeziki"
+		},
+		"other-languages": {
+			"textContent": "Drugi jeziki"
+		},
+		"author-anonymous": {
+			"textContent": "Anonimno"
+		},
+		"author-various": {
+			"textContent": "Razni"
+		},
+		"license": {
+			"textContent": "Licenca"
+		},
+		"license-pd": {
+			"textContent": "Javna domena v ZDA."
+		},
+		"license-copyright": {
+			"textContent": "Avtorsko zavarovano. Za podrobnosti preberite obvestilo o avtorskih pravicah v tej knjigi."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plural(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 prenos v zadnjih 30 dnevih."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} prenosov v zadnjih 30 dnevih."
+		},
+		"top-title": {
+			"textContent": "Knjižnica projekta Gutenberg"
+		},
+		"sub-title": {
+			"textContent": "Prvi producent prostih e-knjig"
+		},
+		"table-previous": {
+			"textContent": "Nazaj"
+		},
+		"table-next": {
+			"textContent": "Naprej"
+		},
+		"about-1": {
+			"textContent": "Projekt Gutenberg ponuja več kot 60.000 prostih e-knjig"
+		},
+		"about-2": {
+			"textContent": "Izbirajte med prostimi knjigami v formatu epub in prostimi knjigami v formatu kindle."
+		},
+		"about-3": {
+			"textContent": "Prenesite jih ali jih berite na spletu."
+		},
+		"about-4": {
+			"textContent": "Ponujamo visokokakovostne e-knjige"
+		},
+		"about-5": {
+			"textContent": "Vse naše e-knjige so predhodno izdali verodostojni založniki."
+		},
+		"about-6": {
+			"textContent": "Digitalizirali in skrbno lektorirali smo jih s pomočjo tisočev prostovoljcev."
+		},
+		"lcc_shelves_title": {
+			"textContent": "Knjižne police (A–Z)"
+		},
+		"lcc_shelf_link": {
+			"textContent": "Brskaj po knjižni polici"
+		},
+		"home_link": {
+			"textContent": "Pojdi domov"
+		},
+		"lcc_shelf": {
+			"placeholder": "Iskanje po knjižnih policah"
+		},
+		"lcc-shelf-A": {
+			"textContent": "A – Splošna dela"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B – Filozofija, psihologija, religija"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C – Pomožne zgodovinske vede"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D – Svetovna zgodovina in zgodovina Evrope, Azije, Afrike, Avstralije, Nove Zelandije idr."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E – Zgodovina Amerike"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F – Zgodovina Amerike"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G – Geografija, antropologija, rekreacija"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H – Družboslovje"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J – Politologija"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K – Pravo"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L – Izobraževanje"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M – Glasba in knjige o glasbi"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N – Likovna umetnost"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P – Jezik in literatura"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q – Naravoslovje"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R – Medicina"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S – Kmetijstvo"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T – Tehnologija"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U – Vojaške vede"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V – Pomorska znanost"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z – Bibliografija, bibliotekarstvo, informacijski viri (splošno)"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA – Grški in latinski jezik in književnost"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB – Sodobni in keltski jeziki"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC – Romanski jeziki"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD – Germanski in skandinavski jeziki"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE – Angleški jeziki"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF – Zahodnogermanski jeziki"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG – Slovanski, baltski in albanski jeziki"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH – Uralski in baskovski jeziki"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ – Orientalski jeziki in književnosti"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK – Indoiranski jeziki in književnosti"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL – Jeziki in književnosti Vzhodne Azije, Afrike in Oceanije"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM – Hiperborejski, indijski in umetni jeziki"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN – Književnost (splošno)"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ – Francoska, italijanska, španska in portugalska književnost"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR – Angleška književnost"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS – Ameriška književnost"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT – Nemška, nizozemska, flamska, afrikanska, skandinavska, staronordijska, staroislandska, staronorveška, moderna islandska, ferska, danska, norveška in švedska književnost"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ – Leposlovje in beletristika za mlade"
+		}
 	},
 	"metadata_defaults": {
 		"title": "Projekt Gutenbergova knjižnica",
