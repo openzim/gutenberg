@@ -41,6 +41,17 @@ class Author:
             self.gut_id,
         ]
 
+    def to_dict(self) -> dict:
+        """Convert author to dictionary for JSON serialization"""
+        return {
+            "id": self.gut_id,
+            "first_name": self.first_names,
+            "last_name": self.last_name,
+            "birth_year": self.birth_year,
+            "death_year": self.death_year,
+            "name": self.name(),
+        }
+
 
 @dataclass(unsafe_hash=True)
 class Book:
@@ -78,6 +89,19 @@ class Book:
             self.book_id,
             self.lcc_shelf,
         ]
+
+    def to_dict(self) -> dict:
+        """Convert book to dictionary for JSON serialization (basic fields only)"""
+        return {
+            "id": self.book_id,
+            "title": self.title,
+            "subtitle": self.subtitle,
+            "languages": self.languages,
+            "license": self.license,
+            "downloads": self.downloads,
+            "popularity": self.popularity,
+            "lcc_shelf": self.lcc_shelf,
+        }
 
 
 class BookRepository:
