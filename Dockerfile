@@ -1,4 +1,4 @@
-FROM node:20-alpine as ui
+FROM node:20-alpine AS ui
 
 WORKDIR /src
 COPY ui /src
@@ -7,7 +7,7 @@ RUN yarn build || npm run build
 
 FROM python:3.13.2-bookworm
 
-LABEL org.opencontainers.image.source https://github.com/openzim/gutenberg
+LABEL org.opencontainers.image.source="https://github.com/openzim/gutenberg"
 
 # Install necessary packages
 RUN apt-get update \
@@ -19,16 +19,8 @@ RUN apt-get update \
  && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
  && locale-gen "en_US.UTF-8"
 
-# Copy pyproject.toml and its dependencies
-COPY scraper/pyproject.toml scraper/get_js_deps.sh scraper/hatch_build.py /scraper/
-COPY scraper/src/gutenberg2zim/__about__.py /scraper/src/gutenberg2zim/__about__.py
-COPY scraper/src/gutenberg2zim/templates /scraper/src/gutenberg2zim/templates
-
-# Install only dependencies
-RUN pip install --no-cache-dir /scraper 
-
 # Copy code + remaining artifacts
-ENV LOCALES_LOCATION /locales
+ENV LOCALES_LOCATION=/locales
 COPY locales /locales
 COPY *.md *.rst LICENSE /scraper/
 COPY scraper /scraper
