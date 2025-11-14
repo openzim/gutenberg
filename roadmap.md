@@ -1,5 +1,7 @@
 # Gutenberg UI Revamp - Implementation Roadmap
 
+> **Note:** This document is for general reference purposes during development and will be removed later.
+
 ## Overview
 This roadmap outlines the complete implementation plan for migrating Gutenberg from Jinja2/jQuery to Vue.js, following the patterns established in the Youtube scraper. The plan is organized into logical phases that build upon each other.
 
