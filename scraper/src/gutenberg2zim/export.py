@@ -10,7 +10,21 @@ from jinja2 import Environment, PackageLoader
 import gutenberg2zim
 from gutenberg2zim.constants import LOCALES_LOCATION, logger
 from gutenberg2zim.iso639 import language_name
-from gutenberg2zim.models import Book, repository
+from gutenberg2zim.models import Author, Book, repository
+from gutenberg2zim.schemas import (
+    Author as AuthorSchema,
+    AuthorDetail,
+    AuthorPreview,
+    Authors,
+    Book as BookSchema,
+    BookFormat,
+    BookPreview,
+    Books,
+    Config,
+    LCCShelf,
+    LCCShelfPreview,
+    LCCShelves,
+)
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import (
     UTF8,
@@ -943,3 +957,237 @@ def export_to_json_helpers(languages, formats, zim_name, add_lcc_shelves):
     logger.info("\tDumping main_languages.js and other_languages.js")
     dumpjs(main_languages, "main_languages.js", "main_languages_json_data")
     dumpjs(other_languages, "other_languages.js", "other_languages_json_data")
+
+
+# JSON Generation Functions for Vue.js UI
+
+
+def _author_to_preview(author: Author) -> AuthorPreview:
+    """Convert Author dataclass to AuthorPreview schema"""
+    book_count = sum(
+        1 for book in repository.get_all_books() if book.author.gut_id == author.gut_id
+    )
+    return AuthorPreview(
+        id=author.gut_id,
+        name=author.name(),
+        book_count=book_count,
+    )
+
+
+def _author_to_schema(author: Author) -> AuthorSchema:
+    """Convert Author dataclass to Author schema"""
+    return AuthorSchema(
+        id=author.gut_id,
+        first_name=author.first_names,
+        last_name=author.last_name,
+        birth_year=author.birth_year,
+        death_year=author.death_year,
+        name=author.name(),
+    )
+
+
+def _book_to_preview(book: Book) -> BookPreview:
+    """Convert Book dataclass to BookPreview schema"""
+    cover_path = None
+    if book.cover_page > 0:
+        cover_article_name = article_name_for(book, cover=True)
+        cover_path = cover_article_name
+
+    return BookPreview(
+        id=book.book_id,
+        title=book.title,
+        author=_author_to_preview(book.author),
+        languages=book.languages,
+        popularity=book.popularity,
+        cover_path=cover_path,
+        lcc_shelf=book.lcc_shelf,
+    )
+
+
+def _book_to_schema(book: Book, formats: list[str]) -> BookSchema:
+    """Convert Book dataclass to Book schema with formats"""
+    cover_path = None
+    if book.cover_page > 0:
+        cover_article_name = article_name_for(book, cover=True)
+        cover_path = cover_article_name
+
+    book_formats: list[BookFormat] = []
+    available_formats = book.requested_formats(formats)
+
+    for fmt in formats:
+        if fmt in available_formats:
+            if fmt == "html":
+                path = article_name_for(book)
+            else:
+                path = archive_name_for(book, fmt)
+            book_formats.append(
+                BookFormat(
+                    format=fmt,
+                    path=path,
+                    available=True,
+                )
+            )
+        else:
+            book_formats.append(
+                BookFormat(
+                    format=fmt,
+                    path="",
+                    available=False,
+                )
+            )
+
+    return BookSchema(
+        id=book.book_id,
+        title=book.title,
+        subtitle=book.subtitle,
+        author=_author_to_schema(book.author),
+        languages=book.languages,
+        license=book.license,
+        downloads=book.downloads,
+        popularity=book.popularity,
+        lcc_shelf=book.lcc_shelf,
+        cover_path=cover_path,
+        formats=book_formats,
+        description=None,
+    )
+
+
+def _lcc_shelf_to_preview(shelf_code: str) -> LCCShelfPreview:
+    """Convert LCC shelf code to LCCShelfPreview schema"""
+    book_count = sum(
+        1
+        for book in repository.get_all_books()
+        if book.lcc_shelf == shelf_code
+    )
+    return LCCShelfPreview(
+        code=shelf_code,
+        name=None,
+        book_count=book_count,
+    )
+
+
+def generate_json_files(
+    zim_name: str,
+    formats: list[str],
+    title: str | None = None,
+    description: str | None = None,
+    add_lcc_shelves: bool = False,
+) -> None:
+    """Generate all JSON files for Vue.js frontend"""
+    logger.info("Generating JSON files for Vue.js UI")
+
+    logger.info("Generating high-level JSON files")
+    logger.debug("Generating books.json")
+    books_preview = [
+        _book_to_preview(book) for book in repository.get_all_books()
+    ]
+    books_collection = Books(books=books_preview, total_count=len(books_preview))
+    Global.add_item_for(
+        path="books.json",
+        content=books_collection.model_dump_json(by_alias=True, indent=2),
+        mimetype="application/json",
+        is_front=False,
+    )
+
+    logger.debug("Generating authors.json")
+    authors_preview = [
+        _author_to_preview(author) for author in repository.get_all_authors()
+    ]
+    authors_collection = Authors(
+        authors=authors_preview, total_count=len(authors_preview)
+    )
+    Global.add_item_for(
+        path="authors.json",
+        content=authors_collection.model_dump_json(by_alias=True, indent=2),
+        mimetype="application/json",
+        is_front=False,
+    )
+
+    if add_lcc_shelves:
+        logger.debug("Generating lcc_shelves.json")
+        shelves_preview = [
+            _lcc_shelf_to_preview(shelf_code)
+            for shelf_code in repository.get_lcc_shelves()
+        ]
+        shelves_collection = LCCShelves(
+            shelves=shelves_preview, total_count=len(shelves_preview)
+        )
+        Global.add_item_for(
+            path="lcc_shelves.json",
+            content=shelves_collection.model_dump_json(by_alias=True, indent=2),
+            mimetype="application/json",
+            is_front=False,
+        )
+
+    logger.debug("Generating config.json")
+    config = Config(
+        title=title or zim_name or "Project Gutenberg Library",
+        description=description,
+        main_color=None,
+        secondary_color=None,
+    )
+    Global.add_item_for(
+        path="config.json",
+        content=config.model_dump_json(by_alias=True, indent=2),
+        mimetype="application/json",
+        is_front=False,
+    )
+
+    logger.info("Generating detail JSON files")
+    logger.debug("Generating book detail files")
+    for book in repository.get_all_books():
+        book_detail = _book_to_schema(book, formats)
+        Global.add_item_for(
+            path=f"books/{book.book_id}.json",
+            content=book_detail.model_dump_json(by_alias=True, indent=2),
+            mimetype="application/json",
+            is_front=False,
+        )
+
+    logger.debug("Generating author detail files")
+    for author in repository.get_all_authors():
+        author_books = [
+            _book_to_preview(book)
+            for book in repository.get_all_books()
+            if book.author.gut_id == author.gut_id
+        ]
+        author_detail = AuthorDetail(
+            id=author.gut_id,
+            first_name=author.first_names,
+            last_name=author.last_name,
+            birth_year=author.birth_year,
+            death_year=author.death_year,
+            name=author.name(),
+            books=author_books,
+            book_count=len(author_books),
+        )
+
+        Global.add_item_for(
+            path=f"authors/{author.gut_id}.json",
+            content=author_detail.model_dump_json(by_alias=True, indent=2),
+            mimetype="application/json",
+            is_front=False,
+        )
+
+    if add_lcc_shelves:
+        logger.debug("Generating LCC shelf detail files")
+        for shelf_code in repository.get_lcc_shelves():
+            shelf_books = [
+                _book_to_preview(book)
+                for book in repository.get_all_books()
+                if book.lcc_shelf == shelf_code
+            ]
+            shelf_detail = LCCShelf(
+                code=shelf_code,
+                name=None,
+                books=shelf_books,
+                book_count=len(shelf_books),
+            )
+            Global.add_item_for(
+                path=f"lcc_shelves/{shelf_code}.json",
+                content=shelf_detail.model_dump_json(by_alias=True, indent=2),
+                mimetype="application/json",
+                is_front=False,
+            )
+
+    logger.info("JSON file generation completed")

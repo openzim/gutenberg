@@ -144,6 +144,8 @@ def build_zimfile(
             progress=progress,
             title_search=title_search,
             add_lcc_shelves=add_lcc_shelves,
+            title=title,
+            description=description,
         )
 
         # Export Vue.js UI dist folder if provided

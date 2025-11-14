@@ -8,7 +8,11 @@ import requests
 
 from gutenberg2zim.constants import logger
 from gutenberg2zim.download import download_book
-from gutenberg2zim.export import export_book, export_skeleton, export_to_json_helpers
+from gutenberg2zim.export import (
+    export_book,
+    export_skeleton,
+    generate_json_files,
+)
 from gutenberg2zim.models import repository
 from gutenberg2zim.rdf import download_and_parse_book_rdf
 from gutenberg2zim.scraper_progress import ScraperProgress
@@ -27,6 +31,8 @@ def process_all_books(
     *,
     title_search: bool,
     add_lcc_shelves: bool,
+    title: str | None = None,
+    description: str | None = None,
 ) -> None:
     """Download and export all books directly to ZIM without filesystem cache"""
 
@@ -134,12 +140,13 @@ def process_all_books(
             [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
         )
 
-    # export to JSON helpers
-    logger.info("Exporting JSON helpers")
-    export_to_json_helpers(
-        languages=languages,
-        formats=formats,
+    # export to JSON files (new format for Vue.js UI)
+    logger.info("Generating JSON files for Vue.js UI")
+    generate_json_files(
         zim_name=zim_name,
+        formats=formats,
+        title=title,
+        description=description,
         add_lcc_shelves=add_lcc_shelves,
     )
 
