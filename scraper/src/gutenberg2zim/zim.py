@@ -1,5 +1,6 @@
 import datetime
 import pathlib
+import re
 
 from gutenberg2zim import i18n
 from gutenberg2zim.book_processor import process_all_books
@@ -19,6 +20,42 @@ def get_zim_language_metadata(languages: list[str], books: list[CatalogEntry]):
         if zim_lang
     }
     return sorted(language_counts, key=lambda lang: language_counts[lang], reverse=True)
+
+
+def export_ui_dist(ui_dist: pathlib.Path, title: str) -> None:
+    """Export Vue.js UI dist folder to ZIM file."""
+    if not ui_dist.exists():
+        logger.warning(f"UI dist directory not found at {ui_dist}, skipping UI export")
+        return
+
+    logger.info(f"Adding Vue.js UI files from {ui_dist}")
+    for file in ui_dist.rglob("*"):
+        if file.is_dir():
+            continue
+        path = str(file.relative_to(ui_dist))
+        logger.debug(f"Adding {path} to ZIM")
+
+        # Update index.html title
+        if path == "index.html":
+            html_content = file.read_text(encoding="utf-8")
+            new_html_content = re.sub(
+                r"(<title>)(.*?)(</title>)",
+                rf"\1{title}\3",
+                html_content,
+                flags=re.IGNORECASE,
+            )
+            Global.add_item_for(
+                path=path,
+                content=new_html_content,
+                mimetype="text/html",
+                is_front=True,
+            )
+        else:
+            Global.add_item_for(
+                path=path,
+                fpath=file,
+                is_front=False,
+            )
 
 
 def build_zimfile(
@@ -43,6 +80,7 @@ def build_zimfile(
     progress: ScraperProgress,
     with_fulltext_index: bool,
     debug: bool,
+    ui_dist: pathlib.Path | None = None,
 ) -> None:
     """Build ZIM file using singleton BookRepository"""
     progress.increase_total(len(books))
@@ -107,6 +145,10 @@ def build_zimfile(
             title_search=title_search,
             add_lcc_shelves=add_lcc_shelves,
         )
+
+        # Export Vue.js UI dist folder if provided
+        if ui_dist:
+            export_ui_dist(ui_dist, title or i18n.t("metadata_defaults.title"))
 
     except Exception as exc:
         # request Creator not to create a ZIM file on finish

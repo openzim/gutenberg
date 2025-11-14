@@ -26,7 +26,7 @@ help_info = (
     """[--zim-languages LANGUAGES] [--zim-name ZIM_NAME] [-c CONCURRENCY]"""
     """[--no-index] [--title-search] [--lcc-shelves SHELVES] """
     """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
-    """[--mirror-url MIRROR_URL] [--output OUTPUT_FOLDER][--debug] """
+    """[--mirror-url MIRROR_URL] [--output OUTPUT_FOLDER] [--ui-dist UI_DIST] [--debug] """
     """
 
 -h --help                       Display this help message
@@ -57,6 +57,8 @@ help_info = (
 --publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
 --mirror_url=<mirror_url>       Optional custom url of mirror hosting Gutenberg files
 --output=<output_folder>        Output folder for ZIMs. Default: ./output
+--ui-dist=<ui_dist>              Directory containing Vue.js UI build output (ui/dist).
+                                 Default: ../ui/dist or GUTENBERG_UI_DIST env var
 --debug                         Enable verbose output
 
 This script is used to produce a ZIM file of Gutenberg repository using a mirror.
@@ -148,6 +150,13 @@ def main():
     debug = arguments.get("--debug") or False
     output_folder = Path(
         arguments.get("--output") or os.getenv("GUTENBERG_OUTPUT", "./output")
+    )
+    # Calculate default UI dist path: from scraper/src/gutenberg2zim/entrypoint.py
+    # go up to repo root, then to ui/dist
+    default_ui_dist = Path(__file__).parent.parent.parent.parent.parent / "ui" / "dist"
+    ui_dist = Path(
+        arguments.get("--ui-dist")
+        or os.getenv("GUTENBERG_UI_DIST", str(default_ui_dist))
     )
 
     if debug:
@@ -258,6 +267,7 @@ def main():
         progress=progress,
         with_fulltext_index=with_fulltext_index,
         debug=debug,
+        ui_dist=ui_dist,
     )
 
     # Final increase to indicate we are done
