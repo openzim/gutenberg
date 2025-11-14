@@ -25,8 +25,9 @@ COPY locales /locales
 COPY README.md *.rst LICENSE /
 COPY scraper /scraper
 
-# Install + cleanup
-RUN pip install --no-cache-dir /scraper \
+# Install dependencies first, then the package
+RUN pip install --no-cache-dir pydantic==2.11.7 pyhumps==3.8.0 \
+ && pip install --no-cache-dir /scraper \
  && rm -rf /scraper
 
 # Copy Vue.js UI build output
