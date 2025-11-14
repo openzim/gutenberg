@@ -330,5 +330,5 @@ The old format used JavaScript files like:
 - Type-safe (Pydantic validation)
 - Folder-based organization (scalable)
 
-The old format will be deprecated but kept for backward compatibility during transition.
+The old format has been removed. The scraper now only generates the new JSON files for the Vue.js UI.
 
