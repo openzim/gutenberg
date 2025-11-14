@@ -139,7 +139,7 @@ def build_zimfile(
             zim_name=zim_name,
             mirror_url=mirror_url,
             concurrency=concurrency,
-            languages=languages,
+            _languages=languages,
             formats=formats,
             progress=progress,
             title_search=title_search,
