@@ -1,6 +1,6 @@
 """Pydantic schemas for JSON serialization with camelCase conversion"""
 
-from pyhumps import camelize
+from humps import camelize
 from pydantic import BaseModel
 
 
