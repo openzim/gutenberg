@@ -136,4 +136,3 @@ class Config(CamelModel):
 BookPreview.model_rebuild()
 Book.model_rebuild()
 AuthorDetail.model_rebuild()
-

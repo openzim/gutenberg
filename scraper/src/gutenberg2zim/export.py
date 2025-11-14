@@ -1054,11 +1054,7 @@ def _book_to_schema(book: Book, formats: list[str]) -> BookSchema:
 
 def _lcc_shelf_to_preview(shelf_code: str) -> LCCShelfPreview:
     """Convert LCC shelf code to LCCShelfPreview schema"""
-    book_count = sum(
-        1
-        for book in repository.get_all_books()
-        if book.lcc_shelf == shelf_code
-    )
+    book_count = sum(1 for book in repository.get_all_books() if book.lcc_shelf == shelf_code)
     return LCCShelfPreview(
         code=shelf_code,
         name=None,
@@ -1078,9 +1074,7 @@ def generate_json_files(
 
     logger.info("Generating high-level JSON files")
     logger.debug("Generating books.json")
-    books_preview = [
-        _book_to_preview(book) for book in repository.get_all_books()
-    ]
+    books_preview = [_book_to_preview(book) for book in repository.get_all_books()]
     books_collection = Books(books=books_preview, total_count=len(books_preview))
     Global.add_item_for(
         path="books.json",
