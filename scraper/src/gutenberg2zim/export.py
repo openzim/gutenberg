@@ -7,16 +7,16 @@ import bs4
 from bs4 import BeautifulSoup, Tag
 from jinja2 import Environment, PackageLoader
 
-import gutenberg2zim
 from gutenberg2zim.constants import LOCALES_LOCATION, logger
 from gutenberg2zim.iso639 import language_name
 from gutenberg2zim.models import Author, Book, repository
 from gutenberg2zim.schemas import (
     Author as AuthorSchema,
+)
+from gutenberg2zim.schemas import (
     AuthorDetail,
     AuthorPreview,
     Authors,
-    Book as BookSchema,
     BookFormat,
     BookPreview,
     Books,
@@ -24,6 +24,9 @@ from gutenberg2zim.schemas import (
     LCCShelf,
     LCCShelfPreview,
     LCCShelves,
+)
+from gutenberg2zim.schemas import (
+    Book as BookSchema,
 )
 from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import (
@@ -116,7 +119,7 @@ jinja_env.filters["urlencode"] = urlencode
 
 
 def tmpl_path() -> Path:
-    return Path(gutenberg2zim.__file__).parent / "templates"
+    return Path(__file__).parent / "templates"
 
 
 def get_list_of_all_languages():
