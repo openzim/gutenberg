@@ -22,7 +22,7 @@ RUN apt-get update \
 # Copy code + remaining artifacts
 ENV LOCALES_LOCATION=/locales
 COPY locales /locales
-COPY *.md *.rst LICENSE /scraper/
+COPY README.md *.rst LICENSE /
 COPY scraper /scraper
 
 # Install + cleanup
