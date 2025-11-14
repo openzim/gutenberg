@@ -1054,7 +1054,9 @@ def _book_to_schema(book: Book, formats: list[str]) -> BookSchema:
 
 def _lcc_shelf_to_preview(shelf_code: str) -> LCCShelfPreview:
     """Convert LCC shelf code to LCCShelfPreview schema"""
-    book_count = sum(1 for book in repository.get_all_books() if book.lcc_shelf == shelf_code)
+    book_count = sum(
+        1 for book in repository.get_all_books() if book.lcc_shelf == shelf_code
+    )
     return LCCShelfPreview(
         code=shelf_code,
         name=None,
