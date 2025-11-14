@@ -26,7 +26,8 @@ help_info = (
     """[--zim-languages LANGUAGES] [--zim-name ZIM_NAME] [-c CONCURRENCY]"""
     """[--no-index] [--title-search] [--lcc-shelves SHELVES] """
     """[--stats-filename STATS_FILENAME] [--publisher ZIM_PUBLISHER] """
-    """[--mirror-url MIRROR_URL] [--output OUTPUT_FOLDER] [--ui-dist UI_DIST] [--debug] """
+    """[--mirror-url MIRROR_URL] [--output OUTPUT_FOLDER] """
+    """[--ui-dist UI_DIST] [--debug] """
     """
 
 -h --help                       Display this help message

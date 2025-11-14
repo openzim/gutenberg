@@ -1,6 +1,6 @@
 import logging
-import subprocess
 import shutil
+import subprocess
 from pathlib import Path
 
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
@@ -32,15 +32,17 @@ class BuildVueUIHook(BuildHookInterface):
         if not node_modules.exists():
             logger.info("Installing Vue.js dependencies...")
             # Try npm first, fallback to yarn
-            if shutil.which("npm"):
+            npm_path = shutil.which("npm")
+            yarn_path = shutil.which("yarn")
+            if npm_path:
                 subprocess.run(
-                    ["npm", "install"],
+                    [npm_path, "install"],
                     cwd=ui_dir,
                     check=True,
                 )
-            elif shutil.which("yarn"):
+            elif yarn_path:
                 subprocess.run(
-                    ["yarn", "install", "--frozen-lockfile"],
+                    [yarn_path, "install", "--frozen-lockfile"],
                     cwd=ui_dir,
                     check=True,
                 )
@@ -52,15 +54,17 @@ class BuildVueUIHook(BuildHookInterface):
                 return
 
         # Build Vue.js app
-        if shutil.which("npm"):
+        npm_path = shutil.which("npm")
+        yarn_path = shutil.which("yarn")
+        if npm_path:
             subprocess.run(
-                ["npm", "run", "build"],
+                [npm_path, "run", "build"],
                 cwd=ui_dir,
                 check=True,
             )
-        elif shutil.which("yarn"):
+        elif yarn_path:
             subprocess.run(
-                ["yarn", "build"],
+                [yarn_path, "build"],
                 cwd=ui_dir,
                 check=True,
             )

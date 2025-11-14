@@ -25,7 +25,7 @@ def process_all_books(
     zim_name: str,
     mirror_url: str,
     concurrency: int,
-    languages: list[str],
+    _languages: list[str],  # noqa: ARG001
     formats: list[str],
     progress: ScraperProgress,
     *,

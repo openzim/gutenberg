@@ -1069,6 +1069,7 @@ def generate_json_files(
     formats: list[str],
     title: str | None = None,
     description: str | None = None,
+    *,
     add_lcc_shelves: bool = False,
 ) -> None:
     """Generate all JSON files for Vue.js frontend"""
