@@ -1,6 +1,8 @@
 # Gutenberg UI Revamp - Complete Structure
 
-## 📁 Directory Structure
+> **Note:** This document is for general reference purposes during development and will be removed later.
+
+## Directory Structure
 
 ```
 gutenberg/
@@ -79,7 +81,7 @@ gutenberg/
 
 ---
 
-## 📄 JSON File Structure
+## JSON File Structure
 
 Following Youtube scraper pattern: **High-level metadata files + Detail files**
 
@@ -105,7 +107,7 @@ ZIM_ROOT/
 
 ---
 
-## 🐍 Python Side - Pydantic Schemas
+## Python Side - Pydantic Schemas
 
 ### `src/gutenberg2zim/schemas.py` (NEW)
 
@@ -218,7 +220,7 @@ class Config(CamelModel):
 
 ---
 
-## 📊 JSON File Examples
+## JSON File Examples
 
 ### `books.json` (High-Level)
 ```json
@@ -379,7 +381,7 @@ class Config(CamelModel):
 
 ---
 
-## 🔄 Python Export Flow
+## Python Export Flow
 
 ### `src/gutenberg2zim/export.py` - New Functions
 
@@ -467,7 +469,7 @@ def export_vue_dist(dist_dir: Path) -> None:
 
 ---
 
-## 🎨 Vue.js Side Structure
+## Vue.js Side Structure
 
 ### `ui/src/types/Book.ts`
 ```typescript
@@ -613,7 +615,7 @@ export default router
 
 ---
 
-## 🔗 Integration Points
+## Integration Points
 
 ### 1. Build Process
 1. **Python side**: Generate JSON files during ZIM creation
@@ -640,7 +642,7 @@ Python (models.py)
 
 ---
 
-## 📝 Key Differences from Youtube
+## Key Differences from Youtube
 
 | Aspect | Youtube | Gutenberg |
 |--------|---------|-----------|
@@ -652,7 +654,7 @@ Python (models.py)
 
 ---
 
-## ✅ Next Steps
+## Next Steps
 
 1. Create `schemas.py` with Pydantic models
 2. Modify `export.py` to generate JSON files
