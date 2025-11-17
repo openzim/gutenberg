@@ -22,7 +22,7 @@ RUN apt-get update \
 # Copy code + remaining artifacts
 ENV LOCALES_LOCATION=/locales
 COPY locales /locales
-COPY README.md *.rst LICENSE /
+COPY README.md *.rst LICENSE /src/
 COPY scraper /src/scraper
 
 # Install package (pip should install dependencies from pyproject.toml automatically)
