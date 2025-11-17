@@ -47,7 +47,7 @@ Following Youtube scraper structure:
 
 ### 2.1 Create Pydantic Schemas
 Create `scraper/src/gutenberg2zim/schemas.py`:
-- Implement `CamelModel` base class (using `humps.camelize`)
+- Implement `CamelModel` base class (custom camelCase helper)
 - Define `Author` model (full details)
 - Define `AuthorPreview` model (for lists)
 - Define `BookFormat` model (format availability info)
@@ -496,7 +496,7 @@ Update main `README.md`:
 
 ### Python Side
 - `pydantic` - JSON schema validation and serialization
-- `humps` - camelCase conversion
+- camelCase helper function for JSON aliases
 - `json` - JSON serialization
 - Existing dependencies (beautifulsoup4, Jinja2, etc.)
 

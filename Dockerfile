@@ -23,16 +23,16 @@ RUN apt-get update \
 ENV LOCALES_LOCATION=/locales
 COPY locales /locales
 COPY README.md *.rst LICENSE /
-COPY scraper /scraper
+COPY scraper /src/scraper
 
 # Install package (pip should install dependencies from pyproject.toml automatically)
-RUN pip install --no-cache-dir /scraper \
- && rm -rf /scraper
+RUN pip install --no-cache-dir /src/scraper \
+ && rm -rf /src/scraper
 
 # Copy Vue.js UI build output
-COPY --from=ui /src/dist /src/ui
+COPY --from=ui /src/dist /src/zimui
 
-ENV GUTENBERG_UI_DIST=/src/ui
+ENV GUTENBERG_UI_DIST=/src/zimui
 
 # default output directory
 RUN mkdir -p /output

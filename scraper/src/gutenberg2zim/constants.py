@@ -13,7 +13,6 @@ VERSION = __version__
 
 SCRAPER = f"{NAME} {VERSION}"
 
-# when modifiying this list, update list in hatch_build.py as well
 JS_DEPS: list[str] = [
     "datatables/datatables.min.css",
     "datatables/datatables.min.js",

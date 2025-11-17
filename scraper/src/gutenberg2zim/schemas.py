@@ -1,15 +1,24 @@
 """Pydantic schemas for JSON serialization with camelCase conversion"""
 
-from humps import camelize
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
+
+
+def to_camel(value: str) -> str:
+    """Convert snake_case to camelCase."""
+    parts = value.split("_")
+    if not parts:
+        return value
+    first, *rest = parts
+    return first + "".join(word.capitalize() for word in rest if word)
 
 
 class CamelModel(BaseModel):
     """Model to transform Python snake_case into JSON camelCase."""
 
-    class Config:
-        alias_generator = camelize
-        populate_by_name = True
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
 
 
 # Author Models
@@ -32,17 +41,14 @@ class AuthorPreview(CamelModel):
     book_count: int
 
 
-class AuthorDetail(CamelModel):
+class AuthorDetail(AuthorPreview):
     """Full author details with books list"""
 
-    id: str
     first_name: str | None = None
     last_name: str
     birth_year: str | None = None
     death_year: str | None = None
-    name: str
     books: list["BookPreview"]
-    book_count: int
 
 
 # Book Models
@@ -66,19 +72,13 @@ class BookPreview(CamelModel):
     lcc_shelf: str | None = None
 
 
-class Book(CamelModel):
+class Book(BookPreview):
     """Full book details"""
 
-    id: int
-    title: str
     subtitle: str | None = None
-    author: "Author"
-    languages: list[str]
     license: str
     downloads: int
-    popularity: int
-    lcc_shelf: str | None = None
-    cover_path: str | None = None
+    author: "Author"
     formats: list[BookFormat]
     description: str | None = None  # If available from RDF
 
@@ -92,13 +92,10 @@ class LCCShelfPreview(CamelModel):
     book_count: int
 
 
-class LCCShelf(CamelModel):
+class LCCShelf(LCCShelfPreview):
     """Full LCC shelf details"""
 
-    code: str
-    name: str | None = None
     books: list[BookPreview]
-    book_count: int
 
 
 # Collection Models

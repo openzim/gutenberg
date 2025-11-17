@@ -32,7 +32,6 @@ dependencies = [
   "backoff==2.2.1",
   "i18nice==0.16.0",
   "pydantic==2.11.7",
-  "pyhumps==3.8.0",
 ]
 dynamic = ["version"]
 
@@ -64,10 +63,6 @@ path = "src/gutenberg2zim/__about__.py"
 
 [tool.hatch.build]
 exclude = ["/.github"]
-
-[tool.hatch.build.hooks.custom]
-path = "hatch_build.py"
-dependencies = ["zimscraperlib==5.1.1"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/gutenberg2zim"]

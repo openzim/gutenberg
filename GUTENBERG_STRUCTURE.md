@@ -112,7 +112,8 @@ ZIM_ROOT/
 ### `src/gutenberg2zim/schemas.py` (NEW)
 
 ```python
-from humps import camelize
+    from pydantic import BaseModel, ConfigDict
+    from gutenberg2zim.schemas import to_camel
 from pydantic import BaseModel
 
 class CamelModel(BaseModel):
