@@ -1,15 +1,7 @@
 """Pydantic schemas for JSON serialization with camelCase conversion"""
 
 from pydantic import BaseModel, ConfigDict
-
-
-def to_camel(value: str) -> str:
-    """Convert snake_case to camelCase."""
-    parts = value.split("_")
-    if not parts:
-        return value
-    first, *rest = parts
-    return first + "".join(word.capitalize() for word in rest if word)
+from pydantic.alias_generators import to_camel
 
 
 class CamelModel(BaseModel):
