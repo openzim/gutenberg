@@ -171,14 +171,17 @@ Create `ui/src/stores/main.ts`:
   - `fetchLCCShelf(code)` - Load `lcc_shelves/{code}.json`
   - `fetchConfig()` - Load `config.json`
 - Use Axios for HTTP requests
-- Implement caching to avoid redundant requests
+- Implement simple request deduplication (prevent duplicate concurrent requests to same resource)
+- Do NOT cache detail files in memory (books, authors, shelves) to keep memory usage low on small devices
 - Handle loading states and errors
 
 ### 3.4 Configure Vue Router
 Set up routes in `ui/src/router/index.ts`:
 - `/` - HomeView (book listing)
 - `/book/:id` - BookDetailView
+- `/authors` - AuthorListView (list all authors)
 - `/author/:id` - AuthorDetailView
+- `/lcc-shelves` - LCCShelfListView (list all shelves)
 - `/lcc-shelf/:code` - LCCShelfDetailView
 - `/about` - AboutView
 - Use hash mode (`createWebHashHistory()`)
@@ -187,7 +190,8 @@ Set up routes in `ui/src/router/index.ts`:
 ### 3.5 Configure Vuetify Theme
 - Set up Vuetify plugin in `ui/src/main.ts`
 - Load theme colors from `config.json`
-- Configure default theme
+- Configure default (light) theme
+- Add dark mode support with alternate color palette (using `@media (prefers-color-scheme: dark)`)
 - Set up responsive breakpoints
 
 ---
@@ -206,17 +210,23 @@ Set up routes in `ui/src/router/index.ts`:
 - **BookDetailInfo.vue**: Full book details page component
 
 ### 4.3 Author Components
-- **AuthorCard.vue**: Card display for author
+- **AuthorCard.vue**: Card display for author (name, book count)
+- **AuthorGrid.vue**: Grid layout for author cards (responsive)
 - **AuthorDetailInfo.vue**: Full author details with their books
 
-### 4.4 Common Components
+### 4.4 LCC Shelf Components
+- **LCCShelfCard.vue**: Card display for LCC shelf (code, name, book count)
+- **LCCShelfGrid.vue**: Grid layout for shelf cards (responsive)
+- **LCCShelfDetailInfo.vue**: Full shelf details with books
+
+### 4.5 Common Components
 - **LanguageFilter.vue**: Filter books by language
 - **FormatFilter.vue**: Filter books by available formats
 - **SortControl.vue**: Sort books (popularity, title, etc.)
 - **ErrorDisplay.vue**: Error message display
 - **Note**: NO SearchBar component (rely on native ZIM search only)
 
-### 4.5 Design Implementation
+### 4.6 Design Implementation
 - Implement card-based design with modern spacing
 - Use grid layout for book listings (responsive)
 - Ensure proper contrast ratios (fix known contrast issues)
@@ -235,6 +245,7 @@ Set up routes in `ui/src/router/index.ts`:
 - Add sort controls (popularity, title)
 - Show featured/random books (better than current "not-that-random" content)
 - Move long text content to AboutView
+- Handle loading states and errors
 
 ### 5.2 BookDetailView
 - Display full book information
@@ -245,20 +256,38 @@ Set up routes in `ui/src/router/index.ts`:
 - Show cover image
 - Display license information
 - Show popularity/rating
+- Handle loading states and errors
 
-### 5.3 AuthorDetailView
+### 5.3 AuthorListView
+- Display all authors in grid/list format
+- Implement pagination or infinite scroll
+- Show author name and book count
+- Link to individual author detail pages
+- Make authors easily discoverable
+- Handle loading states and errors
+
+### 5.4 AuthorDetailView
 - Display author information
 - Show all books by this author
 - Make it clear user is viewing author's books (fix visibility issue)
 - Link to individual books
+- Handle loading states and errors
 
-### 5.4 LCCShelfDetailView
+### 5.5 LCCShelfListView
+- Display all LCC shelves in grid/list format
+- Show shelf code, name, and book count
+- Link to individual shelf detail pages
+- Make LCC shelves more discoverable (fix "hidden" issue)
+- Handle loading states and errors
+
+### 5.6 LCCShelfDetailView
 - Display LCC shelf information
 - Show all books in shelf
-- Make LCC shelves more discoverable (fix "hidden" issue)
+- Make it clear user is viewing shelf's books
 - Link to individual books
+- Handle loading states and errors
 
-### 5.5 AboutView
+### 5.7 AboutView
 - Move homepage text content here
 - Display project information
 - Show statistics
@@ -268,12 +297,12 @@ Set up routes in `ui/src/router/index.ts`:
 
 ## Phase 6: Python Integration
 
-### 6.1 Update Export Functions
+### 6.1 Clean Up Export Functions
 Modify `scraper/src/gutenberg2zim/export.py`:
-- Replace `export_to_json_helpers()` with `generate_json_files()`
-- Ensure JSON files are generated in correct folder structure
-- Update `export_skeleton()` to handle Vue.js dist export
-- Remove old `.js` file generation (or deprecate gradually)
+- Remove old `export_to_json_helpers()` function (no longer called)
+- Remove old `.js` file generation code
+- Update `export_skeleton()` to handle Vue.js dist export if needed
+- Note: `generate_json_files()` already implemented in Phase 2
 
 ### 6.2 Add Vue.js Dist Export
 Modify `scraper/src/gutenberg2zim/zim.py`:
@@ -287,10 +316,10 @@ Modify `scraper/src/gutenberg2zim/zim.py`:
 - Ensure proper entry points for Vue.js app
 - Handle hash routing correctly
 
-### 6.4 Remove Old Template System (Gradually)
-- Keep Jinja2 templates initially for fallback
-- Mark as deprecated
-- Remove after Vue.js UI is fully functional
+### 6.4 Remove Old Template System
+- Remove old Jinja2 book/author templates (no longer needed)
+- Keep only templates needed for No-JS fallback (Phase 7)
+- Clean up template generation code that's no longer used
 
 ---
 
