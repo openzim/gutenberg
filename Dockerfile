@@ -1,4 +1,13 @@
+FROM node:20-alpine AS ui
+
+WORKDIR /src
+COPY ui /src
+RUN yarn install --frozen-lockfile || npm install
+RUN yarn build || npm run build
+
 FROM python:3.13.2-bookworm
+
+LABEL org.opencontainers.image.source="https://github.com/openzim/gutenberg"
 
 # Install necessary packages
 RUN apt-get update \
@@ -10,23 +19,20 @@ RUN apt-get update \
  && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
  && locale-gen "en_US.UTF-8"
 
-# Copy pyproject.toml and its dependencies
-COPY pyproject.toml README.md get_js_deps.sh hatch_build.py /scraper/
-COPY src/gutenberg2zim/__about__.py /scraper/src/gutenberg2zim/__about__.py
-COPY src/gutenberg2zim/templates /scraper/src/gutenberg2zim/templates
-
-# Install only dependencies
-RUN pip install --no-cache-dir /scraper 
-
 # Copy code + remaining artifacts
-ENV LOCALES_LOCATION /locales
+ENV LOCALES_LOCATION=/locales
 COPY locales /locales
-COPY *.md *.rst get_js_deps.sh LICENSE *.py /scraper/
-COPY src /scraper/src
+COPY README.md *.rst LICENSE /src/
+COPY scraper /src/scraper
 
-# Install + cleanup
-RUN pip install --no-cache-dir /scraper \
- && rm -rf /scraper
+# Install package (pip should install dependencies from pyproject.toml automatically)
+RUN pip install --no-cache-dir /src/scraper \
+ && rm -rf /src/scraper
+
+# Copy Vue.js UI build output
+COPY --from=ui /src/dist /src/zimui
+
+ENV GUTENBERG_UI_DIST=/src/zimui
 
 # default output directory
 RUN mkdir -p /output

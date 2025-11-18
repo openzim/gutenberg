@@ -16,10 +16,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version-file: pyproject.toml
+          python-version-file: scraper/pyproject.toml
           architecture: x64
 
       - name: Build packages
+        working-directory: scraper
         run: |
           pip install -U pip build
           python -m build --sdist --wheel
