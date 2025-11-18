@@ -508,6 +508,74 @@ Update main `README.md`:
 
 ---
 
+## Phase 13: Infrastructure & Dependency Upgrades (Future PR)
+
+> **Note**: These are follow-up improvements that can be done in a separate PR after Phase 1-12 are complete.
+
+### 13.1 GitHub Workflows Updates
+- Add `zimui` (Vue.js UI) related checks to `.github/workflows/QA.yaml`
+  - Add ESLint checks for `ui/` directory
+  - Add TypeScript type checking
+  - Add Prettier formatting checks
+- Add `zimui` related checks to `.github/workflows/Tests.yaml`
+  - Add Vitest unit tests for Vue.js components
+  - Add build verification for Vue.js UI
+
+### 13.2 Pre-commit Hooks
+Update `.pre-commit-config.yaml`:
+- Add frontend linting (ESLint, Prettier)
+- Add TypeScript type checking
+- Add Vue.js component tests
+- Ensure both Python and JavaScript code is checked before commits
+
+### 13.3 Upgrade Node.js
+- Update from Node 20 to Node 24
+- Update Dockerfile to use `node:24-alpine`
+- Update GitHub Actions workflows to use Node 24
+- Test all npm dependencies with Node 24
+
+### 13.4 Upgrade Python & Base Image
+- Update from Python 3.13 to Python 3.14
+- Update from Debian Bookworm to Debian Trixie
+- Update `pyproject.toml` to require Python 3.14
+- Update Dockerfile base image to `python:3.14-trixie`
+- Test all Python dependencies with Python 3.14
+
+### 13.5 Upgrade JavaScript Dependencies
+Update all outdated JS dependencies in `ui/package.json`:
+- **Critical Upgrades:**
+  - `eslint`: Upgrade to v9.x (breaking changes, new config format)
+  - `vite`: Upgrade to v7.x (latest major version)
+  - `vue`: Ensure latest v3.x
+  - `vuetify`: Ensure latest v3.x
+  - `typescript`: Upgrade to latest v5.x
+- **Other Dependencies:**
+  - `@vitejs/plugin-vue`: Match Vite version
+  - `@vitejs/plugin-legacy`: Match Vite version
+  - All other dev dependencies to latest compatible versions
+- Update ESLint config format (switch from `.eslintrc.cjs` to flat config)
+- Test thoroughly after each major upgrade
+
+### 13.6 Upgrade Python Dependencies
+Update Python dependencies in `scraper/pyproject.toml`:
+- Upgrade all dependencies to latest compatible versions
+- Pay special attention to:
+  - `zimscraperlib`: Ensure latest version
+  - `pydantic`: Upgrade if new major version available
+  - `beautifulsoup4`, `Jinja2`, `requests`: Latest versions
+- Run full test suite after upgrades
+- Update pinned versions in `pyproject.toml`
+
+### 13.7 Testing After Upgrades
+- Run full Python test suite
+- Run full Vue.js test suite
+- Build Docker image and test ZIM generation
+- Test ZIM files in multiple readers (kiwix-serve, kiwix-js, etc.)
+- Test on multiple browsers with compatibility target
+- Document any breaking changes or migration notes
+
+---
+
 ## Key Implementation Principles
 
 1. **Start Fresh from Main**: Use `main` branch as base, reference `ui-revamp` only for ideas
