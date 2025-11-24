@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Authors - Project Gutenberg</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        body {
+            max-width: 1200px;
+        }
+        .author-id {
+            font-family: monospace;
+            color: #666;
+        }
+        .book-count {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="../index.html">Home</a>
+        <a href="books.html">Books</a>
+        <a href="authors.html">Authors</a>
+        <a href="lcc_shelves.html">Shelves</a>
+    </div>
+    
+    <h1>All Authors</h1>
+    
+    <div class="stats">
+        Showing {{ authors|length }} author{% if authors|length != 1 %}s{% endif %}
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Lifespan</th>
+                <th>Books</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for author in authors %}
+            <tr>
+                <td class="author-id">{{ author.gut_id }}</td>
+                <td><a href="author_{{ author.gut_id }}.html">{{ author.name() }}</a></td>
+                <td>
+                    {% if author.birth_year or author.death_year %}
+                        {% if author.birth_year %}{{ author.birth_year }}{% endif %}
+                        {% if author.birth_year or author.death_year %} - {% endif %}
+                        {% if author.death_year %}{{ author.death_year }}{% endif %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="book-count">{{ author_book_counts[author.gut_id] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

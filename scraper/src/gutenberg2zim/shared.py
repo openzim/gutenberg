@@ -1,9 +1,9 @@
 import pathlib
 import threading
 from datetime import date
-from typing import Any
 
 from zimscraperlib.zim.creator import Creator
+from zimscraperlib.zim.indexing import IndexData
 from zimscraperlib.zim.metadata import (
     CreatorMetadata,
     DateMetadata,
@@ -26,10 +26,10 @@ class Global:
     """Shared context accross all scraper components"""
 
     creator: Creator
-    default_context: dict[str, Any] | None
-    default_context_zim_name: str | None
 
     _lock = threading.Lock()
+    # Track which books have cover images successfully saved
+    _books_with_covers: set[int] = set()
 
     @staticmethod
     def setup(
@@ -43,12 +43,12 @@ class Global:
         with_fulltext_index,
         debug,
     ):
-        Global.default_context = None
-        Global.default_context_zim_name = None
+        Global._books_with_covers = set()
+
         Global.creator = (
             Creator(
                 filename=filename,
-                main_path="Home",
+                main_path="index.html",
                 workaround_nocancel=False,
             )
             .config_metadata(
@@ -86,6 +86,7 @@ class Global:
         should_compress: bool | None = None,
         delete_fpath: bool | None = False,
         auto_index: bool = False,
+        index_data: IndexData | None = None,
     ):
         logger.debug(f"\t\tAdding ZIM item at {path}")
 
@@ -104,6 +105,7 @@ class Global:
                 should_compress=should_compress,
                 delete_fpath=delete_fpath,
                 auto_index=auto_index,
+                index_data=index_data,
             )
 
     @staticmethod
@@ -126,3 +128,15 @@ class Global:
                 f"Finished Zim {Global.creator.filename.name} "
                 f"in {Global.creator.filename.parent}"
             )
+    
+    @staticmethod
+    def mark_book_has_cover(book_id: int):
+        """Mark that a book has a cover image saved"""
+        with Global._lock:
+            Global._books_with_covers.add(book_id)
+    
+    @staticmethod
+    def book_has_cover(book_id: int) -> bool:
+        """Check if a book has a cover image saved"""
+        with Global._lock:
+            return book_id in Global._books_with_covers

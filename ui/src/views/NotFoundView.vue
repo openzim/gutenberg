@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// NotFoundView for 404 pages
+import { LAYOUT } from '@/constants/theme'
 </script>
 
 <template>
@@ -24,7 +24,7 @@
 
 <style scoped>
 .not-found-view {
-  padding: 2rem 0;
+  padding: v-bind('LAYOUT.VIEW_PADDING');
 }
 </style>
 

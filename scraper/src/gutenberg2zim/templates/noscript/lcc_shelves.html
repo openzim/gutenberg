@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCC Shelves - Project Gutenberg</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        body {
+            max-width: 1200px;
+        }
+        .shelf-code {
+            font-family: monospace;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="../index.html">Home</a>
+        <a href="books.html">Books</a>
+        <a href="authors.html">Authors</a>
+        <a href="lcc_shelves.html">Shelves</a>
+    </div>
+    
+    <h1>Library of Congress Classification Shelves</h1>
+    
+    <div class="stats">
+        Showing {{ shelves|length }} shelf{% if shelves|length != 1 %}s{% endif %}
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Books Available</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for shelf in shelves %}
+            <tr>
+                <td class="shelf-code">
+                    <a href="lcc_shelf_{{ shelf.code }}.html">{{ shelf.code }}</a>
+                </td>
+                <td>{{ shelf.book_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
