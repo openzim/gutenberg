@@ -5,70 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book.title }} - Project Gutenberg</title>
     <link rel="stylesheet" href="common.css">
-    <style>
-        body {
-            max-width: 900px;
-        }
-        h1 {
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            color: #666;
-            font-size: 1.1em;
-            margin-bottom: 20px;
-        }
-        .book-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        .book-info dt {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-top: 10px;
-        }
-        .book-info dd {
-            margin-left: 0;
-            margin-bottom: 5px;
-        }
-        .formats {
-            margin: 20px 0;
-        }
-        .format-link {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
-            background: #3498db;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 500;
-        }
-        .format-link:hover {
-            background: #2980b9;
-        }
-        .cover-image {
-            max-width: 200px;
-            margin: 20px 0;
-            border-radius: 5px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .description {
-            margin: 20px 0;
-            padding: 15px;
-            background: #f8f9fa;
-            border-left: 4px solid #3498db;
-        }
-    </style>
 </head>
-<body>
-    <div class="nav">
-        <a href="../index.html">Home</a>
-        <a href="books.html">Books</a>
-        <a href="authors.html">Authors</a>
-        <a href="lcc_shelves.html">Shelves</a>
-    </div>
+<body class="detail-page">
+    {% include '_nav.html' %}
     
     <h1>{{ book.title }}</h1>
     {% if book.subtitle %}
@@ -79,7 +18,7 @@
     <img src="../covers/{{ book.book_id }}_cover_image.jpg" alt="Cover: {{ book.title }}" class="cover-image">
     {% endif %}
     
-    <div class="book-info">
+    <div class="detail-info">
         <dl>
             <dt>Author</dt>
             <dd><a href="author_{{ book.author.gut_id }}.html">{{ book.author.name() }}</a></dd>

@@ -5,25 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LCC Shelf {{ shelf_code }} - Project Gutenberg</title>
     <link rel="stylesheet" href="common.css">
-    <style>
-        body {
-            max-width: 1000px;
-        }
-        h1 {
-            margin-bottom: 10px;
-        }
-        .formats {
-            margin-top: 8px;
-        }
-    </style>
 </head>
-<body>
-    <div class="nav">
-        <a href="../index.html">Home</a>
-        <a href="books.html">Books</a>
-        <a href="authors.html">Authors</a>
-        <a href="lcc_shelves.html">Shelves</a>
-    </div>
+<body class="detail-page">
+    {% include '_nav.html' %}
     
     <h1>LCC Shelf {{ shelf_code }}</h1>
     <p class="book-meta">{{ books|length }} book{% if books|length != 1 %}s{% endif %} available in this shelf.</p>

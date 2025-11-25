@@ -128,3 +128,69 @@ tr:hover {
     text-align: center;
 }
 
+/* Detail page styles */
+.detail-page {
+    max-width: 900px;
+}
+
+.detail-page h1 {
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+}
+
+.detail-info {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.detail-info dt {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-top: 10px;
+}
+
+.detail-info dd {
+    margin-left: 0;
+    margin-bottom: 5px;
+}
+
+.description {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+}
+
+.formats {
+    margin: 20px 0;
+}
+
+.format-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    background: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.format-link:hover {
+    background: #2980b9;
+}
+
+.cover-image {
+    max-width: 200px;
+    margin: 20px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+

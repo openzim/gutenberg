@@ -109,7 +109,7 @@ defineProps<{
 
           <div v-if="book.description" class="mb-4">
             <h3 class="text-h6 mb-2">Description</h3>
-            <p class="text-body-2" v-text="book.description"></p>
+            <p class="text-body-2">{{ book.description }}</p>
           </div>
 
           <h3 class="text-h6 mb-2">Available Formats</h3>
