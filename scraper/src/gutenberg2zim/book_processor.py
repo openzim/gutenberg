@@ -149,7 +149,7 @@ def process_all_books(
         description=description,
         add_lcc_shelves=add_lcc_shelves,
     )
-    
+
     # Generate No-JS fallback pages
     logger.info("Generating No-JS fallback pages")
     generate_noscript_pages(formats=formats)

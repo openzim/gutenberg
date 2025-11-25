@@ -46,6 +46,7 @@ jinja_env = Environment(  # noqa: S701
     loader=PackageLoader("gutenberg2zim", "templates")
 )
 
+
 def fa_for_format(book_format):
     return {
         "html": "",
@@ -72,7 +73,9 @@ jinja_env.filters["zim_link_prefix"] = zim_link_prefix
 jinja_env.filters["language_name"] = language_name
 jinja_env.filters["fa_for_format"] = fa_for_format
 jinja_env.filters["urlencode"] = urlencode
-jinja_env.filters["article_name_for"] = lambda book, cover=False: article_name_for(book, cover=cover)
+jinja_env.filters["article_name_for"] = lambda book, cover=False: article_name_for(
+    book, cover=cover
+)
 jinja_env.filters["archive_name_for"] = lambda book, fmt: archive_name_for(book, fmt)
 jinja_env.filters["book_has_cover"] = lambda book_id: Global.book_has_cover(book_id)
 
@@ -562,7 +565,7 @@ def _lcc_shelf_to_preview(shelf_code: str) -> LCCShelfPreview:
 
 def add_index_entry(title: str, content: str, fname: str, vue_route: str) -> None:
     """Add a custom item to the ZIM index with HTML redirect to Vue.js route.
-    
+
     Args:
         title: Title for the index entry
         content: Content/description for search indexing
@@ -624,8 +627,7 @@ def generate_json_files(
 
     logger.debug("Generating lcc_shelves.json")
     shelves_preview = [
-        _lcc_shelf_to_preview(shelf_code)
-        for shelf_code in repository.get_lcc_shelves()
+        _lcc_shelf_to_preview(shelf_code) for shelf_code in repository.get_lcc_shelves()
     ]
     shelves_collection = LCCShelves(
         shelves=shelves_preview, total_count=len(shelves_preview)
@@ -661,7 +663,7 @@ def generate_json_files(
             mimetype="application/json",
             is_front=False,
         )
-        
+
         # Add index entry for book
         book_description = book_detail.description or f"Book by {book.author.name()}"
         add_index_entry(
@@ -695,7 +697,7 @@ def generate_json_files(
             mimetype="application/json",
             is_front=False,
         )
-        
+
         # Add index entry for author
         author_content = f"Author: {author.name()}"
         if author.birth_year or author.death_year:
@@ -707,7 +709,7 @@ def generate_json_files(
                 lifespan_parts.append(author.death_year)
             author_content += f" ({' '.join(lifespan_parts)})"
         author_content += f". {len(author_books)} book(s) available."
-        
+
         add_index_entry(
             title=author.name(),
             content=author_content,
@@ -734,11 +736,11 @@ def generate_json_files(
             mimetype="application/json",
             is_front=False,
         )
-        
+
         if add_lcc_shelves:
             shelf_title = f"LCC Shelf {shelf_code}"
             shelf_content = f"Library of Congress Classification shelf {shelf_code} with {len(shelf_books)} book(s)."
-            
+
             add_index_entry(
                 title=shelf_title,
                 content=shelf_content,
@@ -754,7 +756,7 @@ def generate_noscript_pages(
 ) -> None:
     """Generate No-JavaScript fallback HTML pages"""
     logger.info("Generating No-JS fallback pages")
-    
+
     # Add common CSS file to ZIM
     common_css_path = Path(__file__).parent / "templates" / "noscript" / "common.css"
     if common_css_path.exists():
@@ -769,12 +771,10 @@ def generate_noscript_pages(
     all_authors = repository.get_all_authors()
     shelves = sorted(repository.get_lcc_shelves())
     shelf_books_map: dict[str, list[Book]] = {
-        shelf_code: [
-            book for book in all_books if book.lcc_shelf == shelf_code
-        ]
+        shelf_code: [book for book in all_books if book.lcc_shelf == shelf_code]
         for shelf_code in shelves
     }
-    
+
     # Generate books listing page
     logger.debug("Generating noscript/books.html")
     books_template = jinja_env.get_template("noscript/books.html")
@@ -790,7 +790,7 @@ def generate_noscript_pages(
         title="All Books - Project Gutenberg",
         auto_index=True,
     )
-    
+
     # Generate authors listing page
     logger.debug("Generating noscript/authors.html")
     # Pre-calculate book counts per author
@@ -813,7 +813,7 @@ def generate_noscript_pages(
         title="All Authors - Project Gutenberg",
         auto_index=True,
     )
-    
+
     logger.debug("Generating noscript/lcc_shelves.html")
     shelves_template = jinja_env.get_template("noscript/lcc_shelves.html")
     shelves_html = shelves_template.render(
@@ -833,7 +833,7 @@ def generate_noscript_pages(
         title="LCC Shelves - Project Gutenberg",
         auto_index=True,
     )
-    
+
     logger.debug("Generating No-JS LCC shelf detail pages")
     shelf_template = jinja_env.get_template("noscript/lcc_shelf.html")
     for shelf_code in shelves:
@@ -851,7 +851,7 @@ def generate_noscript_pages(
             title=f"LCC Shelf {shelf_code}",
             auto_index=True,
         )
-    
+
     # Generate individual book pages
     logger.debug("Generating No-JS book detail pages")
     book_template = jinja_env.get_template("noscript/book.html")
@@ -868,15 +868,13 @@ def generate_noscript_pages(
             title=book.title,
             auto_index=True,
         )
-    
+
     # Generate individual author pages
     logger.debug("Generating No-JS author pages")
     author_template = jinja_env.get_template("noscript/author.html")
     for author in all_authors:
         author_books = [
-            book
-            for book in all_books
-            if book.author.gut_id == author.gut_id
+            book for book in all_books if book.author.gut_id == author.gut_id
         ]
         author_html = author_template.render(
             author=author,
@@ -890,5 +888,5 @@ def generate_noscript_pages(
             title=author.name(),
             auto_index=True,
         )
-    
+
     logger.info("No-JS fallback pages generation completed")

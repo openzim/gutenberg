@@ -128,13 +128,13 @@ class Global:
                 f"Finished Zim {Global.creator.filename.name} "
                 f"in {Global.creator.filename.parent}"
             )
-    
+
     @staticmethod
     def mark_book_has_cover(book_id: int):
         """Mark that a book has a cover image saved"""
         with Global._lock:
             Global._books_with_covers.add(book_id)
-    
+
     @staticmethod
     def book_has_cover(book_id: int) -> bool:
         """Check if a book has a cover image saved"""
