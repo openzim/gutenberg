@@ -6,6 +6,7 @@ body {
     margin: 0 auto;
     padding: 20px;
     background: #fff;
+    max-width: 1200px;
 }
 
 h1 {
@@ -72,5 +73,58 @@ tr:hover {
     background: #e9ecef;
     border-radius: 3px;
     font-size: 0.85em;
+}
+
+.book-id,
+.author-id {
+    font-family: monospace;
+    color: #666;
+}
+
+.book-count {
+    color: #666;
+}
+
+.shelf-code {
+    font-family: monospace;
+    font-weight: 600;
+}
+
+.books-list,
+.book-list {
+    margin: 20px 0;
+}
+
+.book-item {
+    padding: 15px;
+    margin: 10px 0;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 3px;
+}
+
+.book-item a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.book-item a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+.book-meta {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.empty-state {
+    padding: 20px;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    color: #666;
+    text-align: center;
 }
 
