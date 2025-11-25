@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="common.css">
 </head>
 <body class="detail-page">
-    {% include '_nav.html' %}
+    {% include 'noscript/_nav.html' %}
     
     <h1>LCC Shelf {{ shelf_code }}</h1>
     <p class="book-meta">{{ books|length }} book{% if books|length != 1 %}s{% endif %} available in this shelf.</p>
