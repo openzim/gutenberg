@@ -59,10 +59,18 @@ export const useMainStore = defineStore('main', () => {
     }
   }
 
-  async function fetchBooks() {
-    const result = await fetchData<Books>('./books.json', 'Failed to load books')
-    booksCount.value = result.totalCount
+  async function fetchList<T extends { totalCount: number }>(
+    url: string,
+    errorMsg: string,
+    countRef: { value: number }
+  ): Promise<T> {
+    const result = await fetchData<T>(url, errorMsg)
+    countRef.value = result.totalCount
     return result
+  }
+
+  async function fetchBooks() {
+    return fetchList<Books>('./books.json', 'Failed to load books', booksCount)
   }
 
   function fetchBook(id: number) {
@@ -70,9 +78,7 @@ export const useMainStore = defineStore('main', () => {
   }
 
   async function fetchAuthors() {
-    const result = await fetchData<Authors>('./authors.json', 'Failed to load authors')
-    authorsCount.value = result.totalCount
-    return result
+    return fetchList<Authors>('./authors.json', 'Failed to load authors', authorsCount)
   }
 
   function fetchAuthor(id: string) {
@@ -80,9 +86,7 @@ export const useMainStore = defineStore('main', () => {
   }
 
   async function fetchLCCShelves() {
-    const result = await fetchData<LCCShelves>('./lcc_shelves.json', 'Failed to load LCC shelves')
-    shelvesCount.value = result.totalCount
-    return result
+    return fetchList<LCCShelves>('./lcc_shelves.json', 'Failed to load LCC shelves', shelvesCount)
   }
 
   function fetchLCCShelf(code: string) {
