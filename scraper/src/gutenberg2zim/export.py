@@ -1,5 +1,3 @@
-import json
-import re
 import urllib.parse
 from collections.abc import Iterable
 from pathlib import Path
@@ -37,7 +35,6 @@ from gutenberg2zim.utils import (
     article_name_for,
     book_name_for_fs,
     fname_for,
-    get_lang_groups,
     read_file,
     save_file,
 )
@@ -330,10 +327,10 @@ def export_book(
     book_files: dict[str, bytes],
     cover_image: bytes | None,
     formats: list[str],
-    zim_name: str,
+    _zim_name: str,
     *,
-    title_search: bool,
-    add_lcc_shelves: bool,
+    _title_search: bool,
+    _add_lcc_shelves: bool,
 ):
     """Export book to ZIM using in-memory content"""
     handle_book_files(
@@ -739,7 +736,10 @@ def generate_json_files(
 
         if add_lcc_shelves:
             shelf_title = f"LCC Shelf {shelf_code}"
-            shelf_content = f"Library of Congress Classification shelf {shelf_code} with {len(shelf_books)} book(s)."
+            shelf_content = (
+                f"Library of Congress Classification shelf {shelf_code} "
+                f"with {len(shelf_books)} book(s)."
+            )
 
             add_index_entry(
                 title=shelf_title,

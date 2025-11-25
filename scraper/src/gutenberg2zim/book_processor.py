@@ -108,9 +108,9 @@ def process_all_books(
                 book_files=book_content.files,
                 cover_image=book_content.cover_image,
                 formats=formats,
-                zim_name=zim_name,
-                title_search=title_search,
-                add_lcc_shelves=add_lcc_shelves,
+                _zim_name=zim_name,
+                _title_search=title_search,
+                _add_lcc_shelves=add_lcc_shelves,
             )
 
     Pool(concurrency).map(partial(process_book, progress=progress), book_ids)

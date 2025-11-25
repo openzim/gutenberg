@@ -1,6 +1,7 @@
 import pathlib
 import threading
 from datetime import date
+from typing import ClassVar
 
 from zimscraperlib.zim.creator import Creator
 from zimscraperlib.zim.indexing import IndexData
@@ -29,7 +30,7 @@ class Global:
 
     _lock = threading.Lock()
     # Track which books have cover images successfully saved
-    _books_with_covers: set[int] = set()
+    _books_with_covers: ClassVar[set[int]] = set()
 
     @staticmethod
     def setup(
