@@ -472,9 +472,7 @@ def _author_to_schema(author: Author) -> AuthorSchema:
 
 def _book_to_preview(book: Book) -> BookPreview:
     """Convert Book dataclass to BookPreview schema"""
-    cover_path = (
-        f"covers/{book.book_id}_cover_image.jpg" if book.cover_page else None
-    )
+    cover_path = f"covers/{book.book_id}_cover_image.jpg" if book.cover_page else None
 
     return BookPreview(
         id=book.book_id,
@@ -489,9 +487,7 @@ def _book_to_preview(book: Book) -> BookPreview:
 
 def _book_to_schema(book: Book, formats: list[str]) -> BookSchema:
     """Convert Book dataclass to Book schema with formats"""
-    cover_path = (
-        f"covers/{book.book_id}_cover_image.jpg" if book.cover_page else None
-    )
+    cover_path = f"covers/{book.book_id}_cover_image.jpg" if book.cover_page else None
 
     book_formats: list[BookFormat] = []
     available_formats = book.requested_formats(formats)
