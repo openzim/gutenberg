@@ -1,7 +1,6 @@
 import pathlib
 import threading
 from datetime import date
-from typing import ClassVar
 
 from zimscraperlib.zim.creator import Creator
 from zimscraperlib.zim.indexing import IndexData
@@ -29,8 +28,6 @@ class Global:
     creator: Creator
 
     _lock = threading.Lock()
-    # Track which books have cover images successfully saved
-    _books_with_covers: ClassVar[set[int]] = set()
 
     @staticmethod
     def setup(
@@ -44,8 +41,6 @@ class Global:
         with_fulltext_index,
         debug,
     ):
-        Global._books_with_covers = set()
-
         Global.creator = (
             Creator(
                 filename=filename,
@@ -129,15 +124,3 @@ class Global:
                 f"Finished Zim {Global.creator.filename.name} "
                 f"in {Global.creator.filename.parent}"
             )
-
-    @staticmethod
-    def mark_book_has_cover(book_id: int):
-        """Mark that a book has a cover image saved"""
-        with Global._lock:
-            Global._books_with_covers.add(book_id)
-
-    @staticmethod
-    def book_has_cover(book_id: int) -> bool:
-        """Check if a book has a cover image saved"""
-        with Global._lock:
-            return book_id in Global._books_with_covers

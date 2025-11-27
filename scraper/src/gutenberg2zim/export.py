@@ -74,19 +74,6 @@ jinja_env.filters["article_name_for"] = lambda book, cover=False: article_name_f
     book, cover=cover
 )
 jinja_env.filters["archive_name_for"] = lambda book, fmt: archive_name_for(book, fmt)
-jinja_env.filters["book_has_cover"] = lambda book_id: Global.book_has_cover(book_id)
-
-
-# DEPRECATED: Old template system functions removed in Phase 6.4
-# These functions generated old HTML pages that are no longer needed
-# since we're using Vue.js UI. Phase 7 will create new No-JS fallback templates.
-#
-# Removed functions:
-# - export_skeleton() - Generated old Home.html and CSS/JS assets
-# - write_book_presentation_article() - Generated old book cover pages
-# - cover_html_content_for() - Generated HTML for book covers
-# - author_html_content_for() - Generated HTML for author pages
-# - save_author_file() - Saved author HTML files
 
 
 def html_content_for(book: Book, src_dir):
@@ -347,7 +334,6 @@ def export_book(
             mimetype="image/jpeg",
             is_front=False,
         )
-        Global.mark_book_has_cover(book.book_id)
 
 
 def handle_book_files(
@@ -486,9 +472,9 @@ def _author_to_schema(author: Author) -> AuthorSchema:
 
 def _book_to_preview(book: Book) -> BookPreview:
     """Convert Book dataclass to BookPreview schema"""
-    cover_path = None
-    if Global.book_has_cover(book.book_id):
-        cover_path = f"covers/{book.book_id}_cover_image.jpg"
+    cover_path = (
+        f"covers/{book.book_id}_cover_image.jpg" if book.cover_page else None
+    )
 
     return BookPreview(
         id=book.book_id,
@@ -503,9 +489,9 @@ def _book_to_preview(book: Book) -> BookPreview:
 
 def _book_to_schema(book: Book, formats: list[str]) -> BookSchema:
     """Convert Book dataclass to Book schema with formats"""
-    cover_path = None
-    if Global.book_has_cover(book.book_id):
-        cover_path = f"covers/{book.book_id}_cover_image.jpg"
+    cover_path = (
+        f"covers/{book.book_id}_cover_image.jpg" if book.cover_page else None
+    )
 
     book_formats: list[BookFormat] = []
     available_formats = book.requested_formats(formats)
@@ -622,19 +608,21 @@ def generate_json_files(
         is_front=False,
     )
 
-    logger.debug("Generating lcc_shelves.json")
-    shelves_preview = [
-        _lcc_shelf_to_preview(shelf_code) for shelf_code in repository.get_lcc_shelves()
-    ]
-    shelves_collection = LCCShelves(
-        shelves=shelves_preview, total_count=len(shelves_preview)
-    )
-    Global.add_item_for(
-        path="lcc_shelves.json",
-        content=shelves_collection.model_dump_json(by_alias=True, indent=2),
-        mimetype="application/json",
-        is_front=False,
-    )
+    if add_lcc_shelves:
+        logger.debug("Generating lcc_shelves.json")
+        shelves_preview = [
+            _lcc_shelf_to_preview(shelf_code)
+            for shelf_code in repository.get_lcc_shelves()
+        ]
+        shelves_collection = LCCShelves(
+            shelves=shelves_preview, total_count=len(shelves_preview)
+        )
+        Global.add_item_for(
+            path="lcc_shelves.json",
+            content=shelves_collection.model_dump_json(by_alias=True, indent=2),
+            mimetype="application/json",
+            is_front=False,
+        )
 
     logger.debug("Generating config.json")
     config = Config(
@@ -714,27 +702,27 @@ def generate_json_files(
             vue_route=f"author/{author.gut_id}",
         )
 
-    logger.debug("Generating LCC shelf detail files and index entries")
-    for shelf_code in repository.get_lcc_shelves():
-        shelf_books = [
-            _book_to_preview(book)
-            for book in repository.get_all_books()
-            if book.lcc_shelf == shelf_code
-        ]
-        shelf_detail = LCCShelf(
-            code=shelf_code,
-            name=None,
-            books=shelf_books,
-            book_count=len(shelf_books),
-        )
-        Global.add_item_for(
-            path=f"lcc_shelves/{shelf_code}.json",
-            content=shelf_detail.model_dump_json(by_alias=True, indent=2),
-            mimetype="application/json",
-            is_front=False,
-        )
+    if add_lcc_shelves:
+        logger.debug("Generating LCC shelf detail files and index entries")
+        for shelf_code in repository.get_lcc_shelves():
+            shelf_books = [
+                _book_to_preview(book)
+                for book in repository.get_all_books()
+                if book.lcc_shelf == shelf_code
+            ]
+            shelf_detail = LCCShelf(
+                code=shelf_code,
+                name=None,
+                books=shelf_books,
+                book_count=len(shelf_books),
+            )
+            Global.add_item_for(
+                path=f"lcc_shelves/{shelf_code}.json",
+                content=shelf_detail.model_dump_json(by_alias=True, indent=2),
+                mimetype="application/json",
+                is_front=False,
+            )
 
-        if add_lcc_shelves:
             shelf_title = f"LCC Shelf {shelf_code}"
             shelf_content = (
                 f"Library of Congress Classification shelf {shelf_code} "

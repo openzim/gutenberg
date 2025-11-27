@@ -14,7 +14,7 @@
     <div class="subtitle">{{ book.subtitle }}</div>
     {% endif %}
     
-    {% if book.book_id|book_has_cover %}
+        {% if book.cover_page %}
     <img src="../covers/{{ book.book_id }}_cover_image.jpg" alt="Cover: {{ book.title }}" class="cover-image">
     {% endif %}
     
