@@ -1,6 +1,89 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Jimkats"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "el"
+		},
+		"autonym": {
+			"textContent": "Ελληνικά"
+		},
+		"homepage": {
+			"alt": "Αρχική σελίδα",
+			"title": "Αρχική σελίδα"
+		},
+		"choose-language": {
+			"placeholder": "Επιλέξτε μια γλώσσα..."
+		},
+		"ui-language-switcher": {
+			"title": "Γλώσσα διεπαφής"
+		},
+		"search": {
+			"textContent": "Αναζήτηση"
+		},
+		"author": {
+			"textContent": "Συγγραφέας"
+		},
+		"title": {
+			"textContent": "Τίτλος"
+		},
+		"filter": {
+			"textContent": "Φίλτρο:"
+		},
+		"popularity": {
+			"textContent": "Δημοτικότητα"
+		},
+		"sort": {
+			"textContent": "Ταξινόμηση:"
+		},
+		"format": {
+			"textContent": "Μορφή"
+		},
+		"loading": {
+			"textContent": "Γίνεται φόρτωση..."
+		},
+		"no-data": {
+			"textContent": "Δεν υπάρχουν διαθέσιμα δεδομένα στον πίνακα"
+		},
+		"prev": {
+			"textContent": "Προηγούμενο"
+		},
+		"next": {
+			"textContent": "Επόμενο"
+		},
+		"language": {
+			"textContent": "Γλώσσα"
+		},
+		"any-languages": {
+			"textContent": "Επιλέξτε τον Κατάλογο"
+		},
+		"main-languages": {
+			"textContent": "Κύριες γλώσσες"
+		},
+		"other-languages": {
+			"textContent": "Άλλες γλώσσες"
+		},
+		"author-anonymous": {
+			"textContent": "Ανώνυμος"
+		},
+		"license": {
+			"textContent": "Άδεια χρήσης"
+		},
+		"license-pd": {
+			"textContent": "Κοινό κτήμα στις ΗΠΑ."
+		},
+		"table-previous": {
+			"textContent": "Προηγούμενο"
+		},
+		"table-next": {
+			"textContent": "Επόμενο"
+		},
+		"home_link": {
+			"textContent": "Μετάβαση στην Αρχική"
+		}
 	},
 	"metadata_defaults": {
 		"title": "Βιβλιοθήκη Project Gutenberg",
