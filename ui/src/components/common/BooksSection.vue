@@ -2,7 +2,6 @@
 import type { BookPreview } from '@/types'
 import BookGrid from '@/components/book/BookGrid.vue'
 import EmptyState from './EmptyState.vue'
-import { MESSAGES } from '@/constants/theme'
 
 interface Props {
   books: BookPreview[]
