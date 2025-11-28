@@ -29,4 +29,3 @@ export interface Authors {
   authors: AuthorPreview[]
   totalCount: number
 }
-

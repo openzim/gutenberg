@@ -27,4 +27,3 @@ import { LAYOUT } from '@/constants/theme'
   padding: v-bind('LAYOUT.VIEW_PADDING');
 }
 </style>
-

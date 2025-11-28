@@ -1,9 +1,6 @@
 import { ref } from 'vue'
 
-export function useListLoader<T, TData>(
-  fetchFn: () => Promise<TData>,
-  itemsKey: keyof TData
-) {
+export function useListLoader<T, TData>(fetchFn: () => Promise<TData>, itemsKey: keyof TData) {
   const items = ref<T[]>([])
   const loading = ref(false)
 
@@ -31,4 +28,3 @@ export function useListLoader<T, TData>(
     loadItems
   }
 }
-

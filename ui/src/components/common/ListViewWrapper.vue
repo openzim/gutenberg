@@ -4,7 +4,7 @@ import EmptyState from './EmptyState.vue'
 import ItemCount from './ItemCount.vue'
 import LoadingSpinner from './LoadingSpinner.vue'
 import PaginationControl from './PaginationControl.vue'
-import { LAYOUT, MESSAGES } from '@/constants/theme'
+import { LAYOUT } from '@/constants/theme'
 
 interface Props {
   title: string
@@ -78,11 +78,7 @@ function handlePageChange(page: number) {
           />
 
           <div class="d-flex justify-space-between align-center mb-4">
-            <item-count
-              :current="currentCount"
-              :total="totalCount"
-              :type="itemType"
-            />
+            <item-count :current="currentCount" :total="totalCount" :type="itemType" />
           </div>
 
           <slot name="content" />
@@ -110,4 +106,3 @@ function handlePageChange(page: number) {
   padding: v-bind('LAYOUT.VIEW_PADDING');
 }
 </style>
-

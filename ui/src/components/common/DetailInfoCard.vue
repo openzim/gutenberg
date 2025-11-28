@@ -17,4 +17,3 @@ import { LAYOUT } from '@/constants/theme'
     </v-card-text>
   </v-card>
 </template>
-

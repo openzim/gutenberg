@@ -1,22 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
-import type {
-  Books,
-  Book,
-  Authors,
-  AuthorDetail,
-  LCCShelves,
-  LCCShelf,
-  Config
-} from '@/types'
+import type { Books, Book, Authors, AuthorDetail, LCCShelves, LCCShelf, Config } from '@/types'
 
 export const useMainStore = defineStore('main', () => {
   const errorMessage = ref<string | null>(null)
   const loading = ref(false)
   const pendingRequests = new Map<string, Promise<unknown>>()
   const loadingCount = ref(0)
-  
+
   const booksCount = ref(0)
   const authorsCount = ref(0)
   const shelvesCount = ref(0)
@@ -90,10 +82,7 @@ export const useMainStore = defineStore('main', () => {
   }
 
   function fetchLCCShelf(code: string) {
-    return fetchData<LCCShelf>(
-      `./lcc_shelves/${code}.json`,
-      `Failed to load LCC shelf ${code}`
-    )
+    return fetchData<LCCShelf>(`./lcc_shelves/${code}.json`, `Failed to load LCC shelf ${code}`)
   }
 
   function fetchConfig() {

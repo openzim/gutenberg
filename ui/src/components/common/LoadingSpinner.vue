@@ -10,4 +10,3 @@ defineProps<{
     <p class="mt-4 text-body-1">{{ message }}</p>
   </div>
 </template>
-

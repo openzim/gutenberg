@@ -1,9 +1,6 @@
 import { ref, computed } from 'vue'
 
-export function useSearchFilter<T>(
-  items: () => T[],
-  searchFields: (item: T) => string[]
-) {
+export function useSearchFilter<T>(items: () => T[], searchFields: (item: T) => string[]) {
   const searchQuery = ref('')
 
   const filteredItems = computed(() => {
@@ -12,10 +9,8 @@ export function useSearchFilter<T>(
     }
 
     const query = searchQuery.value.toLowerCase().trim()
-    return items().filter(item =>
-      searchFields(item).some(field =>
-        field.toLowerCase().includes(query)
-      )
+    return items().filter((item) =>
+      searchFields(item).some((field) => field.toLowerCase().includes(query))
     )
   })
 
@@ -24,4 +19,3 @@ export function useSearchFilter<T>(
     filteredItems
   }
 }
-

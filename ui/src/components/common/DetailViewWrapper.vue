@@ -47,4 +47,3 @@ defineProps<Props>()
   padding: v-bind('LAYOUT.VIEW_PADDING');
 }
 </style>
-

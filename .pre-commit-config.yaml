@@ -6,6 +6,20 @@ repos:
   hooks:
   -   id: trailing-whitespace
   -   id: end-of-file-fixer
+- repo: https://github.com/pre-commit/mirrors-prettier
+  rev: v3.0.3
+  hooks:
+  - id: prettier
+    files: ui\/.*$
+- repo: https://github.com/pre-commit/mirrors-eslint
+  rev: v8.51.0
+  hooks:
+  - id: eslint
+    types: [file]
+    files: ui\/src\/.*(?:\.[jt]sx?|\.vue)$
+    args:
+    - --config
+    - ui/.eslintrc.cjs
 - repo: https://github.com/psf/black
   rev: "25.9.0"
   hooks:
