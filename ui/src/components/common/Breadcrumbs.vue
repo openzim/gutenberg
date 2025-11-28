@@ -19,4 +19,3 @@ defineProps<{
     </v-breadcrumbs>
   </div>
 </template>
-

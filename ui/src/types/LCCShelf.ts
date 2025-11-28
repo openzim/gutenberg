@@ -19,4 +19,3 @@ export interface LCCShelves {
   shelves: LCCShelfPreview[]
   totalCount: number
 }
-

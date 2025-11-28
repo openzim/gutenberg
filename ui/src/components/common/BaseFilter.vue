@@ -122,4 +122,3 @@ function getIcon(item: string): string | undefined {
   }
 }
 </style>
-

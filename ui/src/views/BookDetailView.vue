@@ -8,7 +8,11 @@ import { MESSAGES } from '@/constants/theme'
 
 const main = useMainStore()
 
-const { data: book, notFound, loading } = useDetailView(
+const {
+  data: book,
+  notFound,
+  loading
+} = useDetailView(
   (id) => main.fetchBook(Number(id)),
   'id',
   (value) => Number(value)

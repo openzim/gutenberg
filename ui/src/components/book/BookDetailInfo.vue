@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import type { Book } from '@/types'
-import { getPopularityStars, formatDownloads, formatLanguages, formatAuthorLifespan } from '@/utils/format-utils'
+import {
+  getPopularityStars,
+  formatDownloads,
+  formatLanguages,
+  formatAuthorLifespan
+} from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
 
 defineProps<{
@@ -21,11 +26,15 @@ defineProps<{
       </v-col>
 
       <v-col cols="12" md="8" lg="9">
-        <v-card-title class="text-h4 text-wrap" style="word-break: break-word; white-space: normal;">
+        <v-card-title class="text-h4 text-wrap" style="word-break: break-word; white-space: normal">
           {{ book.title }}
         </v-card-title>
 
-        <v-card-subtitle v-if="book.subtitle" class="text-h6 mb-2 text-wrap" style="word-break: break-word; white-space: normal;">
+        <v-card-subtitle
+          v-if="book.subtitle"
+          class="text-h6 mb-2 text-wrap"
+          style="word-break: break-word; white-space: normal"
+        >
           {{ book.subtitle }}
         </v-card-subtitle>
 
@@ -36,7 +45,11 @@ defineProps<{
                 <v-icon icon="mdi-account" />
               </template>
               <v-list-item-title>
-                <router-link v-if="book.author?.id" :to="`/author/${book.author.id}`" class="text-primary">
+                <router-link
+                  v-if="book.author?.id"
+                  :to="`/author/${book.author.id}`"
+                  class="text-primary"
+                >
                   {{ book.author.name }}
                 </router-link>
                 <span v-else>{{ book.author?.name || 'Unknown' }}</span>

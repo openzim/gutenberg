@@ -15,7 +15,7 @@ export function useSorting<T>(
   const sortedItems = computed(() => {
     const sorted = [...items()]
 
-    const option = sortOptions.find(opt => opt.value === sortBy.value)
+    const option = sortOptions.find((opt) => opt.value === sortBy.value)
     if (!option) {
       return sorted
     }
@@ -32,4 +32,3 @@ export function useSorting<T>(
     sortedItems
   }
 }
-

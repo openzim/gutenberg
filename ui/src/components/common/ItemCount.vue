@@ -12,11 +12,6 @@ defineProps<{
     {{ current }}
     of
     {{ total }}
-    {{
-      total === 1 && type.endsWith('s')
-        ? type.slice(0, -1)
-        : type
-    }}
+    {{ total === 1 && type.endsWith('s') ? type.slice(0, -1) : type }}
   </span>
 </template>
-
