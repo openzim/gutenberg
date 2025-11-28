@@ -17,7 +17,9 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 }
 
 .card-full-height:hover {
@@ -33,17 +35,31 @@ body {
 }
 
 /* Smooth transitions for interactive elements */
-a, button, .v-btn, .v-card {
+a,
+button,
+.v-btn,
+.v-card {
   transition: all 0.2s ease-in-out;
 }
 
 /* Responsive typography */
 @media (max-width: 600px) {
-  .text-h1 { font-size: 1.75rem; }
-  .text-h2 { font-size: 1.5rem; }
-  .text-h3 { font-size: 1.25rem; }
-  .text-h4 { font-size: 1.125rem; }
-  .text-h5 { font-size: 1rem; }
-  .text-h6 { font-size: 0.875rem; }
+  .text-h1 {
+    font-size: 1.75rem;
+  }
+  .text-h2 {
+    font-size: 1.5rem;
+  }
+  .text-h3 {
+    font-size: 1.25rem;
+  }
+  .text-h4 {
+    font-size: 1.125rem;
+  }
+  .text-h5 {
+    font-size: 1rem;
+  }
+  .text-h6 {
+    font-size: 0.875rem;
+  }
 }
-

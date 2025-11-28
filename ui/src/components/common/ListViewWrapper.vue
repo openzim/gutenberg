@@ -78,11 +78,7 @@ function handlePageChange(page: number) {
           />
 
           <div class="d-flex justify-space-between align-center mb-4">
-            <item-count
-              :current="currentCount"
-              :total="totalCount"
-              :type="itemType"
-            />
+            <item-count :current="currentCount" :total="totalCount" :type="itemType" />
           </div>
 
           <slot name="content" />
@@ -110,4 +106,3 @@ function handlePageChange(page: number) {
   padding: v-bind('LAYOUT.VIEW_PADDING');
 }
 </style>
-

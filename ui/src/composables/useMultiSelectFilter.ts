@@ -5,13 +5,13 @@ export function useMultiSelectFilter<T>(
   function toggle(item: T) {
     const selected = [...props.modelValue]
     const index = selected.indexOf(item)
-    
+
     if (index > -1) {
       selected.splice(index, 1)
     } else {
       selected.push(item)
     }
-    
+
     emit('update:modelValue', selected)
   }
 
@@ -25,4 +25,3 @@ export function useMultiSelectFilter<T>(
 
   return { toggle, clearAll, selectAll }
 }
-

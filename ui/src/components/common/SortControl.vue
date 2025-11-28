@@ -17,9 +17,7 @@ const sortOptions: { value: SortOption; text: string; icon: string }[] = [
   { value: 'title', text: 'Title', icon: 'mdi-format-title' }
 ]
 
-const currentSortIcon = computed(() => 
-  sortOptions.find(o => o.value === props.sortBy)?.icon
-)
+const currentSortIcon = computed(() => sortOptions.find((o) => o.value === props.sortBy)?.icon)
 
 function updateSortBy(value: SortOption) {
   emit('update:sortBy', value)

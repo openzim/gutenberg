@@ -13,10 +13,11 @@ import { MESSAGES } from '@/constants/theme'
 
 const main = useMainStore()
 
-const { items: shelves, loading: shelvesLoading, loadItems: loadShelves } = useListLoader<LCCShelfPreview, LCCShelves>(
-  () => main.fetchLCCShelves(),
-  'shelves'
-)
+const {
+  items: shelves,
+  loading: shelvesLoading,
+  loadItems: loadShelves
+} = useListLoader<LCCShelfPreview, LCCShelves>(() => main.fetchLCCShelves(), 'shelves')
 
 const { searchQuery, filteredItems: filteredShelves } = useSearchFilter(
   () => shelves.value,
@@ -45,10 +46,13 @@ const { sortedItems: sortedShelves } = useSorting(
   sortOptions
 )
 
-const { currentPage, paginatedItems: paginatedShelves, totalPages, goToPage, resetPage } = usePagination(
-  () => sortedShelves.value,
-  24
-)
+const {
+  currentPage,
+  paginatedItems: paginatedShelves,
+  totalPages,
+  goToPage,
+  resetPage
+} = usePagination(() => sortedShelves.value, 24)
 
 watch([searchQuery, sortBy, sortOrder], () => {
   resetPage()

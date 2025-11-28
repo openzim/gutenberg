@@ -13,12 +13,12 @@ const navItems = [
 
 <template>
   <v-app-bar elevation="2" color="primary" role="banner">
-    <v-app-bar-nav-icon 
-      @click="drawer = !drawer" 
+    <v-app-bar-nav-icon
+      @click="drawer = !drawer"
       class="d-md-none"
       aria-label="Toggle navigation menu"
     />
-    
+
     <v-app-bar-title>
       <router-link to="/" class="title-link" aria-label="Gutenberg Home">
         <v-icon icon="mdi-book-open-variant" size="large" class="mr-2" aria-hidden="true" />
@@ -41,11 +41,7 @@ const navItems = [
     </template>
   </v-app-bar>
 
-  <v-navigation-drawer 
-    v-model="drawer" 
-    temporary
-    aria-label="Mobile navigation menu"
-  >
+  <v-navigation-drawer v-model="drawer" temporary aria-label="Mobile navigation menu">
     <v-list role="navigation" aria-label="Mobile navigation">
       <v-list-item
         v-for="item in navItems"

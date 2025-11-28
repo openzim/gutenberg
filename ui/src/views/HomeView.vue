@@ -24,10 +24,11 @@ const selectedLanguages = ref<string[]>([])
 const sortBy = ref<SortOption>('popularity')
 const sortOrder = ref<SortOrder>('desc')
 
-const { items: books, loading: booksLoading, loadItems: loadBooks } = useListLoader<BookPreview, Books>(
-  () => main.fetchBooks(),
-  'books'
-)
+const {
+  items: books,
+  loading: booksLoading,
+  loadItems: loadBooks
+} = useListLoader<BookPreview, Books>(() => main.fetchBooks(), 'books')
 
 const availableLanguages = computed(() =>
   extractUniqueValues(books.value, (book) => book.languages)
@@ -37,8 +38,8 @@ const filteredBooks = computed(() => {
   if (selectedLanguages.value.length === 0) {
     return books.value
   }
-  return books.value.filter(book =>
-    book.languages.some(lang => selectedLanguages.value.includes(lang))
+  return books.value.filter((book) =>
+    book.languages.some((lang) => selectedLanguages.value.includes(lang))
   )
 })
 
@@ -60,10 +61,13 @@ const { sortedItems: sortedBooks } = useSorting(
   sortOptions
 )
 
-const { currentPage, paginatedItems: paginatedBooks, totalPages, goToPage, resetPage } = usePagination(
-  () => sortedBooks.value,
-  24
-)
+const {
+  currentPage,
+  paginatedItems: paginatedBooks,
+  totalPages,
+  goToPage,
+  resetPage
+} = usePagination(() => sortedBooks.value, 24)
 
 watch([selectedLanguages, sortBy, sortOrder], () => {
   resetPage()
@@ -100,27 +104,15 @@ onMounted(() => {
               :languages="availableLanguages"
               class="mb-4"
             />
-            <sort-control
-              v-model:sort-by="sortBy"
-              v-model:sort-order="sortOrder"
-            />
+            <sort-control v-model:sort-by="sortBy" v-model:sort-order="sortOrder" />
           </div>
         </v-col>
 
         <v-col cols="12" md="9">
           <div class="d-flex justify-space-between align-center mb-4">
-            <item-count
-              :current="paginatedBooks.length"
-              :total="sortedBooks.length"
-              type="books"
-            />
+            <item-count :current="paginatedBooks.length" :total="sortedBooks.length" type="books" />
             <div class="d-flex align-center gap-2">
-              <v-btn-toggle
-                v-model="viewMode"
-                mandatory
-                variant="outlined"
-                density="compact"
-              >
+              <v-btn-toggle v-model="viewMode" mandatory variant="outlined" density="compact">
                 <v-btn value="grid" icon="mdi-view-grid" aria-label="Grid view" />
                 <v-btn value="list" icon="mdi-view-list" aria-label="List view" />
               </v-btn-toggle>
@@ -164,4 +156,3 @@ onMounted(() => {
   }
 }
 </style>
-

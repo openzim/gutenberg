@@ -8,10 +8,11 @@ import { MESSAGES } from '@/constants/theme'
 
 const main = useMainStore()
 
-const { data: author, notFound, loading } = useDetailView(
-  (id) => main.fetchAuthor(String(id)),
-  'id'
-)
+const {
+  data: author,
+  notFound,
+  loading
+} = useDetailView((id) => main.fetchAuthor(String(id)), 'id')
 </script>
 
 <template>

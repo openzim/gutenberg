@@ -21,4 +21,3 @@ defineProps<Props>()
 
   <empty-state v-else :message="emptyMessage" />
 </template>
-

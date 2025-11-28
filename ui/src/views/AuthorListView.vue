@@ -13,10 +13,11 @@ import { MESSAGES } from '@/constants/theme'
 
 const main = useMainStore()
 
-const { items: authors, loading: authorsLoading, loadItems: loadAuthors } = useListLoader<AuthorPreview, Authors>(
-  () => main.fetchAuthors(),
-  'authors'
-)
+const {
+  items: authors,
+  loading: authorsLoading,
+  loadItems: loadAuthors
+} = useListLoader<AuthorPreview, Authors>(() => main.fetchAuthors(), 'authors')
 
 const { searchQuery, filteredItems: filteredAuthors } = useSearchFilter(
   () => authors.value,
@@ -39,10 +40,13 @@ const { sortedItems: sortedAuthors } = useSorting(
   sortOptions
 )
 
-const { currentPage, paginatedItems: paginatedAuthors, totalPages, goToPage, resetPage } = usePagination(
-  () => sortedAuthors.value,
-  24
-)
+const {
+  currentPage,
+  paginatedItems: paginatedAuthors,
+  totalPages,
+  goToPage,
+  resetPage
+} = usePagination(() => sortedAuthors.value, 24)
 
 watch([searchQuery, sortBy, sortOrder], () => {
   resetPage()

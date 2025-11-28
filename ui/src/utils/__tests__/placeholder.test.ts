@@ -8,4 +8,3 @@ describe('Placeholder', () => {
     expect(true).toBe(true)
   })
 })
-

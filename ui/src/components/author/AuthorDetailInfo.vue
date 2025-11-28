@@ -11,7 +11,9 @@ const props = defineProps<{
 }>()
 
 const fullName = computed(() => formatAuthorName(props.author.firstName, props.author.lastName))
-const lifespan = computed(() => formatAuthorLifespan(props.author.birthYear, props.author.deathYear))
+const lifespan = computed(() =>
+  formatAuthorLifespan(props.author.birthYear, props.author.deathYear)
+)
 </script>
 
 <template>
