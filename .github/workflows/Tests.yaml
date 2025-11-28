@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  run-tests:
+  test-scraper:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -29,11 +29,11 @@ jobs:
         run: inv coverage --args "-vvv"
 
       - name: Upload coverage report to codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  build_python:
+  build-scraper:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -49,6 +49,40 @@ jobs:
         run: |
           pip install -U pip build
           python3 -m build --sdist --wheel
+
+  build-and-test-zimui:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: ui
+        run: |
+          npm ci
+
+      - name: Test
+        working-directory: ui
+        run: |
+          npm run test:unit
+
+      - name: Build
+        working-directory: ui
+        run: |
+          npm run build
+
+      - name: Start web server
+        working-directory: ui
+        run: |
+          npm run preview &
+
+      - name: Wait for web server to be ready
+        run: |
+          npx wait-on http://localhost:4173
 
   build_docker:
     runs-on: ubuntu-24.04
