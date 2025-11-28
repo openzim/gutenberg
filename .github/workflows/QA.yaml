@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  check-qa:
+  check-scraper-qa:
     runs-on: ubuntu-24.04
 
     steps:
@@ -19,11 +19,11 @@ jobs:
           python-version-file: scraper/pyproject.toml
           architecture: x64
 
-      - name: Install dependencies (and project)
+      - name: Install dependencies
         working-directory: scraper
         run: |
           pip install -U pip
-          pip install -e .[lint,scripts,test,check]
+          pip install -e .[lint,check,scripts,test]
 
       - name: Check black formatting
         working-directory: scraper
@@ -36,3 +36,29 @@ jobs:
       - name: Check pyright
         working-directory: scraper
         run: inv check-pyright
+
+  check-zimui-qa:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install JS dependencies
+        working-directory: ui
+        run: |
+          npm ci
+
+      - name: Check prettier
+        working-directory: ui
+        run: |
+          npx prettier --check src/
+
+      - name: Check eslint
+        working-directory: ui
+        run: |
+          npm run lint
