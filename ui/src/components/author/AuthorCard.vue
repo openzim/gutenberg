@@ -3,7 +3,7 @@ import type { AuthorPreview } from '@/types'
 import { pluralize } from '@/utils/format-utils'
 import { AVATAR_SIZES } from '@/constants/theme'
 
-const props = defineProps<{
+defineProps<{
   author: AuthorPreview
 }>()
 </script>

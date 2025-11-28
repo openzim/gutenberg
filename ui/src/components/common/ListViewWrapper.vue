@@ -4,7 +4,7 @@ import EmptyState from './EmptyState.vue'
 import ItemCount from './ItemCount.vue'
 import LoadingSpinner from './LoadingSpinner.vue'
 import PaginationControl from './PaginationControl.vue'
-import { LAYOUT, MESSAGES } from '@/constants/theme'
+import { LAYOUT } from '@/constants/theme'
 
 interface Props {
   title: string
