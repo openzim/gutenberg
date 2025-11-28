@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCC Shelves - Project Gutenberg</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    {% include 'noscript/_nav.html' %}
+    
+    <h1>Library of Congress Classification Shelves</h1>
+    
+    <div class="stats">
+        Showing {{ shelves|length }} shelf{% if shelves|length != 1 %}s{% endif %}
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Books Available</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for shelf in shelves %}
+            <tr>
+                <td class="shelf-code">
+                    <a href="lcc_shelf_{{ shelf.code }}.html">{{ shelf.code }}</a>
+                </td>
+                <td>{{ shelf.book_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

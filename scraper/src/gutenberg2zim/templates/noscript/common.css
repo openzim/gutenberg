@@ -1,0 +1,196 @@
+/* Common styles for No-JS fallback templates */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    max-width: 1200px;
+}
+
+h1 {
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.nav {
+    margin-bottom: 30px;
+}
+
+.nav a {
+    color: #3498db;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.nav a:hover {
+    text-decoration: underline;
+}
+
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.stats {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+tr:hover {
+    background-color: #f8f9fa;
+}
+
+.format-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    margin: 2px;
+    background: #e9ecef;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+.book-id,
+.author-id {
+    font-family: monospace;
+    color: #666;
+}
+
+.book-count {
+    color: #666;
+}
+
+.shelf-code {
+    font-family: monospace;
+    font-weight: 600;
+}
+
+.books-list,
+.book-list {
+    margin: 20px 0;
+}
+
+.book-item {
+    padding: 15px;
+    margin: 10px 0;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    border-radius: 3px;
+}
+
+.book-item a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.book-item a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+.book-meta {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.empty-state {
+    padding: 20px;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    color: #666;
+    text-align: center;
+}
+
+/* Detail page styles */
+.detail-page {
+    max-width: 900px;
+}
+
+.detail-page h1 {
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+}
+
+.detail-info {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.detail-info dt {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-top: 10px;
+}
+
+.detail-info dd {
+    margin-left: 0;
+    margin-bottom: 5px;
+}
+
+.description {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+}
+
+.formats {
+    margin: 20px 0;
+}
+
+.format-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    background: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.format-link:hover {
+    background: #2980b9;
+}
+
+.cover-image {
+    max-width: 200px;
+    margin: 20px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+

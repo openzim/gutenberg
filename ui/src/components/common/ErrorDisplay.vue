@@ -6,12 +6,18 @@ const main = useMainStore()
 
 <template>
   <v-container>
-    <v-alert type="error" prominent>
+    <v-alert
+      type="error"
+      variant="tonal"
+      prominent
+      closable
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+      @click:close="main.clearError()"
+    >
       <v-alert-title>Error</v-alert-title>
-      {{ main.errorMessage }}
+      <div>{{ main.errorMessage }}</div>
     </v-alert>
   </v-container>
 </template>
-
-<style scoped></style>
-

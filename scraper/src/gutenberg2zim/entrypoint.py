@@ -155,10 +155,10 @@ def main():
     # Calculate default UI dist path: from scraper/src/gutenberg2zim/entrypoint.py
     # go up to repo root, then to ui/dist
     default_ui_dist = Path(__file__).parent.parent.parent.parent.parent / "ui" / "dist"
-    ui_dist = Path(
-        arguments.get("--ui-dist")
-        or os.getenv("GUTENBERG_UI_DIST", str(default_ui_dist))
+    ui_dist_raw = arguments.get("--ui-dist") or os.getenv(
+        "GUTENBERG_UI_DIST", str(default_ui_dist)
     )
+    ui_dist = Path(ui_dist_raw).resolve()
 
     if debug:
         for handler in logger.handlers:

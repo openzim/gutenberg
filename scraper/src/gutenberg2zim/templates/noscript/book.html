@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.title }} - Project Gutenberg</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body class="detail-page">
+    {% include 'noscript/_nav.html' %}
+    
+    <h1>{{ book.title }}</h1>
+    {% if book.subtitle %}
+    <div class="subtitle">{{ book.subtitle }}</div>
+    {% endif %}
+    
+        {% if book.cover_page %}
+    <img src="../covers/{{ book.book_id }}_cover_image.jpg" alt="Cover: {{ book.title }}" class="cover-image">
+    {% endif %}
+    
+    <div class="detail-info">
+        <dl>
+            <dt>Author</dt>
+            <dd><a href="author_{{ book.author.gut_id }}.html">{{ book.author.name() }}</a></dd>
+            
+            <dt>Book ID</dt>
+            <dd>{{ book.book_id }}</dd>
+            
+            {% if book.languages %}
+            <dt>Languages</dt>
+            <dd>{{ book.languages|join(", ") }}</dd>
+            {% endif %}
+            
+            {% if book.lcc_shelf %}
+            <dt>LCC Shelf</dt>
+            <dd>{{ book.lcc_shelf }}</dd>
+            {% endif %}
+            
+            <dt>License</dt>
+            <dd>{{ book.license }}</dd>
+            
+            {% if book.downloads %}
+            <dt>Downloads</dt>
+            <dd>{{ "{:,}".format(book.downloads) }}</dd>
+            {% endif %}
+        </dl>
+    </div>
+    
+    {% if book.description %}
+    <div class="description">
+        <strong>Description:</strong>
+        <p>{{ book.description }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="formats">
+        <h2>Available Formats</h2>
+        {% for fmt in book.requested_formats(formats) %}
+        {% if fmt == "html" %}
+        <a href="../{{ book|article_name_for }}" class="format-link">Read Online (HTML)</a>
+        {% elif fmt == "epub" %}
+        <a href="../{{ book|archive_name_for("epub") }}" class="format-link">Download EPUB</a>
+        {% elif fmt == "pdf" %}
+        <a href="../{{ book|archive_name_for("pdf") }}" class="format-link">Download PDF</a>
+        {% endif %}
+        {% endfor %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ author.name() }} - Project Gutenberg</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body class="detail-page">
+    {% include 'noscript/_nav.html' %}
+    
+    <h1>{{ author.name() }}</h1>
+    
+    <div class="detail-info">
+        <dl>
+            <dt>Author ID</dt>
+            <dd>{{ author.gut_id }}</dd>
+            
+            {% if author.first_names %}
+            <dt>First Name</dt>
+            <dd>{{ author.first_names }}</dd>
+            {% endif %}
+            
+            {% if author.last_name %}
+            <dt>Last Name</dt>
+            <dd>{{ author.last_name }}</dd>
+            {% endif %}
+            
+            {% if author.birth_year or author.death_year %}
+            <dt>Lifespan</dt>
+            <dd>
+                {% if author.birth_year %}{{ author.birth_year }}{% endif %}
+                {% if author.birth_year or author.death_year %} - {% endif %}
+                {% if author.death_year %}{{ author.death_year }}{% endif %}
+            </dd>
+            {% endif %}
+        </dl>
+    </div>
+    
+    <div class="books-list">
+        <h2>Books by {{ author.name() }}</h2>
+        <div class="stats">
+            {{ author_books|length }} book{% if author_books|length != 1 %}s{% endif %} available
+        </div>
+        
+        {% for book in author_books %}
+        <div class="book-item">
+            <a href="book_{{ book.book_id }}.html">{{ book.title }}</a>
+            {% if book.subtitle %}
+            <div class="book-meta">{{ book.subtitle }}</div>
+            {% endif %}
+            <div class="book-meta">
+                Book ID: {{ book.book_id }}
+                {% if book.languages %} | Languages: {{ book.languages|join(", ") }}{% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

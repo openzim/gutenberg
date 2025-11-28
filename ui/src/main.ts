@@ -10,7 +10,6 @@ import loadVuetify from './plugins/vuetify'
 import ResizeObserver from 'resize-observer-polyfill'
 
 if (typeof window.ResizeObserver === 'undefined') {
-  console.debug('Polyfilling ResizeObserver')
   window.ResizeObserver = ResizeObserver
 }
 
@@ -23,6 +22,6 @@ loadVuetify()
     app.mount('#app')
   })
   .catch((error) => {
-    console.error('Error initializing app:', error)
+    throw error
   })
 

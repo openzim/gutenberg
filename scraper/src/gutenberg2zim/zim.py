@@ -25,14 +25,14 @@ def get_zim_language_metadata(languages: list[str], books: list[CatalogEntry]):
 def export_ui_dist(ui_dist: pathlib.Path, title: str) -> None:
     """Export Vue.js UI dist folder to ZIM file."""
     if not ui_dist.exists():
-        logger.warning(f"UI dist directory not found at {ui_dist}, skipping UI export")
-        return
+        raise FileNotFoundError(f"UI dist directory not found: {ui_dist}")
 
     logger.info(f"Adding Vue.js UI files from {ui_dist}")
+    file_count = 0
     for file in ui_dist.rglob("*"):
         if file.is_dir():
             continue
-        path = str(file.relative_to(ui_dist))
+        path = file.relative_to(ui_dist).as_posix()
         logger.debug(f"Adding {path} to ZIM")
 
         # Update index.html title
@@ -56,6 +56,8 @@ def export_ui_dist(ui_dist: pathlib.Path, title: str) -> None:
                 fpath=file,
                 is_front=False,
             )
+        file_count += 1
+    logger.info(f"Successfully added {file_count} UI files to ZIM")
 
 
 def build_zimfile(
@@ -80,7 +82,7 @@ def build_zimfile(
     progress: ScraperProgress,
     with_fulltext_index: bool,
     debug: bool,
-    ui_dist: pathlib.Path | None = None,
+    ui_dist: pathlib.Path,
 ) -> None:
     """Build ZIM file using singleton BookRepository"""
     progress.increase_total(len(books))
@@ -148,9 +150,8 @@ def build_zimfile(
             description=description,
         )
 
-        # Export Vue.js UI dist folder if provided
-        if ui_dist:
-            export_ui_dist(ui_dist, title or i18n.t("metadata_defaults.title"))
+        # Export Vue.js UI dist folder
+        export_ui_dist(ui_dist, title)
 
     except Exception as exc:
         # request Creator not to create a ZIM file on finish

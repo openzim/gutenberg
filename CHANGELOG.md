@@ -8,6 +8,8 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+## [3.0.1] - 2025-11-24
+
 ### Added
 
 - Add CLI flag to customize ZIM Name (#340)

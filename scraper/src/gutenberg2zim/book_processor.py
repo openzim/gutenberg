@@ -10,8 +10,8 @@ from gutenberg2zim.constants import logger
 from gutenberg2zim.download import download_book
 from gutenberg2zim.export import (
     export_book,
-    export_skeleton,
     generate_json_files,
+    generate_noscript_pages,
 )
 from gutenberg2zim.models import repository
 from gutenberg2zim.rdf import download_and_parse_book_rdf
@@ -108,9 +108,9 @@ def process_all_books(
                 book_files=book_content.files,
                 cover_image=book_content.cover_image,
                 formats=formats,
-                zim_name=zim_name,
-                title_search=title_search,
-                add_lcc_shelves=add_lcc_shelves,
+                _zim_name=zim_name,
+                _title_search=title_search,
+                _add_lcc_shelves=add_lcc_shelves,
             )
 
     Pool(concurrency).map(partial(process_book, progress=progress), book_ids)
@@ -150,10 +150,6 @@ def process_all_books(
         add_lcc_shelves=add_lcc_shelves,
     )
 
-    # export HTML index and other static files
-    logger.info("Exporting HTML skeleton")
-    export_skeleton(
-        zim_name=zim_name,
-        title_search=title_search,
-        add_lcc_shelves=add_lcc_shelves,
-    )
+    # Generate No-JS fallback pages
+    logger.info("Generating No-JS fallback pages")
+    generate_noscript_pages(formats=formats)

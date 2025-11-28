@@ -1,9 +1,9 @@
 import pathlib
 import threading
 from datetime import date
-from typing import Any
 
 from zimscraperlib.zim.creator import Creator
+from zimscraperlib.zim.indexing import IndexData
 from zimscraperlib.zim.metadata import (
     CreatorMetadata,
     DateMetadata,
@@ -26,8 +26,6 @@ class Global:
     """Shared context accross all scraper components"""
 
     creator: Creator
-    default_context: dict[str, Any] | None
-    default_context_zim_name: str | None
 
     _lock = threading.Lock()
 
@@ -43,12 +41,10 @@ class Global:
         with_fulltext_index,
         debug,
     ):
-        Global.default_context = None
-        Global.default_context_zim_name = None
         Global.creator = (
             Creator(
                 filename=filename,
-                main_path="Home",
+                main_path="index.html",
                 workaround_nocancel=False,
             )
             .config_metadata(
@@ -86,6 +82,7 @@ class Global:
         should_compress: bool | None = None,
         delete_fpath: bool | None = False,
         auto_index: bool = False,
+        index_data: IndexData | None = None,
     ):
         logger.debug(f"\t\tAdding ZIM item at {path}")
 
@@ -104,6 +101,7 @@ class Global:
                 should_compress=should_compress,
                 delete_fpath=delete_fpath,
                 auto_index=auto_index,
+                index_data=index_data,
             )
 
     @staticmethod
