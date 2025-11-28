@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCC Shelf {{ shelf_code }} - Project Gutenberg</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body class="detail-page">
+    {% include 'noscript/_nav.html' %}
+    
+    <h1>LCC Shelf {{ shelf_code }}</h1>
+    <p class="book-meta">{{ books|length }} book{% if books|length != 1 %}s{% endif %} available in this shelf.</p>
+    
+    <div class="book-list">
+        {% if books %}
+            {% for book in books %}
+            <div class="book-item">
+                <a href="book_{{ book.book_id }}.html">{{ book.title }}</a>
+                <div class="book-meta">
+                    by <a href="author_{{ book.author.gut_id }}.html">{{ book.author.name() }}</a>
+                </div>
+                {% if book.languages %}
+                <div class="book-meta">
+                    Languages: {{ book.languages|join(", ") }}
+                </div>
+                {% endif %}
+                <div class="formats">
+                    {% for fmt in book.requested_formats(formats) %}
+                    <span class="format-badge">{{ fmt|upper }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                No books are currently available for this shelf.
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

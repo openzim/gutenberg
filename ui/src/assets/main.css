@@ -1,0 +1,49 @@
+@import '@fontsource/roboto/300.css';
+@import '@fontsource/roboto/400.css';
+@import '@fontsource/roboto/500.css';
+@import '@fontsource/roboto/700.css';
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+/* Shared card styles for consistent card behavior */
+.card-full-height {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card-full-height:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Accessibility: Focus states */
+*:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth transitions for interactive elements */
+a, button, .v-btn, .v-card {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Responsive typography */
+@media (max-width: 600px) {
+  .text-h1 { font-size: 1.75rem; }
+  .text-h2 { font-size: 1.5rem; }
+  .text-h3 { font-size: 1.25rem; }
+  .text-h4 { font-size: 1.125rem; }
+  .text-h5 { font-size: 1rem; }
+  .text-h6 { font-size: 0.875rem; }
+}
+

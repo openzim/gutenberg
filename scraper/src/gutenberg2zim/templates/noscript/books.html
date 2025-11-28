@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Books - Project Gutenberg</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    {% include 'noscript/_nav.html' %}
+    
+    <h1>All Books</h1>
+    
+    <div class="stats">
+        Showing {{ books|length }} book{% if books|length != 1 %}s{% endif %}
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Languages</th>
+                <th>Formats</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td class="book-id">{{ book.book_id }}</td>
+                <td><a href="book_{{ book.book_id }}.html">{{ book.title }}</a></td>
+                <td><a href="author_{{ book.author.gut_id }}.html">{{ book.author.name() }}</a></td>
+                <td>{{ book.languages|join(", ") }}</td>
+                <td>
+                    {% for fmt in book.requested_formats(formats) %}
+                    <span class="format-badge">{{ fmt }}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
