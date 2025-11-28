@@ -82,7 +82,7 @@ jobs:
 
       - name: Wait for web server to be ready
         run: |
-          npx wait-on http://localhost:4173
+          npx wait-on http://localhost:5173
 
   build_docker:
     runs-on: ubuntu-24.04
