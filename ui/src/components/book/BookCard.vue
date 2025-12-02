@@ -34,14 +34,11 @@ defineProps<{
 
     <v-card-text class="pa-4">
       <div class="d-flex align-center mb-2">
-        <span 
-          class="text-warning" 
-          :aria-label="`Popularity: ${book.popularity} out of 5 stars`"
-        >
+        <span class="text-warning" :aria-label="`Popularity: ${book.popularity} out of 5 stars`">
           {{ getPopularityStars(book.popularity) }}
         </span>
       </div>
-      
+
       <v-chip-group>
         <v-chip
           v-for="lang in book.languages"

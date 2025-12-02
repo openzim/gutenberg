@@ -8,10 +8,11 @@ import { MESSAGES } from '@/constants/theme'
 
 const main = useMainStore()
 
-const { data: shelf, notFound, loading } = useDetailView(
-  (id) => main.fetchLCCShelf(String(id)),
-  'code'
-)
+const {
+  data: shelf,
+  notFound,
+  loading
+} = useDetailView((id) => main.fetchLCCShelf(String(id)), 'code')
 </script>
 
 <template>

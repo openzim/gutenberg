@@ -3,7 +3,7 @@ import type { LCCShelfPreview } from '@/types'
 import { pluralize } from '@/utils/format-utils'
 import { AVATAR_SIZES } from '@/constants/theme'
 
-const props = defineProps<{
+defineProps<{
   shelf: LCCShelfPreview
 }>()
 </script>
@@ -31,4 +31,3 @@ const props = defineProps<{
     </v-card-text>
   </v-card>
 </template>
-

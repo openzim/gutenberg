@@ -24,7 +24,7 @@ export function useDetailView<T>(
   function loadData() {
     const param = route.params[paramName]
     const paramValue = Array.isArray(param) ? param[0] : param
-    
+
     if (!paramValue) {
       notFound.value = true
       return
@@ -32,14 +32,12 @@ export function useDetailView<T>(
 
     let id: string | number
     try {
-      id = parseParam 
-        ? parseParam(paramValue as string)
-        : (paramValue as string)
+      id = parseParam ? parseParam(paramValue as string) : (paramValue as string)
     } catch {
       notFound.value = true
       return
     }
-    
+
     if (!id) {
       notFound.value = true
       return
@@ -47,7 +45,7 @@ export function useDetailView<T>(
 
     loading.value = true
     fetchFn(id)
-      .then(result => {
+      .then((result) => {
         if (!isMounted) return
         data.value = result
         if (route.meta.title) {
@@ -66,9 +64,12 @@ export function useDetailView<T>(
       })
   }
 
-  watch(() => route.params[paramName], () => {
-    loadData()
-  })
+  watch(
+    () => route.params[paramName],
+    () => {
+      loadData()
+    }
+  )
 
   onMounted(() => {
     isMounted = true
@@ -85,4 +86,3 @@ export function useDetailView<T>(
     loading
   }
 }
-

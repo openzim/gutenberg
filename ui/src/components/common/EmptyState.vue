@@ -10,4 +10,3 @@ defineProps<{
     {{ message }}
   </v-alert>
 </template>
-

@@ -34,4 +34,3 @@ export interface Books {
   books: BookPreview[]
   totalCount: number
 }
-

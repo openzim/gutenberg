@@ -13,12 +13,8 @@ const links = [
     <v-container>
       <v-row>
         <v-col cols="12" md="6" class="text-center text-md-left">
-          <p class="mb-2">
-            <strong>Project Gutenberg</strong> - Free eBooks
-          </p>
-          <p class="text-medium-emphasis">
-            {{ currentYear }} · Offline access powered by Kiwix
-          </p>
+          <p class="mb-2"><strong>Project Gutenberg</strong> - Free eBooks</p>
+          <p class="text-medium-emphasis">{{ currentYear }} · Offline access powered by Kiwix</p>
         </v-col>
 
         <v-col cols="12" md="6" class="text-center text-md-right">

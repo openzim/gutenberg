@@ -38,7 +38,9 @@ export const MESSAGES = {
   NO_BOOKS_IN_SHELF: 'No books available in this shelf.',
   NO_LANGUAGES: 'No languages available.',
   NO_FORMATS: 'No formats available.',
-  NOT_FOUND_BOOK: 'Book not found. The book you\'re looking for doesn\'t exist or has been removed.',
-  NOT_FOUND_AUTHOR: 'Author not found. The author you\'re looking for doesn\'t exist or has been removed.',
-  NOT_FOUND_SHELF: 'LCC shelf not found. The shelf you\'re looking for doesn\'t exist or has been removed.'
+  NOT_FOUND_BOOK: "Book not found. The book you're looking for doesn't exist or has been removed.",
+  NOT_FOUND_AUTHOR:
+    "Author not found. The author you're looking for doesn't exist or has been removed.",
+  NOT_FOUND_SHELF:
+    "LCC shelf not found. The shelf you're looking for doesn't exist or has been removed."
 } as const

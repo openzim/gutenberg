@@ -5,10 +5,7 @@ export function formatAuthorName(firstName: string | null, lastName: string): st
   return lastName
 }
 
-export function formatAuthorLifespan(
-  birthYear: string | null,
-  deathYear: string | null
-): string {
+export function formatAuthorLifespan(birthYear: string | null, deathYear: string | null): string {
   if (birthYear && deathYear) {
     return `${birthYear} - ${deathYear}`
   }
@@ -42,16 +39,13 @@ export function formatLanguages(languages: string[]): string {
 }
 
 export function pluralize(count: number, singular: string, plural?: string): string {
-  return count === 1 ? singular : (plural || `${singular}s`)
+  return count === 1 ? singular : plural || `${singular}s`
 }
 
-export function extractUniqueValues<T>(
-  items: T[],
-  getter: (item: T) => string[]
-): string[] {
+export function extractUniqueValues<T>(items: T[], getter: (item: T) => string[]): string[] {
   const values = new Set<string>()
-  items.forEach(item => {
-    getter(item).forEach(value => values.add(value))
+  items.forEach((item) => {
+    getter(item).forEach((value) => values.add(value))
   })
   return Array.from(values).sort()
 }

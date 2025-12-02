@@ -3,4 +3,3 @@
     <v-progress-circular indeterminate color="grey-lighten-2" />
   </v-row>
 </template>
-

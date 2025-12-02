@@ -24,4 +24,3 @@ loadVuetify()
   .catch((error) => {
     throw error
   })
-

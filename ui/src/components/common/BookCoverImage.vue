@@ -34,7 +34,6 @@ const props = withDefaults(defineProps<Props>(), {
       <cover-fallback :size="size" :height="height" :class="props.class" />
     </template>
   </v-img>
-  
+
   <cover-fallback v-else :size="size" :height="height" :class="props.class" />
 </template>
-

@@ -27,6 +27,4 @@ useTheme()
 .v-main {
   min-height: calc(100vh - 200px); /* header + footer height */
 }
-
 </style>
-
