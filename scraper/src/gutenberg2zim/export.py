@@ -68,6 +68,7 @@ def save_bs_output(soup, fpath, encoding=UTF8):
 jinja_env.filters["book_name_for_fs"] = book_name_for_fs
 jinja_env.filters["zim_link_prefix"] = zim_link_prefix
 jinja_env.filters["language_name"] = language_name
+jinja_env.filters["fa_for_format"] = fa_for_format
 jinja_env.filters["urlencode"] = urlencode
 jinja_env.filters["article_name_for"] = lambda book, cover=False: article_name_for(
     book, cover=cover
