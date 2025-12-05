@@ -38,6 +38,16 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
         
+        .gutenberg-btn:focus {
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+        
+        .gutenberg-btn:focus-visible {
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+        
         .gutenberg-btn svg {
             width: 24px;
             height: 24px;
@@ -113,6 +123,7 @@
     <a 
         href="./index.html#/book/{{ book.book_id }}" 
         class="gutenberg-btn gutenberg-btn-info" 
+        aria-label="View book cover and information"
         title="View book cover and information"
     >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -125,6 +136,7 @@
             <a 
                 href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.epub" 
                 class="gutenberg-btn gutenberg-btn-epub" 
+                aria-label="Download EPUB format"
                 title="Download EPUB format"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -135,6 +147,7 @@
             <a 
                 href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.pdf" 
                 class="gutenberg-btn gutenberg-btn-pdf" 
+                aria-label="Download PDF format"
                 title="Download PDF format"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -148,6 +161,7 @@
         href="#" 
         class="gutenberg-btn gutenberg-btn-up" 
         id="scroll-to-top"
+        aria-label="Scroll to top"
         title="Scroll to top"
     >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
