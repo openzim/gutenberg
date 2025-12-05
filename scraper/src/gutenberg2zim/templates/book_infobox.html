@@ -1,16 +1,181 @@
-<div>
-    <span class="zim_info">
-    <a title="{{ book.title }}" href="./{{ book|book_name_for_fs|urlencode }}_cover.{{ book.book_id }}"><i class="fa fa-info-circle fa-2x"></i></a>
-    </span>
+<div id="gutenberg-infobox">
+    <style>
+        #gutenberg-infobox {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        .gutenberg-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .gutenberg-btn:hover {
+            background: #f5f5f5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .gutenberg-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .gutenberg-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        .gutenberg-btn-info {
+            color: #3498db;
+        }
+        
+        .gutenberg-btn-info:hover {
+            background: #e3f2fd;
+            border-color: #3498db;
+        }
+        
+        .gutenberg-btn-epub {
+            color: #9c27b0;
+        }
+        
+        .gutenberg-btn-epub:hover {
+            background: #f3e5f5;
+            border-color: #9c27b0;
+        }
+        
+        .gutenberg-btn-pdf {
+            color: #f44336;
+        }
+        
+        .gutenberg-btn-pdf:hover {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+        
+        .gutenberg-btn-up {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: #666;
+        }
+        
+        .gutenberg-btn-up:hover {
+            border-color: #666;
+        }
+        
+        .gutenberg-btn-up.hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            #gutenberg-infobox {
+                top: 10px;
+                right: 10px;
+                gap: 8px;
+            }
+            
+            .gutenberg-btn {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .gutenberg-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .gutenberg-btn-up {
+                bottom: 10px;
+                left: 10px;
+            }
+        }
+    </style>
+    
+    <a 
+        href="./index.html#/book/{{ book.book_id }}" 
+        class="gutenberg-btn gutenberg-btn-info" 
+        title="View book cover and information"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+    </a>
+    
     {% for format in book.requested_formats(formats) %}
-        {% if not format == 'html' %}
-            <span class="zim_{{ format }}">
-            <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.{{ format }}">
-            <i class="fa fa-2x {{ format|fa_for_format }}"></i></a>
-            </span>
+        {% if format == 'epub' %}
+            <a 
+                href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.epub" 
+                class="gutenberg-btn gutenberg-btn-epub" 
+                title="Download EPUB format"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+            </a>
+        {% elif format == 'pdf' %}
+            <a 
+                href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.pdf" 
+                class="gutenberg-btn gutenberg-btn-pdf" 
+                title="Download PDF format"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zm5 0h1v-1h-1v1zm-5 2h1v-1H9v1zm5 0h1v-1h-1v1z"/>
+                </svg>
+            </a>
         {% endif %}
     {% endfor %}
-    <span class="zim_up" style="position: fixed; bottom: 1em; left: 1em;">
-    	<a href="#"><i class="fa fa-2x fa-chevron-circle-up" /></a>
-	</span>
+    
+    <a 
+        href="#" 
+        class="gutenberg-btn gutenberg-btn-up" 
+        id="scroll-to-top"
+        title="Scroll to top"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+        </svg>
+    </a>
+    
+    <script>
+        (function() {
+            var scrollBtn = document.getElementById('scroll-to-top');
+            if (!scrollBtn) return;
+            
+            function toggleScrollButton() {
+                if (window.pageYOffset > 300) {
+                    scrollBtn.classList.remove('hidden');
+                } else {
+                    scrollBtn.classList.add('hidden');
+                }
+            }
+            
+            function scrollToTop(e) {
+                e.preventDefault();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+            
+            scrollBtn.addEventListener('click', scrollToTop);
+            window.addEventListener('scroll', toggleScrollButton);
+            toggleScrollButton();
+        })();
+    </script>
 </div>
