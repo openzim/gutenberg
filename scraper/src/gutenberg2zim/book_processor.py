@@ -10,6 +10,7 @@ from gutenberg2zim.constants import logger
 from gutenberg2zim.download import download_book
 from gutenberg2zim.export import (
     export_book,
+    export_infobox_assets,
     generate_json_files,
     generate_noscript_pages,
 )
@@ -139,6 +140,10 @@ def process_all_books(
         book.popularity = sum(
             [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
         )
+
+    # Export infobox assets (CSS and JS)
+    logger.info("Exporting infobox assets")
+    export_infobox_assets()
 
     # export to JSON files (new format for Vue.js UI)
     logger.info("Generating JSON files for Vue.js UI")
