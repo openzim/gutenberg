@@ -292,8 +292,8 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
             head = soup.new_tag("head")
             html.insert(0, head)
 
-        # Add CSS link if not already present
-        if not soup.find("link", {"href": "css/gutenberg-infobox.css"}):
+        # Add CSS link if not already present in head
+        if not head.find("link", {"href": "css/gutenberg-infobox.css"}):
             css_link = soup.new_tag(
                 "link",
                 rel="stylesheet",
@@ -302,8 +302,8 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
             )
             head.append(css_link)
 
-        # Add JS script at the end of body (runs after DOM is ready)
-        if not soup.find("script", {"src": "js/gutenberg-infobox.js"}):
+        # Add JS script at the end of body if not already present
+        if not body.find("script", {"src": "js/gutenberg-infobox.js"}):
             js_script = soup.new_tag(
                 "script", src="js/gutenberg-infobox.js", type="text/javascript"
             )
