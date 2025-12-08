@@ -41,6 +41,10 @@ def process_all_books(
         f"Processing {len(book_ids)} books with {concurrency} (parallel) worker(s)"
     )
 
+    # Export infobox assets (CSS, JS, and icons)
+    logger.info("Exporting infobox assets")
+    export_infobox_assets()
+
     def backoff_busy_error_hdlr(details):
         logger.warning(
             "Backing off {wait:0.1f} seconds after {tries} tries "
@@ -140,10 +144,6 @@ def process_all_books(
         book.popularity = sum(
             [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
         )
-
-    # Export infobox assets (CSS and JS)
-    logger.info("Exporting infobox assets")
-    export_infobox_assets()
 
     # export to JSON files (new format for Vue.js UI)
     logger.info("Generating JSON files for Vue.js UI")
