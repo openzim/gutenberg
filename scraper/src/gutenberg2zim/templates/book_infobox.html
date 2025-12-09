@@ -1,16 +1,42 @@
-<div>
-    <span class="zim_info">
-    <a title="{{ book.title }}" href="./{{ book|book_name_for_fs|urlencode }}_cover.{{ book.book_id }}"><i class="fa fa-info-circle fa-2x"></i></a>
-    </span>
+<div id="gutenberg-infobox">
+    <a 
+        href="./index.html#/book/{{ book.book_id }}" 
+        class="gutenberg-btn gutenberg-btn-info" 
+        aria-label="View book cover and information"
+        title="View book cover and information"
+    >
+        <img src="icons/info.svg" alt="Info" width="24" height="24">
+    </a>
+    
     {% for format in book.requested_formats(formats) %}
-        {% if not format == 'html' %}
-            <span class="zim_{{ format }}">
-            <a title="{{ book.title }}: {{ format|upper }}" href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.{{ format }}">
-            <i class="fa fa-2x {{ format|fa_for_format }}"></i></a>
-            </span>
+        {% if format == 'epub' %}
+            <a 
+                href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.epub" 
+                class="gutenberg-btn gutenberg-btn-epub" 
+                aria-label="Download EPUB format"
+                title="Download EPUB format"
+            >
+                <img src="icons/epub.svg" alt="EPUB" width="24" height="24">
+            </a>
+        {% elif format == 'pdf' %}
+            <a 
+                href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.pdf" 
+                class="gutenberg-btn gutenberg-btn-pdf" 
+                aria-label="Download PDF format"
+                title="Download PDF format"
+            >
+                <img src="icons/pdf.svg" alt="PDF" width="24" height="24">
+            </a>
         {% endif %}
     {% endfor %}
-    <span class="zim_up" style="position: fixed; bottom: 1em; left: 1em;">
-    	<a href="#"><i class="fa fa-2x fa-chevron-circle-up" /></a>
-	</span>
+    
+    <a 
+        href="#" 
+        class="gutenberg-btn gutenberg-btn-up hidden" 
+        id="scroll-to-top"
+        aria-label="Scroll to top"
+        title="Scroll to top"
+    >
+        <img src="icons/scroll-up.svg" alt="Scroll to top" width="24" height="24">
+    </a>
 </div>

@@ -1,0 +1,104 @@
+#gutenberg-infobox {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#gutenberg-infobox .gutenberg-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+#gutenberg-infobox .gutenberg-btn:hover {
+    background: #f5f5f5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+#gutenberg-infobox .gutenberg-btn:focus,
+#gutenberg-infobox .gutenberg-btn:focus-visible {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+}
+
+#gutenberg-infobox .gutenberg-btn img {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+#gutenberg-infobox .gutenberg-btn-info {
+    color: #3498db;
+}
+
+#gutenberg-infobox .gutenberg-btn-info:hover {
+    background: #e3f2fd;
+    border-color: #3498db;
+}
+
+#gutenberg-infobox .gutenberg-btn-epub {
+    color: #9c27b0;
+}
+
+#gutenberg-infobox .gutenberg-btn-epub:hover {
+    background: #f3e5f5;
+    border-color: #9c27b0;
+}
+
+#gutenberg-infobox .gutenberg-btn-pdf {
+    color: #f44336;
+}
+
+#gutenberg-infobox .gutenberg-btn-pdf:hover {
+    background: #ffebee;
+    border-color: #f44336;
+}
+
+.gutenberg-btn-up {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    color: #666;
+}
+
+.gutenberg-btn-up.hidden {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    #gutenberg-infobox {
+        top: 10px;
+        right: 10px;
+        gap: 8px;
+    }
+    
+    #gutenberg-infobox .gutenberg-btn {
+        width: 48px;
+        height: 48px;
+    }
+    
+    #gutenberg-infobox .gutenberg-btn img {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .gutenberg-btn-up {
+        bottom: 10px;
+        left: 10px;
+    }
+}

@@ -283,6 +283,32 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
             raise Exception("info_box div should be a Tag class")
         body.insert(0, info_box)
 
+        # Ensure head exists
+        head = soup.find("head")
+        if not head:
+            html = soup.find("html")
+            if not isinstance(html, Tag):
+                raise Exception("html should be a Tag class")
+            head = soup.new_tag("head")
+            html.insert(0, head)
+
+        # Add CSS link if not already present in head
+        if not head.find("link", {"href": "css/gutenberg-infobox.css"}):
+            css_link = soup.new_tag(
+                "link",
+                rel="stylesheet",
+                href="css/gutenberg-infobox.css",
+                type="text/css",
+            )
+            head.append(css_link)
+
+        # Add JS script at the end of body if not already present
+        if not body.find("script", {"src": "js/gutenberg-infobox.js"}):
+            js_script = soup.new_tag(
+                "script", src="js/gutenberg-infobox.js", type="text/javascript"
+            )
+            body.append(js_script)
+
     # if there is no charset, set it to utf8
     if not epub:
         meta = BeautifulSoup(
@@ -733,6 +759,33 @@ def generate_json_files(
             )
 
     logger.info("JSON file generation completed")
+
+
+def export_infobox_assets() -> None:
+    """Export infobox CSS, JS, and icon files to ZIM"""
+    templates_dir = Path(__file__).parent / "templates"
+
+    assets = [
+        ("css/gutenberg-infobox.css", "css", "text/css"),
+        ("js/gutenberg-infobox.js", "js", "text/javascript"),
+        ("icons/info.svg", "icons", "image/svg+xml"),
+        ("icons/epub.svg", "icons", "image/svg+xml"),
+        ("icons/pdf.svg", "icons", "image/svg+xml"),
+        ("icons/scroll-up.svg", "icons", "image/svg+xml"),
+    ]
+
+    for zim_path, subdir, mimetype in assets:
+        file_path = templates_dir / subdir / Path(zim_path).name
+        if not file_path.exists():
+            logger.warning(f"Infobox asset not found: {file_path}")
+            continue
+        logger.debug(f"Adding {zim_path} to ZIM")
+        Global.add_item_for(
+            path=zim_path,
+            fpath=file_path,
+            mimetype=mimetype,
+            is_front=False,
+        )
 
 
 def generate_noscript_pages(

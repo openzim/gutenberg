@@ -10,6 +10,7 @@ from gutenberg2zim.constants import logger
 from gutenberg2zim.download import download_book
 from gutenberg2zim.export import (
     export_book,
+    export_infobox_assets,
     generate_json_files,
     generate_noscript_pages,
 )
@@ -39,6 +40,10 @@ def process_all_books(
     logger.info(
         f"Processing {len(book_ids)} books with {concurrency} (parallel) worker(s)"
     )
+
+    # Export infobox assets (CSS, JS, and icons)
+    logger.info("Exporting infobox assets")
+    export_infobox_assets()
 
     def backoff_busy_error_hdlr(details):
         logger.warning(
