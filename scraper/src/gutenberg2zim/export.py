@@ -472,6 +472,13 @@ def lcc_shelf_list_language(lang):
 # JSON Generation Functions for Vue.js UI
 
 
+def _get_authors_with_books() -> list[Author]:
+    """Get only authors who have at least one book in the repository"""
+    all_books = repository.get_all_books()
+    authors_dict = {book.author.gut_id: book.author for book in all_books}
+    return list(authors_dict.values())
+
+
 def _author_to_preview(author: Author) -> AuthorPreview:
     """Convert Author dataclass to AuthorPreview schema"""
     book_count = sum(
@@ -618,7 +625,7 @@ def generate_json_files(
 
     logger.debug("Generating authors.json")
     authors_preview = [
-        _author_to_preview(author) for author in repository.get_all_authors()
+        _author_to_preview(author) for author in _get_authors_with_books()
     ]
     authors_collection = Authors(
         authors=authors_preview, total_count=len(authors_preview)
@@ -681,7 +688,7 @@ def generate_json_files(
         )
 
     logger.debug("Generating author detail files and index entries")
-    for author in repository.get_all_authors():
+    for author in _get_authors_with_books():
         author_books = [
             _book_to_preview(book)
             for book in repository.get_all_books()
@@ -805,7 +812,7 @@ def generate_noscript_pages(
             is_front=False,
         )
     all_books = repository.get_all_books()
-    all_authors = repository.get_all_authors()
+    all_authors = _get_authors_with_books()
     shelves = sorted(repository.get_lcc_shelves())
     shelf_books_map: dict[str, list[Book]] = {
         shelf_code: [book for book in all_books if book.lcc_shelf == shelf_code]
