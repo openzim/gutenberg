@@ -154,17 +154,13 @@ def main():
     publisher = arguments.get("--publisher") or "openZIM"
     primary_color = arguments.get("--primary-color")
     secondary_color = arguments.get("--secondary-color")
-    
+
     # Validate color formats if provided
     if primary_color and not is_hex_color(primary_color):
-        critical_error(
-            f"--primary-color is not a valid hex color: {primary_color}"
-        )
+        critical_error(f"--primary-color is not a valid hex color: {primary_color}")
     if secondary_color and not is_hex_color(secondary_color):
-        critical_error(
-            f"--secondary-color is not a valid hex color: {secondary_color}"
-        )
-    
+        critical_error(f"--secondary-color is not a valid hex color: {secondary_color}")
+
     debug = arguments.get("--debug") or False
     output_folder = Path(
         arguments.get("--output") or os.getenv("GUTENBERG_OUTPUT", "./output")
