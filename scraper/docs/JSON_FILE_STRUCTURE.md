@@ -247,7 +247,7 @@ ZIM_ROOT/
 {
   "title": "Project Gutenberg Library",
   "description": "Free eBooks from Project Gutenberg",
-  "mainColor": null,
+  "primaryColor": null,
   "secondaryColor": null
 }
 ```

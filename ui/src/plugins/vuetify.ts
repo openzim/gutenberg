@@ -11,7 +11,7 @@ async function loadVuetify() {
 
   try {
     const response = await axios.get<Config>('./config.json')
-    primaryColor = response.data.mainColor || primaryColor
+    primaryColor = response.data.primaryColor || primaryColor
     secondaryColor = response.data.secondaryColor || secondaryColor
   } catch (error) {
     console.warn('Failed to load config.json for theme colors, using defaults.', error)
