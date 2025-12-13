@@ -151,8 +151,8 @@ def main():
 
     stats_filename: str | None = arguments.get("--stats-filename") or None
     publisher = arguments.get("--publisher") or "openZIM"
-    primary_color = arguments.get("--primary-color") or None
-    secondary_color = arguments.get("--secondary-color") or None
+    primary_color = arguments.get("--primary-color")
+    secondary_color = arguments.get("--secondary-color")
     debug = arguments.get("--debug") or False
     output_folder = Path(
         arguments.get("--output") or os.getenv("GUTENBERG_OUTPUT", "./output")
