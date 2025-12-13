@@ -4,6 +4,7 @@ from pathlib import Path
 
 from docopt import docopt
 from schedule import run_all
+from zimscraperlib.image.probing import is_hex_color
 from zimscraperlib.inputs import compute_descriptions
 
 from gutenberg2zim import i18n
@@ -57,7 +58,7 @@ help_info = (
     """(e.g., P,PR,Q). Use 'all' to generate all shelves. If omitted, no shelf generated
 --stats-filename=<filename>  Path to store the progress JSON file to
 --publisher=<zim_publisher>     Custom Publisher in ZIM Metadata (openZIM otherwise)
---mirror_url=<mirror_url>       Optional custom url of mirror hosting Gutenberg files
+--mirror-url=<mirror_url>       Optional custom url of mirror hosting Gutenberg files
 --output=<output_folder>        Output folder for ZIMs. Default: ./output
 --primary-color=<color>         Custom primary color. Hex/HTML syntax (#1976D2)
 --secondary-color=<color>       Custom secondary color. Hex/HTML syntax (#424242)
@@ -153,6 +154,17 @@ def main():
     publisher = arguments.get("--publisher") or "openZIM"
     primary_color = arguments.get("--primary-color")
     secondary_color = arguments.get("--secondary-color")
+    
+    # Validate color formats if provided
+    if primary_color and not is_hex_color(primary_color):
+        critical_error(
+            f"--primary-color is not a valid hex color: {primary_color}"
+        )
+    if secondary_color and not is_hex_color(secondary_color):
+        critical_error(
+            f"--secondary-color is not a valid hex color: {secondary_color}"
+        )
+    
     debug = arguments.get("--debug") or False
     output_folder = Path(
         arguments.get("--output") or os.getenv("GUTENBERG_OUTPUT", "./output")
