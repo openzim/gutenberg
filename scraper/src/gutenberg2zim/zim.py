@@ -75,6 +75,8 @@ def build_zimfile(
     zim_languages: list[str] | None,
     publisher: str,
     *,
+    primary_color: str | None = None,
+    secondary_color: str | None = None,
     force: bool,
     is_selection: bool,
     title_search: bool,
@@ -148,6 +150,8 @@ def build_zimfile(
             add_lcc_shelves=add_lcc_shelves,
             title=title,
             description=description,
+            primary_color=primary_color,
+            secondary_color=secondary_color,
         )
 
         # Export Vue.js UI dist folder

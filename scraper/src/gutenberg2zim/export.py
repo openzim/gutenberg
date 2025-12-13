@@ -608,6 +608,8 @@ def generate_json_files(
     description: str | None = None,
     *,
     add_lcc_shelves: bool = False,
+    primary_color: str | None = None,
+    secondary_color: str | None = None,
 ) -> None:
     """Generate all JSON files for Vue.js frontend"""
     logger.info("Generating JSON files for Vue.js UI")
@@ -657,8 +659,8 @@ def generate_json_files(
     config = Config(
         title=title or zim_name or "Project Gutenberg Library",
         description=description,
-        main_color=None,
-        secondary_color=None,
+        primary_color=primary_color,
+        secondary_color=secondary_color,
     )
     Global.add_item_for(
         path="config.json",
