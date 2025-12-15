@@ -34,6 +34,8 @@ def process_all_books(
     add_lcc_shelves: bool,
     title: str | None = None,
     description: str | None = None,
+    primary_color: str | None = None,
+    secondary_color: str | None = None,
 ) -> None:
     """Download and export all books directly to ZIM without filesystem cache"""
 
@@ -153,6 +155,8 @@ def process_all_books(
         title=title,
         description=description,
         add_lcc_shelves=add_lcc_shelves,
+        primary_color=primary_color,
+        secondary_color=secondary_color,
     )
 
     # Generate No-JS fallback pages

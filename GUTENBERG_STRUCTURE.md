@@ -215,7 +215,7 @@ class Config(CamelModel):
     """UI configuration"""
     title: str
     description: str | None = None
-    mainColor: str | None = None
+    primaryColor: str | None = None
     secondaryColor: str | None = None
 ```
 
@@ -375,7 +375,7 @@ class Config(CamelModel):
 {
   "title": "Project Gutenberg Library",
   "description": "Free eBooks from Project Gutenberg",
-  "mainColor": null,
+  "primaryColor": null,
   "secondaryColor": null
 }
 ```

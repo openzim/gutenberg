@@ -117,7 +117,7 @@ class Config(CamelModel):
 
     title: str
     description: str | None = None
-    main_color: str | None = None
+    primary_color: str | None = None
     secondary_color: str | None = None
 
 
