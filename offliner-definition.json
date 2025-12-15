@@ -118,6 +118,20 @@
       "required": false,
       "title": "Mirror URL",
       "description": "URL to a specific Gutenberg mirror to use"
+    },
+    "primary_color": {
+      "type": "string",
+      "required": false,
+      "title": "Primary Color",
+      "description": "Custom primary color. Hex/HTML syntax (#1976D2)",
+      "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
+    },
+    "secondary_color": {
+      "type": "string",
+      "required": false,
+      "title": "Secondary Color",
+      "description": "Custom secondary color. Hex/HTML syntax (#424242)",
+      "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
     }
   }
 }
