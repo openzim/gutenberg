@@ -1,9 +1,15 @@
+import threading
 from pathlib import Path
 from typing import Any
 
 import i18n
+from i18n import resource_loader
 
 from gutenberg2zim.constants import LOCALES_LOCATION, logger
+
+# Thread lock for locale switching to prevent race conditions
+# when t() is called from multiple threads (e.g., via multiprocessing.dummy.Pool)
+_locale_lock = threading.Lock()
 
 
 def setup_i18n() -> None:
@@ -29,15 +35,36 @@ def change_locale(lang: str) -> None:
 
 
 def t(key: str, fallback: str | None = None, **kwargs: Any) -> str:
-    """Get translated string"""
-    return (
-        i18n.t(  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
-            key, **kwargs
-        )
-        if not fallback or has_strict_translation(key)
-        else fallback
-    )
+    """Get translated string with manual fallback support"""
+    current_locale = i18n.get("locale")  # pyright: ignore[reportUnknownMemberType]
+    fallback_locale = (
+        i18n.get("fallback") or "en"
+    )  # pyright: ignore[reportUnknownMemberType]
 
+    result = i18n.t(
+        key, **kwargs
+    )  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
 
-def has_strict_translation(key: str) -> bool:
-    return i18n.translations.has(key, i18n.get("locale"))
+    # python-i18n's fallback doesn't work in our context (fallback becomes None)
+    if result == key and current_locale != fallback_locale:
+        with _locale_lock:
+            try:
+                i18n.set(
+                    "locale", fallback_locale
+                )  # pyright: ignore[reportUnknownMemberType]
+                resource_loader.search_translation(key, fallback_locale)
+                fallback_result = i18n.t(
+                    key, **kwargs
+                )  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
+                if fallback_result != key:
+                    result = fallback_result
+            except (AttributeError, KeyError, ImportError) as e:
+                logger.debug(f"Manual fallback failed for key '{key}': {e}")
+            finally:
+                i18n.set(
+                    "locale", current_locale
+                )  # pyright: ignore[reportUnknownMemberType]
+
+    if result != key:
+        return result
+    return fallback if fallback is not None else key
