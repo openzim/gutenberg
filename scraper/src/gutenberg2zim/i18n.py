@@ -9,7 +9,7 @@ from gutenberg2zim.constants import LOCALES_LOCATION, logger
 def setup_i18n() -> None:
     """Configure python-i18n"""
     i18n.set("locale", "en")  # pyright: ignore[reportUnknownMemberType]
-    i18n.set("fallback", "en")  # pyright: ignore[reportUnknownMemberType]
+    i18n.set("fallback", None)  # pyright: ignore[reportUnknownMemberType]
     i18n.set("file_format", "json")  # pyright: ignore[reportUnknownMemberType]
     i18n.set(  # pyright: ignore[reportUnknownMemberType]
         "filename_format", "{locale}.{format}"
@@ -26,6 +26,7 @@ def setup_i18n() -> None:
 def change_locale(lang: str) -> None:
     """Change locale"""
     i18n.set("locale", lang)  # pyright: ignore[reportUnknownMemberType]
+    i18n.set("fallback", "en")  # pyright: ignore[reportUnknownMemberType]
 
 
 def t(key: str, fallback: str | None = None, **kwargs: Any) -> str:
