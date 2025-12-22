@@ -1,0 +1,77 @@
+{
+	"@metadata": {
+		"authors": [
+			"YeBoy371"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "ko"
+		},
+		"autonym": {
+			"textContent": "한국어"
+		},
+		"homepage": {
+			"alt": "홈페이지",
+			"title": "홈페이지"
+		},
+		"choose-language": {
+			"placeholder": "언어 선택..."
+		},
+		"ui-language-switcher": {
+			"title": "인터페이스 언어"
+		},
+		"search": {
+			"textContent": "검색"
+		},
+		"author": {
+			"textContent": "저자"
+		},
+		"title": {
+			"textContent": "제목"
+		},
+		"cover-img": {
+			"alt": "책 표지",
+			"title": "책 표지"
+		},
+		"loading": {
+			"textContent": "불러오는 중..."
+		},
+		"no-data": {
+			"textContent": "테이블에 사용할 수 있는 데이터가 없습니다"
+		},
+		"prev": {
+			"textContent": "이전"
+		},
+		"next": {
+			"textContent": "다음"
+		},
+		"language": {
+			"textContent": "언어"
+		},
+		"main-languages": {
+			"textContent": "기본 언어"
+		},
+		"other-languages": {
+			"textContent": "다른 언어"
+		},
+		"author-anonymous": {
+			"textContent": "익명"
+		},
+		"author-various": {
+			"textContent": "여러 가지"
+		},
+		"license": {
+			"textContent": "라이선스"
+		},
+		"license-pd": {
+			"textContent": "미국에서는 퍼블릭 도메인입니다."
+		},
+		"table-previous": {
+			"textContent": "이전"
+		},
+		"table-next": {
+			"textContent": "다음"
+		}
+	}
+}
