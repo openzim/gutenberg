@@ -1,6 +1,13 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Yupik"
+		]
+	},
+	"ui_strings": {
+		"other-languages": {
+			"textContent": "Muut kielet"
+		}
 	},
 	"metadata_defaults": {
 		"title": "Project Gutenbergin Kirjasto",

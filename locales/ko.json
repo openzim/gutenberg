@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"YeBoy371"
+			"YeBoy371",
+			"Ykhwong"
 		]
 	},
 	"ui_strings": {
@@ -25,14 +26,31 @@
 			"textContent": "검색"
 		},
 		"author": {
-			"textContent": "저자"
+			"textContent": "저자",
+			"placeholder": "만든이 이름으로 검색"
 		},
 		"title": {
-			"textContent": "제목"
+			"textContent": "제목",
+			"placeholder": "제목으로 검색"
 		},
 		"cover-img": {
 			"alt": "책 표지",
 			"title": "책 표지"
+		},
+		"cover": {
+			"textContent": "(커버)"
+		},
+		"filter": {
+			"textContent": "필터:"
+		},
+		"popularity": {
+			"textContent": "인기"
+		},
+		"sort": {
+			"textContent": "정렬:"
+		},
+		"format": {
+			"textContent": "형식"
 		},
 		"loading": {
 			"textContent": "불러오는 중..."
@@ -48,6 +66,9 @@
 		},
 		"language": {
 			"textContent": "언어"
+		},
+		"any-languages": {
+			"textContent": "카탈로그 선택"
 		},
 		"main-languages": {
 			"textContent": "기본 언어"

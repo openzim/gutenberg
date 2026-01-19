@@ -1,6 +1,8 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Laranxa"
+		]
 	},
 	"ui_strings": {
 		"isocode": {
@@ -27,6 +29,7 @@
 			"placeholder": "Lista de libros de un autor"
 		},
 		"title": {
+			"textContent": "Título",
 			"placeholder": "Buscar libros por título"
 		},
 		"cover-img": {
@@ -90,6 +93,9 @@
 		"license-pd": {
 			"textContent": "De dominio público en EEUU."
 		},
+		"license-copyright": {
+			"textContent": "Tiene derechos de autor. Lea el aviso de derechos de autor dentro de este libro para más detalles."
+		},
 		"nb-downloads": {
 			"textContent": "{[ plural(nb) ]}"
 		},
@@ -140,6 +146,123 @@
 		},
 		"lcc_shelf": {
 			"placeholder": "Búsqueda de estantería"
+		},
+		"lcc-shelf-A": {
+			"textContent": "A-Obras generales"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B-Filosofía, psicología, religión"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-Ciencias auxiliares de la historia"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D-Historia mundial e historia de Europa, Asia, África, Australia, Nueva Zelanda, etc."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-Historia de las Américas"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F-Historia de las Américas"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G-Geografía, antropología, recreación"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H-Ciencias sociales"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J-Ciencias políticas"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K-Derecho"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L-Educación"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M-Música y libros sobre música"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N-Bellas artes"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P-Lengua y literatura"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q-Ciencia"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R-Medicina"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S-Agricultura"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T-Tecnología"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U-Ciencia militar"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V-Ciencia naval"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z-Bibliografía, bibliotecología, recursos de la información (general)"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA-Lengua y literatura griega y latina"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB-Lenguas modernas y celtas"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC-Lenguas romances"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD-Lenguas germánicas y escandinavas"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE-Lengua inglesa"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF-Lenguas germánicas occidentales"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG-Lenguas eslavas, bálticas y albanesas"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH-Lenguas urálicas y vascas"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ-Lenguas y literaturas orientales"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK-Lenguas y literaturas indoiraníes"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL-Lenguas y literaturas de Asia Oriental, África y Oceanía"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM-Lenguas hiperbóreas, indias y artificiales"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN-Literatura (General)"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ-Literatura francesa, italiana, española y portuguesa"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR-Literatura inglesa"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS-Literatura estadounidense"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT-Literatura alemana, holandesa, flamenca, africana, escandinava, nórdica antigua, islandesa antigua, noruega antigua, islandesa moderna, faroesa, danesa, noruega y Sueca"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ-Ficción y bellas letras juveniles"
 		}
 	},
 	"metadata_defaults": {
