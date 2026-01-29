@@ -1,0 +1,220 @@
+{
+	"@metadata": {
+		"authors": [
+			"Leosls"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "en"
+		},
+		"autonym": {
+			"textContent": "Inglês"
+		},
+		"homepage": {
+			"alt": "Página inicial",
+			"title": "Página inicial"
+		},
+		"choose-language": {
+			"placeholder": "Escolha um idioma..."
+		},
+		"ui-language-switcher": {
+			"title": "Idioma da interface"
+		},
+		"search": {
+			"textContent": "Pesquisar"
+		},
+		"author": {
+			"textContent": "Autor",
+			"placeholder": "Pesquisar por nome do autor"
+		},
+		"title": {
+			"textContent": "Título",
+			"placeholder": "Pesquisar por título"
+		},
+		"cover-img": {
+			"alt": "Capa do livro",
+			"title": "Capa do livro"
+		},
+		"cover": {
+			"textContent": "(capa)"
+		},
+		"filter": {
+			"textContent": "Filtro:"
+		},
+		"popularity": {
+			"textContent": "Popularidade"
+		},
+		"sort": {
+			"textContent": "Organizar:"
+		},
+		"sort-popularity": {
+			"textContent": "Ordenar livros por popularidade"
+		},
+		"sort-title": {
+			"textContent": "Ordenar livros por título"
+		},
+		"format": {
+			"textContent": "Formato"
+		},
+		"loading": {
+			"textContent": "Carregando..."
+		},
+		"no-data": {
+			"textContent": "Não há dados disponíveis na tabela"
+		},
+		"prev": {
+			"textContent": "Anterior"
+		},
+		"next": {
+			"textContent": "Próximo"
+		},
+		"language": {
+			"textContent": "Idioma"
+		},
+		"any-languages": {
+			"textContent": "Escolha o catálogo"
+		},
+		"main-languages": {
+			"textContent": "Principais idiomas"
+		},
+		"other-languages": {
+			"textContent": "Outros idiomas"
+		},
+		"author-anonymous": {
+			"textContent": "Anônimos"
+		},
+		"author-various": {
+			"textContent": "Vários"
+		},
+		"license": {
+			"textContent": "Licença"
+		},
+		"license-pd": {
+			"textContent": "Domínio público nos EUA."
+		},
+		"license-copyright": {
+			"textContent": "Protegido por direitos autorais. Leia o aviso de direitos autorais dentro deste livro para obter detalhes."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plural(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 download nos últimos 30 dias."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} downloads nos últimos 30 dias."
+		},
+		"top-title": {
+			"textContent": "Biblioteca do Projeto Gutenberg"
+		},
+		"sub-title": {
+			"textContent": "O primeiro produtor de livros eletrônicos gratuitos"
+		},
+		"table-previous": {
+			"textContent": "Anterior"
+		},
+		"table-next": {
+			"textContent": "Próximo"
+		},
+		"about-1": {
+			"textContent": "Projeto Gutenberg oferece mais de 60.000 livros eletrônicos gratuitos."
+		},
+		"about-2": {
+			"textContent": "Escolha entre livros gratuitos em formato epub e livros gratuitos para Kindle."
+		},
+		"about-3": {
+			"textContent": "Faça o download ou leia online."
+		},
+		"about-4": {
+			"textContent": "Dispomos de livros digitais de alta qualidade."
+		},
+		"about-5": {
+			"textContent": "Todos os nossos livros digitais foram publicados anteriormente por editoras idôneas."
+		},
+		"about-6": {
+			"textContent": "Nós os digitalizamos e revisamos cuidadosamente com a ajuda de milhares de voluntários."
+		},
+		"lcc_shelves_title": {
+			"textContent": "Estantes de livros (A-Z)"
+		},
+		"lcc_shelf_link": {
+			"textContent": "Navegue por estante de livros"
+		},
+		"home_link": {
+			"textContent": "Ir para Início"
+		},
+		"lcc_shelf": {
+			"placeholder": "Busca na estante"
+		},
+		"lcc-shelf-A": {
+			"textContent": "Obras A-General"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B-Filosofia, psicologia, religião"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-Ciências auxiliares da história"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D-História mundial e história da Europa, Ásia, África, Austrália, Nova Zelândia, etc."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-História das Américas"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F-História das Américas"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G-Geografia, antropologia, recreação"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H-Ciências sociais"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J-Ciência política"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K-Direito"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L-Educação"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M-Música e livros sobre música"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N-Belas artes"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P-Linguagem e literatura"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q-Ciência"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R-Medicina"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S-Agricultura"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T-Tecnologia"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U-Ciência militar"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V-Ciência Naval"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z-Bibliografia, biblioteconomia, recursos de informação (geral)"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA-Língua e literatura grega e latina"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB-Línguas modernas e celtas"
+		}
+	}
+}

@@ -1,6 +1,269 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Peterleth"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "dk"
+		},
+		"autonym": {
+			"textContent": "Dansk"
+		},
+		"homepage": {
+			"alt": "Hjemmeside",
+			"title": "Hjemmeside"
+		},
+		"choose-language": {
+			"placeholder": "Vælg et sprog..."
+		},
+		"ui-language-switcher": {
+			"title": "Grænsefladesprog"
+		},
+		"search": {
+			"textContent": "Søg"
+		},
+		"author": {
+			"textContent": "Forfatter",
+			"placeholder": "Søg efter forfatternavn"
+		},
+		"title": {
+			"textContent": "Titel",
+			"placeholder": "Søg efter titel"
+		},
+		"cover-img": {
+			"alt": "Bogomslag",
+			"title": "Bogomslag"
+		},
+		"cover": {
+			"textContent": "(omslag)"
+		},
+		"filter": {
+			"textContent": "Filter:"
+		},
+		"popularity": {
+			"textContent": "Popularitet"
+		},
+		"sort": {
+			"textContent": "Sortér"
+		},
+		"sort-popularity": {
+			"textContent": "Sortér bøger efter popularitet"
+		},
+		"sort-title": {
+			"textContent": "Sortér bøger efter titel"
+		},
+		"format": {
+			"textContent": "Format"
+		},
+		"loading": {
+			"textContent": "Indlæser..."
+		},
+		"no-data": {
+			"textContent": "Ingen data tilgængelig i tabel"
+		},
+		"prev": {
+			"textContent": "Forrige"
+		},
+		"next": {
+			"textContent": "Næste"
+		},
+		"language": {
+			"textContent": "Sprog"
+		},
+		"any-languages": {
+			"textContent": "Vælg kataloget"
+		},
+		"main-languages": {
+			"textContent": "Hovedsprog"
+		},
+		"other-languages": {
+			"textContent": "Andre sprog"
+		},
+		"author-anonymous": {
+			"textContent": "Anonym"
+		},
+		"author-various": {
+			"textContent": "Forskellige"
+		},
+		"license": {
+			"textContent": "Licens"
+		},
+		"license-pd": {
+			"textContent": "Offentligt domæne i USA."
+		},
+		"license-copyright": {
+			"textContent": "Ophavsretligt beskyttet. Læs ophavsretsmeddelelsen i denne bog for yderligere oplysninger."
+		},
+		"nb-downloads": {
+			"textContent": "{[ flertal(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 download i de sidste 30 dage."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} downloads i de sidste 30 dage."
+		},
+		"top-title": {
+			"textContent": "Projekt Gutenberg-biblioteket"
+		},
+		"sub-title": {
+			"textContent": "Den første producent af frie og gratis e-bøger"
+		},
+		"table-previous": {
+			"textContent": "Forrige"
+		},
+		"table-next": {
+			"textContent": "Næste"
+		},
+		"about-1": {
+			"textContent": "Projekt Gutenberg tilbyder over 60.000 gratis e-bøger"
+		},
+		"about-2": {
+			"textContent": "Vælg mellem gratis epub-bøger og gratis Kindle-bøger."
+		},
+		"about-3": {
+			"textContent": "Download dem eller læs dem online."
+		},
+		"about-4": {
+			"textContent": "Vi fører e-bøger af høj kvalitet"
+		},
+		"about-5": {
+			"textContent": "Alle vores e-bøger er tidligere blevet udgivet af velrenommerede forlag."
+		},
+		"about-6": {
+			"textContent": "Vi digitaliserede og korrekturlæste dem med hjælp fra tusindvis af frivillige."
+		},
+		"lcc_shelves_title": {
+			"textContent": "Bogreoler (A-Z)"
+		},
+		"lcc_shelf_link": {
+			"textContent": "Gennemse efter bogreol"
+		},
+		"home_link": {
+			"textContent": "Gå hjem"
+		},
+		"lcc_shelf": {
+			"placeholder": "Bogreolsøgning"
+		},
+		"lcc-shelf-A": {
+			"textContent": "A-Generelle værker"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B-Filosofi, psykologi, religion"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-Historiens hjælpevidenskaber"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D-Verdenshistorie og historie om Europa, Asien, Afrika, Australien, New Zealand etc."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-Amerikas historie"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F-Amerikas historie"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G-Geografi, antropologi, rekreation"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H-Samfundsvidenskab"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J-Statvidenskab"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K-Jura"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L-Uddannelse"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M-Musik og bøger om musik"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N-Kunst"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P-Sprog og litteratur"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q-Videnskab"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R-Medicin"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S-Landbrug"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T-Teknologi"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U-Militærvidenskab"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V-Marinevidenskab"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z-Bibliografi, biblioteksvidenskab, informationsressourcer (generelt)"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA - Græsk og latinsk sprog og litteratur"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB - Moderne og keltiske sprog"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC-romanske sprog"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD-Germanske og skandinaviske sprog"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE-engelsk sprog"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF-Vestgermanske sprog"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG - Slaviske, baltiske og albanske sprog"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH-uralske og baskiske sprog"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ - Orientalske sprog og litteraturer"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK-indo-iranske sprog og litteraturer"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL - Sprog og litteratur i Østasien, Afrika og Oceanien"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM - Hyperboreiske, indiske og kunstige sprog"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN-Litteratur (Generel)"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ - Fransk, italiensk, spansk, portugisisk litteratur"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR-engelsk litteratur"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS-amerikansk litteratur"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT - tysk, hollandsk, flamsk, afrikaans, skandinavisk, oldnordisk, gammelislandsk, oldnorsk, moderne islandsk, færøsk, dansk, norsk og svensk litteratur"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ-Fiktion og ungdomslitteratur"
+		}
 	},
 	"metadata_defaults": {
 		"title": "Projekt Gutenbergs Bibliotek",
