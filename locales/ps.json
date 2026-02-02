@@ -1,0 +1,120 @@
+{
+	"@metadata": {
+		"authors": [
+			"شاه زمان پټان"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "ps"
+		},
+		"autonym": {
+			"textContent": "پښتو"
+		},
+		"search": {
+			"textContent": "پلټل"
+		},
+		"author": {
+			"textContent": "ليکوال"
+		},
+		"title": {
+			"textContent": "سرليک"
+		},
+		"cover": {
+			"textContent": "(پښتۍ)"
+		},
+		"filter": {
+			"textContent": "چاڼگر:"
+		},
+		"popularity": {
+			"textContent": "نومياليتوب"
+		},
+		"sort": {
+			"textContent": "اوډل:"
+		},
+		"sort-popularity": {
+			"textContent": "کتابونه د نومياليتوب له مخې اوډل"
+		},
+		"sort-title": {
+			"textContent": "کتابونه د سرليک له مخې اوډل"
+		},
+		"format": {
+			"textContent": "بڼه"
+		},
+		"loading": {
+			"textContent": "بارېږي..."
+		},
+		"no-data": {
+			"textContent": "لښتيال کې هېڅ اومتوکي نشته"
+		},
+		"prev": {
+			"textContent": "پخوانی"
+		},
+		"next": {
+			"textContent": "راتلونکی"
+		},
+		"language": {
+			"textContent": "ژبه"
+		},
+		"any-languages": {
+			"textContent": "کتلاگ خوښول"
+		},
+		"main-languages": {
+			"textContent": "ارې ژبې"
+		},
+		"other-languages": {
+			"textContent": "نورې ژبې"
+		},
+		"author-anonymous": {
+			"textContent": "ورکنومی"
+		},
+		"author-various": {
+			"textContent": "بېلابېل"
+		},
+		"license": {
+			"textContent": "منښتليک"
+		},
+		"license-pd": {
+			"textContent": "په امريکا متحده ايالتونو کې ټولگړې واک‌سيمه"
+		},
+		"license-copyright": {
+			"textContent": "لمېس‌رېښتې. سپيناوي لپاره د کتاب دننه لمېسل‌رېښتو خبرتيا ولولئ."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plural(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "په تېرو ۳۰ ورځو کې ۱ راکښته‌کېدنه."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "په تېرو ۳۰ ورځو کې {{nb}} راکښته‌کېدنې."
+		},
+		"top-title": {
+			"textContent": "د گوتېنبېرگ کتابتون پروژه"
+		},
+		"sub-title": {
+			"textContent": "د وړيا کتابونو لومړنی توليدوونکی"
+		},
+		"table-previous": {
+			"textContent": "پخوانی"
+		},
+		"table-next": {
+			"textContent": "راتلونکی"
+		},
+		"home_link": {
+			"textContent": "کور ته تلل"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C-د پېښليک مرستندويه پوهې"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D-د نړۍ پېښليک او د اروپا، اسيا، افريقا، استراليا، نيو زيلينډ او نورو پېښليک."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E-د امريکا پېښليک"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F-د امريکا پېښليک"
+		}
+	}
+}
