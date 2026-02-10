@@ -147,6 +147,19 @@ defineProps<{
 
 <style scoped>
 .book-cover {
-  min-height: 400px;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+@media (min-width: 960px) {
+  .book-cover {
+    min-height: 360px;
+  }
+}
+
+@media (max-width: 959px) {
+  .book-cover {
+    max-height: 60vh;
+  }
 }
 </style>

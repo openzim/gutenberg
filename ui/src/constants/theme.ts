@@ -18,6 +18,8 @@ export const LAYOUT = {
   HEADER_HEIGHT: '64px',
   FOOTER_HEIGHT: '136px',
   VIEW_PADDING: '2rem 0',
+  VIEW_PADDING_MOBILE: '1.5rem 0',
+  SIDEBAR_MARGIN_MOBILE: '1rem',
   CARD_SPACING: 'mb-6',
   CARD_PADDING: 'pa-4',
   SECTION_SPACING: 'mb-8',
@@ -27,7 +29,17 @@ export const LAYOUT = {
 export const AVATAR_SIZES = {
   CARD: 80,
   DETAIL: 120,
+  DETAIL_MOBILE: 80,
   LIST: 56
+} as const
+
+export const ICON_SIZES = {
+  CARD: 48,
+  DETAIL: 48,
+  DETAIL_MOBILE: 40,
+  LIST: 32,
+  STAT: 48,
+  SMALL: 20
 } as const
 
 export const MESSAGES = {

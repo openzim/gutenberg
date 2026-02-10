@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useMainStore } from '@/stores/main'
-import { LAYOUT } from '@/constants/theme'
+import { LAYOUT, ICON_SIZES } from '@/constants/theme'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 
 const main = useMainStore()
@@ -25,6 +25,8 @@ async function loadData() {
     if (promises.length > 0) {
       await Promise.all(promises)
     }
+  } catch (error) {
+    console.error('Failed to load statistics:', error)
   } finally {
     statsLoading.value = false
   }
@@ -76,14 +78,24 @@ onMounted(() => {
             </v-col>
             <v-col cols="12" sm="4">
               <v-card variant="outlined" class="text-center pa-4">
-                <v-icon icon="mdi-book-multiple" size="48" color="primary" class="mb-2" />
+                <v-icon
+                  icon="mdi-book-multiple"
+                  :size="ICON_SIZES.STAT"
+                  color="primary"
+                  class="mb-2"
+                />
                 <div class="text-h4 font-weight-bold">{{ stats.totalBooks.toLocaleString() }}</div>
                 <div class="text-body-2 text-medium-emphasis">Books</div>
               </v-card>
             </v-col>
             <v-col cols="12" sm="4">
               <v-card variant="outlined" class="text-center pa-4">
-                <v-icon icon="mdi-account-multiple" size="48" color="primary" class="mb-2" />
+                <v-icon
+                  icon="mdi-account-multiple"
+                  :size="ICON_SIZES.STAT"
+                  color="primary"
+                  class="mb-2"
+                />
                 <div class="text-h4 font-weight-bold">
                   {{ stats.totalAuthors.toLocaleString() }}
                 </div>
@@ -92,7 +104,7 @@ onMounted(() => {
             </v-col>
             <v-col cols="12" sm="4">
               <v-card variant="outlined" class="text-center pa-4">
-                <v-icon icon="mdi-bookshelf" size="48" color="primary" class="mb-2" />
+                <v-icon icon="mdi-bookshelf" :size="ICON_SIZES.STAT" color="primary" class="mb-2" />
                 <div class="text-h4 font-weight-bold">
                   {{ stats.totalShelves.toLocaleString() }}
                 </div>

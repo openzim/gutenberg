@@ -4,7 +4,7 @@ import type { AuthorDetail } from '@/types'
 import BooksSection from '@/components/common/BooksSection.vue'
 import DetailInfoCard from '@/components/common/DetailInfoCard.vue'
 import { formatAuthorName, formatAuthorLifespan, pluralize } from '@/utils/format-utils'
-import { AVATAR_SIZES, MESSAGES } from '@/constants/theme'
+import { AVATAR_SIZES, ICON_SIZES, MESSAGES } from '@/constants/theme'
 
 const props = defineProps<{
   author: AuthorDetail
@@ -20,13 +20,22 @@ const lifespan = computed(() =>
   <div>
     <detail-info-card>
       <template #avatar>
-        <v-avatar :size="AVATAR_SIZES.DETAIL" color="primary" class="mr-6 flex-shrink-0">
-          <v-icon icon="mdi-account" size="64" />
+        <v-avatar
+          :size="AVATAR_SIZES.DETAIL"
+          color="primary"
+          class="author-avatar mr-6 flex-shrink-0"
+        >
+          <v-icon icon="mdi-account" :size="ICON_SIZES.DETAIL" class="author-icon" />
         </v-avatar>
       </template>
 
       <template #title>
-        <h1 class="text-h3 mb-2">{{ author.name }}</h1>
+        <h1
+          class="text-h4 text-md-h3 mb-2 text-wrap"
+          style="word-break: break-word; overflow-wrap: break-word"
+        >
+          {{ author.name }}
+        </h1>
       </template>
 
       <template #info>
@@ -69,3 +78,17 @@ const lifespan = computed(() =>
     />
   </div>
 </template>
+
+<style scoped>
+@media (max-width: 959px) {
+  .author-avatar {
+    width: v-bind('AVATAR_SIZES.DETAIL_MOBILE + "px"') !important;
+    height: v-bind('AVATAR_SIZES.DETAIL_MOBILE + "px"') !important;
+    margin-right: 1rem !important;
+  }
+
+  .author-icon {
+    font-size: v-bind('ICON_SIZES.DETAIL_MOBILE + "px"') !important;
+  }
+}
+</style>
