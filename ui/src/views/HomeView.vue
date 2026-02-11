@@ -153,6 +153,11 @@ onMounted(() => {
 @media (max-width: 960px) {
   .filters-sidebar {
     position: static;
+    margin-bottom: v-bind('LAYOUT.SIDEBAR_MARGIN_MOBILE');
+  }
+
+  .home-view {
+    padding: v-bind('LAYOUT.VIEW_PADDING_MOBILE');
   }
 }
 </style>
