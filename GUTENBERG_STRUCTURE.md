@@ -1,33 +1,44 @@
 # Gutenberg UI Revamp - Complete Structure
 
-> **Note:** This document is for general reference purposes during development and will be removed later.
+> **Note:** This document is historical documentation from the Vue.js UI migration. It provides architectural context and design decisions. While the implementation may have evolved, the core concepts remain relevant for understanding the system.
 
 ## Directory Structure
 
 ```
 gutenberg/
-├── src/gutenberg2zim/              # Python scraper (existing)
+├── scraper/src/gutenberg2zim/      # Python scraper
 │   ├── __init__.py
 │   ├── __main__.py
 │   ├── entrypoint.py
 │   ├── book_processor.py
 │   ├── csv_catalog.py
 │   ├── download.py
-│   ├── export.py                    # MODIFIED: Add JSON generation
-│   ├── models.py                    # MODIFIED: Add Pydantic schemas
-│   ├── schemas.py                   # NEW: Pydantic models for JSON
-│   ├── zim.py                       # MODIFIED: Add Vue dist export
-│   ├── templates/                   # Existing Jinja2 templates
-│   │   ├── base.html
-│   │   ├── Home.html
-│   │   ├── cover_article.html
-│   │   ├── author.html
-│   │   └── noscript/                # NEW: No-JS fallback templates
+│   ├── export.py                    # JSON generation + Vue dist export
+│   ├── models.py
+│   ├── schemas.py                   # Pydantic models for JSON
+│   ├── zim.py
+│   ├── templates/                   # Minimal templates (infobox + no-JS fallback)
+│   │   ├── book_infobox.html        # Book infobox for HTML books
+│   │   ├── css/
+│   │   │   └── gutenberg-infobox.css
+│   │   ├── js/
+│   │   │   └── gutenberg-infobox.js
+│   │   ├── icons/                   # Infobox icons only
+│   │   │   ├── epub.svg
+│   │   │   ├── info.svg
+│   │   │   ├── pdf.svg
+│   │   │   └── scroll-up.svg
+│   │   └── noscript/                # No-JS fallback templates
+│   │       ├── _nav.html
 │   │       ├── books.html
 │   │       ├── book.html
-│   │       └── author.html
+│   │       ├── authors.html
+│   │       ├── author.html
+│   │       ├── lcc_shelves.html
+│   │       ├── lcc_shelf.html
+│   │       └── common.css
 │   └── ...
-├── ui/                              # NEW: Vue.js frontend
+├── ui/                              # Vue.js frontend
 │   ├── index.html
 │   ├── package.json
 │   ├── vite.config.ts
@@ -41,11 +52,11 @@ gutenberg/
 │   │   │   └── main.ts
 │   │   ├── views/
 │   │   │   ├── HomeView.vue
-│   │   │   ├── BookListView.vue
+│   │   │   ├── BooksView.vue
 │   │   │   ├── BookDetailView.vue
-│   │   │   ├── AuthorListView.vue
+│   │   │   ├── AuthorsView.vue
 │   │   │   ├── AuthorDetailView.vue
-│   │   │   ├── LCCShelfListView.vue
+│   │   │   ├── LCCShelvesView.vue
 │   │   │   ├── LCCShelfDetailView.vue
 │   │   │   └── AboutView.vue
 │   │   ├── components/
@@ -56,24 +67,35 @@ gutenberg/
 │   │   │   │   └── BookDetailInfo.vue
 │   │   │   ├── author/
 │   │   │   │   ├── AuthorCard.vue
+│   │   │   │   ├── AuthorGrid.vue
 │   │   │   │   └── AuthorDetailInfo.vue
+│   │   │   ├── lcc/
+│   │   │   │   ├── LCCShelfCard.vue
+│   │   │   │   └── LCCShelfGrid.vue
 │   │   │   ├── common/
-│   │   │   │   ├── SearchBar.vue
 │   │   │   │   ├── LanguageFilter.vue
-│   │   │   │   ├── FormatFilter.vue
 │   │   │   │   ├── SortControl.vue
-│   │   │   │   └── ErrorDisplay.vue
+│   │   │   │   ├── PaginationControl.vue
+│   │   │   │   ├── ItemCount.vue
+│   │   │   │   ├── EmptyState.vue
+│   │   │   │   ├── LoadingSpinner.vue
+│   │   │   │   ├── BookCoverImage.vue
+│   │   │   │   ├── BooksSection.vue
+│   │   │   │   ├── DetailInfoCard.vue
+│   │   │   │   └── Breadcrumbs.vue
 │   │   │   └── layout/
 │   │   │       ├── AppHeader.vue
 │   │   │       └── AppFooter.vue
 │   │   ├── types/
-│   │   │   ├── Book.ts
-│   │   │   ├── Author.ts
-│   │   │   ├── LCCShelf.ts
-│   │   │   └── Config.ts
+│   │   │   └── index.ts
+│   │   ├── constants/
+│   │   │   └── theme.ts
+│   │   ├── composables/
+│   │   │   ├── usePagination.ts
+│   │   │   ├── useListLoader.ts
+│   │   │   └── useSorting.ts
 │   │   └── utils/
-│   │       ├── format-utils.ts
-│   │       └── search-utils.ts
+│   │       └── format-utils.ts
 │   └── public/
 │       └── favicon.ico
 └── ...
@@ -109,37 +131,38 @@ ZIM_ROOT/
 
 ## Python Side - Pydantic Schemas
 
-### `src/gutenberg2zim/schemas.py` (NEW)
+### `scraper/src/gutenberg2zim/schemas.py`
+
+> **Note:** Code examples below are simplified for illustration. See actual implementation for complete details.
 
 ```python
-    from pydantic import BaseModel, ConfigDict
-    from gutenberg2zim.schemas import to_camel
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
+from pydantic.alias_generators import to_camel
 
 class CamelModel(BaseModel):
-    """Model to transform Python snake_case into JSON camelCase."""
-    class Config:
-        alias_generator = camelize
-        populate_by_name = True
-
+    """Base model that converts snake_case to camelCase for JSON"""
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
 
 # Author Models
-class Author(CamelModel):
-    """Author information for JSON export"""
-    id: str  # gut_id
-    firstName: str | None = None
-    lastName: str
-    birthYear: str | None = None
-    deathYear: str | None = None
-    name: str  # Formatted full name
-
-
 class AuthorPreview(CamelModel):
     """Author preview for list views"""
     id: str
     name: str
-    bookCount: int
+    book_count: int
 
+class AuthorDetail(CamelModel):
+    """Full author details"""
+    id: str
+    first_name: str | None = None
+    last_name: str
+    birth_year: str | None = None
+    death_year: str | None = None
+    name: str
+    books: list["BookPreview"]
+    book_count: int
 
 # Book Models
 class BookFormat(CamelModel):
@@ -148,7 +171,6 @@ class BookFormat(CamelModel):
     path: str    # ZIM path to file
     available: bool = True
 
-
 class BookPreview(CamelModel):
     """Book preview for list views"""
     id: int
@@ -156,67 +178,60 @@ class BookPreview(CamelModel):
     author: AuthorPreview
     languages: list[str]
     popularity: int  # Star rating (0-5)
-    coverPath: str | None = None
-    lccShelf: str | None = None
-
+    cover_path: str | None = None
+    lcc_shelf: str | None = None
 
 class Book(CamelModel):
     """Full book details"""
     id: int
     title: str
     subtitle: str | None = None
-    author: Author
+    author: AuthorDetail
     languages: list[str]
     license: str
     downloads: int
     popularity: int
-    lccShelf: str | None = None
-    coverPath: str | None = None
+    lcc_shelf: str | None = None
+    cover_path: str | None = None
     formats: list[BookFormat]
-    description: str | None = None  # If available from RDF
-
+    description: str | None = None
 
 # LCC Shelf Models
 class LCCShelfPreview(CamelModel):
     """LCC shelf preview for list views"""
     code: str
     name: str | None = None
-    bookCount: int
-
+    book_count: int
 
 class LCCShelf(CamelModel):
     """Full LCC shelf details"""
     code: str
     name: str | None = None
     books: list[BookPreview]
-    bookCount: int
-
+    book_count: int
 
 # Collection Models
 class Books(CamelModel):
     """List of book previews"""
     books: list[BookPreview]
-    totalCount: int
-
+    total_count: int
 
 class Authors(CamelModel):
     """List of author previews"""
     authors: list[AuthorPreview]
-    totalCount: int
-
+    total_count: int
 
 class LCCShelves(CamelModel):
     """List of LCC shelf previews"""
     shelves: list[LCCShelfPreview]
-    totalCount: int
-
+    total_count: int
 
 class Config(CamelModel):
     """UI configuration"""
     title: str
     description: str | None = None
-    primaryColor: str | None = None
-    secondaryColor: str | None = None
+    primary_color: str | None = None
+    secondary_color: str | None = None
 ```
 
 ---
@@ -472,20 +487,25 @@ def export_vue_dist(dist_dir: Path) -> None:
 
 ## Vue.js Side Structure
 
-### `ui/src/types/Book.ts`
+### `ui/src/types/index.ts`
+
+> **Note:** TypeScript interfaces match the Pydantic schemas (camelCase).
+
 ```typescript
-export interface Author {
+export interface AuthorPreview {
+  id: string
+  name: string
+  bookCount: number
+}
+
+export interface AuthorDetail {
   id: string
   firstName?: string
   lastName: string
   birthYear?: string
   deathYear?: string
   name: string
-}
-
-export interface AuthorPreview {
-  id: string
-  name: string
+  books: BookPreview[]
   bookCount: number
 }
 
@@ -509,7 +529,7 @@ export interface Book {
   id: number
   title: string
   subtitle?: string
-  author: Author
+  author: AuthorDetail
   languages: string[]
   license: string
   downloads: number
@@ -522,17 +542,20 @@ export interface Book {
 ```
 
 ### `ui/src/stores/main.ts` (Pinia Store)
+
+> **Note:** Simplified example. See actual implementation for complete store logic.
+
 ```typescript
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import type { Book, BookPreview, Author, AuthorPreview } from '@/types/Book'
+import type { Book, BookPreview, AuthorDetail, AuthorPreview } from '@/types'
 
 export const useMainStore = defineStore('main', {
   state: () => ({
     books: [] as BookPreview[],
     authors: [] as AuthorPreview[],
     currentBook: null as Book | null,
-    currentAuthor: null as Author | null,
+    currentAuthor: null as AuthorDetail | null,
     isLoading: false,
     errorMessage: ''
   }),
@@ -562,6 +585,9 @@ export const useMainStore = defineStore('main', {
 ```
 
 ### `ui/src/router/index.ts`
+
+> **Note:** Simplified example showing route structure.
+
 ```typescript
 import { createRouter, createWebHashHistory } from 'vue-router'
 
@@ -576,7 +602,7 @@ const router = createRouter({
     {
       path: '/books',
       name: 'books',
-      component: () => import('@/views/BookListView.vue')
+      component: () => import('@/views/BooksView.vue')
     },
     {
       path: '/book/:id',
@@ -586,7 +612,7 @@ const router = createRouter({
     {
       path: '/authors',
       name: 'authors',
-      component: () => import('@/views/AuthorListView.vue')
+      component: () => import('@/views/AuthorsView.vue')
     },
     {
       path: '/author/:id',
@@ -596,7 +622,7 @@ const router = createRouter({
     {
       path: '/lcc-shelves',
       name: 'lcc-shelves',
-      component: () => import('@/views/LCCShelfListView.vue')
+      component: () => import('@/views/LCCShelvesView.vue')
     },
     {
       path: '/lcc-shelf/:code',
@@ -621,7 +647,7 @@ export default router
 ### 1. Build Process
 1. **Python side**: Generate JSON files during ZIM creation
 2. **Vue side**: Build with `npm run build` → `ui/dist/`
-3. **Python side**: Export `ui/dist/` to ZIM (similar to Youtube's `add_zimui()`)
+3. **Python side**: Export `ui/dist/` to ZIM
 4. **Result**: ZIM contains both JSON files and Vue.js app
 
 ### 2. Data Flow
@@ -636,35 +662,26 @@ Python (models.py)
 ```
 
 ### 3. No-JS Fallback
-- Generate static HTML pages using Jinja2 templates
+- Generate static HTML pages using Jinja2 templates in `noscript/`
 - Include in ZIM alongside Vue app
 - Users without JS see HTML pages
 - Users with JS see Vue app (better UX)
 
 ---
 
-## Key Differences from Youtube
+## Key Design Decisions
 
-| Aspect | Youtube | Gutenberg |
-|--------|---------|-----------|
-| **Entity** | Videos, Playlists, Channels | Books, Authors, LCC Shelves |
-| **Navigation** | Channel-centric | Book/Author-centric |
-| **Formats** | Video formats (webm, mp4) | Book formats (html, epub, pdf) |
-| **Search** | Video search | Book/Author search |
-| **LCC Shelves** | N/A | Unique to Gutenberg |
-
----
-
-## Next Steps
-
-1. Create `schemas.py` with Pydantic models
-2. Modify `export.py` to generate JSON files
-3. Set up Vue.js project in `ui/` folder
-4. Create TypeScript interfaces matching Pydantic schemas
-5. Implement Vue components and views
-6. Test end-to-end flow
+| Aspect | Decision | Rationale |
+|--------|----------|-----------|
+| **Data Format** | JSON (two-tier: preview + detail) | Efficient loading, follows Youtube pattern |
+| **Frontend** | Vue.js 3 + Vite | Modern, fast, component-based |
+| **State Management** | Pinia | Official Vue store, simpler than Vuex |
+| **Routing** | Vue Router (hash mode) | Works in ZIM without server |
+| **Styling** | Vuetify 3 | Material Design, comprehensive components |
+| **No-JS Fallback** | Jinja2 templates | Accessibility, works without JavaScript |
+| **Type Safety** | Pydantic + TypeScript | Ensures data consistency |
 
 ---
 
-*This structure follows Youtube scraper patterns while adapting to Gutenberg's specific needs (books, authors, LCC shelves).*
+*This architecture provides a modern, maintainable foundation while preserving backwards compatibility through no-JS fallback pages.*
 
