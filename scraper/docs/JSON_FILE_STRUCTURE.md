@@ -1,5 +1,7 @@
 # JSON File Structure Specification
 
+> **Note:** This document is historical documentation from the Vue.js UI migration. It provides detailed specifications for the JSON file structure. While the implementation may have evolved, this serves as a reference for understanding the data architecture and design decisions.
+
 ## Overview
 
 This document defines the complete JSON file structure for the Gutenberg Vue.js UI, following the pattern established in the Youtube scraper. The structure uses a two-tier approach: **high-level preview files** for listing/pagination, and **detail files** for full content.
