@@ -18,8 +18,7 @@ const emit = defineEmits<{
 
 const { toggle, clearAll, selectAll } = useMultiSelectFilter(props, emit)
 
-const getIcon = (item: string) =>
-  props.iconMap?.[item.toLowerCase()] ?? props.iconMap?.[item]
+const getIcon = (item: string) => props.iconMap?.[item.toLowerCase()] ?? props.iconMap?.[item]
 </script>
 
 <template>
