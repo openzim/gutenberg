@@ -4,8 +4,7 @@ import { useMainStore } from '@/stores/main'
 import type { BookPreview, SortOption, SortOrder } from '@/types'
 import BookGrid from '@/components/book/BookGrid.vue'
 import BookList from '@/components/book/BookList.vue'
-import LanguageFilter from '@/components/common/LanguageFilter.vue'
-import SortControl from '@/components/common/SortControl.vue'
+import CollapsibleFilters from '@/components/common/CollapsibleFilters.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import PaginationControl from '@/components/common/PaginationControl.vue'
@@ -97,19 +96,8 @@ onMounted(() => {
       </v-row>
 
       <v-row v-else-if="books.length > 0">
-        <v-col cols="12" md="3">
-          <div class="filters-sidebar">
-            <language-filter
-              v-model="selectedLanguages"
-              :languages="availableLanguages"
-              class="mb-4"
-            />
-            <sort-control v-model:sort-by="sortBy" v-model:sort-order="sortOrder" />
-          </div>
-        </v-col>
-
-        <v-col cols="12" md="9">
-          <div class="d-flex justify-space-between align-center mb-4">
+        <v-col cols="12">
+          <div class="d-flex justify-space-between align-center mb-4 flex-wrap gap-3">
             <item-count :current="paginatedBooks.length" :total="sortedBooks.length" type="books" />
             <div class="d-flex align-center gap-2">
               <v-btn-toggle v-model="viewMode" mandatory variant="outlined" density="compact">
@@ -118,6 +106,14 @@ onMounted(() => {
               </v-btn-toggle>
             </div>
           </div>
+
+          <collapsible-filters
+            :languages="availableLanguages"
+            v-model:selected-languages="selectedLanguages"
+            v-model:sort-by="sortBy"
+            v-model:sort-order="sortOrder"
+            class="mb-4"
+          />
 
           <book-grid v-if="viewMode === 'grid'" :books="paginatedBooks" />
           <book-list v-else :books="paginatedBooks" />
@@ -145,17 +141,7 @@ onMounted(() => {
   padding: v-bind('LAYOUT.VIEW_PADDING');
 }
 
-.filters-sidebar {
-  position: sticky;
-  top: 80px;
-}
-
 @media (max-width: 960px) {
-  .filters-sidebar {
-    position: static;
-    margin-bottom: v-bind('LAYOUT.SIDEBAR_MARGIN_MOBILE');
-  }
-
   .home-view {
     padding: v-bind('LAYOUT.VIEW_PADDING_MOBILE');
   }
