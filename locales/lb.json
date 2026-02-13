@@ -1,0 +1,204 @@
+{
+	"@metadata": {
+		"authors": [
+			"Volvox"
+		]
+	},
+	"ui_strings": {
+		"isocode": {
+			"textContent": "lb"
+		},
+		"autonym": {
+			"textContent": "Lëtzebuergesch"
+		},
+		"homepage": {
+			"alt": "Haaptsäit",
+			"title": "Haaptsäit"
+		},
+		"choose-language": {
+			"placeholder": "Sicht eng Sprooch eraus..."
+		},
+		"ui-language-switcher": {
+			"title": "Sprooch vum Interface"
+		},
+		"search": {
+			"textContent": "Sichen"
+		},
+		"author": {
+			"textContent": "Auteur",
+			"placeholder": "Mam Numm vum Auteur sichen"
+		},
+		"title": {
+			"textContent": "Titel",
+			"placeholder": "Mam Titel sichen"
+		},
+		"filter": {
+			"textContent": "Filte:"
+		},
+		"popularity": {
+			"textContent": "Popularitéit"
+		},
+		"sort": {
+			"textContent": "Sortéieren:"
+		},
+		"sort-popularity": {
+			"textContent": "Bicher no Popularitéit sortéieren"
+		},
+		"sort-title": {
+			"textContent": "Bicher no Titel sortéieren"
+		},
+		"format": {
+			"textContent": "Format"
+		},
+		"loading": {
+			"textContent": "Gëtt gelueden..."
+		},
+		"language": {
+			"textContent": "Sprooch"
+		},
+		"any-languages": {
+			"textContent": "Wielt de Katalog"
+		},
+		"main-languages": {
+			"textContent": "Haaptsproochen"
+		},
+		"other-languages": {
+			"textContent": "Aner Sproochen"
+		},
+		"author-anonymous": {
+			"textContent": "Anonym"
+		},
+		"license": {
+			"textContent": "Lizenz"
+		},
+		"license-pd": {
+			"textContent": "Domaine public an den USA."
+		},
+		"nb-downloads": {
+			"textContent": "{[ plural(nb) ]}"
+		},
+		"nb-downloads=5Bone=5D": {
+			"textContent": "1 Download an de leschten 30 Deeg."
+		},
+		"nb-downloads=5Bother=5D": {
+			"textContent": "{{nb}} Downloaden an de leschten 30 Deeg."
+		},
+		"lcc-shelf-A": {
+			"textContent": "A – Allgemeng Wierker"
+		},
+		"lcc-shelf-B": {
+			"textContent": "B – Philosophie, Psychologie, Relioun"
+		},
+		"lcc-shelf-C": {
+			"textContent": "C – Historesch Hëllefswëssenschaften"
+		},
+		"lcc-shelf-D": {
+			"textContent": "D – Weltgeschicht a Geschicht vun Europa, Asien, Afrika, Australien, Neiséiland etc."
+		},
+		"lcc-shelf-E": {
+			"textContent": "E – Geschicht vun Amerika"
+		},
+		"lcc-shelf-F": {
+			"textContent": "F – Geschicht vun Amerika"
+		},
+		"lcc-shelf-G": {
+			"textContent": "G – Geographie, Anthropologie, Fräizäit"
+		},
+		"lcc-shelf-H": {
+			"textContent": "H – Sozialwëssenschaften"
+		},
+		"lcc-shelf-J": {
+			"textContent": "J – Politikwëssenschaften"
+		},
+		"lcc-shelf-K": {
+			"textContent": "K – Droit"
+		},
+		"lcc-shelf-L": {
+			"textContent": "L – Educatioun"
+		},
+		"lcc-shelf-M": {
+			"textContent": "M – Musek a Bicher iwwer Musek"
+		},
+		"lcc-shelf-N": {
+			"textContent": "N – Beaux-Arts"
+		},
+		"lcc-shelf-P": {
+			"textContent": "P – Sprooch a Literatur"
+		},
+		"lcc-shelf-Q": {
+			"textContent": "Q – Wëssenschaft"
+		},
+		"lcc-shelf-R": {
+			"textContent": "R – Medezin"
+		},
+		"lcc-shelf-S": {
+			"textContent": "S – Landwirtschaft"
+		},
+		"lcc-shelf-T": {
+			"textContent": "T – Technologie"
+		},
+		"lcc-shelf-U": {
+			"textContent": "U – Militärwëssenschaft"
+		},
+		"lcc-shelf-V": {
+			"textContent": "V – Marinnwëssenschaft"
+		},
+		"lcc-shelf-Z": {
+			"textContent": "Z – Bibliographie, Bibliothéikswëssenschaft, Informatiounsressourcen (allgemeng)"
+		},
+		"lcc-shelf-PA": {
+			"textContent": "PA – Griichesch a laténgesch Sprooch a Literatur"
+		},
+		"lcc-shelf-PB": {
+			"textContent": "PB – Modern a keltesch Sproochen"
+		},
+		"lcc-shelf-PC": {
+			"textContent": "PC – Romanesch Sproochen"
+		},
+		"lcc-shelf-PD": {
+			"textContent": "PD – Germanesch a skandinavesch Sproochen"
+		},
+		"lcc-shelf-PE": {
+			"textContent": "PE – Englesch Sprooch"
+		},
+		"lcc-shelf-PF": {
+			"textContent": "PF – Westgermanesch Sproochen"
+		},
+		"lcc-shelf-PG": {
+			"textContent": "PG – Slawesch, baltesch an albanesch Sproochen"
+		},
+		"lcc-shelf-PH": {
+			"textContent": "PH – Uralesch a baskesch Sproochen"
+		},
+		"lcc-shelf-PJ": {
+			"textContent": "PJ – Orientalesch Sproochen a Literatur"
+		},
+		"lcc-shelf-PK": {
+			"textContent": "PK – Indo-iranesch Sproochen a Literatur"
+		},
+		"lcc-shelf-PL": {
+			"textContent": "PL – Sproochen a Literatur aus Ostasien, Afrika an Ozeanien"
+		},
+		"lcc-shelf-PM": {
+			"textContent": "PM – Hyperboreeësch, indesch a kënschtlech Sproochen"
+		},
+		"lcc-shelf-PN": {
+			"textContent": "PN – Literatur (allgemeng)"
+		},
+		"lcc-shelf-PQ": {
+			"textContent": "PQ – Franséisch, italieenesch, spuenesch a portugisesch Literatur"
+		},
+		"lcc-shelf-PR": {
+			"textContent": "PR – Englesch Literatur"
+		},
+		"lcc-shelf-PS": {
+			"textContent": "PS – Amerikanesch Literatur"
+		},
+		"lcc-shelf-PT": {
+			"textContent": "PT – Däitsch, hollännesch, flämesch, Afrikaans-, skandinavesch, alnordesch, alislännesch, alnorwegesch, modern islännesch, färöesch, dänesch, norwegesch a schweedesch Literatur"
+		},
+		"lcc-shelf-PZ": {
+			"textContent": "PZ – Fiktioun a Jugendbelletristik"
+		}
+	}
+}
