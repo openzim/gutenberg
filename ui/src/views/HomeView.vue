@@ -109,13 +109,10 @@ onMounted(() => {
 
           <collapsible-filters
             :languages="availableLanguages"
-            :selected-languages="selectedLanguages"
-            :sort-by="sortBy"
-            :sort-order="sortOrder"
+            v-model:selected-languages="selectedLanguages"
+            v-model:sort-by="sortBy"
+            v-model:sort-order="sortOrder"
             class="mb-4"
-            @update:selected-languages="selectedLanguages = $event"
-            @update:sort-by="sortBy = $event"
-            @update:sort-order="sortOrder = $event"
           />
 
           <book-grid v-if="viewMode === 'grid'" :books="paginatedBooks" />

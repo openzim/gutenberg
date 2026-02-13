@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useMultiSelectFilter } from '@/composables/useMultiSelectFilter'
 import EmptyState from './EmptyState.vue'
 import { MESSAGES } from '@/constants/theme'
@@ -19,9 +18,8 @@ const emit = defineEmits<{
 
 const { toggle, clearAll, selectAll } = useMultiSelectFilter(props, emit)
 
-const getIcon = computed(() => (item: string) => 
+const getIcon = (item: string) =>
   props.iconMap?.[item.toLowerCase()] ?? props.iconMap?.[item]
-)
 </script>
 
 <template>

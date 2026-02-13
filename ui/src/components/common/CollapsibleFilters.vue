@@ -37,8 +37,9 @@ function toggle(panel: 'languages' | 'sort') {
       <v-btn
         :variant="showLanguages ? 'flat' : 'outlined'"
         :color="showLanguages ? 'primary' : undefined"
-        @click="toggle('languages')"
+        :aria-expanded="showLanguages"
         aria-label="Toggle language filter"
+        @click="toggle('languages')"
       >
         <v-icon icon="mdi-translate" />
         <span class="ml-2">Languages</span>
@@ -54,8 +55,9 @@ function toggle(panel: 'languages' | 'sort') {
       <v-btn
         :variant="showSort ? 'flat' : 'outlined'"
         :color="showSort ? 'primary' : undefined"
-        @click="toggle('sort')"
+        :aria-expanded="showSort"
         aria-label="Toggle sort options"
+        @click="toggle('sort')"
       >
         <v-icon icon="mdi-sort" />
         <span class="ml-2">Sort</span>
