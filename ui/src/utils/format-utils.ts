@@ -1,3 +1,6 @@
+import { supportedLanguages } from '@/plugins/i18n'
+import { useI18n } from 'vue-i18n'
+
 export function formatAuthorName(firstName: string | null, lastName: string): string {
   if (firstName) {
     return `${firstName} ${lastName}`
@@ -34,8 +37,23 @@ export function getPopularityStars(popularity: number): string {
 }
 
 export function formatLanguages(languages: string[]): string {
-  // Language codes are displayed as-is (e.g., 'en', 'fr')
-  return languages.join(', ')
+  const { t, te } = useI18n()
+  const languageMap = new Map(
+    supportedLanguages.map((lang) => [lang.code.toLowerCase(), lang.display])
+  )
+
+  return languages
+    .map((code) => {
+      const lowerCode = code.toLowerCase()
+      const i18nKey = `languageNames.${lowerCode}`
+
+      if (te(i18nKey)) {
+        return t(i18nKey)
+      }
+
+      return languageMap.get(lowerCode) || code
+    })
+    .join(', ')
 }
 
 export function pluralize(count: number, singular: string, plural?: string): string {
