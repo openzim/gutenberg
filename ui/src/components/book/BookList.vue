@@ -2,7 +2,11 @@
 import type { BookPreview } from '@/types'
 import { getPopularityStars, normalizeImagePath } from '@/utils/format-utils'
 import EmptyState from '@/components/common/EmptyState.vue'
-import { AVATAR_SIZES, MESSAGES } from '@/constants/theme'
+import { AVATAR_SIZES } from '@/constants/theme'
+import { MESSAGES } from '@/constants/messages'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 defineProps<{
   books: BookPreview[]
@@ -54,5 +58,5 @@ const MAX_LANGUAGES_IN_LIST = 2
     </v-list-item>
   </v-list>
 
-  <empty-state v-else :message="MESSAGES.NO_BOOKS" />
+  <empty-state v-else :message="t(MESSAGES.NO_BOOKS)" />
 </template>

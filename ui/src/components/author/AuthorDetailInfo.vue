@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { AuthorDetail } from '@/types'
 import BooksSection from '@/components/common/BooksSection.vue'
 import DetailInfoCard from '@/components/common/DetailInfoCard.vue'
-import { formatAuthorName, formatAuthorLifespan, pluralize } from '@/utils/format-utils'
-import { AVATAR_SIZES, ICON_SIZES, MESSAGES } from '@/constants/theme'
+import { formatAuthorName, formatAuthorLifespan } from '@/utils/format-utils'
+import { AVATAR_SIZES, ICON_SIZES } from '@/constants/theme'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   author: AuthorDetail
@@ -46,7 +49,7 @@ const lifespan = computed(() =>
           <v-list-item-title>
             {{ fullName }}
           </v-list-item-title>
-          <v-list-item-subtitle>Full Name</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ t('author.fullName') }}</v-list-item-subtitle>
         </v-list-item>
 
         <v-list-item v-if="author.birthYear || author.deathYear">
@@ -56,7 +59,7 @@ const lifespan = computed(() =>
           <v-list-item-title>
             {{ lifespan }}
           </v-list-item-title>
-          <v-list-item-subtitle>Lifespan</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ t('author.lifespan') }}</v-list-item-subtitle>
         </v-list-item>
 
         <v-list-item>
@@ -64,17 +67,17 @@ const lifespan = computed(() =>
             <v-icon icon="mdi-book-multiple" />
           </template>
           <v-list-item-title>
-            {{ author.bookCount }} {{ pluralize(author.bookCount, 'book') }}
+            {{ t('author.bookCount', author.bookCount) }}
           </v-list-item-title>
-          <v-list-item-subtitle>Works Available</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ t('author.worksAvailable') }}</v-list-item-subtitle>
         </v-list-item>
       </template>
     </detail-info-card>
 
     <books-section
       :books="author.books"
-      :title="`Books by ${author.name}`"
-      :empty-message="MESSAGES.NO_BOOKS_FOR_AUTHOR"
+      :title="t('author.booksByAuthor', { name: author.name })"
+      :empty-message="t('messages.noBooksForAuthor')"
     />
   </div>
 </template>

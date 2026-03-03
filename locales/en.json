@@ -1,267 +1,200 @@
 {
-    "ui_strings": {
-        "isocode": {
-            "textContent": "en"
-        },
-        "autonym": {
-            "textContent": "English"
-        },
-        "homepage": {
-            "alt": "Homepage",
-            "title": "Homepage"
-        },
-        "choose-language": {
-            "placeholder": "Choose a language..."
-        },
-        "ui-language-switcher": {
-            "title": "Interface language"
-        },
-        "search": {
-            "textContent": "Search"
-        },
-        "author": {
-            "textContent": "Author",
-            "placeholder": "Search by author name"
-        },
-        "title": {
-            "textContent": "Title",
-            "placeholder": "Search by title"
-        },
-        "cover-img": {
-            "alt": "Book Cover",
-            "title": "Book Cover"
-        },
-        "cover": {
-            "textContent": "(cover)"
-        },
-        "filter": {
-            "textContent": "Filter:"
-        },
-        "popularity": {
-            "textContent": "Popularity"
-        },
-        "sort": {
-            "textContent": "Sort:"
-        },
-        "sort-popularity": {
-            "textContent": "Sort books by popularity"
-        },
-        "sort-title": {
-            "textContent": "Sort books by title"
-        },
-        "format": {
-            "textContent": "Format"
-        },
-        "loading": {
-            "textContent": "Loading..."
-        },
-        "no-data": {
-            "textContent": "No data available in table"
-        },
-        "prev": {
-            "textContent": "Previous"
-        },
-        "next": {
-            "textContent": "Next"
-        },
-        "language": {
-            "textContent": "Language"
-        },
-        "any-languages": {
-            "textContent": "Choose the Catalog"
-        },
-        "main-languages": {
-            "textContent": "Main languages"
-        },
-        "other-languages": {
-            "textContent": "Other languages"
-        },
-        "author-anonymous": {
-            "textContent": "Anonymous"
-        },
-        "author-various": {
-            "textContent": "Various"
-        },
-        "license": {
-            "textContent": "License"
-        },
-        "license-pd": {
-            "textContent": "Public domain in the USA."
-        },
-        "license-copyright": {
-            "textContent": "Copyrighted. Read the copyright notice inside this book for details."
-        },
-        "nb-downloads": {
-            "textContent": "{[ plural(nb) ]}"
-        },
-        "nb-downloads[one]": {
-            "textContent": "1 download in the last 30 days."
-        },
-        "nb-downloads[other]": {
-            "textContent": "{{nb}} downloads in the last 30 days."
-        },
-        "top-title": {
-            "textContent": "Project Gutenberg Library"
-        },
-        "sub-title": {
-            "textContent": "The first producer of free ebooks"
-        },
-        "table-previous": {
-            "textContent": "Previous"
-        },
-        "table-next": {
-            "textContent": "Next"
-        },
-        "about-1": {
-            "textContent": "Project Gutenberg offers over 60,000 free ebooks"
-        },
-        "about-2": {
-            "textContent": "Choose among free epub books, free kindle books."
-        },
-        "about-3": {
-            "textContent": "Download them or read them online."
-        },
-        "about-4": {
-            "textContent": "We carry high quality ebooks"
-        },
-        "about-5": {
-            "textContent": "All our ebooks were previously published by bona fide publishers."
-        },
-        "about-6": {
-            "textContent": "We digitized and diligently proofread them with the help of thousands of volunteers."
-        },
-        "lcc_shelves_title": {
-            "textContent": "Bookshelves (A-Z)"
-        },
-        "lcc_shelf_link": {
-            "textContent": "Browse by Bookshelf"
-        },
-        "home_link": {
-            "textContent": "Go Home"
-        },
-        "lcc_shelf": {
-            "placeholder": "Bookshelf Search"
-        },
-        "lcc-shelf-A": {
-            "textContent": "A-General works"
-        },
-        "lcc-shelf-B": {
-            "textContent": "B-Phylosophy, psychology, religion"
-        },
-        "lcc-shelf-C": {
-            "textContent": "C-Auxiliary sciences of history"
-        },
-        "lcc-shelf-D": {
-            "textContent": "D-World history and history of Europe, Asia, Africa, Australia, New Zealand, etc."
-        },
-        "lcc-shelf-E": {
-            "textContent": "E-History of the Americas"
-        },
-        "lcc-shelf-F": {
-            "textContent": "F-History of the Americas"
-        },
-        "lcc-shelf-G": {
-            "textContent": "G-Geography, anthropology, recreation"
-        },
-        "lcc-shelf-H": {
-            "textContent": "H-Social sciences"
-        },
-        "lcc-shelf-J": {
-            "textContent": "J-Political science"
-        },
-        "lcc-shelf-K": {
-            "textContent": "K-Law"
-        },
-        "lcc-shelf-L": {
-            "textContent": "L-Education"
-        },
-        "lcc-shelf-M": {
-            "textContent": "M-Music and books on music"
-        },
-        "lcc-shelf-N": {
-            "textContent": "N-Fine arts"
-        },
-        "lcc-shelf-P": {
-            "textContent": "P-Language and literature"
-        },
-        "lcc-shelf-Q": {
-            "textContent": "Q-Science"
-        },
-        "lcc-shelf-R": {
-            "textContent": "R-Medicine"
-        },
-        "lcc-shelf-S": {
-            "textContent": "S-Agriculture"
-        },
-        "lcc-shelf-T": {
-            "textContent": "T-Technology"
-        },
-        "lcc-shelf-U": {
-            "textContent": "U-Military science"
-        },
-        "lcc-shelf-V": {
-            "textContent": "V-Naval science"
-        },
-        "lcc-shelf-Z": {
-            "textContent": "Z-Bibliography, library science, information resources (general)"
-        },
-        "lcc-shelf-PA": {
-            "textContent": "PA-Greek and latin language and literature"
-        },
-        "lcc-shelf-PB": {
-            "textContent": "PB-Modern and Celtic languages"
-        },
-        "lcc-shelf-PC": {
-            "textContent": "PC-Romance languages"
-        },
-        "lcc-shelf-PD": {
-            "textContent": "PD-Germanic and Scandinavian languages"
-        },
-        "lcc-shelf-PE": {
-            "textContent": "PE-English language"
-        },
-        "lcc-shelf-PF": {
-            "textContent": "PF-West Germanic languages"
-        },
-        "lcc-shelf-PG": {
-            "textContent": "PG-Slavic, Baltic and Albanian languages"
-        },
-        "lcc-shelf-PH": {
-            "textContent": "PH-Uralic and Basque languages"
-        },
-        "lcc-shelf-PJ": {
-            "textContent": "PJ-Oriental languages and literatures"
-        },
-        "lcc-shelf-PK": {
-            "textContent": "PK-Indo-Iranian languages and literatures"
-        },
-        "lcc-shelf-PL": {
-            "textContent": "PL-Languages and literatures of Eastern Asia, Africa, Oceania"
-        },
-        "lcc-shelf-PM": {
-            "textContent": "PM-Hyperborean, Indian, and artificial languages"
-        },
-        "lcc-shelf-PN": {
-            "textContent": "PN-Literature (General)"
-        },
-        "lcc-shelf-PQ": {
-            "textContent": "PQ-French, Italian, Spanish, Portuguese literature"
-        },
-        "lcc-shelf-PR": {
-            "textContent": "PR-English literature"
-        },
-        "lcc-shelf-PS": {
-            "textContent": "PS-American literature"
-        },
-        "lcc-shelf-PT": {
-            "textContent": "PT-German, Dutch, Flemish, Afrikaans, Scandinavian, Old Norse, Old Iceland, Old Norwegian, Modern Icelandic, Faroese, Danish, Norwegian and Swedish Literature"
-        },
-        "lcc-shelf-PZ": {
-            "textContent": "PZ-Fiction and juvenile belles lettres"
-        }
-    },
-    "metadata_defaults": {
-        "title": "Project Gutenberg Library",
-        "description": "All books in English from the first producer of free Ebooks"
-    }
+	"language": "English",
+	"isocode": "en",
+	"nav": {
+		"home": "Home",
+		"authors": "Authors",
+		"shelves": "Shelves",
+		"about": "About"
+	},
+	"home": {
+		"title": "Project Gutenberg Library",
+		"subtitle": "The first producer of free ebooks"
+	},
+	"about": {
+		"title": "About Project Gutenberg",
+		"offers": "Project Gutenberg offers over 70,000 free eBooks",
+		"choose": "Choose among free epub books, free kindle books, and more. Download them or read them online.",
+		"qualityTitle": "We carry high quality eBooks",
+		"qualityDesc": "All our eBooks were previously published by bona fide publishers. We digitized and diligently proofread them with the help of thousands of volunteers.",
+		"collectionStats": "Collection Statistics",
+		"collectionTitle": "About This Collection",
+		"collectionDesc1": "This offline collection contains a curated selection of books from Project Gutenberg, the first and largest single collection of free electronic books.",
+		"collectionDesc2": "Project Gutenberg was founded in 1971 by Michael S. Hart and is the oldest digital library. The mission of Project Gutenberg is to encourage the creation and distribution of eBooks.",
+		"collectionDesc3": "This collection is made available offline through Kiwix, allowing you to access these literary works without an internet connection.",
+		"linksTitle": "Links",
+		"linkGutenberg": "Project Gutenberg Website",
+		"linkGutenbergDesc": "Visit the official Project Gutenberg website",
+		"linkKiwix": "Kiwix",
+		"linkKiwixDesc": "Learn more about Kiwix offline content"
+	},
+	"stats": {
+		"books": "Books",
+		"authors": "Authors",
+		"shelves": "LCC Shelves"
+	},
+	"authors": {
+		"title": "Authors",
+		"description": "Browse all authors in the Gutenberg collection"
+	},
+	"shelves": {
+		"title": "LCC Shelves",
+		"description": "Browse books organized by Library of Congress Classification (LCC) system"
+	},
+	"book": {
+		"title": "Books",
+		"author": "Author",
+		"lifespan": "Lifespan",
+		"popularity": "Popularity",
+		"downloads": "downloads",
+		"downloadsCount": "{count} download | {count} downloads",
+		"downloadCount": "Download count",
+		"languages": "Language(s)",
+		"lccShelf": "LCC Shelf",
+		"license": "License",
+		"licensePd": "Public domain in the USA.",
+		"licenseCopyright": "Copyrighted. Read the copyright notice inside this book for details.",
+		"description": "Description",
+		"availableFormats": "Available Formats",
+		"fullName": "Full Name",
+		"worksAvailable": "Works Available",
+		"unknown": "Unknown",
+		"cover": "Book Cover",
+		"coverLabel": "(cover)",
+		"anonymous": "Anonymous",
+		"various": "Various"
+	},
+	"author": {
+		"bookCount": "{n} book | {n} books",
+		"booksByAuthor": "Books by {name}",
+		"fullName": "Full Name",
+		"lifespan": "Lifespan",
+		"worksAvailable": "Works Available"
+	},
+	"shelf": {
+		"classificationCode": "Classification Code",
+		"booksInShelf": "Books in This Shelf",
+		"booksIn": "Books in",
+		"booksInTitle": "Books in {shelf}",
+		"bookCount": "{n} book | {n} books"
+	},
+	"common": {
+		"loading": "Loading...",
+		"loadingBook": "Loading book details...",
+		"loadingAuthor": "Loading author details...",
+		"loadingShelf": "Loading shelf details...",
+		"loadingStats": "Loading statistics...",
+		"loadingItems": "Loading {type}...",
+		"showing": "Showing",
+		"of": "of",
+		"search": "Search",
+		"searchAuthors": "Search authors",
+		"searchAuthorsByName": "Search authors by name",
+		"searchShelf": "Search by shelf code or name",
+		"searchShelfAria": "Search LCC shelves by code or name",
+		"clear": "Clear",
+		"all": "All",
+		"clearAllSelections": "Clear all selections",
+		"selectAll": "Select all",
+		"sort": "Sort",
+		"sortBy": "Sort by",
+		"sortPopularity": "Popularity",
+		"sortTitle": "Title",
+		"language": "Language",
+		"bookLanguages": "Book Languages",
+		"chooseLanguage": "Choose a language...",
+		"mainLanguages": "Main languages",
+		"otherLanguages": "Other languages",
+		"anyCatalog": "Choose the Catalog",
+		"format": "Format",
+		"uiLanguage": "UI Language",
+		"selectInterfaceLanguage": "Select interface language",
+		"filterBy": "Filter by",
+		"filterByTitle": "Filter by {title}",
+		"filter": "filter",
+		"selected": "selected",
+		"gridView": "Grid view",
+		"listView": "List view",
+		"browseAll": "Browse All",
+		"browseAllShelves": "Browse All Shelves",
+		"browseAllAuthors": "Browse All Authors",
+		"returnHome": "Return to Home",
+		"toggleNavigationMenu": "Toggle navigation menu",
+		"mainNavigation": "Main navigation",
+		"mobileNavigationMenu": "Mobile navigation menu",
+		"mobileNavigation": "Mobile navigation",
+		"footerLinks": "Footer links",
+		"toggleSortOptions": "Toggle sort options",
+		"navigateTo": "Navigate to",
+		"navigateToItem": "Navigate to {item}",
+		"opensInNewTab": "opens in new tab",
+		"gutenbergHome": "Gutenberg Home"
+	},
+	"messages": {
+		"noBooks": "No books found.",
+		"noAuthors": "No authors found.",
+		"noShelves": "No shelves found.",
+		"noBooksForAuthor": "No books available for this author.",
+		"noBooksInShelf": "No books available in this shelf.",
+		"noLanguages": "No languages available.",
+		"noFormats": "No formats available.",
+		"notFoundBook": "Book not found. The book you're looking for doesn't exist or has been removed.",
+		"notFoundAuthor": "Author not found. The author you're looking for doesn't exist or has been removed.",
+		"notFoundShelf": "LCC shelf not found. The shelf you're looking for doesn't exist or has been removed."
+	},
+	"metadata_defaults": {
+		"title": "Project Gutenberg Library",
+		"description": "All books in English from the first producer of free Ebooks"
+	},
+	"footer": {
+		"tagline": "Project Gutenberg",
+		"subtitle": "Free eBooks",
+		"powered": "Offline access powered by Kiwix"
+	},
+	"itemTypes": {
+		"books": "book | books",
+		"authors": "author | authors",
+		"shelves": "shelf | shelves"
+	},
+	"lccShelves": {
+		"A": "A-General works",
+		"B": "B-Philosophy, psychology, religion",
+		"C": "C-Auxiliary sciences of history",
+		"D": "D-World history and history of Europe, Asia, Africa, Australia, New Zealand, etc.",
+		"E": "E-History of the Americas",
+		"F": "F-History of the Americas",
+		"G": "G-Geography, anthropology, recreation",
+		"H": "H-Social sciences",
+		"J": "J-Political science",
+		"K": "K-Law",
+		"L": "L-Education",
+		"M": "M-Music and books on music",
+		"N": "N-Fine arts",
+		"P": "P-Language and literature",
+		"Q": "Q-Science",
+		"R": "R-Medicine",
+		"S": "S-Agriculture",
+		"T": "T-Technology",
+		"U": "U-Military science",
+		"V": "V-Naval science",
+		"Z": "Z-Bibliography, library science, information resources (general)",
+		"PA": "PA-Greek and Latin language and literature",
+		"PB": "PB-Modern and Celtic languages",
+		"PC": "PC-Romance languages",
+		"PD": "PD-Germanic and Scandinavian languages",
+		"PE": "PE-English language",
+		"PF": "PF-West Germanic languages",
+		"PG": "PG-Slavic, Baltic and Albanian languages",
+		"PH": "PH-Uralic and Basque languages",
+		"PJ": "PJ-Oriental languages and literatures",
+		"PK": "PK-Indo-Iranian languages and literatures",
+		"PL": "PL-Languages and literatures of Eastern Asia, Africa, Oceania",
+		"PM": "PM-Hyperborean, Indian, and artificial languages",
+		"PN": "PN-Literature (General)",
+		"PQ": "PQ-French, Italian, Spanish, Portuguese literature",
+		"PR": "PR-English literature",
+		"PS": "PS-American literature",
+		"PT": "PT-German, Dutch, Flemish, Afrikaans, Scandinavian, Old Norse, Old Iceland, Old Norwegian, Modern Icelandic, Faroese, Danish, Norwegian and Swedish Literature",
+		"PZ": "PZ-Fiction and juvenile belles lettres"
+	}
 }

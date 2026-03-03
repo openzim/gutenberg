@@ -3,14 +3,17 @@ import { computed } from 'vue'
 import type { LCCShelf } from '@/types'
 import BooksSection from '@/components/common/BooksSection.vue'
 import DetailInfoCard from '@/components/common/DetailInfoCard.vue'
-import { pluralize } from '@/utils/format-utils'
-import { AVATAR_SIZES, MESSAGES } from '@/constants/theme'
+import { AVATAR_SIZES } from '@/constants/theme'
+import { MESSAGES } from '@/constants/messages'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   shelf: LCCShelf
 }>()
 
-const shelfTitle = computed(() => props.shelf.name || `LCC Shelf ${props.shelf.code}`)
+const shelfTitle = computed(() => props.shelf.name || `${t('book.lccShelf')} ${props.shelf.code}`)
 </script>
 
 <template>
@@ -34,7 +37,7 @@ const shelfTitle = computed(() => props.shelf.name || `LCC Shelf ${props.shelf.c
           <v-list-item-title>
             {{ shelf.code }}
           </v-list-item-title>
-          <v-list-item-subtitle>Classification Code</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ t('shelf.classificationCode') }}</v-list-item-subtitle>
         </v-list-item>
 
         <v-list-item>
@@ -42,17 +45,17 @@ const shelfTitle = computed(() => props.shelf.name || `LCC Shelf ${props.shelf.c
             <v-icon icon="mdi-book-multiple" />
           </template>
           <v-list-item-title>
-            {{ shelf.bookCount }} {{ pluralize(shelf.bookCount, 'book') }}
+            {{ t('shelf.bookCount', shelf.bookCount) }}
           </v-list-item-title>
-          <v-list-item-subtitle>Books in This Shelf</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ t('shelf.booksInShelf') }}</v-list-item-subtitle>
         </v-list-item>
       </template>
     </detail-info-card>
 
     <books-section
       :books="shelf.books"
-      :title="`Books in ${shelfTitle}`"
-      :empty-message="MESSAGES.NO_BOOKS_IN_SHELF"
+      :title="t('shelf.booksInTitle', { shelf: shelfTitle })"
+      :empty-message="t(MESSAGES.NO_BOOKS_IN_SHELF)"
     />
   </div>
 </template>

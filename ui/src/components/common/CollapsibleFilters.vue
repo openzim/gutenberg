@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import LanguageFilter from './LanguageFilter.vue'
+import LanguageSwitcher from './LanguageSwitcher.vue'
 import SortControl from './SortControl.vue'
 import type { SortOption, SortOrder } from '@/types'
+
+const { t } = useI18n()
 
 defineProps<{
   languages: string[]
@@ -34,15 +38,17 @@ function toggle(panel: 'languages' | 'sort') {
 <template>
   <div class="collapsible-filters">
     <div class="filter-buttons">
+      <language-switcher />
+
       <v-btn
         :variant="showLanguages ? 'flat' : 'outlined'"
         :color="showLanguages ? 'primary' : undefined"
         :aria-expanded="showLanguages"
-        aria-label="Toggle language filter"
+        :aria-label="t('common.toggleSortOptions')"
         @click="toggle('languages')"
       >
-        <v-icon icon="mdi-translate" />
-        <span class="ml-2">Languages</span>
+        <v-icon icon="mdi-filter-outline" />
+        <span class="ml-2">{{ t('common.bookLanguages') }}</span>
         <v-badge
           v-if="selectedLanguages.length > 0"
           :content="selectedLanguages.length"
@@ -56,11 +62,11 @@ function toggle(panel: 'languages' | 'sort') {
         :variant="showSort ? 'flat' : 'outlined'"
         :color="showSort ? 'primary' : undefined"
         :aria-expanded="showSort"
-        aria-label="Toggle sort options"
+        :aria-label="t('common.toggleSortOptions')"
         @click="toggle('sort')"
       >
         <v-icon icon="mdi-sort" />
-        <span class="ml-2">Sort</span>
+        <span class="ml-2">{{ t('common.sort') }}</span>
       </v-btn>
     </div>
 

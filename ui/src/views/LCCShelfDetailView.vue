@@ -4,7 +4,10 @@ import Breadcrumbs from '@/components/common/Breadcrumbs.vue'
 import DetailViewWrapper from '@/components/common/DetailViewWrapper.vue'
 import { useDetailView } from '@/composables/useDetailView'
 import { useMainStore } from '@/stores/main'
-import { MESSAGES } from '@/constants/theme'
+import { MESSAGES } from '@/constants/messages'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const main = useMainStore()
 
@@ -20,15 +23,15 @@ const {
     :loading="loading"
     :not-found="notFound"
     :has-data="!!shelf"
-    loading-message="Loading shelf details..."
-    :not-found-message="MESSAGES.NOT_FOUND_SHELF"
+    :loading-message="t('common.loadingShelf')"
+    :not-found-message="t(MESSAGES.NOT_FOUND_SHELF)"
     list-route="/lcc-shelves"
-    list-label="Browse All Shelves"
+    :list-label="t('common.browseAllShelves')"
   >
     <breadcrumbs
       :items="[
-        { title: 'Home', to: '/' },
-        { title: 'LCC Shelves', to: '/lcc-shelves' },
+        { title: t('nav.home'), to: '/' },
+        { title: t('shelves.title'), to: '/lcc-shelves' },
         { title: shelf!.code, disabled: true }
       ]"
     />

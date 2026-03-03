@@ -4,199 +4,82 @@
 			"Beta16"
 		]
 	},
-	"ui_strings": {
-		"isocode": {
-			"textContent": "it"
-		},
-		"autonym": {
-			"textContent": "Italiano"
-		},
-		"homepage": {
-			"alt": "Homepage",
-			"title": "Homepage"
-		},
-		"choose-language": {
-			"placeholder": "Scegli la lingua..."
-		},
-		"ui-language-switcher": {
-			"title": "Interfaccia lingua"
-		},
-		"search": {
-			"textContent": "Cerca"
-		},
-		"author": {
-			"textContent": "Autore",
-			"placeholder": "Elenca i libri di un singolo Autore"
-		},
-		"title": {
-			"placeholder": "Cerca libri per titolo"
-		},
-		"cover-img": {
-			"alt": "Copertina del Libro",
-			"title": "Copertina del Libro"
-		},
-		"cover": {
-			"textContent": "(copertina)"
-		},
-		"filter": {
-			"textContent": "Filtro:"
-		},
-		"popularity": {
-			"textContent": "Popolarità"
-		},
-		"sort": {
-			"textContent": "Ordina:"
-		},
-		"sort-popularity": {
-			"textContent": "Ordina libri per popolarità"
-		},
-		"sort-title": {
-			"textContent": "Ordina libri per titolo"
-		},
-		"format": {
-			"textContent": "Formato"
-		},
-		"loading": {
-			"textContent": "Caricamento in corso..."
-		},
-		"no-data": {
-			"textContent": "Nessun dato disponibile nella tabella"
-		},
-		"prev": {
-			"textContent": "Precedente"
-		},
-		"next": {
-			"textContent": "Successivo"
-		},
-		"language": {
-			"textContent": "Linguaggio"
-		},
-		"any-languages": {
-			"textContent": "Scegli il CatalogoChoose the Catalog"
-		},
-		"main-languages": {
-			"textContent": "Lingue Principali"
-		},
-		"other-languages": {
-			"textContent": "Altre lingue"
-		},
-		"author-anonymous": {
-			"textContent": "Anonimo"
-		},
-		"author-various": {
-			"textContent": "Vari"
-		},
-		"license": {
-			"textContent": "Licenza"
-		},
-		"license-pd": {
-			"textContent": "Di pubblico dominio negli USA."
-		},
-		"nb-downloads": {
-			"textContent": "{[ plurale(nb) ]}"
-		},
-		"nb-downloads=5Bone=5D": {
-			"textContent": "1 download negli ultimi 30 giorni."
-		},
-		"nb-downloads=5Bother=5D": {
-			"textContent": "{{nb}} download negli ultimi 30 giorni."
-		},
-		"top-title": {
-			"textContent": "Libreria del Progetto Gutenberg"
-		},
-		"sub-title": {
-			"textContent": "Il primo produttore di ebooks gratuiti"
-		},
-		"table-previous": {
-			"textContent": "Precedente"
-		},
-		"table-next": {
-			"textContent": "Successivo"
-		},
-		"about-1": {
-			"textContent": "Il Progetto Gutenberg offre più di 60,000 ebooks gratuiti"
-		},
-		"about-2": {
-			"textContent": "Scegli fra file epub gratuiti, file kindle gratuiti."
-		},
-		"about-3": {
-			"textContent": "Scaricali o leggili online."
-		},
-		"about-4": {
-			"textContent": "Noi forniamo ebook di alta qualità"
-		},
-		"about-5": {
-			"textContent": "Tutti i nostri ebook erano precedentemente pubblicati da editori."
-		},
-		"about-6": {
-			"textContent": "Li abbiamo digitalizzati e verificati diligentemente con l'aiuto di migliaia di volontari."
-		},
-		"lcc_shelves_title": {
-			"textContent": "Scaffali per libri (A-Z)"
-		},
-		"lcc_shelf_link": {
-			"textContent": "Sfoglia per libreria"
-		},
-		"home_link": {
-			"textContent": "Andare a casa"
-		},
-		"lcc_shelf": {
-			"placeholder": "Ricerca in libreria"
-		},
-		"lcc-shelf-B": {
-			"textContent": "B-Filosofia, psicologia, religione"
-		},
-		"lcc-shelf-C": {
-			"textContent": "C-Scienze ausiliarie della storia"
-		},
-		"lcc-shelf-E": {
-			"textContent": "E-Storia delle Americhe"
-		},
-		"lcc-shelf-G": {
-			"textContent": "G-Geografia, antropologia, ricreazione"
-		},
-		"lcc-shelf-H": {
-			"textContent": "H-Scienze sociali"
-		},
-		"lcc-shelf-J": {
-			"textContent": "J-Scienze politiche"
-		},
-		"lcc-shelf-P": {
-			"textContent": "P-Lingua e letteratura"
-		},
-		"lcc-shelf-Q": {
-			"textContent": "Q-Scienza"
-		},
-		"lcc-shelf-S": {
-			"textContent": "S-Agricoltura"
-		},
-		"lcc-shelf-T": {
-			"textContent": "T-Tecnologia"
-		},
-		"lcc-shelf-U": {
-			"textContent": "U-Scienze militari"
-		},
-		"lcc-shelf-V": {
-			"textContent": "V-Scienze navali"
-		},
-		"lcc-shelf-PD": {
-			"textContent": "PD-Lingue germaniche e scandinave"
-		},
-		"lcc-shelf-PE": {
-			"textContent": "PE-Lingua inglese"
-		},
-		"lcc-shelf-PF": {
-			"textContent": "PF-Lingue germaniche occidentali"
-		},
-		"lcc-shelf-PH": {
-			"textContent": "PH-Lingue uraliche e basche"
-		},
-		"lcc-shelf-PR": {
-			"textContent": "PR-Letteratura inglese"
-		},
-		"lcc-shelf-PS": {
-			"textContent": "PS-Letteratura americana"
-		}
+	"language": "Italiano",
+	"isocode": "it",
+	"nav": {
+		"home": "Homepage"
+	},
+	"home": {
+		"title": "Libreria del Progetto Gutenberg",
+		"subtitle": "Il primo produttore di ebooks gratuiti"
+	},
+	"about": {
+		"offers": "Il Progetto Gutenberg offre più di 60,000 ebooks gratuiti",
+		"choose": "Scegli fra file epub gratuiti, file kindle gratuiti. Scaricali o leggili online.",
+		"qualityTitle": "Noi forniamo ebook di alta qualità",
+		"qualityDesc": "Tutti i nostri ebook erano precedentemente pubblicati da editori. Li abbiamo digitalizzati e verificati diligentemente con l'aiuto di migliaia di volontari."
+	},
+	"shelves": {
+		"title": "Scaffali per libri (A-Z)"
+	},
+	"book": {
+		"author": "Autore",
+		"title": "Titolo",
+		"popularity": "Popolarità",
+		"languages": "Linguaggio",
+		"license": "Licenza",
+		"licensePd": "Di pubblico dominio negli USA.",
+		"cover": "Copertina del Libro",
+		"coverLabel": "(copertina)",
+		"anonymous": "Anonimo",
+		"various": "Vari"
+	},
+	"shelf": {
+		"booksInShelf": "Sfoglia per libreria"
+	},
+	"lccShelves": {
+		"B": "B-Filosofia, psicologia, religione",
+		"C": "C-Scienze ausiliarie della storia",
+		"E": "E-Storia delle Americhe",
+		"G": "G-Geografia, antropologia, ricreazione",
+		"H": "H-Scienze sociali",
+		"J": "J-Scienze politiche",
+		"P": "P-Lingua e letteratura",
+		"Q": "Q-Scienza",
+		"S": "S-Agricoltura",
+		"T": "T-Tecnologia",
+		"U": "U-Scienze militari",
+		"V": "V-Scienze navali",
+		"PD": "PD-Lingue germaniche e scandinave",
+		"PE": "PE-Lingua inglese",
+		"PF": "PF-Lingue germaniche occidentali",
+		"PH": "PH-Lingue uraliche e basche",
+		"PR": "PR-Letteratura inglese",
+		"PS": "PS-Letteratura americana"
+	},
+	"common": {
+		"loading": "Caricamento in corso...",
+		"search": "Cerca",
+		"searchAuthors": "Elenca i libri di un singolo Autore",
+		"searchAuthorsByName": "Cerca libri per titolo",
+		"searchShelf": "Ricerca in libreria",
+		"filter": "Filtro",
+		"sort": "Ordina",
+		"sortPopularity": "Ordina libri per popolarità",
+		"sortTitle": "Ordina libri per titolo",
+		"language": "Linguaggio",
+		"chooseLanguage": "Scegli la lingua...",
+		"mainLanguages": "Lingue Principali",
+		"otherLanguages": "Altre lingue",
+		"anyCatalog": "Scegli il Catalogo",
+		"format": "Formato",
+		"prev": "Precedente",
+		"next": "Successivo",
+		"returnHome": "Andare a casa",
+		"uiLanguage": "Interfaccia lingua"
+	},
+	"messages": {
+		"noBooks": "Nessun dato disponibile nella tabella"
 	},
 	"metadata_defaults": {
 		"title": "Biblioteca Progetto Gutenberg",

@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { useMultiSelectFilter } from '@/composables/useMultiSelectFilter'
 import EmptyState from './EmptyState.vue'
-import { MESSAGES } from '@/constants/theme'
+import { MESSAGES } from '@/constants/messages'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   title: string
@@ -22,7 +25,11 @@ const getIcon = (item: string) => props.iconMap?.[item.toLowerCase()] ?? props.i
 </script>
 
 <template>
-  <v-card variant="outlined" role="group" :aria-label="`Filter by ${title.toLowerCase()}`">
+  <v-card
+    variant="outlined"
+    role="group"
+    :aria-label="t('common.filterByTitle', { title: title.toLowerCase() })"
+  >
     <v-card-title class="filter-header">
       <div class="filter-title">
         <v-icon :icon="icon" class="mr-2" aria-hidden="true" />
@@ -34,18 +41,18 @@ const getIcon = (item: string) => props.iconMap?.[item.toLowerCase()] ?? props.i
           variant="text"
           size="small"
           @click="clearAll()"
-          aria-label="Clear all selections"
+          :aria-label="t('common.clearAllSelections')"
         >
-          Clear
+          {{ t('common.clear') }}
         </v-btn>
         <v-btn
           v-if="modelValue.length < items.length"
           variant="text"
           size="small"
           @click="selectAll(items)"
-          aria-label="Select all"
+          :aria-label="t('common.selectAll')"
         >
-          All
+          {{ t('common.all') }}
         </v-btn>
       </div>
     </v-card-title>
@@ -61,7 +68,7 @@ const getIcon = (item: string) => props.iconMap?.[item.toLowerCase()] ?? props.i
           :color="modelValue.includes(item) ? 'primary' : undefined"
           :prepend-icon="getIcon(item)"
           :aria-pressed="modelValue.includes(item)"
-          :aria-label="`${item.toUpperCase()} filter${modelValue.includes(item) ? ' (selected)' : ''}`"
+          :aria-label="`${item.toUpperCase()} ${t('common.filter')}${modelValue.includes(item) ? ` (${t('common.selected')})` : ''}`"
           role="button"
           tabindex="0"
           @click="toggle(item)"
@@ -74,7 +81,7 @@ const getIcon = (item: string) => props.iconMap?.[item.toLowerCase()] ?? props.i
 
       <empty-state
         v-if="items.length === 0"
-        :message="emptyMessage || MESSAGES.NO_LANGUAGES"
+        :message="emptyMessage || t(MESSAGES.NO_LANGUAGES)"
         class="mt-2"
       />
     </v-card-text>

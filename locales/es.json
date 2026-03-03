@@ -4,266 +4,104 @@
 			"Laranxa"
 		]
 	},
-	"ui_strings": {
-		"isocode": {
-			"textContent": "es"
-		},
-		"autonym": {
-			"textContent": "español"
-		},
-		"homepage": {
-			"alt": "Inicio",
-			"title": "Inicio"
-		},
-		"choose-language": {
-			"placeholder": "Elija un idioma..."
-		},
-		"ui-language-switcher": {
-			"title": "Idioma de la interfaz"
-		},
-		"search": {
-			"textContent": "Buscar"
-		},
-		"author": {
-			"textContent": "Autor",
-			"placeholder": "Lista de libros de un autor"
-		},
-		"title": {
-			"textContent": "Título",
-			"placeholder": "Buscar libros por título"
-		},
-		"cover-img": {
-			"alt": "Portada del libro",
-			"title": "Portada del libro"
-		},
-		"cover": {
-			"textContent": "(portada)"
-		},
-		"filter": {
-			"textContent": "Filtro:"
-		},
-		"popularity": {
-			"textContent": "Popularidad"
-		},
-		"sort": {
-			"textContent": "Ordenar:"
-		},
-		"sort-popularity": {
-			"textContent": "Ordenar libros por popularidad"
-		},
-		"sort-title": {
-			"textContent": "Ordenar libros por título"
-		},
-		"format": {
-			"textContent": "Formato"
-		},
-		"loading": {
-			"textContent": "Cargando..."
-		},
-		"no-data": {
-			"textContent": "No hay datos disponibles en la tabla"
-		},
-		"prev": {
-			"textContent": "Anterior"
-		},
-		"next": {
-			"textContent": "Siguiente"
-		},
-		"language": {
-			"textContent": "Idioma"
-		},
-		"any-languages": {
-			"textContent": "Elija en el catálogo"
-		},
-		"main-languages": {
-			"textContent": "Idiomas principales"
-		},
-		"other-languages": {
-			"textContent": "Otros idiomas"
-		},
-		"author-anonymous": {
-			"textContent": "Anónimo"
-		},
-		"author-various": {
-			"textContent": "Varios"
-		},
-		"license": {
-			"textContent": "Licencia"
-		},
-		"license-pd": {
-			"textContent": "De dominio público en EEUU."
-		},
-		"license-copyright": {
-			"textContent": "Tiene derechos de autor. Lea el aviso de derechos de autor dentro de este libro para más detalles."
-		},
-		"nb-downloads": {
-			"textContent": "{[ plural(nb) ]}"
-		},
-		"nb-downloads=5Bone=5D": {
-			"textContent": "Una descarga en los últimos 30 días."
-		},
-		"nb-downloads=5Bother=5D": {
-			"textContent": "{{nb}} descargas en los últimos 30 días."
-		},
-		"top-title": {
-			"textContent": "Librería del Proyecto Gutenberg"
-		},
-		"sub-title": {
-			"textContent": "El primer editor de ebooks libres"
-		},
-		"table-previous": {
-			"textContent": "Anterior"
-		},
-		"table-next": {
-			"textContent": "Siguiente"
-		},
-		"about-1": {
-			"textContent": "El Proyecto Gutenberg ofrece más de 60,000 ebooks libres"
-		},
-		"about-2": {
-			"textContent": "Elija entre ebooks epub libres y ebooks kindle libres."
-		},
-		"about-3": {
-			"textContent": "Descárgalos o léelos online."
-		},
-		"about-4": {
-			"textContent": "Tenemos ebooks de gran calidad"
-		},
-		"about-5": {
-			"textContent": "Todos nuestros ebooks han sido publicados antes por editoriales de prestigio."
-		},
-		"about-6": {
-			"textContent": "Los digitalizamos y comprobamos cuidadosamente con la ayuda de miles de voluntarios."
-		},
-		"lcc_shelves_title": {
-			"textContent": "Estantes (A-Z)"
-		},
-		"lcc_shelf_link": {
-			"textContent": "Buscar por estantería"
-		},
-		"home_link": {
-			"textContent": "Vete a casa"
-		},
-		"lcc_shelf": {
-			"placeholder": "Búsqueda de estantería"
-		},
-		"lcc-shelf-A": {
-			"textContent": "A-Obras generales"
-		},
-		"lcc-shelf-B": {
-			"textContent": "B-Filosofía, psicología, religión"
-		},
-		"lcc-shelf-C": {
-			"textContent": "C-Ciencias auxiliares de la historia"
-		},
-		"lcc-shelf-D": {
-			"textContent": "D-Historia mundial e historia de Europa, Asia, África, Australia, Nueva Zelanda, etc."
-		},
-		"lcc-shelf-E": {
-			"textContent": "E-Historia de las Américas"
-		},
-		"lcc-shelf-F": {
-			"textContent": "F-Historia de las Américas"
-		},
-		"lcc-shelf-G": {
-			"textContent": "G-Geografía, antropología, recreación"
-		},
-		"lcc-shelf-H": {
-			"textContent": "H-Ciencias sociales"
-		},
-		"lcc-shelf-J": {
-			"textContent": "J-Ciencias políticas"
-		},
-		"lcc-shelf-K": {
-			"textContent": "K-Derecho"
-		},
-		"lcc-shelf-L": {
-			"textContent": "L-Educación"
-		},
-		"lcc-shelf-M": {
-			"textContent": "M-Música y libros sobre música"
-		},
-		"lcc-shelf-N": {
-			"textContent": "N-Bellas artes"
-		},
-		"lcc-shelf-P": {
-			"textContent": "P-Lengua y literatura"
-		},
-		"lcc-shelf-Q": {
-			"textContent": "Q-Ciencia"
-		},
-		"lcc-shelf-R": {
-			"textContent": "R-Medicina"
-		},
-		"lcc-shelf-S": {
-			"textContent": "S-Agricultura"
-		},
-		"lcc-shelf-T": {
-			"textContent": "T-Tecnología"
-		},
-		"lcc-shelf-U": {
-			"textContent": "U-Ciencia militar"
-		},
-		"lcc-shelf-V": {
-			"textContent": "V-Ciencia naval"
-		},
-		"lcc-shelf-Z": {
-			"textContent": "Z-Bibliografía, bibliotecología, recursos de la información (general)"
-		},
-		"lcc-shelf-PA": {
-			"textContent": "PA-Lengua y literatura griega y latina"
-		},
-		"lcc-shelf-PB": {
-			"textContent": "PB-Lenguas modernas y celtas"
-		},
-		"lcc-shelf-PC": {
-			"textContent": "PC-Lenguas romances"
-		},
-		"lcc-shelf-PD": {
-			"textContent": "PD-Lenguas germánicas y escandinavas"
-		},
-		"lcc-shelf-PE": {
-			"textContent": "PE-Lengua inglesa"
-		},
-		"lcc-shelf-PF": {
-			"textContent": "PF-Lenguas germánicas occidentales"
-		},
-		"lcc-shelf-PG": {
-			"textContent": "PG-Lenguas eslavas, bálticas y albanesas"
-		},
-		"lcc-shelf-PH": {
-			"textContent": "PH-Lenguas urálicas y vascas"
-		},
-		"lcc-shelf-PJ": {
-			"textContent": "PJ-Lenguas y literaturas orientales"
-		},
-		"lcc-shelf-PK": {
-			"textContent": "PK-Lenguas y literaturas indoiraníes"
-		},
-		"lcc-shelf-PL": {
-			"textContent": "PL-Lenguas y literaturas de Asia Oriental, África y Oceanía"
-		},
-		"lcc-shelf-PM": {
-			"textContent": "PM-Lenguas hiperbóreas, indias y artificiales"
-		},
-		"lcc-shelf-PN": {
-			"textContent": "PN-Literatura (General)"
-		},
-		"lcc-shelf-PQ": {
-			"textContent": "PQ-Literatura francesa, italiana, española y portuguesa"
-		},
-		"lcc-shelf-PR": {
-			"textContent": "PR-Literatura inglesa"
-		},
-		"lcc-shelf-PS": {
-			"textContent": "PS-Literatura estadounidense"
-		},
-		"lcc-shelf-PT": {
-			"textContent": "PT-Literatura alemana, holandesa, flamenca, africana, escandinava, nórdica antigua, islandesa antigua, noruega antigua, islandesa moderna, faroesa, danesa, noruega y Sueca"
-		},
-		"lcc-shelf-PZ": {
-			"textContent": "PZ-Ficción y bellas letras juveniles"
-		}
+	"language": "español",
+	"isocode": "es",
+	"nav": {
+		"home": "Inicio"
+	},
+	"home": {
+		"title": "Librería del Proyecto Gutenberg",
+		"subtitle": "El primer editor de ebooks libres"
+	},
+	"about": {
+		"offers": "El Proyecto Gutenberg ofrece más de 60,000 ebooks libres",
+		"choose": "Elija entre ebooks epub libres y ebooks kindle libres. Descárgalos o léelos online.",
+		"qualityTitle": "Tenemos ebooks de gran calidad",
+		"qualityDesc": "Todos nuestros ebooks han sido publicados antes por editoriales de prestigio. Los digitalizamos y comprobamos cuidadosamente con la ayuda de miles de voluntarios."
+	},
+	"shelves": {
+		"title": "Estantes (A-Z)"
+	},
+	"book": {
+		"author": "Autor",
+		"title": "Título",
+		"popularity": "Popularidad",
+		"languages": "Idioma",
+		"license": "Licencia",
+		"licensePd": "De dominio público en EEUU.",
+		"licenseCopyright": "Tiene derechos de autor. Lea el aviso de derechos de autor dentro de este libro para más detalles.",
+		"cover": "Portada del libro",
+		"coverLabel": "(portada)",
+		"anonymous": "Anónimo",
+		"various": "Varios"
+	},
+	"shelf": {
+		"booksInShelf": "Buscar por estantería"
+	},
+	"lccShelves": {
+		"A": "A-Obras generales",
+		"B": "B-Filosofía, psicología, religión",
+		"C": "C-Ciencias auxiliares de la historia",
+		"D": "D-Historia mundial e historia de Europa, Asia, África, Australia, Nueva Zelanda, etc.",
+		"E": "E-Historia de las Américas",
+		"F": "F-Historia de las Américas",
+		"G": "G-Geografía, antropología, recreación",
+		"H": "H-Ciencias sociales",
+		"J": "J-Ciencias políticas",
+		"K": "K-Derecho",
+		"L": "L-Educación",
+		"M": "M-Música y libros sobre música",
+		"N": "N-Bellas artes",
+		"P": "P-Lengua y literatura",
+		"Q": "Q-Ciencia",
+		"R": "R-Medicina",
+		"S": "S-Agricultura",
+		"T": "T-Tecnología",
+		"U": "U-Ciencia militar",
+		"V": "V-Ciencia naval",
+		"Z": "Z-Bibliografía, bibliotecología, recursos de la información (general)",
+		"PA": "PA-Lengua y literatura griega y latina",
+		"PB": "PB-Lenguas modernas y celtas",
+		"PC": "PC-Lenguas romances",
+		"PD": "PD-Lenguas germánicas y escandinavas",
+		"PE": "PE-Lengua inglesa",
+		"PF": "PF-Lenguas germánicas occidentales",
+		"PG": "PG-Lenguas eslavas, bálticas y albanesas",
+		"PH": "PH-Lenguas urálicas y vascas",
+		"PJ": "PJ-Lenguas y literaturas orientales",
+		"PK": "PK-Lenguas y literaturas indoiraníes",
+		"PL": "PL-Lenguas y literaturas de Asia Oriental, África y Oceanía",
+		"PM": "PM-Lenguas hiperbóreas, indias y artificiales",
+		"PN": "PN-Literatura (General)",
+		"PQ": "PQ-Literatura francesa, italiana, española y portuguesa",
+		"PR": "PR-Literatura inglesa",
+		"PS": "PS-Literatura estadounidense",
+		"PT": "PT-Literatura alemana, holandesa, flamenca, africana, escandinava, nórdica antigua, islandesa antigua, noruega antigua, islandesa moderna, faroesa, danesa, noruega y Sueca",
+		"PZ": "PZ-Ficción y bellas letras juveniles"
+	},
+	"common": {
+		"loading": "Cargando...",
+		"search": "Buscar",
+		"searchAuthors": "Lista de libros de un autor",
+		"searchAuthorsByName": "Buscar autores por nombre",
+		"searchShelf": "Búsqueda de estantería",
+		"filter": "Filtro",
+		"sort": "Ordenar",
+		"sortPopularity": "Ordenar libros por popularidad",
+		"sortTitle": "Ordenar libros por título",
+		"language": "Idioma",
+		"chooseLanguage": "Elija un idioma...",
+		"mainLanguages": "Idiomas principales",
+		"otherLanguages": "Otros idiomas",
+		"anyCatalog": "Elija en el catálogo",
+		"format": "Formato",
+		"prev": "Anterior",
+		"next": "Siguiente",
+		"returnHome": "Volver al inicio",
+		"uiLanguage": "Idioma de la interfaz"
+	},
+	"messages": {
+		"noBooks": "No hay datos disponibles en la tabla"
 	},
 	"metadata_defaults": {
 		"title": "Biblioteca Proyecto Gutenberg",

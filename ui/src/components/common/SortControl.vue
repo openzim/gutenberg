@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { SortOption, SortOrder } from '@/types'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   sortBy: SortOption
@@ -12,12 +15,14 @@ const emit = defineEmits<{
   'update:sortOrder': [value: SortOrder]
 }>()
 
-const sortOptions: { value: SortOption; text: string; icon: string }[] = [
-  { value: 'popularity', text: 'Popularity', icon: 'mdi-star' },
-  { value: 'title', text: 'Title', icon: 'mdi-format-title' }
-]
+const sortOptions = computed<{ value: SortOption; text: string; icon: string }[]>(() => [
+  { value: 'popularity', text: t('common.sortPopularity'), icon: 'mdi-star' },
+  { value: 'title', text: t('common.sortTitle'), icon: 'mdi-format-title' }
+])
 
-const currentSortIcon = computed(() => sortOptions.find((o) => o.value === props.sortBy)?.icon)
+const currentSortIcon = computed(
+  () => sortOptions.value.find((o) => o.value === props.sortBy)?.icon
+)
 
 function updateSortBy(value: SortOption) {
   emit('update:sortBy', value)
@@ -29,10 +34,10 @@ function toggleSortOrder() {
 </script>
 
 <template>
-  <v-card variant="outlined" role="group" aria-label="Sort options">
+  <v-card variant="outlined" role="group" :aria-label="t('common.sort')">
     <v-card-title class="d-flex align-center">
       <v-icon icon="mdi-sort" class="mr-2" aria-hidden="true" />
-      <span>Sort By</span>
+      <span>{{ t('common.sort') }}</span>
     </v-card-title>
 
     <v-divider />
@@ -46,8 +51,8 @@ function toggleSortOrder() {
         variant="outlined"
         density="compact"
         hide-details
-        label="Sort by"
-        aria-label="Select sort option"
+        :label="t('common.sort')"
+        :aria-label="t('common.sort')"
         @update:model-value="updateSortBy"
       >
         <template v-slot:prepend-inner>

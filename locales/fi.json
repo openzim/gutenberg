@@ -4,10 +4,8 @@
 			"Yupik"
 		]
 	},
-	"ui_strings": {
-		"other-languages": {
-			"textContent": "Muut kielet"
-		}
+	"common": {
+		"otherLanguages": "Muut kielet"
 	},
 	"metadata_defaults": {
 		"title": "Project Gutenbergin Kirjasto",

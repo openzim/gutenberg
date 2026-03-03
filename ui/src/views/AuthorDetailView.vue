@@ -4,7 +4,9 @@ import Breadcrumbs from '@/components/common/Breadcrumbs.vue'
 import DetailViewWrapper from '@/components/common/DetailViewWrapper.vue'
 import { useDetailView } from '@/composables/useDetailView'
 import { useMainStore } from '@/stores/main'
-import { MESSAGES } from '@/constants/theme'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const main = useMainStore()
 
@@ -20,15 +22,15 @@ const {
     :loading="loading"
     :not-found="notFound"
     :has-data="!!author"
-    loading-message="Loading author details..."
-    :not-found-message="MESSAGES.NOT_FOUND_AUTHOR"
+    :loading-message="t('common.loadingAuthor')"
+    :not-found-message="t('messages.notFoundAuthor')"
     list-route="/authors"
-    list-label="Browse All Authors"
+    :list-label="t('common.browseAllAuthors')"
   >
     <breadcrumbs
       :items="[
-        { title: 'Home', to: '/' },
-        { title: 'Authors', to: '/authors' },
+        { title: t('nav.home'), to: '/' },
+        { title: t('nav.authors'), to: '/authors' },
         { title: author!.name, disabled: true }
       ]"
     />

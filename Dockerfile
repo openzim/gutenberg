@@ -1,6 +1,7 @@
 FROM node:20-alpine AS ui
 
 WORKDIR /src
+COPY locales /locales
 COPY ui /src
 RUN yarn install --frozen-lockfile || npm install
 RUN yarn build || npm run build

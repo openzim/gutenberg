@@ -4,7 +4,9 @@ import Breadcrumbs from '@/components/common/Breadcrumbs.vue'
 import DetailViewWrapper from '@/components/common/DetailViewWrapper.vue'
 import { useDetailView } from '@/composables/useDetailView'
 import { useMainStore } from '@/stores/main'
-import { MESSAGES } from '@/constants/theme'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const main = useMainStore()
 
@@ -24,13 +26,12 @@ const {
     :loading="loading"
     :not-found="notFound"
     :has-data="!!book"
-    loading-message="Loading book details..."
-    :not-found-message="MESSAGES.NOT_FOUND_BOOK"
+    :loading-message="t('common.loadingBook')"
+    :not-found-message="t('messages.notFoundBook')"
   >
     <breadcrumbs
       :items="[
-        { title: 'Home', to: '/' },
-        { title: 'Books', to: '/' },
+        { title: t('nav.home'), to: '/' },
         { title: book!.title, disabled: true }
       ]"
     />
