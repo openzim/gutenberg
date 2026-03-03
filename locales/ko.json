@@ -5,94 +5,41 @@
 			"Ykhwong"
 		]
 	},
-	"ui_strings": {
-		"isocode": {
-			"textContent": "ko"
-		},
-		"autonym": {
-			"textContent": "한국어"
-		},
-		"homepage": {
-			"alt": "홈페이지",
-			"title": "홈페이지"
-		},
-		"choose-language": {
-			"placeholder": "언어 선택..."
-		},
-		"ui-language-switcher": {
-			"title": "인터페이스 언어"
-		},
-		"search": {
-			"textContent": "검색"
-		},
-		"author": {
-			"textContent": "저자",
-			"placeholder": "만든이 이름으로 검색"
-		},
-		"title": {
-			"textContent": "제목",
-			"placeholder": "제목으로 검색"
-		},
-		"cover-img": {
-			"alt": "책 표지",
-			"title": "책 표지"
-		},
-		"cover": {
-			"textContent": "(커버)"
-		},
-		"filter": {
-			"textContent": "필터:"
-		},
-		"popularity": {
-			"textContent": "인기"
-		},
-		"sort": {
-			"textContent": "정렬:"
-		},
-		"format": {
-			"textContent": "형식"
-		},
-		"loading": {
-			"textContent": "불러오는 중..."
-		},
-		"no-data": {
-			"textContent": "테이블에 사용할 수 있는 데이터가 없습니다"
-		},
-		"prev": {
-			"textContent": "이전"
-		},
-		"next": {
-			"textContent": "다음"
-		},
-		"language": {
-			"textContent": "언어"
-		},
-		"any-languages": {
-			"textContent": "카탈로그 선택"
-		},
-		"main-languages": {
-			"textContent": "기본 언어"
-		},
-		"other-languages": {
-			"textContent": "다른 언어"
-		},
-		"author-anonymous": {
-			"textContent": "익명"
-		},
-		"author-various": {
-			"textContent": "여러 가지"
-		},
-		"license": {
-			"textContent": "라이선스"
-		},
-		"license-pd": {
-			"textContent": "미국에서는 퍼블릭 도메인입니다."
-		},
-		"table-previous": {
-			"textContent": "이전"
-		},
-		"table-next": {
-			"textContent": "다음"
-		}
+	"language": "한국어",
+	"isocode": "ko",
+	"nav": {
+		"home": "홈페이지"
+	},
+	"book": {
+		"author": "저자",
+		"title": "제목",
+		"popularity": "인기",
+		"languages": "언어",
+		"license": "라이선스",
+		"licensePd": "미국에서는 퍼블릭 도메인입니다.",
+		"cover": "책 표지",
+		"coverLabel": "(커버)",
+		"anonymous": "익명",
+		"various": "여러 가지"
+	},
+	"common": {
+		"loading": "불러오는 중...",
+		"search": "검색",
+		"searchAuthors": "만든이 이름으로 검색",
+		"searchAuthorsByName": "제목으로 검색",
+		"filter": "필터",
+		"sort": "정렬",
+		"language": "언어",
+		"chooseLanguage": "언어 선택...",
+		"mainLanguages": "기본 언어",
+		"otherLanguages": "다른 언어",
+		"anyCatalog": "카탈로그 선택",
+		"format": "형식",
+		"prev": "이전",
+		"next": "다음",
+		"uiLanguage": "인터페이스 언어"
+	},
+	"messages": {
+		"noBooks": "테이블에 사용할 수 있는 데이터가 없습니다"
 	}
 }

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import BaseFilter from './BaseFilter.vue'
-import { MESSAGES } from '@/constants/theme'
+import { MESSAGES } from '@/constants/messages'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 defineProps<{
   formats: string[]
@@ -22,11 +25,11 @@ const formatIcons: Record<string, string> = {
 
 <template>
   <base-filter
-    title="Formats"
+    :title="t('common.format')"
     icon="mdi-file-multiple"
     :items="formats"
     :model-value="modelValue"
-    :empty-message="MESSAGES.NO_FORMATS"
+    :empty-message="t(MESSAGES.NO_FORMATS)"
     :icon-map="formatIcons"
     @update:model-value="$emit('update:modelValue', $event)"
   />

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useMainStore } from '@/stores/main'
 import type { BookPreview, SortOption, SortOrder } from '@/types'
 import BookGrid from '@/components/book/BookGrid.vue'
@@ -14,8 +15,10 @@ import { useListLoader } from '@/composables/useListLoader'
 import type { Books } from '@/types'
 import { useSorting, type SortConfig } from '@/composables/useSorting'
 import { extractUniqueValues } from '@/utils/format-utils'
-import { LAYOUT, MESSAGES } from '@/constants/theme'
+import { LAYOUT } from '@/constants/theme'
+import { MESSAGES } from '@/constants/messages'
 
+const { t } = useI18n()
 const main = useMainStore()
 
 const viewMode = ref<'grid' | 'list'>('grid')
@@ -82,16 +85,16 @@ onMounted(() => {
     <v-container>
       <v-row>
         <v-col cols="12">
-          <h1 class="text-h3 mb-4">Project Gutenberg</h1>
+          <h1 class="text-h3 mb-4">{{ t('home.title') }}</h1>
           <p class="text-body-1 text-medium-emphasis mb-6">
-            Free eBooks - Choose from over 70,000 free eBooks
+            {{ t('home.subtitle') }}
           </p>
         </v-col>
       </v-row>
 
       <v-row v-if="booksLoading">
         <v-col cols="12">
-          <loading-spinner message="Loading books..." />
+          <loading-spinner :message="t('common.loading')" />
         </v-col>
       </v-row>
 
@@ -101,8 +104,8 @@ onMounted(() => {
             <item-count :current="paginatedBooks.length" :total="sortedBooks.length" type="books" />
             <div class="d-flex align-center gap-2">
               <v-btn-toggle v-model="viewMode" mandatory variant="outlined" density="compact">
-                <v-btn value="grid" icon="mdi-view-grid" aria-label="Grid view" />
-                <v-btn value="list" icon="mdi-view-list" aria-label="List view" />
+                <v-btn value="grid" icon="mdi-view-grid" :aria-label="t('common.gridView')" />
+                <v-btn value="list" icon="mdi-view-list" :aria-label="t('common.listView')" />
               </v-btn-toggle>
             </div>
           </div>
@@ -129,7 +132,7 @@ onMounted(() => {
 
       <v-row v-else>
         <v-col cols="12">
-          <empty-state :message="MESSAGES.NO_BOOKS" type="info" />
+          <empty-state :message="t(MESSAGES.NO_BOOKS)" type="info" />
         </v-col>
       </v-row>
     </v-container>

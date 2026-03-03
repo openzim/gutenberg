@@ -5,6 +5,9 @@ import ItemCount from './ItemCount.vue'
 import LoadingSpinner from './LoadingSpinner.vue'
 import PaginationControl from './PaginationControl.vue'
 import { LAYOUT } from '@/constants/theme'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 interface Props {
   title: string
@@ -43,6 +46,10 @@ const searchValue = computed({
 function handlePageChange(page: number) {
   emit('go-to-page', page)
 }
+
+const loadingMessage = computed(() =>
+  t('common.loadingItems', { type: t(`itemTypes.${props.itemType}`) })
+)
 </script>
 
 <template>
@@ -59,7 +66,7 @@ function handlePageChange(page: number) {
 
       <v-row v-if="loading">
         <v-col cols="12">
-          <loading-spinner :message="`Loading ${itemType}...`" />
+          <loading-spinner :message="loadingMessage" />
         </v-col>
       </v-row>
 

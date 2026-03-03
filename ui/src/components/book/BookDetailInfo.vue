@@ -7,6 +7,9 @@ import {
   formatAuthorLifespan
 } from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 defineProps<{
   book: Book
@@ -52,9 +55,9 @@ defineProps<{
                 >
                   {{ book.author.name }}
                 </router-link>
-                <span v-else>{{ book.author?.name || 'Unknown' }}</span>
+                <span v-else>{{ book.author?.name || t('book.unknown') }}</span>
               </v-list-item-title>
-              <v-list-item-subtitle>Author</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ t('book.author') }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item v-if="book.author.birthYear || book.author.deathYear">
@@ -64,7 +67,7 @@ defineProps<{
               <v-list-item-title>
                 {{ formatAuthorLifespan(book.author.birthYear, book.author.deathYear) }}
               </v-list-item-title>
-              <v-list-item-subtitle>Lifespan</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ t('book.lifespan') }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item>
@@ -74,7 +77,7 @@ defineProps<{
               <v-list-item-title class="text-warning">
                 {{ getPopularityStars(book.popularity) }}
               </v-list-item-title>
-              <v-list-item-subtitle>Popularity</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ t('book.popularity') }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item>
@@ -82,9 +85,9 @@ defineProps<{
                 <v-icon icon="mdi-download" />
               </template>
               <v-list-item-title>
-                {{ formatDownloads(book.downloads) }} downloads
+                {{ t('book.downloadsCount', { count: formatDownloads(book.downloads) }) }}
               </v-list-item-title>
-              <v-list-item-subtitle>Download count</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ t('book.downloadCount') }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item>
@@ -94,7 +97,7 @@ defineProps<{
               <v-list-item-title>
                 {{ formatLanguages(book.languages) }}
               </v-list-item-title>
-              <v-list-item-subtitle>Language(s)</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ t('book.languages') }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item v-if="book.lccShelf">
@@ -106,7 +109,7 @@ defineProps<{
                   {{ book.lccShelf }}
                 </router-link>
               </v-list-item-title>
-              <v-list-item-subtitle>LCC Shelf</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ t('book.lccShelf') }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item>
@@ -114,18 +117,18 @@ defineProps<{
                 <v-icon icon="mdi-license" />
               </template>
               <v-list-item-title>{{ book.license }}</v-list-item-title>
-              <v-list-item-subtitle>License</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ t('book.license') }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
 
           <v-divider class="my-4" />
 
           <div v-if="book.description" class="mb-4">
-            <h3 class="text-h6 mb-2">Description</h3>
+            <h3 class="text-h6 mb-2">{{ t('book.description') }}</h3>
             <p class="text-body-2">{{ book.description }}</p>
           </div>
 
-          <h3 class="text-h6 mb-2">Available Formats</h3>
+          <h3 class="text-h6 mb-2">{{ t('book.availableFormats') }}</h3>
           <v-chip-group>
             <v-chip
               v-for="format in book.formats"

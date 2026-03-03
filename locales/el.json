@@ -4,86 +4,38 @@
 			"Jimkats"
 		]
 	},
-	"ui_strings": {
-		"isocode": {
-			"textContent": "el"
-		},
-		"autonym": {
-			"textContent": "Ελληνικά"
-		},
-		"homepage": {
-			"alt": "Αρχική σελίδα",
-			"title": "Αρχική σελίδα"
-		},
-		"choose-language": {
-			"placeholder": "Επιλέξτε μια γλώσσα..."
-		},
-		"ui-language-switcher": {
-			"title": "Γλώσσα διεπαφής"
-		},
-		"search": {
-			"textContent": "Αναζήτηση"
-		},
-		"author": {
-			"textContent": "Συγγραφέας"
-		},
-		"title": {
-			"textContent": "Τίτλος"
-		},
-		"filter": {
-			"textContent": "Φίλτρο:"
-		},
-		"popularity": {
-			"textContent": "Δημοτικότητα"
-		},
-		"sort": {
-			"textContent": "Ταξινόμηση:"
-		},
-		"format": {
-			"textContent": "Μορφή"
-		},
-		"loading": {
-			"textContent": "Γίνεται φόρτωση..."
-		},
-		"no-data": {
-			"textContent": "Δεν υπάρχουν διαθέσιμα δεδομένα στον πίνακα"
-		},
-		"prev": {
-			"textContent": "Προηγούμενο"
-		},
-		"next": {
-			"textContent": "Επόμενο"
-		},
-		"language": {
-			"textContent": "Γλώσσα"
-		},
-		"any-languages": {
-			"textContent": "Επιλέξτε τον Κατάλογο"
-		},
-		"main-languages": {
-			"textContent": "Κύριες γλώσσες"
-		},
-		"other-languages": {
-			"textContent": "Άλλες γλώσσες"
-		},
-		"author-anonymous": {
-			"textContent": "Ανώνυμος"
-		},
-		"license": {
-			"textContent": "Άδεια χρήσης"
-		},
-		"license-pd": {
-			"textContent": "Κοινό κτήμα στις ΗΠΑ."
-		},
-		"table-previous": {
-			"textContent": "Προηγούμενο"
-		},
-		"table-next": {
-			"textContent": "Επόμενο"
-		},
-		"home_link": {
-			"textContent": "Μετάβαση στην Αρχική"
-		}
+	"language": "Ελληνικά",
+	"isocode": "el",
+	"nav": {
+		"home": "Αρχική σελίδα"
+	},
+	"book": {
+		"author": "Συγγραφέας",
+		"title": "Τίτλος",
+		"popularity": "Δημοτικότητα",
+		"languages": "Γλώσσα",
+		"license": "Άδεια χρήσης",
+		"licensePd": "Κοινό κτήμα στις ΗΠΑ.",
+		"anonymous": "Ανώνυμος"
+	},
+	"common": {
+		"loading": "Γίνεται φόρτωση...",
+		"search": "Αναζήτηση",
+		"filter": "Φίλτρο",
+		"sort": "Ταξινόμηση",
+		"language": "Γλώσσα",
+		"chooseLanguage": "Επιλέξτε μια γλώσσα...",
+		"mainLanguages": "Κύριες γλώσσες",
+		"otherLanguages": "Άλλες γλώσσες",
+		"anyCatalog": "Επιλέξτε τον Κατάλογο",
+		"format": "Μορφή",
+		"prev": "Προηγούμενο",
+		"next": "Επόμενο",
+		"returnHome": "Μετάβαση στην Αρχική",
+		"uiLanguage": "Γλώσσα διεπαφής"
+	},
+	"messages": {
+		"noBooks": "Δεν υπάρχουν διαθέσιμα δεδομένα στον πίνακα"
 	},
 	"metadata_defaults": {
 		"title": "Βιβλιοθήκη Project Gutenberg",

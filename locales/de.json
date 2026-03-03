@@ -4,145 +4,62 @@
 			"Brettchenweber"
 		]
 	},
-	"ui_strings": {
-		"isocode": {
-			"textContent": "de"
-		},
-		"autonym": {
-			"textContent": "Deutsch"
-		},
-		"homepage": {
-			"alt": "Homepage",
-			"title": "Homepage"
-		},
-		"choose-language": {
-			"placeholder": "Sprache auswählen..."
-		},
-		"ui-language-switcher": {
-			"title": "Sprache der Oberfläche"
-		},
-		"search": {
-			"textContent": "Suchen"
-		},
-		"author": {
-			"textContent": "Autor",
-			"placeholder": "Bücherliste eines einzelnen Autors"
-		},
-		"title": {
-			"placeholder": "Suche nach Büchern nach Titel"
-		},
-		"cover-img": {
-			"alt": "Einband",
-			"title": "Einband"
-		},
-		"cover": {
-			"textContent": "(Einband)"
-		},
-		"filter": {
-			"textContent": "Filter:"
-		},
-		"popularity": {
-			"textContent": "Beliebtheit"
-		},
-		"sort": {
-			"textContent": "Sortieren:"
-		},
-		"sort-popularity": {
-			"textContent": "Sortiere Bücher nach Beliebtheit"
-		},
-		"sort-title": {
-			"textContent": "Sortiere Bücher nach Titel"
-		},
-		"format": {
-			"textContent": "Format"
-		},
-		"loading": {
-			"textContent": "Lade..."
-		},
-		"no-data": {
-			"textContent": "Keine Daten zum Anzeigen"
-		},
-		"prev": {
-			"textContent": "Zurück"
-		},
-		"next": {
-			"textContent": "Weiter"
-		},
-		"language": {
-			"textContent": "Sprache"
-		},
-		"any-languages": {
-			"textContent": "Katalog wählen"
-		},
-		"main-languages": {
-			"textContent": "Hauptsprachen"
-		},
-		"other-languages": {
-			"textContent": "Andere Sprachen"
-		},
-		"author-anonymous": {
-			"textContent": "Anonym"
-		},
-		"author-various": {
-			"textContent": "Diverse"
-		},
-		"license": {
-			"textContent": "Lizenz"
-		},
-		"license-pd": {
-			"textContent": "Public domain in den USA."
-		},
-		"nb-downloads": {
-			"textContent": "{[ plural(nb) ]}"
-		},
-		"nb-downloads=5Bone=5D": {
-			"textContent": "Download in den letzten 30 Tagen."
-		},
-		"nb-downloads=5Bother=5D": {
-			"textContent": "{{nb}} Downloads in den letzten 30 Tagen."
-		},
-		"top-title": {
-			"textContent": "Projekt Gutenberg"
-		},
-		"sub-title": {
-			"textContent": "Der erste Produzent freier E-Books"
-		},
-		"table-previous": {
-			"textContent": "Zurück"
-		},
-		"table-next": {
-			"textContent": "Weiter"
-		},
-		"about-1": {
-			"textContent": "Projekt Gutenberg bietet mehr als 60.000 freie E-Books"
-		},
-		"about-2": {
-			"textContent": "Aus freien Büchern auswählen."
-		},
-		"about-3": {
-			"textContent": "Lade sie herunter oder lies online."
-		},
-		"about-4": {
-			"textContent": "Wir haben hochwertige E-Books"
-		},
-		"about-5": {
-			"textContent": "Alle unsere E-Books waren vorher gemeinnützig veröffentlicht."
-		},
-		"about-6": {
-			"textContent": "Wir digitalisierten und prüften sie sorgfältig mit der Hilfe von tausenden Freiwilligen."
-		},
-		"lcc_shelves_title": {
-			"textContent": "Bücherregale (A-Z)"
-		},
-		"lcc_shelf_link": {
-			"textContent": "Durchsuchen Sie das Bücherregal"
-		},
-		"home_link": {
-			"textContent": "Nach Hause gehen"
-		},
-		"lcc_shelf": {
-			"placeholder": "Bücherregalsuche"
-		}
+	"language": "Deutsch",
+	"isocode": "de",
+	"nav": {
+		"home": "Homepage"
+	},
+	"home": {
+		"title": "Projekt Gutenberg",
+		"subtitle": "Der erste Produzent freier E-Books"
+	},
+	"about": {
+		"offers": "Projekt Gutenberg bietet mehr als 60.000 freie E-Books",
+		"choose": "Aus freien Büchern auswählen. Lade sie herunter oder lies online.",
+		"qualityTitle": "Wir haben hochwertige E-Books",
+		"qualityDesc": "Alle unsere E-Books waren vorher gemeinnützig veröffentlicht. Wir digitalisierten und prüften sie sorgfältig mit der Hilfe von tausenden Freiwilligen."
+	},
+	"shelves": {
+		"title": "Bücherregale (A-Z)"
+	},
+	"book": {
+		"author": "Autor",
+		"title": "Titel",
+		"popularity": "Beliebtheit",
+		"languages": "Sprache",
+		"license": "Lizenz",
+		"licensePd": "Public domain in den USA.",
+		"cover": "Einband",
+		"coverLabel": "(Einband)",
+		"anonymous": "Anonym",
+		"various": "Diverse"
+	},
+	"shelf": {
+		"booksInShelf": "Durchsuchen Sie das Bücherregal"
+	},
+	"common": {
+		"loading": "Lade...",
+		"search": "Suchen",
+		"searchAuthors": "Bücherliste eines einzelnen Autors",
+		"searchAuthorsByName": "Suche nach Autoren nach Namen",
+		"searchShelf": "Bücherregalsuche",
+		"filter": "Filter",
+		"sort": "Sortieren",
+		"sortPopularity": "Sortiere Bücher nach Beliebtheit",
+		"sortTitle": "Sortiere Bücher nach Titel",
+		"language": "Sprache",
+		"chooseLanguage": "Sprache auswählen...",
+		"mainLanguages": "Hauptsprachen",
+		"otherLanguages": "Andere Sprachen",
+		"anyCatalog": "Katalog wählen",
+		"format": "Format",
+		"prev": "Zurück",
+		"next": "Weiter",
+		"returnHome": "Nach Hause gehen",
+		"uiLanguage": "Sprache der Oberfläche"
+	},
+	"messages": {
+		"noBooks": "Keine Daten zum Anzeigen"
 	},
 	"metadata_defaults": {
 		"title": "Projekt Gutenberg-Bibliothek",

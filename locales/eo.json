@@ -4,19 +4,11 @@
 			"Tymewalk"
 		]
 	},
-	"ui_strings": {
-		"isocode": {
-			"textContent": "eo"
-		},
-		"autonym": {
-			"textContent": "Esperanto"
-		},
-		"author": {
-			"textContent": "Aŭtoro"
-		},
-		"title": {
-			"textContent": "Titolo"
-		}
+	"language": "Esperanto",
+	"isocode": "eo",
+	"book": {
+		"author": "Aŭtoro",
+		"title": "Titolo"
 	},
 	"metadata_defaults": {
 		"title": "Projekto Biblioteko Gutenberg",

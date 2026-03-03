@@ -9,7 +9,10 @@ import { useListLoader } from '@/composables/useListLoader'
 import type { Authors } from '@/types'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSorting, type SortConfig } from '@/composables/useSorting'
-import { MESSAGES } from '@/constants/theme'
+import { MESSAGES } from '@/constants/messages'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const main = useMainStore()
 
@@ -59,8 +62,8 @@ onMounted(() => {
 
 <template>
   <list-view-wrapper
-    title="Authors"
-    description="Browse all authors in the Gutenberg collection"
+    :title="t('nav.authors')"
+    :description="t('authors.description')"
     :loading="authorsLoading"
     :has-items="authors.length > 0"
     :current-count="paginatedAuthors.length"
@@ -68,11 +71,11 @@ onMounted(() => {
     item-type="authors"
     :total-pages="totalPages"
     :current-page="currentPage"
-    :empty-message="MESSAGES.NO_AUTHORS"
+    :empty-message="t(MESSAGES.NO_AUTHORS)"
     :show-search="true"
     v-model:search-query="searchQuery"
-    search-label="Search authors"
-    search-aria-label="Search authors by name"
+    :search-label="t('common.searchAuthors')"
+    :search-aria-label="t('common.searchAuthorsByName')"
     @go-to-page="goToPage"
   >
     <template #content>

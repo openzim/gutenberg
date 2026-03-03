@@ -9,7 +9,10 @@ import { useListLoader } from '@/composables/useListLoader'
 import type { LCCShelves } from '@/types'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSorting, type SortConfig } from '@/composables/useSorting'
-import { MESSAGES } from '@/constants/theme'
+import { MESSAGES } from '@/constants/messages'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const main = useMainStore()
 
@@ -65,8 +68,8 @@ onMounted(() => {
 
 <template>
   <list-view-wrapper
-    title="LCC Shelves"
-    description="Browse books organized by Library of Congress Classification (LCC) system"
+    :title="t('shelves.title')"
+    :description="t('shelves.description')"
     :loading="shelvesLoading"
     :has-items="shelves.length > 0"
     :current-count="paginatedShelves.length"
@@ -74,11 +77,11 @@ onMounted(() => {
     item-type="shelves"
     :total-pages="totalPages"
     :current-page="currentPage"
-    :empty-message="MESSAGES.NO_SHELVES"
+    :empty-message="t(MESSAGES.NO_SHELVES)"
     :show-search="true"
     v-model:search-query="searchQuery"
-    search-label="Search by shelf code or name"
-    search-aria-label="Search LCC shelves by code or name"
+    :search-label="t('common.searchShelf')"
+    :search-aria-label="t('common.searchShelfAria')"
     @go-to-page="goToPage"
   >
     <template #content>

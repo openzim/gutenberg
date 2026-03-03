@@ -4,266 +4,104 @@
 			"Siebrand"
 		]
 	},
-	"ui_strings": {
-		"isocode": {
-			"textContent": "nl"
-		},
-		"autonym": {
-			"textContent": "Nederlands"
-		},
-		"homepage": {
-			"alt": "Startpagina",
-			"title": "Startpagina"
-		},
-		"choose-language": {
-			"placeholder": "Kies een taal..."
-		},
-		"ui-language-switcher": {
-			"title": "Interfacetaal"
-		},
-		"search": {
-			"textContent": "Zoek"
-		},
-		"author": {
-			"textContent": "Auteur",
-			"placeholder": "Lijst van boeken van een enkele auteur"
-		},
-		"title": {
-			"textContent": "Titel",
-			"placeholder": "Zoek boeken op titel"
-		},
-		"cover-img": {
-			"alt": "Boekomslag",
-			"title": "Boekomslag"
-		},
-		"cover": {
-			"textContent": "(omslag)"
-		},
-		"filter": {
-			"textContent": "Filter:"
-		},
-		"popularity": {
-			"textContent": "Populariteit"
-		},
-		"sort": {
-			"textContent": "Sorteer:"
-		},
-		"sort-popularity": {
-			"textContent": "Sorteer boeken op populariteit"
-		},
-		"sort-title": {
-			"textContent": "Sorteer boeken op titel"
-		},
-		"format": {
-			"textContent": "Formaat"
-		},
-		"loading": {
-			"textContent": "Aan het laden..."
-		},
-		"no-data": {
-			"textContent": "Geen gegevens beschikbaar in tabel"
-		},
-		"prev": {
-			"textContent": "Vorige"
-		},
-		"next": {
-			"textContent": "Volgende"
-		},
-		"language": {
-			"textContent": "Taal"
-		},
-		"any-languages": {
-			"textContent": "Selecteer de Catalogus"
-		},
-		"main-languages": {
-			"textContent": "Belangrijkste talen"
-		},
-		"other-languages": {
-			"textContent": "Andere talen"
-		},
-		"author-anonymous": {
-			"textContent": "Anoniem"
-		},
-		"author-various": {
-			"textContent": "Verschillende"
-		},
-		"license": {
-			"textContent": "Licentie"
-		},
-		"license-pd": {
-			"textContent": "Publiek domein in de VS."
-		},
-		"license-copyright": {
-			"textContent": "Auteursrechtelijk beschermd. Lees de copyrightvermelding in dit boek voor meer informatie."
-		},
-		"nb-downloads": {
-			"textContent": "{[ plural(nb) ]}"
-		},
-		"nb-downloads=5Bone=5D": {
-			"textContent": "1 download in de afgelopen 30 dagen."
-		},
-		"nb-downloads=5Bother=5D": {
-			"textContent": "{{nb}} downloads in de afgelopen 30 dagen."
-		},
-		"top-title": {
-			"textContent": "Project Gutenberg Bibliotheek"
-		},
-		"sub-title": {
-			"textContent": "De eerste producent van gratis eboeken"
-		},
-		"table-previous": {
-			"textContent": "Vorige"
-		},
-		"table-next": {
-			"textContent": "Volgende"
-		},
-		"about-1": {
-			"textContent": "Project Gutenberg bevat meer dan 60,000 gratis eboeken"
-		},
-		"about-2": {
-			"textContent": "Kies uit gratis epub boeken, gratis kindle boeken."
-		},
-		"about-3": {
-			"textContent": "Download ze of lees ze online."
-		},
-		"about-4": {
-			"textContent": "Wij bieden eboeken van hoge kwaliteit"
-		},
-		"about-5": {
-			"textContent": "Al onze eboeken werden oorspronkelijk uitgegeven door bona fide uitgevers."
-		},
-		"about-6": {
-			"textContent": "We hebben ze gedigitaliseerd en zorgvuldig gecorrigeerd met behulp van duizenden vrijwilligers."
-		},
-		"lcc_shelves_title": {
-			"textContent": "Boekenplanken (A-Z)"
-		},
-		"lcc_shelf_link": {
-			"textContent": "Bladeren op boekenplank"
-		},
-		"home_link": {
-			"textContent": "Ga naar huis"
-		},
-		"lcc_shelf": {
-			"placeholder": "Boekenplank zoeken"
-		},
-		"lcc-shelf-A": {
-			"textContent": "A-Algemene werken"
-		},
-		"lcc-shelf-B": {
-			"textContent": "B-Filosofie, psychologie, religie"
-		},
-		"lcc-shelf-C": {
-			"textContent": "C-Historische hulpwetenschappen"
-		},
-		"lcc-shelf-D": {
-			"textContent": "D-Wereldgeschiedenis en geschiedenis van Europa, Azië, Afrika, Australië, Nieuw-Zeeland, enz."
-		},
-		"lcc-shelf-E": {
-			"textContent": "E-Geschiedenis van Amerika"
-		},
-		"lcc-shelf-F": {
-			"textContent": "F-Geschiedenis van Amerika"
-		},
-		"lcc-shelf-G": {
-			"textContent": "G-Geografie, antropologie, recreatie"
-		},
-		"lcc-shelf-H": {
-			"textContent": "H-Sociale wetenschappen"
-		},
-		"lcc-shelf-J": {
-			"textContent": "J-Politieke wetenschappen"
-		},
-		"lcc-shelf-K": {
-			"textContent": "K-Rechten"
-		},
-		"lcc-shelf-L": {
-			"textContent": "L-Onderwijs"
-		},
-		"lcc-shelf-M": {
-			"textContent": "M-Muziek en boeken over muziek"
-		},
-		"lcc-shelf-N": {
-			"textContent": "N-Schone kunsten"
-		},
-		"lcc-shelf-P": {
-			"textContent": "P-Taal en literatuur"
-		},
-		"lcc-shelf-Q": {
-			"textContent": "Q-Wetenschap"
-		},
-		"lcc-shelf-R": {
-			"textContent": "R-Geneeskunde"
-		},
-		"lcc-shelf-S": {
-			"textContent": "S-Landbouw"
-		},
-		"lcc-shelf-T": {
-			"textContent": "T-Technologie"
-		},
-		"lcc-shelf-U": {
-			"textContent": "U-Militaire wetenschap"
-		},
-		"lcc-shelf-V": {
-			"textContent": "V-Marinewetenschap"
-		},
-		"lcc-shelf-Z": {
-			"textContent": "Z-Bibliografie, bibliotheekwetenschappen, informatiebronnen (algemeen)"
-		},
-		"lcc-shelf-PA": {
-			"textContent": "PA-Griekse en Latijnse taal- en letterkunde"
-		},
-		"lcc-shelf-PB": {
-			"textContent": "PB-Moderne en Keltische talen"
-		},
-		"lcc-shelf-PC": {
-			"textContent": "PC-Romaanse talen"
-		},
-		"lcc-shelf-PD": {
-			"textContent": "PD-Germaanse en Scandinavische talen"
-		},
-		"lcc-shelf-PE": {
-			"textContent": "PE-Engelse taal"
-		},
-		"lcc-shelf-PF": {
-			"textContent": "PF-West-Germaanse talen"
-		},
-		"lcc-shelf-PG": {
-			"textContent": "PG-Slavische, Baltische en Albanese talen"
-		},
-		"lcc-shelf-PH": {
-			"textContent": "PH-Oeraalse en Baskische talen"
-		},
-		"lcc-shelf-PJ": {
-			"textContent": "PJ-Oosterse talen en literatuur"
-		},
-		"lcc-shelf-PK": {
-			"textContent": "PK-Indo-Iraanse talen en literatuur"
-		},
-		"lcc-shelf-PL": {
-			"textContent": "PL-Talen en literatuur van Oost-Azië, Afrika, Oceanië"
-		},
-		"lcc-shelf-PM": {
-			"textContent": "PM-Hyperboreïsche, Indiaanse en kunstmatige talen"
-		},
-		"lcc-shelf-PN": {
-			"textContent": "PN-Literatuur (Algemeen)"
-		},
-		"lcc-shelf-PQ": {
-			"textContent": "PQ-Franse, Italiaanse, Spaanse, Portugese literatuur"
-		},
-		"lcc-shelf-PR": {
-			"textContent": "PR-Engelstalige literatuur"
-		},
-		"lcc-shelf-PS": {
-			"textContent": "PS-Amerikaanse literatuur"
-		},
-		"lcc-shelf-PT": {
-			"textContent": "PT-Duitse, Nederlandse, Vlaamse, Afrikaanse, Scandinavische, Oudnoorse, Oudijslandse, Modern IJslandse, Faeröerse, Deense, Noorse en Zweedse literatuur"
-		},
-		"lcc-shelf-PZ": {
-			"textContent": "PZ-Fictie en jeugdliteratuur"
-		}
+	"language": "Nederlands",
+	"isocode": "nl",
+	"nav": {
+		"home": "Startpagina"
+	},
+	"home": {
+		"title": "Project Gutenberg Bibliotheek",
+		"subtitle": "De eerste producent van gratis e-boeken"
+	},
+	"about": {
+		"offers": "Project Gutenberg bevat meer dan 60,000 gratis e-boeken",
+		"choose": "Kies uit gratis epub boeken, gratis kindle boeken. Download ze of lees ze online.",
+		"qualityTitle": "Wij bieden eboeken van hoge kwaliteit",
+		"qualityDesc": "Al onze eboeken werden oorspronkelijk uitgegeven door bona fide uitgevers. We hebben ze gedigitaliseerd en zorgvuldig gecorrigeerd met behulp van duizenden vrijwilligers."
+	},
+	"shelves": {
+		"title": "Boekenplanken (A-Z)"
+	},
+	"book": {
+		"author": "Auteur",
+		"title": "Titel",
+		"popularity": "Populariteit",
+		"languages": "Taal",
+		"license": "Licentie",
+		"licensePd": "Publiek domein in de VS.",
+		"licenseCopyright": "Auteursrechtelijk beschermd. Lees de copyrightvermelding in dit boek voor meer informatie.",
+		"cover": "Boekomslag",
+		"coverLabel": "(omslag)",
+		"anonymous": "Anoniem",
+		"various": "Verschillende"
+	},
+	"shelf": {
+		"booksInShelf": "Bladeren op boekenplank"
+	},
+	"lccShelves": {
+		"A": "A-Algemene werken",
+		"B": "B-Filosofie, psychologie, religie",
+		"C": "C-Historische hulpwetenschappen",
+		"D": "D-Wereldgeschiedenis en geschiedenis van Europa, Azië, Afrika, Australië, Nieuw-Zeeland, enz.",
+		"E": "E-Geschiedenis van Amerika",
+		"F": "F-Geschiedenis van Amerika",
+		"G": "G-Geografie, antropologie, recreatie",
+		"H": "H-Sociale wetenschappen",
+		"J": "J-Politieke wetenschappen",
+		"K": "K-Rechten",
+		"L": "L-Onderwijs",
+		"M": "M-Muziek en boeken over muziek",
+		"N": "N-Schone kunsten",
+		"P": "P-Taal en literatuur",
+		"Q": "Q-Wetenschap",
+		"R": "R-Geneeskunde",
+		"S": "S-Landbouw",
+		"T": "T-Technologie",
+		"U": "U-Militaire wetenschap",
+		"V": "V-Marinewetenschap",
+		"Z": "Z-Bibliografie, bibliotheekwetenschappen, informatiebronnen (algemeen)",
+		"PA": "PA-Griekse en Latijnse taal- en letterkunde",
+		"PB": "PB-Moderne en Keltische talen",
+		"PC": "PC-Romaanse talen",
+		"PD": "PD-Germaanse en Scandinavische talen",
+		"PE": "PE-Engelse taal",
+		"PF": "PF-West-Germaanse talen",
+		"PG": "PG-Slavische, Baltische en Albanese talen",
+		"PH": "PH-Oeraalse en Baskische talen",
+		"PJ": "PJ-Oosterse talen en literatuur",
+		"PK": "PK-Indo-Iraanse talen en literatuur",
+		"PL": "PL-Talen en literatuur van Oost-Azië, Afrika, Oceanië",
+		"PM": "PM-Hyperboreïsche, Indiaanse en kunstmatige talen",
+		"PN": "PN-Literatuur (Algemeen)",
+		"PQ": "PQ-Franse, Italiaanse, Spaanse, Portugese literatuur",
+		"PR": "PR-Engelstalige literatuur",
+		"PS": "PS-Amerikaanse literatuur",
+		"PT": "PT-Duitse, Nederlandse, Vlaamse, Afrikaanse, Scandinavische, Oudnoorse, Oudijslandse, Modern IJslandse, Faeröerse, Deense, Noorse en Zweedse literatuur",
+		"PZ": "PZ-Fictie en jeugdliteratuur"
+	},
+	"common": {
+		"loading": "Aan het laden...",
+		"search": "Zoek",
+		"searchAuthors": "Lijst van boeken van een enkele auteur",
+		"searchAuthorsByName": "Zoek auteurs op naam",
+		"searchShelf": "Boekenplank zoeken",
+		"filter": "Filter",
+		"sort": "Sorteer",
+		"sortPopularity": "Sorteer boeken op populariteit",
+		"sortTitle": "Sorteer boeken op titel",
+		"language": "Taal",
+		"chooseLanguage": "Kies een taal...",
+		"mainLanguages": "Belangrijkste talen",
+		"otherLanguages": "Andere talen",
+		"anyCatalog": "Selecteer de Catalogus",
+		"format": "Formaat",
+		"prev": "Vorige",
+		"next": "Volgende",
+		"returnHome": "Ga naar huis",
+		"uiLanguage": "Interfacetaal"
+	},
+	"messages": {
+		"noBooks": "Geen gegevens beschikbaar in tabel"
 	},
 	"metadata_defaults": {
 		"title": "Project Gutenberg-bibliotheek",

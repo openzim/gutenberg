@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const drawer = ref(false)
 
-const navItems = [
-  { title: 'Home', to: '/', icon: 'mdi-home' },
-  { title: 'Authors', to: '/authors', icon: 'mdi-account-multiple' },
-  { title: 'Shelves', to: '/lcc-shelves', icon: 'mdi-bookshelf' },
-  { title: 'About', to: '/about', icon: 'mdi-information' }
-]
+const navItems = computed(() => [
+  { title: t('nav.home'), to: '/', icon: 'mdi-home' },
+  { title: t('nav.authors'), to: '/authors', icon: 'mdi-account-multiple' },
+  { title: t('nav.shelves'), to: '/lcc-shelves', icon: 'mdi-bookshelf' },
+  { title: t('nav.about'), to: '/about', icon: 'mdi-information' }
+])
 </script>
 
 <template>
@@ -16,24 +19,24 @@ const navItems = [
     <v-app-bar-nav-icon
       @click="drawer = !drawer"
       class="d-md-none"
-      aria-label="Toggle navigation menu"
+      :aria-label="t('common.toggleNavigationMenu')"
     />
 
     <v-app-bar-title>
-      <router-link to="/" class="title-link" aria-label="Gutenberg Home">
+      <router-link to="/" class="title-link" :aria-label="t('common.gutenbergHome')">
         <v-icon icon="mdi-book-open-variant" size="large" class="mr-2" aria-hidden="true" />
         <span>Gutenberg</span>
       </router-link>
     </v-app-bar-title>
 
     <template v-slot:append>
-      <nav role="navigation" aria-label="Main navigation" class="d-none d-md-flex">
+      <nav :aria-label="t('common.mainNavigation')" class="d-none d-md-flex">
         <v-btn
           v-for="item in navItems"
           :key="item.to"
           :to="item.to"
           variant="text"
-          :aria-label="`Navigate to ${item.title}`"
+          :aria-label="t('common.navigateToItem', { item: item.title })"
         >
           {{ item.title }}
         </v-btn>
@@ -41,15 +44,15 @@ const navItems = [
     </template>
   </v-app-bar>
 
-  <v-navigation-drawer v-model="drawer" temporary aria-label="Mobile navigation menu">
-    <v-list role="navigation" aria-label="Mobile navigation">
+  <v-navigation-drawer v-model="drawer" temporary :aria-label="t('common.mobileNavigationMenu')">
+    <v-list role="navigation" :aria-label="t('common.mobileNavigation')">
       <v-list-item
         v-for="item in navItems"
         :key="item.to"
         :to="item.to"
         :prepend-icon="item.icon"
         :title="item.title"
-        :aria-label="`Navigate to ${item.title}`"
+        :aria-label="t('common.navigateToItem', { item: item.title })"
         @click="drawer = false"
       />
     </v-list>

@@ -5,109 +5,48 @@
 			"YaronSh"
 		]
 	},
-	"ui_strings": {
-		"isocode": {
-			"textContent": "he"
-		},
-		"autonym": {
-			"textContent": "עברית"
-		},
-		"homepage": {
-			"alt": "דף הבית",
-			"title": "דף הבית"
-		},
-		"choose-language": {
-			"placeholder": "בחירת שפה..."
-		},
-		"ui-language-switcher": {
-			"title": "שפת ממשק"
-		},
-		"search": {
-			"textContent": "חיפוש"
-		},
-		"title": {
-			"textContent": "כותרת",
-			"placeholder": "חיפוש לפי כותרת"
-		},
-		"cover-img": {
-			"alt": "כריכת הספר",
-			"title": "כריכת הספר"
-		},
-		"cover": {
-			"textContent": "(כריכה)"
-		},
-		"filter": {
-			"textContent": "סינון:"
-		},
-		"sort": {
-			"textContent": "מיון:"
-		},
-		"sort-title": {
-			"textContent": "מיון ספרים לפי כותרת"
-		},
-		"format": {
-			"textContent": "תסדיר"
-		},
-		"loading": {
-			"textContent": "טעינה..."
-		},
-		"no-data": {
-			"textContent": "אין נתונים זמינים בטבלה"
-		},
-		"prev": {
-			"textContent": "הקודם"
-		},
-		"next": {
-			"textContent": "הבא"
-		},
-		"language": {
-			"textContent": "שפה"
-		},
-		"any-languages": {
-			"textContent": "בחירת הקטלוג"
-		},
-		"main-languages": {
-			"textContent": "שפות ראשיות"
-		},
-		"other-languages": {
-			"textContent": "שפות אחרות"
-		},
-		"author-anonymous": {
-			"textContent": "אלמוני"
-		},
-		"author-various": {
-			"textContent": "מגוון"
-		},
-		"license": {
-			"textContent": "רישיון"
-		},
-		"license-pd": {
-			"textContent": "נחלת הכלל בארה״ב."
-		},
-		"top-title": {
-			"textContent": "ספריית פרויקט גוטנברג"
-		},
-		"table-previous": {
-			"textContent": "הקודם"
-		},
-		"table-next": {
-			"textContent": "הבא"
-		},
-		"about-1": {
-			"textContent": "פרויקט גוטנברג מציע למעלה מ־60,000 ספרים בחינם"
-		},
-		"about-2": {
-			"textContent": "אפשר לבחור בין מבחר ספרי epub בחינם או ספרי kindle בחינם."
-		},
-		"about-3": {
-			"textContent": "אפשר להוריד אותם או לקרוא אותם ישירות מהאתר."
-		},
-		"about-4": {
-			"textContent": "אנו מציעים ספרים אלקטרוניים באיכות גבוהה"
-		},
-		"about-5": {
-			"textContent": "כל הספרים האלקטרוניים שלנו פורסמו בעבר על־ידי בתי הוצאה אמיתיים."
-		}
+	"language": "עברית",
+	"isocode": "he",
+	"nav": {
+		"home": "דף הבית"
+	},
+	"home": {
+		"title": "ספריית פרויקט גוטנברג"
+	},
+	"about": {
+		"offers": "פרויקט גוטנברג מציע למעלה מ־60,000 ספרים בחינם",
+		"choose": "אפשר לבחור בין מבחר ספרי epub בחינם או ספרי kindle בחינם. אפשר להוריד אותם או לקרוא אותם ישירות מהאתר.",
+		"qualityTitle": "אנו מציעים ספרים אלקטרוניים באיכות גבוהה"
+	},
+	"book": {
+		"title": "כותרת",
+		"languages": "שפה",
+		"license": "רישיון",
+		"licensePd": "נחלת הכלל בארה״ב.",
+		"cover": "כריכת הספר",
+		"coverLabel": "(כריכה)",
+		"anonymous": "אלמוני",
+		"various": "מגוון"
+	},
+	"common": {
+		"loading": "טעינה...",
+		"search": "חיפוש",
+		"searchAuthorsByName": "חיפוש סופרים לפי שם",
+		"filter": "סינון",
+		"sort": "מיון",
+		"sortTitle": "מיון ספרים לפי כותרת",
+		"language": "שפה",
+		"chooseLanguage": "בחירת שפה...",
+		"mainLanguages": "שפות ראשיות",
+		"otherLanguages": "שפות אחרות",
+		"anyCatalog": "בחירת הקטלוג",
+		"format": "תסדיר",
+		"prev": "הקודם",
+		"next": "הבא",
+		"uiLanguage": "שפת ממשק"
+	},
+	"messages": {
+		"noBooks": "אין נתונים זמינים בטבלה"
 	},
 	"metadata_defaults": {
 		"title": "ספריית פרויקט גוטנברג",

@@ -1,17 +1,21 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps<{
   current: number
   total: number
-  type: string
+  type: 'books' | 'authors' | 'shelves'
 }>()
 </script>
 
 <template>
   <span class="text-body-2 text-medium-emphasis">
-    Showing
+    {{ t('common.showing') }}
     {{ current }}
-    of
+    {{ t('common.of') }}
     {{ total }}
-    {{ total === 1 && type.endsWith('s') ? type.slice(0, -1) : type }}
+    {{ t(`itemTypes.${type}`, total) }}
   </span>
 </template>
