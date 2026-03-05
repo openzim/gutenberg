@@ -39,13 +39,13 @@ def process_all_books(
 ) -> None:
     """Download and export all books directly to ZIM without filesystem cache"""
 
+    # Export infobox assets (CSS, JS, and icons) first to fail fast if there's an issue
+    logger.info("Exporting infobox assets")
+    export_infobox_assets()
+
     logger.info(
         f"Processing {len(book_ids)} books with {concurrency} (parallel) worker(s)"
     )
-
-    # Export infobox assets (CSS, JS, and icons)
-    logger.info("Exporting infobox assets")
-    export_infobox_assets()
 
     def backoff_busy_error_hdlr(details):
         logger.warning(
