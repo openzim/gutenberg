@@ -43,6 +43,10 @@ def process_all_books(
         f"Processing {len(book_ids)} books with {concurrency} (parallel) worker(s)"
     )
 
+    # Export infobox assets (CSS, JS, and icons)
+    logger.info("Exporting infobox assets")
+    export_infobox_assets()
+
     def backoff_busy_error_hdlr(details):
         logger.warning(
             "Backing off {wait:0.1f} seconds after {tries} tries "
@@ -117,10 +121,6 @@ def process_all_books(
             )
 
     Pool(concurrency).map(partial(process_book, progress=progress), book_ids)
-
-    # Export infobox assets (CSS, JS, and icons)
-    logger.info("Exporting infobox assets")
-    export_infobox_assets()
 
     # Compute popularity (a bit too late for rendering on books pages,
     # but still useful for sorting)
