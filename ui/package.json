@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=24.0.0 <25.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
@@ -25,9 +28,9 @@
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
-    "@tsconfig/node20": "^20.1.9",
+    "@tsconfig/node24": "^24.0.0",
     "@types/jsdom": "^27.0.0",
-    "@types/node": "^25.2.3",
+    "@types/node": "^24.0.0",
     "@vitejs/plugin-legacy": "^7.2.1",
     "@vitejs/plugin-vue": "^6.0.4",
     "@vue/eslint-config-prettier": "^10.2.0",

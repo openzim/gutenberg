@@ -6,42 +6,42 @@ build-backend = "hatchling.build"
 name = "gutenberg2zim"
 authors = [{ name = "Kiwix", email = "dev@kiwix.org" }]
 keywords = ["kiwix", "zim", "offline", "gutenberg"]
-requires-python = ">=3.13,<3.14"
+requires-python = ">=3.14,<3.15"
 description = "Make ZIM file from Gutenberg books"
 readme = "../README.md"
 license = { text = "GPL-3.0-or-later" }
 classifiers = [
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 ]
 dependencies = [
-  "beautifulsoup4==4.14.2",
+  "beautifulsoup4==4.14.3",
   "Jinja2==3.1.6",
   "path.py==12.5.0",
-  "Babel==2.17.0",
+  "Babel==2.18.0",
   "lxml==6.0.2",
   "docopt==0.6.2",
   "chardet==5.2.0",
-  "apsw==3.50.4.0",
-  "kiwixstorage==0.9.0",
+  "apsw==3.51.2.0",
+  "kiwixstorage==0.10.1",
   "requests==2.32.5",
   "pif==0.8.2",
-  "zimscraperlib==5.2.0",
+  "zimscraperlib==5.3.0",
   "schedule==1.2.2",
   "backoff==2.2.1",
   "i18nice==0.16.0",
-  "pydantic==2.11.7",
+  "pydantic==2.12.5",
 ]
 dynamic = ["version"]
 
 [project.optional-dependencies]
 scripts = ["invoke==2.2.1"]
-lint = ["black==25.9.0", "ruff==0.14.0"]
-check = ["pyright==1.1.406"]
-test = ["pytest==8.4.2", "coverage==7.10.7"]
+lint = ["black==25.12.0", "ruff==0.15.0"]
+check = ["pyright==1.1.408"]
+test = ["pytest==9.0.2", "coverage==7.13.4"]
 dev = [
-  "pre-commit==4.3.0",
+  "pre-commit==4.5.1",
   "debugpy==1.8.17",
   "ipdb==0.13.13",
   "ipython==9.6.0",
@@ -82,7 +82,7 @@ html = "inv coverage --html --args '{args}'"
 
 [tool.hatch.envs.lint]
 template = "lint"
-python = "py313"
+python = "py314"
 skip-install = false
 features = ["scripts", "lint"]
 
@@ -103,10 +103,10 @@ all = "inv checkall --args '{args}'"
 
 [tool.black]
 line-length = 88
-target-version = ['py313']
+target-version = ['py314']
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py314"
 line-length = 88
 src = ["src"]
 
@@ -227,6 +227,6 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 include = ["src", "tests", "tasks.py"]
 exclude = ["**/node_modules", "**/__pycache__", "src/gutenberg2zim/templates"]
 extraPaths = ["src"]
-pythonVersion = "3.13"
+pythonVersion = "3.14"
 pythonPlatform = "All"
 typeCheckingMode = "basic"

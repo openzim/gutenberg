@@ -73,7 +73,7 @@ jinja_env.filters["urlencode"] = urlencode
 jinja_env.filters["article_name_for"] = lambda book, cover=False: article_name_for(
     book, cover=cover
 )
-jinja_env.filters["archive_name_for"] = lambda book, fmt: archive_name_for(book, fmt)
+jinja_env.filters["archive_name_for"] = archive_name_for
 
 
 def html_content_for(book: Book, src_dir):
