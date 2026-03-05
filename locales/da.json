@@ -23,8 +23,8 @@
 		"title": "Bogreoler (A-Z)"
 	},
 	"book": {
-		"author": "Forfatter",
 		"title": "Titel",
+		"author": "Forfatter",
 		"popularity": "Popularitet",
 		"languages": "Sprog",
 		"license": "Licens",
@@ -37,6 +37,31 @@
 	},
 	"shelf": {
 		"booksInShelf": "Gennemse efter bogreol"
+	},
+	"common": {
+		"loading": "Indlæser...",
+		"search": "Søg",
+		"searchAuthors": "Søg efter forfatternavn",
+		"searchShelf": "Bogreolsøgning",
+		"sort": "Sortér",
+		"sortPopularity": "Sortér bøger efter popularitet",
+		"sortTitle": "Sortér bøger efter titel",
+		"language": "Sprog",
+		"chooseLanguage": "Vælg et sprog...",
+		"mainLanguages": "Hovedsprog",
+		"otherLanguages": "Andre sprog",
+		"anyCatalog": "Vælg kataloget",
+		"format": "Format",
+		"uiLanguage": "Grænsefladesprog",
+		"filter": "Filter",
+		"returnHome": "Gå hjem"
+	},
+	"messages": {
+		"noBooks": "Ingen data tilgængelig i tabel"
+	},
+	"metadata_defaults": {
+		"title": "Projekt Gutenbergs Bibliotek",
+		"description": "Alle bøger på dansk fra den første producent af gratis e-bøger"
 	},
 	"lccShelves": {
 		"A": "A-Generelle værker",
@@ -78,33 +103,5 @@
 		"PS": "PS-amerikansk litteratur",
 		"PT": "PT - tysk, hollandsk, flamsk, afrikaans, skandinavisk, oldnordisk, gammelislandsk, oldnorsk, moderne islandsk, færøsk, dansk, norsk og svensk litteratur",
 		"PZ": "PZ-Fiktion og ungdomslitteratur"
-	},
-	"common": {
-		"loading": "Indlæser...",
-		"search": "Søg",
-		"searchAuthors": "Søg efter forfatternavn",
-		"searchByTitle": "Søg efter titel",
-		"searchShelf": "Bogreolsøgning",
-		"filter": "Filter",
-		"sort": "Sortér",
-		"sortPopularity": "Sortér bøger efter popularitet",
-		"sortTitle": "Sortér bøger efter titel",
-		"language": "Sprog",
-		"chooseLanguage": "Vælg et sprog...",
-		"mainLanguages": "Hovedsprog",
-		"otherLanguages": "Andre sprog",
-		"anyCatalog": "Vælg kataloget",
-		"format": "Format",
-		"prev": "Forrige",
-		"next": "Næste",
-		"returnHome": "Gå hjem",
-		"uiLanguage": "Grænsefladesprog"
-	},
-	"messages": {
-		"noBooks": "Ingen data tilgængelig i tabel"
-	},
-	"metadata_defaults": {
-		"title": "Projekt Gutenbergs Bibliotek",
-		"description": "Alle bøger på dansk fra den første producent af gratis e-bøger"
 	}
 }

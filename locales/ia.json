@@ -23,8 +23,8 @@
 		"title": "Plancas de libros (A-Z)"
 	},
 	"book": {
-		"author": "Autor",
 		"title": "Titulo",
+		"author": "Autor",
 		"popularity": "Popularitate",
 		"languages": "Lingua",
 		"license": "Licentia",
@@ -37,6 +37,31 @@
 	},
 	"shelf": {
 		"booksInShelf": "Percurrer per planca de libros"
+	},
+	"common": {
+		"loading": "Cargamento…",
+		"search": "Cercar",
+		"searchAuthors": "Cercar per nomine de autor",
+		"searchShelf": "Cercar in plancas de libros",
+		"sort": "Ordinar",
+		"sortPopularity": "Ordinar libros per popularitate",
+		"sortTitle": "Ordinar libros per titulo",
+		"language": "Lingua",
+		"chooseLanguage": "Elige un lingua…",
+		"mainLanguages": "Linguas principal",
+		"otherLanguages": "Altere linguas",
+		"anyCatalog": "Elige le catalogo",
+		"format": "Formato",
+		"uiLanguage": "Lingua del interfacie",
+		"filter": "Filtro",
+		"returnHome": "Retornar al initio"
+	},
+	"messages": {
+		"noBooks": "Nulle datos disponibile in tabella"
+	},
+	"metadata_defaults": {
+		"title": "Bibliotheca Project Gutenberg",
+		"description": "Omne libros in Interlingua ab le prime productor de Ebooks gratuite"
 	},
 	"lccShelves": {
 		"A": "A-Obras general",
@@ -78,33 +103,5 @@
 		"PS": "PS-Litteratura american",
 		"PT": "PT-Litteratura german, nederlandese, flaminge, afrikaans, scandinave, nordico ancian, islandese ancian, norvegiano ancian, islandese moderne, faroese, danese, norvegiano e svedese",
 		"PZ": "PZ-Fiction e belle litteras pro juvenes"
-	},
-	"common": {
-		"loading": "Cargamento…",
-		"search": "Cercar",
-		"searchAuthors": "Cercar per nomine de autor",
-		"searchByTitle": "Cercar per titulo",
-		"searchShelf": "Cercar in plancas de libros",
-		"filter": "Filtro",
-		"sort": "Ordinar",
-		"sortPopularity": "Ordinar libros per popularitate",
-		"sortTitle": "Ordinar libros per titulo",
-		"language": "Lingua",
-		"chooseLanguage": "Elige un lingua…",
-		"mainLanguages": "Linguas principal",
-		"otherLanguages": "Altere linguas",
-		"anyCatalog": "Elige le catalogo",
-		"format": "Formato",
-		"prev": "Precedente",
-		"next": "Sequente",
-		"returnHome": "Retornar al initio",
-		"uiLanguage": "Lingua del interfacie"
-	},
-	"messages": {
-		"noBooks": "Nulle datos disponibile in tabella"
-	},
-	"metadata_defaults": {
-		"title": "Bibliotheca Project Gutenberg",
-		"description": "Omne libros in Interlingua ab le prime productor de Ebooks gratuite"
 	}
 }

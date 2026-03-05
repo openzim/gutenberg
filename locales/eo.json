@@ -7,8 +7,11 @@
 	"language": "Esperanto",
 	"isocode": "eo",
 	"book": {
-		"author": "Aŭtoro",
-		"title": "Titolo"
+		"title": "Titolo",
+		"author": "Aŭtoro"
+	},
+	"common": {
+		"sortTitle": "Titolo"
 	},
 	"metadata_defaults": {
 		"title": "Projekto Biblioteko Gutenberg",

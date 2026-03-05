@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Laranxa"
+			"Laranxa",
+			"Monicapozo03"
 		]
 	},
 	"language": "español",
@@ -23,8 +24,8 @@
 		"title": "Estantes (A-Z)"
 	},
 	"book": {
-		"author": "Autor",
 		"title": "Título",
+		"author": "Autor",
 		"popularity": "Popularidad",
 		"languages": "Idioma",
 		"license": "Licencia",
@@ -37,6 +38,32 @@
 	},
 	"shelf": {
 		"booksInShelf": "Buscar por estantería"
+	},
+	"common": {
+		"loading": "Cargando...",
+		"search": "Buscar",
+		"searchAuthors": "Lista de libros de un autor",
+		"searchAuthorsByName": "Buscar autores por nombre",
+		"searchShelf": "Búsqueda de estantería",
+		"sort": "Ordenar",
+		"sortPopularity": "Ordenar libros por popularidad",
+		"sortTitle": "Ordenar libros por título",
+		"language": "Idioma",
+		"chooseLanguage": "Elija un idioma...",
+		"mainLanguages": "Idiomas principales",
+		"otherLanguages": "Otros idiomas",
+		"anyCatalog": "Elija en el catálogo",
+		"format": "Formato",
+		"uiLanguage": "Idioma de la interfaz",
+		"filter": "Filtro",
+		"returnHome": "Volver al inicio"
+	},
+	"messages": {
+		"noBooks": "No hay datos disponibles en la tabla"
+	},
+	"metadata_defaults": {
+		"title": "Biblioteca Proyecto Gutenberg",
+		"description": "Los libros en español del primer productor de libros electrónicos gratuitos"
 	},
 	"lccShelves": {
 		"A": "A-Obras generales",
@@ -79,32 +106,13 @@
 		"PT": "PT-Literatura alemana, holandesa, flamenca, africana, escandinava, nórdica antigua, islandesa antigua, noruega antigua, islandesa moderna, faroesa, danesa, noruega y Sueca",
 		"PZ": "PZ-Ficción y bellas letras juveniles"
 	},
-	"common": {
-		"loading": "Cargando...",
-		"search": "Buscar",
-		"searchAuthors": "Lista de libros de un autor",
-		"searchAuthorsByName": "Buscar autores por nombre",
-		"searchShelf": "Búsqueda de estantería",
-		"filter": "Filtro",
-		"sort": "Ordenar",
-		"sortPopularity": "Ordenar libros por popularidad",
-		"sortTitle": "Ordenar libros por título",
-		"language": "Idioma",
-		"chooseLanguage": "Elija un idioma...",
-		"mainLanguages": "Idiomas principales",
-		"otherLanguages": "Otros idiomas",
-		"anyCatalog": "Elija en el catálogo",
-		"format": "Formato",
-		"prev": "Anterior",
-		"next": "Siguiente",
-		"returnHome": "Volver al inicio",
-		"uiLanguage": "Idioma de la interfaz"
-	},
-	"messages": {
-		"noBooks": "No hay datos disponibles en la tabla"
-	},
-	"metadata_defaults": {
-		"title": "Biblioteca Proyecto Gutenberg",
-		"description": "Los libros en español del primer productor de libros electrónicos gratuitos"
+	"languageNames": {
+		"ca": "Catalán",
+		"ceb": "Cebuano",
+		"fa": "Persa",
+		"la": "Latín",
+		"myn": "Lenguas mayas",
+		"sv": "Sueco",
+		"zh-hans": "Chino simplificado"
 	}
 }
