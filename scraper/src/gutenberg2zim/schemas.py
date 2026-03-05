@@ -40,7 +40,7 @@ class AuthorDetail(AuthorPreview):
     last_name: str
     birth_year: str | None = None
     death_year: str | None = None
-    books: list["BookPreview"]
+    books: list[BookPreview]
 
 
 # Book Models
@@ -57,7 +57,7 @@ class BookPreview(CamelModel):
 
     id: int
     title: str
-    author: "AuthorPreview"
+    author: AuthorPreview
     languages: list[str]
     popularity: int  # Star rating (0-5)
     cover_path: str | None = None
@@ -70,7 +70,7 @@ class Book(BookPreview):
     subtitle: str | None = None
     license: str
     downloads: int
-    author: "Author"
+    author: Author
     formats: list[BookFormat]
     description: str | None = None  # If available from RDF
 
