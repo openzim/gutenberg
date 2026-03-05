@@ -32,7 +32,6 @@
 		"loading": "טעינה...",
 		"search": "חיפוש",
 		"searchAuthorsByName": "חיפוש סופרים לפי שם",
-		"filter": "סינון",
 		"sort": "מיון",
 		"sortTitle": "מיון ספרים לפי כותרת",
 		"language": "שפה",
@@ -41,9 +40,8 @@
 		"otherLanguages": "שפות אחרות",
 		"anyCatalog": "בחירת הקטלוג",
 		"format": "תסדיר",
-		"prev": "הקודם",
-		"next": "הבא",
-		"uiLanguage": "שפת ממשק"
+		"uiLanguage": "שפת ממשק",
+		"filter": "סינון"
 	},
 	"messages": {
 		"noBooks": "אין נתונים זמינים בטבלה"

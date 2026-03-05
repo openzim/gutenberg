@@ -16,15 +16,15 @@
 	"about": {
 		"offers": "Il Progetto Gutenberg offre più di 60,000 ebooks gratuiti",
 		"choose": "Scegli fra file epub gratuiti, file kindle gratuiti. Scaricali o leggili online.",
-		"qualityTitle": "Noi forniamo ebook di alta qualità",
+		"qualityTitle": "Disponiamo di eBook di alta qualità",
 		"qualityDesc": "Tutti i nostri ebook erano precedentemente pubblicati da editori. Li abbiamo digitalizzati e verificati diligentemente con l'aiuto di migliaia di volontari."
 	},
 	"shelves": {
 		"title": "Scaffali per libri (A-Z)"
 	},
 	"book": {
-		"author": "Autore",
 		"title": "Titolo",
+		"author": "Autore",
 		"popularity": "Popolarità",
 		"languages": "Linguaggio",
 		"license": "Licenza",
@@ -36,6 +36,32 @@
 	},
 	"shelf": {
 		"booksInShelf": "Sfoglia per libreria"
+	},
+	"common": {
+		"loading": "Caricamento in corso...",
+		"search": "Cerca",
+		"searchAuthors": "Elenca i libri di un singolo Autore",
+		"searchAuthorsByName": "Cerca libri per titolo",
+		"searchShelf": "Ricerca in libreria",
+		"sort": "Ordina",
+		"sortPopularity": "Ordina libri per popolarità",
+		"sortTitle": "Ordina libri per titolo",
+		"language": "Linguaggio",
+		"chooseLanguage": "Scegli la lingua...",
+		"mainLanguages": "Lingue Principali",
+		"otherLanguages": "Altre lingue",
+		"anyCatalog": "Scegli il Catalogo",
+		"format": "Formato",
+		"uiLanguage": "Interfaccia lingua",
+		"filter": "Filtro",
+		"returnHome": "Andare a casa"
+	},
+	"messages": {
+		"noBooks": "Nessun dato disponibile nella tabella"
+	},
+	"metadata_defaults": {
+		"title": "Biblioteca Progetto Gutenberg",
+		"description": "Tutti i libri in italiano dal primo produttore di ebook gratuiti"
 	},
 	"lccShelves": {
 		"B": "B-Filosofia, psicologia, religione",
@@ -57,32 +83,63 @@
 		"PR": "PR-Letteratura inglese",
 		"PS": "PS-Letteratura americana"
 	},
-	"common": {
-		"loading": "Caricamento in corso...",
-		"search": "Cerca",
-		"searchAuthors": "Elenca i libri di un singolo Autore",
-		"searchAuthorsByName": "Cerca libri per titolo",
-		"searchShelf": "Ricerca in libreria",
-		"filter": "Filtro",
-		"sort": "Ordina",
-		"sortPopularity": "Ordina libri per popolarità",
-		"sortTitle": "Ordina libri per titolo",
-		"language": "Linguaggio",
-		"chooseLanguage": "Scegli la lingua...",
-		"mainLanguages": "Lingue Principali",
-		"otherLanguages": "Altre lingue",
-		"anyCatalog": "Scegli il Catalogo",
-		"format": "Formato",
-		"prev": "Precedente",
-		"next": "Successivo",
-		"returnHome": "Andare a casa",
-		"uiLanguage": "Interfaccia lingua"
-	},
-	"messages": {
-		"noBooks": "Nessun dato disponibile nella tabella"
-	},
-	"metadata_defaults": {
-		"title": "Biblioteca Progetto Gutenberg",
-		"description": "Tutti i libri in italiano dal primo produttore di ebook gratuiti"
+	"languageNames": {
+		"af": "Afrikaans",
+		"ar": "Arabo",
+		"bg": "Bulgaro",
+		"bo": "Tibetano",
+		"br": "Bretone",
+		"ca": "Catalano",
+		"ceb": "Cebuano",
+		"cs": "Ceco",
+		"cy": "Gallese",
+		"da": "Danese",
+		"de": "Tedesco",
+		"el": "Greco",
+		"en": "Inglese",
+		"enm": "Lingua inglese media",
+		"eo": "Esperanto",
+		"es": "Spagnolo",
+		"et": "Estone",
+		"fa": "Persiano",
+		"fi": "Finlandese",
+		"fr": "Francese",
+		"fur": "Friulano",
+		"fy": "Frisone occidentale",
+		"ga": "Irlandese",
+		"gd": "Gaelico scozzese",
+		"gl": "Galiziano",
+		"he": "Ebraico",
+		"hu": "Ungherese",
+		"ia": "Interlingua",
+		"is": "Islandese",
+		"it": "Italiano",
+		"iu": "Inuktitut",
+		"ja": "Giapponese",
+		"ko": "Coreano",
+		"la": "Latino",
+		"lb": "Lussemburghese",
+		"mk": "Macedone",
+		"mul": "Più lingue",
+		"nah": "Nahuatl",
+		"nap": "Napoletano",
+		"nl": "Olandese",
+		"no": "Norvegese",
+		"oc": "Occitano",
+		"pl": "Polacco",
+		"ps": "Pashto",
+		"pt": "Portoghese",
+		"pt-br": "Portoghese brasiliano",
+		"ro": "Rumeno",
+		"ru": "Russo",
+		"sa": "Sanscrito",
+		"sl": "Sloveno",
+		"sr": "Serbo",
+		"sv": "Svedese",
+		"te": "Telugu",
+		"tl": "Tagalog",
+		"zh": "Cinese",
+		"zh-hans": "Cinese semplificato",
+		"zh-hant": "Cinese tradizionale"
 	}
 }

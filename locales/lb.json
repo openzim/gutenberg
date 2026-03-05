@@ -7,16 +7,70 @@
 	"language": "Lëtzebuergesch",
 	"isocode": "lb",
 	"nav": {
-		"home": "Haaptsäit"
+		"home": "Haaptsäit",
+		"authors": "Auteuren",
+		"about": "Iwwer"
+	},
+	"about": {
+		"linkKiwix": "Kiwix"
+	},
+	"stats": {
+		"books": "Bicher",
+		"authors": "Auteuren"
+	},
+	"authors": {
+		"title": "Auteuren"
 	},
 	"book": {
-		"author": "Auteur",
 		"title": "Titel",
+		"author": "Auteur",
 		"popularity": "Popularitéit",
 		"languages": "Sprooch",
 		"license": "Lizenz",
 		"licensePd": "Domaine public an den USA.",
+		"description": "Beschreiwung",
+		"unknown": "Onbekannt",
 		"anonymous": "Anonym"
+	},
+	"author": {
+		"bookCount": "{n} Buch | {n} Bicher",
+		"booksByAuthor": "Bicher vum {name}"
+	},
+	"shelf": {
+		"bookCount": "{n} Buch | {n} Bicher"
+	},
+	"common": {
+		"loading": "Gëtt gelueden...",
+		"search": "Sichen",
+		"searchAuthors": "Mam Numm vum Auteur sichen",
+		"searchAuthorsByName": "Mam Numm vum Auteur sichen",
+		"all": "All",
+		"sort": "Sortéieren",
+		"sortBy": "Sortéieren no",
+		"sortPopularity": "Bicher no Popularitéit sortéieren",
+		"sortTitle": "Bicher no Titel sortéieren",
+		"language": "Sprooch",
+		"chooseLanguage": "Sicht eng Sprooch eraus...",
+		"mainLanguages": "Haaptsproochen",
+		"otherLanguages": "Aner Sproochen",
+		"anyCatalog": "Wielt de Katalog",
+		"format": "Format",
+		"uiLanguage": "Sprooch vum Interface",
+		"filter": "Filter"
+	},
+	"messages": {
+		"noBooks": "Kee Buch fonnt.",
+		"noAuthors": "Keen Auteur fonnt.",
+		"noBooksForAuthor": "Keng Bicher disponibel fir dësen Auteur.",
+		"noLanguages": "Keng Sproochen disponibel."
+	},
+	"footer": {
+		"tagline": "Projet Gutenberg"
+	},
+	"itemTypes": {
+		"books": "Buch | Bicher",
+		"authors": "Auteur | Auteuren",
+		"shelves": "Regal | Regaler"
 	},
 	"lccShelves": {
 		"A": "A – Allgemeng Wierker",
@@ -59,21 +113,55 @@
 		"PT": "PT – Däitsch, hollännesch, flämesch, Afrikaans-, skandinavesch, alnordesch, alislännesch, alnorwegesch, modern islännesch, färöesch, dänesch, norwegesch a schweedesch Literatur",
 		"PZ": "PZ – Fiktioun a Jugendbelletristik"
 	},
-	"common": {
-		"loading": "Gëtt gelueden...",
-		"search": "Sichen",
-		"searchAuthors": "Mam Numm vum Auteur sichen",
-		"searchAuthorsByName": "Mam Numm vum Auteur sichen",
-		"filter": "Filter",
-		"sort": "Sortéieren",
-		"sortPopularity": "Bicher no Popularitéit sortéieren",
-		"sortTitle": "Bicher no Titel sortéieren",
-		"language": "Sprooch",
-		"chooseLanguage": "Sicht eng Sprooch eraus...",
-		"mainLanguages": "Haaptsproochen",
-		"otherLanguages": "Aner Sproochen",
-		"anyCatalog": "Wielt de Katalog",
-		"format": "Format",
-		"uiLanguage": "Sprooch vum Interface"
+	"languageNames": {
+		"af": "Afrikaans",
+		"ar": "Arabesch",
+		"bg": "Bulgaresch",
+		"br": "Bretonesch",
+		"ca": "Katalounesch",
+		"ceb": "Cebuano",
+		"cs": "Tschechesch",
+		"cy": "Walisesch",
+		"da": "Dänesch",
+		"de": "Däitsch",
+		"el": "Griichesch",
+		"en": "Englesch",
+		"enm": "Mëttelenglesch",
+		"eo": "Esperanto",
+		"es": "Spuenesch",
+		"et": "Estnesch",
+		"fa": "Persesch",
+		"fi": "Finnesch",
+		"fr": "Franséisch",
+		"ga": "Iresch",
+		"gl": "Galizesch",
+		"he": "Hebräesch",
+		"hu": "Ungaresch",
+		"ia": "Interlingua",
+		"is": "Islännesch",
+		"it": "Italieenesch",
+		"iu": "Inuktitut",
+		"ja": "Japanesch",
+		"ko": "Koreanesch",
+		"la": "Latäin",
+		"lb": "Lëtzebuergesch",
+		"mk": "Mazedonesch",
+		"mul": "Méi Sproochen",
+		"nap": "Neapolitanesch",
+		"nl": "Hollännesch",
+		"no": "Norwegesch",
+		"pl": "Polnesch",
+		"pt": "Portugisesch",
+		"pt-br": "Brasilianescht Portugisesch",
+		"ro": "Rumänesch",
+		"ru": "Russesch",
+		"sa": "Sanskrit",
+		"sl": "Sloweenesch",
+		"sr": "Serbesch",
+		"sv": "Schweedesch",
+		"te": "Telugu",
+		"zh": "Chineesesch",
+		"zh-hans": "Vereinfacht Chineesesch",
+		"zh-hant": "Traditionellt Chineesesch"
 	}
 }

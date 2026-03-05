@@ -23,8 +23,8 @@
 		"title": "Title for the Library of Congress Classification bookshelves page"
 	},
 	"book": {
-		"author": "Label for the author field",
 		"title": "Label for the book title field",
+		"author": "Label for the author field",
 		"popularity": "Label for the popularity metric",
 		"languages": "Label for the language field or filter",
 		"license": "Label for the license field",
@@ -37,6 +37,32 @@
 	},
 	"shelf": {
 		"booksInShelf": "Link text to browse books by Library of Congress Classification bookshelf"
+	},
+	"common": {
+		"loading": "Message displayed while content is loading",
+		"search": "Label for the search functionality",
+		"searchAuthors": "Placeholder text for the author search input field",
+		"searchAuthorsByName": "Placeholder text for searching authors by their name",
+		"searchShelf": "Placeholder text for the bookshelf search input field",
+		"sort": "Label for sort controls",
+		"sortPopularity": "Label for the option to sort books by popularity",
+		"sortTitle": "Label for the option to sort books by title",
+		"language": "Label for the language field or filter",
+		"chooseLanguage": "Placeholder text for the language selection dropdown",
+		"mainLanguages": "Label for the main/primary languages section",
+		"otherLanguages": "Label for the other/secondary languages section",
+		"anyCatalog": "Label for the option to view all language catalogs",
+		"format": "Label for the book format field (e.g., EPUB, PDF, HTML)",
+		"uiLanguage": "Title for the user interface language switcher control",
+		"filter": "Label for filter controls",
+		"returnHome": "Link text to return to the homepage"
+	},
+	"messages": {
+		"noBooks": "Message displayed in tables when no data is available"
+	},
+	"metadata_defaults": {
+		"title": "Default ZIM title used in ZIM metadata when no specific ZIM title is set",
+		"description": "Default ZIM description used in ZIM metadata when no specific ZIM description is set"
 	},
 	"lccShelves": {
 		"A": "Library of Congress Classification Shelf A - General works",
@@ -78,34 +104,6 @@
 		"PS": "Library of Congress Classification Shelf PS - American literature",
 		"PT": "Library of Congress Classification Shelf PT - German, Dutch, Flemish, Afrikaans, Scandinavian, Old Norse, Old Iceland, Old Norwegian, Modern Icelandic, Faroese, Danish, Norwegian and Swedish Literature",
 		"PZ": "Library of Congress Classification Shelf PZ - Fiction and juvenile belles lettres"
-	},
-	"common": {
-		"loading": "Message displayed while content is loading",
-		"search": "Label for the search functionality",
-		"searchAuthors": "Placeholder text for the author search input field",
-		"searchAuthorsByName": "Placeholder text for searching authors by their name",
-		"searchShelf": "Placeholder text for the bookshelf search input field",
-		"filter": "Label for filter controls",
-		"sort": "Label for sort controls",
-		"sortPopularity": "Label for the option to sort books by popularity",
-		"sortTitle": "Label for the option to sort books by title",
-		"language": "Label for the language field or filter",
-		"chooseLanguage": "Placeholder text for the language selection dropdown",
-		"mainLanguages": "Label for the main/primary languages section",
-		"otherLanguages": "Label for the other/secondary languages section",
-		"anyCatalog": "Label for the option to view all language catalogs",
-		"format": "Label for the book format field (e.g., EPUB, PDF, HTML)",
-		"prev": "Label for the previous button in navigation",
-		"next": "Label for the next button in navigation",
-		"returnHome": "Link text to return to the homepage",
-		"uiLanguage": "Title for the user interface language switcher control"
-	},
-	"messages": {
-		"noBooks": "Message displayed in tables when no data is available"
-	},
-	"metadata_defaults": {
-		"title": "Default ZIM title used in ZIM metadata when no specific ZIM title is set",
-		"description": "Default ZIM description used in ZIM metadata when no specific ZIM description is set"
 	},
 	"languageNames": {
 		"af": "Localized name for Afrikaans language",

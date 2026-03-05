@@ -23,8 +23,8 @@
 		"title": "أرفف الكتب (أ-ي)"
 	},
 	"book": {
-		"author": "المؤلف",
 		"title": "العنوان",
+		"author": "المؤلف",
 		"popularity": "الشعبية",
 		"languages": "اللغة",
 		"license": "الرخصة",
@@ -43,7 +43,6 @@
 		"searchAuthors": "البحث عن المؤلفين",
 		"searchAuthorsByName": "ابحث عن المؤلفين بالاسم",
 		"searchShelf": "بحث رف الكتب",
-		"filter": "فلتر",
 		"sort": "ترتيب",
 		"sortPopularity": "رتب الكتب بحسب الشعبية",
 		"sortTitle": "رتب الكتب بحسب العنوان",
@@ -53,10 +52,9 @@
 		"otherLanguages": "اللغات الأخرى",
 		"anyCatalog": "أختر قائمة",
 		"format": "الصيغة",
-		"prev": "السابق",
-		"next": "التالي",
-		"returnHome": "العودة للرئيسية",
-		"uiLanguage": "لغة الواجهة"
+		"uiLanguage": "لغة الواجهة",
+		"filter": "فلتر",
+		"returnHome": "العودة للرئيسية"
 	},
 	"messages": {
 		"noBooks": "لا توجد معلومات في الجدول"

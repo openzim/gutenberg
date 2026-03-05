@@ -23,8 +23,8 @@
 		"title": "書架（A 至 Z）"
 	},
 	"book": {
-		"author": "作者",
 		"title": "標題",
+		"author": "作者",
 		"popularity": "人氣",
 		"languages": "語言",
 		"license": "授權條款",
@@ -37,6 +37,32 @@
 	},
 	"shelf": {
 		"booksInShelf": "按書架瀏覽"
+	},
+	"common": {
+		"loading": "載入中…",
+		"search": "搜尋",
+		"searchAuthors": "依照作者名稱搜尋",
+		"searchAuthorsByName": "依照標題搜尋",
+		"searchShelf": "書架搜尋",
+		"sort": "排序：",
+		"sortPopularity": "依照人氣排序書籍",
+		"sortTitle": "依照標題排序書籍",
+		"language": "語言",
+		"chooseLanguage": "選擇一種語言…",
+		"mainLanguages": "主要語言",
+		"otherLanguages": "其他語言",
+		"anyCatalog": "選擇目錄",
+		"format": "格式",
+		"uiLanguage": "介面語言",
+		"filter": "篩選：",
+		"returnHome": "返回首頁"
+	},
+	"messages": {
+		"noBooks": "表格裡沒有可用資料"
+	},
+	"metadata_defaults": {
+		"title": "古騰堡計劃文庫",
+		"description": "所有英文書籍均來自首家免費電子書製作者"
 	},
 	"lccShelves": {
 		"A": "A-總類",
@@ -78,33 +104,5 @@
 		"PS": "PS-美國文學",
 		"PT": "PT-德語、荷蘭語、佛拉蒙語、南非荷蘭語、斯堪地那維亞語、古諾斯語、古冰島語、古挪威語、現代冰島語、法羅語、丹麥語、挪威語和瑞典語文學",
 		"PZ": "PZ-小說和青少年文學"
-	},
-	"common": {
-		"loading": "載入中…",
-		"search": "搜尋",
-		"searchAuthors": "依照作者名稱搜尋",
-		"searchAuthorsByName": "依照標題搜尋",
-		"searchShelf": "書架搜尋",
-		"filter": "篩選：",
-		"sort": "排序：",
-		"sortPopularity": "依照人氣排序書籍",
-		"sortTitle": "依照標題排序書籍",
-		"language": "語言",
-		"chooseLanguage": "選擇一種語言…",
-		"mainLanguages": "主要語言",
-		"otherLanguages": "其他語言",
-		"anyCatalog": "選擇目錄",
-		"format": "格式",
-		"prev": "上一個",
-		"next": "下一個",
-		"returnHome": "返回首頁",
-		"uiLanguage": "介面語言"
-	},
-	"messages": {
-		"noBooks": "表格裡沒有可用資料"
-	},
-	"metadata_defaults": {
-		"title": "古騰堡計劃文庫",
-		"description": "所有英文書籍均來自首家免費電子書製作者"
 	}
 }

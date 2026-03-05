@@ -23,8 +23,8 @@
 		"title": "Bokhyllor (A-Z)"
 	},
 	"book": {
-		"author": "Författare",
 		"title": "Titel",
+		"author": "Författare",
 		"popularity": "Popularitet",
 		"languages": "Språk",
 		"license": "Licens",
@@ -37,6 +37,32 @@
 	},
 	"shelf": {
 		"booksInShelf": "Bläddra efter Bokhylla"
+	},
+	"common": {
+		"loading": "Laddar...",
+		"search": "Sök",
+		"searchAuthors": "Sök efter författare",
+		"searchAuthorsByName": "Sök författare efter namn",
+		"searchShelf": "Sök i bokhyllan",
+		"sort": "Sortering",
+		"sortPopularity": "Sortera efter popularitet",
+		"sortTitle": "Sortera efter titel",
+		"language": "Språk",
+		"chooseLanguage": "Välj ett språk...",
+		"mainLanguages": "Huvudspråk",
+		"otherLanguages": "Andra språk",
+		"anyCatalog": "Välj Katalogen",
+		"format": "Format",
+		"uiLanguage": "Gränssnittsspråk",
+		"filter": "Filter",
+		"returnHome": "Hem"
+	},
+	"messages": {
+		"noBooks": "Ingen data tillgänglig i tabellen"
+	},
+	"metadata_defaults": {
+		"title": "Projekt Gutenbergs Bibliotek",
+		"description": "Alla böcker på svenska från den första producenten av gratis e-böcker"
 	},
 	"lccShelves": {
 		"A": "A-Allmänna verk",
@@ -78,33 +104,5 @@
 		"PS": "PS-Amerikansk litteratur",
 		"PT": "PT-Tyska, nederländska, flamländska, afrikaans, skandinaviska, fornnordiska, fornisländska, fornnorska, moderna isländska, färöiska, danska, norska och svenska litteraturer",
 		"PZ": "PZ-Skönlitteratur och vitterhet"
-	},
-	"common": {
-		"loading": "Laddar...",
-		"search": "Sök",
-		"searchAuthors": "Sök efter författare",
-		"searchAuthorsByName": "Sök författare efter namn",
-		"searchShelf": "Sök i bokhyllan",
-		"filter": "Filter",
-		"sort": "Sortering",
-		"sortPopularity": "Sortera efter popularitet",
-		"sortTitle": "Sortera efter titel",
-		"language": "Språk",
-		"chooseLanguage": "Välj ett språk...",
-		"mainLanguages": "Huvudspråk",
-		"otherLanguages": "Andra språk",
-		"anyCatalog": "Välj Katalogen",
-		"format": "Format",
-		"prev": "Föregående",
-		"next": "Nästa",
-		"returnHome": "Hem",
-		"uiLanguage": "Gränssnittsspråk"
-	},
-	"messages": {
-		"noBooks": "Ingen data tillgänglig i tabellen"
-	},
-	"metadata_defaults": {
-		"title": "Projekt Gutenbergs Bibliotek",
-		"description": "Alla böcker på svenska från den första producenten av gratis e-böcker"
 	}
 }

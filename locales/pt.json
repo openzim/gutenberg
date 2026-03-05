@@ -23,8 +23,8 @@
 		"title": "Prateleiras (A-Z)"
 	},
 	"book": {
-		"author": "Autor",
 		"title": "Título",
+		"author": "Autor",
 		"popularity": "Popularidade",
 		"languages": "Idioma",
 		"license": "Licença",
@@ -41,9 +41,7 @@
 		"loading": "A carregar...",
 		"search": "Procurar",
 		"searchAuthors": "Procurar por nome do autor",
-		"searchByTitle": "Procurar por título",
 		"searchShelf": "Pesquisa de Estante",
-		"filter": "Filtro",
 		"sort": "Ordenar",
 		"sortPopularity": "Ordenar os livros por popularidade",
 		"sortTitle": "Ordenar os livros por título",
@@ -53,10 +51,9 @@
 		"otherLanguages": "Outros idiomas",
 		"anyCatalog": "Escolha o Catálogo",
 		"format": "Formato",
-		"prev": "Anterior",
-		"next": "Seguinte",
-		"returnHome": "Ir para Início",
-		"uiLanguage": "Idioma da interface"
+		"uiLanguage": "Idioma da interface",
+		"filter": "Filtro",
+		"returnHome": "Ir para Início"
 	},
 	"messages": {
 		"noBooks": "Nenhum dado disponível na tabela"
