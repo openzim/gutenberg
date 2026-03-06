@@ -54,7 +54,7 @@ You can find the full arguments list below:
 
 ```bash
 -h --help                       Display this help message
--F --force                      Overwrite existing ZIM file
+--overwrite                     Overwrite existing ZIM file
 
 -l --languages=<list>           Comma-separated list of lang codes to filter export to (preferably ISO 639-1, else ISO 639-3)
 -f --formats=<list>             Comma-separated list of formats to filter export to (epub, html, pdf, all)
