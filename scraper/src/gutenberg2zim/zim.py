@@ -77,7 +77,7 @@ def build_zimfile(
     *,
     primary_color: str | None = None,
     secondary_color: str | None = None,
-    force: bool,
+    overwrite: bool,
     is_selection: bool,
     title_search: bool,
     add_lcc_shelves: bool,
@@ -116,7 +116,7 @@ def build_zimfile(
         )
     zim_path = output_folder / zim_file
 
-    if zim_path.exists() and not force:
+    if zim_path.exists() and not overwrite:
         logger.info(f"ZIM file `{zim_file}` already exist.")
         return
     elif zim_path.exists():

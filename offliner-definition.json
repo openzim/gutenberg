@@ -86,6 +86,12 @@
       "title": "No Full-text Index",
       "description": "Do not create ZIM with full-text index"
     },
+    "overwrite": {
+      "type": "boolean",
+      "required": false,
+      "title": "Overwrite",
+      "description": "Overwrite existing ZIM file if it already exists"
+    },
     "lcc_shelves": {
       "type": "string",
       "required": false,
