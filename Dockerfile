@@ -1,4 +1,4 @@
-FROM node:20-alpine AS ui
+FROM node:24-alpine AS ui
 
 WORKDIR /src
 COPY locales /locales
@@ -6,7 +6,7 @@ COPY ui /src
 RUN yarn install --frozen-lockfile || npm install
 RUN yarn build || npm run build
 
-FROM python:3.13.2-bookworm
+FROM python:3.14-bookworm
 
 LABEL org.opencontainers.image.source="https://github.com/openzim/gutenberg"
 

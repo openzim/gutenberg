@@ -40,6 +40,7 @@ export const supportedLanguages: Language[] = [
   { code: 'gd', display: 'Gàidhlig', rtl: false },
   { code: 'gl', display: 'Galego', rtl: false },
   { code: 'he', display: 'עברית', rtl: true },
+  { code: 'hi', display: 'हिन्दी', rtl: false },
   { code: 'hu', display: 'Magyar', rtl: false },
   { code: 'ia', display: 'Interlingua', rtl: false },
   { code: 'ilo', display: 'Ilokano', rtl: false },

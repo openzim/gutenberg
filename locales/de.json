@@ -20,13 +20,13 @@
 		"qualityDesc": "Alle unsere E-Books waren vorher gemeinnützig veröffentlicht. Wir digitalisierten und prüften sie sorgfältig mit der Hilfe von tausenden Freiwilligen."
 	},
 	"shelves": {
-		"title": "Bücherregale (A-Z)"
+		"title": "Bücherregale (A–Z)"
 	},
 	"book": {
-		"author": "Autor",
 		"title": "Titel",
+		"author": "Autor",
 		"popularity": "Beliebtheit",
-		"languages": "Sprache",
+		"languages": "Sprache(n)",
 		"license": "Lizenz",
 		"licensePd": "Public domain in den USA.",
 		"cover": "Einband",
@@ -43,7 +43,6 @@
 		"searchAuthors": "Bücherliste eines einzelnen Autors",
 		"searchAuthorsByName": "Suche nach Autoren nach Namen",
 		"searchShelf": "Bücherregalsuche",
-		"filter": "Filter",
 		"sort": "Sortieren",
 		"sortPopularity": "Sortiere Bücher nach Beliebtheit",
 		"sortTitle": "Sortiere Bücher nach Titel",
@@ -53,10 +52,9 @@
 		"otherLanguages": "Andere Sprachen",
 		"anyCatalog": "Katalog wählen",
 		"format": "Format",
-		"prev": "Zurück",
-		"next": "Weiter",
-		"returnHome": "Nach Hause gehen",
-		"uiLanguage": "Sprache der Oberfläche"
+		"uiLanguage": "Sprache der Oberfläche",
+		"filter": "Filter",
+		"returnHome": "Nach Hause gehen"
 	},
 	"messages": {
 		"noBooks": "Keine Daten zum Anzeigen"

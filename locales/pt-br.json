@@ -1,13 +1,16 @@
 {
 	"@metadata": {
 		"authors": [
+			"Eduardoaddad",
 			"Leosls"
 		]
 	},
 	"language": "Português",
 	"isocode": "pt-BR",
 	"nav": {
-		"home": "Página inicial"
+		"home": "Página inicial",
+		"authors": "Autores",
+		"about": "Sobre"
 	},
 	"home": {
 		"title": "Biblioteca do Projeto Gutenberg",
@@ -17,19 +20,29 @@
 		"offers": "Projeto Gutenberg oferece mais de 60.000 livros eletrônicos gratuitos.",
 		"choose": "Escolha entre livros gratuitos em formato epub e livros gratuitos para Kindle. Faça o download ou leia online.",
 		"qualityTitle": "Dispomos de livros digitais de alta qualidade.",
-		"qualityDesc": "Todos os nossos livros digitais foram publicados anteriormente por editoras idôneas. Nós os digitalizamos e revisamos cuidadosamente com a ajuda de milhares de voluntários."
+		"qualityDesc": "Todos os nossos livros digitais foram publicados anteriormente por editoras idôneas. Nós os digitalizamos e revisamos cuidadosamente com a ajuda de milhares de voluntários.",
+		"linksTitle": "Links",
+		"linkKiwix": "Kiwix"
+	},
+	"stats": {
+		"authors": "Autores"
+	},
+	"authors": {
+		"title": "Autores"
 	},
 	"shelves": {
 		"title": "Estantes de livros (A-Z)"
 	},
 	"book": {
-		"author": "Autor",
 		"title": "Título",
+		"author": "Autor",
 		"popularity": "Popularidade",
 		"languages": "Idioma",
 		"license": "Licença",
 		"licensePd": "Domínio público nos EUA.",
 		"licenseCopyright": "Protegido por direitos autorais. Leia o aviso de direitos autorais dentro deste livro para obter detalhes.",
+		"description": "Descrição",
+		"fullName": "Nome completo",
 		"cover": "Capa do livro",
 		"coverLabel": "(capa)",
 		"anonymous": "Anônimos",
@@ -37,6 +50,28 @@
 	},
 	"shelf": {
 		"booksInShelf": "Navegue por estante de livros"
+	},
+	"common": {
+		"loading": "Carregando...",
+		"search": "Pesquisar",
+		"searchAuthors": "Pesquisar por nome do autor",
+		"searchAuthorsByName": "Pesquisar por título",
+		"searchShelf": "Busca na estante",
+		"sort": "Organizar",
+		"sortPopularity": "Ordenar livros por popularidade",
+		"sortTitle": "Ordenar livros por título",
+		"language": "Idioma",
+		"chooseLanguage": "Escolha um idioma...",
+		"mainLanguages": "Principais idiomas",
+		"otherLanguages": "Outros idiomas",
+		"anyCatalog": "Escolha o catálogo",
+		"format": "Formato",
+		"uiLanguage": "Idioma da interface",
+		"filter": "Filtro",
+		"returnHome": "Ir para Início"
+	},
+	"messages": {
+		"noBooks": "Não há dados disponíveis na tabela"
 	},
 	"lccShelves": {
 		"A": "A-Obras gerais",
@@ -62,29 +97,5 @@
 		"Z": "Z-Bibliografia, biblioteconomia, recursos de informação (geral)",
 		"PA": "PA-Língua e literatura grega e latina",
 		"PB": "PB-Línguas modernas e celtas"
-	},
-	"common": {
-		"loading": "Carregando...",
-		"search": "Pesquisar",
-		"searchAuthors": "Pesquisar por nome do autor",
-		"searchAuthorsByName": "Pesquisar por título",
-		"searchShelf": "Busca na estante",
-		"filter": "Filtro",
-		"sort": "Organizar",
-		"sortPopularity": "Ordenar livros por popularidade",
-		"sortTitle": "Ordenar livros por título",
-		"language": "Idioma",
-		"chooseLanguage": "Escolha um idioma...",
-		"mainLanguages": "Principais idiomas",
-		"otherLanguages": "Outros idiomas",
-		"anyCatalog": "Escolha o catálogo",
-		"format": "Formato",
-		"prev": "Anterior",
-		"next": "Próximo",
-		"returnHome": "Ir para Início",
-		"uiLanguage": "Idioma da interface"
-	},
-	"messages": {
-		"noBooks": "Não há dados disponíveis na tabela"
 	}
 }

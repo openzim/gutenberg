@@ -73,7 +73,7 @@ jinja_env.filters["urlencode"] = urlencode
 jinja_env.filters["article_name_for"] = lambda book, cover=False: article_name_for(
     book, cover=cover
 )
-jinja_env.filters["archive_name_for"] = lambda book, fmt: archive_name_for(book, fmt)
+jinja_env.filters["archive_name_for"] = archive_name_for
 
 
 def html_content_for(book: Book, src_dir):
@@ -505,7 +505,7 @@ def _author_to_schema(author: Author) -> AuthorSchema:
 
 def _book_to_preview(book: Book) -> BookPreview:
     """Convert Book dataclass to BookPreview schema"""
-    cover_path = f"covers/{book.book_id}_cover_image.jpg" if book.cover_page else None
+    cover_path = f"covers/{book.book_id}_cover_image.jpg" if book.has_cover else None
 
     return BookPreview(
         id=book.book_id,
@@ -520,7 +520,7 @@ def _book_to_preview(book: Book) -> BookPreview:
 
 def _book_to_schema(book: Book, formats: list[str]) -> BookSchema:
     """Convert Book dataclass to Book schema with formats"""
-    cover_path = f"covers/{book.book_id}_cover_image.jpg" if book.cover_page else None
+    cover_path = f"covers/{book.book_id}_cover_image.jpg" if book.has_cover else None
 
     book_formats: list[BookFormat] = []
     available_formats = book.requested_formats(formats)
@@ -588,7 +588,7 @@ def add_index_entry(title: str, content: str, fname: str, vue_route: str) -> Non
     html_content = (
         f"<html><head><title>{title}</title>"
         f'<meta http-equiv="refresh" content="0;URL=\'{redirect_url}\'" />'
-        f"</head><body></body></html>"
+        f"</head><body>{content}</body></html>"
     )
 
     logger.debug(f"Adding {fname} to ZIM index")
@@ -614,9 +614,16 @@ def generate_json_files(
     """Generate all JSON files for Vue.js frontend"""
     logger.info("Generating JSON files for Vue.js UI")
 
+    # Maximum number of books to include in index entries
+    max_books_in_index = 10
+
+    # Fetch data once and reuse
+    all_books = repository.get_all_books()
+    all_authors = _get_authors_with_books()
+
     logger.info("Generating high-level JSON files")
     logger.debug("Generating books.json")
-    books_preview = [_book_to_preview(book) for book in repository.get_all_books()]
+    books_preview = [_book_to_preview(book) for book in all_books]
     books_collection = Books(books=books_preview, total_count=len(books_preview))
     Global.add_item_for(
         path="books.json",
@@ -626,9 +633,7 @@ def generate_json_files(
     )
 
     logger.debug("Generating authors.json")
-    authors_preview = [
-        _author_to_preview(author) for author in _get_authors_with_books()
-    ]
+    authors_preview = [_author_to_preview(author) for author in all_authors]
     authors_collection = Authors(
         authors=authors_preview, total_count=len(authors_preview)
     )
@@ -671,7 +676,7 @@ def generate_json_files(
 
     logger.info("Generating detail JSON files")
     logger.debug("Generating book detail files and index entries")
-    for book in repository.get_all_books():
+    for book in all_books:
         book_detail = _book_to_schema(book, formats)
         Global.add_item_for(
             path=f"books/{book.book_id}.json",
@@ -682,18 +687,28 @@ def generate_json_files(
 
         # Add index entry for book
         book_description = book_detail.description or f"Book by {book.author.name()}"
+        # Build searchable content with key metadata
+        index_parts = [book_description, f"by {book.author.name()}"]
+
+        if book.subtitle:
+            index_parts.insert(0, book.subtitle)
+        if book.languages:
+            index_parts.append(f"Languages: {', '.join(book.languages)}")
+        if book.lcc_shelf:
+            index_parts.append(f"LCC Shelf: {book.lcc_shelf}")
+
         add_index_entry(
             title=book.title,
-            content=book_description,
+            content=". ".join(index_parts) + ".",
             fname=f"book_{book.book_id}",
             vue_route=f"book/{book.book_id}",
         )
 
     logger.debug("Generating author detail files and index entries")
-    for author in _get_authors_with_books():
+    for author in all_authors:
         author_books = [
             _book_to_preview(book)
-            for book in repository.get_all_books()
+            for book in all_books
             if book.author.gut_id == author.gut_id
         ]
         author_detail = AuthorDetail(
@@ -715,20 +730,26 @@ def generate_json_files(
         )
 
         # Add index entry for author
-        author_content = f"Author: {author.name()}"
+        author_parts = [f"Author: {author.name()}"]
+
         if author.birth_year or author.death_year:
-            lifespan_parts = []
-            if author.birth_year:
-                lifespan_parts.append(author.birth_year)
-            lifespan_parts.append("-")
-            if author.death_year:
-                lifespan_parts.append(author.death_year)
-            author_content += f" ({' '.join(lifespan_parts)})"
-        author_content += f". {len(author_books)} book(s) available."
+            years = f"{author.birth_year or ''} - {author.death_year or ''}".strip(" -")
+            author_parts.append(f"({years})")
+
+        author_parts.append(f"{len(author_books)} book(s)")
+
+        # Add book titles for searchability
+        if author_books:
+            titles = [book.title for book in author_books[:max_books_in_index]]
+            author_parts.append("Books: " + ", ".join(titles))
+            if len(author_books) > max_books_in_index:
+                author_parts.append(
+                    f"and {len(author_books) - max_books_in_index} more"
+                )
 
         add_index_entry(
             title=author.name(),
-            content=author_content,
+            content=". ".join(author_parts) + ".",
             fname=f"author_{author.gut_id}",
             vue_route=f"author/{author.gut_id}",
         )
@@ -738,7 +759,7 @@ def generate_json_files(
         for shelf_code in repository.get_lcc_shelves():
             shelf_books = [
                 _book_to_preview(book)
-                for book in repository.get_all_books()
+                for book in all_books
                 if book.lcc_shelf == shelf_code
             ]
             shelf_detail = LCCShelf(
@@ -755,17 +776,56 @@ def generate_json_files(
             )
 
             shelf_title = f"LCC Shelf {shelf_code}"
-            shelf_content = (
-                f"Library of Congress Classification shelf {shelf_code} "
-                f"with {len(shelf_books)} book(s)."
-            )
+            shelf_parts = [
+                f"Library of Congress Classification shelf {shelf_code}",
+                f"{len(shelf_books)} book(s)",
+            ]
+
+            # Add book titles and authors for searchability
+            if shelf_books:
+                book_entries = [
+                    f"{book.title} by {book.author.name}"
+                    for book in shelf_books[:max_books_in_index]
+                ]
+                shelf_parts.append("Books: " + ", ".join(book_entries))
+                if len(shelf_books) > max_books_in_index:
+                    shelf_parts.append(
+                        f"and {len(shelf_books) - max_books_in_index} more"
+                    )
 
             add_index_entry(
                 title=shelf_title,
-                content=shelf_content,
+                content=". ".join(shelf_parts) + ".",
                 fname=f"lcc_shelf_{shelf_code}",
                 vue_route=f"lcc-shelf/{shelf_code}",
             )
+
+    # Add index entries for main listing pages
+    add_index_entry(
+        title="All Books - Project Gutenberg",
+        content=f"Browse all {len(all_books)} books available in Project Gutenberg. "
+        f"Search and filter by language, format, author, and more.",
+        fname="books_list",
+        vue_route="books",
+    )
+
+    add_index_entry(
+        title="All Authors - Project Gutenberg",
+        content=f"Browse all {len(all_authors)} authors in Project Gutenberg. "
+        f"Discover books by your favorite authors.",
+        fname="authors_list",
+        vue_route="authors",
+    )
+
+    if add_lcc_shelves:
+        shelves = repository.get_lcc_shelves()
+        add_index_entry(
+            title="LCC Shelves - Project Gutenberg",
+            content=f"Browse books by Library of Congress Classification. "
+            f"{len(shelves)} shelves available covering various subjects and topics.",
+            fname="lcc_shelves_list",
+            vue_route="lcc-shelves",
+        )
 
     logger.info("JSON file generation completed")
 
@@ -834,7 +894,7 @@ def generate_noscript_pages(
         mimetype="text/html",
         is_front=False,
         title="All Books - Project Gutenberg",
-        auto_index=True,
+        auto_index=False,
     )
 
     # Generate authors listing page
@@ -857,7 +917,7 @@ def generate_noscript_pages(
         mimetype="text/html",
         is_front=False,
         title="All Authors - Project Gutenberg",
-        auto_index=True,
+        auto_index=False,
     )
 
     logger.debug("Generating noscript/lcc_shelves.html")
@@ -877,7 +937,7 @@ def generate_noscript_pages(
         mimetype="text/html",
         is_front=False,
         title="LCC Shelves - Project Gutenberg",
-        auto_index=True,
+        auto_index=False,
     )
 
     logger.debug("Generating No-JS LCC shelf detail pages")
@@ -895,7 +955,7 @@ def generate_noscript_pages(
             mimetype="text/html",
             is_front=False,
             title=f"LCC Shelf {shelf_code}",
-            auto_index=True,
+            auto_index=False,
         )
 
     # Generate individual book pages
@@ -912,7 +972,7 @@ def generate_noscript_pages(
             mimetype="text/html",
             is_front=False,
             title=book.title,
-            auto_index=True,
+            auto_index=False,
         )
 
     # Generate individual author pages
@@ -932,7 +992,7 @@ def generate_noscript_pages(
             mimetype="text/html",
             is_front=False,
             title=author.name(),
-            auto_index=True,
+            auto_index=False,
         )
 
     logger.info("No-JS fallback pages generation completed")

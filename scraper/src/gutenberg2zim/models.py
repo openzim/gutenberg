@@ -65,7 +65,7 @@ class Book:
     subtitle: str | None = None
     downloads: int = 0
     lcc_shelf: str | None = None
-    cover_page: int = 0
+    has_cover: bool = False
     unsupported_formats: list[str] = field(default_factory=list)
     popularity: int = 0  # Computed field for star rating
 
@@ -107,7 +107,7 @@ class Book:
 class BookRepository:
     """In-memory repository for books and authors (Singleton)"""
 
-    _instance: "BookRepository | None" = None
+    _instance: BookRepository | None = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -130,7 +130,7 @@ class BookRepository:
         self.authors["216"] = Author(gut_id="216", last_name="Anonymous")
 
     @classmethod
-    def get_instance(cls) -> "BookRepository":
+    def get_instance(cls) -> BookRepository:
         """Get the singleton instance of BookRepository"""
         if cls._instance is None:
             cls._instance = cls()

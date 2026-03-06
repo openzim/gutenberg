@@ -10,10 +10,10 @@ jobs:
   test-scraper:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version-file: scraper/pyproject.toml
           architecture: x64
@@ -36,10 +36,10 @@ jobs:
   build-scraper:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version-file: scraper/pyproject.toml
           architecture: x64
@@ -53,12 +53,12 @@ jobs:
   build-and-test-zimui:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: 'ui/package.json'
 
       - name: Install dependencies
         working-directory: ui
@@ -87,7 +87,7 @@ jobs:
   build_docker:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Ensure we can build the Docker image
         run: |

@@ -7,36 +7,142 @@
 	"language": "Nederlands",
 	"isocode": "nl",
 	"nav": {
-		"home": "Startpagina"
+		"home": "Startpagina",
+		"authors": "Auteurs",
+		"shelves": "Boekenplanken",
+		"about": "Over"
 	},
 	"home": {
 		"title": "Project Gutenberg Bibliotheek",
 		"subtitle": "De eerste producent van gratis e-boeken"
 	},
 	"about": {
+		"title": "Over Project Gutenberg",
 		"offers": "Project Gutenberg bevat meer dan 60,000 gratis e-boeken",
 		"choose": "Kies uit gratis epub boeken, gratis kindle boeken. Download ze of lees ze online.",
-		"qualityTitle": "Wij bieden eboeken van hoge kwaliteit",
-		"qualityDesc": "Al onze eboeken werden oorspronkelijk uitgegeven door bona fide uitgevers. We hebben ze gedigitaliseerd en zorgvuldig gecorrigeerd met behulp van duizenden vrijwilligers."
+		"qualityTitle": "Wij bieden e-books van hoge kwaliteit aan",
+		"qualityDesc": "Al onze eboeken werden oorspronkelijk uitgegeven door bona fide uitgevers. We hebben ze gedigitaliseerd en zorgvuldig gecorrigeerd met behulp van duizenden vrijwilligers.",
+		"collectionStats": "Verzamelingsstatistieken",
+		"collectionTitle": "Over deze verzameling",
+		"collectionDesc1": "Deze offline verzameling bevat een zorgvuldig samengestelde selectie boeken van Project Gutenberg, de eerste en grootste verzameling gratis elektronische boeken.",
+		"collectionDesc2": "Project Gutenberg werd in 1971 opgericht door Michael S. Hart en is de oudste digitale bibliotheek. De missie van Project Gutenberg is het stimuleren van het maken en verspreiden van e-boeken.",
+		"collectionDesc3": "Deze verzameling is offline beschikbaar via Kiwix, waardoor u deze literaire werken kunt raadplegen zonder internetverbinding.",
+		"linksTitle": "Koppelingen",
+		"linkGutenberg": "Project Gutenberg Website",
+		"linkGutenbergDesc": "Bezoek de officiële website van Project Gutenberg",
+		"linkKiwix": "Kiwix",
+		"linkKiwixDesc": "Meer lezen over de offline content van Kiwix"
+	},
+	"stats": {
+		"books": "Boeken",
+		"authors": "Auteurs",
+		"shelves": "LCC-boekenplanken"
+	},
+	"authors": {
+		"title": "Auteurs",
+		"description": "Alle auteurs in de Gutenberg-verzameling bekijken"
 	},
 	"shelves": {
-		"title": "Boekenplanken (A-Z)"
+		"title": "Boekenplanken (A-Z)",
+		"description": "Door boeken bladeren die zijn georganiseerd volgens het classificatiesysteem van de Library of Congress (LCC)."
 	},
 	"book": {
-		"author": "Auteur",
 		"title": "Titel",
+		"author": "Auteur",
+		"lifespan": "Levensduur",
 		"popularity": "Populariteit",
+		"downloads": "downloads",
+		"downloadsCount": "{count} download | {count} downloads",
+		"downloadCount": "Aantal downloads",
 		"languages": "Taal",
+		"lccShelf": "LCC-boekenplank",
 		"license": "Licentie",
 		"licensePd": "Publiek domein in de VS.",
 		"licenseCopyright": "Auteursrechtelijk beschermd. Lees de copyrightvermelding in dit boek voor meer informatie.",
+		"description": "Beschrijving",
+		"availableFormats": "Beschikbare formaten",
+		"fullName": "Volledige naam",
+		"worksAvailable": "Beschikbare werken",
+		"unknown": "Onbekend",
 		"cover": "Boekomslag",
 		"coverLabel": "(omslag)",
 		"anonymous": "Anoniem",
 		"various": "Verschillende"
 	},
+	"author": {
+		"bookCount": "{n} boek | {n} boeken",
+		"booksByAuthor": "Blokkades door {name}",
+		"fullName": "Volledige naam",
+		"lifespan": "Levensduur",
+		"worksAvailable": "Beschikbare werken"
+	},
 	"shelf": {
-		"booksInShelf": "Bladeren op boekenplank"
+		"classificationCode": "Classificatiecode",
+		"booksInShelf": "Bladeren op boekenplank",
+		"booksIn": "Boeken in",
+		"booksInTitle": "Boeken op {plank}",
+		"bookCount": "{n} boek | {n} boeken"
+	},
+	"common": {
+		"loading": "Aan het laden...",
+		"loadingBook": "Boekgegevens laden...",
+		"loadingAuthor": "Auteursgegevens laden...",
+		"loadingShelf": "Boekenplankgegevens laden...",
+		"loadingStats": "Statistieken laden...",
+		"loadingItems": "{type} laden...",
+		"showing": "Weergegeven:",
+		"of": "van",
+		"search": "Zoek",
+		"searchAuthors": "Lijst van boeken van een enkele auteur",
+		"searchAuthorsByName": "Zoek auteurs op naam",
+		"searchShelf": "Boekenplank zoeken",
+		"searchShelfAria": "LCC-boekenplanken doorzoeken op code of naam",
+		"clear": "Wissen",
+		"all": "Alle",
+		"clearAllSelections": "Alle selecties verwijderen",
+		"selectAll": "Alles selecteren",
+		"sort": "Sorteer",
+		"sortBy": "Sorteren op",
+		"sortPopularity": "Sorteer boeken op populariteit",
+		"sortTitle": "Sorteer boeken op titel",
+		"language": "Taal",
+		"bookLanguages": "Boektalen",
+		"chooseLanguage": "Kies een taal...",
+		"mainLanguages": "Belangrijkste talen",
+		"otherLanguages": "Andere talen",
+		"anyCatalog": "Selecteer de Catalogus",
+		"format": "Formaat",
+		"uiLanguage": "Interfacetaal",
+		"selectInterfaceLanguage": "Selecteer interfacetaal",
+		"filterBy": "Filteren op",
+		"filterByTitle": "Filteren op {title}",
+		"filter": "Filter",
+		"selected": "geselecteerd",
+		"gridView": "Rasterweergave",
+		"listView": "Lijstweergave",
+		"browseAll": "Alles bekijken",
+		"browseAllShelves": "Alle boekenplanken bekijken",
+		"browseAllAuthors": "Alle auteurs bekijken",
+		"returnHome": "Ga naar huis",
+		"toggleNavigationMenu": "Navigatiemenu in-/uitschakelen",
+		"mainNavigation": "Hoofdnavigatie",
+		"mobileNavigationMenu": "Mobiel navigatiemenu",
+		"mobileNavigation": "Mobiele navigatie",
+		"footerLinks": "Voettekstkoppelingen",
+		"toggleSortOptions": "Sorteeropties in- of uitschakelen",
+		"navigateTo": "Navigeren naar",
+		"navigateToItem": "Navigeren naar {item}",
+		"opensInNewTab": "wordt geopend in nieuw tabblad",
+		"gutenbergHome": "Gutenberg Startpagina"
+	},
+	"messages": {
+		"noBooks": "Geen gegevens beschikbaar in tabel",
+		"noAuthors": "Geen auteurs gevonden.",
+		"noShelves": "Geen boekenplanken gevonden."
+	},
+	"metadata_defaults": {
+		"title": "Project Gutenberg-bibliotheek",
+		"description": "Alle boeken in het Nederlands van de eerste producent van gratis e-boeken"
 	},
 	"lccShelves": {
 		"A": "A-Algemene werken",
@@ -78,33 +184,5 @@
 		"PS": "PS-Amerikaanse literatuur",
 		"PT": "PT-Duitse, Nederlandse, Vlaamse, Afrikaanse, Scandinavische, Oudnoorse, Oudijslandse, Modern IJslandse, Faeröerse, Deense, Noorse en Zweedse literatuur",
 		"PZ": "PZ-Fictie en jeugdliteratuur"
-	},
-	"common": {
-		"loading": "Aan het laden...",
-		"search": "Zoek",
-		"searchAuthors": "Lijst van boeken van een enkele auteur",
-		"searchAuthorsByName": "Zoek auteurs op naam",
-		"searchShelf": "Boekenplank zoeken",
-		"filter": "Filter",
-		"sort": "Sorteer",
-		"sortPopularity": "Sorteer boeken op populariteit",
-		"sortTitle": "Sorteer boeken op titel",
-		"language": "Taal",
-		"chooseLanguage": "Kies een taal...",
-		"mainLanguages": "Belangrijkste talen",
-		"otherLanguages": "Andere talen",
-		"anyCatalog": "Selecteer de Catalogus",
-		"format": "Formaat",
-		"prev": "Vorige",
-		"next": "Volgende",
-		"returnHome": "Ga naar huis",
-		"uiLanguage": "Interfacetaal"
-	},
-	"messages": {
-		"noBooks": "Geen gegevens beschikbaar in tabel"
-	},
-	"metadata_defaults": {
-		"title": "Project Gutenberg-bibliotheek",
-		"description": "Alle boeken in het Nederlands van de eerste producent van gratis e-boeken"
 	}
 }

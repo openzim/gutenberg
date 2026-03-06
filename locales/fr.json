@@ -23,8 +23,8 @@
 		"title": "Rayons (A-Z)"
 	},
 	"book": {
-		"author": "Auteur",
 		"title": "Titre",
+		"author": "Auteur",
 		"popularity": "Popularité",
 		"languages": "Langue",
 		"license": "Licence",
@@ -37,6 +37,32 @@
 	},
 	"shelf": {
 		"booksInShelf": "Parcourir par rayon"
+	},
+	"common": {
+		"loading": "Chargement...",
+		"search": "Rechercher",
+		"searchAuthors": "Rechercher par nom d'auteur",
+		"searchAuthorsByName": "Rechercher des livres par titre",
+		"searchShelf": "Recherche de rayon",
+		"sort": "Trier",
+		"sortPopularity": "Trier les livres par popularité",
+		"sortTitle": "Trier les livres par titre",
+		"language": "Langue",
+		"chooseLanguage": "Choisissez une langue...",
+		"mainLanguages": "Langues principales",
+		"otherLanguages": "Autres langues",
+		"anyCatalog": "Choisir le catalogue",
+		"format": "Format",
+		"uiLanguage": "Langue de l`interface",
+		"filter": "Filtrer",
+		"returnHome": "Retour"
+	},
+	"messages": {
+		"noBooks": "Pas de données disponibles"
+	},
+	"metadata_defaults": {
+		"title": "Projet Bibliothèque Gutenberg",
+		"description": "Tous les livres en français du premier producteur d'ebooks gratuits"
 	},
 	"lccShelves": {
 		"A": "A-Généralités",
@@ -78,33 +104,5 @@
 		"PS": "PS-Littérature américaine",
 		"PT": "PT - Littératures allemande, néerlandaise, flamande, afrikaans, scandinave, vieux norrois, ancienne islandaise, vieux norvégien, islandais moderne, féroïen, danois, norvégien et suédois",
 		"PZ": "PZ-Fiction et belles lettres pour jeunes"
-	},
-	"common": {
-		"loading": "Chargement...",
-		"search": "Rechercher",
-		"searchAuthors": "Rechercher par nom d'auteur",
-		"searchAuthorsByName": "Rechercher des livres par titre",
-		"searchShelf": "Recherche de rayon",
-		"filter": "Filtrer",
-		"sort": "Trier",
-		"sortPopularity": "Trier les livres par popularité",
-		"sortTitle": "Trier les livres par titre",
-		"language": "Langue",
-		"chooseLanguage": "Choisissez une langue...",
-		"mainLanguages": "Langues principales",
-		"otherLanguages": "Autres langues",
-		"anyCatalog": "Choisir le catalogue",
-		"format": "Format",
-		"prev": "Précédent",
-		"next": "Suivant",
-		"returnHome": "Retour",
-		"uiLanguage": "Langue de l`interface"
-	},
-	"messages": {
-		"noBooks": "Pas de données disponibles"
-	},
-	"metadata_defaults": {
-		"title": "Projet Bibliothèque Gutenberg",
-		"description": "Tous les livres en français du premier producteur d'ebooks gratuits"
 	}
 }
