@@ -20,7 +20,7 @@ from gutenberg2zim.utils import ALL_FORMATS, critical_error
 from gutenberg2zim.zim import build_zimfile
 
 help_info = (
-    """Usage: gutenberg2zim [-F] [-l LANGS] [-f FORMATS] """
+    """Usage: gutenberg2zim [--overwrite] [-l LANGS] [-f FORMATS] """
     """[-d CACHE_PATH] [-e STATIC_PATH] """
     """[-z ZIM_PATH] [-b BOOKS] """
     """[-t ZIM_TITLE] [-n ZIM_DESC] [-L ZIM_LONG_DESC] """
@@ -33,7 +33,7 @@ help_info = (
     """
 
 -h --help                       Display this help message
--F --force                      Redo step even if target already exist
+--overwrite                     Overwrite ZIM file if target already exists
 
 -l --languages=<list>           Comma-separated list of lang codes to filter"""
     """ export to (preferably ISO 639-1, else ISO 639-3)
@@ -94,7 +94,7 @@ def main():
     zim_long_description = arguments.get("--zim-long-desc")
 
     concurrency = int(arguments.get("--concurrency") or 16)
-    force = arguments.get("--force", False)
+    overwrite = arguments.get("--overwrite", False)
     title_search = arguments.get("--title-search", False)
 
     with_fulltext_index = not arguments.get("--no-index", False)
@@ -280,7 +280,7 @@ def main():
         publisher=publisher,
         primary_color=primary_color,
         secondary_color=secondary_color,
-        force=force,
+        overwrite=overwrite,
         title_search=title_search,
         add_lcc_shelves=add_lcc_shelves,
         progress=progress,
