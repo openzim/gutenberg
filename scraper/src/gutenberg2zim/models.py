@@ -65,7 +65,7 @@ class Book:
     subtitle: str | None = None
     downloads: int = 0
     lcc_shelf: str | None = None
-    cover_page: int = 0
+    has_cover: bool = False
     unsupported_formats: list[str] = field(default_factory=list)
     popularity: int = 0  # Computed field for star rating
 

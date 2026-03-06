@@ -114,7 +114,7 @@ def test_rdf_parser():
     assert parsed.birth_year == "1806"
     assert parsed.author_id == "3485"
     assert parsed.bookshelf == "Category: Travel Writing"
-    assert parsed.cover_image == 1
+    assert parsed.has_cover
     assert parsed.death_year == "1851"
     assert parsed.downloads == "548"
     assert parsed.first_name == "James"
@@ -146,7 +146,7 @@ def test_rdf_parser_minimal():
     assert parsed.first_name is None
     assert parsed.last_name is None
     assert parsed.bookshelf is None
-    assert parsed.cover_image == 0
+    assert not parsed.has_cover
     assert parsed.birth_year is None
     assert parsed.death_year is None
     assert parsed.bookshelf is None
@@ -185,32 +185,32 @@ def test_rdf_parser_multi_languages():
     [
         pytest.param(
             "https://www.gutenberg.org/cache/epub/22094/pg22094.cover.medium.jpg",
-            1,
+            True,
             id="good",
         ),
         pytest.param(
             "https://www.gutenberg.org/cache/epub/22094/pg22094.cover.medium.png",
-            0,
+            False,
             id="bad_extension",
         ),
         pytest.param(
             "https://www.gutenberg.org/cache/epub/22094/pg1234.cover.medium.jpg",
-            0,
+            False,
             id="bad_pg_id",
         ),
         pytest.param(
             "https://www.gutenberg.org/cache/epub/12345/pg22094.cover.medium.jpg",
-            0,
+            False,
             id="bad_folder_id",
         ),
         pytest.param(
             "https://foo.org/cache/epub/22094/pg22094.cover.medium.jpg",
-            1,
+            True,
             id="good_mirror",
         ),
     ],
 )
-def test_rdf_parser_cover(cover_url: str, expected_cover: int):
+def test_rdf_parser_cover(cover_url: str, *, expected_cover: bool):
     rdf = RdfParser(
         f"""
   {RDF_HEADER}
@@ -236,7 +236,7 @@ def test_rdf_parser_cover(cover_url: str, expected_cover: int):
         22094,
     )
     parsed = rdf.parse()
-    assert parsed.cover_image == expected_cover
+    assert parsed.has_cover == expected_cover
 
 
 def test_rdf_parser_title_subtitle():

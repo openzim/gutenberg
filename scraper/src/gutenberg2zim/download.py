@@ -187,7 +187,7 @@ def download_book(
         return None
 
     # download cover image
-    if book.cover_page:
+    if book.has_cover:
         url = (
             f"{mirror_url}/cache/epub/{book.book_id}/pg{book.book_id}.cover.medium.jpg"
         )
