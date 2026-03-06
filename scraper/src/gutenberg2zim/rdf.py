@@ -20,7 +20,7 @@ class RdfParser:
 
         self.bookshelf = None
         self.lcc_shelf = None
-        self.cover_image = 0
+        self.has_cover = False
 
     def parse(self):
         soup = BeautifulSoup(self.rdf_data, "lxml-xml")
@@ -70,12 +70,8 @@ class RdfParser:
                     return True
             return False
 
-        self.cover_image = (
-            1
-            if any(
-                is_cover_node(file_node) for file_node in soup.find_all("pgterms:file")
-            )
-            else 0
+        self.has_cover = any(
+            is_cover_node(file_node) for file_node in soup.find_all("pgterms:file")
         )
 
         # Parsing the name of the Author. Sometimes it's the name of
@@ -190,7 +186,7 @@ def _save_rdf_in_repository(parser: RdfParser) -> None:
         license=parser.license,
         downloads=int(parser.downloads),
         lcc_shelf=parser.lcc_shelf,
-        cover_page=parser.cover_image,
+        has_cover=parser.has_cover,
     )
     repository.add_book(book)
 
