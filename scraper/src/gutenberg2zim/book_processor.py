@@ -80,7 +80,9 @@ def process_all_books(
         try:
             process_book_inner(book_id)
         except Exception:
-            logger.error(f"Fatal error received with processing book {book_id}")
+            logger.error(
+                f"Fatal error received with processing book {book_id}", exc_info=True
+            )
         progress.increase_progress()
 
     @backoff.on_exception(
@@ -126,6 +128,14 @@ def process_all_books(
     # but still useful for sorting)
     logger.info("Computing book popularity")
     all_books = repository.get_all_books()
+
+    # Check if any books were successfully downloaded
+    if not all_books:
+        logger.error("No books were successfully processed")
+        raise RuntimeError(
+            "All books failed to process. Cannot create ZIM without any content."
+        )
+
     all_books_count = len(all_books)
     stars_limits = [0] * NB_POPULARITY_STARS
     stars = NB_POPULARITY_STARS
