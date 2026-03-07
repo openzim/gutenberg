@@ -199,29 +199,25 @@ def download_and_parse_book_rdf(book_id: int, mirror_url: str) -> Book | None:
         mirror_url: The mirror URL (e.g., "https://gutenberg.mirror.driftle.ss")
 
     Returns:
-        Book object if successful, None if book couldn't be downloaded or parsed
+        Book object if successful, None only for expected unusable books
+        (no license, no title, etc.)
+
+    Raises:
+        requests.RequestException: If RDF download fails (retries handled by caller)
+        Exception: If RDF parsing fails
     """
-    # Construct URL: {mirror_url}/cache/epub/{book_id}/pg{book_id}.rdf
     rdf_url = f"{mirror_url}/cache/epub/{book_id}/pg{book_id}.rdf"
 
     logger.debug(f"Downloading RDF for book {book_id} from {rdf_url}")
 
-    try:
-        response = requests.get(rdf_url, timeout=DEFAULT_HTTP_TIMEOUT)
-        response.raise_for_status()
-        rdf_data = response.content
-    except requests.RequestException as exc:
-        logger.warning(f"Could not download RDF for book {book_id}: {exc}")
-        return None
+    # Download and parse the RDF - any errors will bubble up to the caller
+    response = requests.get(rdf_url, timeout=DEFAULT_HTTP_TIMEOUT)
+    response.raise_for_status()
+    rdf_data = response.content
 
-    # Parse the RDF data
-    try:
-        parser = RdfParser(rdf_data, str(book_id)).parse()
-    except Exception as exc:
-        logger.warning(f"Could not parse RDF for book {book_id}: {exc}")
-        return None
+    parser = RdfParser(rdf_data, str(book_id)).parse()
 
-    # Validate the parsed data
+    # Skip books that are missing critical information
     if parser.license == "None":
         logger.info(f"\tWARN: Unusable book without any information {book_id}")
         return None
@@ -229,7 +225,7 @@ def download_and_parse_book_rdf(book_id: int, mirror_url: str) -> Book | None:
         logger.info(f"\tWARN: Unusable book without title {book_id}")
         return None
 
-    # Save to repository and return the book
+    # All good - save it and return
     _save_rdf_in_repository(parser)
     return repository.get_book(book_id)
 
