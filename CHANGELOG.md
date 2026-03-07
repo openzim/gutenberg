@@ -16,6 +16,7 @@ as of 2.0.0.
 - Convert to WEBP and optimize WEBP, JPG and PNG images (both HTML resources + cover image) (#375)
 - Optimize Docker build topology to reuse layers (#420)
 - Optimize ePub again (#376)
+- Fail scraper when RDF download fails (#414)
 
 ### Changed
 
