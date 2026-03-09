@@ -1,64 +1,80 @@
-# Gutenberg UI Revamp - Complete Structure
+# Gutenberg Project Architecture
 
-> **Note:** This document is historical documentation from the Vue.js UI migration. It provides architectural context and design decisions. While the implementation may have evolved, the core concepts remain relevant for understanding the system.
+> **Note:** This document provides architectural context and design decisions for the Gutenberg scraper and Vue.js UI. While the implementation may have evolved, the core concepts remain relevant for understanding the system.
 
 ## Directory Structure
 
 ```
 gutenberg/
-├── scraper/src/gutenberg2zim/      # Python scraper
-│   ├── __init__.py
-│   ├── __main__.py
-│   ├── entrypoint.py
-│   ├── book_processor.py
-│   ├── csv_catalog.py
-│   ├── download.py
-│   ├── export.py                    # JSON generation + Vue dist export
-│   ├── models.py
-│   ├── schemas.py                   # Pydantic models for JSON
-│   ├── zim.py
-│   ├── templates/                   # Minimal templates (infobox + no-JS fallback)
-│   │   ├── book_infobox.html        # Book infobox for HTML books
-│   │   ├── css/
-│   │   │   └── gutenberg-infobox.css
-│   │   ├── js/
-│   │   │   └── gutenberg-infobox.js
-│   │   ├── icons/                   # Infobox icons only
-│   │   │   ├── epub.svg
-│   │   │   ├── info.svg
-│   │   │   ├── pdf.svg
-│   │   │   └── scroll-up.svg
-│   │   └── noscript/                # No-JS fallback templates
-│   │       ├── _nav.html
-│   │       ├── books.html
-│   │       ├── book.html
-│   │       ├── authors.html
-│   │       ├── author.html
-│   │       ├── lcc_shelves.html
-│   │       ├── lcc_shelf.html
-│   │       └── common.css
-│   └── ...
+├── scraper/
+│   ├── docs/                        # Technical documentation
+│   │   ├── JSON_FILE_STRUCTURE.md   # JSON schema specification
+│   │   └── GUTENBERG_STRUCTURE.md   # Architecture overview
+│   ├── src/gutenberg2zim/           # Python scraper
+│   │   ├── __init__.py
+│   │   ├── __main__.py
+│   │   ├── __about__.py
+│   │   ├── entrypoint.py            # CLI entry point
+│   │   ├── book_processor.py        # Book processing logic
+│   │   ├── csv_catalog.py           # CSV catalog handling
+│   │   ├── download.py              # Book downloading
+│   │   ├── export.py                # JSON generation + Vue dist export
+│   │   ├── i18n.py                  # Internationalization
+│   │   ├── iso639.py                # Language code handling
+│   │   ├── models.py                # Data models
+│   │   ├── pg_archive_urls.py       # Archive URL handling
+│   │   ├── rdf.py                   # RDF metadata parsing
+│   │   ├── schemas.py               # Pydantic models for JSON
+│   │   ├── scraper_progress.py      # Progress tracking
+│   │   ├── shared.py                # Shared utilities
+│   │   ├── utils.py                 # Utility functions
+│   │   ├── zim.py                   # ZIM file creation
+│   │   ├── templates/               # Jinja2 templates
+│   │   │   ├── book_infobox.html    # Book infobox for HTML books
+│   │   │   ├── css/
+│   │   │   │   └── gutenberg-infobox.css
+│   │   │   ├── js/
+│   │   │   │   └── gutenberg-infobox.js
+│   │   │   ├── icons/               # Infobox icons
+│   │   │   │   ├── epub.svg
+│   │   │   │   ├── info.svg
+│   │   │   │   ├── pdf.svg
+│   │   │   │   └── scroll-up.svg
+│   │   │   ├── favicon.png
+│   │   │   └── noscript/            # No-JS fallback templates
+│   │   │       ├── _nav.html
+│   │   │       ├── books.html
+│   │   │       ├── book.html
+│   │   │       ├── authors.html
+│   │   │       ├── author.html
+│   │   │       ├── lcc_shelves.html
+│   │   │       ├── lcc_shelf.html
+│   │   │       └── common.css
+│   │   └── __pycache__/
+│   ├── tests/                       # Python tests
+│   │   └── test_rdf.py
+│   ├── pyproject.toml               # Python project configuration
+│   └── tasks.py                     # Invoke tasks
 ├── ui/                              # Vue.js frontend
-│   ├── index.html
-│   ├── package.json
-│   ├── vite.config.ts
-│   ├── tsconfig.json
+│   ├── dist/                        # Build output (generated)
+│   ├── node_modules/                # npm dependencies
+│   ├── public/                      # Static assets
 │   ├── src/
-│   │   ├── main.ts
-│   │   ├── App.vue
+│   │   ├── main.ts                  # App entry point
+│   │   ├── App.vue                  # Root component
 │   │   ├── router/
-│   │   │   └── index.ts
+│   │   │   └── index.ts             # Vue Router configuration
 │   │   ├── stores/
-│   │   │   └── main.ts
-│   │   ├── views/
+│   │   │   └── main.ts              # Pinia store
+│   │   ├── views/                   # Page components
 │   │   │   ├── HomeView.vue
-│   │   │   ├── BooksView.vue
 │   │   │   ├── BookDetailView.vue
-│   │   │   ├── AuthorsView.vue
+│   │   │   ├── AuthorListView.vue
 │   │   │   ├── AuthorDetailView.vue
-│   │   │   ├── LCCShelvesView.vue
+│   │   │   ├── LCCShelfListView.vue
 │   │   │   ├── LCCShelfDetailView.vue
-│   │   │   └── AboutView.vue
+│   │   │   ├── AboutView.vue
+│   │   │   └── NotFoundView.vue
 │   │   ├── components/
 │   │   │   ├── book/
 │   │   │   │   ├── BookCard.vue
@@ -69,44 +85,90 @@ gutenberg/
 │   │   │   │   ├── AuthorCard.vue
 │   │   │   │   ├── AuthorGrid.vue
 │   │   │   │   └── AuthorDetailInfo.vue
-│   │   │   ├── lcc/
+│   │   │   ├── lccshelf/
 │   │   │   │   ├── LCCShelfCard.vue
-│   │   │   │   └── LCCShelfGrid.vue
+│   │   │   │   ├── LCCShelfGrid.vue
+│   │   │   │   └── LCCShelfDetailInfo.vue
 │   │   │   ├── common/
-│   │   │   │   ├── LanguageFilter.vue
-│   │   │   │   ├── SortControl.vue
-│   │   │   │   ├── PaginationControl.vue
-│   │   │   │   ├── ItemCount.vue
-│   │   │   │   ├── EmptyState.vue
-│   │   │   │   ├── LoadingSpinner.vue
+│   │   │   │   ├── BaseFilter.vue
 │   │   │   │   ├── BookCoverImage.vue
 │   │   │   │   ├── BooksSection.vue
+│   │   │   │   ├── Breadcrumbs.vue
+│   │   │   │   ├── CollapsibleFilters.vue
+│   │   │   │   ├── CoverFallback.vue
 │   │   │   │   ├── DetailInfoCard.vue
-│   │   │   │   └── Breadcrumbs.vue
+│   │   │   │   ├── DetailViewWrapper.vue
+│   │   │   │   ├── EmptyState.vue
+│   │   │   │   ├── ErrorDisplay.vue
+│   │   │   │   ├── FormatFilter.vue
+│   │   │   │   ├── ImagePlaceholder.vue
+│   │   │   │   ├── ItemCount.vue
+│   │   │   │   ├── LanguageFilter.vue
+│   │   │   │   ├── LanguageSwitcher.vue
+│   │   │   │   ├── ListViewWrapper.vue
+│   │   │   │   ├── LoadingSpinner.vue
+│   │   │   │   ├── NotFoundState.vue
+│   │   │   │   ├── PaginationControl.vue
+│   │   │   │   └── SortControl.vue
 │   │   │   └── layout/
 │   │   │       ├── AppHeader.vue
 │   │   │       └── AppFooter.vue
 │   │   ├── types/
-│   │   │   └── index.ts
+│   │   │   └── index.ts             # TypeScript type definitions
 │   │   ├── constants/
+│   │   │   ├── messages.ts
 │   │   │   └── theme.ts
-│   │   ├── composables/
-│   │   │   ├── usePagination.ts
+│   │   ├── composables/             # Vue composables
 │   │   │   ├── useListLoader.ts
+│   │   │   ├── usePagination.ts
+│   │   │   ├── useSearchFilter.ts
 │   │   │   └── useSorting.ts
+│   │   ├── plugins/
+│   │   │   ├── i18n.ts              # i18n configuration
+│   │   │   └── vuetify.ts           # Vuetify configuration
 │   │   └── utils/
 │   │       └── format-utils.ts
-│   └── public/
-│       └── favicon.ico
-└── ...
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── tsconfig.json
+│   ├── tsconfig.app.json
+│   ├── tsconfig.node.json
+│   ├── eslint.config.js
+│   ├── .prettierrc.json
+│   ├── env.d.ts
+│   └── README.md
+├── locales/                         # UI translations
+│   ├── en.json
+│   ├── fr.json
+│   ├── es.json
+│   ├── de.json
+│   └── ... (many more languages)
+├── pictures/                        # Screenshots
+│   ├── screenshot_1.png
+│   └── screenshot_2.png
+├── .github/
+│   └── workflows/                   # CI/CD workflows
+│       ├── Publish.yaml
+│       ├── PublishDockerDevImage.yaml
+│       ├── QA.yaml
+│       ├── Tests.yaml
+│       └── update-zim-offliner-definition.yaml
+├── Dockerfile
+├── README.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── CHANGELOG.md
+├── offliner-definition.json
+├── pg_catalog.csv.gz
+└── .pre-commit-config.yaml
 ```
 
 ---
 
 ## JSON File Structure
 
-Following Youtube scraper pattern: **High-level metadata files + Detail files**
-
+Following YouTube scraper pattern: **High-level metadata files + Detail files**
 ### High-Level Files (List/Preview Data)
 ```
 ZIM_ROOT/
@@ -405,6 +467,9 @@ class Config(CamelModel):
 def generate_json_files(zim_name: str, formats: list[str]) -> None:
     """Generate all JSON files for Vue.js frontend"""
     
+    # Note: Helper functions like book_to_preview(), book_to_detail(), etc.
+    # convert internal data models to Pydantic schema instances
+    
     # 1. Generate high-level files
     books_preview = [book_to_preview(book) for book in repository.get_all_books()]
     authors_preview = [author_to_preview(author) for author in repository.get_all_authors()]
@@ -600,19 +665,14 @@ const router = createRouter({
       component: () => import('@/views/HomeView.vue')
     },
     {
-      path: '/books',
-      name: 'books',
-      component: () => import('@/views/BooksView.vue')
-    },
-    {
       path: '/book/:id',
       name: 'book-detail',
       component: () => import('@/views/BookDetailView.vue')
     },
     {
       path: '/authors',
-      name: 'authors',
-      component: () => import('@/views/AuthorsView.vue')
+      name: 'author-list',
+      component: () => import('@/views/AuthorListView.vue')
     },
     {
       path: '/author/:id',
@@ -621,8 +681,8 @@ const router = createRouter({
     },
     {
       path: '/lcc-shelves',
-      name: 'lcc-shelves',
-      component: () => import('@/views/LCCShelvesView.vue')
+      name: 'lcc-shelf-list',
+      component: () => import('@/views/LCCShelfListView.vue')
     },
     {
       path: '/lcc-shelf/:code',

@@ -1,6 +1,6 @@
 # JSON File Structure Specification
 
-> **Note:** This document is historical documentation from the Vue.js UI migration. It provides detailed specifications for the JSON file structure. While the implementation may have evolved, this serves as a reference for understanding the data architecture and design decisions.
+> **Note:** This document provides detailed specifications for the JSON file structure used by the Vue.js UI. It defines the data architecture, file organization, and loading strategies.
 
 ## Overview
 
