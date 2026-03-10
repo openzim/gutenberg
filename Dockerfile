@@ -20,13 +20,20 @@ RUN apt-get update \
  && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
  && locale-gen "en_US.UTF-8"
 
+# Copy pyproject.toml and its dependencies
+COPY README.md LICENSE /src/
+COPY scraper/pyproject.toml /src/scraper/
+COPY scraper/src/gutenberg2zim/__about__.py /src/scraper/src/gutenberg2zim/__about__.py
+
+# Install Python dependencies
+RUN pip install --no-cache-dir /src/scraper
+
 # Copy code + remaining artifacts
 ENV LOCALES_LOCATION=/locales
 COPY locales /locales
-COPY README.md *.rst LICENSE /src/
 COPY scraper /src/scraper
 
-# Install package (pip should install dependencies from pyproject.toml automatically)
+# Install scraper itself + cleanup
 RUN pip install --no-cache-dir /src/scraper \
  && rm -rf /src/scraper
 
