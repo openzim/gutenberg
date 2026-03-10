@@ -1,5 +1,6 @@
 import io
 import urllib.parse
+import zipfile
 from collections.abc import Iterable
 from dataclasses import asdict
 from pathlib import Path
@@ -8,7 +9,11 @@ import bs4
 from bs4 import BeautifulSoup, Tag
 from jinja2 import Environment, PackageLoader
 from PIL.Image import open as pilopen
-from zimscraperlib.image.optimization import OptimizeWebpOptions
+from zimscraperlib.image.optimization import (
+    OptimizeWebpOptions,
+    optimize_jpeg,
+    optimize_png,
+)
 from zimscraperlib.zim.indexing import IndexData
 
 from gutenberg2zim.constants import logger
@@ -414,9 +419,12 @@ def handle_book_files(
             other_filenames.append(book_filename)
             try:
                 archive_name = archive_name_for(book, other_format)
+                content = book_files[book_filename]
+                if other_format == "epub":
+                    content = optimize_epub_bytes(content, book)
                 Global.add_item_for(
                     path=archive_name,
-                    content=book_files[book_filename],
+                    content=content,
                     is_front=False,
                 )
             except Exception as e:
@@ -483,6 +491,92 @@ def optimize_content(book: Book, filename: str, file_content: bytes) -> bytes:
         return file_content
     else:
         return file_content
+
+
+def _optimize_epub_jpeg(data: bytes) -> bytes:
+    """Optimize JPEG image in-memory for EPUB, keeping original format."""
+    dst = io.BytesIO()
+    optimize_jpeg(src=io.BytesIO(data), dst=dst)
+    return dst.getvalue()
+
+
+def _optimize_epub_png(data: bytes) -> bytes:
+    """Optimize PNG image in-memory for EPUB, keeping original format."""
+    dst = io.BytesIO()
+    optimize_png(src=io.BytesIO(data), dst=dst)
+    return dst.getvalue()
+
+
+def _process_epub_html(data: bytes, book: Book) -> bytes:
+    """Process HTML file from EPUB: remove Gutenberg markers and process content."""
+    html_str = data.decode("utf-8", errors="replace")
+    soup = update_html_for_static(
+        book=book, html_content=html_str, formats=[], epub=True
+    )
+    return str(soup).encode(UTF8)
+
+
+def _process_epub_ncx(data: bytes, book: Book | None = None) -> bytes:
+    """Process NCX navigation file: remove license section."""
+    ncx_str = data.decode("utf-8", errors="replace")
+    soup = BeautifulSoup(ncx_str, "lxml-xml")
+    pattern = "*** START: FULL LICENSE ***"
+    for tag in soup.find_all("text"):
+        if pattern in tag.text:
+            book_info = f"book {book.book_id}" if book else "unknown book"
+            logger.info(f"Found license section in NCX for {book_info}")
+            s = tag.parent.parent  # pyright: ignore[reportOptionalMemberAccess]
+            # Collect siblings before decomposing (decompose breaks iteration)
+            siblings_to_remove = list(
+                s.next_siblings  # pyright: ignore[reportOptionalMemberAccess]
+            )
+            s.decompose()  # pyright: ignore[reportOptionalMemberAccess]
+            for sibling in siblings_to_remove:
+                if hasattr(sibling, "decompose"):  # Skip text nodes
+                    sibling.decompose()
+            break
+    return str(soup).encode(UTF8)
+
+
+def optimize_epub_bytes(epub_bytes: bytes, book: Book) -> bytes:
+    """Optimize EPUB in-memory: process HTML/NCX and optimize images without FS."""
+    src_buf = io.BytesIO(epub_bytes)
+    dst_buf = io.BytesIO()
+    original_size = len(epub_bytes)
+
+    with (
+        zipfile.ZipFile(src_buf, "r") as src_zf,
+        zipfile.ZipFile(dst_buf, "w", zipfile.ZIP_DEFLATED) as dst_zf,
+    ):
+        for info in src_zf.infolist():
+            name = info.filename
+            data = src_zf.read(name)
+            suffix = Path(name).suffix.lower()
+
+            if suffix in (".jpg", ".jpeg"):
+                data = _optimize_epub_jpeg(data)
+            elif suffix == ".png":
+                data = _optimize_epub_png(data)
+            elif suffix in (".gif", ".webp"):
+                logger.warning(
+                    f"Unexpected {suffix} image in EPUB for book {book.book_id}: {name}"
+                )
+            elif suffix in (".htm", ".html"):
+                data = _process_epub_html(data, book)
+            elif suffix == ".ncx":
+                data = _process_epub_ncx(data, book)
+
+            dst_zf.writestr(info, data)
+
+    optimized_bytes = dst_buf.getvalue()
+    optimized_size = len(optimized_bytes)
+    if optimized_size > original_size:
+        logger.warning(
+            f"Optimized EPUB for book {book.book_id} is larger than original: "
+            f"{optimized_size} > {original_size} bytes"
+        )
+
+    return optimized_bytes
 
 
 def _lcc_shelf_list_for_books(books: Iterable[Book]):

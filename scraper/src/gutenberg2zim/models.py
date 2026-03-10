@@ -1,5 +1,7 @@
 """In-memory data models for Gutenberg books"""
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 
 

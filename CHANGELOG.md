@@ -13,6 +13,7 @@ as of 2.0.0.
 - Fix issue with i18n fallback language (#360)
 - Convert to WEBP and optimize WEBP, JPG and PNG images (both HTML resources + cover image) (#375)
 - Optimize Docker build topology to reuse layers (#420)
+- Optimize ePub again (#376)
 
 ## [3.0.1] - 2025-11-24
 
