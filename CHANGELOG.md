@@ -11,6 +11,7 @@ as of 2.0.0.
 ### Fixed
 
 - Fix issue with i18n fallback language (#360)
+- Convert to WEBP and optimize WEBP, JPG and PNG images (both HTML resources + cover image) (#375)
 
 ## [3.0.1] - 2025-11-24
 

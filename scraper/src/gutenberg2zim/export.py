@@ -1,10 +1,14 @@
+import io
 import urllib.parse
 from collections.abc import Iterable
+from dataclasses import asdict
 from pathlib import Path
 
 import bs4
 from bs4 import BeautifulSoup, Tag
 from jinja2 import Environment, PackageLoader
+from PIL.Image import open as pilopen
+from zimscraperlib.image.optimization import OptimizeWebpOptions
 from zimscraperlib.zim.indexing import IndexData
 
 from gutenberg2zim.constants import logger
@@ -42,6 +46,8 @@ from gutenberg2zim.utils import (
 jinja_env = Environment(  # noqa: S701
     loader=PackageLoader("gutenberg2zim", "templates")
 )
+
+default_webp_options = asdict(OptimizeWebpOptions())
 
 
 def fa_for_format(book_format):
@@ -353,11 +359,12 @@ def export_book(
     )
 
     if cover_image:
-        cover_path = f"covers/{book.book_id}_cover_image.jpg"
+        cover_path = f"covers/{book.book_id}_cover_image.webp"
+        cover_image = optimize_content(book, cover_path, cover_image)
         Global.add_item_for(
             path=cover_path,
             content=cover_image,
-            mimetype="image/jpeg",
+            mimetype="image/webp",
             is_front=False,
         )
 
@@ -445,14 +452,37 @@ def handle_book_files(
         else:
             # Add other files (images, etc) directly
             try:
+                optimized_file_content = optimize_content(book, filename, file_content)
                 Global.add_item_for(
                     path=filename,
-                    content=file_content,
+                    content=optimized_file_content,
                     is_front=False,
                 )
             except Exception as e:
                 logger.exception(e)
                 logger.error(f"\t\tException while handling file {filename}: {e}")
+
+
+def optimize_content(book: Book, filename: str, file_content: bytes) -> bytes:
+    filepath = Path(filename)
+    src_format = filepath.suffix[1:]
+    # Optimize image if JPG, PNG or WEBP
+    # We always convert to WEBP to ensure optimal file size
+    # We do not optimize GIFs since they are rare and probably used for animations
+    # We do not optimize other contents
+    if src_format in ("jpg", "jpeg", "png", "webp"):
+        # convert to webp and optimize in one step (zimscraperlib does not offer this
+        # primitive ATM)
+        dst = io.BytesIO()
+        with pilopen(io.BytesIO(file_content)) as image:
+            image.save(dst, format="WEBP", **asdict(OptimizeWebpOptions()))
+
+        return dst.getvalue()
+    elif src_format == "gif":
+        logger.debug(f"GIF file {filename} found in book {book.book_id} not optimized")
+        return file_content
+    else:
+        return file_content
 
 
 def _lcc_shelf_list_for_books(books: Iterable[Book]):
@@ -505,7 +535,7 @@ def _author_to_schema(author: Author) -> AuthorSchema:
 
 def _book_to_preview(book: Book) -> BookPreview:
     """Convert Book dataclass to BookPreview schema"""
-    cover_path = f"covers/{book.book_id}_cover_image.jpg" if book.has_cover else None
+    cover_path = f"covers/{book.book_id}_cover_image.webp" if book.has_cover else None
 
     return BookPreview(
         id=book.book_id,
@@ -520,7 +550,7 @@ def _book_to_preview(book: Book) -> BookPreview:
 
 def _book_to_schema(book: Book, formats: list[str]) -> BookSchema:
     """Convert Book dataclass to Book schema with formats"""
-    cover_path = f"covers/{book.book_id}_cover_image.jpg" if book.has_cover else None
+    cover_path = f"covers/{book.book_id}_cover_image.webp" if book.has_cover else None
 
     book_formats: list[BookFormat] = []
     available_formats = book.requested_formats(formats)
