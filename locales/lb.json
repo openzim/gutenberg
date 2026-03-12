@@ -9,6 +9,7 @@
 	"nav": {
 		"home": "Haaptsäit",
 		"authors": "Auteuren",
+		"shelves": "Regaler",
 		"about": "Iwwer"
 	},
 	"about": {
@@ -16,19 +17,25 @@
 	},
 	"stats": {
 		"books": "Bicher",
-		"authors": "Auteuren"
+		"authors": "Auteuren",
+		"shelves": "LCC-Regaler"
 	},
 	"authors": {
 		"title": "Auteuren"
+	},
+	"shelves": {
+		"title": "LCC-Regaler"
 	},
 	"book": {
 		"title": "Titel",
 		"author": "Auteur",
 		"popularity": "Popularitéit",
 		"languages": "Sprooch",
+		"lccShelf": "LCC-Regal",
 		"license": "Lizenz",
 		"licensePd": "Domaine public an den USA.",
 		"description": "Beschreiwung",
+		"availableFormats": "Disponibel Formater",
 		"unknown": "Onbekannt",
 		"anonymous": "Anonym"
 	},
@@ -41,6 +48,7 @@
 	},
 	"common": {
 		"loading": "Gëtt gelueden...",
+		"loadingBook": "Buchdetailer gi gelueden...",
 		"search": "Sichen",
 		"searchAuthors": "Mam Numm vum Auteur sichen",
 		"searchAuthorsByName": "Mam Numm vum Auteur sichen",
@@ -62,7 +70,10 @@
 		"noBooks": "Kee Buch fonnt.",
 		"noAuthors": "Keen Auteur fonnt.",
 		"noBooksForAuthor": "Keng Bicher disponibel fir dësen Auteur.",
-		"noLanguages": "Keng Sproochen disponibel."
+		"noBooksInShelf": "Et si keng Bicher an dësem Regal disponibel.",
+		"noLanguages": "Keng Sproochen disponibel.",
+		"noFormats": "Kee Format disponibel.",
+		"notFoundShelf": "LCC-Regal net fonnt. D'Regal, no deem Dir gesicht hutt, existéiert net oder et gouf ewechgeholl."
 	},
 	"footer": {
 		"tagline": "Projet Gutenberg"
@@ -136,6 +147,7 @@
 		"ga": "Iresch",
 		"gl": "Galizesch",
 		"he": "Hebräesch",
+		"hi": "Hindi",
 		"hu": "Ungaresch",
 		"ia": "Interlingua",
 		"is": "Islännesch",

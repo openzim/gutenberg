@@ -7,7 +7,10 @@
 	"language": "Interlingua",
 	"isocode": "ia",
 	"nav": {
-		"home": "Pagina initial"
+		"home": "Pagina initial",
+		"authors": "Autores",
+		"shelves": "Plancas",
+		"about": "A proposito"
 	},
 	"home": {
 		"title": "Bibliotheca del Projecto Gutenberg",
