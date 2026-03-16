@@ -10,6 +10,9 @@
 	"nav": {
 		"home": "홈페이지"
 	},
+	"about": {
+		"linkKiwix": "Kiwix"
+	},
 	"book": {
 		"title": "제목",
 		"author": "저자",
@@ -40,6 +43,11 @@
 	},
 	"messages": {
 		"noBooks": "테이블에 사용할 수 있는 데이터가 없습니다"
+	},
+	"itemTypes": {
+		"books": "책",
+		"authors": "저자",
+		"shelves": "책장"
 	},
 	"languageNames": {
 		"af": "아프리칸스어",
