@@ -62,8 +62,8 @@ Note: You'll need to install system dependencies (zim-tools) separately. See [CO
 ## Command-Line Options
 
 ```
--h --help                            Display help message
--F --force                           Overwrite existing ZIM file
+-h --help                       Display this help message
+--overwrite                     Overwrite existing ZIM file
 
 -l --languages=<list>                Comma-separated language codes (ISO 639-1 or ISO 639-3)
 -f --formats=<list>                  Comma-separated formats (epub, html, pdf, all)

@@ -15,6 +15,10 @@ as of 2.0.0.
 - Optimize Docker build topology to reuse layers (#420)
 - Optimize ePub again (#376)
 
+### Changed
+
+- Changed `--force` to `--overwrite` (#399)
+
 ## [3.0.1] - 2025-11-24
 
 ### Added
