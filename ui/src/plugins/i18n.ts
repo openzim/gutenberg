@@ -66,6 +66,7 @@ export const supportedLanguages: Language[] = [
   { code: 'ro', display: 'Română', rtl: false },
   { code: 'ru', display: 'Русский', rtl: false },
   { code: 'sa', display: 'संस्कृतम्', rtl: false },
+  { code: 'skr-arab', display: 'سرائیکی', rtl: true },
   { code: 'sl', display: 'Slovenščina', rtl: false },
   { code: 'sr', display: 'Српски', rtl: false },
   { code: 'sv', display: 'Svenska', rtl: false },
