@@ -62,3 +62,25 @@ jobs:
         working-directory: ui
         run: |
           npm run lint
+
+  check-i18n:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Retrieve source code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: scraper/pyproject.toml
+          architecture: x64
+
+      - name: Install dependencies
+        working-directory: scraper
+        run: |
+          pip install -U pip
+          pip install -e .
+
+      - name: Validate i18n translations
+        run: gutenberg2zim-validate-i18n
