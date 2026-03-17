@@ -10,6 +10,8 @@ as of 2.0.0.
 
 ### Fixed
 
+- Prevent crash when all books fail to download (#416)
+- Add Friulian (fur) language code mapping (#415)
 - Fix issue with i18n fallback language (#360)
 - Convert to WEBP and optimize WEBP, JPG and PNG images (both HTML resources + cover image) (#375)
 - Optimize Docker build topology to reuse layers (#420)
@@ -17,6 +19,8 @@ as of 2.0.0.
 
 ### Changed
 
+- Rename cover_page to has_cover and change type to bool (#409)
+- Update to Python 3.14, Node.js 24, and upgrade dependencies (#402)
 - Changed `--force` to `--overwrite` (#399)
 
 ## [3.0.1] - 2025-11-24
