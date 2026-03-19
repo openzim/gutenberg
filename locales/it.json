@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Beta16"
+			"Beta16",
+			"FL2226"
 		]
 	},
 	"language": "Italiano",
@@ -112,6 +113,7 @@
 		"he": "Ebraico",
 		"hi": "Hindi",
 		"hu": "Ungherese",
+		"hy": "Armeno",
 		"ia": "Interlingua",
 		"is": "Islandese",
 		"it": "Italiano",
@@ -134,6 +136,7 @@
 		"ro": "Rumeno",
 		"ru": "Russo",
 		"sa": "Sanscrito",
+		"skr-arab": "Saraiki (scrittura araba)",
 		"sl": "Sloveno",
 		"sr": "Serbo",
 		"sv": "Svedese",

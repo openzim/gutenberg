@@ -1,9 +1,143 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Rivoz"
+		]
+	},
+	"nav": {
+		"home": "Avaleht",
+		"authors": "Autorid",
+		"shelves": "Riiulid",
+		"about": "Teave"
+	},
+	"about": {
+		"title": "Teave Project Gutenbergi kohta",
+		"collectionStats": "Kogu statistika",
+		"linksTitle": "Lingid",
+		"linkGutenberg": "Projekti Gutenberg veebisait"
+	},
+	"stats": {
+		"books": "Raamatud",
+		"authors": "Autorid"
+	},
+	"authors": {
+		"title": "Autorid",
+		"description": "Sirvi kõiki Gutenbergi kogu autoreid"
+	},
+	"book": {
+		"title": "Raamatud",
+		"downloads": "allalaadimised",
+		"downloadsCount": "{count} allalaadimine | {count} allalaadimist",
+		"downloadCount": "Allalaadimiste arv",
+		"languages": "Keel(ed)",
+		"lccShelf": "LCC riiul",
+		"description": "Kirjeldus",
+		"availableFormats": "Saadaolevad vormingud",
+		"fullName": "Täisnimi",
+		"unknown": "Tundmatu"
+	},
+	"author": {
+		"bookCount": "{n} raamat | {n} raamatut",
+		"fullName": "Täisnimi"
+	},
+	"shelf": {
+		"booksInShelf": "Raamatud selles riiulis",
+		"booksInTitle": "Raamatud riiulil {shelf}"
+	},
+	"common": {
+		"loadingAuthor": "Autori info laadimine...",
+		"loadingStats": "Statistika laadimine...",
+		"loadingItems": "Laadimine {type}...",
+		"searchAuthors": "Otsi autoreid",
+		"clear": "Tühjenda",
+		"all": "Kõik",
+		"clearAllSelections": "Tühjenda kõik valikud",
+		"selectAll": "Vali kõik",
+		"sort": "Sorteeri",
+		"sortBy": "Sorteeri",
+		"sortPopularity": "Populaarsus",
+		"bookLanguages": "Raamatu keeled",
+		"uiLanguage": "Kasutajaliidese keel",
+		"selectInterfaceLanguage": "Vali kasutajaliidese keel",
+		"filter": "filter",
+		"selected": "valitud",
+		"gridView": "Ruudustikuvaade",
+		"listView": "Loendivaade",
+		"browseAll": "Sirvi kõiki",
+		"browseAllShelves": "Sirvi kõiki riiuleid",
+		"browseAllAuthors": "Sirvi kõiki autoreid",
+		"returnHome": "Tagasi avalehele",
+		"toggleNavigationMenu": "Navigeerimismenüü avamine/sulgemine",
+		"footerLinks": "Jaluse lingid",
+		"toggleSortOptions": "Sorteerimisvalikute sisse/välja lülitamine"
+	},
+	"messages": {
+		"noBooks": "Raamatuid ei leitud.",
+		"noAuthors": "Autoreid ei leitud.",
+		"noShelves": "Riiuleid ei leitud.",
+		"noLanguages": "Keeli pole saadaval.",
+		"noFormats": "Vorminguid pole saadaval."
 	},
 	"metadata_defaults": {
 		"title": "Projekt Gutenbergi raamatukogu",
 		"description": "Kõik eestikeelsed raamatud esimeselt tasuta e-raamatute tootjalt"
+	},
+	"itemTypes": {
+		"books": "raamat | raamatud"
+	},
+	"lccShelves": {
+		"B": "B-Filosoofia, psühholoogia, religioon"
+	},
+	"languageNames": {
+		"af": "Afrikaani",
+		"ar": "Araabia",
+		"bg": "Bulgaaria",
+		"bo": "Tiibeti",
+		"br": "Bretooni",
+		"ca": "Katalaani",
+		"cs": "Tšehhi",
+		"da": "Taani",
+		"de": "Saksa",
+		"el": "Kreeka",
+		"en": "Inglise",
+		"eo": "Esperanto",
+		"es": "Hispaania",
+		"et": "Eesti",
+		"fa": "Pärsia",
+		"fi": "Soome",
+		"fr": "Prantsuse",
+		"fy": "Läänefriisi",
+		"ga": "Iiri",
+		"gl": "Galeegi",
+		"he": "Heebrea",
+		"hi": "hindi",
+		"hu": "Ungari",
+		"hy": "Armeenia",
+		"is": "Islandi",
+		"it": "Itaalia",
+		"ja": "Jaapani",
+		"ko": "Korea",
+		"la": "Ladina",
+		"mi": "Maoori",
+		"mk": "Makedoonia",
+		"mul": "Mitu keelt",
+		"nl": "Hollandi",
+		"no": "Norra",
+		"oj": "Ojibwe",
+		"pl": "Poola",
+		"ps": "Puštu",
+		"pt": "Portugali",
+		"pt-br": "Brasiilia portugali keel",
+		"ro": "Rumeenia",
+		"ru": "Vene",
+		"sa": "Sanskriti",
+		"sl": "Sloveenia",
+		"sr": "Serbia",
+		"sv": "Rootsi",
+		"te": "Telugu",
+		"tl": "Tagalogi",
+		"zh": "Hiina",
+		"zh-hans": "Lihtsustatud hiina keel",
+		"zh-hant": "Traditsiooniline hiina"
 	}
 }
