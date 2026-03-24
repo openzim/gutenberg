@@ -80,7 +80,7 @@
 		"classificationCode": "Classificatiecode",
 		"booksInShelf": "Bladeren op boekenplank",
 		"booksIn": "Boeken in",
-		"booksInTitle": "Boeken op {plank}",
+		"booksInTitle": "Boeken op {shelf}",
 		"bookCount": "{n} boek | {n} boeken"
 	},
 	"common": {

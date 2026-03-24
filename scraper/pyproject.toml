@@ -57,6 +57,7 @@ Donate = "https://www.kiwix.org/en/support-us/"
 
 [project.scripts]
 gutenberg2zim = "gutenberg2zim:entrypoint.main"
+gutenberg2zim-validate-i18n = "gutenberg2zim.scripts.validate_i18n:main"
 
 [tool.hatch.version]
 path = "src/gutenberg2zim/__about__.py"
