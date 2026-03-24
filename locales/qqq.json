@@ -7,62 +7,159 @@
 	"language": "Name of the language you're translating into, in its own language (autonym). <span style=\"color: red\">'''Do not translate “English” into your language here!'''</span>",
 	"isocode": "ISO 639-1 language code for the language you're translating into.",
 	"nav": {
-		"home": "Title attribute for the homepage link/button"
+		"home": "Title attribute for the homepage link/button",
+		"authors": "Title attribute for the authors page link/button",
+		"shelves": "Title attribute for the shelves page link/button",
+		"about": "Title attribute for the about page link/button"
 	},
 	"home": {
 		"title": "Main title for the Project Gutenberg library site",
 		"subtitle": "Subtitle/tagline describing Project Gutenberg"
 	},
 	"about": {
-		"offers": "First sentence in the about section describing the collection size",
-		"choose": "Second sentence in the about section describing available formats Third sentence in the about section describing how to access books",
-		"qualityTitle": "Fourth sentence in the about section introducing the quality statement",
-		"qualityDesc": "Fifth sentence in the about section describing the source of books Sixth sentence in the about section describing the digitization process"
+		"title": "Title for the about page",
+		"offers": "Introductory sentence stating the number of free eBooks offered by Project Gutenberg",
+		"choose": "Description of available book formats (epub, kindle, etc.) and how to access them (download or read online)",
+		"qualityTitle": "Heading emphasizing the high quality of the eBook collection",
+		"qualityDesc": "Explanation of eBook quality, mentioning publisher sources and the digitization/proofreading process with volunteers",
+		"collectionStats": "Label for the collection statistics section",
+		"collectionTitle": "Heading for the section describing this offline collection",
+		"collectionDesc1": "Description of this offline collection as a curated selection from Project Gutenberg",
+		"collectionDesc2": "Historical information about Project Gutenberg's founding and mission",
+		"collectionDesc3": "Explanation of how Kiwix enables offline access to this collection",
+		"linksTitle": "Heading for the external links section",
+		"linkGutenberg": "Link text for the Project Gutenberg website",
+		"linkGutenbergDesc": "Description text for the Project Gutenberg website link",
+		"linkKiwix": "Link text for the Kiwix website",
+		"linkKiwixDesc": "Description text for the Kiwix website link"
+	},
+	"stats": {
+		"books": "Label for the number of books in the collection",
+		"authors": "Label for the number of authors in the collection",
+		"shelves": "Label for the number of LCC shelves in the collection"
+	},
+	"authors": {
+		"title": "Title for the authors listing page",
+		"description": "Description for the authors page"
 	},
 	"shelves": {
-		"title": "Title for the Library of Congress Classification bookshelves page"
+		"title": "Title for the Library of Congress Classification bookshelves page",
+		"description": "Description for the shelves page"
 	},
 	"book": {
 		"title": "Label for the book title field",
 		"author": "Label for the author field",
+		"lifespan": "Label for the author's lifespan (birth-death years)",
 		"popularity": "Label for the popularity metric",
+		"downloads": "Label for the downloads metric",
+		"downloadsCount": "Text showing download count with pluralization. Parameters: {count} - number of downloads",
+		"downloadCount": "Label for the download count field",
 		"languages": "Label for the language field or filter",
+		"lccShelf": "Label for the Library of Congress Classification shelf field",
 		"license": "Label for the license field",
 		"licensePd": "Text describing the public domain license status in the USA",
 		"licenseCopyright": "Text describing copyrighted works with a notice to check the book for details",
+		"description": "Label for the book description field",
+		"availableFormats": "Label for the available book formats section",
+		"fullName": "Label for the full name field",
+		"worksAvailable": "Label for the number of works available",
+		"unknown": "Text displayed when information is unknown",
 		"cover": "Alt text for book cover images",
 		"coverLabel": "Text label indicating a book cover (used in links or captions)",
 		"anonymous": "Text displayed for books with anonymous authors",
 		"various": "Text displayed for books with various/multiple authors"
 	},
+	"author": {
+		"bookCount": "Text showing book count with pluralization. Parameters: {n} - number of books",
+		"booksByAuthor": "Title for books by a specific author. Parameters: {name} - author name",
+		"fullName": "Label for the author's full name",
+		"lifespan": "Label for the author's lifespan (birth-death years)",
+		"worksAvailable": "Label for the number of works available by this author"
+	},
 	"shelf": {
-		"booksInShelf": "Link text to browse books by Library of Congress Classification bookshelf"
+		"classificationCode": "Label for the Library of Congress Classification code",
+		"booksInShelf": "Link text to browse books by Library of Congress Classification bookshelf",
+		"booksIn": "Text prefix for 'Books in [shelf name]'",
+		"booksInTitle": "Title for books in a specific shelf. Parameters: {shelf} - shelf name",
+		"bookCount": "Text showing book count with pluralization. Parameters: {n} - number of books"
 	},
 	"common": {
 		"loading": "Message displayed while content is loading",
+		"loadingBook": "Message displayed while book details are loading",
+		"loadingAuthor": "Message displayed while author details are loading",
+		"loadingShelf": "Message displayed while shelf details are loading",
+		"loadingStats": "Message displayed while statistics are loading",
+		"loadingItems": "Message displayed while items are loading. Parameters: {type} - type of items being loaded",
+		"showing": "Text prefix for showing results count",
+		"of": "Text separator between current and total count (e.g., '10 of 100')",
 		"search": "Label for the search functionality",
 		"searchAuthors": "Placeholder text for the author search input field",
 		"searchAuthorsByName": "Placeholder text for searching authors by their name",
 		"searchShelf": "Placeholder text for the bookshelf search input field",
+		"searchShelfAria": "Accessible label for the shelf search input field",
+		"clear": "Label for clear/reset button",
+		"all": "Label for the option to select all items",
+		"clearAllSelections": "Label for clearing all filter selections",
+		"selectAll": "Label for selecting all items",
 		"sort": "Label for sort controls",
+		"sortBy": "Label for the sort by dropdown",
 		"sortPopularity": "Label for the option to sort books by popularity",
 		"sortTitle": "Label for the option to sort books by title",
 		"language": "Label for the language field or filter",
+		"bookLanguages": "Label for the book languages filter",
 		"chooseLanguage": "Placeholder text for the language selection dropdown",
 		"mainLanguages": "Label for the main/primary languages section",
 		"otherLanguages": "Label for the other/secondary languages section",
 		"anyCatalog": "Label for the option to view all language catalogs",
 		"format": "Label for the book format field (e.g., EPUB, PDF, HTML)",
 		"uiLanguage": "Title for the user interface language switcher control",
+		"selectInterfaceLanguage": "Accessible label for the interface language selector",
+		"filterBy": "Label for filter controls",
+		"filterByTitle": "Label for filtering by a specific field. Parameters: {title} - field name",
 		"filter": "Label for filter controls",
-		"returnHome": "Link text to return to the homepage"
+		"selected": "Text indicating items are selected",
+		"gridView": "Label for grid view layout option",
+		"listView": "Label for list view layout option",
+		"browseAll": "Label for browsing all items",
+		"browseAllShelves": "Label for browsing all shelves",
+		"browseAllAuthors": "Label for browsing all authors",
+		"returnHome": "Link text to return to the homepage",
+		"toggleNavigationMenu": "Accessible label for toggling the navigation menu",
+		"mainNavigation": "Accessible label for the main navigation area",
+		"mobileNavigationMenu": "Accessible label for the mobile navigation menu",
+		"mobileNavigation": "Accessible label for mobile navigation",
+		"footerLinks": "Accessible label for the footer links section",
+		"toggleSortOptions": "Accessible label for toggling sort options",
+		"navigateTo": "Accessible label prefix for navigation links",
+		"navigateToItem": "Accessible label for navigating to an item. Parameters: {item} - item name",
+		"opensInNewTab": "Accessible text indicating a link opens in a new tab",
+		"gutenbergHome": "Label for the Gutenberg home link"
 	},
 	"messages": {
-		"noBooks": "Message displayed in tables when no data is available"
+		"noBooks": "Message displayed when no data is available",
+		"noAuthors": "Message displayed when no authors are found",
+		"noShelves": "Message displayed when no shelves are found",
+		"noBooksForAuthor": "Message displayed when an author has no books available",
+		"noBooksInShelf": "Message displayed when a shelf has no books available",
+		"noLanguages": "Message displayed when no languages are available",
+		"noFormats": "Message displayed when no formats are available",
+		"notFoundBook": "Error message displayed when a book is not found",
+		"notFoundAuthor": "Error message displayed when an author is not found",
+		"notFoundShelf": "Error message displayed when a shelf is not found"
 	},
 	"metadata_defaults": {
 		"title": "Default ZIM title used in ZIM metadata when no specific ZIM title is set",
 		"description": "Default ZIM description used in ZIM metadata when no specific ZIM description is set"
+	},
+	"footer": {
+		"tagline": "Main tagline text in the footer",
+		"subtitle": "Subtitle text in the footer",
+		"powered": "Text crediting Kiwix for offline access"
+	},
+	"itemTypes": {
+		"books": "Pluralization for book items. Format: singular | plural",
+		"authors": "Pluralization for author items. Format: singular | plural",
+		"shelves": "Pluralization for shelf items. Format: singular | plural"
 	},
 	"lccShelves": {
 		"A": "Library of Congress Classification Shelf A - General works",

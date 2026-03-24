@@ -93,7 +93,7 @@
 		"uiLanguage": "Interfaccia lingua",
 		"selectInterfaceLanguage": "Seleziona la lingua dell'interfaccia",
 		"filterBy": "Filtra per",
-		"filterByTitle": "Filtra per {titolo}",
+		"filterByTitle": "Filtra per {title}",
 		"filter": "Filtro",
 		"selected": "selezionato",
 		"gridView": "Visualizzazione a griglia",
@@ -103,7 +103,7 @@
 		"mainNavigation": "Navigazione principale",
 		"mobileNavigation": "Navigazione mobile",
 		"navigateTo": "Vai a",
-		"navigateToItem": "Vai a {elemento}",
+		"navigateToItem": "Vai a {item}",
 		"opensInNewTab": "apri in una nuova scheda"
 	},
 	"messages": {

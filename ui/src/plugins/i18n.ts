@@ -45,6 +45,7 @@ export const supportedLanguages: Language[] = [
   { code: 'hy', display: 'հայերեն', rtl: false },
   { code: 'ia', display: 'Interlingua', rtl: false },
   { code: 'ilo', display: 'Ilokano', rtl: false },
+  { code: 'is', display: 'Íslenska', rtl: false },
   { code: 'it', display: 'Italiano', rtl: false },
   { code: 'iu', display: 'ᐃᓄᒃᑎᑐᑦ', rtl: false },
   { code: 'ja', display: '日本語', rtl: false },
