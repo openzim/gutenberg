@@ -102,8 +102,10 @@ def html_content_for(book: Book, src_dir):
         raise
 
 
-def update_html_for_static(book, html_content, formats, *, epub=False):
-    soup = BeautifulSoup(html_content, "lxml")
+def update_html_for_static(
+    book, html_content, formats, *, epub: bool = False, is_xml: bool = False
+):
+    soup = BeautifulSoup(html_content, "lxml-xml" if is_xml else "lxml")
 
     # remove encoding as we're saving to UTF8 anyway
     encoding_specified = False
@@ -230,20 +232,20 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
     if not isinstance(body, Tag):
         return
     try:
-        is_encapsulated_in_div = (
-            sum(
-                [
-                    1
-                    for e in body.children
-                    if not isinstance(e, bs4.element.NavigableString)
-                ]
-            )
-            == 1
+        number_of_children_tags = sum(
+            [1 for e in body.children if isinstance(e, bs4.Tag)]
+        )
+        number_of_children_div_tags = sum(
+            [1 for e in body.children if isinstance(e, bs4.Tag) and e.name == "div"]
+        )
+        has_single_div = (
+            number_of_children_tags == number_of_children_div_tags
+            and number_of_children_tags == 1
         )
     except Exception:
-        is_encapsulated_in_div = False
+        has_single_div = False
 
-    if not is_encapsulated_in_div:
+    if not has_single_div:
         for start_of_text, end_of_text in patterns:
             if start_of_text not in body.text and end_of_text not in body.text:
                 continue
@@ -266,7 +268,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
                 remove = True
                 for child in body.children:
                     if not isinstance(child, bs4.Tag):
-                        raise Exception("start_of_text child should be a Tag class")
+                        continue
                     if start_of_text in getattr(child, "text", ""):
                         child.decompose()
                         remove = False
@@ -277,7 +279,7 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
                 remove = False
                 for child in body.children:
                     if not isinstance(child, bs4.Tag):
-                        raise Exception("end_of_text child should be a Tag class")
+                        continue
                     if end_of_text in getattr(child, "text", ""):
                         remove = True
                     if remove:
@@ -507,11 +509,11 @@ def _optimize_epub_png(data: bytes) -> bytes:
     return dst.getvalue()
 
 
-def _process_epub_html(data: bytes, book: Book) -> bytes:
+def _process_epub_html(data: bytes, book: Book, *, is_xml: bool = False) -> bytes:
     """Process HTML file from EPUB: remove Gutenberg markers and process content."""
     html_str = data.decode("utf-8", errors="replace")
     soup = update_html_for_static(
-        book=book, html_content=html_str, formats=[], epub=True
+        book=book, html_content=html_str, formats=[], epub=True, is_xml=is_xml
     )
     return str(soup).encode(UTF8)
 
@@ -554,19 +556,23 @@ def optimize_epub_bytes(epub_bytes: bytes, book: Book) -> bytes:
             suffix = Path(name).suffix.lower()
 
             if suffix in (".jpg", ".jpeg"):
-                data = _optimize_epub_jpeg(data)
+                optimized_data = _optimize_epub_jpeg(data)
+                if len(optimized_data) < len(data):  # ignore bigger compressed version
+                    data = optimized_data
             elif suffix == ".png":
-                data = _optimize_epub_png(data)
+                optimized_data = _optimize_epub_png(data)
+                if len(optimized_data) < len(data):  # ignore bigger compressed version
+                    data = optimized_data
             elif suffix in (".gif", ".webp"):
                 logger.warning(
                     f"Unexpected {suffix} image in EPUB for book {book.book_id}: {name}"
                 )
-            elif suffix in (".htm", ".html"):
-                data = _process_epub_html(data, book)
+            elif suffix in (".htm", ".html", ".xhtml"):
+                data = _process_epub_html(data, book, is_xml=(suffix == ".xhtml"))
             elif suffix == ".ncx":
                 data = _process_epub_ncx(data, book)
 
-            dst_zf.writestr(info, data)
+            dst_zf.writestr(info.filename, data)
 
     optimized_bytes = dst_buf.getvalue()
     optimized_size = len(optimized_bytes)
@@ -574,6 +580,11 @@ def optimize_epub_bytes(epub_bytes: bytes, book: Book) -> bytes:
         logger.warning(
             f"Optimized EPUB for book {book.book_id} is larger than original: "
             f"{optimized_size} > {original_size} bytes"
+        )
+    else:
+        logger.debug(
+            f"Optimized EPUB for book {book.book_id}: "
+            f"{optimized_size} < {original_size} bytes"
         )
 
     return optimized_bytes
