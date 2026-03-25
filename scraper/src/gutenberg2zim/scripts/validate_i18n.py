@@ -151,7 +151,13 @@ def process_files(
 
     for pattern, file_type in file_patterns.items():
         for file_path in directory.rglob(pattern):
+            # Skip node_modules
             if "node_modules" in str(file_path):
+                continue
+            # Skip test files
+            if "__tests__" in file_path.parts or file_path.stem.endswith(
+                (".test", ".spec")
+            ):
                 continue
             try:
                 if file_path.samefile(Path(__file__)):
