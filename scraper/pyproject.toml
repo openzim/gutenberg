@@ -25,7 +25,7 @@ dependencies = [
   "chardet==5.2.0",
   "apsw==3.51.2.0",
   "kiwixstorage==0.10.1",
-  "requests==2.32.5",
+  "requests==2.33.0",
   "pif==0.8.2",
   "zimscraperlib==5.3.0",
   "schedule==1.2.2",
