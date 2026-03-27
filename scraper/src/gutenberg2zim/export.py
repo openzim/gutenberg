@@ -17,6 +17,7 @@ from zimscraperlib.image.optimization import (
 from zimscraperlib.zim.indexing import IndexData
 
 from gutenberg2zim.constants import logger
+from gutenberg2zim.download import download_book_cover
 from gutenberg2zim.iso639 import language_name
 from gutenberg2zim.models import Author, Book, repository
 from gutenberg2zim.schemas import (
@@ -131,10 +132,29 @@ def html_content_for(book: Book, src_dir):
         raise
 
 
+def transform_image_path(book_id: int, path: str) -> str:
+    """Transform image path from images/xxx to {book_id}_xxx"""
+    return path.replace("images/", f"{book_id}_")
+
+
 def update_html_for_static(
     book, html_content, formats, *, epub: bool = False, is_xml: bool = False
 ):
     soup = BeautifulSoup(html_content, "lxml-xml" if is_xml else "lxml")
+
+    # Extract cover image href from <link rel="icon"> for later detection
+    # and update its path to match image transformations
+    if not epub:
+        icon_link = soup.find("link", rel="icon")
+        if icon_link:
+            href = icon_link.get("href")
+            if href and isinstance(href, str):
+                # Store original href for cover detection (only once)
+                if not book._cover_href:
+                    book._cover_href = href
+
+                # Transform the path
+                icon_link["href"] = transform_image_path(book.book_id, href)
 
     # remove encoding as we're saving to UTF8 anyway
     encoding_specified = False
@@ -164,11 +184,12 @@ def update_html_for_static(
     if not epub:
         for img in soup.find_all("img"):
             if "src" in img.attrs:
-                img.attrs["src"] = img.get_attribute_list("src")[0].replace(
-                    "images/", f"{book.book_id}_"
+                img.attrs["src"] = transform_image_path(
+                    book.book_id, img.get_attribute_list("src")[0]
                 )
 
         # Rewrite image references to use .webp extension for converted images
+        # This also handles <link rel="icon"> tags
         # Only for regular HTML, not EPUB (EPUB images are not converted to WebP)
         rewrite_html_image_references(soup, book)
 
@@ -384,8 +405,8 @@ def update_html_for_static(
 def export_book(
     book: Book,
     book_files: dict[str, bytes],
-    cover_image: bytes | None,
     formats: list[str],
+    mirror_url: str,
     _zim_name: str,
     *,
     _title_search: bool,
@@ -398,15 +419,33 @@ def export_book(
         formats=formats,
     )
 
-    if cover_image:
-        cover_path = f"covers/{book.book_id}_cover_image.webp"
-        cover_image = optimize_content(book, cover_path, cover_image)
-        Global.add_item_for(
-            path=cover_path,
-            content=cover_image,
-            mimetype="image/webp",
-            is_front=False,
+    # Handle cover image
+    cover_path = f"covers/{book.book_id}_cover_image.webp"
+
+    if book.html_cover_path:
+        # HTML has a cover image - create alias instead of storing duplicate
+        # Use alias (not redirect) since this is an image, not HTML with relative paths
+        logger.debug(
+            f"Using HTML cover for book #{book.book_id}: {book.html_cover_path}"
         )
+        Global.add_alias(
+            path=cover_path,
+            title="",
+            target=book.html_cover_path,
+        )
+    else:
+        # No HTML cover - download from mirror
+        cover_image = download_book_cover(mirror_url, book)
+
+        if cover_image:
+            logger.debug(f"Using downloaded cover for book #{book.book_id}")
+            cover_image = optimize_content(book, cover_path, cover_image)
+            Global.add_item_for(
+                path=cover_path,
+                content=cover_image,
+                mimetype="image/webp",
+                is_front=False,
+            )
 
 
 def handle_book_files(
@@ -497,6 +536,24 @@ def handle_book_files(
             try:
                 optimized_file_content = optimize_content(book, filename, file_content)
                 output_filename = ImageProcessor.get_output_filename(filename)
+
+                # Check if this is the cover image by comparing with transformed href
+                # Note: filename is already transformed (e.g., "1_cover.jpg")
+                # by download.py so we transform book._cover_href the same way
+                if book._cover_href:
+                    # Transform cover href same way we transform image paths
+                    expected_cover = transform_image_path(
+                        book.book_id, book._cover_href
+                    )
+                    expected_cover = ImageProcessor.get_output_filename(expected_cover)
+
+                    if output_filename == expected_cover:
+                        book.html_cover_path = output_filename
+                        logger.debug(
+                            f"Detected HTML cover for book #{book.book_id}: "
+                            f"{output_filename}"
+                        )
+
                 Global.add_item_for(
                     path=output_filename,
                     content=optimized_file_content,

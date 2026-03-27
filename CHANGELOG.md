@@ -10,6 +10,7 @@ as of 2.0.0.
 
 ### Fixed
 
+- Deduplicate cover images by reusing HTML version (#437)
 - Prevent crash when all books fail to download (#416)
 - Add Friulian (fur) language code mapping (#415)
 - Fix issue with i18n fallback language (#360)

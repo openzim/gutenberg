@@ -111,6 +111,18 @@ class Global:
                 Global.creator.add_illustration(illus_size, fh.read())
 
     @staticmethod
+    def add_alias(path: str, title: str, target: str):
+        """Add a ZIM alias from path to target (for images/data, not HTML)"""
+        logger.debug(f"\t\tAdding ZIM alias from {path} to {target}")
+        with Global._lock:
+            Global.creator.add_alias(
+                path=path,
+                title=title,
+                targetPath=target,
+                hints={},
+            )
+
+    @staticmethod
     def start():
         Global.creator.start()
 
