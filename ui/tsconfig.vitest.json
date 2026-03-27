@@ -1,9 +1,8 @@
 {
   "extends": "./tsconfig.app.json",
   "include": [
-    "src/**/__tests__/*",
-    "src/**/*.{test,spec}.{ts,mts,tsx,vue}"
-  ],
+    "env.d.ts",
+    "src/**/*"  ],
   "exclude": [],
   "compilerOptions": {
     "composite": true,
@@ -11,4 +10,3 @@
     "types": ["node", "jsdom", "vitest/globals"]
   }
 }
-
