@@ -18,10 +18,10 @@
 	},
 	"about": {
 		"title": "Title for the about page",
-		"offers": "Introductory sentence stating the number of free eBooks offered by Project Gutenberg",
-		"choose": "Description of available book formats (epub, kindle, etc.) and how to access them (download or read online)",
-		"qualityTitle": "Heading emphasizing the high quality of the eBook collection",
-		"qualityDesc": "Explanation of eBook quality, mentioning publisher sources and the digitization/proofreading process with volunteers",
+		"offers": "First sentence in the about section describing the collection size",
+		"choose": "Second sentence in the about section describing available formats Third sentence in the about section describing how to access books",
+		"qualityTitle": "Fourth sentence in the about section introducing the quality statement",
+		"qualityDesc": "Fifth sentence in the about section describing the source of books Sixth sentence in the about section describing the digitization process",
 		"collectionStats": "Label for the collection statistics section",
 		"collectionTitle": "Heading for the section describing this offline collection",
 		"collectionDesc1": "Description of this offline collection as a curated selection from Project Gutenberg",
@@ -136,7 +136,7 @@
 		"gutenbergHome": "Label for the Gutenberg home link"
 	},
 	"messages": {
-		"noBooks": "Message displayed when no data is available",
+		"noBooks": "Message displayed in tables when no data is available",
 		"noAuthors": "Message displayed when no authors are found",
 		"noShelves": "Message displayed when no shelves are found",
 		"noBooksForAuthor": "Message displayed when an author has no books available",
