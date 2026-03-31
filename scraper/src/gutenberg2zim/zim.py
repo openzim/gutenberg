@@ -12,12 +12,29 @@ from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import get_zim_name
 
 
+def resolve_language(lang: str) -> list[str]:
+    """Helper to resolve one input language code to ZIM language code(s)."""
+    return [
+        zim_lang
+        for zim_lang in ZIM_LANGUAGES_MAP.get(
+            lang,
+            [ISO_MATRIX.get(lang, lang if lang in ISO_MATRIX_REV else None)],
+        )
+        if zim_lang
+    ]
+
+
 def get_zim_language_metadata(languages: list[str], books: list[CatalogEntry]):
+    unresolved = [lang for lang in languages if not resolve_language(lang)]
+    if unresolved:
+        raise ValueError(
+            f"Cannot resolve ZIM language metadata for: {', '.join(unresolved)}. "
+            "Use --zim-languages to override."
+        )
     language_counts = {
         zim_lang: sum(lang in book.languages for book in books)
         for lang in languages
-        for zim_lang in ZIM_LANGUAGES_MAP.get(lang, [ISO_MATRIX.get(lang, None)])
-        if zim_lang
+        for zim_lang in resolve_language(lang)
     }
     return sorted(language_counts, key=lambda lang: language_counts[lang], reverse=True)
 
