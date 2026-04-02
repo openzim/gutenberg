@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import type { Book } from '@/types'
-import {
-  getPopularityStars,
-  formatDownloads,
-  formatLanguages,
-  formatAuthorLifespan
-} from '@/utils/format-utils'
+import { useFormatters } from '@/composables/useFormatters'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const { getPopularityStars, formatDownloads, formatLanguages, formatAuthorLifespan } =
+  useFormatters()
 
 defineProps<{
   book: Book

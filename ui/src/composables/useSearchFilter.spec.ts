@@ -31,31 +31,25 @@ describe('useSearchFilter', () => {
     expect(filteredItems.value).toEqual(SAMPLE_BOOKS)
   })
 
-  it('filters items by searchable fields', () => {
+  it.each([
+    { query: 'pride', field: 'title', expected: 'Pride and Prejudice' },
+    { query: 'dickens', field: 'author', expected: 'Charles Dickens' }
+  ])('filters items by $field with query "$query"', ({ query, field, expected }) => {
     const { filteredItems, searchQuery } = createFilter((item) => [item.title, item.author])
 
-    searchQuery.value = 'pride'
-    expect(filteredItems.value).toHaveLength(1)
-    expect(filteredItems.value[0]!.title).toBe('Pride and Prejudice')
+    searchQuery.value = query
 
-    searchQuery.value = 'dickens'
     expect(filteredItems.value).toHaveLength(1)
-    expect(filteredItems.value[0]!.author).toBe('Charles Dickens')
+    expect(filteredItems.value[0]![field as keyof TestBook]).toBe(expected)
   })
 
-  it('is case-insensitive', () => {
-    const { filteredItems, searchQuery } = createFilter((item) => [item.author])
+  it.each([
+    { query: 'ORWELL', description: 'case-insensitive' },
+    { query: '  1984  ', description: 'trims whitespace' }
+  ])('is $description', ({ query }) => {
+    const { filteredItems, searchQuery } = createFilter((item) => [item.title, item.author])
 
-    searchQuery.value = 'ORWELL'
-
-    expect(filteredItems.value).toHaveLength(1)
-    expect(filteredItems.value[0]!.author).toBe('George Orwell')
-  })
-
-  it('trims whitespace from query', () => {
-    const { filteredItems, searchQuery } = createFilter((item) => [item.title])
-
-    searchQuery.value = '  1984  '
+    searchQuery.value = query
 
     expect(filteredItems.value).toHaveLength(1)
     expect(filteredItems.value[0]!.title).toBe('1984')
@@ -69,7 +63,7 @@ describe('useSearchFilter', () => {
     expect(filteredItems.value).toEqual([])
   })
 
-  it('searches across multiple fields including arrays', () => {
+  it('searches across multiple fields including arrays and handles partial matches', () => {
     const { filteredItems, searchQuery } = createFilter((item) => [
       item.title,
       item.author,
@@ -77,15 +71,9 @@ describe('useSearchFilter', () => {
     ])
 
     searchQuery.value = 'classic'
-
     expect(filteredItems.value).toHaveLength(2)
-  })
-
-  it('handles partial matches', () => {
-    const { filteredItems, searchQuery } = createFilter((item) => [item.title])
 
     searchQuery.value = 'exp'
-
     expect(filteredItems.value).toHaveLength(1)
     expect(filteredItems.value[0]!.title).toBe('Great Expectations')
   })

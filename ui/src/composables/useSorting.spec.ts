@@ -40,104 +40,86 @@ describe('useSorting', () => {
   }
 
   describe('sorting by field', () => {
-    it('sorts by title ascending', () => {
-      const { sortedItems } = createSorting('title', 'asc')
+    it.each([
+      {
+        field: 'title',
+        order: 'asc' as SortOrder,
+        expected: ['Apple Book', 'Mango Book', 'Zebra Book']
+      },
+      {
+        field: 'title',
+        order: 'desc' as SortOrder,
+        expected: ['Zebra Book', 'Mango Book', 'Apple Book']
+      },
+      { field: 'popularity', order: 'asc' as SortOrder, expected: [2, 3, 5] },
+      { field: 'downloads', order: 'desc' as SortOrder, expected: [5000, 3000, 1000] }
+    ])('sorts by $field $order', ({ field, order, expected }) => {
+      const { sortedItems } = createSorting(field, order)
 
-      expect(sortedItems.value.map((b) => b.title)).toEqual([
-        'Apple Book',
-        'Mango Book',
-        'Zebra Book'
-      ])
-    })
-
-    it('sorts by title descending', () => {
-      const { sortedItems } = createSorting('title', 'desc')
-
-      expect(sortedItems.value.map((b) => b.title)).toEqual([
-        'Zebra Book',
-        'Mango Book',
-        'Apple Book'
-      ])
-    })
-
-    it('sorts by popularity', () => {
-      const { sortedItems } = createSorting('popularity', 'asc')
-
-      expect(sortedItems.value.map((b) => b.popularity)).toEqual([2, 3, 5])
-    })
-
-    it('sorts by downloads descending', () => {
-      const { sortedItems } = createSorting('downloads', 'desc')
-
-      expect(sortedItems.value.map((b) => b.downloads)).toEqual([5000, 3000, 1000])
+      expect(sortedItems.value.map((b) => b[field as keyof TestBook])).toEqual(expected)
     })
   })
 
   describe('behavior', () => {
-    it('returns unsorted items when sort option not found', () => {
-      const { sortedItems } = createSorting('invalid')
+    it('returns unsorted items when sort option not found and does not mutate original array', () => {
+      const { items, sortedItems } = createSorting('invalid')
 
       expect(sortedItems.value).toEqual(SAMPLE_BOOKS)
-    })
-
-    it('does not mutate original array', () => {
-      const { items, sortedItems } = createSorting('title')
-
       expect(sortedItems.value).not.toBe(items.value)
       expect(items.value[0]!.title).toBe('Zebra Book')
     })
 
-    it('reactively updates when items change', () => {
-      const { items, sortedItems } = createSorting('title')
-
-      expect(sortedItems.value).toHaveLength(3)
-
-      items.value = [...items.value, { title: 'Beta Book', popularity: 4, downloads: 2000 }]
-
-      expect(sortedItems.value).toHaveLength(4)
-      expect(sortedItems.value[1]!.title).toBe('Beta Book')
-    })
-
-    it('reactively updates when sortBy changes', () => {
-      const { sortedItems, sortBy } = createSorting('title')
-
-      expect(sortedItems.value[0]!.title).toBe('Apple Book')
-
-      sortBy.value = 'popularity'
-
-      expect(sortedItems.value[0]!.popularity).toBe(2)
-    })
-
-    it('reactively updates when sortOrder changes', () => {
-      const { sortedItems, sortOrder } = createSorting('title', 'asc')
-
-      expect(sortedItems.value[0]!.title).toBe('Apple Book')
-
-      sortOrder.value = 'desc'
-
-      expect(sortedItems.value[0]!.title).toBe('Zebra Book')
+    it.each([
+      {
+        name: 'items change',
+        setup: (ctx: ReturnType<typeof createSorting>) => {
+          ctx.items.value = [
+            ...ctx.items.value,
+            { title: 'Beta Book', popularity: 4, downloads: 2000 }
+          ]
+        },
+        verify: (ctx: ReturnType<typeof createSorting>) => {
+          expect(ctx.sortedItems.value).toHaveLength(4)
+          expect(ctx.sortedItems.value[1]!.title).toBe('Beta Book')
+        }
+      },
+      {
+        name: 'sortBy changes',
+        setup: (ctx: ReturnType<typeof createSorting>) => {
+          ctx.sortBy.value = 'popularity'
+        },
+        verify: (ctx: ReturnType<typeof createSorting>) => {
+          expect(ctx.sortedItems.value[0]!.popularity).toBe(2)
+        }
+      },
+      {
+        name: 'sortOrder changes',
+        setup: (ctx: ReturnType<typeof createSorting>) => {
+          ctx.sortOrder.value = 'desc'
+        },
+        verify: (ctx: ReturnType<typeof createSorting>) => {
+          expect(ctx.sortedItems.value[0]!.title).toBe('Zebra Book')
+        }
+      }
+    ])('reactively updates when $name', ({ setup, verify }) => {
+      const ctx = createSorting('title', 'asc')
+      setup(ctx)
+      verify(ctx)
     })
   })
 
   describe('edge cases', () => {
-    it('handles empty items array', () => {
-      const items = ref<TestBook[]>([])
+    it.each([
+      { items: [], description: 'empty items array' },
+      { items: [SAMPLE_BOOKS[0]!], description: 'single item' }
+    ])('handles $description', ({ items }) => {
+      const itemsRef = ref(items)
       const sortBy = ref('title')
       const sortOrder = ref<SortOrder>('asc')
 
-      const { sortedItems } = useSorting(() => items.value, sortBy, sortOrder, SORT_OPTIONS)
+      const { sortedItems } = useSorting(() => itemsRef.value, sortBy, sortOrder, SORT_OPTIONS)
 
-      expect(sortedItems.value).toEqual([])
-    })
-
-    it('handles single item', () => {
-      const items = ref([SAMPLE_BOOKS[0]!])
-      const sortBy = ref('title')
-      const sortOrder = ref<SortOrder>('asc')
-
-      const { sortedItems } = useSorting(() => items.value, sortBy, sortOrder, SORT_OPTIONS)
-
-      expect(sortedItems.value).toEqual([SAMPLE_BOOKS[0]])
+      expect(sortedItems.value).toEqual(items)
     })
   })
 })

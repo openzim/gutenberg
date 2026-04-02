@@ -52,51 +52,38 @@ describe('usePagination', () => {
   })
 
   describe('total pages', () => {
-    it('calculates correctly for exact multiples', () => {
-      const { totalPages } = createPagination(50, 10)
+    it.each([
+      { items: 50, pageSize: 10, expected: 5, description: 'exact multiples' },
+      { items: 55, pageSize: 10, expected: 6, description: 'partial pages' },
+      { items: 0, pageSize: 10, expected: 0, description: 'empty items' }
+    ])('calculates $expected for $description', ({ items, pageSize, expected }) => {
+      const { totalPages } = createPagination(items, pageSize)
 
-      expect(totalPages.value).toBe(5)
-    })
-
-    it('rounds up for partial pages', () => {
-      const { totalPages } = createPagination(55, 10)
-
-      expect(totalPages.value).toBe(6)
-    })
-
-    it('returns 0 for empty items', () => {
-      const { totalPages } = createPagination(0, 10)
-
-      expect(totalPages.value).toBe(0)
+      expect(totalPages.value).toBe(expected)
     })
   })
 
   describe('navigation', () => {
-    it('navigates to specific page', () => {
+    it('navigates to specific page and scrolls to top', () => {
       const { paginatedItems, goToPage, currentPage } = createPagination(50, 10)
 
       goToPage(3)
 
       expect(currentPage.value).toBe(3)
       expect(paginatedItems.value).toEqual(createRange(10).map((i) => i + 20))
-    })
-
-    it('scrolls to top when navigating', () => {
-      const { goToPage } = createPagination(50, 10)
-
-      goToPage(2)
-
       expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
     })
 
-    it('ignores invalid page numbers', () => {
+    it.each([
+      { page: 0, description: 'page 0' },
+      { page: 10, description: 'page beyond total' }
+    ])('ignores invalid $description', ({ page }) => {
       const { goToPage, currentPage } = createPagination(50, 10)
 
-      goToPage(0)
-      expect(currentPage.value).toBe(1)
+      goToPage(page)
 
-      goToPage(10)
       expect(currentPage.value).toBe(1)
+      expect(window.scrollTo).not.toHaveBeenCalled()
     })
 
     it('resets to first page', () => {

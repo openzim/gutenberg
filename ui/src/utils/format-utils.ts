@@ -1,5 +1,4 @@
 import { supportedLanguages } from '@/plugins/i18n'
-import { useI18n } from 'vue-i18n'
 
 export function formatAuthorName(firstName: string | null, lastName: string): string {
   if (firstName) {
@@ -36,8 +35,10 @@ export function getPopularityStars(popularity: number): string {
   return '★'.repeat(clamped) + '☆'.repeat(5 - clamped)
 }
 
-export function formatLanguages(languages: string[]): string {
-  const { t, te } = useI18n()
+export function formatLanguages(
+  languages: string[],
+  translator?: { t: (key: string) => string; te: (key: string) => boolean }
+): string {
   const languageMap = new Map(
     supportedLanguages.map((lang) => [lang.code.toLowerCase(), lang.display])
   )
@@ -45,10 +46,12 @@ export function formatLanguages(languages: string[]): string {
   return languages
     .map((code) => {
       const lowerCode = code.toLowerCase()
-      const i18nKey = `languageNames.${lowerCode}`
 
-      if (te(i18nKey)) {
-        return t(i18nKey)
+      if (translator) {
+        const i18nKey = `languageNames.${lowerCode}`
+        if (translator.te(i18nKey)) {
+          return translator.t(i18nKey)
+        }
       }
 
       return languageMap.get(lowerCode) || code
