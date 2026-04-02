@@ -70,6 +70,8 @@ class Book:
     has_cover: bool = False
     unsupported_formats: list[str] = field(default_factory=list)
     popularity: int = 0  # Computed field for star rating
+    html_cover_path: str | None = None  # Path to cover image extracted from HTML
+    _cover_href: str | None = None  # Original href from <link rel="icon"> for detection
 
     def requested_formats(self, all_requested_formats: list[str]) -> list[str]:
         """Get list of formats available for this book"""

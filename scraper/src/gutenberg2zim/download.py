@@ -186,19 +186,28 @@ def download_book(
         repository.remove_book(book.book_id)
         return None
 
-    # download cover image
-    if book.has_cover:
-        url = (
-            f"{mirror_url}/cache/epub/{book.book_id}/pg{book.book_id}.cover.medium.jpg"
-        )
-        logger.debug(f"Downloading cover image from {url}")
-        try:
-            resp = requests.get(url, timeout=DEFAULT_HTTP_TIMEOUT)
-            if resp.status_code == requests.codes.ok:
-                book_content.cover_image = resp.content
-        except Exception as exc:
-            logger.warning(f"Failed to download cover for book #{book.book_id}: {exc}")
-    else:
-        logger.debug(f"No Book Cover found for Book #{book.book_id}")
+    # Note: Cover image download moved to export_book to avoid downloading
+    # when HTML already has a cover (see export.py)
 
     return book_content
+
+
+def download_book_cover(mirror_url: str, book: Book) -> bytes | None:
+    """Download cover image from mirror for a book.
+
+    Returns cover image bytes if successful, None otherwise.
+    """
+    if not book.has_cover:
+        logger.debug(f"No Book Cover found for Book #{book.book_id}")
+        return None
+
+    url = f"{mirror_url}/cache/epub/{book.book_id}/pg{book.book_id}.cover.medium.jpg"
+    logger.debug(f"Downloading cover image from {url}")
+    try:
+        resp = requests.get(url, timeout=DEFAULT_HTTP_TIMEOUT)
+        if resp.status_code == requests.codes.ok:
+            return resp.content
+    except Exception as exc:
+        logger.warning(f"Failed to download cover for book #{book.book_id}: {exc}")
+
+    return None

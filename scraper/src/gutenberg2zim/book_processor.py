@@ -115,8 +115,8 @@ def process_all_books(
             export_book(
                 book=book,
                 book_files=book_content.files,
-                cover_image=book_content.cover_image,
                 formats=formats,
+                mirror_url=mirror_url,
                 _zim_name=zim_name,
                 _title_search=title_search,
                 _add_lcc_shelves=add_lcc_shelves,
