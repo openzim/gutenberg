@@ -19,6 +19,7 @@ as of 2.0.0.
 - Optimize Docker build topology to reuse layers (#420)
 - Optimize ePub again (#376, #436)
 - Fail scraper when RDF download fails (#414)
+- Fix prettier and eslint check in zimui QA CI (#455)
 
 ### Changed
 

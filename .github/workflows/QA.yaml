@@ -56,12 +56,12 @@ jobs:
       - name: Check prettier
         working-directory: ui
         run: |
-          npx prettier --check src/
+          npm run format-check
 
       - name: Check eslint
         working-directory: ui
         run: |
-          npm run lint
+          npm run lint-check
 
   check-i18n:
     runs-on: ubuntu-24.04
