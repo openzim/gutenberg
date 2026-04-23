@@ -12,28 +12,30 @@ from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import get_zim_name
 
 
-def get_zim_language_metadata(languages: list[str], books: list[CatalogEntry]):
-    unresolved = []
-    language_counts: dict[str, int] = {}
-    for lang in languages:
-        zim_langs = ZIM_LANGUAGES_MAP.get(
+def resolve_language(lang: str) -> list[str]:
+    """Helper to resolve one input language code to ZIM language code(s)."""
+    return [
+        zim_lang
+        for zim_lang in ZIM_LANGUAGES_MAP.get(
             lang,
-            # Try ISO_MATRIX (2-letter → 3-letter), fall back to
-            # ISO_MATRIX_REV to check if already a valid 3-letter code
             [ISO_MATRIX.get(lang, lang if lang in ISO_MATRIX_REV else None)],
         )
-        resolved = [zl for zl in zim_langs if zl]
-        if not resolved:
-            unresolved.append(lang)
-            continue
-        for zim_lang in resolved:
-            language_counts[zim_lang] = sum(lang in book.languages for book in books)
+        if zim_lang
+    ]
+
+
+def get_zim_language_metadata(languages: list[str], books: list[CatalogEntry]):
+    unresolved = [lang for lang in languages if not resolve_language(lang)]
     if unresolved:
-        logger.warning(
-            f"Could not resolve ZIM language metadata for: {', '.join(unresolved)}. "
-            "Books with these languages will still be included, but they won't appear "
-            "in ZIM language metadata."
+        raise ValueError(
+            f"Cannot resolve ZIM language metadata for: {', '.join(unresolved)}. "
+            "Use --zim-languages to override."
         )
+    language_counts = {
+        zim_lang: sum(lang in book.languages for book in books)
+        for lang in languages
+        for zim_lang in resolve_language(lang)
+    }
     return sorted(language_counts, key=lambda lang: language_counts[lang], reverse=True)
 
 
@@ -138,17 +140,9 @@ def build_zimfile(
         logger.info(f"Removing existing ZIM file {zim_file}")
         zim_path.unlink(missing_ok=True)
 
-    resolved_languages = zim_languages or get_zim_language_metadata(languages, books)
-    if not resolved_languages:
-        raise ValueError(
-            f"Cannot resolve language metadata for: "
-            f"{', '.join(languages)}. "
-            "Use --zim-languages to override."
-        )
-
     Global.setup(
         filename=zim_path,
-        language=resolved_languages,
+        language=zim_languages or get_zim_language_metadata(languages, books),
         title=title,
         description=description,
         long_description=long_description,
