@@ -10,6 +10,7 @@ as of 2.0.0.
 
 ### Fixed
 
+- Fix language codes not recognized correctly (#337)
 - Add a function to remove MARC notations (#372)
 - Deduplicate cover images by reusing HTML version (#437)
 - Prevent crash when all books fail to download (#416)

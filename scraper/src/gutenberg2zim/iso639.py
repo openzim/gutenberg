@@ -240,5 +240,6 @@ ZIM_LANGUAGES_MAP: dict[str, list[str]] = {
     "myn": [],
     "nai": [],
     "nah": ["nhe"],
+    "nap": ["nap"],  # Neapolitan: no ISO 639-1 code, already valid ISO 639-3
     "fur": ["fvr"],  # Friulian: IETF fur maps to ISO 639-3 fvr
 }
