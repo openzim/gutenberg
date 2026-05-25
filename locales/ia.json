@@ -17,10 +17,29 @@
 		"subtitle": "Le prime productor de libros electronic gratuite"
 	},
 	"about": {
+		"title": "A proposito del Projecto Gutenberg",
 		"offers": "Le Projecto Gutenberg offere plus de 60.000 libros electronic gratuite",
 		"choose": "Elige inter libros EPUB o Kindle gratuite. Discarga los o lege los in linea.",
 		"qualityTitle": "Nos forni libros electronic de alte qualitate",
-		"qualityDesc": "Tote nostre libros electronic ha essite publicate antea per editores legitime. Nos los ha digitalisate e diligentemente corrigite con le adjuta de milles de voluntarios."
+		"qualityDesc": "Tote nostre libros electronic ha essite publicate antea per editores legitime. Nos los ha digitalisate e diligentemente corrigite con le adjuta de milles de voluntarios.",
+		"collectionStats": "Statisticas del collection",
+		"collectionTitle": "A proposito de iste collection",
+		"collectionDesc1": "Iste collection foras de linea contine un selection curate de libros del Projecto Gutenberg, le prime e plus grande collection de libros electronic gratuite.",
+		"collectionDesc2": "Le Projecto Gutenberg ha essite fundate in 1971 per Michael S. Hart e es le bibliotheca digital le plus ancian. Le mission del Projecto Gutenberg es incoragiar le creation e distribution de libros electronic.",
+		"collectionDesc3": "Iste collection es rendite disponibile foras de linea per Kiwix, permittente te de acceder iste obras litterari sin connexion a internet.",
+		"linksTitle": "Ligamines",
+		"linkGutenberg": "Sito web del Projecto Gutenberg",
+		"linkGutenbergDesc": "Visitar le sito web official del Projecto Gutenberg",
+		"linkKiwix": "Kiwix",
+		"linkKiwixDesc": "Leger plus sur le contento foras de linea de Kiwix"
+	},
+	"stats": {
+		"books": "Libros",
+		"authors": "Autores",
+		"shelves": "Plancas de libros LCC"
+	},
+	"authors": {
+		"title": "Autores"
 	},
 	"shelves": {
 		"title": "Plancas de libros (A-Z)"

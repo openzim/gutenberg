@@ -14,9 +14,26 @@
 		"shelves": "책장",
 		"about": "정보"
 	},
+	"home": {
+		"title": "프로젝트 구텐베르크 도서관",
+		"subtitle": "최초의 무료 전자책 제작사"
+	},
 	"about": {
+		"title": "프로젝트 구텐베르크에 대해",
+		"offers": "프로젝트 구텐베르크는 7만 권 이상의 무료 전자책을 제공합니다",
+		"choose": "무료 EPUB 전자책, 무료 킨들 전자책 등 다양한 전자책 중에서 선택하세요. 다운로드하거나 온라인으로 읽어보세요.",
+		"qualityTitle": "저희는 고품질 전자책을 제공합니다",
+		"qualityDesc": "저희의 모든 전자책은 공신력 있는 출판사에서 출간된 책들입니다. 수천 명의 자원봉사자들의 도움을 받아 디지털화하고 꼼꼼하게 교정 작업을 거쳤습니다.",
+		"collectionStats": "모음집 통계",
+		"collectionTitle": "이 모음집에 대해",
+		"collectionDesc1": "이 오프라인 모음집에는 최초이자 최대 규모의 무료 전자책 모음집인 프로젝트 구텐베르크에서 엄선된 도서들이 포함되어 있습니다.",
+		"collectionDesc2": "프로젝트 구텐베르크는 1971년 마이클 S. 하트에 의해 설립되었으며, 가장 오래된 디지털 도서관입니다. 프로젝트 구텐베르크의 목표는 전자책의 제작과 배포를 장려하는 것입니다.",
+		"collectionDesc3": "이 모음집은 Kiwix를 통해 오프라인으로 제공되므로 인터넷 연결 없이도 이러한 문학 작품을 감상할 수 있습니다.",
 		"linksTitle": "링크",
-		"linkKiwix": "Kiwix"
+		"linkGutenberg": "프로젝트 구텐베르크 도서관",
+		"linkGutenbergDesc": "공식 프로젝트 구텐베르크 웹사이트를 방문하세요",
+		"linkKiwix": "Kiwix",
+		"linkKiwixDesc": "키윅스 오프라인 콘텐츠에 대해 자세히 알아보세요"
 	},
 	"stats": {
 		"books": "책",
@@ -24,11 +41,17 @@
 		"shelves": "LCC 책장"
 	},
 	"authors": {
-		"title": "저자"
+		"title": "저자",
+		"description": "구텐베르크 모음집에 있는 모든 저자를 찾아보세요"
+	},
+	"shelves": {
+		"title": "LCC 책장",
+		"description": "미국 의회 도서관 분류 체계(LCC)별로 정리된 도서를 찾아보세요"
 	},
 	"book": {
 		"title": "제목",
 		"author": "저자",
+		"lifespan": "향년",
 		"popularity": "인기",
 		"downloads": "다운로드",
 		"downloadsCount": "{count} 다운로드 | {count} 다운로드",
@@ -50,11 +73,16 @@
 	},
 	"author": {
 		"bookCount": "{n}권 | {n}권",
+		"booksByAuthor": "{이름}의 책",
 		"fullName": "성명",
+		"lifespan": "향년",
 		"worksAvailable": "작품 이용 가능"
 	},
 	"shelf": {
 		"classificationCode": "분류 코드",
+		"booksInShelf": "이 책장의 책",
+		"booksIn": "다음 책장의 책:",
+		"booksInTitle": "다음 책장의 책: {shelf}",
 		"bookCount": "{n}권 | {n}권"
 	},
 	"common": {
@@ -64,6 +92,7 @@
 		"loadingShelf": "책장 정보를 불러오는 중...",
 		"loadingStats": "통계를 불러오는 중...",
 		"loadingItems": "{type} 불러오는 중...",
+		"showing": "다음 결과 갯수 표시 중:",
 		"of": "/",
 		"search": "검색",
 		"searchAuthors": "만든이 이름으로 검색",
@@ -88,6 +117,7 @@
 		"uiLanguage": "인터페이스 언어",
 		"selectInterfaceLanguage": "인터페이스 언어 선택",
 		"filterBy": "필터 기준",
+		"filterByTitle": "{title}(으)로 필터링",
 		"filter": "필터",
 		"selected": "선택됨",
 		"gridView": "그리드 보기",
@@ -96,8 +126,16 @@
 		"browseAllShelves": "모든 선반 탐색",
 		"browseAllAuthors": "모든 저자 탐색",
 		"returnHome": "홈으로 돌아가기",
+		"toggleNavigationMenu": "둘러보기 메뉴 전환",
+		"mainNavigation": "주 둘러보기",
 		"mobileNavigationMenu": "모바일 탐색 메뉴",
-		"footerLinks": "바닥글 링크"
+		"mobileNavigation": "모바일 둘러보기",
+		"footerLinks": "바닥글 링크",
+		"toggleSortOptions": "정렬 옵션 전환",
+		"navigateTo": "다음으로 이동:",
+		"navigateToItem": "다음으로 이동: {item}",
+		"opensInNewTab": "새 탭에서 열기",
+		"gutenbergHome": "구텐베르크 홈"
 	},
 	"messages": {
 		"noBooks": "테이블에 사용할 수 있는 데이터가 없습니다",
@@ -111,10 +149,60 @@
 		"notFoundAuthor": "저자를 찾을 수 없습니다. 찾으려는 저자가 존재하지 않거나 삭제되었습니다.",
 		"notFoundShelf": "LCC 책장을 찾을 수 없습니다. 찾으려는 책장이 존재하지 않거나 삭제되었습니다."
 	},
+	"metadata_defaults": {
+		"title": "프로젝트 구텐베르크 도서관",
+		"description": "최초의 무료 전자책 제작사가 제공하는 모든 영어 도서"
+	},
+	"footer": {
+		"tagline": "구텐베르크 프로젝트",
+		"subtitle": "무료 전자책",
+		"powered": "키윅스에서 제공하는 오프라인 액세스"
+	},
 	"itemTypes": {
 		"books": "책",
 		"authors": "저자",
 		"shelves": "책장"
+	},
+	"lccShelves": {
+		"A": "A-일반 작품",
+		"B": "B-철학, 심리학, 종교",
+		"C": "C-보조 역사 과학",
+		"D": "D-유럽, 아시아, 아프리카, 호주, 뉴질랜드 등의 세계사와 역사",
+		"E": "E-아메리카의 역사",
+		"F": "F-아메리카의 역사",
+		"G": "G-지리학, 인류학 및 레크리에이션",
+		"H": "H-사회과학",
+		"J": "J-정치 과학",
+		"K": "K-법",
+		"L": "L-교육",
+		"M": "M-음악과 음악 관련 서적",
+		"N": "N-미술",
+		"P": "P-언어 및 문학",
+		"Q": "Q-과학",
+		"R": "R-의학",
+		"S": "S-농업",
+		"T": "T-과학 기술",
+		"U": "U-군사과학",
+		"V": "V-해군 과학",
+		"Z": "Z-서지, 도서관 과학 및 일반 정보 자료",
+		"PA": "PA-그리스어 및 문학, 라틴어 및 문학",
+		"PB": "PB-현대어 및 켈트어",
+		"PC": "PC-로마어",
+		"PD": "PD-게르만어 및 스칸디나비아어",
+		"PE": "PE-영어",
+		"PF": "PF-서 게르만 언어",
+		"PG": "PG-슬라브어, 발트어 및 알바니아어",
+		"PH": "PH-우랄어 및 바스크어",
+		"PJ": "PJ-동양 언어 및 문학",
+		"PK": "PK-인도-이란 언어 및 문학",
+		"PL": "PL-동아시아, 아프리카, 오세아니아의 언어와 문학",
+		"PM": "PM-극지인, 아메리카 원주민 및 인공어",
+		"PN": "PN-문학 (일반)",
+		"PQ": "PQ-프랑스어, 이탈리아어, 스페인어, 포르투갈어 문학",
+		"PR": "PR-영어 문학",
+		"PS": "PS-미국 문학",
+		"PT": "PT-독일어, 네덜란드어, 플람스어, 아프리카어, 스칸디나비아어, 노르웨이어, 구 아이슬란드어, 구 노르웨이어, 현대 아이슬란드어, 페로어, 덴마크어, 노르웨이어 및 스웨덴어 문학",
+		"PZ": "PZ-픽션과 청소년 문학"
 	},
 	"languageNames": {
 		"af": "아프리칸스어",
@@ -146,19 +234,26 @@
 		"he": "히브리어",
 		"hi": "힌디어",
 		"hu": "헝가리어",
+		"hy": "아르메니아어",
 		"ia": "인테르링구아",
+		"ilo": "일로카노어",
 		"is": "아이슬란드어",
 		"it": "이탈리아어",
+		"iu": "이누크티투트어",
 		"ja": "일본어",
 		"ko": "한국어",
 		"la": "라틴어",
 		"lb": "룩셈부르크어",
+		"mi": "마오리어",
 		"mk": "마케도니아어",
 		"mul": "다수 언어",
+		"myn": "마야어",
+		"nah": "나와틀어",
 		"nap": "나폴리어",
 		"nl": "네덜란드어",
 		"no": "노르웨이어",
 		"oc": "오크어",
+		"oj": "오지브웨어",
 		"pl": "폴란드어",
 		"ps": "파슈토어",
 		"pt": "포르투갈어",
@@ -166,6 +261,7 @@
 		"ro": "루마니아어",
 		"ru": "러시아어",
 		"sa": "산스크리트어",
+		"skr-arab": "사라이키어(아랍 문자)",
 		"sl": "슬로베니아어",
 		"sr": "세르비아어",
 		"sv": "스웨덴어",
