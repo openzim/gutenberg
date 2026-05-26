@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Administrator66",
 			"Benoit74",
 			"GuoPC",
 			"TFX202X"
@@ -19,7 +20,8 @@
 		"offers": "古腾堡计划提供超过60,000本免费电子书",
 		"choose": "在免费的epub书籍、免费的kindle书籍中进行选择。 下载它们或在线阅读。",
 		"qualityTitle": "我们提供高质量的电子书",
-		"qualityDesc": "我们所有的电子书都是由正规出版商出版的。 我们在数千名志愿者的帮助下将它们数字化并认真校对。"
+		"qualityDesc": "我们所有的电子书都是由正规出版商出版的。 我们在数千名志愿者的帮助下将它们数字化并认真校对。",
+		"collectionDesc3": "该系列通过Kiwix离线提供，允许您在没有互联网连接的情况下访问这些文学作品。"
 	},
 	"shelves": {
 		"title": "书架（A-Z）"
