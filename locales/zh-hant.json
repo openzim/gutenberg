@@ -24,8 +24,6 @@
 	},
 	"book": {
 		"title": "標題",
-		"author": "作者",
-		"popularity": "人氣",
 		"languages": "語言",
 		"license": "授權條款",
 		"licensePd": "在美國屬於公有領域。",

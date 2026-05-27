@@ -35,13 +35,10 @@
 	},
 	"book": {
 		"title": "Título",
-		"author": "Autor",
-		"popularity": "Popularidade",
 		"languages": "Idioma",
 		"license": "Licença",
 		"licensePd": "Domínio público nos EUA.",
 		"licenseCopyright": "Protegido por direitos autorais. Leia o aviso de direitos autorais dentro deste livro para obter detalhes.",
-		"description": "Descrição",
 		"fullName": "Nome completo",
 		"cover": "Capa do livro",
 		"coverLabel": "(capa)",
