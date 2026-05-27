@@ -27,12 +27,9 @@
 	"book": {
 		"title": "Raamatud",
 		"downloads": "allalaadimised",
-		"downloadsCount": "{count} allalaadimine | {count} allalaadimist",
 		"downloadCount": "Allalaadimiste arv",
 		"languages": "Keel(ed)",
 		"lccShelf": "LCC riiul",
-		"description": "Kirjeldus",
-		"availableFormats": "Saadaolevad vormingud",
 		"fullName": "Täisnimi",
 		"unknown": "Tundmatu"
 	},

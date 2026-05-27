@@ -24,7 +24,21 @@ async function loadVuetify() {
     error: THEME_COLORS.ERROR,
     info: THEME_COLORS.INFO,
     success: THEME_COLORS.SUCCESS,
-    warning: THEME_COLORS.WARNING
+    warning: THEME_COLORS.WARNING,
+    format: THEME_COLORS.FORMAT,
+    star: THEME_COLORS.STAR,
+    title: THEME_COLORS.TITLE,
+    author: THEME_COLORS.AUTHOR,
+    authorFocus: THEME_COLORS.AUTHOR_FOCUS,
+    description: THEME_COLORS.DESCRIPTION,
+    focusBook: THEME_COLORS.FOCUS_BOOK,
+    menuActive: THEME_COLORS.MENU_ACTIVE,
+    bgd1: THEME_COLORS.BGD_1,
+    bgd2: THEME_COLORS.BGD_2,
+    bgd3Fill: THEME_COLORS.BGD_3_FILL,
+    bgd3Outline: THEME_COLORS.BGD_3_OUTLINE,
+    text: THEME_COLORS.TEXT,
+    grid: THEME_COLORS.GRID
   }
 
   const lightTheme: ThemeDefinition = {

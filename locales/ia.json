@@ -46,8 +46,6 @@
 	},
 	"book": {
 		"title": "Titulo",
-		"author": "Autor",
-		"popularity": "Popularitate",
 		"languages": "Lingua",
 		"license": "Licentia",
 		"licensePd": "De dominio public in le Statos Unite.",

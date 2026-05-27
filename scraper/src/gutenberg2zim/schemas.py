@@ -62,6 +62,7 @@ class BookPreview(CamelModel):
     popularity: int  # Star rating (0-5)
     cover_path: str | None = None
     lcc_shelf: str | None = None
+    available_formats: list[str] = []
 
 
 class Book(BookPreview):

@@ -5,7 +5,6 @@
 		]
 	},
 	"book": {
-		"author": "Kirjoittaja",
 		"cover": "Kirjan kansi",
 		"coverLabel": "(kansi)"
 	},
