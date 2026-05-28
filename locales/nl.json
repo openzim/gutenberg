@@ -17,26 +17,7 @@
 		"subtitle": "De eerste producent van gratis e-boeken"
 	},
 	"about": {
-		"title": "Over Project Gutenberg",
-		"offers": "Project Gutenberg bevat meer dan 60,000 gratis e-boeken",
-		"choose": "Kies uit gratis epub boeken, gratis kindle boeken. Download ze of lees ze online.",
-		"qualityTitle": "Wij bieden e-books van hoge kwaliteit aan",
-		"qualityDesc": "Al onze eboeken werden oorspronkelijk uitgegeven door bona fide uitgevers. We hebben ze gedigitaliseerd en zorgvuldig gecorrigeerd met behulp van duizenden vrijwilligers.",
-		"collectionStats": "Verzamelingsstatistieken",
-		"collectionTitle": "Over deze verzameling",
-		"collectionDesc1": "Deze offline verzameling bevat een zorgvuldig samengestelde selectie boeken van Project Gutenberg, de eerste en grootste verzameling gratis elektronische boeken.",
-		"collectionDesc2": "Project Gutenberg werd in 1971 opgericht door Michael S. Hart en is de oudste digitale bibliotheek. De missie van Project Gutenberg is het stimuleren van het maken en verspreiden van e-boeken.",
-		"collectionDesc3": "Deze verzameling is offline beschikbaar via Kiwix, waardoor u deze literaire werken kunt raadplegen zonder internetverbinding.",
-		"linksTitle": "Koppelingen",
-		"linkGutenberg": "Project Gutenberg Website",
-		"linkGutenbergDesc": "Bezoek de officiële website van Project Gutenberg",
-		"linkKiwix": "Kiwix",
-		"linkKiwixDesc": "Meer lezen over de offline inhoud van Kiwix"
-	},
-	"stats": {
-		"books": "Boeken",
-		"authors": "Auteurs",
-		"shelves": "LCC-boekenplanken"
+		"linkKiwix": "Kiwix"
 	},
 	"authors": {
 		"title": "Auteurs",
@@ -82,7 +63,6 @@
 		"loadingBook": "Boekgegevens laden...",
 		"loadingAuthor": "Auteursgegevens laden...",
 		"loadingShelf": "Boekenplankgegevens laden...",
-		"loadingStats": "Statistieken laden...",
 		"loadingItems": "{type} laden...",
 		"showing": "Weergegeven:",
 		"of": "van",

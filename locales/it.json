@@ -16,24 +16,7 @@
 		"subtitle": "Il primo produttore di ebooks gratuiti"
 	},
 	"about": {
-		"title": "Informazioni sul Progetto Gutenberg",
-		"offers": "Il Progetto Gutenberg offre più di 60,000 ebooks gratuiti",
-		"choose": "Scegli fra file epub gratuiti, file kindle gratuiti. Scaricali o leggili online.",
-		"qualityTitle": "Disponiamo di eBook di alta qualità",
-		"qualityDesc": "Tutti i nostri ebook erano precedentemente pubblicati da editori. Li abbiamo digitalizzati e verificati diligentemente con l'aiuto di migliaia di volontari.",
-		"collectionTitle": "Informazioni su questa collezione",
-		"collectionDesc1": "Questa collezione offline contiene una selezione curata di libri provenienti dal Progetto Gutenberg, la prima e più ampia collezione di libri elettronici gratuiti.",
-		"collectionDesc2": "Il Progetto Gutenberg è stato fondato nel 1971 da Michael S. Hart ed è la più antica biblioteca digitale. La missione del Progetto Gutenberg è quella di incoraggiare la creazione e la distribuzione di eBook.",
-		"collectionDesc3": "Questa collezione è resa disponibile offline tramite Kiwix, consentendo di accedere a queste opere letterarie senza una connessione Internet.",
-		"linksTitle": "Collegamenti",
-		"linkGutenberg": "Sito web del Progetto Gutenberg",
-		"linkGutenbergDesc": "Visita il sito ufficiale del Progetto Gutenberg",
-		"linkKiwix": "Kiwix",
-		"linkKiwixDesc": "Scopri di più sui contenuti offline di Kiwix"
-	},
-	"stats": {
-		"books": "Libri",
-		"authors": "Autori"
+		"linkKiwix": "Kiwix"
 	},
 	"authors": {
 		"title": "Autori"
@@ -67,7 +50,6 @@
 		"loading": "Caricamento in corso...",
 		"loadingBook": "Caricamento dei dettagli del libro..",
 		"loadingAuthor": "Caricamento dei dettagli dell'autore...",
-		"loadingStats": "Caricamento statistiche...",
 		"of": "di",
 		"search": "Cerca",
 		"searchAuthors": "Elenca i libri di un singolo Autore",

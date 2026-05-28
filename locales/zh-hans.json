@@ -19,32 +19,6 @@
 		"title": "古腾堡计划图书馆",
 		"subtitle": "第一个免费电子书的制作者"
 	},
-	"about": {
-		"title": "关于古腾堡计划",
-		"offers": "古腾堡计划提供超过60,000本免费电子书",
-		"choose": "在免费的epub书籍、免费的kindle书籍中进行选择。 下载它们或在线阅读。",
-		"qualityTitle": "我们提供高质量的电子书",
-		"qualityDesc": "我们所有的电子书都是由正规出版商出版的。 我们在数千名志愿者的帮助下将它们数字化并认真校对。",
-		"collectionStats": "收藏统计数据",
-		"collectionTitle": "关于本收藏",
-		"collectionDesc1": "这个离线收藏集收录了来自古腾堡计划的精选书籍，古腾堡计划是第一个也是最大的免费电子书收藏集。",
-		"collectionDesc2": "古腾堡计划由迈克尔·S·哈特于1971年创立，是历史最悠久的数字图书馆。古腾堡计划的使命是鼓励电子书的创作和传播。",
-		"collectionDesc3": "该系列通过Kiwix离线提供，允许您在没有互联网连接的情况下访问这些文学作品。",
-		"linksTitle": "链接",
-		"linkGutenberg": "古腾堡计划网站",
-		"linkGutenbergDesc": "访问古腾堡计划官方网站",
-		"linkKiwix": "Kiwix",
-		"linkKiwixDesc": "了解更多关于Kiwix离线内容的信息"
-	},
-	"stats": {
-		"books": "书籍",
-		"authors": "作者",
-		"shelves": "LCC书架"
-	},
-	"authors": {
-		"title": "作者",
-		"description": "浏览古腾堡收藏中的所有作者"
-	},
 	"shelves": {
 		"title": "书架（A-Z）",
 		"description": "浏览按美国国会图书馆分类法 (LCC) 系统组织的图书"

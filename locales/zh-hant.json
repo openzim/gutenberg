@@ -15,28 +15,6 @@
 		"title": "古騰堡計劃文庫",
 		"subtitle": "首個免費電子書製作者"
 	},
-	"about": {
-		"title": "關於古騰堡計劃",
-		"offers": "古騰堡計劃提供超過 6 萬本免費電子書",
-		"choose": "在免費 epub 電子書與免費 kindle 電子書中選擇。 下載或線上閱讀。",
-		"qualityTitle": "我們提供高品質電子書",
-		"qualityDesc": "我們所有的電子書都是由正規出版社出版。 我們在數千名志工的幫助之下，進行了數位化並認真校對資料。",
-		"collectionStats": "收藏統計",
-		"collectionTitle": "關於此收藏",
-		"linksTitle": "連結",
-		"linkGutenberg": "古騰堡計劃網站",
-		"linkGutenbergDesc": "參訪古騰堡計劃的官方網站",
-		"linkKiwix": "Kiwix",
-		"linkKiwixDesc": "了解更多關於 Kiwix 的離線內容"
-	},
-	"stats": {
-		"books": "書籍",
-		"authors": "作者"
-	},
-	"authors": {
-		"title": "作者",
-		"description": "在古騰堡收藏裡瀏覽所有作者"
-	},
 	"shelves": {
 		"title": "書架（A 至 Z）"
 	},

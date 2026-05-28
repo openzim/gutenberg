@@ -10,16 +10,6 @@
 		"shelves": "Riiulid",
 		"about": "Teave"
 	},
-	"about": {
-		"title": "Teave Project Gutenbergi kohta",
-		"collectionStats": "Kogu statistika",
-		"linksTitle": "Lingid",
-		"linkGutenberg": "Projekti Gutenberg veebisait"
-	},
-	"stats": {
-		"books": "Raamatud",
-		"authors": "Autorid"
-	},
 	"authors": {
 		"title": "Autorid",
 		"description": "Sirvi kõiki Gutenbergi kogu autoreid"
@@ -43,7 +33,6 @@
 	},
 	"common": {
 		"loadingAuthor": "Autori info laadimine...",
-		"loadingStats": "Statistika laadimine...",
 		"loadingItems": "Laadimine {type}...",
 		"searchAuthors": "Otsi autoreid",
 		"clear": "Tühjenda",
