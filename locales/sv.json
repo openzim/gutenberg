@@ -19,26 +19,7 @@
 		"subtitle": "Den första utgivaren av gratis e-böcker"
 	},
 	"about": {
-		"title": "Om Projekt Gutenberg",
-		"offers": "Projekt Gutenberg erbjuder över 60 000 gratis e-böcker",
-		"choose": "Välj bland gratis epub-böcker, gratis Kindle-böcker. Ladda ned dem eller läs dem online.",
-		"qualityTitle": "Vi har e-böcker av hög kvalitet",
-		"qualityDesc": "Alla våra e-böcker publicerades tidigare av bona fide förlag. Vi digitaliserade och korrekturläste dem noggrant med hjälp av tusentals volontärer.",
-		"collectionStats": "Samlingsstatistik",
-		"collectionTitle": "Om Denna Samling",
-		"collectionDesc1": "Denna offlinesamling innehåller ett urval av böcker från Projekt Gutenberg, den första och största enskilda samlingen av fria elektroniska böcker.",
-		"collectionDesc2": "Projekt Gutenberg grundades 1971 av Michael S. Hart och är det äldsta digitala biblioteket. Projekt Gutenbergs uppdrag är att uppmuntra till skapande och distribution av e-böcker.",
-		"collectionDesc3": "Denna samling är tillgänglig offline via Kiwix, vilket gör att du kan få tillgång till dessa litterära verk utan internetanslutning.",
-		"linksTitle": "Länkar",
-		"linkGutenberg": "Projekt Gutenbergs webbplats",
-		"linkGutenbergDesc": "Besök Project Gutenbergs officiella webbplats",
-		"linkKiwix": "Kiwix",
-		"linkKiwixDesc": "Ta reda på mer om Kiwix offlineinnehåll"
-	},
-	"stats": {
-		"books": "Böcker",
-		"authors": "Författare",
-		"shelves": "LCC-hyllor"
+		"linkKiwix": "Kiwix"
 	},
 	"authors": {
 		"title": "Författare",
@@ -84,7 +65,6 @@
 		"loadingBook": "Laddar in bokdetaljer...",
 		"loadingAuthor": "Laddar in författardetaljer...",
 		"loadingShelf": "Laddar in hylldetaljer...",
-		"loadingStats": "Laddar in statistik...",
 		"loadingItems": "Laddar in {type}...",
 		"showing": "Visar",
 		"of": "av",

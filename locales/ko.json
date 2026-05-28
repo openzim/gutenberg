@@ -19,26 +19,7 @@
 		"subtitle": "최초의 무료 전자책 제작사"
 	},
 	"about": {
-		"title": "프로젝트 구텐베르크에 대해",
-		"offers": "프로젝트 구텐베르크는 7만 권 이상의 무료 전자책을 제공합니다",
-		"choose": "무료 EPUB 전자책, 무료 킨들 전자책 등 다양한 전자책 중에서 선택하세요. 다운로드하거나 온라인으로 읽어보세요.",
-		"qualityTitle": "저희는 고품질 전자책을 제공합니다",
-		"qualityDesc": "저희의 모든 전자책은 공신력 있는 출판사에서 출간된 책들입니다. 수천 명의 자원봉사자들의 도움을 받아 디지털화하고 꼼꼼하게 교정 작업을 거쳤습니다.",
-		"collectionStats": "모음집 통계",
-		"collectionTitle": "이 모음집에 대해",
-		"collectionDesc1": "이 오프라인 모음집에는 최초이자 최대 규모의 무료 전자책 모음집인 프로젝트 구텐베르크에서 엄선된 도서들이 포함되어 있습니다.",
-		"collectionDesc2": "프로젝트 구텐베르크는 1971년 마이클 S. 하트에 의해 설립되었으며, 가장 오래된 디지털 도서관입니다. 프로젝트 구텐베르크의 목표는 전자책의 제작과 배포를 장려하는 것입니다.",
-		"collectionDesc3": "이 모음집은 Kiwix를 통해 오프라인으로 제공되므로 인터넷 연결 없이도 이러한 문학 작품을 감상할 수 있습니다.",
-		"linksTitle": "링크",
-		"linkGutenberg": "프로젝트 구텐베르크 도서관",
-		"linkGutenbergDesc": "공식 프로젝트 구텐베르크 웹사이트를 방문하세요",
-		"linkKiwix": "Kiwix",
-		"linkKiwixDesc": "키윅스 오프라인 콘텐츠에 대해 자세히 알아보세요"
-	},
-	"stats": {
-		"books": "책",
-		"authors": "저자",
-		"shelves": "LCC 책장"
+		"linkKiwix": "Kiwix"
 	},
 	"authors": {
 		"title": "저자",
@@ -84,7 +65,6 @@
 		"loadingBook": "책 정보를 불러오는 중...",
 		"loadingAuthor": "저자 정보를 불러오는 중...",
 		"loadingShelf": "책장 정보를 불러오는 중...",
-		"loadingStats": "통계를 불러오는 중...",
 		"loadingItems": "{type} 불러오는 중...",
 		"showing": "다음 결과 갯수 표시 중:",
 		"of": "/",

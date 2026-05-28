@@ -17,15 +17,7 @@
 		"subtitle": "O primeiro produtor de livros eletrônicos gratuitos"
 	},
 	"about": {
-		"offers": "Projeto Gutenberg oferece mais de 60.000 livros eletrônicos gratuitos.",
-		"choose": "Escolha entre livros gratuitos em formato epub e livros gratuitos para Kindle. Faça o download ou leia online.",
-		"qualityTitle": "Dispomos de livros digitais de alta qualidade.",
-		"qualityDesc": "Todos os nossos livros digitais foram publicados anteriormente por editoras idôneas. Nós os digitalizamos e revisamos cuidadosamente com a ajuda de milhares de voluntários.",
-		"linksTitle": "Links",
 		"linkKiwix": "Kiwix"
-	},
-	"stats": {
-		"authors": "Autores"
 	},
 	"authors": {
 		"title": "Autores"
