@@ -13,12 +13,6 @@
 		"title": "Biblioteca do Projeto Gutenberg",
 		"subtitle": "O primeiro produtor de ebooks gratuitos"
 	},
-	"about": {
-		"offers": "O Projeto Gutenberg oferece mais de 60.000 ebooks gratuitos",
-		"choose": "Escolha entre livros de epub grátis, livros de kindle grátis. Transfira-os ou leia-os online.",
-		"qualityTitle": "Nós temos ebooks de alta qualidade",
-		"qualityDesc": "Todos os nossos ebooks foram publicados anteriormente por editoras de bona fide. Nós digitalizamos e diligentemente os revemos com a ajuda de milhares de voluntários."
-	},
 	"shelves": {
 		"title": "Prateleiras (A-Z)"
 	},

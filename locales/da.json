@@ -13,12 +13,6 @@
 		"title": "Projekt Gutenberg-biblioteket",
 		"subtitle": "Den første producent af frie og gratis e-bøger"
 	},
-	"about": {
-		"offers": "Projekt Gutenberg tilbyder over 60.000 gratis e-bøger",
-		"choose": "Vælg mellem gratis epub-bøger og gratis Kindle-bøger. Download dem eller læs dem online.",
-		"qualityTitle": "Vi fører e-bøger af høj kvalitet",
-		"qualityDesc": "Alle vores e-bøger er tidligere blevet udgivet af velrenommerede forlag. Vi digitaliserede og korrekturlæste dem med hjælp fra tusindvis af frivillige."
-	},
 	"shelves": {
 		"title": "Bogreoler (A-Z)"
 	},
