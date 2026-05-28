@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
-import { getPopularityStars } from '@/utils/format-utils'
+import { getPopularityStars, formatLabel } from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
 
 defineProps<{
@@ -19,7 +19,7 @@ defineProps<{
     />
 
     <div v-if="book.availableFormats?.length" class="format-links text-caption mb-2">
-      {{ book.availableFormats.map((f) => f.toUpperCase()).join(' · ') }}
+      {{ book.availableFormats.map(formatLabel).join(' · ') }}
     </div>
 
     <h3 class="shelf-book-title text-body-2 font-weight-bold mb-1">
@@ -46,8 +46,20 @@ defineProps<{
   width: 180px;
   min-width: 180px;
   color: inherit;
-  border-right: 2px solid rgb(var(--v-theme-grid));
+  border: 2px solid rgb(var(--v-theme-grid));
   padding: 1rem 1.25rem;
+  margin-left: -2px;
+  transition: border-color 0.2s ease;
+}
+
+.shelf-book-card:first-child {
+  margin-left: 0;
+}
+
+.shelf-book-card:hover,
+.shelf-book-card:focus {
+  border-color: rgb(var(--v-theme-text));
+  z-index: 1;
 }
 
 .shelf-book-cover {

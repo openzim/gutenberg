@@ -41,12 +41,28 @@ async function loadVuetify() {
     grid: THEME_COLORS.GRID
   }
 
+  const lightColors = {
+    ...sharedColors,
+    grid: THEME_COLORS.GRID,
+    text: THEME_COLORS.TEXT,
+    bgd3Fill: THEME_COLORS.BGD_3_FILL,
+    bgd3Outline: THEME_COLORS.BGD_3_OUTLINE
+  }
+
+  const darkColors = {
+    ...sharedColors,
+    grid: THEME_COLORS.GRID_DARK,
+    text: THEME_COLORS.TEXT_DARK,
+    bgd3Fill: THEME_COLORS.BGD_3_FILL_DARK,
+    bgd3Outline: THEME_COLORS.BGD_3_OUTLINE_DARK
+  }
+
   const lightTheme: ThemeDefinition = {
     dark: false,
     colors: {
       background: THEME_COLORS.BACKGROUND_LIGHT,
       surface: THEME_COLORS.SURFACE_LIGHT,
-      ...sharedColors
+      ...lightColors
     }
   }
 
@@ -55,7 +71,7 @@ async function loadVuetify() {
     colors: {
       background: THEME_COLORS.BACKGROUND_DARK,
       surface: THEME_COLORS.SURFACE_DARK,
-      ...sharedColors
+      ...darkColors
     }
   }
 
