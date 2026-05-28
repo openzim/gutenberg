@@ -2,7 +2,12 @@
 import type { Book } from '@/types'
 import { computed } from 'vue'
 import { useFormatters } from '@/composables/useFormatters'
-import { normalizeImagePath, getPopularityStars, formatDownloads } from '@/utils/format-utils'
+import {
+  normalizeImagePath,
+  getPopularityStars,
+  formatDownloads,
+  formatLabel
+} from '@/utils/format-utils'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -18,7 +23,7 @@ function orderedFormats(order: string[]) {
     .filter((f): f is NonNullable<typeof f> => !!f)
 }
 
-const viewFormats = computed(() => orderedFormats(['html', 'pdf', 'epub']))
+const viewFormats = computed(() => orderedFormats(['html']))
 const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
 </script>
 
@@ -76,7 +81,7 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
           <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.lccShelf') }}</div>
           <router-link
             :to="`/lcc-shelf/${book.lccShelf}`"
-            class="inter-13 text-decoration-underline text-primary"
+            class="inter-13 text-decoration-underline shelf-link"
           >
             {{ book.lccShelf }}
           </router-link>
@@ -89,15 +94,16 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
             <span class="action-label">{{ t('book.view') }}</span>
             <v-btn
               v-for="fmt in viewFormats"
+              v-show="fmt.available"
               :key="`view-${fmt.format}`"
               :href="fmt.path"
-              :disabled="!fmt.available"
               variant="outlined"
+              :elevation="0"
               size="small"
               rounded="md"
               class="text-none format-btn"
             >
-              {{ fmt.format.toUpperCase() }}
+              {{ formatLabel(fmt.format) }}
             </v-btn>
           </div>
 
@@ -105,15 +111,16 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
             <span class="action-label">{{ t('book.download') }}</span>
             <v-btn
               v-for="fmt in downloadFormats"
+              v-show="fmt.available"
               :key="`dl-${fmt.format}`"
               :href="fmt.path"
-              :disabled="!fmt.available"
               variant="outlined"
+              :elevation="0"
               size="small"
               rounded="md"
               class="text-none format-btn"
             >
-              {{ fmt.format.toUpperCase() }}
+              {{ formatLabel(fmt.format) }}
             </v-btn>
           </div>
         </div>
@@ -265,7 +272,7 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem 1.5rem;
+  gap: 0.75rem 2.5rem;
 }
 
 .format-group {
@@ -282,6 +289,15 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
 .author-name:hover,
 .author-name:focus {
   color: rgb(var(--v-theme-authorFocus));
+}
+
+.shelf-link {
+  color: rgb(var(--v-theme-author));
+}
+
+.shelf-link:hover,
+.shelf-link:focus {
+  color: rgb(var(--v-theme-text));
 }
 
 .meta-row {
