@@ -124,7 +124,7 @@ describe('BookDetailView Integration', () => {
     it('displays available download formats', async () => {
       const wrapper = await mountView()
 
-      expect(wrapper.text()).toContain('EPUB')
+      expect(wrapper.text()).toContain('ePUB')
       expect(wrapper.text()).toContain('PDF')
     })
   })
