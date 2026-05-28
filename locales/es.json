@@ -14,12 +14,6 @@
 		"title": "Librería del Proyecto Gutenberg",
 		"subtitle": "El primer editor de ebooks libres"
 	},
-	"about": {
-		"offers": "El Proyecto Gutenberg ofrece más de 60,000 ebooks libres",
-		"choose": "Elija entre ebooks epub libres y ebooks kindle libres. Descárgalos o léelos online.",
-		"qualityTitle": "Tenemos ebooks de gran calidad",
-		"qualityDesc": "Todos nuestros ebooks han sido publicados antes por editoriales de prestigio. Los digitalizamos y comprobamos cuidadosamente con la ayuda de miles de voluntarios."
-	},
 	"shelves": {
 		"title": "Estantes (A-Z)"
 	},
