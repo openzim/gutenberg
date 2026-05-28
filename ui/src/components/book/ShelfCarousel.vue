@@ -32,8 +32,6 @@ const { t } = useI18n()
 .shelf-books-row {
   display: flex;
   overflow-x: auto;
-  border: 2px solid rgb(var(--v-theme-grid));
-  border-right: none;
   width: fit-content;
   max-width: 100%;
 }

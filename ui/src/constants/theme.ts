@@ -13,7 +13,7 @@ export const THEME_COLORS = {
   FORMAT: '#ef502b',
   STAR: '#ffce00',
   TITLE: '#c48e4e',
-  AUTHOR: '#fcefe3',
+  AUTHOR: '#c48e4e',
   AUTHOR_FOCUS: '#69afc6',
   DESCRIPTION: '#666666',
   FOCUS_BOOK: '#3c485a',
@@ -21,9 +21,13 @@ export const THEME_COLORS = {
   BGD_1: '#e8f6ff',
   BGD_2: '#fcefe3',
   BGD_3_FILL: '#f9f9f9',
+  BGD_3_FILL_DARK: '#2a2a2a',
   BGD_3_OUTLINE: '#e2e2e2',
+  BGD_3_OUTLINE_DARK: '#555555',
   TEXT: '#000000',
+  TEXT_DARK: '#ffffff',
   GRID: '#cccccc',
+  GRID_DARK: '#444444',
   ON_PRIMARY: '#FFFFFF'
 } as const
 
