@@ -20,6 +20,10 @@ export function formatAuthorLifespan(birthYear: string | null, deathYear: string
   return ''
 }
 
+export function formatLabel(format: string): string {
+  return format === 'epub' ? 'ePUB' : format.toUpperCase()
+}
+
 export function formatDownloads(downloads: number): string {
   if (downloads >= 1000000) {
     return `${(downloads / 1000000).toFixed(1)}M`
