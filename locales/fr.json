@@ -128,6 +128,7 @@
 		"toggleNavigationMenu": "Bascule du menu de navigation",
 		"mainNavigation": "Navigation principale",
 		"footerLinks": "Liens de pied de page",
+		"toggleSortOptions": "Activer/désactiver les options de tri",
 		"navigateTo": "Naviguer vers",
 		"navigateToItem": "Accédez à {item}",
 		"opensInNewTab": "s'ouvre dans un nouvel onglet",
