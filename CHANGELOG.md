@@ -65,7 +65,7 @@ as of 2.0.0.
 - Finalize implementation of scraper progress (#289)
 - Move to another default mirror + add CLI flag to select mirror to use (#301)
 - Split build logic in Dockerfile to separate dependencies layer from scraper code layer (#302)
-- Prepare structure for TranslateWiki (#312)
+- Prepare structure for translatewiki.net (#312)
 - Remove « .html » extension (#166)
 - Configure libzim verbosity based on `--debug` flag (#326)
 

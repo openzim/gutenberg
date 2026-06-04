@@ -304,7 +304,7 @@ def main() -> int:
                 f"❌ {len(missing_in_qqq)} keys missing documentation in qqq.json"
             )
             errors.append(
-                "   TranslateWiki requires documentation for all keys in qqq.json"
+                "   translatewiki.net requires documentation for all keys in qqq.json"
             )
             for key in sorted(missing_in_qqq):
                 errors.append(f"   - {key}")
