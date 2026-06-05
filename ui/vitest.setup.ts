@@ -70,12 +70,6 @@ const i18n = createI18n({
         noShelves: 'No shelves found',
         noLanguages: 'No languages available',
         noFormats: 'No formats available'
-      },
-      languageNames: {
-        en: 'English',
-        fr: 'French',
-        de: 'German',
-        es: 'Spanish'
       }
     }
   }

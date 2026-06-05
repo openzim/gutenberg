@@ -27,3 +27,5 @@ dist-ssr
 *.tsbuildinfo
 *.d.ts
 
+# Generated files
+src/generated/

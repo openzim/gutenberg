@@ -100,26 +100,23 @@ describe('getPopularityStars', () => {
 })
 
 describe('formatLanguages', () => {
-  const mockTranslator = {
-    t: (key: string) => {
-      const translations: Record<string, string> = {
-        'languageNames.en': 'English (i18n)',
-        'languageNames.fr': 'French (i18n)'
-      }
-      return translations[key] || key
-    },
-    te: (key: string) => ['languageNames.en', 'languageNames.fr'].includes(key)
-  }
-
   it.each([
-    { langs: [], translator: undefined, expected: '' },
-    { langs: ['en'], translator: undefined, expected: 'English' },
-    { langs: ['en', 'fr'], translator: undefined, expected: 'English, Français' },
-    { langs: ['xyz'], translator: undefined, expected: 'xyz' },
-    { langs: ['en'], translator: mockTranslator, expected: 'English (i18n)' },
-    { langs: ['en', 'fr'], translator: mockTranslator, expected: 'English (i18n), French (i18n)' }
-  ])('formats $langs as "$expected"', ({ langs, translator, expected }) => {
-    expect(formatLanguages(langs, translator)).toBe(expected)
+    { langs: [], expected: '' },
+    { langs: ['en'], expected: 'English' },
+    { langs: ['fr'], expected: 'French' },
+    { langs: ['en', 'fr'], expected: 'English, French' },
+    { langs: ['xyz'], expected: 'xyz' }
+  ])('formats $langs as "$expected" with default (en) locale', ({ langs, expected }) => {
+    expect(formatLanguages(langs)).toBe(expected)
+  })
+
+  it('uses uiLocale for translated names', () => {
+    expect(formatLanguages(['en'], { uiLocale: 'fr' })).toBe('anglais')
+    expect(formatLanguages(['de'], { uiLocale: 'fr' })).toBe('allemand')
+  })
+
+  it('falls back to English when locale has no CLDR data', () => {
+    expect(formatLanguages(['en'], { uiLocale: 'zzz' })).toBe('English')
   })
 })
 

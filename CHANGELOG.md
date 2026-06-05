@@ -8,6 +8,10 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Use CLDR data for language names instead of languageNames i18n keys (#487)
+
 ### Fixed
 
 - Fix language codes not recognized correctly (#337)

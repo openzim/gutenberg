@@ -105,14 +105,5 @@
 		"PS": "PS-Literatura estadounidense",
 		"PT": "PT-Literatura alemana, holandesa, flamenca, africana, escandinava, nórdica antigua, islandesa antigua, noruega antigua, islandesa moderna, faroesa, danesa, noruega y Sueca",
 		"PZ": "PZ-Ficción y bellas letras juveniles"
-	},
-	"languageNames": {
-		"ca": "Catalán",
-		"ceb": "Cebuano",
-		"fa": "Persa",
-		"la": "Latín",
-		"myn": "Lenguas mayas",
-		"sv": "Sueco",
-		"zh-hans": "Chino simplificado"
 	}
 }

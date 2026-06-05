@@ -1,4 +1,4 @@
-import { supportedLanguages } from '@/plugins/i18n'
+import { getLanguageName } from '@/utils/language-names'
 
 export function formatAuthorName(firstName: string | null, lastName: string): string {
   if (firstName) {
@@ -35,28 +35,10 @@ export function getPopularityStars(popularity: number): string {
   return '★'.repeat(clamped) + '☆'.repeat(5 - clamped)
 }
 
-export function formatLanguages(
-  languages: string[],
-  translator?: { t: (key: string) => string; te: (key: string) => boolean }
-): string {
-  const languageMap = new Map(
-    supportedLanguages.map((lang) => [lang.code.toLowerCase(), lang.display])
-  )
+export function formatLanguages(languages: string[], options?: { uiLocale?: string }): string {
+  const locale = options?.uiLocale || 'en'
 
-  return languages
-    .map((code) => {
-      const lowerCode = code.toLowerCase()
-
-      if (translator) {
-        const i18nKey = `languageNames.${lowerCode}`
-        if (translator.te(i18nKey)) {
-          return translator.t(i18nKey)
-        }
-      }
-
-      return languageMap.get(lowerCode) || code
-    })
-    .join(', ')
+  return languages.map((code) => getLanguageName(code, locale)).join(', ')
 }
 
 export function pluralize(count: number, singular: string, plural?: string): string {
