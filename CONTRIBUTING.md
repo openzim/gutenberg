@@ -19,7 +19,7 @@ The project consists of several components:
 
 ### 1. Adding UI Translations
 
-UI translations are managed through [TranslateWiki](https://translatewiki.net/w/i.php?title=Special:MessageGroupStats/kiwix-gutenberg). We welcome volunteers to contribute translations in their native languages.
+UI translations are managed through [translatewiki.net](https://translatewiki.net/w/i.php?title=Special:MessageGroupStats/kiwix-gutenberg). We welcome volunteers to contribute translations in their native languages.
 
 When a new language `<new_code>` starts being translated, developers need to add support for it:
 
