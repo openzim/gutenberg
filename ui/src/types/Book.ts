@@ -20,6 +20,7 @@ export interface BookPreview {
   coverPath: string | null
   lccShelf: string | null
   availableFormats?: string[]
+  description?: string | null
 }
 
 export interface Book extends Omit<BookPreview, 'author'> {

@@ -8,6 +8,7 @@ const drawer = ref(false)
 
 const navItems = computed(() => [
   { title: t('nav.home'), to: '/', icon: 'mdi-home' },
+  { title: t('nav.books'), to: '/books', icon: 'mdi-book-multiple' },
   { title: t('nav.authors'), to: '/authors', icon: 'mdi-account-multiple' },
   { title: t('nav.shelves'), to: '/lcc-shelves', icon: 'mdi-bookshelf' },
   { title: t('nav.about'), to: '/about', icon: 'mdi-information' }

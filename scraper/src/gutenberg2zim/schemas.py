@@ -63,6 +63,7 @@ class BookPreview(CamelModel):
     cover_path: str | None = None
     lcc_shelf: str | None = None
     available_formats: list[str] = []
+    description: str | None = None
 
 
 class Book(BookPreview):

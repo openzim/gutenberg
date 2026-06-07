@@ -43,22 +43,22 @@ defineProps<{
 .shelf-book-card {
   display: flex;
   flex-direction: column;
-  width: 180px;
-  min-width: 180px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 0;
   color: inherit;
   border: 2px solid rgb(var(--v-theme-grid));
   padding: 1rem 1.25rem;
-  margin-left: -2px;
-  transition: border-color 0.2s ease;
-}
-
-.shelf-book-card:first-child {
-  margin-left: 0;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .shelf-book-card:hover,
 .shelf-book-card:focus {
   border-color: rgb(var(--v-theme-text));
+  box-shadow: 0 0 5px 0 rgb(var(--v-theme-text));
   z-index: 1;
 }
 
@@ -84,5 +84,8 @@ defineProps<{
 
 .shelf-book-author {
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

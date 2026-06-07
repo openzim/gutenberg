@@ -10,7 +10,8 @@
 		"home": "Title attribute for the homepage link/button",
 		"authors": "Title attribute for the authors page link/button",
 		"shelves": "Title attribute for the shelves page link/button",
-		"about": "Title attribute for the about page link/button"
+		"about": "Title attribute for the about page link/button",
+		"books": "Title attribute for the books page link/button"
 	},
 	"home": {
 		"title": "Main title for the Project Gutenberg library site",
@@ -122,6 +123,8 @@
 		"selected": "Text indicating items are selected",
 		"gridView": "Label for grid view layout option",
 		"listView": "Label for list view layout option",
+		"previous": "Label for the previous page button in pagination controls",
+		"next": "Label for the next page button in pagination controls",
 		"browseAll": "Label for browsing all items",
 		"browseAllShelves": "Label for browsing all shelves",
 		"browseAllAuthors": "Label for browsing all authors",
