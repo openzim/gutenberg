@@ -48,11 +48,7 @@
 	},
 	"book": {
 		"title": "Titulo",
-		"author": "Autor",
-		"lifespan": "Durata de vita",
-		"popularity": "Popularitate",
 		"downloads": "discargamentos",
-		"downloadsCount": "{count} discargamento | {count} discargamentos",
 		"downloadCount": "Numero de discargamentos",
 		"languages": "Lingua",
 		"lccShelf": "Planca LCC",
