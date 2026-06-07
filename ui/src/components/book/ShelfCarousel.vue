@@ -17,7 +17,9 @@ const { t } = useI18n()
     </h2>
 
     <div class="shelf-books-row">
-      <shelf-book-card v-for="book in books" :key="book.id" :book="book" />
+      <div v-for="book in books" :key="book.id" class="carousel-card-wrapper">
+        <shelf-book-card :book="book" />
+      </div>
     </div>
   </div>
 </template>
@@ -34,9 +36,20 @@ const { t } = useI18n()
   overflow-x: auto;
   width: fit-content;
   max-width: 100%;
+  padding: 5px;
 }
 
 .shelf-books-row::-webkit-scrollbar {
   display: none;
+}
+
+.carousel-card-wrapper {
+  width: 180px;
+  min-width: 180px;
+  margin-left: -2px;
+}
+
+.carousel-card-wrapper:first-child {
+  margin-left: 0;
 }
 </style>
