@@ -35,7 +35,6 @@
 		"authors": "Авторы"
 	},
 	"book": {
-		"availableFormats": "Доступные форматы:",
 		"fullName": "Полное имя"
 	},
 	"metadata_defaults": {

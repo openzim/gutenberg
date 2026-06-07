@@ -24,8 +24,6 @@
 	},
 	"book": {
 		"title": "Наслов",
-		"author": "Автор",
-		"popularity": "Популарност",
 		"languages": "Јазик",
 		"license": "Лиценца",
 		"licensePd": "Јавна сопственост во САД.",

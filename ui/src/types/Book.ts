@@ -19,6 +19,7 @@ export interface BookPreview {
   popularity: number // Star rating (0-5)
   coverPath: string | null
   lccShelf: string | null
+  availableFormats?: string[]
 }
 
 export interface Book extends Omit<BookPreview, 'author'> {

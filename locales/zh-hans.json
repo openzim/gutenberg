@@ -28,8 +28,6 @@
 	},
 	"book": {
 		"title": "标题",
-		"author": "作者",
-		"popularity": "流行度",
 		"languages": "语言",
 		"license": "许可协议",
 		"licensePd": "在美国属于公共领域。",

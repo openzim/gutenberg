@@ -68,6 +68,7 @@ class Book:
     downloads: int = 0
     lcc_shelf: str | None = None
     has_cover: bool = False
+    description: str | None = None
     unsupported_formats: list[str] = field(default_factory=list)
     popularity: int = 0  # Computed field for star rating
     html_cover_path: str | None = None  # Path to cover image extracted from HTML
