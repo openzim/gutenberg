@@ -7,8 +7,7 @@
 	"language": "Esperanto",
 	"isocode": "eo",
 	"book": {
-		"title": "Titolo",
-		"author": "Aŭtoro"
+		"title": "Titolo"
 	},
 	"common": {
 		"sortTitle": "Titolo"

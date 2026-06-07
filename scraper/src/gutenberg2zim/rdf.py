@@ -22,6 +22,7 @@ class RdfParser:
         self.bookshelf = None
         self.lcc_shelf = None
         self.has_cover = False
+        self.description = None
 
     def parse(self):
         soup = BeautifulSoup(self.rdf_data, "lxml-xml")
@@ -73,6 +74,11 @@ class RdfParser:
         self.has_cover = any(
             is_cover_node(file_node) for file_node in soup.find_all("pgterms:file")
         )
+
+        # Parse book description (MARC 520 = summary)
+        marc520_tag = soup.find("pgterms:marc520")
+        if isinstance(marc520_tag, Tag):
+            self.description = clean_marc_notation(marc520_tag.text)
 
         # Parsing the name of the Author. Sometimes it's the name of
         # an organization or the name is not known and therefore
@@ -204,6 +210,9 @@ def _save_rdf_in_repository(parser: RdfParser) -> None:
         downloads=int(parser.downloads),
         lcc_shelf=parser.lcc_shelf,
         has_cover=parser.has_cover,
+        description=(
+            normalize(parser.description.strip()) if parser.description else None
+        ),
     )
     repository.add_book(book)
 
