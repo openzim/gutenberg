@@ -17,6 +17,7 @@ export const THEME_COLORS = {
   AUTHOR_FOCUS: '#69afc6',
   DESCRIPTION: '#666666',
   FOCUS_BOOK: '#3c485a',
+  FOCUS_BOOK_DARK: '#5c6b7d',
   MENU_ACTIVE: '#0c858b',
   BGD_1: '#e8f6ff',
   BGD_2: '#fcefe3',
