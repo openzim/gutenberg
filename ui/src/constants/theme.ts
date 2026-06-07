@@ -10,6 +10,20 @@ export const THEME_COLORS = {
   INFO: '#1976D2',
   SUCCESS: '#388E3C',
   WARNING: '#F57C00',
+  FORMAT: '#ef502b',
+  STAR: '#ffce00',
+  TITLE: '#c48e4e',
+  AUTHOR: '#fcefe3',
+  AUTHOR_FOCUS: '#69afc6',
+  DESCRIPTION: '#666666',
+  FOCUS_BOOK: '#3c485a',
+  MENU_ACTIVE: '#0c858b',
+  BGD_1: '#e8f6ff',
+  BGD_2: '#fcefe3',
+  BGD_3_FILL: '#f9f9f9',
+  BGD_3_OUTLINE: '#e2e2e2',
+  TEXT: '#000000',
+  GRID: '#cccccc',
   ON_PRIMARY: '#FFFFFF'
 } as const
 

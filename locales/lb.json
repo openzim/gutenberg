@@ -28,14 +28,10 @@
 	},
 	"book": {
 		"title": "Titel",
-		"author": "Auteur",
-		"popularity": "Popularitéit",
 		"languages": "Sprooch",
 		"lccShelf": "LCC-Regal",
 		"license": "Lizenz",
 		"licensePd": "Domaine public an den USA.",
-		"description": "Beschreiwung",
-		"availableFormats": "Disponibel Formater",
 		"unknown": "Onbekannt",
 		"anonymous": "Anonym"
 	},

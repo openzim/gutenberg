@@ -24,8 +24,6 @@
 	},
 	"book": {
 		"title": "Título",
-		"author": "Autor",
-		"popularity": "Popularidade",
 		"languages": "Idioma",
 		"license": "Licença",
 		"licensePd": "Domínio público nos EUA.",

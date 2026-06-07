@@ -97,10 +97,10 @@ describe('BookDetailView Integration', () => {
     it('displays book cover image', async () => {
       const wrapper = await mountView()
 
-      const coverImage = wrapper.findComponent({ name: 'BookCoverImage' })
+      const coverImage = wrapper.find('img.detail-cover')
       expect(coverImage.exists()).toBe(true)
-      expect(coverImage.props('coverPath')).toBe('/covers/1.jpg')
-      expect(coverImage.props('alt')).toBe('Pride and Prejudice cover')
+      expect(coverImage.attributes('src')).toBe('.//covers/1.jpg')
+      expect(coverImage.attributes('alt')).toBe('Pride and Prejudice book.coverLabel')
     })
   })
 

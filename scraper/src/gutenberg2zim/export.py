@@ -749,7 +749,7 @@ def _author_to_schema(author: Author) -> AuthorSchema:
     )
 
 
-def _book_to_preview(book: Book) -> BookPreview:
+def _book_to_preview(book: Book, formats: list[str]) -> BookPreview:
     """Convert Book dataclass to BookPreview schema"""
     cover_path = f"covers/{book.book_id}_cover_image.webp" if book.has_cover else None
 
@@ -761,6 +761,7 @@ def _book_to_preview(book: Book) -> BookPreview:
         popularity=book.popularity,
         cover_path=cover_path,
         lcc_shelf=book.lcc_shelf,
+        available_formats=book.requested_formats(formats),
     )
 
 
@@ -805,7 +806,7 @@ def _book_to_schema(book: Book, formats: list[str]) -> BookSchema:
         lcc_shelf=book.lcc_shelf,
         cover_path=cover_path,
         formats=book_formats,
-        description=None,
+        description=book.description,
     )
 
 
@@ -869,7 +870,7 @@ def generate_json_files(
 
     logger.info("Generating high-level JSON files")
     logger.debug("Generating books.json")
-    books_preview = [_book_to_preview(book) for book in all_books]
+    books_preview = [_book_to_preview(book, formats) for book in all_books]
     books_collection = Books(books=books_preview, total_count=len(books_preview))
     Global.add_item_for(
         path="books.json",
@@ -953,7 +954,7 @@ def generate_json_files(
     logger.debug("Generating author detail files and index entries")
     for author in all_authors:
         author_books = [
-            _book_to_preview(book)
+            _book_to_preview(book, formats)
             for book in all_books
             if book.author.gut_id == author.gut_id
         ]
@@ -1004,7 +1005,7 @@ def generate_json_files(
         logger.debug("Generating LCC shelf detail files and index entries")
         for shelf_code in repository.get_lcc_shelves():
             shelf_books = [
-                _book_to_preview(book)
+                _book_to_preview(book, formats)
                 for book in all_books
                 if book.lcc_shelf == shelf_code
             ]
