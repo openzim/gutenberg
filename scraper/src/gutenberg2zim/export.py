@@ -1,12 +1,13 @@
 import io
 import urllib.parse
+import warnings
 import zipfile
 from collections.abc import Iterable
 from dataclasses import asdict
 from pathlib import Path
 
 import bs4
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, Tag, XMLParsedAsHTMLWarning
 from jinja2 import Environment, PackageLoader
 from PIL.Image import open as pilopen
 from zimscraperlib.image.optimization import (
@@ -48,6 +49,8 @@ from gutenberg2zim.utils import (
     read_file,
     save_file,
 )
+
+warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 jinja_env = Environment(  # noqa: S701
     loader=PackageLoader("gutenberg2zim", "templates")
@@ -762,6 +765,7 @@ def _book_to_preview(book: Book, formats: list[str]) -> BookPreview:
         cover_path=cover_path,
         lcc_shelf=book.lcc_shelf,
         available_formats=book.requested_formats(formats),
+        description=book.description,
     )
 
 

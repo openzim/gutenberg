@@ -1,6 +1,7 @@
 import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
 import tseslint from 'typescript-eslint'
+import globals from 'globals'
 import prettierSkipFormatting from '@vue/eslint-config-prettier/skip-formatting'
 
 export default [
@@ -24,6 +25,7 @@ export default [
         parser: tseslint.parser,
       },
       globals: {
+        ...globals.browser,
         console: 'readonly',
       },
     },

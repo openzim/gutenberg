@@ -5,7 +5,8 @@
 		"home": "Home",
 		"authors": "Authors",
 		"shelves": "Shelves",
-		"about": "About"
+		"about": "About",
+		"books": "Books"
 	},
 	"home": {
 		"title": "Project Gutenberg Library",
@@ -117,6 +118,8 @@
 		"selected": "selected",
 		"gridView": "Grid view",
 		"listView": "List view",
+		"previous": "Previous",
+		"next": "Next",
 		"browseAll": "Browse All",
 		"browseAllShelves": "Browse All Shelves",
 		"browseAllAuthors": "Browse All Authors",

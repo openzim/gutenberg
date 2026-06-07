@@ -54,7 +54,8 @@ async function loadVuetify() {
     grid: THEME_COLORS.GRID_DARK,
     text: THEME_COLORS.TEXT_DARK,
     bgd3Fill: THEME_COLORS.BGD_3_FILL_DARK,
-    bgd3Outline: THEME_COLORS.BGD_3_OUTLINE_DARK
+    bgd3Outline: THEME_COLORS.BGD_3_OUTLINE_DARK,
+    focusBook: THEME_COLORS.FOCUS_BOOK_DARK
   }
 
   const lightTheme: ThemeDefinition = {

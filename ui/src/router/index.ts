@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import BooksView from '../views/BooksView.vue'
 import BookDetailView from '../views/BookDetailView.vue'
 import AuthorListView from '../views/AuthorListView.vue'
 import AuthorDetailView from '../views/AuthorDetailView.vue'
@@ -16,6 +17,12 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       meta: { title: 'Home - Gutenberg Library' }
+    },
+    {
+      path: '/books',
+      name: 'books',
+      component: BooksView,
+      meta: { title: 'Books - Gutenberg Library' }
     },
     {
       path: '/book/:id',
