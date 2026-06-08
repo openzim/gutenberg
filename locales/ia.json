@@ -17,7 +17,6 @@
 		"subtitle": "Le prime productor de libros electronic gratuite"
 	},
 	"about": {
-		"linkKiwix": "Kiwix"
 	},
 	"authors": {
 		"title": "Autores"
@@ -99,11 +98,9 @@
 		"mainNavigation": "Navigation principal",
 		"mobileNavigationMenu": "Menu de navigation mobile",
 		"mobileNavigation": "Navigation mobile",
-		"footerLinks": "Ligamines al pede",
 		"toggleSortOptions": "Activar/disactivar le optiones de ordinamento",
 		"navigateTo": "Navigar a",
 		"navigateToItem": "Navigar a {item}",
-		"opensInNewTab": "se aperi in un nove scheda",
 		"gutenbergHome": "Pagina principal de Gutenberg"
 	},
 	"messages": {

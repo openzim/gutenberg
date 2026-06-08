@@ -85,13 +85,13 @@ const lifespan = computed(() =>
 <style scoped>
 @media (max-width: 959px) {
   .author-avatar {
-    width: v-bind('AVATAR_SIZES.DETAIL_MOBILE + "px"') !important;
-    height: v-bind('AVATAR_SIZES.DETAIL_MOBILE + "px"') !important;
+    width: v-bind(AVATAR_SIZES.DETAIL_MOBILE + 'px') !important;
+    height: v-bind(AVATAR_SIZES.DETAIL_MOBILE + 'px') !important;
     margin-right: 1rem !important;
   }
 
   .author-icon {
-    font-size: v-bind('ICON_SIZES.DETAIL_MOBILE + "px"') !important;
+    font-size: v-bind(ICON_SIZES.DETAIL_MOBILE + 'px') !important;
   }
 }
 </style>

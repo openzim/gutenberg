@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 const props = defineProps<{
   modelValue: string
@@ -76,8 +77,9 @@ function isActive(key: string): boolean {
 }
 
 .alphabet-btn__label {
-  font-size: 0.8125rem;
-  font-weight: 600;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.SMALL_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.SMALL_WEIGHT);
   line-height: 1.2;
   text-transform: uppercase;
 }

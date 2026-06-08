@@ -60,3 +60,23 @@ export const ICON_SIZES = {
   STAT: 48,
   SMALL: 20
 } as const
+
+export const TYPOGRAPHY = {
+  FONT_FAMILY: "'Inter Variable', 'Inter', sans-serif",
+  H1_SIZE: '1.5rem',
+  H1_WEIGHT: 700,
+  H2_SIZE: '1.375rem',
+  H2_WEIGHT: 500,
+  H3_SIZE: '0.9375rem',
+  H3_WEIGHT: 600,
+  BODY_SIZE: '0.875rem',
+  BODY_WEIGHT: 400,
+  CAPTION_SIZE: '0.8125rem',
+  CAPTION_WEIGHT: 500,
+  SMALL_SIZE: '0.75rem',
+  SMALL_WEIGHT: 500,
+  BUTTON_SIZE: '0.875rem',
+  BUTTON_WEIGHT: 500,
+  DESCRIPTION_SIZE: '0.75rem',
+  DESCRIPTION_WEIGHT: 500
+} as const

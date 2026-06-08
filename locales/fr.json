@@ -18,7 +18,6 @@
 		"subtitle": "Premier producteur d'ebooks gratuits"
 	},
 	"about": {
-		"linkKiwix": "Kiwix"
 	},
 	"authors": {
 		"title": "Auteurs"
@@ -87,7 +86,7 @@
 		"uiLanguage": "Langue de l`interface",
 		"selectInterfaceLanguage": "Sélectionner la langue de l’interface",
 		"filterBy": "Filtrer par",
-		"filterByTitle": "Filtrer par {titre}",
+		"filterByTitle": "Filtrer par {title}",
 		"filter": "Filtrer",
 		"selected": "sélectionnés",
 		"gridView": "Affichage en grille",
@@ -98,11 +97,9 @@
 		"returnHome": "Retour",
 		"toggleNavigationMenu": "Bascule du menu de navigation",
 		"mainNavigation": "Navigation principale",
-		"footerLinks": "Liens de pied de page",
 		"toggleSortOptions": "Activer/désactiver les options de tri",
 		"navigateTo": "Naviguer vers",
 		"navigateToItem": "Accédez à {item}",
-		"opensInNewTab": "s'ouvre dans un nouvel onglet",
 		"gutenbergHome": "Accueil Gutenberg"
 	},
 	"messages": {

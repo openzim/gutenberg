@@ -18,7 +18,6 @@
 		"subtitle": "Subtitle/tagline describing Project Gutenberg"
 	},
 	"about": {
-		"linkKiwix": "Link text for the Kiwix website",
 		"introHeading": "Heading for the About Project Gutenberg section",
 		"introParagraph1": "First introductory paragraph about Project Gutenberg",
 		"introParagraph2": "Second introductory paragraph about Michael Hart founding Project Gutenberg",
@@ -131,16 +130,15 @@
 		"mainNavigation": "Accessible label for the main navigation area",
 		"mobileNavigationMenu": "Accessible label for the mobile navigation menu",
 		"mobileNavigation": "Accessible label for mobile navigation",
-		"footerLinks": "Accessible label for the footer links section",
 		"toggleSortOptions": "Accessible label for toggling sort options",
 		"navigateTo": "Accessible label prefix for navigation links",
 		"navigateToItem": "Accessible label for navigating to an item. Parameters: {item} - item name",
-		"opensInNewTab": "Accessible text indicating a link opens in a new tab",
 		"gutenbergHome": "Label for the Gutenberg home link"
 	},
 	"messages": {
 		"noBooks": "Message displayed in tables when no data is available",
 		"noAuthors": "Message displayed when no authors are found",
+		"noAuthorsForLetter": "Message displayed when no authors start with the selected letter. Parameters: {letter} - the selected letter or filter",
 		"noShelves": "Message displayed when no shelves are found",
 		"noBooksForAuthor": "Message displayed when an author has no books available",
 		"noBooksInShelf": "Message displayed when a shelf has no books available",

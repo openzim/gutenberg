@@ -13,7 +13,6 @@
 		"subtitle": "The first producer of free ebooks"
 	},
 	"about": {
-		"linkKiwix": "Kiwix",
 		"introHeading": "About Project Gutenberg",
 		"introParagraph1": "Project Gutenberg is an online library of more than 75,000 free eBooks.",
 		"introParagraph2": "Michael Hart, founder of Project Gutenberg, invented eBooks in 1971 and his memory continues to inspire the creation of eBooks and related content today.",
@@ -126,16 +125,15 @@
 		"mainNavigation": "Main navigation",
 		"mobileNavigationMenu": "Mobile navigation menu",
 		"mobileNavigation": "Mobile navigation",
-		"footerLinks": "Footer links",
 		"toggleSortOptions": "Toggle sort options",
 		"navigateTo": "Navigate to",
 		"navigateToItem": "Navigate to {item}",
-		"opensInNewTab": "opens in new tab",
 		"gutenbergHome": "Gutenberg Home"
 	},
 	"messages": {
 		"noBooks": "No books found.",
 		"noAuthors": "No authors found.",
+		"noAuthorsForLetter": "No authors starting with \"{letter}\".",
 		"noShelves": "No shelves found.",
 		"noBooksForAuthor": "No books available for this author.",
 		"noBooksInShelf": "No books available in this shelf.",

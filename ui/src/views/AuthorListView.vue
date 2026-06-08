@@ -66,9 +66,13 @@ onMounted(() => {
           <alphabet-filter v-model="activeFilter" />
 
           <authors-list
+            v-if="filteredByLetter.length > 0"
             :authors="filteredByLetter"
             @update:displayed-count="listDisplayedCount = $event"
           />
+          <p v-else class="no-authors text-body-1 text-medium-emphasis text-center py-8">
+            {{ t('messages.noAuthorsForLetter', { letter: activeFilter }) }}
+          </p>
         </v-col>
       </v-row>
 
@@ -83,12 +87,12 @@ onMounted(() => {
 
 <style scoped>
 .author-list-view {
-  padding: v-bind('LAYOUT.VIEW_PADDING');
+  padding: v-bind(LAYOUT.VIEW_PADDING);
 }
 
 @media (max-width: 960px) {
   .author-list-view {
-    padding: v-bind('LAYOUT.VIEW_PADDING_MOBILE');
+    padding: v-bind(LAYOUT.VIEW_PADDING_MOBILE);
   }
 }
 </style>
