@@ -24,6 +24,6 @@ import { LAYOUT } from '@/constants/theme'
 
 <style scoped>
 .not-found-view {
-  padding: v-bind('LAYOUT.VIEW_PADDING');
+  padding: v-bind(LAYOUT.VIEW_PADDING);
 }
 </style>

@@ -17,7 +17,6 @@
 		"subtitle": "Prvi producent prostih e-knjig"
 	},
 	"about": {
-		"linkKiwix": "Kiwix"
 	},
 	"authors": {
 		"title": "Avtorji"
@@ -99,11 +98,9 @@
 		"mainNavigation": "Glavna navigacija",
 		"mobileNavigationMenu": "Mobilni navigacijski meni",
 		"mobileNavigation": "Mobilna navigacija",
-		"footerLinks": "Povezave v nogi",
 		"toggleSortOptions": "Preklopi možnosti razvrščanja",
 		"navigateTo": "Navigacija do",
 		"navigateToItem": "Navigacija do {item}",
-		"opensInNewTab": "odpre v novem zavihku",
 		"gutenbergHome": "Gutenberg Home"
 	},
 	"messages": {
