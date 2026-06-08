@@ -177,14 +177,12 @@ def process_files(
                     )
 
 
-def get_ignored_keys(locales_dir: Path, en_data: dict[str, Any]) -> set[str]:
+def get_ignored_keys(en_data: dict[str, Any]) -> set[str]:
     """Get keys that should not trigger 'unused key' warnings.
 
     These include:
     - Locale metadata fields (e.g., 'language', 'isocode')
       These exist in locale files but are not accessed by application code
-    - Dynamic language name keys (e.g., 'languageNames.af', 'languageNames.ar')
-      Accessed dynamically via languageNames[code]
     - Dynamic LCC shelf keys (e.g., 'lccShelves.A', 'lccShelves.B')
       Accessed dynamically or reserved for future use
     """
@@ -192,13 +190,6 @@ def get_ignored_keys(locales_dir: Path, en_data: dict[str, Any]) -> set[str]:
         "language",
         "isocode",
     }
-
-    # Extract language codes from actual locale files
-    language_codes = [
-        f.stem
-        for f in locales_dir.glob("*.json")
-        if f.name not in ["en.json", "qqq.json"]
-    ]
 
     # Extract LCC codes from en.json lccShelves section
     lcc_codes = []
@@ -240,8 +231,6 @@ def get_ignored_keys(locales_dir: Path, en_data: dict[str, Any]) -> set[str]:
     }
 
     ignored = base_ignored | template_keys
-    ignored.update(f"languageNames.{code}" for code in language_codes)
-    ignored.add("languageNames.en")
     ignored.update(f"lccShelves.{code}" for code in lcc_codes)
 
     return ignored
@@ -353,56 +342,17 @@ def main() -> int:
 
     print()
 
-    # Check language completeness (CONTRIBUTING.md requirements)
+    # Check language completeness
+    # Supported languages are determined dynamically from locale filenames
+    # in ui/src/plugins/i18n.ts — no additional registration is needed.
+    # Language display names are provided by CLDR data (generated JSON),
+    # not by languageNames keys in locale files.
     print("🌍 Checking language completeness...")
-
-    # Get all language codes from locale files
-    all_language_codes = [
-        f.stem
-        for f in locales_dir.glob("*.json")
-        if f.name not in ["en.json", "qqq.json"]
-    ]
-
-    # Special language codes that are metadata-only (not UI languages)
-    # These need locale files and languageNames entries but not i18n.ts entries
-    metadata_only_languages = {
-        "mul",
-    }
-
-    # Check i18n.ts for supported languages
     i18n_ts_path = ui_src_dir / "plugins" / "i18n.ts"
     if not i18n_ts_path.exists():
         errors.append(f"❌ Missing ui/src/plugins/i18n.ts at {i18n_ts_path}")
     else:
-        i18n_ts_content = i18n_ts_path.read_text(encoding="utf-8")
-        # Extract language codes from supportedLanguages array
-        # Looking for patterns like: { code: 'af', display: '...', rtl: ... }
-        i18n_codes = set(re.findall(r"code:\s*['\"]([^'\"]+)['\"]", i18n_ts_content))
-
-        for lang_code in all_language_codes:
-            language_name_key = f"languageNames.{lang_code}"
-
-            # Check all required locations
-            missing = []
-            if language_name_key not in en_keys:
-                missing.append(f"   ❌ Missing languageNames.{lang_code} in en.json")
-            if language_name_key not in qqq_keys:
-                missing.append(f"   ❌ Missing languageNames.{lang_code} in qqq.json")
-
-            # Metadata-only languages don't need to be in i18n.ts
-            if lang_code not in metadata_only_languages and lang_code not in i18n_codes:
-                missing.append(
-                    f"   ❌ Missing '{lang_code}' in ui/src/plugins/i18n.ts "
-                    "supportedLanguages"
-                )
-
-            if missing:
-                errors.append(f"❌ Language '{lang_code}' is incomplete:")
-                errors.extend(missing)
-            elif lang_code in metadata_only_languages:
-                print(f"   ✅ {lang_code} is complete (metadata-only)")
-            else:
-                print(f"   ✅ {lang_code} is complete")
+        print("   ✅ i18n.ts exists (supported languages derived from locale files)")
 
     print()
 
@@ -441,7 +391,7 @@ def main() -> int:
         print("   ✅ All code keys exist in en.json")
 
     # Keys in en.json but not used in code
-    ignored_keys = get_ignored_keys(locales_dir, en_data)
+    ignored_keys = get_ignored_keys(en_data)
     unused_keys = {
         key for key in en_keys if key not in ignored_keys and key not in code_keys
     }

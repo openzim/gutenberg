@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "generate": "node scripts/generate-language-names.js",
+    "build": "npm run generate && run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest --run --exclude \"**/*.integration.spec.ts\"",
     "test:integration": "vitest --run integration",
@@ -23,6 +24,7 @@
   },
   "dependencies": {
     "@fontsource/roboto": "^5.2.9",
+    "@wikimedia/language-data": "^2.0.3",
     "axios": "^1.13.5",
     "pinia": "^3.0.4",
     "resize-observer-polyfill": "^1.5.1",
@@ -32,6 +34,7 @@
     "vuetify": "^3.11.8"
   },
   "devDependencies": {
+    "cldr-localenames-full": "^48.2.0",
     "@mdi/font": "^7.4.47",
     "@tsconfig/node24": "^24.0.0",
     "@types/jsdom": "^27.0.0",

@@ -65,6 +65,11 @@ jobs:
         run: |
           npm ci
 
+      - name: Generate language names
+        working-directory: ui
+        run: |
+          npm run generate
+
       - name: Test
         working-directory: ui
         run: |
