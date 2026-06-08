@@ -22,8 +22,7 @@
 		"linkKiwix": "Kiwix"
 	},
 	"authors": {
-		"title": "Författare",
-		"description": "Bläddra igenom alla författare i Gutenbergsamlingen"
+		"title": "Författare"
 	},
 	"shelves": {
 		"title": "Bokhyllor (A-Z)",
@@ -69,8 +68,6 @@
 		"showing": "Visar",
 		"of": "av",
 		"search": "Sök",
-		"searchAuthors": "Sök efter författare",
-		"searchAuthorsByName": "Sök författare efter namn",
 		"searchShelf": "Sök i bokhyllan",
 		"searchShelfAria": "Sök efter LCC-hyllor efter kod eller namn",
 		"clear": "Rensa",

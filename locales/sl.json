@@ -20,8 +20,7 @@
 		"linkKiwix": "Kiwix"
 	},
 	"authors": {
-		"title": "Avtorji",
-		"description": "Brskajte po vseh avtorjih v zbirki Gutenberg"
+		"title": "Avtorji"
 	},
 	"shelves": {
 		"title": "Knjižne police (A–Z)",
@@ -67,8 +66,6 @@
 		"showing": "Prikazano",
 		"of": "od",
 		"search": "Išči",
-		"searchAuthors": "Iskanje po imenu avtorja",
-		"searchAuthorsByName": "Iskanje po naslovu",
 		"searchShelf": "Iskanje po knjižnih policah",
 		"searchShelfAria": "Iščite v policah LCC po kodi ali imenu",
 		"clear": "Počisti",

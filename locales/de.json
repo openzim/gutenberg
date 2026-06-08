@@ -32,8 +32,6 @@
 	"common": {
 		"loading": "Lade...",
 		"search": "Suchen",
-		"searchAuthors": "Bücherliste eines einzelnen Autors",
-		"searchAuthorsByName": "Suche nach Autoren nach Namen",
 		"searchShelf": "Bücherregalsuche",
 		"sort": "Sortieren",
 		"sortPopularity": "Sortiere Bücher nach Beliebtheit",

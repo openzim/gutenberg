@@ -1,20 +1,23 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import { useMainStore } from '@/stores/main'
-import type { AuthorPreview, SortOrder } from '@/types'
-import AuthorGrid from '@/components/author/AuthorGrid.vue'
-import ListViewWrapper from '@/components/common/ListViewWrapper.vue'
-import { usePagination } from '@/composables/usePagination'
-import { useListLoader } from '@/composables/useListLoader'
-import type { Authors } from '@/types'
-import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useSorting, type SortConfig } from '@/composables/useSorting'
-import { MESSAGES } from '@/constants/messages'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useMainStore } from '@/stores/main'
+import type { AuthorPreview, Authors } from '@/types'
+import AuthorsList from '@/components/author/AuthorsList.vue'
+import AlphabetFilter from '@/components/author/AlphabetFilter.vue'
+import EmptyState from '@/components/common/EmptyState.vue'
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import { useListLoader } from '@/composables/useListLoader'
+import { MESSAGES } from '@/constants/messages'
+import { LAYOUT } from '@/constants/theme'
 
 const { t } = useI18n()
-
 const main = useMainStore()
+
+const PAGE_SIZE = 24
+
+const activeFilter = ref('ALL')
+const listDisplayedCount = ref(PAGE_SIZE)
 
 const {
   items: authors,
@@ -22,37 +25,26 @@ const {
   loadItems: loadAuthors
 } = useListLoader<AuthorPreview, Authors>(() => main.fetchAuthors(), 'authors')
 
-const { searchQuery, filteredItems: filteredAuthors } = useSearchFilter(
-  () => authors.value,
-  (author) => [author.name]
-)
-
-const sortBy = ref('name')
-const sortOrder = ref<SortOrder>('asc')
-const sortOptions: SortConfig<AuthorPreview>[] = [
-  {
-    value: 'name',
-    compare: (a, b) => a.name.localeCompare(b.name)
+const filteredByLetter = computed(() => {
+  if (activeFilter.value === 'ALL') {
+    return authors.value
   }
-]
 
-const { sortedItems: sortedAuthors } = useSorting(
-  () => filteredAuthors.value,
-  sortBy,
-  sortOrder,
-  sortOptions
-)
+  if (activeFilter.value === '0-9') {
+    return authors.value.filter((author) => {
+      const firstChar = author.name.charAt(0)
+      return firstChar >= '0' && firstChar <= '9'
+    })
+  }
 
-const {
-  currentPage,
-  paginatedItems: paginatedAuthors,
-  totalPages,
-  goToPage,
-  resetPage
-} = usePagination(() => sortedAuthors.value, 24)
+  return authors.value.filter((author) => {
+    const firstChar = author.name.charAt(0).toUpperCase()
+    return firstChar === activeFilter.value
+  })
+})
 
-watch([searchQuery, sortBy, sortOrder], () => {
-  resetPage()
+watch(activeFilter, () => {
+  listDisplayedCount.value = PAGE_SIZE
 })
 
 onMounted(() => {
@@ -61,25 +53,42 @@ onMounted(() => {
 </script>
 
 <template>
-  <list-view-wrapper
-    :title="t('nav.authors')"
-    :description="t('authors.description')"
-    :loading="authorsLoading"
-    :has-items="authors.length > 0"
-    :current-count="paginatedAuthors.length"
-    :total-count="sortedAuthors.length"
-    item-type="authors"
-    :total-pages="totalPages"
-    :current-page="currentPage"
-    :empty-message="t(MESSAGES.NO_AUTHORS)"
-    :show-search="true"
-    v-model:search-query="searchQuery"
-    :search-label="t('common.searchAuthors')"
-    :search-aria-label="t('common.searchAuthorsByName')"
-    @go-to-page="goToPage"
-  >
-    <template #content>
-      <author-grid :authors="paginatedAuthors" />
-    </template>
-  </list-view-wrapper>
+  <div class="author-list-view">
+    <v-container>
+      <v-row v-if="authorsLoading">
+        <v-col cols="12">
+          <loading-spinner :message="t('common.loadingItems', { type: t('itemTypes.authors') })" />
+        </v-col>
+      </v-row>
+
+      <v-row v-else-if="authors.length > 0">
+        <v-col cols="12">
+          <alphabet-filter v-model="activeFilter" />
+
+          <authors-list
+            :authors="filteredByLetter"
+            @update:displayed-count="listDisplayedCount = $event"
+          />
+        </v-col>
+      </v-row>
+
+      <v-row v-else>
+        <v-col cols="12">
+          <empty-state :message="t(MESSAGES.NO_AUTHORS)" type="info" />
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
+
+<style scoped>
+.author-list-view {
+  padding: v-bind('LAYOUT.VIEW_PADDING');
+}
+
+@media (max-width: 960px) {
+  .author-list-view {
+    padding: v-bind('LAYOUT.VIEW_PADDING_MOBILE');
+  }
+}
+</style>

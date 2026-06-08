@@ -41,8 +41,7 @@
 		"attribution": "Written by Michael S. Hart June 20, 2004. Updated October 23, 2004; December 25, 2007."
 	},
 	"authors": {
-		"title": "Authors",
-		"description": "Browse all authors in the Gutenberg collection"
+		"title": "Authors"
 	},
 	"shelves": {
 		"title": "LCC Shelves",
@@ -73,7 +72,8 @@
 		"booksByAuthor": "Books by {name}",
 		"fullName": "Full Name",
 		"lifespan": "Lifespan",
-		"worksAvailable": "Works Available"
+		"worksAvailable": "Works Available",
+		"viewAuthor": "View author: {name} with {n} book | View author: {name} with {n} books"
 	},
 	"shelf": {
 		"classificationCode": "Classification Code",
@@ -91,8 +91,6 @@
 		"showing": "Showing",
 		"of": "of",
 		"search": "Search",
-		"searchAuthors": "Search authors",
-		"searchAuthorsByName": "Search authors by name",
 		"searchShelf": "Search by shelf code or name",
 		"searchShelfAria": "Search LCC shelves by code or name",
 		"clear": "Clear",
