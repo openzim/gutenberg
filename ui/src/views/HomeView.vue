@@ -141,12 +141,12 @@ onMounted(() => {
 
 <style scoped>
 .home-view {
-  padding: v-bind('LAYOUT.VIEW_PADDING');
+  padding: v-bind(LAYOUT.VIEW_PADDING);
 }
 
 @media (max-width: 960px) {
   .home-view {
-    padding: v-bind('LAYOUT.VIEW_PADDING_MOBILE');
+    padding: v-bind(LAYOUT.VIEW_PADDING_MOBILE);
   }
 }
 </style>

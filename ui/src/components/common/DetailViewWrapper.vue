@@ -44,6 +44,6 @@ defineProps<Props>()
 
 <style scoped>
 .detail-view {
-  padding: v-bind('LAYOUT.VIEW_PADDING');
+  padding: v-bind(LAYOUT.VIEW_PADDING);
 }
 </style>

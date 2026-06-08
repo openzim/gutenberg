@@ -1,5 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
+import { TYPOGRAPHY } from '@/constants/theme'
+
 interface BreadcrumbItem {
   title: string
   to?: string
@@ -13,10 +15,22 @@ defineProps<{
 
 <template>
   <div class="mb-4">
-    <v-breadcrumbs :items="items" class="pa-0">
+    <v-breadcrumbs :items="items" class="pa-0 breadcrumbs-nav">
       <template v-slot:divider>
         <v-icon icon="mdi-chevron-right" size="small" />
       </template>
     </v-breadcrumbs>
   </div>
 </template>
+
+<style scoped>
+.breadcrumbs-nav :deep(.v-breadcrumbs-item) {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+}
+
+.breadcrumbs-nav :deep(.v-breadcrumbs-item--disabled) {
+  font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
+}
+</style>

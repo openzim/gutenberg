@@ -110,6 +110,6 @@ const loadingMessage = computed(() =>
 
 <style scoped>
 .list-view {
-  padding: v-bind('LAYOUT.VIEW_PADDING');
+  padding: v-bind(LAYOUT.VIEW_PADDING);
 }
 </style>

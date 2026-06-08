@@ -2,6 +2,7 @@
 import type { BookPreview } from '@/types'
 import ShelfBookCard from './ShelfBookCard.vue'
 import { useI18n } from 'vue-i18n'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
   books: BookPreview[]
@@ -12,7 +13,7 @@ const { t } = useI18n()
 
 <template>
   <div class="shelf-carousel">
-    <h2 class="text-h6 font-weight-bold mb-4">
+    <h2 class="shelf-carousel-title mb-4">
       {{ t('book.sameShelfBooks') }}
     </h2>
 
@@ -29,6 +30,12 @@ const { t } = useI18n()
   max-width: 1200px;
   margin-inline: auto;
   padding: 1.5rem;
+}
+
+.shelf-carousel-title {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.H3_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
 }
 
 .shelf-books-row {

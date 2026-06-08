@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed } from 'vue'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 export function usePaginationPages(
   currentPage: () => number,
@@ -95,8 +96,9 @@ defineEmits<{
   min-width: 40px;
   height: 40px;
   padding: 0 12px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.BUTTON_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.BUTTON_WEIGHT);
   text-transform: none;
 }
 

@@ -19,7 +19,6 @@
 		"subtitle": "최초의 무료 전자책 제작사"
 	},
 	"about": {
-		"linkKiwix": "Kiwix"
 	},
 	"authors": {
 		"title": "저자"
@@ -47,7 +46,7 @@
 	},
 	"author": {
 		"bookCount": "{n}권 | {n}권",
-		"booksByAuthor": "{이름}의 책",
+		"booksByAuthor": "{name}의 책",
 		"fullName": "성명",
 		"lifespan": "향년",
 		"worksAvailable": "작품 이용 가능"
@@ -101,11 +100,9 @@
 		"mainNavigation": "주 둘러보기",
 		"mobileNavigationMenu": "모바일 탐색 메뉴",
 		"mobileNavigation": "모바일 둘러보기",
-		"footerLinks": "바닥글 링크",
 		"toggleSortOptions": "정렬 옵션 전환",
 		"navigateTo": "다음으로 이동:",
 		"navigateToItem": "다음으로 이동: {item}",
-		"opensInNewTab": "새 탭에서 열기",
 		"gutenbergHome": "구텐베르크 홈"
 	},
 	"messages": {

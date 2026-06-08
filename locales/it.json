@@ -16,7 +16,6 @@
 		"subtitle": "Il primo produttore di ebooks gratuiti"
 	},
 	"about": {
-		"linkKiwix": "Kiwix"
 	},
 	"authors": {
 		"title": "Autori"
@@ -78,8 +77,7 @@
 		"mainNavigation": "Navigazione principale",
 		"mobileNavigation": "Navigazione mobile",
 		"navigateTo": "Vai a",
-		"navigateToItem": "Vai a {item}",
-		"opensInNewTab": "apri in una nuova scheda"
+		"navigateToItem": "Vai a {item}"
 	},
 	"messages": {
 		"noBooks": "Nessun dato disponibile nella tabella",

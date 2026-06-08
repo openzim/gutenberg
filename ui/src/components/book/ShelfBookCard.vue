@@ -2,6 +2,7 @@
 import type { BookPreview } from '@/types'
 import { getPopularityStars, formatLabel } from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
   book: BookPreview
@@ -22,18 +23,15 @@ defineProps<{
       {{ book.availableFormats.map(formatLabel).join(' · ') }}
     </div>
 
-    <h3 class="shelf-book-title text-body-2 font-weight-bold mb-1">
+    <h3 class="shelf-book-title mb-1">
       {{ book.title }}
     </h3>
 
-    <p class="shelf-book-author text-caption text-medium-emphasis mb-2">
+    <p class="shelf-book-author mb-2">
       {{ book.author?.name }}
     </p>
 
-    <span
-      class="text-star text-body-2"
-      :aria-label="`Popularity: ${book.popularity} out of 5 stars`"
-    >
+    <span class="text-star" :aria-label="`Popularity: ${book.popularity} out of 5 stars`">
       {{ getPopularityStars(book.popularity) }}
     </span>
   </router-link>
@@ -68,11 +66,14 @@ defineProps<{
 
 .format-links {
   color: rgb(var(--v-theme-format));
-  font-family: 'Inter Variable', 'Inter', sans-serif;
-  font-weight: 500;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
 }
 
 .shelf-book-title {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.H3_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -83,9 +84,20 @@ defineProps<{
 }
 
 .shelf-book-author {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+  color: rgb(var(--v-theme-text));
+  opacity: 0.6;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.text-star {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
 }
 </style>

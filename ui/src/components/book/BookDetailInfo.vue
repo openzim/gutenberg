@@ -9,6 +9,7 @@ import {
   formatLabel
 } from '@/utils/format-utils'
 import { useI18n } from 'vue-i18n'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 const { t } = useI18n()
 const { formatLanguages } = useFormatters()
@@ -212,39 +213,39 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
 
 /* Typography shared class */
 .inter-13 {
-  font-family: 'Inter Variable', 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 13pt;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.H3_SIZE);
 }
 
 .book-title {
-  font-family: 'Inter Variable', 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 24pt;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.H1_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.H1_SIZE);
   line-height: 1.3;
   word-break: break-word;
   color: rgb(var(--v-theme-title));
 }
 
 .book-desc {
-  font-family: 'Inter Variable', 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 12pt;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.DESCRIPTION_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.DESCRIPTION_SIZE);
   line-height: 1.6;
   color: rgb(var(--v-theme-description));
 }
 
 .action-label {
-  font-family: 'Inter Variable', 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 13pt;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
   line-height: 1;
 }
 
 .format-btn.v-btn {
-  font-family: 'Inter Variable', 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 12pt;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.DESCRIPTION_SIZE);
   border-radius: 8px;
   background-color: rgb(var(--v-theme-bgd3Fill));
   border-color: rgb(var(--v-theme-bgd3Outline));
