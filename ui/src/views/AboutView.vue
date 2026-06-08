@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 const { t } = useI18n()
 </script>
@@ -73,8 +74,9 @@ const { t } = useI18n()
 }
 
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.H1_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.H1_WEIGHT);
   color: rgb(var(--v-theme-text));
   margin-bottom: 1rem;
 }
@@ -85,13 +87,17 @@ const { t } = useI18n()
 }
 
 .mission-by {
-  font-size: 0.95rem;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
   opacity: 0.85;
   margin-bottom: 1rem;
 }
 
 p {
-  font-size: 0.95rem;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
   line-height: 1.6;
   color: rgb(var(--v-theme-text));
   opacity: 0.9;
@@ -105,7 +111,8 @@ p {
 }
 
 .attribution p {
-  font-size: 0.85rem;
+  font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
   opacity: 0.7;
   margin-bottom: 0;
 }
@@ -124,7 +131,7 @@ p {
   }
 
   .section-title {
-    font-size: 1.25rem;
+    font-size: v-bind(TYPOGRAPHY.H2_SIZE);
   }
 }
 </style>

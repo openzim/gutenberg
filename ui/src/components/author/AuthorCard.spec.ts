@@ -113,7 +113,7 @@ describe('AuthorCard', () => {
       expect(avatar.classes()).toContain('author-card__avatar')
     })
 
-    it('renders name with correct classes', () => {
+    it('renders name with correct text', () => {
       const wrapper = mount(AuthorCard, {
         props: { author: createAuthor() }
       })
@@ -121,7 +121,6 @@ describe('AuthorCard', () => {
       const name = wrapper.find('.author-card__name')
       expect(name.exists()).toBe(true)
       expect(name.text()).toBe('Jane Austen')
-      expect(name.classes()).toContain('font-weight-bold')
     })
   })
 

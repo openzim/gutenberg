@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AuthorPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
   author: AuthorPreview
@@ -19,11 +20,11 @@ const { t } = useI18n()
       <v-icon icon="mdi-account" :size="48" />
     </v-avatar>
 
-    <h3 class="author-card__name text-body-2 font-weight-bold">
+    <h3 class="author-card__name">
       {{ author.name }}
     </h3>
 
-    <p class="author-card__count text-caption text-medium-emphasis">
+    <p class="author-card__count">
       {{ t('author.bookCount', author.bookCount) }}
     </p>
   </router-link>
@@ -55,8 +56,11 @@ const { t } = useI18n()
 }
 
 .author-card__name {
-  text-align: center;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.H3_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
   line-height: 1.4;
+  text-align: center;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -68,6 +72,12 @@ const { t } = useI18n()
 }
 
 .author-card__count {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+  line-height: 1.4;
+  color: rgb(var(--v-theme-text));
+  opacity: 0.6;
   margin: 0;
   text-align: center;
 }

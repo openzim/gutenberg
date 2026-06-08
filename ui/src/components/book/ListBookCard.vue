@@ -2,6 +2,7 @@
 import type { BookPreview } from '@/types'
 import { getPopularityStars, formatLabel } from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
   book: BookPreview
@@ -24,18 +25,15 @@ defineProps<{
         {{ book.availableFormats.map(formatLabel).join(' · ') }}
       </div>
 
-      <h3 class="list-book-title text-body-2 font-weight-bold mb-1">
+      <h3 class="list-book-title mb-1">
         {{ book.title }}
       </h3>
 
-      <p class="list-book-author text-caption text-medium-emphasis mb-2">
+      <p class="list-book-author mb-2">
         {{ book.author?.name }}
       </p>
 
-      <p
-        v-if="book.description"
-        class="list-book-description text-caption text-medium-emphasis mb-2"
-      >
+      <p v-if="book.description" class="list-book-description mb-2">
         {{ book.description }}
       </p>
 
@@ -84,11 +82,14 @@ defineProps<{
 
 .format-links {
   color: rgb(var(--v-theme-format));
-  font-family: 'Inter Variable', 'Inter', sans-serif;
-  font-weight: 500;
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
 }
 
 .list-book-title {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.H3_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -99,6 +100,11 @@ defineProps<{
 }
 
 .list-book-author {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+  color: rgb(var(--v-theme-text));
+  opacity: 0.6;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -106,6 +112,11 @@ defineProps<{
 }
 
 .list-book-description {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
+  color: rgb(var(--v-theme-text));
+  opacity: 0.6;
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;

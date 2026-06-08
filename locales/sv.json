@@ -19,7 +19,6 @@
 		"subtitle": "Den första utgivaren av gratis e-böcker"
 	},
 	"about": {
-		"linkKiwix": "Kiwix"
 	},
 	"authors": {
 		"title": "Författare"
@@ -101,11 +100,9 @@
 		"mainNavigation": "Huvudnavigering",
 		"mobileNavigationMenu": "Mobil navigeringsmeny",
 		"mobileNavigation": "Mobil navigering",
-		"footerLinks": "Länkar i sidfoten",
 		"toggleSortOptions": "Växla sorteringsalternativ",
 		"navigateTo": "Navigera till",
 		"navigateToItem": "Navigera till {item}",
-		"opensInNewTab": "öppnar i ny flik",
 		"gutenbergHome": "Gutenbergs hem"
 	},
 	"messages": {
