@@ -46,8 +46,7 @@
 		"attribution": "Attribution footer for the Mission Statement with author and dates"
 	},
 	"authors": {
-		"title": "Title for the authors listing page",
-		"description": "Description for the authors page"
+		"title": "Title for the authors listing page"
 	},
 	"shelves": {
 		"title": "Title for the Library of Congress Classification bookshelves page",
@@ -78,7 +77,8 @@
 		"booksByAuthor": "Title for books by a specific author. Parameters: {name} - author name",
 		"fullName": "Label for the author's full name",
 		"lifespan": "Label for the author's lifespan (birth-death years)",
-		"worksAvailable": "Label for the number of works available by this author"
+		"worksAvailable": "Label for the number of works available by this author",
+		"viewAuthor": "Accessible label for author card link. Parameters: {name} - author name, {n} - number of books"
 	},
 	"shelf": {
 		"classificationCode": "Label for the Library of Congress Classification code",
@@ -96,8 +96,6 @@
 		"showing": "Text prefix for showing results count",
 		"of": "Text separator between current and total count (e.g., '10 of 100')",
 		"search": "Label for the search functionality",
-		"searchAuthors": "Placeholder text for the author search input field",
-		"searchAuthorsByName": "Placeholder text for searching authors by their name",
 		"searchShelf": "Placeholder text for the bookshelf search input field",
 		"searchShelfAria": "Accessible label for the shelf search input field",
 		"clear": "Label for clear/reset button",

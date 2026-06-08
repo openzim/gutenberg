@@ -33,8 +33,6 @@
 	"common": {
 		"loading": "جار التحميل...",
 		"search": "بحث",
-		"searchAuthors": "البحث عن المؤلفين",
-		"searchAuthorsByName": "ابحث عن المؤلفين بالاسم",
 		"searchShelf": "بحث رف الكتب",
 		"sort": "ترتيب",
 		"sortPopularity": "رتب الكتب بحسب الشعبية",

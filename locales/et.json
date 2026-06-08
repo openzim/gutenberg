@@ -11,8 +11,7 @@
 		"about": "Teave"
 	},
 	"authors": {
-		"title": "Autorid",
-		"description": "Sirvi kõiki Gutenbergi kogu autoreid"
+		"title": "Autorid"
 	},
 	"book": {
 		"title": "Raamatud",
@@ -34,7 +33,6 @@
 	"common": {
 		"loadingAuthor": "Autori info laadimine...",
 		"loadingItems": "Laadimine {type}...",
-		"searchAuthors": "Otsi autoreid",
 		"clear": "Tühjenda",
 		"all": "Kõik",
 		"clearAllSelections": "Tühjenda kõik valikud",

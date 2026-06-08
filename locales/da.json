@@ -33,7 +33,6 @@
 	"common": {
 		"loading": "Indlæser...",
 		"search": "Søg",
-		"searchAuthors": "Søg efter forfatternavn",
 		"searchShelf": "Bogreolsøgning",
 		"sort": "Sortér",
 		"sortPopularity": "Sortér bøger efter popularitet",
