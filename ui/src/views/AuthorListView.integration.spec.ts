@@ -1,6 +1,6 @@
 /**
  * Integration tests for AuthorListView
- * Tests author browsing with search and pagination
+ * Tests author browsing with alphabet filter and infinite scroll
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
@@ -61,110 +61,72 @@ describe('AuthorListView Integration', () => {
     it('shows empty state when no authors available', async () => {
       const wrapper = await mountView({ totalCount: 0, authors: [] })
 
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      expect(listWrapper.props('hasItems')).toBe(false)
+      expect(wrapper.text()).toContain('No authors found')
     })
   })
 
-  describe('Search Functionality', () => {
-    it('filters authors by search query', async () => {
+  describe('Alphabet Filter', () => {
+    it('filters authors by letter', async () => {
       const wrapper = await mountView()
 
-      expect(wrapper.text()).toContain('Jane Austen')
-      expect(wrapper.text()).toContain('Charles Dickens')
+      const filter = wrapper.findComponent({ name: 'AlphabetFilter' })
+      expect(filter.exists()).toBe(true)
 
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      await listWrapper.vm.$emit('update:searchQuery', 'Jane')
-      await wrapper.vm.$nextTick()
+      // Click on 'J' filter
+      const jButton = filter.findAll('.alphabet-btn').find((btn) => btn.text().includes('J'))
+      expect(jButton).toBeDefined()
+      await jButton!.trigger('click')
+      await flushPromises()
 
-      const authorGrid = wrapper.findComponent({ name: 'AuthorGrid' })
-      expect(authorGrid.props('authors')).toHaveLength(1)
-      expect(authorGrid.props('authors')[0].name).toBe('Jane Austen')
+      const authorsList = wrapper.findComponent({ name: 'AuthorsList' })
+      expect(authorsList.props('authors')).toHaveLength(1)
+      expect(authorsList.props('authors')[0].name).toBe('Jane Austen')
     })
 
-    it('shows all authors when search is cleared', async () => {
+    it('switches back to ALL showing all authors', async () => {
       const wrapper = await mountView()
 
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      await listWrapper.vm.$emit('update:searchQuery', 'Jane')
-      await wrapper.vm.$nextTick()
+      const filter = wrapper.findComponent({ name: 'AlphabetFilter' })
 
-      const authorGrid = wrapper.findComponent({ name: 'AuthorGrid' })
-      expect(authorGrid.props('authors')).toHaveLength(1)
+      // Click on 'J' filter
+      const jButton = filter.findAll('.alphabet-btn').find((btn) => btn.text().includes('J'))
+      await jButton!.trigger('click')
+      await flushPromises()
 
-      await listWrapper.vm.$emit('update:searchQuery', '')
-      await wrapper.vm.$nextTick()
+      const authorsList = wrapper.findComponent({ name: 'AuthorsList' })
+      expect(authorsList.props('authors')).toHaveLength(1)
 
-      expect(authorGrid.props('authors')).toHaveLength(5)
+      // Click back to ALL
+      const allButton = filter.findAll('.alphabet-btn').find((btn) => btn.text().includes('ALL'))
+      await allButton!.trigger('click')
+      await flushPromises()
+
+      expect(authorsList.props('authors')).toHaveLength(5)
     })
 
-    it('handles case-insensitive search', async () => {
+    it('does not show pagination in any mode', async () => {
       const wrapper = await mountView()
 
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      await listWrapper.vm.$emit('update:searchQuery', 'DICKENS')
-      await wrapper.vm.$nextTick()
-
-      const authorGrid = wrapper.findComponent({ name: 'AuthorGrid' })
-      expect(authorGrid.props('authors')).toHaveLength(1)
-      expect(authorGrid.props('authors')[0].name).toBe('Charles Dickens')
+      const pagination = wrapper.findComponent({ name: 'PaginationControl' })
+      expect(pagination.exists()).toBe(false)
     })
   })
 
-  describe('Sorting', () => {
-    it('sorts authors alphabetically by default', async () => {
+  describe('No Search Bar', () => {
+    it('does not render search input', async () => {
       const wrapper = await mountView()
 
-      const authorGrid = wrapper.findComponent({ name: 'AuthorGrid' })
-      const authors = authorGrid.props('authors')
-
-      expect(authors[0].name).toBe('Charles Dickens')
-      expect(authors[1].name).toBe('Jane Austen')
-      expect(authors[2].name).toBe('Mark Twain')
+      const searchInput = wrapper.find('input[type="text"]')
+      expect(searchInput.exists()).toBe(false)
     })
   })
 
-  describe('Pagination', () => {
-    const createManyAuthors = () => ({
-      totalCount: 30,
-      authors: Array.from({ length: 30 }, (_, i) => ({
-        id: `author-${i}`,
-        name: `Author ${String(i + 1).padStart(2, '0')}`,
-        bookCount: 5
-      }))
-    })
-
-    it('paginates when more than 24 authors', async () => {
-      const wrapper = await mountView(createManyAuthors())
-
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      expect(listWrapper.props('totalPages')).toBeGreaterThan(1)
-    })
-
-    it('resets to page 1 when search query changes', async () => {
-      const wrapper = await mountView(createManyAuthors())
-
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      await listWrapper.vm.$emit('goToPage', 2)
-      await wrapper.vm.$nextTick()
-
-      expect(listWrapper.props('currentPage')).toBe(2)
-
-      await listWrapper.vm.$emit('update:searchQuery', 'test')
-      await wrapper.vm.$nextTick()
-
-      expect(listWrapper.props('currentPage')).toBe(1)
-    })
-  })
-
-  describe('Item Count', () => {
-    it('displays correct author count', async () => {
+  describe('No Item Count', () => {
+    it('does not render item count', async () => {
       const wrapper = await mountView()
 
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      expect(listWrapper.props('currentCount')).toBe(5)
-      expect(listWrapper.props('totalCount')).toBe(5)
-      expect(listWrapper.props('itemType')).toBe('authors')
+      const itemCount = wrapper.findComponent({ name: 'ItemCount' })
+      expect(itemCount.exists()).toBe(false)
     })
   })
 })
