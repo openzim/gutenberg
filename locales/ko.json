@@ -22,8 +22,7 @@
 		"linkKiwix": "Kiwix"
 	},
 	"authors": {
-		"title": "저자",
-		"description": "구텐베르크 모음집에 있는 모든 저자를 찾아보세요"
+		"title": "저자"
 	},
 	"shelves": {
 		"title": "LCC 책장",
@@ -69,8 +68,6 @@
 		"showing": "다음 결과 갯수 표시 중:",
 		"of": "/",
 		"search": "검색",
-		"searchAuthors": "만든이 이름으로 검색",
-		"searchAuthorsByName": "제목으로 검색",
 		"searchShelf": "책장 코드 또는 이름으로 검색",
 		"searchShelfAria": "LCC 책장을 코드 또는 이름으로 검색",
 		"clear": "지우기",

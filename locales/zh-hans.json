@@ -36,8 +36,6 @@
 	"common": {
 		"loading": "加载中...",
 		"search": "搜索",
-		"searchAuthors": "按作者姓名搜索",
-		"searchAuthorsByName": "按作者姓名搜索",
 		"searchShelf": "书架搜索",
 		"sort": "排序：",
 		"sortPopularity": "按受欢迎程度对书籍进行排序",

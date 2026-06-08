@@ -20,8 +20,7 @@
 		"linkKiwix": "Kiwix"
 	},
 	"authors": {
-		"title": "Autores",
-		"description": "Explorar tote le autores in le collection Gutenberg"
+		"title": "Autores"
 	},
 	"shelves": {
 		"title": "Plancas de libros (A-Z)",
@@ -36,8 +35,6 @@
 		"license": "Licentia",
 		"licensePd": "De dominio public in le Statos Unite.",
 		"licenseCopyright": "Protegite per le derecto de autor. Consulta le aviso de derecto de autor in iste libro pro plus detalios.",
-		"description": "Description",
-		"availableFormats": "Formatos disponibile",
 		"fullName": "Nomine complete",
 		"worksAvailable": "Obras disponibile",
 		"unknown": "Incognite",
@@ -65,13 +62,10 @@
 		"loadingBook": "Cargamento del detalios del libro…",
 		"loadingAuthor": "Cargamento del detalios del autor…",
 		"loadingShelf": "Cargamento del detalios del planca…",
-		"loadingStats": "Cargamento del statisticas…",
 		"loadingItems": "Cargamento de {type}…",
 		"showing": "Es monstrate",
 		"of": "de",
 		"search": "Cercar",
-		"searchAuthors": "Cercar per nomine de autor",
-		"searchAuthorsByName": "Cercar autores per nomine",
 		"searchShelf": "Cercar in plancas de libros",
 		"searchShelfAria": "Cercar in plancas LCC per codice o nomine",
 		"clear": "Rader",

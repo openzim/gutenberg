@@ -43,8 +43,6 @@
 	"common": {
 		"loading": "Carregando...",
 		"search": "Pesquisar",
-		"searchAuthors": "Pesquisar por nome do autor",
-		"searchAuthorsByName": "Pesquisar por título",
 		"searchShelf": "Busca na estante",
 		"sort": "Organizar",
 		"sortPopularity": "Ordenar livros por popularidade",

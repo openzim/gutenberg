@@ -33,8 +33,6 @@
 	"common": {
 		"loading": "載入中…",
 		"search": "搜尋",
-		"searchAuthors": "依照作者名稱搜尋",
-		"searchAuthorsByName": "依照標題搜尋",
 		"searchShelf": "書架搜尋",
 		"sort": "排序：",
 		"sortPopularity": "依照人氣排序書籍",

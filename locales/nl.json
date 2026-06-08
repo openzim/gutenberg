@@ -20,8 +20,7 @@
 		"linkKiwix": "Kiwix"
 	},
 	"authors": {
-		"title": "Auteurs",
-		"description": "Alle auteurs in de Gutenberg-verzameling bekijken"
+		"title": "Auteurs"
 	},
 	"shelves": {
 		"title": "Boekenplanken (A-Z)",
@@ -67,8 +66,6 @@
 		"showing": "Weergegeven:",
 		"of": "van",
 		"search": "Zoek",
-		"searchAuthors": "Lijst van boeken van een enkele auteur",
-		"searchAuthorsByName": "Zoek auteurs op naam",
 		"searchShelf": "Boekenplank zoeken",
 		"searchShelfAria": "LCC-boekenplanken doorzoeken op code of naam",
 		"clear": "Wissen",

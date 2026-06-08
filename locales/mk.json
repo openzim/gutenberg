@@ -33,8 +33,6 @@
 	"common": {
 		"loading": "Вчитувам...",
 		"search": "Пребарај",
-		"searchAuthors": "Пребарајте по име на автор",
-		"searchAuthorsByName": "Пребарајте по наслов",
 		"searchShelf": "Пребарување на полици",
 		"sort": "Подреди",
 		"sortPopularity": "Подреди книги по популарност",

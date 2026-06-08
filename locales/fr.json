@@ -21,8 +21,7 @@
 		"linkKiwix": "Kiwix"
 	},
 	"authors": {
-		"title": "Auteurs",
-		"description": "Parcourez tous les auteurs de la collection Gutenberg"
+		"title": "Auteurs"
 	},
 	"shelves": {
 		"title": "Rayons (A-Z)",
@@ -68,8 +67,6 @@
 		"showing": "Affichage",
 		"of": "sur",
 		"search": "Rechercher",
-		"searchAuthors": "Rechercher par nom d'auteur",
-		"searchAuthorsByName": "Rechercher des livres par titre",
 		"searchShelf": "Recherche de rayon",
 		"searchShelfAria": "Rechercher des bibliothèques LCC par code ou par nom",
 		"clear": "Effacer",
