@@ -133,5 +133,31 @@
       "description": "Custom secondary color. Hex/HTML syntax (#424242)",
       "pattern": "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
     }
-  }
+  },
+  "zimMetadata": [
+    {
+      "metadata": "Name",
+      "flag": "zim_name"
+    },
+    {
+      "metadata": "Title",
+      "flag": "zim_title"
+    },
+    {
+      "metadata": "Description",
+      "flag": "zim_desc"
+    },
+    {
+      "metadata": "LongDescription",
+      "flag": "zim_long_desc"
+    },
+    {
+      "metadata": "Publisher",
+      "flag": "publisher"
+    },
+    {
+      "metadata": "Language",
+      "flag": "zim_languages"
+    }
+  ]
 }
