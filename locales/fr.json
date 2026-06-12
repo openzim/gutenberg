@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Benoit74",
-			"Chpol"
+			"Chpol",
+			"Dash777"
 		]
 	},
 	"language": "Français",
@@ -127,6 +128,8 @@
 		"returnHome": "Retour",
 		"toggleNavigationMenu": "Bascule du menu de navigation",
 		"mainNavigation": "Navigation principale",
+		"mobileNavigationMenu": "Menu de navigation mobile",
+		"mobileNavigation": "Navigation mobile",
 		"footerLinks": "Liens de pied de page",
 		"toggleSortOptions": "Activer/désactiver les options de tri",
 		"navigateTo": "Naviguer vers",
