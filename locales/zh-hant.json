@@ -21,6 +21,8 @@
 		"choose": "在免費 epub 電子書與免費 kindle 電子書中選擇。 下載或線上閱讀。",
 		"qualityTitle": "我們提供高品質電子書",
 		"qualityDesc": "我們所有的電子書都是由正規出版社出版。 我們在數千名志工的幫助之下，進行了數位化並認真校對資料。",
+		"collectionStats": "收藏統計",
+		"collectionTitle": "關於此收藏",
 		"linksTitle": "連結",
 		"linkGutenberg": "古騰堡計劃網站",
 		"linkGutenbergDesc": "參訪古騰堡計劃的官方網站",
@@ -32,7 +34,8 @@
 		"authors": "作者"
 	},
 	"authors": {
-		"title": "作者"
+		"title": "作者",
+		"description": "在古騰堡收藏裡瀏覽所有作者"
 	},
 	"shelves": {
 		"title": "書架（A 至 Z）"
@@ -69,6 +72,10 @@
 		"loading": "載入中…",
 		"loadingBook": "正在載入書籍詳細資訊…",
 		"loadingAuthor": "正在載入作者詳細資訊…",
+		"loadingStats": "正在載入統計數據…",
+		"loadingItems": "正在載入{type}…",
+		"showing": "顯示",
+		"of": "/",
 		"search": "搜尋",
 		"searchAuthors": "依照作者名稱搜尋",
 		"searchAuthorsByName": "依照標題搜尋",
@@ -78,9 +85,11 @@
 		"clearAllSelections": "清除全部所選",
 		"selectAll": "全選",
 		"sort": "排序：",
+		"sortBy": "排序依",
 		"sortPopularity": "依照人氣排序書籍",
 		"sortTitle": "依照標題排序書籍",
 		"language": "語言",
+		"bookLanguages": "書籍語言",
 		"chooseLanguage": "選擇一種語言…",
 		"mainLanguages": "主要語言",
 		"otherLanguages": "其他語言",
@@ -88,6 +97,8 @@
 		"format": "格式",
 		"uiLanguage": "介面語言",
 		"selectInterfaceLanguage": "選擇介面語言",
+		"filterBy": "篩選依照",
+		"filterByTitle": "篩選依照{title}",
 		"filter": "篩選：",
 		"selected": "已選",
 		"returnHome": "返回首頁",
@@ -96,10 +107,14 @@
 		"mobileNavigationMenu": "行動版導覽選單",
 		"mobileNavigation": "行動版導覽",
 		"footerLinks": "註腳連結",
+		"navigateTo": "導覽至",
+		"navigateToItem": "導覽至{item}",
+		"opensInNewTab": "在新分頁開啟",
 		"gutenbergHome": "古騰堡首頁"
 	},
 	"messages": {
 		"noBooks": "表格裡沒有可用資料",
+		"noAuthors": "找不到作者。",
 		"noBooksForAuthor": "此位作者沒有這本書。",
 		"noBooksInShelf": "此書架沒有可用的書籍。",
 		"noLanguages": "沒有可用的語言。",
@@ -110,7 +125,13 @@
 		"description": "所有英文書籍均來自首家免費電子書製作者"
 	},
 	"footer": {
-		"tagline": "古騰堡計劃"
+		"tagline": "古騰堡計劃",
+		"subtitle": "自由的電子書",
+		"powered": "Kiwix 提供離線存取技術支援"
+	},
+	"itemTypes": {
+		"books": "書籍 | 書籍",
+		"authors": "作者 | 作者"
 	},
 	"lccShelves": {
 		"A": "A-總類",
