@@ -19,12 +19,10 @@
 		"downloadCount": "Allalaadimiste arv",
 		"languages": "Keel(ed)",
 		"lccShelf": "LCC riiul",
-		"fullName": "Täisnimi",
 		"unknown": "Tundmatu"
 	},
 	"author": {
-		"bookCount": "{n} raamat | {n} raamatut",
-		"fullName": "Täisnimi"
+		"bookCount": "{n} raamat | {n} raamatut"
 	},
 	"shelf": {
 		"booksInShelf": "Raamatud selles riiulis",

@@ -18,8 +18,7 @@
 		"title": "Projekt Gutenberg-biblioteket",
 		"subtitle": "Den första utgivaren av gratis e-böcker"
 	},
-	"about": {
-	},
+	"about": {},
 	"authors": {
 		"title": "Författare"
 	},
@@ -36,8 +35,6 @@
 		"license": "Licens",
 		"licensePd": "Public domain i USA.",
 		"licenseCopyright": "Upphovsrättsskyddad. Läs upphovsrättsmeddelandet i boken för mer information.",
-		"fullName": "Fullständigt namn",
-		"worksAvailable": "Tillgängliga verk",
 		"unknown": "Okänd",
 		"cover": "Bokomslag",
 		"coverLabel": "(omslag)",
@@ -45,11 +42,7 @@
 		"various": "Diverse"
 	},
 	"author": {
-		"bookCount": "{n} bok | {n} böcker",
-		"booksByAuthor": "Böcker av {name}",
-		"fullName": "Fullständigt namn",
-		"lifespan": "Livslängd",
-		"worksAvailable": "Tillgängliga verk"
+		"bookCount": "{n} bok | {n} böcker"
 	},
 	"shelf": {
 		"classificationCode": "Klassificeringskod",

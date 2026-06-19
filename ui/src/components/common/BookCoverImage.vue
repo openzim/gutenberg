@@ -24,7 +24,6 @@ const props = withDefaults(defineProps<Props>(), {
     :src="normalizeImagePath(coverPath)"
     :alt="alt"
     :height="height"
-    cover
     :class="props.class"
   >
     <template v-slot:placeholder>

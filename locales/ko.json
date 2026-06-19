@@ -18,8 +18,7 @@
 		"title": "프로젝트 구텐베르크 도서관",
 		"subtitle": "최초의 무료 전자책 제작사"
 	},
-	"about": {
-	},
+	"about": {},
 	"authors": {
 		"title": "저자"
 	},
@@ -36,8 +35,6 @@
 		"license": "라이선스",
 		"licensePd": "미국에서는 퍼블릭 도메인입니다.",
 		"licenseCopyright": "저작권 보호 대상입니다. 자세한 내용은 책 안쪽에 있는 저작권 고지를 참조하세요.",
-		"fullName": "성명",
-		"worksAvailable": "작품 이용 가능",
 		"unknown": "알 수 없음",
 		"cover": "책 표지",
 		"coverLabel": "(커버)",
@@ -45,11 +42,7 @@
 		"various": "여러 가지"
 	},
 	"author": {
-		"bookCount": "{n}권 | {n}권",
-		"booksByAuthor": "{name}의 책",
-		"fullName": "성명",
-		"lifespan": "향년",
-		"worksAvailable": "작품 이용 가능"
+		"bookCount": "{n}권 | {n}권"
 	},
 	"shelf": {
 		"classificationCode": "분류 코드",

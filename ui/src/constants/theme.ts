@@ -47,18 +47,23 @@ export const LAYOUT = {
 
 export const AVATAR_SIZES = {
   CARD: 80,
+  CAROUSEL: 64,
   DETAIL: 120,
-  DETAIL_MOBILE: 80,
-  LIST: 56
+  LIST: 56,
+  TABLET: 100
 } as const
 
 export const ICON_SIZES = {
   CARD: 48,
   DETAIL: 48,
-  DETAIL_MOBILE: 40,
   LIST: 32,
   STAT: 48,
   SMALL: 20
+} as const
+
+export const CAROUSEL_ARROW_SIZES = {
+  BUTTON: 40,
+  ICON: 28
 } as const
 
 export const TYPOGRAPHY = {

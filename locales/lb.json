@@ -12,8 +12,7 @@
 		"shelves": "Regaler",
 		"about": "Iwwer"
 	},
-	"about": {
-	},
+	"about": {},
 	"authors": {
 		"title": "Auteuren"
 	},
@@ -30,8 +29,7 @@
 		"anonymous": "Anonym"
 	},
 	"author": {
-		"bookCount": "{n} Buch | {n} Bicher",
-		"booksByAuthor": "Bicher vum {name}"
+		"bookCount": "{n} Buch | {n} Bicher"
 	},
 	"shelf": {
 		"bookCount": "{n} Buch | {n} Bicher"
