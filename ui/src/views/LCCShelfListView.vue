@@ -55,7 +55,7 @@ const {
   totalPages,
   goToPage,
   resetPage
-} = usePagination(() => sortedShelves.value, 24)
+} = usePagination(() => sortedShelves.value, 24, { scrollToTop: true })
 
 watch([searchQuery, sortBy, sortOrder], () => {
   resetPage()

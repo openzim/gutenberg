@@ -1,97 +1,81 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import type { AuthorDetail } from '@/types'
-import BooksSection from '@/components/common/BooksSection.vue'
-import DetailInfoCard from '@/components/common/DetailInfoCard.vue'
-import { formatAuthorName, formatAuthorLifespan } from '@/utils/format-utils'
-import { AVATAR_SIZES, ICON_SIZES } from '@/constants/theme'
-
-const { t } = useI18n()
+import { toRef } from 'vue'
+import type { AuthorPreview, AuthorDetail, BookPreview } from '@/types'
+import BooksGrid from '@/components/book/BooksGrid.vue'
+import BooksList from '@/components/book/BooksList.vue'
+import SortAndLimitControl from '@/components/common/SortAndLimitControl.vue'
+import PaginationControl from '@/components/common/PaginationControl.vue'
+import EmptyState from '@/components/common/EmptyState.vue'
+import AuthorDetailCarousel from './AuthorDetailCarousel.vue'
+import { useBookDisplay } from '@/composables/useBookDisplay'
 
 const props = defineProps<{
   author: AuthorDetail
+  authors: AuthorPreview[]
 }>()
 
-const fullName = computed(() => formatAuthorName(props.author.firstName, props.author.lastName))
-const lifespan = computed(() =>
-  formatAuthorLifespan(props.author.birthYear, props.author.deathYear)
-)
+const books = toRef(() => props.author.books as BookPreview[])
+
+const {
+  sortBy,
+  sortOrder,
+  limit,
+  viewMode,
+  isGridView,
+  isShowAll,
+  pageSizeNumber,
+  sortedBooks,
+  displayedBooks,
+  displayedRange,
+  currentPage,
+  totalPages,
+  goToPage,
+  infiniteHasMore,
+  sentinelRef
+} = useBookDisplay(books)
 </script>
 
 <template>
   <div>
-    <detail-info-card>
-      <template #avatar>
-        <v-avatar
-          :size="AVATAR_SIZES.DETAIL"
-          color="primary"
-          class="author-avatar mr-6 flex-shrink-0"
-        >
-          <v-icon icon="mdi-account" :size="ICON_SIZES.DETAIL" class="author-icon" />
-        </v-avatar>
-      </template>
+    <author-detail-carousel :authors="authors" :current-author="author" />
 
-      <template #title>
-        <h1
-          class="text-h4 text-md-h3 mb-2 text-wrap"
-          style="word-break: break-word; overflow-wrap: break-word"
-        >
-          {{ author.name }}
-        </h1>
-      </template>
+    <div v-if="sortedBooks.length > 0" class="author-books">
+      <sort-and-limit-control
+        v-model:sort-by="sortBy"
+        v-model:sort-order="sortOrder"
+        v-model:limit="limit"
+        v-model:view-mode="viewMode"
+        :current="displayedRange"
+        :total="sortedBooks.length"
+        type="books"
+        class="mb-4"
+      />
 
-      <template #info>
-        <v-list-item v-if="author.firstName || author.lastName">
-          <template v-slot:prepend>
-            <v-icon icon="mdi-card-account-details" />
-          </template>
-          <v-list-item-title>
-            {{ fullName }}
-          </v-list-item-title>
-          <v-list-item-subtitle>{{ t('author.fullName') }}</v-list-item-subtitle>
-        </v-list-item>
+      <books-grid v-if="isGridView" :books="displayedBooks" />
+      <books-list v-else :books="displayedBooks" />
 
-        <v-list-item v-if="author.birthYear || author.deathYear">
-          <template v-slot:prepend>
-            <v-icon icon="mdi-calendar-range" />
-          </template>
-          <v-list-item-title>
-            {{ lifespan }}
-          </v-list-item-title>
-          <v-list-item-subtitle>{{ t('author.lifespan') }}</v-list-item-subtitle>
-        </v-list-item>
+      <pagination-control
+        v-if="!isShowAll && sortedBooks.length > pageSizeNumber"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        @go-to-page="goToPage"
+      />
 
-        <v-list-item>
-          <template v-slot:prepend>
-            <v-icon icon="mdi-book-multiple" />
-          </template>
-          <v-list-item-title>
-            {{ t('author.bookCount', author.bookCount) }}
-          </v-list-item-title>
-          <v-list-item-subtitle>{{ t('author.worksAvailable') }}</v-list-item-subtitle>
-        </v-list-item>
-      </template>
-    </detail-info-card>
+      <div
+        v-if="isShowAll && infiniteHasMore"
+        ref="sentinelRef"
+        class="text-caption text-center py-4"
+      >
+        {{ $t('common.loading') }}
+      </div>
+    </div>
 
-    <books-section
-      :books="author.books"
-      :title="t('author.booksByAuthor', { name: author.name })"
-      :empty-message="t('messages.noBooksForAuthor')"
-    />
+    <empty-state v-else :message="$t('messages.noBooksForAuthor')" />
   </div>
 </template>
 
 <style scoped>
-@media (max-width: 959px) {
-  .author-avatar {
-    width: v-bind(AVATAR_SIZES.DETAIL_MOBILE + 'px') !important;
-    height: v-bind(AVATAR_SIZES.DETAIL_MOBILE + 'px') !important;
-    margin-right: 1rem !important;
-  }
-
-  .author-icon {
-    font-size: v-bind(ICON_SIZES.DETAIL_MOBILE + 'px') !important;
-  }
+.author-books {
+  margin-top: 1.5rem;
 }
 </style>

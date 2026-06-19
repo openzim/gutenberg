@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
 
-export function useInfiniteScroll<T>(items: () => T[], batchSize: number = 24) {
+export function useInfiniteScroll<T>(items: () => T[], batchSize: number = 20) {
   const displayedCount = ref(batchSize)
 
   const displayedItems = computed(() => items().slice(0, displayedCount.value))

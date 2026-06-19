@@ -16,8 +16,7 @@
 		"title": "Knjižnica projekta Gutenberg",
 		"subtitle": "Prvi producent prostih e-knjig"
 	},
-	"about": {
-	},
+	"about": {},
 	"authors": {
 		"title": "Avtorji"
 	},
@@ -34,8 +33,6 @@
 		"license": "Licenca",
 		"licensePd": "Javna domena v ZDA.",
 		"licenseCopyright": "Avtorsko zavarovano. Za podrobnosti preberite obvestilo o avtorskih pravicah v tej knjigi.",
-		"fullName": "Celotno ime",
-		"worksAvailable": "Dela na voljo",
 		"unknown": "Neznano",
 		"cover": "Naslovnica knjige",
 		"coverLabel": "(naslovnica)",
@@ -43,11 +40,7 @@
 		"various": "Razni"
 	},
 	"author": {
-		"bookCount": "{n} knjiga | {n} knjig",
-		"booksByAuthor": "Knjige po {name}",
-		"fullName": "Celotno ime",
-		"lifespan": "Življenjska doba",
-		"worksAvailable": "Dela na voljo"
+		"bookCount": "{n} knjiga | {n} knjig"
 	},
 	"shelf": {
 		"classificationCode": "Klasifikacijska koda",

@@ -69,7 +69,7 @@ const {
   totalPages,
   goToPage,
   resetPage
-} = usePagination(() => sortedBooks.value, 24)
+} = usePagination(() => sortedBooks.value, 24, { scrollToTop: true })
 
 watch([selectedLanguages, sortBy, sortOrder], () => {
   resetPage()

@@ -18,9 +18,15 @@ defineProps<{
 <style scoped>
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 180px);
+  grid-template-columns: repeat(auto-fill, 220px);
   justify-content: center;
   padding: 1px;
+}
+
+@media (max-width: 1279px) {
+  .books-grid {
+    grid-template-columns: repeat(auto-fill, 160px);
+  }
 }
 
 .grid-cell {

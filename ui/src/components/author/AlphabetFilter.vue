@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
 
-const props = defineProps<{
+defineProps<{
   modelValue: string
 }>()
 
@@ -11,29 +9,18 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-const { t } = useI18n()
-
-const allItems = computed(() => ['ALL', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '0-9'])
-
-const activeValue = computed({
-  get: () => props.modelValue,
-  set: (value: string) => emit('update:modelValue', value)
-})
-
-function isActive(key: string): boolean {
-  return activeValue.value === key
-}
+const ALL_ITEMS = ['ALL', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '0-9']
 </script>
 
 <template>
   <div class="alphabet-filter">
     <button
-      v-for="key in allItems"
+      v-for="key in ALL_ITEMS"
       :key="key"
-      :class="['alphabet-btn', { 'alphabet-btn--active': isActive(key) }]"
-      @click="activeValue = key"
-      :aria-label="t('common.filterByTitle', { title: key })"
-      :aria-pressed="isActive(key)"
+      :class="['alphabet-btn', { 'alphabet-btn--active': modelValue === key }]"
+      @click="emit('update:modelValue', key)"
+      :aria-label="$t('common.filterByTitle', { title: key })"
+      :aria-pressed="modelValue === key"
     >
       <span class="alphabet-btn__label">{{ key }}</span>
     </button>
@@ -60,20 +47,18 @@ function isActive(key: string): boolean {
   border: none;
   cursor: pointer;
   color: rgb(var(--v-theme-author));
-  opacity: 0.6;
-  transition:
-    opacity 0.2s ease,
-    color 0.2s ease;
+  opacity: 1;
+  transition: color 0.2s ease;
 }
 
 .alphabet-btn:hover {
-  opacity: 1;
   color: rgb(var(--v-theme-text));
 }
 
 .alphabet-btn--active {
-  opacity: 1;
   color: rgb(var(--v-theme-text));
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .alphabet-btn__label {
@@ -82,5 +67,24 @@ function isActive(key: string): boolean {
   font-weight: v-bind(TYPOGRAPHY.SMALL_WEIGHT);
   line-height: 1.2;
   text-transform: uppercase;
+}
+
+@media (max-width: 1279px) {
+  .alphabet-filter {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.25rem 0;
+  }
+
+  .alphabet-filter::-webkit-scrollbar {
+    display: none;
+  }
+
+  .alphabet-btn {
+    flex-shrink: 0;
+  }
 }
 </style>
