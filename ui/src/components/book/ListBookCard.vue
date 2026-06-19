@@ -58,9 +58,7 @@ defineProps<{
   color: inherit;
   border: 2px solid rgb(var(--v-theme-grid));
   padding: 1rem 1.25rem;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 
 .list-book-card:hover,

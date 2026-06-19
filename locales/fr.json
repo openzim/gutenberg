@@ -17,8 +17,7 @@
 		"title": "Bibliothèque du projet Gutenberg",
 		"subtitle": "Premier producteur d'ebooks gratuits"
 	},
-	"about": {
-	},
+	"about": {},
 	"authors": {
 		"title": "Auteurs"
 	},
@@ -35,8 +34,6 @@
 		"license": "Licence",
 		"licensePd": "Domaine public aux États-Unis.",
 		"licenseCopyright": "Protégé par le droit d'auteur. Consultez la mention de droit d'auteur à l'intérieur de ce livre pour plus de détails.",
-		"fullName": "Nom complet",
-		"worksAvailable": "Œuvres disponibles",
 		"unknown": "Non disponible",
 		"cover": "Couverture du livre",
 		"coverLabel": "(couverture)",
@@ -44,11 +41,7 @@
 		"various": "Plusieurs"
 	},
 	"author": {
-		"bookCount": "{n} livre | {n} livres",
-		"booksByAuthor": "Livres de {name}",
-		"fullName": "Nom complet",
-		"lifespan": "Durée de vie",
-		"worksAvailable": "Œuvres disponibles"
+		"bookCount": "{n} livre | {n} livres"
 	},
 	"shelf": {
 		"classificationCode": "Code de classification",

@@ -16,8 +16,7 @@
 		"title": "Bibliotheca del Projecto Gutenberg",
 		"subtitle": "Le prime productor de libros electronic gratuite"
 	},
-	"about": {
-	},
+	"about": {},
 	"authors": {
 		"title": "Autores"
 	},
@@ -34,8 +33,6 @@
 		"license": "Licentia",
 		"licensePd": "De dominio public in le Statos Unite.",
 		"licenseCopyright": "Protegite per le derecto de autor. Consulta le aviso de derecto de autor in iste libro pro plus detalios.",
-		"fullName": "Nomine complete",
-		"worksAvailable": "Obras disponibile",
 		"unknown": "Incognite",
 		"cover": "Copertura de libro",
 		"coverLabel": "(copertura)",
@@ -43,11 +40,7 @@
 		"various": "Plures"
 	},
 	"author": {
-		"bookCount": "{n} libro | {n} libros",
-		"booksByAuthor": "Libros de {name}",
-		"fullName": "Nomine complete",
-		"lifespan": "Durata de vita",
-		"worksAvailable": "Obras disponibile"
+		"bookCount": "{n} libro | {n} libros"
 	},
 	"shelf": {
 		"classificationCode": "Codice de classification",

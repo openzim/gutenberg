@@ -55,8 +55,6 @@
 		"license": "License",
 		"licensePd": "Public domain in the USA.",
 		"licenseCopyright": "Copyrighted. Read the copyright notice inside this book for details.",
-		"fullName": "Full Name",
-		"worksAvailable": "Works Available",
 		"unknown": "Unknown",
 		"cover": "Book Cover",
 		"coverLabel": "(cover)",
@@ -68,10 +66,6 @@
 	},
 	"author": {
 		"bookCount": "{n} book | {n} books",
-		"booksByAuthor": "Books by {name}",
-		"fullName": "Full Name",
-		"lifespan": "Lifespan",
-		"worksAvailable": "Works Available",
 		"viewAuthor": "View author: {name} with {n} book | View author: {name} with {n} books"
 	},
 	"shelf": {
@@ -98,8 +92,11 @@
 		"selectAll": "Select all",
 		"sort": "Sort",
 		"sortBy": "Sort by",
-		"sortPopularity": "Popularity",
-		"sortTitle": "Title",
+		"sortPopularity": "Sort by popularity",
+		"sortTitle": "Sort by title",
+		"sortAuthor": "Sort by author",
+		"showN": "Show {n}",
+		"showAll": "All",
 		"language": "Language",
 		"bookLanguages": "Book Languages",
 		"chooseLanguage": "Choose a language...",

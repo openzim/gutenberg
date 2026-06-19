@@ -60,8 +60,6 @@
 		"license": "Label for the license field",
 		"licensePd": "Text describing the public domain license status in the USA",
 		"licenseCopyright": "Text describing copyrighted works with a notice to check the book for details",
-		"fullName": "Label for the full name field",
-		"worksAvailable": "Label for the number of works available",
 		"unknown": "Text displayed when information is unknown",
 		"cover": "Alt text for book cover images",
 		"coverLabel": "Text label indicating a book cover (used in links or captions)",
@@ -73,10 +71,6 @@
 	},
 	"author": {
 		"bookCount": "Text showing book count with pluralization. Parameters: {n} - number of books",
-		"booksByAuthor": "Title for books by a specific author. Parameters: {name} - author name",
-		"fullName": "Label for the author's full name",
-		"lifespan": "Label for the author's lifespan (birth-death years)",
-		"worksAvailable": "Label for the number of works available by this author",
 		"viewAuthor": "Accessible label for author card link. Parameters: {name} - author name, {n} - number of books"
 	},
 	"shelf": {
@@ -105,6 +99,9 @@
 		"sortBy": "Label for the sort by dropdown",
 		"sortPopularity": "Label for the option to sort books by popularity",
 		"sortTitle": "Label for the option to sort books by title",
+		"sortAuthor": "Label for the option to sort books by author",
+		"showN": "Label for showing N items. Parameters: {n} - number of items to show",
+		"showAll": "Label for showing all items without pagination",
 		"language": "Label for the language field or filter",
 		"bookLanguages": "Label for the book languages filter",
 		"chooseLanguage": "Placeholder text for the language selection dropdown",

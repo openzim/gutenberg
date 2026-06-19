@@ -16,8 +16,7 @@
 		"title": "Project Gutenberg Bibliotheek",
 		"subtitle": "De eerste producent van gratis e-boeken"
 	},
-	"about": {
-	},
+	"about": {},
 	"authors": {
 		"title": "Auteurs"
 	},
@@ -34,8 +33,6 @@
 		"license": "Licentie",
 		"licensePd": "Publiek domein in de VS.",
 		"licenseCopyright": "Auteursrechtelijk beschermd. Lees de copyrightvermelding in dit boek voor meer informatie.",
-		"fullName": "Volledige naam",
-		"worksAvailable": "Beschikbare werken",
 		"unknown": "Onbekend",
 		"cover": "Boekomslag",
 		"coverLabel": "(omslag)",
@@ -43,11 +40,7 @@
 		"various": "Verschillende"
 	},
 	"author": {
-		"bookCount": "{n} boek | {n} boeken",
-		"booksByAuthor": "Blokkades door {name}",
-		"fullName": "Volledige naam",
-		"lifespan": "Levensduur",
-		"worksAvailable": "Beschikbare werken"
+		"bookCount": "{n} boek | {n} boeken"
 	},
 	"shelf": {
 		"classificationCode": "Classificatiecode",

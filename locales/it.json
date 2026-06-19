@@ -28,7 +28,6 @@
 		"languages": "Linguaggio",
 		"license": "Licenza",
 		"licensePd": "Di pubblico dominio negli USA.",
-		"worksAvailable": "Opere disponibili",
 		"unknown": "Sconosciuto",
 		"cover": "Copertina del Libro",
 		"coverLabel": "(copertina)",
@@ -36,8 +35,6 @@
 		"various": "Vari"
 	},
 	"author": {
-		"lifespan": "Durata",
-		"worksAvailable": "Opere disponibili"
 	},
 	"shelf": {
 		"classificationCode": "Codice di classificazione",

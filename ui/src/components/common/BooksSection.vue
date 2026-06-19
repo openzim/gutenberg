@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
-import BookGrid from '@/components/book/BookGrid.vue'
+import BooksGrid from '@/components/book/BooksGrid.vue'
 import EmptyState from './EmptyState.vue'
 
 interface Props {
@@ -14,8 +14,7 @@ defineProps<Props>()
 
 <template>
   <div v-if="books.length > 0">
-    <h2 class="text-h5 mb-4">{{ title }}</h2>
-    <book-grid :books="books" />
+    <books-grid :books="books" />
   </div>
 
   <empty-state v-else :message="emptyMessage" />
