@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
-import { getPopularityStars, formatLabel } from '@/utils/format-utils'
+import { formatLabel } from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
+import StarRating from '@/components/common/StarRating.vue'
 import { TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
@@ -31,9 +32,7 @@ defineProps<{
       {{ book.author?.name }}
     </p>
 
-    <span class="text-star" :aria-label="`Popularity: ${book.popularity} out of 5 stars`">
-      {{ getPopularityStars(book.popularity) }}
-    </span>
+    <star-rating :popularity="book.popularity" />
   </router-link>
 </template>
 
@@ -91,11 +90,5 @@ defineProps<{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.text-star {
-  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
-  font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
-  font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
 }
 </style>

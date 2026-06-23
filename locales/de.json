@@ -13,9 +13,6 @@
 		"title": "Projekt Gutenberg",
 		"subtitle": "Der erste Produzent freier E-Books"
 	},
-	"shelves": {
-		"title": "Bücherregale (A–Z)"
-	},
 	"book": {
 		"title": "Titel",
 		"languages": "Sprache(n)",
@@ -26,13 +23,10 @@
 		"anonymous": "Anonym",
 		"various": "Diverse"
 	},
-	"shelf": {
-		"booksInShelf": "Durchsuchen Sie das Bücherregal"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "Lade...",
 		"search": "Suchen",
-		"searchShelf": "Bücherregalsuche",
 		"sort": "Sortieren",
 		"sortPopularity": "Sortiere Bücher nach Beliebtheit",
 		"sortTitle": "Sortiere Bücher nach Titel",

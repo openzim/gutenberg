@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
-import { getPopularityStars, normalizeImagePath } from '@/utils/format-utils'
+import { normalizeImagePath } from '@/utils/format-utils'
 import EmptyState from '@/components/common/EmptyState.vue'
+import StarRating from '@/components/common/StarRating.vue'
 import { AVATAR_SIZES } from '@/constants/theme'
 import { MESSAGES } from '@/constants/messages'
 import { useI18n } from 'vue-i18n'
@@ -41,9 +42,7 @@ const MAX_LANGUAGES_IN_LIST = 2
 
       <template v-slot:append>
         <div class="d-flex flex-column align-end">
-          <span class="text-warning text-caption mb-1">
-            {{ getPopularityStars(book.popularity) }}
-          </span>
+          <star-rating :popularity="book.popularity" class="mb-1" />
           <v-chip
             v-for="lang in book.languages.slice(0, MAX_LANGUAGES_IN_LIST)"
             :key="lang"

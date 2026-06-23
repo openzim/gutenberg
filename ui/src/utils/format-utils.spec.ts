@@ -6,43 +6,13 @@
 
 import { describe, it, expect } from 'vitest'
 import {
-  formatAuthorName,
   formatAuthorLifespan,
   formatDownloads,
-  getPopularityStars,
   formatLanguages,
   pluralize,
   extractUniqueValues,
   normalizeImagePath
 } from './format-utils'
-
-describe('formatAuthorName', () => {
-  it.each([
-    { first: 'Jane', last: 'Austen', expected: 'Jane Austen' },
-    { first: 'Charles', last: 'Dickens', expected: 'Charles Dickens' },
-    { first: 'José', last: 'García', expected: 'José García' },
-    { first: "O'Brien", last: 'Smith', expected: "O'Brien Smith" }
-  ])('formats "$first $last" as "$expected"', ({ first, last, expected }) => {
-    expect(formatAuthorName(first, last)).toBe(expected)
-  })
-
-  it.each([
-    { first: null, last: 'Shakespeare', expected: 'Shakespeare' },
-    { first: '', last: 'Plato', expected: 'Plato' }
-  ])('returns only last name when first name is $first', ({ first, last, expected }) => {
-    expect(formatAuthorName(first, last)).toBe(expected)
-  })
-
-  it('handles null or empty last name by concatenating as-is', () => {
-    expect(formatAuthorName('Madonna', null as unknown as string)).toBe('Madonna null')
-    expect(formatAuthorName('Prince', '')).toBe('Prince ')
-  })
-
-  it('preserves whitespace without trimming', () => {
-    expect(formatAuthorName(' Jane ', ' Austen ')).toBe(' Jane   Austen ')
-    expect(formatAuthorName('  ', 'Shakespeare')).toBe('   Shakespeare')
-  })
-})
 
 describe('formatAuthorLifespan', () => {
   it.each([
@@ -79,23 +49,6 @@ describe('formatDownloads', () => {
     { value: 15000000, expected: '15.0M' }
   ])('formats $value as $expected', ({ value, expected }) => {
     expect(formatDownloads(value)).toBe(expected)
-  })
-})
-
-describe('getPopularityStars', () => {
-  it.each([
-    { rating: -1, expected: '☆☆☆☆☆' },
-    { rating: 0, expected: '☆☆☆☆☆' },
-    { rating: 1, expected: '★☆☆☆☆' },
-    { rating: 2, expected: '★★☆☆☆' },
-    { rating: 2.9, expected: '★★☆☆☆' },
-    { rating: 3, expected: '★★★☆☆' },
-    { rating: 4, expected: '★★★★☆' },
-    { rating: 4.99, expected: '★★★★☆' },
-    { rating: 5, expected: '★★★★★' },
-    { rating: 6, expected: '★★★★★' }
-  ])('returns $expected for rating $rating', ({ rating, expected }) => {
-    expect(getPopularityStars(rating)).toBe(expected)
   })
 })
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import BookDetailInfo from '@/components/book/BookDetailInfo.vue'
 import ShelfCarousel from '@/components/book/ShelfCarousel.vue'
-import Breadcrumbs from '@/components/common/Breadcrumbs.vue'
 import DetailViewWrapper from '@/components/common/DetailViewWrapper.vue'
 import { useDetailView } from '@/composables/useDetailView'
 import { useMainStore } from '@/stores/main'
@@ -58,13 +57,8 @@ watch(
     :has-data="!!book"
     :loading-message="t('common.loadingBook')"
     :not-found-message="t('messages.notFoundBook')"
+    no-padding
   >
-    <breadcrumbs
-      :items="[
-        { title: t('nav.home'), to: '/' },
-        { title: book!.title, disabled: true }
-      ]"
-    />
     <book-detail-info :book="book!" />
     <shelf-carousel v-if="sameShelfBooks.length > 0" :books="sameShelfBooks" />
   </detail-view-wrapper>

@@ -6,6 +6,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import BookList from './BookList.vue'
+import StarRating from '@/components/common/StarRating.vue'
 import type { BookPreview } from '@/types'
 
 const createWrapper = (books: BookPreview[]) =>
@@ -50,8 +51,12 @@ describe('BookList', () => {
     expect(wrapper.text()).toContain('Austen, Jane')
     expect(wrapper.text()).toContain('Frankenstein')
     expect(wrapper.text()).toContain('Shelley, Mary')
-    expect(wrapper.text()).toContain('★★★★★')
-    expect(wrapper.text()).toContain('★★★★☆')
+
+    const starRatings = wrapper.findAllComponents(StarRating)
+    expect(starRatings).toHaveLength(2)
+    expect(starRatings[0]!.props('popularity')).toBe(5)
+    expect(starRatings[1]!.props('popularity')).toBe(4)
+
     expect(wrapper.text()).toContain('EN')
     expect(wrapper.text()).toContain('FR')
   })

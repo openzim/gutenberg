@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
-import { getPopularityStars } from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
+import StarRating from '@/components/common/StarRating.vue'
 import { TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
@@ -35,9 +35,7 @@ defineProps<{
 
     <v-card-text class="pa-4">
       <div class="d-flex align-center mb-2">
-        <span class="text-warning" :aria-label="`Popularity: ${book.popularity} out of 5 stars`">
-          {{ getPopularityStars(book.popularity) }}
-        </span>
+        <star-rating :popularity="book.popularity" />
       </div>
 
       <v-chip-group>

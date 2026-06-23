@@ -20,10 +20,6 @@
 	"authors": {
 		"title": "Autores"
 	},
-	"shelves": {
-		"title": "Plancas de libros (A-Z)",
-		"description": "Explorar libros organisate secundo le systema de classification del Bibliotheca del Congresso statounitese (LCC)"
-	},
 	"book": {
 		"title": "Titulo",
 		"downloads": "discargamentos",
@@ -42,24 +38,15 @@
 	"author": {
 		"bookCount": "{n} libro | {n} libros"
 	},
-	"shelf": {
-		"classificationCode": "Codice de classification",
-		"booksInShelf": "Percurrer per planca de libros",
-		"booksIn": "Libros in",
-		"booksInTitle": "Libros in {shelf}",
-		"bookCount": "{n} libro | {n} libros"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "Cargamento…",
 		"loadingBook": "Cargamento del detalios del libro…",
 		"loadingAuthor": "Cargamento del detalios del autor…",
-		"loadingShelf": "Cargamento del detalios del planca…",
 		"loadingItems": "Cargamento de {type}…",
 		"showing": "Es monstrate",
 		"of": "de",
 		"search": "Cercar",
-		"searchShelf": "Cercar in plancas de libros",
-		"searchShelfAria": "Cercar in plancas LCC per codice o nomine",
 		"clear": "Rader",
 		"all": "Totes",
 		"clearAllSelections": "Rader tote le selectiones",
@@ -84,7 +71,6 @@
 		"gridView": "Disposition in grillia",
 		"listView": "Disposition in lista",
 		"browseAll": "Explorar toto",
-		"browseAllShelves": "Explorar tote le plancas",
 		"browseAllAuthors": "Explorar tote le autores",
 		"returnHome": "Retornar al initio",
 		"toggleNavigationMenu": "Monstrar/celar le menu de navigation",

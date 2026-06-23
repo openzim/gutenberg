@@ -42,10 +42,7 @@
 	"authors": {
 		"title": "Authors"
 	},
-	"shelves": {
-		"title": "LCC Shelves",
-		"description": "Browse books organized by Library of Congress Classification (LCC) system"
-	},
+
 	"book": {
 		"title": "Books",
 		"downloads": "downloads",
@@ -69,23 +66,16 @@
 		"viewAuthor": "View author: {name} with {n} book | View author: {name} with {n} books"
 	},
 	"shelf": {
-		"classificationCode": "Classification Code",
-		"booksInShelf": "Books in This Shelf",
-		"booksIn": "Books in",
-		"booksInTitle": "Books in {shelf}",
-		"bookCount": "{n} book | {n} books"
+		"allShelves": "All Shelves"
 	},
 	"common": {
 		"loading": "Loading...",
 		"loadingBook": "Loading book details...",
 		"loadingAuthor": "Loading author details...",
-		"loadingShelf": "Loading shelf details...",
 		"loadingItems": "Loading {type}...",
 		"showing": "Showing",
 		"of": "of",
 		"search": "Search",
-		"searchShelf": "Search by shelf code or name",
-		"searchShelfAria": "Search LCC shelves by code or name",
 		"clear": "Clear",
 		"all": "All",
 		"clearAllSelections": "Clear all selections",
@@ -115,7 +105,6 @@
 		"previous": "Previous",
 		"next": "Next",
 		"browseAll": "Browse All",
-		"browseAllShelves": "Browse All Shelves",
 		"browseAllAuthors": "Browse All Authors",
 		"returnHome": "Return to Home",
 		"toggleNavigationMenu": "Toggle navigation menu",
@@ -125,7 +114,11 @@
 		"toggleSortOptions": "Toggle sort options",
 		"navigateTo": "Navigate to",
 		"navigateToItem": "Navigate to {item}",
-		"gutenbergHome": "Gutenberg Home"
+		"gutenbergHome": "Gutenberg Home",
+		"readMore": "Read more",
+		"showLess": "Show less",
+		"scrollLeft": "Scroll left",
+		"scrollRight": "Scroll right"
 	},
 	"messages": {
 		"noBooks": "No books found.",

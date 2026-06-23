@@ -20,10 +20,6 @@
 	"authors": {
 		"title": "Auteurs"
 	},
-	"shelves": {
-		"title": "Boekenplanken (A-Z)",
-		"description": "Door boeken bladeren die zijn georganiseerd volgens het classificatiesysteem van de Library of Congress (LCC)."
-	},
 	"book": {
 		"title": "Titel",
 		"downloads": "downloads",
@@ -42,24 +38,15 @@
 	"author": {
 		"bookCount": "{n} boek | {n} boeken"
 	},
-	"shelf": {
-		"classificationCode": "Classificatiecode",
-		"booksInShelf": "Bladeren op boekenplank",
-		"booksIn": "Boeken in",
-		"booksInTitle": "Boeken op {shelf}",
-		"bookCount": "{n} boek | {n} boeken"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "Aan het laden...",
 		"loadingBook": "Boekgegevens laden...",
 		"loadingAuthor": "Auteursgegevens laden...",
-		"loadingShelf": "Boekenplankgegevens laden...",
 		"loadingItems": "{type} laden...",
 		"showing": "Weergegeven:",
 		"of": "van",
 		"search": "Zoek",
-		"searchShelf": "Boekenplank zoeken",
-		"searchShelfAria": "LCC-boekenplanken doorzoeken op code of naam",
 		"clear": "Wissen",
 		"all": "Alle",
 		"clearAllSelections": "Alle selecties verwijderen",
@@ -84,7 +71,6 @@
 		"gridView": "Rasterweergave",
 		"listView": "Lijstweergave",
 		"browseAll": "Alles bekijken",
-		"browseAllShelves": "Alle boekenplanken bekijken",
 		"browseAllAuthors": "Alle auteurs bekijken",
 		"returnHome": "Ga naar huis",
 		"toggleNavigationMenu": "Navigatiemenu in-/uitschakelen",
