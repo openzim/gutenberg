@@ -24,10 +24,7 @@
 	"author": {
 		"bookCount": "{n} raamat | {n} raamatut"
 	},
-	"shelf": {
-		"booksInShelf": "Raamatud selles riiulis",
-		"booksInTitle": "Raamatud riiulil {shelf}"
-	},
+	"shelf": {},
 	"common": {
 		"loadingAuthor": "Autori info laadimine...",
 		"loadingItems": "Laadimine {type}...",
@@ -46,7 +43,6 @@
 		"gridView": "Ruudustikuvaade",
 		"listView": "Loendivaade",
 		"browseAll": "Sirvi kõiki",
-		"browseAllShelves": "Sirvi kõiki riiuleid",
 		"browseAllAuthors": "Sirvi kõiki autoreid",
 		"returnHome": "Tagasi avalehele",
 		"toggleNavigationMenu": "Navigeerimismenüü avamine/sulgemine",

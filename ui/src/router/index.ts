@@ -5,7 +5,6 @@ import BookDetailView from '../views/BookDetailView.vue'
 import AuthorListView from '../views/AuthorListView.vue'
 import AuthorDetailView from '../views/AuthorDetailView.vue'
 import LCCShelfListView from '../views/LCCShelfListView.vue'
-import LCCShelfDetailView from '../views/LCCShelfDetailView.vue'
 import AboutView from '../views/AboutView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 
@@ -16,49 +15,43 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: { title: 'Home - Gutenberg Library' }
+      meta: { title: 'Home - Gutenberg Library', breadcrumb: 'nav.home' }
     },
     {
       path: '/books',
       name: 'books',
       component: BooksView,
-      meta: { title: 'Books - Gutenberg Library' }
+      meta: { title: 'Books - Gutenberg Library', breadcrumb: 'nav.books' }
     },
     {
       path: '/book/:id',
       name: 'book-detail',
       component: BookDetailView,
-      meta: { title: 'Book Details' }
+      meta: { title: 'Book Details', breadcrumb: 'nav.books', parent: '/books' }
     },
     {
       path: '/authors',
       name: 'author-list',
       component: AuthorListView,
-      meta: { title: 'Authors - Gutenberg Library' }
+      meta: { title: 'Authors - Gutenberg Library', breadcrumb: 'nav.authors' }
     },
     {
       path: '/author/:id',
       name: 'author-detail',
       component: AuthorDetailView,
-      meta: { title: 'Author Details' }
+      meta: { title: 'Author Details', breadcrumb: 'nav.authors', parent: '/authors' }
     },
     {
       path: '/lcc-shelves',
       name: 'lcc-shelf-list',
       component: LCCShelfListView,
-      meta: { title: 'LCC Shelves - Gutenberg Library' }
-    },
-    {
-      path: '/lcc-shelf/:code',
-      name: 'lcc-shelf-detail',
-      component: LCCShelfDetailView,
-      meta: { title: 'LCC Shelf Details' }
+      meta: { title: 'LCC Shelves - Gutenberg Library', breadcrumb: 'nav.shelves' }
     },
     {
       path: '/about',
       name: 'about',
       component: AboutView,
-      meta: { title: 'About - Gutenberg Library' }
+      meta: { title: 'About - Gutenberg Library', breadcrumb: 'nav.about' }
     },
     {
       path: '/:pathMatch(.*)*',

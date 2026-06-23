@@ -22,10 +22,6 @@
 	"authors": {
 		"title": "Auteurs"
 	},
-	"shelves": {
-		"title": "Rayons (A-Z)",
-		"description": "Parcourez les livres organisés selon le système de classification de la Bibliothèque du Congrès (LCC)."
-	},
 	"book": {
 		"title": "Titre",
 		"downloads": "téléchargements",
@@ -44,24 +40,15 @@
 	"author": {
 		"bookCount": "{n} livre | {n} livres"
 	},
-	"shelf": {
-		"classificationCode": "Code de classification",
-		"booksInShelf": "Parcourir par rayon",
-		"booksIn": "Livres dans",
-		"booksInTitle": "Livres dans {shelf}",
-		"bookCount": "{n} livre | {n} livres"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "Chargement...",
 		"loadingBook": "Chargement des informations sur le livre…",
 		"loadingAuthor": "Chargement des informations sur l'auteur…",
-		"loadingShelf": "Chargement des informations sur la bibliothèque…",
 		"loadingItems": "Chargement de {type}…",
 		"showing": "Affichage",
 		"of": "sur",
 		"search": "Rechercher",
-		"searchShelf": "Recherche de rayon",
-		"searchShelfAria": "Rechercher des bibliothèques LCC par code ou par nom",
 		"clear": "Effacer",
 		"all": "Tout",
 		"clearAllSelections": "Effacer les filtres de sélection",
@@ -86,7 +73,6 @@
 		"gridView": "Affichage en grille",
 		"listView": "Affichage en liste",
 		"browseAll": "Tout parcourir",
-		"browseAllShelves": "Parcourir toutes les bibliothèques",
 		"browseAllAuthors": "Parcourir tous les auteurs",
 		"returnHome": "Retour",
 		"toggleNavigationMenu": "Bascule du menu de navigation",

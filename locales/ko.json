@@ -22,10 +22,6 @@
 	"authors": {
 		"title": "저자"
 	},
-	"shelves": {
-		"title": "LCC 책장",
-		"description": "미국 의회 도서관 분류 체계(LCC)별로 정리된 도서를 찾아보세요"
-	},
 	"book": {
 		"title": "제목",
 		"downloads": "다운로드",
@@ -44,24 +40,15 @@
 	"author": {
 		"bookCount": "{n}권 | {n}권"
 	},
-	"shelf": {
-		"classificationCode": "분류 코드",
-		"booksInShelf": "이 책장의 책",
-		"booksIn": "다음 책장의 책:",
-		"booksInTitle": "다음 책장의 책: {shelf}",
-		"bookCount": "{n}권 | {n}권"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "불러오는 중...",
 		"loadingBook": "책 정보를 불러오는 중...",
 		"loadingAuthor": "저자 정보를 불러오는 중...",
-		"loadingShelf": "책장 정보를 불러오는 중...",
 		"loadingItems": "{type} 불러오는 중...",
 		"showing": "다음 결과 갯수 표시 중:",
 		"of": "/",
 		"search": "검색",
-		"searchShelf": "책장 코드 또는 이름으로 검색",
-		"searchShelfAria": "LCC 책장을 코드 또는 이름으로 검색",
 		"clear": "지우기",
 		"all": "모두",
 		"clearAllSelections": "모든 선택 지우기",
@@ -86,7 +73,6 @@
 		"gridView": "그리드 보기",
 		"listView": "리스트 보기",
 		"browseAll": "모두 찾아보기",
-		"browseAllShelves": "모든 선반 탐색",
 		"browseAllAuthors": "모든 저자 탐색",
 		"returnHome": "홈으로 돌아가기",
 		"toggleNavigationMenu": "둘러보기 메뉴 전환",

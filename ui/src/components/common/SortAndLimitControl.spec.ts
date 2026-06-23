@@ -34,6 +34,13 @@ vi.mock('vue-i18n', () => ({
   })
 }))
 
+// Mock vue-router
+vi.mock('vue-router', () => ({
+  useRoute: () => ({
+    path: '/books'
+  })
+}))
+
 const createWrapper = (props: {
   sortBy: SortOption
   sortOrder: SortOrder

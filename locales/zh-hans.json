@@ -16,9 +16,6 @@
 		"title": "古腾堡计划图书馆",
 		"subtitle": "第一个免费电子书的制作者"
 	},
-	"shelves": {
-		"title": "书架（A-Z）"
-	},
 	"book": {
 		"title": "标题",
 		"languages": "语言",
@@ -30,13 +27,10 @@
 		"anonymous": "匿名用户",
 		"various": "各种各样的"
 	},
-	"shelf": {
-		"booksInShelf": "按书架浏览"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "加载中...",
 		"search": "搜索",
-		"searchShelf": "书架搜索",
 		"sort": "排序：",
 		"sortPopularity": "按受欢迎程度对书籍进行排序",
 		"sortTitle": "按标题对书籍进行排序",

@@ -14,9 +14,6 @@
 		"title": "مشروع مكتبة Gutenberg",
 		"subtitle": "المصنع الأول للكتب الأكترونية المجانية"
 	},
-	"shelves": {
-		"title": "أرفف الكتب (أ-ي)"
-	},
 	"book": {
 		"title": "العنوان",
 		"languages": "اللغة",
@@ -27,13 +24,10 @@
 		"anonymous": "مجهول",
 		"various": "متنوع"
 	},
-	"shelf": {
-		"booksInShelf": "تصفح حسب رف الكتب"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "جار التحميل...",
 		"search": "بحث",
-		"searchShelf": "بحث رف الكتب",
 		"sort": "ترتيب",
 		"sortPopularity": "رتب الكتب بحسب الشعبية",
 		"sortTitle": "رتب الكتب بحسب العنوان",

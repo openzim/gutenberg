@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import AuthorDetailInfo from '@/components/author/AuthorDetailInfo.vue'
-import Breadcrumbs from '@/components/common/Breadcrumbs.vue'
 import DetailViewWrapper from '@/components/common/DetailViewWrapper.vue'
 import { useDetailView } from '@/composables/useDetailView'
 import { useMainStore } from '@/stores/main'
@@ -40,13 +39,6 @@ onMounted(async () => {
     list-route="/authors"
     :list-label="t('common.browseAllAuthors')"
   >
-    <breadcrumbs
-      :items="[
-        { title: t('nav.home'), to: '/' },
-        { title: t('nav.authors'), to: '/authors' },
-        { title: author!.name, disabled: true }
-      ]"
-    />
     <author-detail-info :author="author!" :authors="authors" />
   </detail-view-wrapper>
 </template>

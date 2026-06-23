@@ -13,9 +13,6 @@
 		"title": "Biblioteca do Projeto Gutenberg",
 		"subtitle": "O primeiro produtor de ebooks gratuitos"
 	},
-	"shelves": {
-		"title": "Prateleiras (A-Z)"
-	},
 	"book": {
 		"title": "Título",
 		"languages": "Idioma",
@@ -26,13 +23,10 @@
 		"anonymous": "Anónimo",
 		"various": "Vários"
 	},
-	"shelf": {
-		"booksInShelf": "Navegar por Estante"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "A carregar...",
 		"search": "Procurar",
-		"searchShelf": "Pesquisa de Estante",
 		"sort": "Ordenar",
 		"sortPopularity": "Ordenar os livros por popularidade",
 		"sortTitle": "Ordenar os livros por título",
