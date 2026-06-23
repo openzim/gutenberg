@@ -1,18 +1,55 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useMainStore } from '@/stores/main'
 import { useTheme } from '@/composables/useTheme'
+import { LAYOUT } from '@/constants/theme'
 
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import ErrorDisplay from '@/components/common/ErrorDisplay.vue'
+import Breadcrumbs from '@/components/common/Breadcrumbs.vue'
 
+const { t } = useI18n()
+const route = useRoute()
 const main = useMainStore()
 useTheme()
+
+const breadcrumbItems = computed(() => {
+  if (!route.meta.breadcrumb || route.path === '/') return []
+
+  const items: { title: string; to?: string }[] = [{ title: t('nav.home'), to: '/' }]
+
+  const parent = route.meta.parent as string | undefined
+  const name = route.meta.breadcrumb as string
+
+  if (parent) {
+    items.push({ title: t(name), to: parent })
+    if (route.name === 'book-detail' && main.currentBook) {
+      items.push({ title: main.currentBook.title })
+    } else if (route.name === 'author-detail' && main.currentAuthor) {
+      items.push({ title: main.currentAuthor.name })
+    }
+  } else {
+    items.push({ title: t(name) })
+  }
+
+  return items
+})
+
+const showBreadcrumbs = computed(() => breadcrumbItems.value.length > 0)
 </script>
 
 <template>
   <v-app>
     <app-header />
+
+    <div v-if="showBreadcrumbs" class="app-breadcrumbs-wrapper">
+      <div class="app-breadcrumbs-inner">
+        <breadcrumbs :items="breadcrumbItems" />
+      </div>
+    </div>
 
     <v-main role="main">
       <error-display v-if="main.errorMessage" />
@@ -25,6 +62,17 @@ useTheme()
 
 <style scoped>
 .v-main {
-  min-height: calc(100vh - 200px); /* header + footer height */
+  min-height: calc(100vh - v-bind(LAYOUT.HEADER_HEIGHT) - v-bind(LAYOUT.FOOTER_HEIGHT));
+}
+
+.app-breadcrumbs-wrapper {
+  border-bottom: 1px solid rgb(var(--v-theme-grid));
+  background-color: rgb(var(--v-theme-background));
+}
+
+.app-breadcrumbs-inner {
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem 0;
 }
 </style>

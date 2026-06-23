@@ -49,7 +49,12 @@ describe('BookDetailView Integration', () => {
     router = createRouter({
       history: createMemoryHistory(),
       routes: [
-        { path: '/book/:id', name: 'book-detail', component: BookDetailView },
+        {
+          path: '/book/:id',
+          name: 'book-detail',
+          component: BookDetailView,
+          meta: { breadcrumb: 'nav.books', parent: '/books' }
+        },
         { path: '/author/:id', name: 'author-detail', component: { template: '<div>Author</div>' } }
       ]
     })
@@ -110,13 +115,6 @@ describe('BookDetailView Integration', () => {
 
       const authorLink = wrapper.find('a[href*="author"]')
       expect(authorLink.exists()).toBe(true)
-    })
-
-    it('has breadcrumbs navigation', async () => {
-      const wrapper = await mountView()
-
-      const breadcrumbs = wrapper.findComponent({ name: 'Breadcrumbs' })
-      expect(breadcrumbs.exists()).toBe(true)
     })
   })
 

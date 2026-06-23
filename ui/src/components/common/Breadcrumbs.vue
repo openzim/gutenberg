@@ -32,5 +32,6 @@ defineProps<{
 
 .breadcrumbs-nav :deep(.v-breadcrumbs-item--disabled) {
   font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
+  opacity: 1;
 }
 </style>

@@ -93,6 +93,14 @@ export function useBookDisplay(books: Ref<BookPreview[]>) {
 
   watch([sortBy, sortOrder, limit], resetAll)
   watch(isShowAll, setupObserver)
+  watch(
+    () => books.value.length,
+    () => {
+      if (isShowAll.value) {
+        setupObserver()
+      }
+    }
+  )
 
   onUnmounted(() => {
     observer?.disconnect()

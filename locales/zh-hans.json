@@ -19,10 +19,6 @@
 		"title": "古腾堡计划图书馆",
 		"subtitle": "第一个免费电子书的制作者"
 	},
-	"shelves": {
-		"title": "书架（A-Z）",
-		"description": "浏览按美国国会图书馆分类法 (LCC) 系统组织的图书"
-	},
 	"book": {
 		"title": "标题",
 		"author": "作者",
@@ -46,20 +42,7 @@
 		"anonymous": "匿名用户",
 		"various": "各种各样的"
 	},
-	"author": {
-		"bookCount": "{n}本书| {n}本书",
-		"booksByAuthor": "{name} 的著作",
-		"fullName": "全名",
-		"lifespan": "寿命",
-		"worksAvailable": "现有作品"
-	},
-	"shelf": {
-		"classificationCode": "分类代码",
-		"booksInShelf": "按书架浏览",
-		"booksIn": "书籍位于",
-		"booksInTitle": "书籍位于{shelf}",
-		"bookCount": "{n}本书| {n}本书"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "加载中...",
 		"loadingBook": "正在加载图书详情……",
@@ -70,12 +53,6 @@
 		"showing": "显示",
 		"of": "/",
 		"search": "搜索",
-		"searchShelf": "书架搜索",
-		"searchShelfAria": "按代码或名称搜索LCC书籍",
-		"clear": "清除",
-		"all": "全部",
-		"clearAllSelections": "清除所有选择",
-		"selectAll": "全选",
 		"sort": "排序：",
 		"sortBy": "排序方式",
 		"sortPopularity": "按受欢迎程度对书籍进行排序",

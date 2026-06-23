@@ -15,13 +15,9 @@
 		"title": "Libreria del Progetto Gutenberg",
 		"subtitle": "Il primo produttore di ebooks gratuiti"
 	},
-	"about": {
-	},
+	"about": {},
 	"authors": {
 		"title": "Autori"
-	},
-	"shelves": {
-		"title": "Scaffali per libri (A-Z)"
 	},
 	"book": {
 		"title": "Titolo",
@@ -34,21 +30,14 @@
 		"anonymous": "Anonimo",
 		"various": "Vari"
 	},
-	"author": {
-	},
-	"shelf": {
-		"classificationCode": "Codice di classificazione",
-		"booksInShelf": "Sfoglia per libreria",
-		"booksIn": "Libri in",
-		"bookCount": "{n} libro | {n} libri"
-	},
+	"author": {},
+	"shelf": {},
 	"common": {
 		"loading": "Caricamento in corso...",
 		"loadingBook": "Caricamento dei dettagli del libro..",
 		"loadingAuthor": "Caricamento dei dettagli dell'autore...",
 		"of": "di",
 		"search": "Cerca",
-		"searchShelf": "Ricerca in libreria",
 		"all": "Tutto",
 		"selectAll": "Seleziona tutto",
 		"sort": "Ordina",

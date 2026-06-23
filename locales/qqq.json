@@ -47,10 +47,6 @@
 	"authors": {
 		"title": "Title for the authors listing page"
 	},
-	"shelves": {
-		"title": "Title for the Library of Congress Classification bookshelves page",
-		"description": "Description for the shelves page"
-	},
 	"book": {
 		"title": "Label for the book title field",
 		"downloads": "Label for the downloads metric",
@@ -74,23 +70,16 @@
 		"viewAuthor": "Accessible label for author card link. Parameters: {name} - author name, {n} - number of books"
 	},
 	"shelf": {
-		"classificationCode": "Label for the Library of Congress Classification code",
-		"booksInShelf": "Link text to browse books by Library of Congress Classification bookshelf",
-		"booksIn": "Text prefix for 'Books in [shelf name]'",
-		"booksInTitle": "Title for books in a specific shelf. Parameters: {shelf} - shelf name",
-		"bookCount": "Text showing book count with pluralization. Parameters: {n} - number of books"
+		"allShelves": "Label for the option to view all bookshelves"
 	},
 	"common": {
 		"loading": "Message displayed while content is loading",
 		"loadingBook": "Message displayed while book details are loading",
 		"loadingAuthor": "Message displayed while author details are loading",
-		"loadingShelf": "Message displayed while shelf details are loading",
 		"loadingItems": "Message displayed while items are loading. Parameters: {type} - type of items being loaded",
 		"showing": "Text prefix for showing results count",
 		"of": "Text separator between current and total count (e.g., '10 of 100')",
 		"search": "Label for the search functionality",
-		"searchShelf": "Placeholder text for the bookshelf search input field",
-		"searchShelfAria": "Accessible label for the shelf search input field",
 		"clear": "Label for clear/reset button",
 		"all": "Label for the option to select all items",
 		"clearAllSelections": "Label for clearing all filter selections",
@@ -120,7 +109,6 @@
 		"previous": "Label for the previous page button in pagination controls",
 		"next": "Label for the next page button in pagination controls",
 		"browseAll": "Label for browsing all items",
-		"browseAllShelves": "Label for browsing all shelves",
 		"browseAllAuthors": "Label for browsing all authors",
 		"returnHome": "Link text to return to the homepage",
 		"toggleNavigationMenu": "Accessible label for toggling the navigation menu",
@@ -130,7 +118,11 @@
 		"toggleSortOptions": "Accessible label for toggling sort options",
 		"navigateTo": "Accessible label prefix for navigation links",
 		"navigateToItem": "Accessible label for navigating to an item. Parameters: {item} - item name",
-		"gutenbergHome": "Label for the Gutenberg home link"
+		"gutenbergHome": "Label for the Gutenberg home link",
+		"readMore": "Button to expand truncated description text",
+		"showLess": "Button to collapse expanded description text",
+		"scrollLeft": "Label for scroll left button on carousels",
+		"scrollRight": "Label for scroll right button on carousels"
 	},
 	"messages": {
 		"noBooks": "Message displayed in tables when no data is available",

@@ -9,11 +9,13 @@
  */
 import { computed, ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useIsLccShelfPage } from '@/composables/useIsLccShelfPage'
 import type { SortOption, SortOrder, PageSize } from '@/types'
 import { TYPOGRAPHY } from '@/constants/theme'
-import { mdiViewGrid, mdiViewList } from '@mdi/js'
+import { mdiDotsGrid, mdiFormatListBulleted } from '@mdi/js'
 
 const { t } = useI18n()
+const isLccShelfPage = useIsLccShelfPage()
 
 const props = defineProps<{
   sortBy: SortOption
@@ -91,7 +93,7 @@ if (typeof document !== 'undefined') {
 </script>
 
 <template>
-  <div class="sort-and-limit">
+  <div class="sort-and-limit" :class="{ 'sort-and-limit--lcc-shelf': isLccShelfPage }">
     <!-- Controls on the right -->
     <div class="sort-and-limit__controls">
       <!-- Sort dropdown -->
@@ -177,7 +179,7 @@ if (typeof document !== 'undefined') {
           @click="updateViewMode('grid')"
         >
           <svg class="view-mode-toggle__icon" viewBox="0 0 24 24">
-            <path :d="mdiViewGrid" />
+            <path :d="mdiDotsGrid" />
           </svg>
         </button>
         <button
@@ -187,7 +189,7 @@ if (typeof document !== 'undefined') {
           @click="updateViewMode('list')"
         >
           <svg class="view-mode-toggle__icon" viewBox="0 0 24 24">
-            <path :d="mdiViewList" />
+            <path :d="mdiFormatListBulleted" />
           </svg>
         </button>
       </div>
@@ -208,6 +210,12 @@ if (typeof document !== 'undefined') {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.75rem;
+  max-width: 1102px;
+  margin-inline: auto;
+}
+
+.sort-and-limit--lcc-shelf {
+  max-width: 882px;
 }
 
 .sort-and-limit__count {
@@ -358,6 +366,13 @@ if (typeof document !== 'undefined') {
   width: 20px;
   height: 20px;
   fill: currentColor;
+}
+
+@media (max-width: 1279px) {
+  .sort-and-limit,
+  .sort-and-limit--lcc-shelf {
+    max-width: 802px;
+  }
 }
 
 @media (max-width: 599px) {

@@ -16,9 +16,6 @@
 	"authors": {
 		"title": "Auteuren"
 	},
-	"shelves": {
-		"title": "LCC-Regaler"
-	},
 	"book": {
 		"title": "Titel",
 		"languages": "Sprooch",
@@ -31,9 +28,7 @@
 	"author": {
 		"bookCount": "{n} Buch | {n} Bicher"
 	},
-	"shelf": {
-		"bookCount": "{n} Buch | {n} Bicher"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "Gëtt gelueden...",
 		"loadingBook": "Buchdetailer gi gelueden...",

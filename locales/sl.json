@@ -20,10 +20,6 @@
 	"authors": {
 		"title": "Avtorji"
 	},
-	"shelves": {
-		"title": "Knjižne police (A–Z)",
-		"description": "Brskajte po knjigah, organiziranih po sistemu klasifikacije Kongresne knjižnice (LCC)"
-	},
 	"book": {
 		"title": "Naslov",
 		"downloads": "prenosi",
@@ -42,24 +38,15 @@
 	"author": {
 		"bookCount": "{n} knjiga | {n} knjig"
 	},
-	"shelf": {
-		"classificationCode": "Klasifikacijska koda",
-		"booksInShelf": "Brskaj po knjižni polici",
-		"booksIn": "Knjige v",
-		"booksInTitle": "Knjige v {shelf}",
-		"bookCount": "{n} knjiga | {n} knjig"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "Nalaganje ...",
 		"loadingBook": "Nalaganje podatkov o knjigi ...",
 		"loadingAuthor": "Nalaganje podatkov o avtorju ...",
-		"loadingShelf": "Nalaganje podatkov o polici ...",
 		"loadingItems": "Nalaganje {type} ...",
 		"showing": "Prikazano",
 		"of": "od",
 		"search": "Išči",
-		"searchShelf": "Iskanje po knjižnih policah",
-		"searchShelfAria": "Iščite v policah LCC po kodi ali imenu",
 		"clear": "Počisti",
 		"all": "Vse",
 		"clearAllSelections": "Počisti vse izbire",
@@ -84,7 +71,6 @@
 		"gridView": "Mrežni pogled",
 		"listView": "Pogled seznama",
 		"browseAll": "Prebrskaj vse",
-		"browseAllShelves": "Brskaj po vseh policah",
 		"browseAllAuthors": "Brskaj po vseh avtorjih",
 		"returnHome": "Pojdi domov",
 		"toggleNavigationMenu": "Preklopi navigacijski meni",

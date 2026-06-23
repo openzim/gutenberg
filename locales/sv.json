@@ -22,10 +22,6 @@
 	"authors": {
 		"title": "Författare"
 	},
-	"shelves": {
-		"title": "Bokhyllor (A-Z)",
-		"description": "Bläddra igenom böcker organiserade av Kongressbibliotekets klassifikationssystem (LCC)"
-	},
 	"book": {
 		"title": "Titel",
 		"downloads": "nedladdningar",
@@ -44,24 +40,15 @@
 	"author": {
 		"bookCount": "{n} bok | {n} böcker"
 	},
-	"shelf": {
-		"classificationCode": "Klassificeringskod",
-		"booksInShelf": "Bläddra efter Bokhylla",
-		"booksIn": "Böcker på",
-		"booksInTitle": "Böcker på {shelf}",
-		"bookCount": "{n} bok | {n} böcker"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "Laddar...",
 		"loadingBook": "Laddar in bokdetaljer...",
 		"loadingAuthor": "Laddar in författardetaljer...",
-		"loadingShelf": "Laddar in hylldetaljer...",
 		"loadingItems": "Laddar in {type}...",
 		"showing": "Visar",
 		"of": "av",
 		"search": "Sök",
-		"searchShelf": "Sök i bokhyllan",
-		"searchShelfAria": "Sök efter LCC-hyllor efter kod eller namn",
 		"clear": "Rensa",
 		"all": "Alla",
 		"clearAllSelections": "Rensa alla urval",
@@ -86,7 +73,6 @@
 		"gridView": "Rutnätsvy",
 		"listView": "Listvy",
 		"browseAll": "Bläddra alla",
-		"browseAllShelves": "Bläddra alla hyllor",
 		"browseAllAuthors": "Bläddra alla författare",
 		"returnHome": "Hem",
 		"toggleNavigationMenu": "Växla navigeringsmenyn",

@@ -13,9 +13,6 @@
 		"title": "Projekt Gutenberg-biblioteket",
 		"subtitle": "Den første producent af frie og gratis e-bøger"
 	},
-	"shelves": {
-		"title": "Bogreoler (A-Z)"
-	},
 	"book": {
 		"title": "Titel",
 		"languages": "Sprog",
@@ -27,13 +24,10 @@
 		"anonymous": "Anonym",
 		"various": "Forskellige"
 	},
-	"shelf": {
-		"booksInShelf": "Gennemse efter bogreol"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "Indlæser...",
 		"search": "Søg",
-		"searchShelf": "Bogreolsøgning",
 		"sort": "Sortér",
 		"sortPopularity": "Sortér bøger efter popularitet",
 		"sortTitle": "Sortér bøger efter titel",

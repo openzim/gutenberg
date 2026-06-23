@@ -6,11 +6,11 @@ import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import BookCard from './BookCard.vue'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
+import StarRating from '@/components/common/StarRating.vue'
 import type { BookPreview } from '@/types'
 
 // Mock format-utils
 vi.mock('@/utils/format-utils', () => ({
-  getPopularityStars: (popularity: number) => '★'.repeat(popularity) + '☆'.repeat(5 - popularity),
   normalizeImagePath: (path: string) => path
 }))
 
@@ -86,24 +86,27 @@ describe('BookCard', () => {
         props: { book: createBook({ popularity: 4 }) }
       })
 
-      const popularitySpan = wrapper.find('.text-warning')
-      expect(popularitySpan.attributes('aria-label')).toBe('Popularity: 4 out of 5 stars')
+      const starRating = wrapper.findComponent(StarRating)
+      expect(starRating.exists()).toBe(true)
+      expect(starRating.attributes('aria-label')).toBe('Popularity: 4 out of 5 stars')
     })
   })
 
   describe('Popularity Display', () => {
     it.each([
-      { popularity: 5, expected: '★★★★★' },
-      { popularity: 4, expected: '★★★★☆' },
-      { popularity: 3, expected: '★★★☆☆' },
-      { popularity: 1, expected: '★☆☆☆☆' },
-      { popularity: 0, expected: '☆☆☆☆☆' }
-    ])('displays $expected for popularity $popularity', ({ popularity, expected }) => {
+      { popularity: 5, expected: 5 },
+      { popularity: 4, expected: 4 },
+      { popularity: 3, expected: 3 },
+      { popularity: 1, expected: 1 },
+      { popularity: 0, expected: 0 }
+    ])('displays $expected filled stars for popularity $popularity', ({ popularity }) => {
       const wrapper = mount(BookCard, {
         props: { book: createBook({ popularity }) }
       })
 
-      expect(wrapper.find('.text-warning').text()).toBe(expected)
+      const starRating = wrapper.findComponent(StarRating)
+      expect(starRating.exists()).toBe(true)
+      expect(starRating.props('popularity')).toBe(popularity)
     })
   })
 

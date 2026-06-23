@@ -16,13 +16,9 @@
 		"title": "Biblioteca do Projeto Gutenberg",
 		"subtitle": "O primeiro produtor de livros eletrônicos gratuitos"
 	},
-	"about": {
-	},
+	"about": {},
 	"authors": {
 		"title": "Autores"
-	},
-	"shelves": {
-		"title": "Estantes de livros (A-Z)"
 	},
 	"book": {
 		"title": "Título",
@@ -35,13 +31,10 @@
 		"anonymous": "Anônimos",
 		"various": "Vários"
 	},
-	"shelf": {
-		"booksInShelf": "Navegue por estante de livros"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "Carregando...",
 		"search": "Pesquisar",
-		"searchShelf": "Busca na estante",
 		"sort": "Organizar",
 		"sortPopularity": "Ordenar livros por popularidade",
 		"sortTitle": "Ordenar livros por título",

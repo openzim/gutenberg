@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import type { Book } from '@/types'
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useFormatters } from '@/composables/useFormatters'
-import {
-  normalizeImagePath,
-  getPopularityStars,
-  formatDownloads,
-  formatLabel
-} from '@/utils/format-utils'
+import { normalizeImagePath, formatDownloads, formatLabel } from '@/utils/format-utils'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
+import StarRating from '@/components/common/StarRating.vue'
 
 const { t } = useI18n()
 const { formatLanguages } = useFormatters()
@@ -26,6 +22,18 @@ function orderedFormats(order: string[]) {
 
 const viewFormats = computed(() => orderedFormats(['html']))
 const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
+
+const showFullDescription = ref(false)
+
+const shouldTruncate = computed(() => {
+  if (!props.book.description) return false
+  return props.book.description.length > 280
+})
+
+const shelfDisplayName = computed(() => {
+  if (!props.book.lccShelf) return null
+  return t(`lccShelves.${props.book.lccShelf}`)
+})
 </script>
 
 <template>
@@ -45,8 +53,9 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
           {{ book.title }}
         </h1>
 
-        <div class="stars-author-row mb-6">
-          <span class="text-star text-h6 mr-3">{{ getPopularityStars(book.popularity) }}</span>
+        <!-- Desktop: stars + author on same row, above description -->
+        <div class="stars-author-row stars-author-row--desktop mb-6">
+          <star-rating :popularity="book.popularity" class="mr-3" />
           <router-link
             v-if="book.author?.id"
             :to="`/author/${book.author.id}`"
@@ -59,10 +68,74 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
           }}</span>
         </div>
 
-        <p v-if="book.description" class="book-desc text-medium-emphasis mb-6">
-          {{ book.description }}
-        </p>
+        <!-- Mobile: author only, above description -->
+        <div class="stars-author-row stars-author-row--mobile mb-2">
+          <router-link
+            v-if="book.author?.id"
+            :to="`/author/${book.author.id}`"
+            class="inter-13 text-decoration-underline author-name"
+          >
+            {{ book.author.name }}
+          </router-link>
+          <span v-else class="inter-13 author-name">{{
+            book.author?.name || t('book.unknown')
+          }}</span>
+        </div>
 
+        <div v-if="book.description" class="book-desc-wrapper mb-6">
+          <p
+            class="book-desc text-medium-emphasis"
+            :class="{ 'book-desc--truncated': !showFullDescription }"
+          >
+            {{ book.description }}
+          </p>
+          <button
+            v-if="shouldTruncate"
+            class="read-more-btn mobile-only"
+            @click="showFullDescription = !showFullDescription"
+          >
+            {{ showFullDescription ? t('common.showLess') : t('common.readMore') }}
+          </button>
+        </div>
+
+        <!-- Mobile: stars below description -->
+        <div class="stars-row-mobile mb-6">
+          <star-rating :popularity="book.popularity" />
+        </div>
+
+        <!-- Desktop-only meta (inside info-cell) -->
+        <div class="meta-desktop">
+          <v-row class="meta-row mb-4">
+            <v-col cols="4">
+              <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
+              <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
+            </v-col>
+            <v-col cols="4">
+              <div class="inter-13 text-medium-emphasis">
+                {{ t('book.downloadCount') }}
+              </div>
+              <div class="inter-13">{{ formatDownloads(book.downloads) }}</div>
+            </v-col>
+            <v-col cols="4">
+              <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
+              <div class="inter-13">{{ book.license }}</div>
+            </v-col>
+          </v-row>
+
+          <div v-if="book.lccShelf">
+            <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.lccShelf') }}</div>
+            <router-link
+              :to="{ path: '/lcc-shelves', query: { shelf: book.lccShelf } }"
+              class="inter-13 text-decoration-underline shelf-link"
+            >
+              {{ shelfDisplayName }}
+            </router-link>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile-only meta (full width row) -->
+      <div class="meta-cell">
         <v-row class="meta-row mb-4">
           <v-col cols="4">
             <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
@@ -81,10 +154,10 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
         <div v-if="book.lccShelf">
           <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.lccShelf') }}</div>
           <router-link
-            :to="`/lcc-shelf/${book.lccShelf}`"
+            :to="{ path: '/lcc-shelves', query: { shelf: book.lccShelf } }"
             class="inter-13 text-decoration-underline shelf-link"
           >
-            {{ book.lccShelf }}
+            {{ shelfDisplayName }}
           </router-link>
         </div>
       </div>
@@ -135,7 +208,6 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
   position: relative;
 }
 
-.book-detail-wrapper::before,
 .book-detail-wrapper::after {
   content: '';
   position: absolute;
@@ -143,72 +215,59 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
   transform: translateX(-50%);
   width: 100vw;
   border-top: 1px solid rgb(var(--v-theme-grid));
-}
-
-.book-detail-wrapper::before {
-  top: 0;
-}
-
-.book-detail-wrapper::after {
   bottom: 0;
 }
 
 .book-detail-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  max-width: 1200px;
+  grid-template-columns: 5fr 7fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    'cover info'
+    'cover actions';
+  max-width: 1102px;
   margin-inline: auto;
 }
 
 .cover-cell {
-  padding: 1.5rem;
+  grid-area: cover;
+  padding: 0 1.5rem 1.5rem;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  border-right: 1px solid rgb(var(--v-theme-grid));
 }
 
 .info-cell {
-  padding: 1.5rem;
+  grid-area: info;
+  padding: 0 1.5rem 1.5rem;
+  position: relative;
+}
+
+.info-cell::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  border-top: 1px solid rgb(var(--v-theme-grid));
+}
+
+.meta-desktop {
+  display: block;
+}
+
+.meta-cell {
+  display: none;
+  grid-area: meta;
+  padding: 0.75rem 1.5rem;
 }
 
 .actions-cell {
+  grid-area: actions;
   padding: 0.75rem 1.5rem;
   display: flex;
   align-items: center;
-}
-
-@media (min-width: 960px) {
-  .book-detail-grid {
-    grid-template-columns: 5fr 7fr;
-  }
-
-  .cover-cell {
-    grid-row: 1 / 3;
-    border-right: 1px solid rgb(var(--v-theme-grid));
-  }
-
-  .actions-cell {
-    grid-column: 2;
-  }
-
-  .info-cell {
-    position: relative;
-  }
-
-  .info-cell::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    border-top: 1px solid rgb(var(--v-theme-grid));
-  }
-}
-
-@media (min-width: 1280px) {
-  .book-detail-grid {
-    grid-template-columns: 1fr 2fr;
-  }
 }
 
 /* Typography shared class */
@@ -225,6 +284,7 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
   line-height: 1.3;
   word-break: break-word;
   color: rgb(var(--v-theme-title));
+  margin-top: 1.5rem;
 }
 
 .book-desc {
@@ -233,6 +293,7 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
   font-size: v-bind(TYPOGRAPHY.DESCRIPTION_SIZE);
   line-height: 1.6;
   color: rgb(var(--v-theme-description));
+  margin-bottom: 0;
 }
 
 .action-label {
@@ -261,12 +322,30 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
 .detail-cover {
   max-width: 320px;
   width: 100%;
+  margin-top: 1.5rem;
 }
 
 .stars-author-row {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.stars-author-row--mobile {
+  display: none;
+}
+
+.stars-row-mobile {
+  display: none;
+}
+
+.mobile-only {
+  display: none;
+}
+
+.star-rating {
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 .format-row {
@@ -303,5 +382,135 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
 
 .meta-row {
   word-break: break-word;
+}
+
+.read-more-btn {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+  color: rgb(var(--v-theme-text));
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 0.5rem;
+  line-height: 1.6;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.read-more-btn:hover,
+.read-more-btn:focus {
+  color: rgb(var(--v-theme-text));
+}
+
+@media (max-width: 979px) {
+  .book-detail-grid {
+    grid-template-columns: 5fr 7fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      'cover info'
+      'meta meta'
+      'actions actions';
+    max-width: 802px;
+  }
+
+  .cover-cell {
+    padding: 0 1rem 1rem;
+  }
+
+  .info-cell {
+    padding: 0 1rem 1rem;
+  }
+
+  .info-cell::after {
+    display: none;
+  }
+
+  .meta-desktop {
+    display: none;
+  }
+
+  .meta-cell {
+    display: block;
+    position: relative;
+    padding: 0.75rem 1rem;
+  }
+
+  .meta-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    border-top: 1px solid rgb(var(--v-theme-grid));
+  }
+
+  .actions-cell {
+    position: relative;
+    padding: 0.75rem 1rem;
+  }
+
+  .actions-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    border-top: 1px solid rgb(var(--v-theme-grid));
+  }
+
+  .detail-cover {
+    max-width: 160px;
+  }
+
+  .inter-13 {
+    font-size: v-bind(TYPOGRAPHY.H3_SIZE_MOBILE);
+  }
+
+  .book-title {
+    font-size: v-bind(TYPOGRAPHY.H1_SIZE_MOBILE);
+  }
+
+  .book-desc {
+    font-size: v-bind(TYPOGRAPHY.DESCRIPTION_SIZE_MOBILE);
+  }
+
+  .action-label {
+    font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE_MOBILE);
+  }
+
+  .star-rating {
+    font-size: 0.875rem;
+  }
+
+  .stars-author-row--desktop {
+    display: none;
+  }
+
+  .stars-author-row--mobile {
+    display: flex;
+  }
+
+  .stars-row-mobile {
+    display: flex;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .book-desc--truncated {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .read-more-btn {
+    font-size: v-bind(TYPOGRAPHY.DESCRIPTION_SIZE_MOBILE);
+  }
 }
 </style>

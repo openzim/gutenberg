@@ -14,9 +14,6 @@
 		"title": "Librería del Proyecto Gutenberg",
 		"subtitle": "El primer editor de ebooks libres"
 	},
-	"shelves": {
-		"title": "Estantes (A-Z)"
-	},
 	"book": {
 		"title": "Título",
 		"languages": "Idioma",
@@ -28,13 +25,10 @@
 		"anonymous": "Anónimo",
 		"various": "Varios"
 	},
-	"shelf": {
-		"booksInShelf": "Buscar por estantería"
-	},
+	"shelf": {},
 	"common": {
 		"loading": "Cargando...",
 		"search": "Buscar",
-		"searchShelf": "Búsqueda de estantería",
 		"sort": "Ordenar",
 		"sortPopularity": "Ordenar libros por popularidad",
 		"sortTitle": "Ordenar libros por título",

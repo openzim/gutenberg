@@ -64,7 +64,7 @@ describe('LCCShelfCard', () => {
       })
 
       const card = wrapper.findComponent({ name: 'VCard' })
-      expect(card.props('to')).toBe('/lcc-shelf/PR')
+      expect(card.props('to')).toBe('/lcc-shelves?shelf=PR')
       expect(card.props('hover')).toBe(true)
     })
 
@@ -73,7 +73,7 @@ describe('LCCShelfCard', () => {
         props: { shelf: createShelf({ code: 'PS' }) }
       })
 
-      expect(wrapper.findComponent({ name: 'VCard' }).props('to')).toBe('/lcc-shelf/PS')
+      expect(wrapper.findComponent({ name: 'VCard' }).props('to')).toBe('/lcc-shelves?shelf=PS')
     })
   })
 
