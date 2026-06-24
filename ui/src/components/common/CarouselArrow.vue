@@ -5,6 +5,7 @@ defineProps<{
   direction: 'left' | 'right'
   disabled?: boolean
   ariaLabel: string
+  beigeShadow?: boolean
 }>()
 
 defineEmits<{
@@ -16,6 +17,7 @@ defineEmits<{
   <button
     type="button"
     class="carousel-arrow"
+    :class="{ 'beige-shadow': beigeShadow }"
     :disabled="disabled"
     :aria-label="ariaLabel"
     @click="$emit('click')"
@@ -59,7 +61,20 @@ defineEmits<{
   box-shadow: none;
 }
 
-.arrow-icon {
-  font-size: v-bind(CAROUSEL_ARROW_SIZES.ICON + 'px');
+.carousel-arrow.beige-shadow {
+  box-shadow:
+    0 0 6px rgba(196, 142, 78, 0.25),
+    0 0 12px rgba(196, 142, 78, 0.15);
+}
+
+.carousel-arrow.beige-shadow:hover:not(:disabled) {
+  box-shadow:
+    0 0 12px rgba(196, 142, 78, 0.35),
+    0 0 24px rgba(196, 142, 78, 0.25),
+    0 0 36px rgba(196, 142, 78, 0.15);
+}
+
+.carousel-arrow.beige-shadow:disabled {
+  box-shadow: none;
 }
 </style>

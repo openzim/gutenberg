@@ -9,6 +9,7 @@ export interface LCCShelfPreview {
   code: string
   name: string | null
   bookCount: number
+  totalPopularity?: number
 }
 
 export interface LCCShelf extends LCCShelfPreview {

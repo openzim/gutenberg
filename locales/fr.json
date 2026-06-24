@@ -14,14 +14,6 @@
 		"shelves": "Bibliothèques",
 		"about": "À propos"
 	},
-	"home": {
-		"title": "Bibliothèque du projet Gutenberg",
-		"subtitle": "Premier producteur d'ebooks gratuits"
-	},
-	"about": {},
-	"authors": {
-		"title": "Auteurs"
-	},
 	"book": {
 		"title": "Titre",
 		"downloads": "téléchargements",
@@ -31,6 +23,8 @@
 		"license": "Licence",
 		"licensePd": "Domaine public aux États-Unis.",
 		"licenseCopyright": "Protégé par le droit d'auteur. Consultez la mention de droit d'auteur à l'intérieur de ce livre pour plus de détails.",
+		"fullName": "Nom complet",
+		"worksAvailable": "Œuvres disponibles",
 		"unknown": "Non disponible",
 		"cover": "Couverture du livre",
 		"coverLabel": "(couverture)",
@@ -40,7 +34,9 @@
 	"author": {
 		"bookCount": "{n} livre | {n} livres"
 	},
-	"shelf": {},
+	"shelf": {
+		"booksIn": "Livres dans"
+	},
 	"common": {
 		"loading": "Chargement...",
 		"loadingBook": "Chargement des informations sur le livre…",
@@ -49,27 +45,17 @@
 		"showing": "Affichage",
 		"of": "sur",
 		"search": "Rechercher",
-		"clear": "Effacer",
-		"all": "Tout",
-		"clearAllSelections": "Effacer les filtres de sélection",
-		"selectAll": "Tout sélectionner",
-		"sort": "Trier",
 		"sortBy": "Trier par",
 		"sortPopularity": "Trier les livres par popularité",
 		"sortTitle": "Trier les livres par titre",
-		"language": "Langue",
-		"bookLanguages": "Langues du livre",
 		"chooseLanguage": "Choisissez une langue...",
 		"mainLanguages": "Langues principales",
 		"otherLanguages": "Autres langues",
 		"anyCatalog": "Choisir le catalogue",
-		"format": "Format",
 		"uiLanguage": "Langue de l`interface",
 		"selectInterfaceLanguage": "Sélectionner la langue de l’interface",
 		"filterBy": "Filtrer par",
 		"filterByTitle": "Filtrer par {title}",
-		"filter": "Filtrer",
-		"selected": "sélectionnés",
 		"gridView": "Affichage en grille",
 		"listView": "Affichage en liste",
 		"browseAll": "Tout parcourir",
@@ -77,7 +63,8 @@
 		"returnHome": "Retour",
 		"toggleNavigationMenu": "Bascule du menu de navigation",
 		"mainNavigation": "Navigation principale",
-		"toggleSortOptions": "Activer/désactiver les options de tri",
+		"mobileNavigationMenu": "Menu de navigation mobile",
+		"mobileNavigation": "Navigation mobile",
 		"navigateTo": "Naviguer vers",
 		"navigateToItem": "Accédez à {item}",
 		"gutenbergHome": "Accueil Gutenberg"

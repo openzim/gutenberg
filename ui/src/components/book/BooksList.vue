@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useIsLccShelfPage } from '@/composables/useIsLccShelfPage'
+import { useIntersectionObserver } from '@/composables/useIntersectionObserver'
 import type { BookPreview } from '@/types'
 import ListBookCard from './ListBookCard.vue'
 import { useInfiniteScroll } from '@/composables/useInfiniteScroll'
@@ -27,30 +28,10 @@ watch(
   { immediate: true }
 )
 
-const sentinel = ref<HTMLElement | null>(null)
-let observer: IntersectionObserver | null = null
-
-function setupObserver() {
-  observer?.disconnect()
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting && hasMore.value) {
-        loadMore()
-      }
-    },
-    { rootMargin: '100px' }
-  )
-
-  if (sentinel.value) {
-    observer.observe(sentinel.value)
+const { sentinelRef } = useIntersectionObserver(() => {
+  if (hasMore.value) {
+    loadMore()
   }
-}
-
-onMounted(setupObserver)
-
-onUnmounted(() => {
-  observer?.disconnect()
 })
 </script>
 
@@ -59,7 +40,7 @@ onUnmounted(() => {
     <div v-for="book in displayedItems" :key="book.id" class="list-cell">
       <list-book-card :book="book" />
     </div>
-    <div ref="sentinel" class="sentinel text-caption text-center py-4">
+    <div ref="sentinelRef" class="sentinel text-caption text-center py-4">
       <span v-if="hasMore">{{ t('common.loading') }}</span>
     </div>
   </div>
@@ -69,7 +50,7 @@ onUnmounted(() => {
 .books-list {
   display: flex;
   flex-direction: column;
-  max-width: 1102px;
+  max-width: var(--g-layout-max);
   margin-inline: auto;
 }
 
@@ -77,10 +58,10 @@ onUnmounted(() => {
   max-width: 882px;
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 599px) {
   .books-list,
   .books-list--lcc-shelf {
-    max-width: 802px;
+    margin-inline: auto;
   }
 }
 

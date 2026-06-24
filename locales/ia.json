@@ -12,14 +12,6 @@
 		"shelves": "Plancas",
 		"about": "A proposito"
 	},
-	"home": {
-		"title": "Bibliotheca del Projecto Gutenberg",
-		"subtitle": "Le prime productor de libros electronic gratuite"
-	},
-	"about": {},
-	"authors": {
-		"title": "Autores"
-	},
 	"book": {
 		"title": "Titulo",
 		"downloads": "discargamentos",
@@ -29,6 +21,8 @@
 		"license": "Licentia",
 		"licensePd": "De dominio public in le Statos Unite.",
 		"licenseCopyright": "Protegite per le derecto de autor. Consulta le aviso de derecto de autor in iste libro pro plus detalios.",
+		"fullName": "Nomine complete",
+		"worksAvailable": "Obras disponibile",
 		"unknown": "Incognite",
 		"cover": "Copertura de libro",
 		"coverLabel": "(copertura)",
@@ -38,7 +32,9 @@
 	"author": {
 		"bookCount": "{n} libro | {n} libros"
 	},
-	"shelf": {},
+	"shelf": {
+		"booksIn": "Libros in"
+	},
 	"common": {
 		"loading": "Cargamento…",
 		"loadingBook": "Cargamento del detalios del libro…",
@@ -47,27 +43,17 @@
 		"showing": "Es monstrate",
 		"of": "de",
 		"search": "Cercar",
-		"clear": "Rader",
-		"all": "Totes",
-		"clearAllSelections": "Rader tote le selectiones",
-		"selectAll": "Seliger totes",
-		"sort": "Ordinar",
 		"sortBy": "Ordinar per",
 		"sortPopularity": "Ordinar libros per popularitate",
 		"sortTitle": "Ordinar libros per titulo",
-		"language": "Lingua",
-		"bookLanguages": "Linguas del libro",
 		"chooseLanguage": "Elige un lingua…",
 		"mainLanguages": "Linguas principal",
 		"otherLanguages": "Altere linguas",
 		"anyCatalog": "Elige le catalogo",
-		"format": "Formato",
 		"uiLanguage": "Lingua del interfacie",
 		"selectInterfaceLanguage": "Selige le lingua del interfacie",
 		"filterBy": "Filtrar per",
 		"filterByTitle": "Filtrar per {title}",
-		"filter": "Filtro",
-		"selected": "seligite",
 		"gridView": "Disposition in grillia",
 		"listView": "Disposition in lista",
 		"browseAll": "Explorar toto",
@@ -77,7 +63,6 @@
 		"mainNavigation": "Navigation principal",
 		"mobileNavigationMenu": "Menu de navigation mobile",
 		"mobileNavigation": "Navigation mobile",
-		"toggleSortOptions": "Activar/disactivar le optiones de ordinamento",
 		"navigateTo": "Navigar a",
 		"navigateToItem": "Navigar a {item}",
 		"gutenbergHome": "Pagina principal de Gutenberg"

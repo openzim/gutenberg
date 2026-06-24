@@ -31,6 +31,7 @@ class AuthorPreview(CamelModel):
     id: str
     name: str
     book_count: int
+    total_popularity: int = 0
 
 
 class AuthorDetail(AuthorPreview):
@@ -84,6 +85,7 @@ class LCCShelfPreview(CamelModel):
     code: str
     name: str | None = None
     book_count: int
+    total_popularity: int = 0
 
 
 class LCCShelf(LCCShelfPreview):

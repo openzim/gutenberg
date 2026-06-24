@@ -1,30 +1,41 @@
 <script setup lang="ts">
 import type { AuthorPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
-import { TYPOGRAPHY } from '@/constants/theme'
+import { AVATAR_SIZES, ICON_SIZES, TYPOGRAPHY } from '@/constants/theme'
 
-defineProps<{
+interface Props {
   author: AuthorPreview
-}>()
+  variant?: 'default' | 'carousel'
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'default'
+})
 
 const { t } = useI18n()
+
+const isCarousel = () => props.variant === 'carousel'
 </script>
 
 <template>
   <router-link
     :to="`/author/${author.id}`"
-    class="author-card text-decoration-none"
+    :class="['author-card', 'text-decoration-none', { 'author-card--carousel': isCarousel() }]"
     :aria-label="t('author.viewAuthor', { n: author.bookCount, name: author.name })"
   >
-    <v-avatar :size="100" color="primary" class="author-card__avatar">
-      <v-icon icon="mdi-account" :size="48" />
+    <v-avatar
+      :size="isCarousel() ? AVATAR_SIZES.CAROUSEL : 100"
+      color="primary"
+      :class="['author-card__avatar', { 'author-card__avatar--carousel': isCarousel() }]"
+    >
+      <v-icon icon="mdi-account" :size="isCarousel() ? ICON_SIZES.LIST : 48" />
     </v-avatar>
 
-    <h3 class="author-card__name">
+    <h3 :class="['author-card__name', { 'author-card__name--carousel': isCarousel() }]">
       {{ author.name }}
     </h3>
 
-    <p class="author-card__count">
+    <p :class="['author-card__count', { 'author-card__count--carousel': isCarousel() }]">
       {{ t('author.bookCount', author.bookCount) }}
     </p>
   </router-link>
@@ -37,6 +48,25 @@ const { t } = useI18n()
   align-items: center;
   padding: 1rem 0.5rem;
   color: inherit;
+}
+
+.author-card--carousel {
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgb(var(--v-theme-grid));
+  background: rgb(var(--v-theme-background));
+  color: rgb(var(--v-theme-text));
+  position: relative;
+  z-index: 0;
+  transition: box-shadow 0.2s ease;
+}
+
+.author-card--carousel:hover,
+.author-card--carousel:focus {
+  border-color: rgb(var(--v-theme-text));
+  box-shadow: 0 0 5px 0 rgb(var(--v-theme-text));
+  z-index: 1;
 }
 
 .author-card__avatar {
@@ -55,6 +85,16 @@ const { t } = useI18n()
     0 0 36px rgba(var(--v-theme-text), 0.05);
 }
 
+.author-card__avatar--carousel {
+  transition: none;
+}
+
+.author-card:hover .author-card__avatar--carousel,
+.author-card:focus .author-card__avatar--carousel {
+  transform: none;
+  box-shadow: none;
+}
+
 .author-card__name {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.H3_SIZE);
@@ -71,6 +111,12 @@ const { t } = useI18n()
   margin-bottom: 0.25rem;
 }
 
+.author-card__name--carousel {
+  font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
+  line-height: 1.3;
+  margin: 0 0 0.25rem;
+}
+
 .author-card__count {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
@@ -80,5 +126,23 @@ const { t } = useI18n()
   opacity: 0.6;
   margin: 0;
   text-align: center;
+}
+
+.author-card__count--carousel {
+  margin-bottom: 0.25rem;
+}
+
+@media (max-width: 1279px) {
+  .author-card--carousel {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .author-card__name--carousel {
+    font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+  }
+
+  .author-card__count--carousel {
+    font-size: v-bind(TYPOGRAPHY.SMALL_SIZE);
+  }
 }
 </style>

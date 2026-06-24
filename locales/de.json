@@ -9,10 +9,6 @@
 	"nav": {
 		"home": "Homepage"
 	},
-	"home": {
-		"title": "Projekt Gutenberg",
-		"subtitle": "Der erste Produzent freier E-Books"
-	},
 	"book": {
 		"title": "Titel",
 		"languages": "Sprache(n)",
@@ -23,21 +19,16 @@
 		"anonymous": "Anonym",
 		"various": "Diverse"
 	},
-	"shelf": {},
 	"common": {
 		"loading": "Lade...",
 		"search": "Suchen",
-		"sort": "Sortieren",
 		"sortPopularity": "Sortiere Bücher nach Beliebtheit",
 		"sortTitle": "Sortiere Bücher nach Titel",
-		"language": "Sprache",
 		"chooseLanguage": "Sprache auswählen...",
 		"mainLanguages": "Hauptsprachen",
 		"otherLanguages": "Andere Sprachen",
 		"anyCatalog": "Katalog wählen",
-		"format": "Format",
 		"uiLanguage": "Sprache der Oberfläche",
-		"filter": "Filter",
 		"returnHome": "Nach Hause gehen"
 	},
 	"messages": {

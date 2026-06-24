@@ -10,10 +10,6 @@
 	"nav": {
 		"home": "الصفحة الرئيسية"
 	},
-	"home": {
-		"title": "مشروع مكتبة Gutenberg",
-		"subtitle": "المصنع الأول للكتب الأكترونية المجانية"
-	},
 	"book": {
 		"title": "العنوان",
 		"languages": "اللغة",
@@ -24,21 +20,16 @@
 		"anonymous": "مجهول",
 		"various": "متنوع"
 	},
-	"shelf": {},
 	"common": {
 		"loading": "جار التحميل...",
 		"search": "بحث",
-		"sort": "ترتيب",
 		"sortPopularity": "رتب الكتب بحسب الشعبية",
 		"sortTitle": "رتب الكتب بحسب العنوان",
-		"language": "اللغة",
 		"chooseLanguage": "أختر لغة...",
 		"mainLanguages": "اللغات الأساسية",
 		"otherLanguages": "اللغات الأخرى",
 		"anyCatalog": "أختر قائمة",
-		"format": "الصيغة",
 		"uiLanguage": "لغة الواجهة",
-		"filter": "فلتر",
 		"returnHome": "العودة للرئيسية"
 	},
 	"messages": {

@@ -1,15 +1,4 @@
 export const THEME_COLORS = {
-  PRIMARY: '#1976D2',
-  SECONDARY: '#424242',
-  SURFACE_LIGHT: '#FAFAFA',
-  SURFACE_DARK: '#1E1E1E',
-  BACKGROUND_LIGHT: '#FFFFFF',
-  BACKGROUND_DARK: '#121212',
-  ACCENT: '#82B1FF',
-  ERROR: '#D32F2F',
-  INFO: '#1976D2',
-  SUCCESS: '#388E3C',
-  WARNING: '#F57C00',
   FORMAT: '#ef502b',
   STAR: '#ffce00',
   TITLE: '#c48e4e',
@@ -19,8 +8,12 @@ export const THEME_COLORS = {
   FOCUS_BOOK: '#3c485a',
   FOCUS_BOOK_DARK: '#5c6b7d',
   MENU_ACTIVE: '#0c858b',
+  SHELF_ICON: '#69afc6',
+  SHELF_ICON_DARK: '#8a9ba8',
   BGD_1: '#e8f6ff',
+  BGD_1_DARK: '#2a3a45',
   BGD_2: '#fcefe3',
+  BGD_2_DARK: '#3b3229',
   BGD_3_FILL: '#f9f9f9',
   BGD_3_FILL_DARK: '#2a2a2a',
   BGD_3_OUTLINE: '#e2e2e2',
@@ -28,8 +21,7 @@ export const THEME_COLORS = {
   TEXT: '#000000',
   TEXT_DARK: '#ffffff',
   GRID: '#cccccc',
-  GRID_DARK: '#444444',
-  ON_PRIMARY: '#FFFFFF'
+  GRID_DARK: '#444444'
 } as const
 
 export const LAYOUT = {
@@ -37,28 +29,19 @@ export const LAYOUT = {
   HEADER_HEIGHT: '64px',
   FOOTER_HEIGHT: '136px',
   VIEW_PADDING: '2rem 0',
-  VIEW_PADDING_MOBILE: '1.5rem 0',
-  SIDEBAR_MARGIN_MOBILE: '1rem',
-  CARD_SPACING: 'mb-6',
-  CARD_PADDING: 'pa-4',
-  SECTION_SPACING: 'mb-8',
-  GRID_GAP: 'gap-4'
+  VIEW_PADDING_MOBILE: '1.5rem 0'
 } as const
 
 export const AVATAR_SIZES = {
   CARD: 80,
   CAROUSEL: 64,
   DETAIL: 120,
-  LIST: 56,
   TABLET: 100
 } as const
 
 export const ICON_SIZES = {
-  CARD: 48,
   DETAIL: 48,
-  LIST: 32,
-  STAT: 48,
-  SMALL: 20
+  LIST: 32
 } as const
 
 export const CAROUSEL_ARROW_SIZES = {

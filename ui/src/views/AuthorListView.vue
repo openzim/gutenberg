@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useMainStore } from '@/stores/main'
 import type { AuthorPreview, Authors } from '@/types'
@@ -14,10 +14,7 @@ import { LAYOUT } from '@/constants/theme'
 const { t } = useI18n()
 const main = useMainStore()
 
-const PAGE_SIZE = 24
-
 const activeFilter = ref('ALL')
-const listDisplayedCount = ref(PAGE_SIZE)
 
 const {
   items: authors,
@@ -25,26 +22,26 @@ const {
   loadItems: loadAuthors
 } = useListLoader<AuthorPreview, Authors>(() => main.fetchAuthors(), 'authors')
 
+const sortedAuthors = computed(() =>
+  [...authors.value].sort((a, b) => a.name.localeCompare(b.name))
+)
+
 const filteredByLetter = computed(() => {
   if (activeFilter.value === 'ALL') {
-    return authors.value
+    return sortedAuthors.value
   }
 
   if (activeFilter.value === '0-9') {
-    return authors.value.filter((author) => {
+    return sortedAuthors.value.filter((author) => {
       const firstChar = author.name.charAt(0)
       return firstChar >= '0' && firstChar <= '9'
     })
   }
 
-  return authors.value.filter((author) => {
+  return sortedAuthors.value.filter((author) => {
     const firstChar = author.name.charAt(0).toUpperCase()
     return firstChar === activeFilter.value
   })
-})
-
-watch(activeFilter, () => {
-  listDisplayedCount.value = PAGE_SIZE
 })
 
 onMounted(() => {
@@ -65,12 +62,8 @@ onMounted(() => {
         <v-col cols="12">
           <alphabet-filter v-model="activeFilter" />
 
-          <authors-list
-            v-if="filteredByLetter.length > 0"
-            :authors="filteredByLetter"
-            @update:displayed-count="listDisplayedCount = $event"
-          />
-          <p v-else class="no-authors text-body-1 text-medium-emphasis text-center py-8">
+          <authors-list v-if="filteredByLetter.length > 0" :authors="filteredByLetter" />
+          <p v-else class="text-body-1 text-medium-emphasis text-center py-8">
             {{ t('messages.noAuthorsForLetter', { letter: activeFilter }) }}
           </p>
         </v-col>

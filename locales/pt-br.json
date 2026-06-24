@@ -12,40 +12,28 @@
 		"authors": "Autores",
 		"about": "Sobre"
 	},
-	"home": {
-		"title": "Biblioteca do Projeto Gutenberg",
-		"subtitle": "O primeiro produtor de livros eletrônicos gratuitos"
-	},
-	"about": {},
-	"authors": {
-		"title": "Autores"
-	},
 	"book": {
 		"title": "Título",
 		"languages": "Idioma",
 		"license": "Licença",
 		"licensePd": "Domínio público nos EUA.",
 		"licenseCopyright": "Protegido por direitos autorais. Leia o aviso de direitos autorais dentro deste livro para obter detalhes.",
+		"fullName": "Nome completo",
 		"cover": "Capa do livro",
 		"coverLabel": "(capa)",
 		"anonymous": "Anônimos",
 		"various": "Vários"
 	},
-	"shelf": {},
 	"common": {
 		"loading": "Carregando...",
 		"search": "Pesquisar",
-		"sort": "Organizar",
 		"sortPopularity": "Ordenar livros por popularidade",
 		"sortTitle": "Ordenar livros por título",
-		"language": "Idioma",
 		"chooseLanguage": "Escolha um idioma...",
 		"mainLanguages": "Principais idiomas",
 		"otherLanguages": "Outros idiomas",
 		"anyCatalog": "Escolha o catálogo",
-		"format": "Formato",
 		"uiLanguage": "Idioma da interface",
-		"filter": "Filtro",
 		"returnHome": "Ir para Início"
 	},
 	"messages": {

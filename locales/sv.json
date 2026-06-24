@@ -14,14 +14,6 @@
 		"shelves": "Hyllor",
 		"about": "Om"
 	},
-	"home": {
-		"title": "Projekt Gutenberg-biblioteket",
-		"subtitle": "Den första utgivaren av gratis e-böcker"
-	},
-	"about": {},
-	"authors": {
-		"title": "Författare"
-	},
 	"book": {
 		"title": "Titel",
 		"downloads": "nedladdningar",
@@ -31,6 +23,8 @@
 		"license": "Licens",
 		"licensePd": "Public domain i USA.",
 		"licenseCopyright": "Upphovsrättsskyddad. Läs upphovsrättsmeddelandet i boken för mer information.",
+		"fullName": "Fullständigt namn",
+		"worksAvailable": "Tillgängliga verk",
 		"unknown": "Okänd",
 		"cover": "Bokomslag",
 		"coverLabel": "(omslag)",
@@ -40,7 +34,9 @@
 	"author": {
 		"bookCount": "{n} bok | {n} böcker"
 	},
-	"shelf": {},
+	"shelf": {
+		"booksIn": "Böcker på"
+	},
 	"common": {
 		"loading": "Laddar...",
 		"loadingBook": "Laddar in bokdetaljer...",
@@ -49,27 +45,17 @@
 		"showing": "Visar",
 		"of": "av",
 		"search": "Sök",
-		"clear": "Rensa",
-		"all": "Alla",
-		"clearAllSelections": "Rensa alla urval",
-		"selectAll": "Välj alla",
-		"sort": "Sortering",
 		"sortBy": "Sortera efter",
 		"sortPopularity": "Sortera efter popularitet",
 		"sortTitle": "Sortera efter titel",
-		"language": "Språk",
-		"bookLanguages": "Bokspråk",
 		"chooseLanguage": "Välj ett språk...",
 		"mainLanguages": "Huvudspråk",
 		"otherLanguages": "Andra språk",
 		"anyCatalog": "Välj Katalogen",
-		"format": "Format",
 		"uiLanguage": "Gränssnittsspråk",
 		"selectInterfaceLanguage": "Välj gränssnittsspråk",
 		"filterBy": "Filtrera efter",
 		"filterByTitle": "Filtrera efter {title}",
-		"filter": "Filter",
-		"selected": "vald",
 		"gridView": "Rutnätsvy",
 		"listView": "Listvy",
 		"browseAll": "Bläddra alla",
@@ -79,7 +65,6 @@
 		"mainNavigation": "Huvudnavigering",
 		"mobileNavigationMenu": "Mobil navigeringsmeny",
 		"mobileNavigation": "Mobil navigering",
-		"toggleSortOptions": "Växla sorteringsalternativ",
 		"navigateTo": "Navigera till",
 		"navigateToItem": "Navigera till {item}",
 		"gutenbergHome": "Gutenbergs hem"

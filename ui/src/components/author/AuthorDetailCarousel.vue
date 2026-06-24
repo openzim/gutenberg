@@ -2,7 +2,7 @@
 import { computed, ref, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { AuthorPreview, AuthorDetail } from '@/types'
-import AuthorCarouselCard from './AuthorCarouselCard.vue'
+import AuthorCard from './AuthorCard.vue'
 import CarouselArrow from '@/components/common/CarouselArrow.vue'
 import { AVATAR_SIZES, ICON_SIZES, TYPOGRAPHY } from '@/constants/theme'
 import { formatAuthorLifespan } from '@/utils/format-utils'
@@ -89,7 +89,7 @@ watch(
 
 <template>
   <div class="author-detail-carousel">
-    <div class="carousel-arrow-wrapper carousel-arrow-wrapper--left desktop-only">
+    <div class="carousel-arrow-wrapper carousel-arrow-wrapper--left g-desktop-only">
       <carousel-arrow
         direction="left"
         :disabled="!hasPrevious"
@@ -100,7 +100,7 @@ watch(
 
     <div class="carousel-track-wrapper">
       <!-- Desktop: current + 3 small cards -->
-      <div class="carousel-track desktop-only">
+      <div class="carousel-track g-desktop-only">
         <div class="carousel-cell carousel-cell--current">
           <div class="current-author">
             <v-avatar :size="AVATAR_SIZES.DETAIL" color="primary" class="current-author__avatar">
@@ -126,12 +126,12 @@ watch(
           :key="author.id"
           class="carousel-cell carousel-cell--small"
         >
-          <author-carousel-card :author="author" />
+          <author-card :author="author" variant="carousel" />
         </div>
       </div>
 
       <!-- Mobile: all authors scrollable -->
-      <div ref="trackRef" class="carousel-track mobile-only">
+      <div ref="trackRef" class="carousel-track g-mobile-only">
         <div
           v-for="author in sortedAuthors"
           :key="author.id"
@@ -159,12 +159,12 @@ watch(
             </div>
           </div>
 
-          <author-carousel-card v-else :author="author" />
+          <author-card v-else :author="author" variant="carousel" />
         </div>
       </div>
     </div>
 
-    <div class="carousel-arrow-wrapper carousel-arrow-wrapper--right desktop-only">
+    <div class="carousel-arrow-wrapper carousel-arrow-wrapper--right g-desktop-only">
       <carousel-arrow
         direction="right"
         :disabled="!hasNext"
@@ -196,6 +196,10 @@ watch(
   align-items: stretch;
   height: 220px;
   scrollbar-width: none;
+}
+
+.carousel-track.g-mobile-only {
+  display: none;
 }
 
 .carousel-track::-webkit-scrollbar {
@@ -274,10 +278,6 @@ watch(
   margin: 0;
 }
 
-.mobile-only {
-  display: none;
-}
-
 @media (max-width: 1279px) {
   .author-detail-carousel {
     gap: 0;
@@ -297,6 +297,14 @@ watch(
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .carousel-track.g-desktop-only {
+    display: none !important;
+  }
+
+  .carousel-track.g-mobile-only {
+    display: flex !important;
   }
 
   .carousel-cell {
@@ -342,14 +350,6 @@ watch(
   .current-author__lifespan,
   .current-author__count {
     font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
-  }
-
-  .desktop-only {
-    display: none !important;
-  }
-
-  .mobile-only {
-    display: flex !important;
   }
 }
 </style>

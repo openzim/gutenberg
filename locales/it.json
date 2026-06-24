@@ -11,51 +11,38 @@
 		"home": "Homepage",
 		"authors": "Autori"
 	},
-	"home": {
-		"title": "Libreria del Progetto Gutenberg",
-		"subtitle": "Il primo produttore di ebooks gratuiti"
-	},
-	"about": {},
-	"authors": {
-		"title": "Autori"
-	},
 	"book": {
 		"title": "Titolo",
 		"languages": "Linguaggio",
 		"license": "Licenza",
 		"licensePd": "Di pubblico dominio negli USA.",
+		"worksAvailable": "Opere disponibili",
 		"unknown": "Sconosciuto",
 		"cover": "Copertina del Libro",
 		"coverLabel": "(copertina)",
 		"anonymous": "Anonimo",
 		"various": "Vari"
 	},
-	"author": {},
-	"shelf": {},
+	"shelf": {
+		"booksIn": "Libri in"
+	},
 	"common": {
 		"loading": "Caricamento in corso...",
 		"loadingBook": "Caricamento dei dettagli del libro..",
 		"loadingAuthor": "Caricamento dei dettagli dell'autore...",
 		"of": "di",
 		"search": "Cerca",
-		"all": "Tutto",
-		"selectAll": "Seleziona tutto",
-		"sort": "Ordina",
 		"sortBy": "Ordina per",
 		"sortPopularity": "Ordina libri per popolarità",
 		"sortTitle": "Ordina libri per titolo",
-		"language": "Linguaggio",
 		"chooseLanguage": "Scegli la lingua...",
 		"mainLanguages": "Lingue Principali",
 		"otherLanguages": "Altre lingue",
 		"anyCatalog": "Scegli il Catalogo",
-		"format": "Formato",
 		"uiLanguage": "Interfaccia lingua",
 		"selectInterfaceLanguage": "Seleziona la lingua dell'interfaccia",
 		"filterBy": "Filtra per",
 		"filterByTitle": "Filtra per {title}",
-		"filter": "Filtro",
-		"selected": "selezionato",
 		"gridView": "Visualizzazione a griglia",
 		"listView": "Visualizzazione elenco",
 		"browseAllAuthors": "Visualizza tutti gli autori",

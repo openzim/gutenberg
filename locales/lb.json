@@ -12,10 +12,6 @@
 		"shelves": "Regaler",
 		"about": "Iwwer"
 	},
-	"about": {},
-	"authors": {
-		"title": "Auteuren"
-	},
 	"book": {
 		"title": "Titel",
 		"languages": "Sprooch",
@@ -28,24 +24,18 @@
 	"author": {
 		"bookCount": "{n} Buch | {n} Bicher"
 	},
-	"shelf": {},
 	"common": {
 		"loading": "Gëtt gelueden...",
 		"loadingBook": "Buchdetailer gi gelueden...",
 		"search": "Sichen",
-		"all": "All",
-		"sort": "Sortéieren",
 		"sortBy": "Sortéieren no",
 		"sortPopularity": "Bicher no Popularitéit sortéieren",
 		"sortTitle": "Bicher no Titel sortéieren",
-		"language": "Sprooch",
 		"chooseLanguage": "Sicht eng Sprooch eraus...",
 		"mainLanguages": "Haaptsproochen",
 		"otherLanguages": "Aner Sproochen",
 		"anyCatalog": "Wielt de Katalog",
-		"format": "Format",
-		"uiLanguage": "Sprooch vum Interface",
-		"filter": "Filter"
+		"uiLanguage": "Sprooch vum Interface"
 	},
 	"messages": {
 		"noBooks": "Kee Buch fonnt.",

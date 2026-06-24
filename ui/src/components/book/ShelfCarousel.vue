@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { useCarousel } from '@/composables/useCarousel'
+import { ref, watch, nextTick } from 'vue'
 import type { BookPreview } from '@/types'
 import ShelfBookCard from './ShelfBookCard.vue'
 import CarouselArrow from '@/components/common/CarouselArrow.vue'
@@ -14,28 +15,24 @@ const { t } = useI18n()
 
 const CARDS_PER_VIEW = 5
 
-// Offset controls which card is first visible
-const offset = ref(0)
+const { visibleItems, hasPrevious, hasNext, shiftLeft, shiftRight } = useCarousel(
+  () => props.books,
+  CARDS_PER_VIEW
+)
 
-const visibleBooks = computed(() => {
-  const start = offset.value
-  const end = start + CARDS_PER_VIEW
-  return props.books.slice(start, end)
-})
+// Mobile scroll to first book
+const trackRef = ref<HTMLElement | null>(null)
 
-const hasPrevious = computed(() => offset.value > 0)
-
-const hasNext = computed(() => {
-  return offset.value + CARDS_PER_VIEW < props.books.length
-})
-
-function shiftLeft() {
-  offset.value--
-}
-
-function shiftRight() {
-  offset.value++
-}
+watch(
+  () => props.books,
+  async () => {
+    await nextTick()
+    if (trackRef.value && window.innerWidth <= 1279) {
+      trackRef.value.scrollTo({ left: 0, behavior: 'smooth' })
+    }
+  },
+  { deep: true }
+)
 </script>
 
 <template>
@@ -46,7 +43,7 @@ function shiftRight() {
 
     <div class="shelf-carousel__wrapper">
       <!-- Desktop arrows -->
-      <div class="carousel-arrow-wrapper desktop-only">
+      <div class="carousel-arrow-wrapper g-desktop-only">
         <carousel-arrow
           direction="left"
           :disabled="!hasPrevious"
@@ -56,20 +53,20 @@ function shiftRight() {
       </div>
 
       <div class="shelf-carousel__track-outer">
-        <div class="shelf-books-row desktop-only">
-          <div v-for="book in visibleBooks" :key="book.id" class="carousel-card-wrapper">
+        <div class="shelf-books-row g-desktop-only">
+          <div v-for="book in visibleItems" :key="book.id" class="carousel-card-wrapper">
             <shelf-book-card :book="book" />
           </div>
         </div>
 
-        <div class="shelf-books-row mobile-only">
+        <div ref="trackRef" class="shelf-books-row g-mobile-only">
           <div v-for="book in books" :key="book.id" class="carousel-card-wrapper">
             <shelf-book-card :book="book" />
           </div>
         </div>
       </div>
 
-      <div class="carousel-arrow-wrapper desktop-only">
+      <div class="carousel-arrow-wrapper g-desktop-only">
         <carousel-arrow
           direction="right"
           :disabled="!hasNext"
@@ -83,7 +80,7 @@ function shiftRight() {
 
 <style scoped>
 .shelf-carousel {
-  max-width: 1102px;
+  max-width: var(--g-layout-max);
   margin-inline: auto;
   padding: 1.5rem;
 }
@@ -114,7 +111,7 @@ function shiftRight() {
   padding: 1px;
 }
 
-.shelf-books-row.mobile-only {
+.shelf-books-row.g-mobile-only {
   display: none;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -122,7 +119,7 @@ function shiftRight() {
   padding: 5px;
 }
 
-.shelf-books-row.mobile-only::-webkit-scrollbar {
+.shelf-books-row.g-mobile-only::-webkit-scrollbar {
   display: none;
 }
 
@@ -139,14 +136,6 @@ function shiftRight() {
   justify-content: center;
 }
 
-.desktop-only {
-  display: flex;
-}
-
-.mobile-only {
-  display: none;
-}
-
 @media (max-width: 1279px) {
   .shelf-carousel {
     max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
@@ -158,21 +147,9 @@ function shiftRight() {
     padding: 5px;
   }
 
-  .shelf-books-row.desktop-only {
-    display: none;
-  }
-
-  .shelf-books-row.mobile-only {
-    display: flex;
-  }
-
   .carousel-card-wrapper {
     width: 160px;
     min-width: 160px;
-  }
-
-  .desktop-only {
-    display: none;
   }
 }
 </style>

@@ -9,16 +9,13 @@
 		"authors": "مصنف",
 		"about": "تعارف"
 	},
-	"about": {},
 	"book": {
 		"title": "کتاباں",
 		"languages": "زبان(اں)",
 		"anonymous": "گمنام"
 	},
 	"common": {
-		"all": "یکے",
 		"sortTitle": "عنوان",
-		"filter": "چھاݨاں",
 		"listView": "تندیر نظارہ"
 	}
 }

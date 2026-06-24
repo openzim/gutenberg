@@ -10,43 +10,31 @@
 		"shelves": "Riiulid",
 		"about": "Teave"
 	},
-	"authors": {
-		"title": "Autorid"
-	},
 	"book": {
 		"title": "Raamatud",
 		"downloads": "allalaadimised",
 		"downloadCount": "Allalaadimiste arv",
 		"languages": "Keel(ed)",
 		"lccShelf": "LCC riiul",
+		"fullName": "Täisnimi",
 		"unknown": "Tundmatu"
 	},
 	"author": {
 		"bookCount": "{n} raamat | {n} raamatut"
 	},
-	"shelf": {},
 	"common": {
 		"loadingAuthor": "Autori info laadimine...",
 		"loadingItems": "Laadimine {type}...",
-		"clear": "Tühjenda",
-		"all": "Kõik",
-		"clearAllSelections": "Tühjenda kõik valikud",
-		"selectAll": "Vali kõik",
-		"sort": "Sorteeri",
 		"sortBy": "Sorteeri",
 		"sortPopularity": "Populaarsus",
-		"bookLanguages": "Raamatu keeled",
 		"uiLanguage": "Kasutajaliidese keel",
 		"selectInterfaceLanguage": "Vali kasutajaliidese keel",
-		"filter": "filter",
-		"selected": "valitud",
 		"gridView": "Ruudustikuvaade",
 		"listView": "Loendivaade",
 		"browseAll": "Sirvi kõiki",
 		"browseAllAuthors": "Sirvi kõiki autoreid",
 		"returnHome": "Tagasi avalehele",
-		"toggleNavigationMenu": "Navigeerimismenüü avamine/sulgemine",
-		"toggleSortOptions": "Sorteerimisvalikute sisse/välja lülitamine"
+		"toggleNavigationMenu": "Navigeerimismenüü avamine/sulgemine"
 	},
 	"messages": {
 		"noBooks": "Raamatuid ei leitud.",

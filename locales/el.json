@@ -19,16 +19,12 @@
 	"common": {
 		"loading": "Γίνεται φόρτωση...",
 		"search": "Αναζήτηση",
-		"sort": "Ταξινόμηση",
 		"sortTitle": "Τίτλος",
-		"language": "Γλώσσα",
 		"chooseLanguage": "Επιλέξτε μια γλώσσα...",
 		"mainLanguages": "Κύριες γλώσσες",
 		"otherLanguages": "Άλλες γλώσσες",
 		"anyCatalog": "Επιλέξτε τον Κατάλογο",
-		"format": "Μορφή",
 		"uiLanguage": "Γλώσσα διεπαφής",
-		"filter": "Φίλτρο",
 		"returnHome": "Μετάβαση στην Αρχική"
 	},
 	"messages": {

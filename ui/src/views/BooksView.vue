@@ -3,13 +3,9 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useMainStore } from '@/stores/main'
 import type { BookPreview } from '@/types'
-import BooksGrid from '@/components/book/BooksGrid.vue'
-import BooksList from '@/components/book/BooksList.vue'
-import SortAndLimitControl from '@/components/common/SortAndLimitControl.vue'
+import BookDisplay from '@/components/book/BookDisplay.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import PaginationControl from '@/components/common/PaginationControl.vue'
-import { useBookDisplay } from '@/composables/useBookDisplay'
 import { useListLoader } from '@/composables/useListLoader'
 import { LAYOUT } from '@/constants/theme'
 import { MESSAGES } from '@/constants/messages'
@@ -37,24 +33,6 @@ const filteredBooks = computed(() => {
   )
 })
 
-const {
-  sortBy,
-  sortOrder,
-  limit,
-  viewMode,
-  isGridView,
-  isShowAll,
-  pageSizeNumber,
-  sortedBooks,
-  displayedBooks,
-  displayedRange,
-  currentPage,
-  totalPages,
-  goToPage,
-  infiniteHasMore,
-  sentinelRef
-} = useBookDisplay(filteredBooks)
-
 onMounted(() => {
   loadBooks()
 })
@@ -71,34 +49,7 @@ onMounted(() => {
 
       <v-row v-else-if="books.length > 0">
         <v-col cols="12">
-          <sort-and-limit-control
-            v-model:sort-by="sortBy"
-            v-model:sort-order="sortOrder"
-            v-model:limit="limit"
-            v-model:view-mode="viewMode"
-            :current="displayedRange"
-            :total="sortedBooks.length"
-            type="books"
-            class="mb-4"
-          />
-
-          <books-grid v-if="isGridView" :books="displayedBooks" />
-          <books-list v-else :books="displayedBooks" />
-
-          <pagination-control
-            v-if="!isShowAll && sortedBooks.length > pageSizeNumber"
-            :current-page="currentPage"
-            :total-pages="totalPages"
-            @go-to-page="goToPage"
-          />
-
-          <div
-            v-if="isShowAll && infiniteHasMore"
-            ref="sentinelRef"
-            class="text-caption text-center py-4"
-          >
-            {{ t('common.loading') }}
-          </div>
+          <book-display :books="filteredBooks" type="books" />
         </v-col>
       </v-row>
 
