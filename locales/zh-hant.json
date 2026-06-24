@@ -11,10 +11,6 @@
 		"authors": "作者",
 		"about": "關於"
 	},
-	"home": {
-		"title": "古騰堡計劃文庫",
-		"subtitle": "首個免費電子書製作者"
-	},
 	"book": {
 		"title": "標題",
 		"downloads": "下載",
@@ -23,14 +19,16 @@
 		"license": "授權條款",
 		"licensePd": "在美國屬於公有領域。",
 		"licenseCopyright": "版權所有。詳情請閱讀本書內的版權聲明。",
+		"fullName": "全名",
 		"unknown": "未知",
 		"cover": "書籍封面",
 		"coverLabel": "（封面）",
 		"anonymous": "匿名作者",
 		"various": "多位作者"
 	},
-	"author": {},
-	"shelf": {},
+	"shelf": {
+		"booksIn": "書籍位在"
+	},
 	"common": {
 		"loading": "載入中…",
 		"loadingBook": "正在載入書籍詳細資訊…",
@@ -39,27 +37,17 @@
 		"showing": "顯示",
 		"of": "/",
 		"search": "搜尋",
-		"clear": "清除",
-		"all": "全部",
-		"clearAllSelections": "清除全部所選",
-		"selectAll": "全選",
-		"sort": "排序：",
 		"sortBy": "排序依",
 		"sortPopularity": "依照人氣排序書籍",
 		"sortTitle": "依照標題排序書籍",
-		"language": "語言",
-		"bookLanguages": "書籍語言",
 		"chooseLanguage": "選擇一種語言…",
 		"mainLanguages": "主要語言",
 		"otherLanguages": "其他語言",
 		"anyCatalog": "選擇目錄",
-		"format": "格式",
 		"uiLanguage": "介面語言",
 		"selectInterfaceLanguage": "選擇介面語言",
 		"filterBy": "篩選依照",
 		"filterByTitle": "篩選依照{title}",
-		"filter": "篩選：",
-		"selected": "已選",
 		"returnHome": "返回首頁",
 		"toggleNavigationMenu": "切換導覽選單",
 		"mainNavigation": "主要導覽",

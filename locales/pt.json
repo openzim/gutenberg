@@ -9,10 +9,6 @@
 	"nav": {
 		"home": "Página principal"
 	},
-	"home": {
-		"title": "Biblioteca do Projeto Gutenberg",
-		"subtitle": "O primeiro produtor de ebooks gratuitos"
-	},
 	"book": {
 		"title": "Título",
 		"languages": "Idioma",
@@ -23,21 +19,16 @@
 		"anonymous": "Anónimo",
 		"various": "Vários"
 	},
-	"shelf": {},
 	"common": {
 		"loading": "A carregar...",
 		"search": "Procurar",
-		"sort": "Ordenar",
 		"sortPopularity": "Ordenar os livros por popularidade",
 		"sortTitle": "Ordenar os livros por título",
-		"language": "Idioma",
 		"chooseLanguage": "Escolha um idioma...",
 		"mainLanguages": "Idiomas principais",
 		"otherLanguages": "Outros idiomas",
 		"anyCatalog": "Escolha o Catálogo",
-		"format": "Formato",
 		"uiLanguage": "Idioma da interface",
-		"filter": "Filtro",
 		"returnHome": "Ir para Início"
 	},
 	"messages": {

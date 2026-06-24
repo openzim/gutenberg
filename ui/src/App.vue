@@ -17,9 +17,16 @@ const main = useMainStore()
 useTheme()
 
 const breadcrumbItems = computed(() => {
-  if (!route.meta.breadcrumb || route.path === '/') return []
+  if (!route.meta.breadcrumb && route.path !== '/') return []
 
-  const items: { title: string; to?: string }[] = [{ title: t('nav.home'), to: '/' }]
+  const items: { title: string; to?: string }[] = []
+
+  if (route.path === '/') {
+    items.push({ title: t('nav.home') })
+    return items
+  }
+
+  items.push({ title: t('nav.home'), to: '/' })
 
   const parent = route.meta.parent as string | undefined
   const name = route.meta.breadcrumb as string
@@ -60,6 +67,46 @@ const showBreadcrumbs = computed(() => breadcrumbItems.value.length > 0)
   </v-app>
 </template>
 
+<style>
+/* Global layout CSS custom properties */
+:root {
+  --g-layout-max: 1102px;
+  --g-layout-tablet: 642px;
+  --g-layout-mobile: 322px;
+}
+
+@media (max-width: 960px) {
+  :root {
+    --g-layout-max: 642px;
+  }
+}
+
+@media (max-width: 599px) {
+  :root {
+    --g-layout-max: 322px;
+  }
+}
+
+/* Desktop/mobile toggle utility classes */
+.g-desktop-only {
+  display: flex;
+}
+
+.g-mobile-only {
+  display: none;
+}
+
+@media (max-width: 1279px) {
+  .g-desktop-only {
+    display: none !important;
+  }
+
+  .g-mobile-only {
+    display: flex !important;
+  }
+}
+</style>
+
 <style scoped>
 .v-main {
   min-height: calc(100vh - v-bind(LAYOUT.HEADER_HEIGHT) - v-bind(LAYOUT.FOOTER_HEIGHT));
@@ -71,8 +118,8 @@ const showBreadcrumbs = computed(() => breadcrumbItems.value.length > 0)
 }
 
 .app-breadcrumbs-inner {
-  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
+  max-width: var(--g-layout-max);
   margin: 0 auto;
-  padding: 0.75rem 1.5rem 0;
+  padding: 0.75rem 0 0;
 }
 </style>

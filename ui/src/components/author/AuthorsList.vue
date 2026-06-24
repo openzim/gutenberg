@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { watch } from 'vue'
 import type { AuthorPreview } from '@/types'
 import AuthorCard from './AuthorCard.vue'
 import { useInfiniteScroll } from '@/composables/useInfiniteScroll'
+import { useIntersectionObserver } from '@/composables/useIntersectionObserver'
 
 const props = defineProps<{
   authors: AuthorPreview[]
@@ -22,30 +23,10 @@ watch(
   { immediate: true }
 )
 
-const sentinel = ref<HTMLElement | null>(null)
-let observer: IntersectionObserver | null = null
-
-function setupObserver() {
-  observer?.disconnect()
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting && hasMore.value) {
-        loadMore()
-      }
-    },
-    { rootMargin: '100px' }
-  )
-
-  if (sentinel.value) {
-    observer.observe(sentinel.value)
+const { sentinelRef } = useIntersectionObserver(() => {
+  if (hasMore.value) {
+    loadMore()
   }
-}
-
-onMounted(setupObserver)
-
-onUnmounted(() => {
-  observer?.disconnect()
 })
 </script>
 
@@ -64,7 +45,7 @@ onUnmounted(() => {
         <author-card :author="author" />
       </v-col>
     </v-row>
-    <div ref="sentinel" class="sentinel" />
+    <div ref="sentinelRef" class="sentinel" />
   </div>
 </template>
 

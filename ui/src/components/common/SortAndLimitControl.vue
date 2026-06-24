@@ -4,8 +4,7 @@
  *
  * IMPORTANT: When using this component, always pair it with the `useBookDisplay`
  * composable (`@/composables/useBookDisplay`). That composable provides the
- * required sorting, pagination, infinite-scroll, and view-mode logic. Duplicating
- * that logic in parent components is discouraged.
+ * required sorting, pagination, infinite-scroll, and view-mode logic.
  */
 import { computed, ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -210,7 +209,7 @@ if (typeof document !== 'undefined') {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.75rem;
-  max-width: 1102px;
+  max-width: var(--g-layout-max);
   margin-inline: auto;
 }
 
@@ -368,18 +367,18 @@ if (typeof document !== 'undefined') {
   fill: currentColor;
 }
 
-@media (max-width: 1279px) {
-  .sort-and-limit,
-  .sort-and-limit--lcc-shelf {
-    max-width: 802px;
-  }
-}
-
 @media (max-width: 599px) {
   .sort-and-limit {
+    margin-inline: auto;
+    padding: 0;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+
+  .sort-and-limit--lcc-shelf {
+    margin-inline: auto;
+    max-width: var(--g-layout-max);
   }
 
   .sort-and-limit__count {
@@ -389,7 +388,8 @@ if (typeof document !== 'undefined') {
 
   .sort-and-limit__controls {
     width: 100%;
-    justify-content: flex-start;
+    justify-content: space-between;
+    flex-wrap: nowrap;
   }
 
   .dropdown__trigger,

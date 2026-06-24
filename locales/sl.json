@@ -12,14 +12,6 @@
 		"shelves": "Police",
 		"about": "O projektu"
 	},
-	"home": {
-		"title": "Knjižnica projekta Gutenberg",
-		"subtitle": "Prvi producent prostih e-knjig"
-	},
-	"about": {},
-	"authors": {
-		"title": "Avtorji"
-	},
 	"book": {
 		"title": "Naslov",
 		"downloads": "prenosi",
@@ -29,6 +21,8 @@
 		"license": "Licenca",
 		"licensePd": "Javna domena v ZDA.",
 		"licenseCopyright": "Avtorsko zavarovano. Za podrobnosti preberite obvestilo o avtorskih pravicah v tej knjigi.",
+		"fullName": "Celotno ime",
+		"worksAvailable": "Dela na voljo",
 		"unknown": "Neznano",
 		"cover": "Naslovnica knjige",
 		"coverLabel": "(naslovnica)",
@@ -38,7 +32,9 @@
 	"author": {
 		"bookCount": "{n} knjiga | {n} knjig"
 	},
-	"shelf": {},
+	"shelf": {
+		"booksIn": "Knjige v"
+	},
 	"common": {
 		"loading": "Nalaganje ...",
 		"loadingBook": "Nalaganje podatkov o knjigi ...",
@@ -47,27 +43,17 @@
 		"showing": "Prikazano",
 		"of": "od",
 		"search": "Išči",
-		"clear": "Počisti",
-		"all": "Vse",
-		"clearAllSelections": "Počisti vse izbire",
-		"selectAll": "Izberi vse",
-		"sort": "Razvrsti",
 		"sortBy": "Razvrsti po",
 		"sortPopularity": "Razvrsti knjige po priljubljenosti",
 		"sortTitle": "Naslov",
-		"language": "Jezik",
-		"bookLanguages": "Jeziki knjig",
 		"chooseLanguage": "Izberite jezik ...",
 		"mainLanguages": "Glavni jeziki",
 		"otherLanguages": "Drugi jeziki",
 		"anyCatalog": "Izberite katalog",
-		"format": "Format",
 		"uiLanguage": "Jezik vmesnika",
 		"selectInterfaceLanguage": "Izberite jezik vmesnika",
 		"filterBy": "Filtriraj po",
 		"filterByTitle": "Filtriraj po {title}",
-		"filter": "Filter",
-		"selected": "izbrano",
 		"gridView": "Mrežni pogled",
 		"listView": "Pogled seznama",
 		"browseAll": "Prebrskaj vse",
@@ -77,7 +63,6 @@
 		"mainNavigation": "Glavna navigacija",
 		"mobileNavigationMenu": "Mobilni navigacijski meni",
 		"mobileNavigation": "Mobilna navigacija",
-		"toggleSortOptions": "Preklopi možnosti razvrščanja",
 		"navigateTo": "Navigacija do",
 		"navigateToItem": "Navigacija do {item}",
 		"gutenbergHome": "Gutenberg Home"

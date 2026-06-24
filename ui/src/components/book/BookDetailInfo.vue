@@ -54,7 +54,7 @@ const shelfDisplayName = computed(() => {
         </h1>
 
         <!-- Desktop: stars + author on same row, above description -->
-        <div class="stars-author-row stars-author-row--desktop mb-6">
+        <div class="stars-author-row stars-author-row--desktop g-desktop-only mb-6">
           <star-rating :popularity="book.popularity" class="mr-3" />
           <router-link
             v-if="book.author?.id"
@@ -69,7 +69,7 @@ const shelfDisplayName = computed(() => {
         </div>
 
         <!-- Mobile: author only, above description -->
-        <div class="stars-author-row stars-author-row--mobile mb-2">
+        <div class="stars-author-row stars-author-row--mobile g-mobile-only mb-2">
           <router-link
             v-if="book.author?.id"
             :to="`/author/${book.author.id}`"
@@ -91,7 +91,7 @@ const shelfDisplayName = computed(() => {
           </p>
           <button
             v-if="shouldTruncate"
-            class="read-more-btn mobile-only"
+            class="read-more-btn g-mobile-only"
             @click="showFullDescription = !showFullDescription"
           >
             {{ showFullDescription ? t('common.showLess') : t('common.readMore') }}
@@ -99,12 +99,12 @@ const shelfDisplayName = computed(() => {
         </div>
 
         <!-- Mobile: stars below description -->
-        <div class="stars-row-mobile mb-6">
+        <div class="stars-row-mobile g-mobile-only mb-6">
           <star-rating :popularity="book.popularity" />
         </div>
 
         <!-- Desktop-only meta (inside info-cell) -->
-        <div class="meta-desktop">
+        <div class="meta-desktop g-desktop-only">
           <v-row class="meta-row mb-4">
             <v-col cols="4">
               <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
@@ -135,7 +135,7 @@ const shelfDisplayName = computed(() => {
       </div>
 
       <!-- Mobile-only meta (full width row) -->
-      <div class="meta-cell">
+      <div class="meta-cell g-mobile-only">
         <v-row class="meta-row mb-4">
           <v-col cols="4">
             <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
@@ -225,7 +225,7 @@ const shelfDisplayName = computed(() => {
   grid-template-areas:
     'cover info'
     'cover actions';
-  max-width: 1102px;
+  max-width: var(--g-layout-max);
   margin-inline: auto;
 }
 
@@ -339,10 +339,6 @@ const shelfDisplayName = computed(() => {
   display: none;
 }
 
-.mobile-only {
-  display: none;
-}
-
 .star-rating {
   font-size: 1.25rem;
   line-height: 1;
@@ -411,7 +407,6 @@ const shelfDisplayName = computed(() => {
       'cover info'
       'meta meta'
       'actions actions';
-    max-width: 802px;
   }
 
   .cover-cell {
@@ -495,10 +490,6 @@ const shelfDisplayName = computed(() => {
 
   .stars-row-mobile {
     display: flex;
-  }
-
-  .mobile-only {
-    display: block;
   }
 
   .book-desc--truncated {

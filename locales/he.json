@@ -11,9 +11,6 @@
 	"nav": {
 		"home": "דף הבית"
 	},
-	"home": {
-		"title": "ספריית פרויקט גוטנברג"
-	},
 	"book": {
 		"title": "ספרים",
 		"languages": "שפה",
@@ -27,16 +24,12 @@
 	"common": {
 		"loading": "טעינה...",
 		"search": "חיפוש",
-		"sort": "מיון",
 		"sortTitle": "כותרת",
-		"language": "שפה",
 		"chooseLanguage": "בחירת שפה...",
 		"mainLanguages": "שפות ראשיות",
 		"otherLanguages": "שפות אחרות",
 		"anyCatalog": "בחירת הקטלוג",
-		"format": "תסדיר",
-		"uiLanguage": "שפת ממשק",
-		"filter": "סינון"
+		"uiLanguage": "שפת ממשק"
 	},
 	"messages": {
 		"noBooks": "לא נמצאו ספרים."

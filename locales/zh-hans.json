@@ -15,10 +15,6 @@
 		"shelves": "书架",
 		"about": "关于"
 	},
-	"home": {
-		"title": "古腾堡计划图书馆",
-		"subtitle": "第一个免费电子书的制作者"
-	},
 	"book": {
 		"title": "标题",
 		"author": "作者",
@@ -42,7 +38,6 @@
 		"anonymous": "匿名用户",
 		"various": "各种各样的"
 	},
-	"shelf": {},
 	"common": {
 		"loading": "加载中...",
 		"loadingBook": "正在加载图书详情……",
@@ -53,39 +48,14 @@
 		"showing": "显示",
 		"of": "/",
 		"search": "搜索",
-		"sort": "排序：",
-		"sortBy": "排序方式",
 		"sortPopularity": "按受欢迎程度对书籍进行排序",
 		"sortTitle": "按标题对书籍进行排序",
-		"language": "语言",
-		"bookLanguages": "书籍语言",
 		"chooseLanguage": "选择语言...",
 		"mainLanguages": "主要语言",
 		"otherLanguages": "其他语言",
 		"anyCatalog": "选择目录",
-		"format": "格式",
 		"uiLanguage": "界面语言",
-		"selectInterfaceLanguage": "选择界面语言",
-		"filterBy": "筛选条件",
-		"filterByTitle": "按{title}筛选",
-		"filter": "过滤器：",
-		"selected": "选定",
-		"gridView": "网格视图",
-		"listView": "列表视图",
-		"browseAll": "浏览全部",
-		"browseAllShelves": "浏览所有书架",
-		"browseAllAuthors": "浏览所有作者",
-		"returnHome": "回到主页",
-		"toggleNavigationMenu": "切换导航菜单",
-		"mainNavigation": "主导航",
-		"mobileNavigationMenu": "移动导航菜单",
-		"mobileNavigation": "移动导航",
-		"footerLinks": "页脚链接",
-		"toggleSortOptions": "切换排序选项",
-		"navigateTo": "导航至",
-		"navigateToItem": "导航至 {item}",
-		"opensInNewTab": "在新标签页中打开",
-		"gutenbergHome": "古腾堡计划首页"
+		"returnHome": "回到主页"
 	},
 	"messages": {
 		"noBooks": "表格内没有可用数据",

@@ -10,10 +10,6 @@
 	"nav": {
 		"home": "Inicio"
 	},
-	"home": {
-		"title": "Librería del Proyecto Gutenberg",
-		"subtitle": "El primer editor de ebooks libres"
-	},
 	"book": {
 		"title": "Título",
 		"languages": "Idioma",
@@ -25,21 +21,16 @@
 		"anonymous": "Anónimo",
 		"various": "Varios"
 	},
-	"shelf": {},
 	"common": {
 		"loading": "Cargando...",
 		"search": "Buscar",
-		"sort": "Ordenar",
 		"sortPopularity": "Ordenar libros por popularidad",
 		"sortTitle": "Ordenar libros por título",
-		"language": "Idioma",
 		"chooseLanguage": "Elija un idioma...",
 		"mainLanguages": "Idiomas principales",
 		"otherLanguages": "Otros idiomas",
 		"anyCatalog": "Elija en el catálogo",
-		"format": "Formato",
 		"uiLanguage": "Idioma de la interfaz",
-		"filter": "Filtro",
 		"returnHome": "Volver al inicio"
 	},
 	"messages": {

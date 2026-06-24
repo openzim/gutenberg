@@ -4,14 +4,10 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useMainStore } from '@/stores/main'
 import type { BookPreview, LCCShelfPreview } from '@/types'
-import BooksGrid from '@/components/book/BooksGrid.vue'
-import BooksList from '@/components/book/BooksList.vue'
+import BookDisplay from '@/components/book/BookDisplay.vue'
 import LCCSidebar from '@/components/lccshelf/LCCSidebar.vue'
-import SortAndLimitControl from '@/components/common/SortAndLimitControl.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import PaginationControl from '@/components/common/PaginationControl.vue'
-import { useBookDisplay } from '@/composables/useBookDisplay'
 import { useListLoader } from '@/composables/useListLoader'
 import { LAYOUT } from '@/constants/theme'
 import { MESSAGES } from '@/constants/messages'
@@ -66,24 +62,6 @@ async function loadShelfBooks(code: string | null) {
 
 watch(activeShelfCode, loadShelfBooks, { immediate: true })
 
-const {
-  sortBy,
-  sortOrder,
-  limit,
-  viewMode,
-  isGridView,
-  isShowAll,
-  pageSizeNumber,
-  sortedBooks,
-  displayedBooks,
-  displayedRange,
-  currentPage,
-  totalPages,
-  goToPage,
-  infiniteHasMore,
-  sentinelRef
-} = useBookDisplay(shelfBooks)
-
 function selectShelf(code: string | null) {
   const query = code
     ? { ...route.query, shelf: code }
@@ -107,36 +85,7 @@ function selectShelf(code: string | null) {
           <loading-spinner :message="t('common.loading')" />
         </div>
 
-        <template v-else-if="shelfBooks.length > 0">
-          <sort-and-limit-control
-            v-model:sort-by="sortBy"
-            v-model:sort-order="sortOrder"
-            v-model:limit="limit"
-            v-model:view-mode="viewMode"
-            :current="displayedRange"
-            :total="sortedBooks.length"
-            type="books"
-            class="mb-4"
-          />
-
-          <books-grid v-if="isGridView" :books="displayedBooks" />
-          <books-list v-else :books="displayedBooks" />
-
-          <pagination-control
-            v-if="!isShowAll && sortedBooks.length > pageSizeNumber"
-            :current-page="currentPage"
-            :total-pages="totalPages"
-            @go-to-page="goToPage"
-          />
-
-          <div
-            v-if="isShowAll && infiniteHasMore"
-            ref="sentinelRef"
-            class="text-caption text-center py-4"
-          >
-            {{ t('common.loading') }}
-          </div>
-        </template>
+        <book-display v-else-if="shelfBooks.length > 0" :books="shelfBooks" type="books" />
 
         <empty-state v-else :message="t(MESSAGES.NO_BOOKS)" type="info" />
       </div>

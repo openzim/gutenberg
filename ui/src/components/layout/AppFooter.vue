@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { TYPOGRAPHY, LAYOUT } from '@/constants/theme'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 const { t } = useI18n()
 
 const currentYear = new Date().getFullYear()
 
-const tagline = computed(() => `${t('footer.tagline')} ${t('footer.subtitle')}`)
-const powered = computed(() => `— ${currentYear} ${t('footer.powered')}`)
+const tagline = `${t('footer.tagline')} ${t('footer.subtitle')}`
+const powered = `— ${currentYear} ${t('footer.powered')}`
 </script>
 
 <template>
@@ -32,9 +31,9 @@ const powered = computed(() => `— ${currentYear} ${t('footer.powered')}`)
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
+  max-width: var(--g-layout-max);
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 1.5rem 0;
   min-height: 64px;
 }
 

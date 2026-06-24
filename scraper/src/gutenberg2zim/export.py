@@ -730,13 +730,16 @@ def _get_authors_with_books() -> list[Author]:
 
 def _author_to_preview(author: Author) -> AuthorPreview:
     """Convert Author dataclass to AuthorPreview schema"""
-    book_count = sum(
-        1 for book in repository.get_all_books() if book.author.gut_id == author.gut_id
+    all_books = repository.get_all_books()
+    book_count = sum(1 for book in all_books if book.author.gut_id == author.gut_id)
+    total_popularity = sum(
+        book.popularity for book in all_books if book.author.gut_id == author.gut_id
     )
     return AuthorPreview(
         id=author.gut_id,
         name=author.name(),
         book_count=book_count,
+        total_popularity=total_popularity,
     )
 
 
@@ -814,15 +817,16 @@ def _book_to_schema(book: Book, formats: list[str]) -> BookSchema:
     )
 
 
-def _lcc_shelf_to_preview(shelf_code: str) -> LCCShelfPreview:
+def _lcc_shelf_to_preview(shelf_code: str, all_books: list[Book]) -> LCCShelfPreview:
     """Convert LCC shelf code to LCCShelfPreview schema"""
-    book_count = sum(
-        1 for book in repository.get_all_books() if book.lcc_shelf == shelf_code
-    )
+    shelf_books = [book for book in all_books if book.lcc_shelf == shelf_code]
+    book_count = len(shelf_books)
+    total_popularity = sum(book.popularity for book in shelf_books)
     return LCCShelfPreview(
         code=shelf_code,
         name=None,
         book_count=book_count,
+        total_popularity=total_popularity,
     )
 
 
@@ -898,7 +902,7 @@ def generate_json_files(
     if add_lcc_shelves:
         logger.debug("Generating lcc_shelves.json")
         shelves_preview = [
-            _lcc_shelf_to_preview(shelf_code)
+            _lcc_shelf_to_preview(shelf_code, all_books)
             for shelf_code in repository.get_lcc_shelves()
         ]
         shelves_collection = LCCShelves(

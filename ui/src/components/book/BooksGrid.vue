@@ -24,7 +24,7 @@ const isLccShelfPage = useIsLccShelfPage()
   grid-template-columns: repeat(auto-fill, 220px);
   justify-content: center;
   padding: 1px;
-  max-width: 1102px;
+  max-width: var(--g-layout-max);
   margin-inline: auto;
 }
 
@@ -36,7 +36,6 @@ const isLccShelfPage = useIsLccShelfPage()
   .books-grid,
   .books-grid--lcc-shelf {
     grid-template-columns: repeat(auto-fill, 160px);
-    max-width: 802px;
   }
 }
 

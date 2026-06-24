@@ -14,10 +14,10 @@ import type { LCCShelves, BookPreview } from '@/types'
 const mockShelvesData: LCCShelves = {
   totalCount: 4,
   shelves: [
-    { code: 'PR', name: 'English literature', bookCount: 150 },
-    { code: 'PS', name: 'American literature', bookCount: 200 },
-    { code: 'PQ', name: 'French literature', bookCount: 100 },
-    { code: 'PT', name: 'German literature', bookCount: 80 }
+    { code: 'PR', name: 'English literature', bookCount: 150, totalPopularity: 0 },
+    { code: 'PS', name: 'American literature', bookCount: 200, totalPopularity: 0 },
+    { code: 'PQ', name: 'French literature', bookCount: 100, totalPopularity: 0 },
+    { code: 'PT', name: 'German literature', bookCount: 80, totalPopularity: 0 }
   ]
 }
 
@@ -67,6 +67,7 @@ describe('LCCShelfListView Integration', () => {
       code: 'PR',
       name: 'English literature',
       bookCount: books.length,
+      totalPopularity: 0,
       books
     })
     vi.spyOn(store, 'fetchBooks').mockResolvedValue({ totalCount: books.length, books })

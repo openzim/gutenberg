@@ -3,30 +3,8 @@ import { computed, ref } from 'vue'
 import type { LCCShelfPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
-import {
-  mdiBookOpenPageVariant,
-  mdiBrain,
-  mdiHistory,
-  mdiScriptText,
-  mdiStarCircle,
-  mdiEarth,
-  mdiHub,
-  mdiBank,
-  mdiScaleBalance,
-  mdiSchool,
-  mdiBookMusic,
-  mdiPalette,
-  mdiBookshelf,
-  mdiAtom,
-  mdiMedication,
-  mdiBarley,
-  mdiBlur,
-  mdiTank,
-  mdiShipWheel,
-  mdiFormatListBulleted,
-  mdiPlus,
-  mdiMinus
-} from '@mdi/js'
+import { mdiBookshelf, mdiPlus, mdiMinus } from '@mdi/js'
+import ShelfIcon from '@/components/common/ShelfIcon.vue'
 
 const { t } = useI18n()
 
@@ -57,34 +35,6 @@ const activeShelfName = computed(() => {
   }
   return props.activeCode
 })
-
-const SHELF_ICONS: Record<string, string> = {
-  A: mdiBookOpenPageVariant,
-  B: mdiBrain,
-  C: mdiHistory,
-  D: mdiScriptText,
-  E: mdiStarCircle,
-  F: mdiStarCircle,
-  G: mdiEarth,
-  H: mdiHub,
-  J: mdiBank,
-  K: mdiScaleBalance,
-  L: mdiSchool,
-  M: mdiBookMusic,
-  N: mdiPalette,
-  P: mdiBookshelf,
-  Q: mdiAtom,
-  R: mdiMedication,
-  S: mdiBarley,
-  T: mdiBlur,
-  U: mdiTank,
-  V: mdiShipWheel,
-  Z: mdiFormatListBulleted
-}
-
-function getShelfIcon(code: string): string {
-  return SHELF_ICONS[code.charAt(0)] || mdiBookshelf
-}
 </script>
 
 <template>
@@ -125,9 +75,7 @@ function getShelfIcon(code: string): string {
             :class="{ 'lcc-sidebar__btn--active': activeCode === shelf.code }"
             @click="handleSelect(shelf.code)"
           >
-            <svg class="lcc-sidebar__icon" viewBox="0 0 24 24">
-              <path :d="getShelfIcon(shelf.code)" />
-            </svg>
+            <ShelfIcon :code="shelf.code" :fallback="mdiBookshelf" />
             <span>{{ t(`lccShelves.${shelf.code}`) }} ({{ shelf.bookCount }})</span>
           </button>
         </li>
@@ -194,7 +142,6 @@ function getShelfIcon(code: string): string {
 .lcc-sidebar__btn--active:hover {
   background-color: transparent;
 }
-
 .lcc-sidebar__icon {
   width: 18px;
   height: 18px;
@@ -209,7 +156,7 @@ function getShelfIcon(code: string): string {
 @media (max-width: 1279px) {
   .lcc-sidebar {
     width: 100%;
-    max-width: 802px;
+    max-width: var(--g-layout-max);
     margin-inline: auto;
     border: 2px solid rgb(var(--v-theme-grid));
     padding: 0;
@@ -259,9 +206,15 @@ function getShelfIcon(code: string): string {
   }
 }
 
+@media (max-width: 960px) {
+  .lcc-sidebar {
+    /* width handled by CSS var */
+  }
+}
+
 @media (max-width: 599px) {
   .lcc-sidebar {
-    max-width: 322px;
+    /* width handled by CSS var */
   }
 }
 </style>

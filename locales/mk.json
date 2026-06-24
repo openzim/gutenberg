@@ -9,10 +9,6 @@
 	"nav": {
 		"home": "Почетна страница"
 	},
-	"home": {
-		"title": "Библиотека на Проектот Гутенберг",
-		"subtitle": "Првиот на изработувач на бесплатни е-книги"
-	},
 	"book": {
 		"title": "Наслов",
 		"languages": "Јазик",
@@ -24,21 +20,16 @@
 		"anonymous": "Анонимен",
 		"various": "Разни"
 	},
-	"shelf": {},
 	"common": {
 		"loading": "Вчитувам...",
 		"search": "Пребарај",
-		"sort": "Подреди",
 		"sortPopularity": "Подреди книги по популарност",
 		"sortTitle": "Подреди книги по наслов",
-		"language": "Јазик",
 		"chooseLanguage": "Изберете јазик...",
 		"mainLanguages": "Главни јазици",
 		"otherLanguages": "Други јазици",
 		"anyCatalog": "Изберете каталог",
-		"format": "Формат",
 		"uiLanguage": "Јазик на посредникот",
-		"filter": "Филтер",
 		"returnHome": "Оди Дома"
 	},
 	"messages": {

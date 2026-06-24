@@ -9,10 +9,6 @@
 	"nav": {
 		"home": "Hjemmeside"
 	},
-	"home": {
-		"title": "Projekt Gutenberg-biblioteket",
-		"subtitle": "Den første producent af frie og gratis e-bøger"
-	},
 	"book": {
 		"title": "Titel",
 		"languages": "Sprog",
@@ -24,21 +20,16 @@
 		"anonymous": "Anonym",
 		"various": "Forskellige"
 	},
-	"shelf": {},
 	"common": {
 		"loading": "Indlæser...",
 		"search": "Søg",
-		"sort": "Sortér",
 		"sortPopularity": "Sortér bøger efter popularitet",
 		"sortTitle": "Sortér bøger efter titel",
-		"language": "Sprog",
 		"chooseLanguage": "Vælg et sprog...",
 		"mainLanguages": "Hovedsprog",
 		"otherLanguages": "Andre sprog",
 		"anyCatalog": "Vælg kataloget",
-		"format": "Format",
 		"uiLanguage": "Grænsefladesprog",
-		"filter": "Filter",
 		"returnHome": "Gå hjem"
 	},
 	"messages": {
