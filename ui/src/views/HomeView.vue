@@ -29,16 +29,6 @@ const popularShelves = computed(() =>
   [...shelves.value].sort((a, b) => (b.totalPopularity || 0) - (a.totalPopularity || 0)).slice(0, 6)
 )
 
-const activeShelf = computed(() => {
-  if (!activeShelfCode.value) return null
-  return popularShelves.value.find((s) => s.code === activeShelfCode.value) || null
-})
-
-const activeShelfName = computed(() => {
-  if (!activeShelf.value) return ''
-  return t(`lccShelves.${activeShelf.value.code}`)
-})
-
 const popularAuthors = computed(() =>
   [...authors.value]
     .sort((a, b) => (b.totalPopularity || 0) - (a.totalPopularity || 0))
@@ -139,7 +129,7 @@ onMounted(() => {
 
         <v-row v-else-if="activeShelfCode && shelfBooks.length > 0">
           <v-col cols="12">
-            <popular-shelf-books :books="shelfBooks" :shelf-name="activeShelfName" />
+            <popular-shelf-books :books="shelfBooks" />
           </v-col>
         </v-row>
       </v-container>
