@@ -74,7 +74,7 @@
 		"viewAuthor": "View author link aria-label. Parameters: {name} - author name, {n} - book count"
 	},
 	"shelf": {
-		"booksIn": "Text prefix for 'Books in [shelf name]'",
+		"booksIn": "Heading for books in a shelf. Parameters: {shelf} - shelf name",
 		"allShelves": "All shelves link in sidebar"
 	},
 	"common": {

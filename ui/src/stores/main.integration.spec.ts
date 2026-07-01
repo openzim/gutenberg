@@ -164,6 +164,60 @@ describe('Main Store Integration', () => {
     })
   })
 
+  describe('Response Caching', () => {
+    it('returns cached books without refetching', async () => {
+      const store = useMainStore()
+      const mockData = { totalCount: 100, books: [{ id: 1, title: 'Book 1' }] }
+      vi.mocked(axios.get).mockResolvedValue({ data: mockData })
+
+      const result1 = await store.fetchBooks()
+      expect(axios.get).toHaveBeenCalledTimes(1)
+      expect(result1).toEqual(mockData)
+
+      const result2 = await store.fetchBooks()
+      // Should not make a second request
+      expect(axios.get).toHaveBeenCalledTimes(1)
+      expect(result2).toEqual(mockData)
+    })
+
+    it('returns cached authors without refetching', async () => {
+      const store = useMainStore()
+      const mockData = { totalCount: 50, authors: [{ id: 'a1', name: 'Author 1' }] }
+      vi.mocked(axios.get).mockResolvedValue({ data: mockData })
+
+      await store.fetchAuthors()
+      expect(axios.get).toHaveBeenCalledTimes(1)
+
+      const result2 = await store.fetchAuthors()
+      expect(axios.get).toHaveBeenCalledTimes(1)
+      expect(result2).toEqual(mockData)
+    })
+
+    it('returns cached shelves without refetching', async () => {
+      const store = useMainStore()
+      const mockData = { totalCount: 20, shelves: [{ code: 'PR', bookCount: 5 }] }
+      vi.mocked(axios.get).mockResolvedValue({ data: mockData })
+
+      await store.fetchLCCShelves()
+      expect(axios.get).toHaveBeenCalledTimes(1)
+
+      const result2 = await store.fetchLCCShelves()
+      expect(axios.get).toHaveBeenCalledTimes(1)
+      expect(result2).toEqual(mockData)
+    })
+
+    it('does not cache single item fetches', async () => {
+      const store = useMainStore()
+      const mockData = { id: 42, title: 'Book 42' }
+      vi.mocked(axios.get).mockResolvedValue({ data: mockData })
+
+      await store.fetchBook(42)
+      await store.fetchBook(42)
+
+      expect(axios.get).toHaveBeenCalledTimes(2)
+    })
+  })
+
   describe('Request Deduplication', () => {
     it('deduplicates identical concurrent requests', async () => {
       const store = useMainStore()

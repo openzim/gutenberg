@@ -21,7 +21,12 @@ const isCarousel = () => props.variant === 'carousel'
   <router-link
     :to="`/author/${author.id}`"
     :class="['author-card', 'text-decoration-none', { 'author-card--carousel': isCarousel() }]"
-    :aria-label="t('author.viewAuthor', { n: author.bookCount, name: author.name })"
+    :aria-label="
+      t('author.viewAuthor', {
+        bookCount: t('author.bookCount', author.bookCount),
+        name: author.name
+      })
+    "
   >
     <v-avatar
       :size="isCarousel() ? AVATAR_SIZES.CAROUSEL : 100"

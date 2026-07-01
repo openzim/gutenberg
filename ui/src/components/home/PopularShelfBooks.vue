@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { BookPreview } from '@/types'
 import ShelfBookCard from '@/components/book/ShelfBookCard.vue'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 const props = defineProps<{
   books: BookPreview[]
@@ -15,6 +16,7 @@ const topBooks = computed(() =>
 
 <template>
   <div class="popular-shelf-books">
+    <h3 v-if="shelfName" class="popular-shelf-books__title">{{ shelfName }}</h3>
     <div class="popular-shelf-books__grid">
       <div v-for="book in topBooks" :key="book.id" class="popular-shelf-books__cell">
         <shelf-book-card :book="book" />
@@ -28,6 +30,15 @@ const topBooks = computed(() =>
   max-width: var(--g-layout-max);
   margin-inline: auto;
   padding: 0.75rem 0 1.5rem;
+}
+
+.popular-shelf-books__title {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.H3_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
+  color: rgb(var(--v-theme-title));
+  margin: 0 0 0.75rem;
+  padding: 0 1rem;
 }
 
 .popular-shelf-books__grid {

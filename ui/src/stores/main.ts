@@ -16,6 +16,11 @@ export const useMainStore = defineStore('main', () => {
   const currentBook = ref<Book | null>(null)
   const currentAuthor = ref<AuthorDetail | null>(null)
 
+  // Cached list data to avoid refetching across views
+  const books = ref<Books | null>(null)
+  const authors = ref<Authors | null>(null)
+  const shelves = ref<LCCShelves | null>(null)
+
   async function fetchWithDeduplication<T>(url: string): Promise<T> {
     const existing = pendingRequests.get(url)
     if (existing) {
@@ -57,15 +62,20 @@ export const useMainStore = defineStore('main', () => {
   async function fetchList<T extends { totalCount: number }>(
     url: string,
     errorMsg: string,
-    countRef: { value: number }
+    countRef: { value: number },
+    cacheRef: { value: T | null }
   ): Promise<T> {
+    if (cacheRef.value) {
+      return cacheRef.value
+    }
     const result = await fetchData<T>(url, errorMsg)
     countRef.value = result.totalCount
+    cacheRef.value = result
     return result
   }
 
   async function fetchBooks() {
-    return fetchList<Books>('./books.json', 'Failed to load books', booksCount)
+    return fetchList<Books>('./books.json', 'Failed to load books', booksCount, books)
   }
 
   function fetchBook(id: number) {
@@ -77,7 +87,7 @@ export const useMainStore = defineStore('main', () => {
   }
 
   async function fetchAuthors() {
-    return fetchList<Authors>('./authors.json', 'Failed to load authors', authorsCount)
+    return fetchList<Authors>('./authors.json', 'Failed to load authors', authorsCount, authors)
   }
 
   function fetchAuthor(id: string) {
@@ -91,7 +101,12 @@ export const useMainStore = defineStore('main', () => {
   }
 
   async function fetchLCCShelves() {
-    return fetchList<LCCShelves>('./lcc_shelves.json', 'Failed to load LCC shelves', shelvesCount)
+    return fetchList<LCCShelves>(
+      './lcc_shelves.json',
+      'Failed to load LCC shelves',
+      shelvesCount,
+      shelves
+    )
   }
 
   function fetchLCCShelf(code: string) {

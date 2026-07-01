@@ -162,7 +162,7 @@ def process_files(
             try:
                 if file_path.samefile(Path(__file__)):
                     continue
-            except (OSError, ValueError):
+            except OSError, ValueError:
                 pass
 
             keys = extract_keys_from_file(file_path, file_type)
