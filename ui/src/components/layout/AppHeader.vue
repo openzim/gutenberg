@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { TYPOGRAPHY } from '@/constants/theme'
@@ -9,13 +9,13 @@ const route = useRoute()
 
 const drawer = ref(false)
 
-const navItems = [
+const navItems = computed(() => [
   { title: t('nav.home'), to: '/' },
   { title: t('nav.books'), to: '/books' },
   { title: t('nav.authors'), to: '/authors' },
   { title: t('nav.shelves'), to: '/lcc-shelves' },
   { title: t('nav.about'), to: '/about' }
-]
+])
 
 function isActive(path: string): boolean {
   if (path === '/') {

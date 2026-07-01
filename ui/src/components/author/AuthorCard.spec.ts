@@ -17,9 +17,9 @@ vi.mock('vue-i18n', () => ({
       }
       if (key === 'author.viewAuthor') {
         const p = params as Record<string, unknown>
-        const count = typeof p.n === 'number' ? p.n : 0
+        const bookCount = String(p.bookCount || '')
         const name = String(p.name || '')
-        return `View author: ${name} with ${count} ${count === 1 ? 'book' : 'books'}`
+        return `View author: ${name} (${bookCount})`
       }
       return key
     }
@@ -96,7 +96,7 @@ describe('AuthorCard', () => {
       })
 
       const link = wrapper.find('.author-card')
-      expect(link.attributes('aria-label')).toBe('View author: Jane Austen with 42 books')
+      expect(link.attributes('aria-label')).toBe('View author: Jane Austen (42 books)')
     })
   })
 

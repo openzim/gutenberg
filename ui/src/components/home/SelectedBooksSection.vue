@@ -82,6 +82,7 @@ function goToAuthor(id: string) {
           </button>
 
           <button
+            v-if="mostDownloaded.author"
             class="featured-book__author-button"
             @click="goToAuthor(mostDownloaded.author.id)"
           >

@@ -1,7 +1,17 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 export function useCarousel<T>(items: () => T[], cardsPerView: number = 5) {
   const offset = ref(0)
+
+  watch(
+    () => items().length,
+    (length) => {
+      const maxOffset = Math.max(0, length - cardsPerView)
+      if (offset.value > maxOffset) {
+        offset.value = maxOffset
+      }
+    }
+  )
 
   const visibleItems = computed(() => {
     const start = offset.value
