@@ -10,63 +10,159 @@
 	"language": "简体中文",
 	"isocode": "zh-hans",
 	"nav": {
-		"home": "主页"
+		"home": "主页",
+		"authors": "作者",
+		"shelves": "书架",
+		"about": "关于"
 	},
 	"home": {
 		"title": "古腾堡计划图书馆",
 		"subtitle": "第一个免费电子书的制作者"
 	},
 	"about": {
+		"title": "关于古腾堡计划",
 		"offers": "古腾堡计划提供超过60,000本免费电子书",
 		"choose": "在免费的epub书籍、免费的kindle书籍中进行选择。 下载它们或在线阅读。",
 		"qualityTitle": "我们提供高质量的电子书",
 		"qualityDesc": "我们所有的电子书都是由正规出版商出版的。 我们在数千名志愿者的帮助下将它们数字化并认真校对。",
-		"collectionDesc3": "该系列通过Kiwix离线提供，允许您在没有互联网连接的情况下访问这些文学作品。"
+		"collectionStats": "收藏统计数据",
+		"collectionTitle": "关于本收藏",
+		"collectionDesc1": "这个离线收藏集收录了来自古腾堡计划的精选书籍，古腾堡计划是第一个也是最大的免费电子书收藏集。",
+		"collectionDesc2": "古腾堡计划由迈克尔·S·哈特于1971年创立，是历史最悠久的数字图书馆。古腾堡计划的使命是鼓励电子书的创作和传播。",
+		"collectionDesc3": "该系列通过Kiwix离线提供，允许您在没有互联网连接的情况下访问这些文学作品。",
+		"linksTitle": "链接",
+		"linkGutenberg": "古腾堡计划网站",
+		"linkGutenbergDesc": "访问古腾堡计划官方网站",
+		"linkKiwix": "Kiwix",
+		"linkKiwixDesc": "了解更多关于Kiwix离线内容的信息"
+	},
+	"stats": {
+		"books": "书籍",
+		"authors": "作者",
+		"shelves": "LCC书架"
+	},
+	"authors": {
+		"title": "作者",
+		"description": "浏览古腾堡收藏中的所有作者"
 	},
 	"shelves": {
-		"title": "书架（A-Z）"
+		"title": "书架（A-Z）",
+		"description": "浏览按美国国会图书馆分类法 (LCC) 系统组织的图书"
 	},
 	"book": {
 		"title": "标题",
 		"author": "作者",
+		"lifespan": "寿命",
 		"popularity": "流行度",
+		"downloads": "下载",
+		"downloadsCount": "下载次数：{count} | 下载次数：{count}",
+		"downloadCount": "下载次数",
 		"languages": "语言",
+		"lccShelf": "LCC书架",
 		"license": "许可协议",
 		"licensePd": "在美国属于公共领域。",
 		"licenseCopyright": "受版权保护。详情请阅读本书内的版权声明。",
+		"description": "描述",
+		"availableFormats": "可用格式",
+		"fullName": "全名",
+		"worksAvailable": "现有作品",
+		"unknown": "未知",
 		"cover": "书籍封面",
 		"coverLabel": "（封面）",
 		"anonymous": "匿名用户",
 		"various": "各种各样的"
 	},
+	"author": {
+		"bookCount": "{n}本书| {n}本书",
+		"booksByAuthor": "{name} 的著作",
+		"fullName": "全名",
+		"lifespan": "寿命",
+		"worksAvailable": "现有作品"
+	},
 	"shelf": {
-		"booksInShelf": "按书架浏览"
+		"classificationCode": "分类代码",
+		"booksInShelf": "按书架浏览",
+		"booksIn": "书籍位于",
+		"booksInTitle": "书籍位于{shelf}",
+		"bookCount": "{n}本书| {n}本书"
 	},
 	"common": {
 		"loading": "加载中...",
+		"loadingBook": "正在加载图书详情……",
+		"loadingAuthor": "正在加载作者信息……",
+		"loadingShelf": "正在加载书架详情……",
+		"loadingStats": "正在加载统计数据……",
+		"loadingItems": "正在加载{type}...",
+		"showing": "显示",
+		"of": "/",
 		"search": "搜索",
 		"searchAuthors": "按作者姓名搜索",
 		"searchAuthorsByName": "按作者姓名搜索",
 		"searchShelf": "书架搜索",
+		"searchShelfAria": "按代码或名称搜索LCC书籍",
+		"clear": "清除",
+		"all": "全部",
+		"clearAllSelections": "清除所有选择",
+		"selectAll": "全选",
 		"sort": "排序：",
+		"sortBy": "排序方式",
 		"sortPopularity": "按受欢迎程度对书籍进行排序",
 		"sortTitle": "按标题对书籍进行排序",
 		"language": "语言",
+		"bookLanguages": "书籍语言",
 		"chooseLanguage": "选择语言...",
 		"mainLanguages": "主要语言",
 		"otherLanguages": "其他语言",
 		"anyCatalog": "选择目录",
 		"format": "格式",
 		"uiLanguage": "界面语言",
+		"selectInterfaceLanguage": "选择界面语言",
+		"filterBy": "筛选条件",
+		"filterByTitle": "按{title}筛选",
 		"filter": "过滤器：",
-		"returnHome": "回到主页"
+		"selected": "选定",
+		"gridView": "网格视图",
+		"listView": "列表视图",
+		"browseAll": "浏览全部",
+		"browseAllShelves": "浏览所有书架",
+		"browseAllAuthors": "浏览所有作者",
+		"returnHome": "回到主页",
+		"toggleNavigationMenu": "切换导航菜单",
+		"mainNavigation": "主导航",
+		"mobileNavigationMenu": "移动导航菜单",
+		"mobileNavigation": "移动导航",
+		"footerLinks": "页脚链接",
+		"toggleSortOptions": "切换排序选项",
+		"navigateTo": "导航至",
+		"navigateToItem": "导航至 {item}",
+		"opensInNewTab": "在新标签页中打开",
+		"gutenbergHome": "古腾堡计划首页"
 	},
 	"messages": {
-		"noBooks": "表格内没有可用数据"
+		"noBooks": "表格内没有可用数据",
+		"noAuthors": "未找到作者。",
+		"noShelves": "未找到书架。",
+		"noBooksForAuthor": "该作者暂无作品可供查阅。",
+		"noBooksInShelf": "此书架上没有书籍。",
+		"noLanguages": "没有可用的语言。",
+		"noFormats": "暂无可用格式。",
+		"notFoundBook": "找不到书籍。您要查找的书籍不存在或已被移除。",
+		"notFoundAuthor": "未找到作者。您要查找的作者不存在或已被删除。",
+		"notFoundShelf": "未找到LCC书架。您要查找的书架不存在或已被移除。"
 	},
 	"metadata_defaults": {
 		"title": "古腾堡计划图书馆",
 		"description": "所有书籍均为简体中文，来自首家免费电子书制作商"
+	},
+	"footer": {
+		"tagline": "古腾堡计划",
+		"subtitle": "免费电子书",
+		"powered": "Kiwix提供离线访问支持"
+	},
+	"itemTypes": {
+		"books": "书籍|书籍",
+		"authors": "作者|作者",
+		"shelves": "书架|书架"
 	},
 	"lccShelves": {
 		"A": "A-总类",
