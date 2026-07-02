@@ -9,22 +9,13 @@
 		"authors": "مصنف",
 		"about": "تعارف"
 	},
-	"about": {
-		"linkKiwix": "کیویکس"
-	},
-	"stats": {
-		"books": "کتاباں"
-	},
 	"book": {
 		"title": "کتاباں",
 		"languages": "زبان(اں)",
-		"description": "تفصیل",
 		"anonymous": "گمنام"
 	},
 	"common": {
-		"all": "یکے",
 		"sortTitle": "عنوان",
-		"filter": "چھاݨاں",
 		"listView": "تندیر نظارہ"
 	}
 }

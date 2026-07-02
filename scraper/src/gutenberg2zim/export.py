@@ -1,12 +1,13 @@
 import io
 import urllib.parse
+import warnings
 import zipfile
 from collections.abc import Iterable
 from dataclasses import asdict
 from pathlib import Path
 
 import bs4
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, Tag, XMLParsedAsHTMLWarning
 from jinja2 import Environment, PackageLoader
 from PIL.Image import open as pilopen
 from zimscraperlib.image.optimization import (
@@ -48,6 +49,8 @@ from gutenberg2zim.utils import (
     read_file,
     save_file,
 )
+
+warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 jinja_env = Environment(  # noqa: S701
     loader=PackageLoader("gutenberg2zim", "templates")
@@ -725,15 +728,16 @@ def _get_authors_with_books() -> list[Author]:
     return list(authors_dict.values())
 
 
-def _author_to_preview(author: Author) -> AuthorPreview:
+def _author_to_preview(
+    author: Author, author_stats: dict[str, tuple[int, int]]
+) -> AuthorPreview:
     """Convert Author dataclass to AuthorPreview schema"""
-    book_count = sum(
-        1 for book in repository.get_all_books() if book.author.gut_id == author.gut_id
-    )
+    book_count, total_popularity = author_stats.get(author.gut_id, (0, 0))
     return AuthorPreview(
         id=author.gut_id,
         name=author.name(),
         book_count=book_count,
+        total_popularity=total_popularity,
     )
 
 
@@ -749,18 +753,22 @@ def _author_to_schema(author: Author) -> AuthorSchema:
     )
 
 
-def _book_to_preview(book: Book) -> BookPreview:
+def _book_to_preview(
+    book: Book, formats: list[str], author_stats: dict[str, tuple[int, int]]
+) -> BookPreview:
     """Convert Book dataclass to BookPreview schema"""
     cover_path = f"covers/{book.book_id}_cover_image.webp" if book.has_cover else None
 
     return BookPreview(
         id=book.book_id,
         title=book.title,
-        author=_author_to_preview(book.author),
+        author=_author_to_preview(book.author, author_stats),
         languages=book.languages,
         popularity=book.popularity,
         cover_path=cover_path,
         lcc_shelf=book.lcc_shelf,
+        available_formats=book.requested_formats(formats),
+        description=book.description,
     )
 
 
@@ -805,19 +813,20 @@ def _book_to_schema(book: Book, formats: list[str]) -> BookSchema:
         lcc_shelf=book.lcc_shelf,
         cover_path=cover_path,
         formats=book_formats,
-        description=None,
+        description=book.description,
     )
 
 
-def _lcc_shelf_to_preview(shelf_code: str) -> LCCShelfPreview:
+def _lcc_shelf_to_preview(shelf_code: str, all_books: list[Book]) -> LCCShelfPreview:
     """Convert LCC shelf code to LCCShelfPreview schema"""
-    book_count = sum(
-        1 for book in repository.get_all_books() if book.lcc_shelf == shelf_code
-    )
+    shelf_books = [book for book in all_books if book.lcc_shelf == shelf_code]
+    book_count = len(shelf_books)
+    total_popularity = sum(book.popularity for book in shelf_books)
     return LCCShelfPreview(
         code=shelf_code,
         name=None,
         book_count=book_count,
+        total_popularity=total_popularity,
     )
 
 
@@ -867,9 +876,18 @@ def generate_json_files(
     all_books = repository.get_all_books()
     all_authors = _get_authors_with_books()
 
+    # Build author stats once for O(1) lookups
+    author_stats: dict[str, tuple[int, int]] = {}
+    for book in all_books:
+        gut_id = book.author.gut_id
+        count, pop = author_stats.get(gut_id, (0, 0))
+        author_stats[gut_id] = (count + 1, pop + book.popularity)
+
     logger.info("Generating high-level JSON files")
     logger.debug("Generating books.json")
-    books_preview = [_book_to_preview(book) for book in all_books]
+    books_preview = [
+        _book_to_preview(book, formats, author_stats) for book in all_books
+    ]
     books_collection = Books(books=books_preview, total_count=len(books_preview))
     Global.add_item_for(
         path="books.json",
@@ -879,7 +897,9 @@ def generate_json_files(
     )
 
     logger.debug("Generating authors.json")
-    authors_preview = [_author_to_preview(author) for author in all_authors]
+    authors_preview = [
+        _author_to_preview(author, author_stats) for author in all_authors
+    ]
     authors_collection = Authors(
         authors=authors_preview, total_count=len(authors_preview)
     )
@@ -893,7 +913,7 @@ def generate_json_files(
     if add_lcc_shelves:
         logger.debug("Generating lcc_shelves.json")
         shelves_preview = [
-            _lcc_shelf_to_preview(shelf_code)
+            _lcc_shelf_to_preview(shelf_code, all_books)
             for shelf_code in repository.get_lcc_shelves()
         ]
         shelves_collection = LCCShelves(
@@ -953,7 +973,7 @@ def generate_json_files(
     logger.debug("Generating author detail files and index entries")
     for author in all_authors:
         author_books = [
-            _book_to_preview(book)
+            _book_to_preview(book, formats, author_stats)
             for book in all_books
             if book.author.gut_id == author.gut_id
         ]
@@ -1004,7 +1024,7 @@ def generate_json_files(
         logger.debug("Generating LCC shelf detail files and index entries")
         for shelf_code in repository.get_lcc_shelves():
             shelf_books = [
-                _book_to_preview(book)
+                _book_to_preview(book, formats, author_stats)
                 for book in all_books
                 if book.lcc_shelf == shelf_code
             ]

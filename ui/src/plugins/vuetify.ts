@@ -6,8 +6,20 @@ import type { Config } from '@/types/Config'
 import { THEME_COLORS } from '@/constants/theme'
 
 async function loadVuetify() {
-  let primaryColor: string = THEME_COLORS.PRIMARY
-  let secondaryColor: string = THEME_COLORS.SECONDARY
+  const PRIMARY = '#1976D2'
+  const SECONDARY = '#424242'
+  const ACCENT = '#82B1FF'
+  const ERROR = '#D32F2F'
+  const INFO = '#1976D2'
+  const SUCCESS = '#388E3C'
+  const WARNING = '#F57C00'
+  const BACKGROUND_LIGHT = '#FFFFFF'
+  const BACKGROUND_DARK = '#121212'
+  const SURFACE_LIGHT = '#FAFAFA'
+  const SURFACE_DARK = '#1E1E1E'
+
+  let primaryColor: string = PRIMARY
+  let secondaryColor: string = SECONDARY
 
   try {
     const response = await axios.get<Config>('./config.json')
@@ -20,28 +32,63 @@ async function loadVuetify() {
   const sharedColors = {
     primary: primaryColor,
     secondary: secondaryColor,
-    accent: THEME_COLORS.ACCENT,
-    error: THEME_COLORS.ERROR,
-    info: THEME_COLORS.INFO,
-    success: THEME_COLORS.SUCCESS,
-    warning: THEME_COLORS.WARNING
+    accent: ACCENT,
+    error: ERROR,
+    info: INFO,
+    success: SUCCESS,
+    warning: WARNING,
+    format: THEME_COLORS.FORMAT,
+    star: THEME_COLORS.STAR,
+    title: THEME_COLORS.TITLE,
+    author: THEME_COLORS.AUTHOR,
+    authorFocus: THEME_COLORS.AUTHOR_FOCUS,
+    description: THEME_COLORS.DESCRIPTION,
+    focusBook: THEME_COLORS.FOCUS_BOOK,
+    menuActive: THEME_COLORS.MENU_ACTIVE,
+    shelfIcon: THEME_COLORS.SHELF_ICON,
+    bgd1: THEME_COLORS.BGD_1,
+    bgd2: THEME_COLORS.BGD_2,
+    bgd3Fill: THEME_COLORS.BGD_3_FILL,
+    bgd3Outline: THEME_COLORS.BGD_3_OUTLINE,
+    text: THEME_COLORS.TEXT,
+    grid: THEME_COLORS.GRID
+  }
+
+  const lightColors = {
+    ...sharedColors,
+    grid: THEME_COLORS.GRID,
+    text: THEME_COLORS.TEXT,
+    bgd3Fill: THEME_COLORS.BGD_3_FILL,
+    bgd3Outline: THEME_COLORS.BGD_3_OUTLINE
+  }
+
+  const darkColors = {
+    ...sharedColors,
+    grid: THEME_COLORS.GRID_DARK,
+    text: THEME_COLORS.TEXT_DARK,
+    bgd1: THEME_COLORS.BGD_1_DARK,
+    bgd2: THEME_COLORS.BGD_2_DARK,
+    bgd3Fill: THEME_COLORS.BGD_3_FILL_DARK,
+    bgd3Outline: THEME_COLORS.BGD_3_OUTLINE_DARK,
+    focusBook: THEME_COLORS.FOCUS_BOOK_DARK,
+    shelfIcon: THEME_COLORS.SHELF_ICON_DARK
   }
 
   const lightTheme: ThemeDefinition = {
     dark: false,
     colors: {
-      background: THEME_COLORS.BACKGROUND_LIGHT,
-      surface: THEME_COLORS.SURFACE_LIGHT,
-      ...sharedColors
+      background: BACKGROUND_LIGHT,
+      surface: SURFACE_LIGHT,
+      ...lightColors
     }
   }
 
   const darkTheme: ThemeDefinition = {
     dark: true,
     colors: {
-      background: THEME_COLORS.BACKGROUND_DARK,
-      surface: THEME_COLORS.SURFACE_DARK,
-      ...sharedColors
+      background: BACKGROUND_DARK,
+      surface: SURFACE_DARK,
+      ...darkColors
     }
   }
 

@@ -10,66 +10,31 @@
 		"shelves": "Riiulid",
 		"about": "Teave"
 	},
-	"about": {
-		"title": "Teave Project Gutenbergi kohta",
-		"collectionStats": "Kogu statistika",
-		"linksTitle": "Lingid",
-		"linkGutenberg": "Projekti Gutenberg veebisait"
-	},
-	"stats": {
-		"books": "Raamatud",
-		"authors": "Autorid"
-	},
-	"authors": {
-		"title": "Autorid",
-		"description": "Sirvi kõiki Gutenbergi kogu autoreid"
-	},
 	"book": {
 		"title": "Raamatud",
 		"downloads": "allalaadimised",
-		"downloadsCount": "{count} allalaadimine | {count} allalaadimist",
 		"downloadCount": "Allalaadimiste arv",
 		"languages": "Keel(ed)",
 		"lccShelf": "LCC riiul",
-		"description": "Kirjeldus",
-		"availableFormats": "Saadaolevad vormingud",
 		"fullName": "Täisnimi",
 		"unknown": "Tundmatu"
 	},
 	"author": {
-		"bookCount": "{n} raamat | {n} raamatut",
-		"fullName": "Täisnimi"
-	},
-	"shelf": {
-		"booksInShelf": "Raamatud selles riiulis",
-		"booksInTitle": "Raamatud riiulil {shelf}"
+		"bookCount": "{n} raamat | {n} raamatut"
 	},
 	"common": {
 		"loadingAuthor": "Autori info laadimine...",
-		"loadingStats": "Statistika laadimine...",
 		"loadingItems": "Laadimine {type}...",
-		"searchAuthors": "Otsi autoreid",
-		"clear": "Tühjenda",
-		"all": "Kõik",
-		"clearAllSelections": "Tühjenda kõik valikud",
-		"selectAll": "Vali kõik",
-		"sort": "Sorteeri",
 		"sortBy": "Sorteeri",
 		"sortPopularity": "Populaarsus",
-		"bookLanguages": "Raamatu keeled",
 		"uiLanguage": "Kasutajaliidese keel",
 		"selectInterfaceLanguage": "Vali kasutajaliidese keel",
-		"filter": "filter",
-		"selected": "valitud",
 		"gridView": "Ruudustikuvaade",
 		"listView": "Loendivaade",
 		"browseAll": "Sirvi kõiki",
-		"browseAllShelves": "Sirvi kõiki riiuleid",
 		"browseAllAuthors": "Sirvi kõiki autoreid",
 		"returnHome": "Tagasi avalehele",
-		"toggleNavigationMenu": "Navigeerimismenüü avamine/sulgemine",
-		"footerLinks": "Jaluse lingid",
-		"toggleSortOptions": "Sorteerimisvalikute sisse/välja lülitamine"
+		"toggleNavigationMenu": "Navigeerimismenüü avamine/sulgemine"
 	},
 	"messages": {
 		"noBooks": "Raamatuid ei leitud.",

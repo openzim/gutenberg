@@ -7,13 +7,11 @@
 	"language": "Հայերեն",
 	"book": {
 		"title": "Գրքեր",
-		"author": "Հեղինակ",
 		"license": "Արտոնագիր",
 		"cover": "Գրքի շապիկ"
 	},
 	"common": {
 		"search": "Որոնել",
-		"language": "Լեզու",
 		"chooseLanguage": "Ընտրեք լեզուն",
 		"otherLanguages": "Այլ լեզուներ"
 	}

@@ -122,7 +122,7 @@ def extract_keys_from_file(file_path: Path, file_type: str) -> set[str]:
     content = file_path.read_text(encoding="utf-8")
 
     patterns = {
-        "vue": r't\s*\(\s*["\']([^"\']+)["\']',
+        "vue": r'\bt\s*\(\s*["\']([^"\']+)["\']',
         "python": r'i18n\.t\s*\(\s*["\']([^"\']+)["\']',
         "html": r'data-l10n-id\s*=\s*["\']([^"\']+)["\']',
     }
@@ -162,7 +162,7 @@ def process_files(
             try:
                 if file_path.samefile(Path(__file__)):
                     continue
-            except (OSError, ValueError):
+            except OSError, ValueError:
                 pass
 
             keys = extract_keys_from_file(file_path, file_type)

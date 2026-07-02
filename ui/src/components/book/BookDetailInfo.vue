@@ -1,165 +1,516 @@
 <script setup lang="ts">
 import type { Book } from '@/types'
+import { ref, computed } from 'vue'
 import { useFormatters } from '@/composables/useFormatters'
-import BookCoverImage from '@/components/common/BookCoverImage.vue'
+import { normalizeImagePath, formatDownloads, formatLabel } from '@/utils/format-utils'
 import { useI18n } from 'vue-i18n'
+import { TYPOGRAPHY } from '@/constants/theme'
+import StarRating from '@/components/common/StarRating.vue'
 
 const { t } = useI18n()
-const { getPopularityStars, formatDownloads, formatLanguages, formatAuthorLifespan } =
-  useFormatters()
+const { formatLanguages } = useFormatters()
 
-defineProps<{
+const props = defineProps<{
   book: Book
 }>()
+
+function orderedFormats(order: string[]) {
+  return order
+    .map((fmt) => props.book.formats.find((f) => f.format === fmt))
+    .filter((f): f is NonNullable<typeof f> => !!f)
+}
+
+const viewFormats = computed(() => orderedFormats(['html']))
+const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
+
+const showFullDescription = ref(false)
+
+const shouldTruncate = computed(() => {
+  if (!props.book.description) return false
+  return props.book.description.length > 280
+})
+
+const shelfDisplayName = computed(() => {
+  if (!props.book.lccShelf) return null
+  return t(`lccShelves.${props.book.lccShelf}`)
+})
 </script>
 
 <template>
-  <v-card>
-    <v-row no-gutters>
-      <v-col cols="12" md="4" lg="3">
-        <book-cover-image
-          :cover-path="book.coverPath"
-          :alt="`${book.title} cover`"
-          :size="120"
-          class="book-cover"
+  <div class="book-detail-wrapper">
+    <div class="book-detail-grid">
+      <div class="cover-cell">
+        <img
+          v-if="book.coverPath"
+          :src="normalizeImagePath(book.coverPath)"
+          :alt="`${book.title} ${t('book.coverLabel')}`"
+          class="detail-cover"
         />
-      </v-col>
+      </div>
 
-      <v-col cols="12" md="8" lg="9">
-        <v-card-title class="text-h4 text-wrap" style="word-break: break-word; white-space: normal">
+      <div class="info-cell">
+        <h1 class="book-title mb-2">
           {{ book.title }}
-        </v-card-title>
+        </h1>
 
-        <v-card-subtitle
-          v-if="book.subtitle"
-          class="text-h6 mb-2 text-wrap"
-          style="word-break: break-word; white-space: normal"
-        >
-          {{ book.subtitle }}
-        </v-card-subtitle>
+        <!-- Desktop: stars + author on same row, above description -->
+        <div class="stars-author-row stars-author-row--desktop mb-6">
+          <star-rating :popularity="book.popularity" class="mr-3" />
+          <router-link
+            v-if="book.author?.id"
+            :to="`/author/${book.author.id}`"
+            class="inter-13 text-decoration-underline author-name"
+          >
+            {{ book.author.name }}
+          </router-link>
+          <span v-else class="inter-13 author-name">{{
+            book.author?.name || t('book.unknown')
+          }}</span>
+        </div>
 
-        <v-card-text>
-          <v-list lines="one" density="compact">
-            <v-list-item>
-              <template v-slot:prepend>
-                <v-icon icon="mdi-account" />
-              </template>
-              <v-list-item-title>
-                <router-link
-                  v-if="book.author?.id"
-                  :to="`/author/${book.author.id}`"
-                  class="text-primary"
-                >
-                  {{ book.author.name }}
-                </router-link>
-                <span v-else>{{ book.author?.name || t('book.unknown') }}</span>
-              </v-list-item-title>
-              <v-list-item-subtitle>{{ t('book.author') }}</v-list-item-subtitle>
-            </v-list-item>
+        <!-- Mobile: author only, above description -->
+        <div class="stars-author-row stars-author-row--mobile mb-2">
+          <router-link
+            v-if="book.author?.id"
+            :to="`/author/${book.author.id}`"
+            class="inter-13 text-decoration-underline author-name"
+          >
+            {{ book.author.name }}
+          </router-link>
+          <span v-else class="inter-13 author-name">{{
+            book.author?.name || t('book.unknown')
+          }}</span>
+        </div>
 
-            <v-list-item v-if="book.author.birthYear || book.author.deathYear">
-              <template v-slot:prepend>
-                <v-icon icon="mdi-calendar" />
-              </template>
-              <v-list-item-title>
-                {{ formatAuthorLifespan(book.author.birthYear, book.author.deathYear) }}
-              </v-list-item-title>
-              <v-list-item-subtitle>{{ t('book.lifespan') }}</v-list-item-subtitle>
-            </v-list-item>
+        <div v-if="book.description" class="book-desc-wrapper mb-6">
+          <p
+            class="book-desc text-medium-emphasis"
+            :class="{ 'book-desc--truncated': !showFullDescription }"
+          >
+            {{ book.description }}
+          </p>
+          <button
+            v-if="shouldTruncate"
+            class="read-more-btn mobile-only"
+            @click="showFullDescription = !showFullDescription"
+          >
+            {{ showFullDescription ? t('common.showLess') : t('common.readMore') }}
+          </button>
+        </div>
 
-            <v-list-item>
-              <template v-slot:prepend>
-                <v-icon icon="mdi-star" />
-              </template>
-              <v-list-item-title class="text-warning">
-                {{ getPopularityStars(book.popularity) }}
-              </v-list-item-title>
-              <v-list-item-subtitle>{{ t('book.popularity') }}</v-list-item-subtitle>
-            </v-list-item>
+        <!-- Mobile: stars below description -->
+        <div class="stars-row-mobile mb-6">
+          <star-rating :popularity="book.popularity" />
+        </div>
 
-            <v-list-item>
-              <template v-slot:prepend>
-                <v-icon icon="mdi-download" />
-              </template>
-              <v-list-item-title>
-                {{ t('book.downloadsCount', { count: formatDownloads(book.downloads) }) }}
-              </v-list-item-title>
-              <v-list-item-subtitle>{{ t('book.downloadCount') }}</v-list-item-subtitle>
-            </v-list-item>
+        <!-- Desktop-only meta (inside info-cell) -->
+        <div class="meta-desktop">
+          <v-row class="meta-row mb-4">
+            <v-col cols="4">
+              <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
+              <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
+            </v-col>
+            <v-col cols="4">
+              <div class="inter-13 text-medium-emphasis">
+                {{ t('book.downloadCount') }}
+              </div>
+              <div class="inter-13">{{ formatDownloads(book.downloads) }}</div>
+            </v-col>
+            <v-col cols="4">
+              <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
+              <div class="inter-13">{{ book.license }}</div>
+            </v-col>
+          </v-row>
 
-            <v-list-item>
-              <template v-slot:prepend>
-                <v-icon icon="mdi-translate" />
-              </template>
-              <v-list-item-title>
-                {{ formatLanguages(book.languages) }}
-              </v-list-item-title>
-              <v-list-item-subtitle>{{ t('book.languages') }}</v-list-item-subtitle>
-            </v-list-item>
+          <div v-if="book.lccShelf">
+            <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.lccShelf') }}</div>
+            <router-link
+              :to="{ path: '/lcc-shelves', query: { shelf: book.lccShelf } }"
+              class="inter-13 text-decoration-underline shelf-link"
+            >
+              {{ shelfDisplayName }}
+            </router-link>
+          </div>
+        </div>
+      </div>
 
-            <v-list-item v-if="book.lccShelf">
-              <template v-slot:prepend>
-                <v-icon icon="mdi-bookshelf" />
-              </template>
-              <v-list-item-title>
-                <router-link :to="`/lcc-shelf/${book.lccShelf}`" class="text-primary">
-                  {{ book.lccShelf }}
-                </router-link>
-              </v-list-item-title>
-              <v-list-item-subtitle>{{ t('book.lccShelf') }}</v-list-item-subtitle>
-            </v-list-item>
+      <!-- Mobile-only meta (full width row) -->
+      <div class="meta-cell">
+        <v-row class="meta-row mb-4">
+          <v-col cols="4">
+            <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
+            <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
+          </v-col>
+          <v-col cols="4">
+            <div class="inter-13 text-medium-emphasis">{{ t('book.downloadCount') }}</div>
+            <div class="inter-13">{{ formatDownloads(book.downloads) }}</div>
+          </v-col>
+          <v-col cols="4">
+            <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
+            <div class="inter-13">{{ book.license }}</div>
+          </v-col>
+        </v-row>
 
-            <v-list-item>
-              <template v-slot:prepend>
-                <v-icon icon="mdi-license" />
-              </template>
-              <v-list-item-title>{{ book.license }}</v-list-item-title>
-              <v-list-item-subtitle>{{ t('book.license') }}</v-list-item-subtitle>
-            </v-list-item>
-          </v-list>
+        <div v-if="book.lccShelf">
+          <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.lccShelf') }}</div>
+          <router-link
+            :to="{ path: '/lcc-shelves', query: { shelf: book.lccShelf } }"
+            class="inter-13 text-decoration-underline shelf-link"
+          >
+            {{ shelfDisplayName }}
+          </router-link>
+        </div>
+      </div>
 
-          <v-divider class="my-4" />
-
-          <div v-if="book.description" class="mb-4">
-            <h3 class="text-h6 mb-2">{{ t('book.description') }}</h3>
-            <p class="text-body-2">{{ book.description }}</p>
+      <div class="actions-cell">
+        <div class="format-row">
+          <div class="format-group">
+            <span class="action-label">{{ t('book.view') }}</span>
+            <v-btn
+              v-for="fmt in viewFormats"
+              v-show="fmt.available"
+              :key="`view-${fmt.format}`"
+              :href="fmt.path"
+              variant="outlined"
+              :elevation="0"
+              size="small"
+              rounded="md"
+              class="text-none format-btn"
+            >
+              {{ formatLabel(fmt.format) }}
+            </v-btn>
           </div>
 
-          <h3 class="text-h6 mb-2">{{ t('book.availableFormats') }}</h3>
-          <v-chip-group>
-            <v-chip
-              v-for="format in book.formats"
-              :key="format.format"
-              :href="format.path"
-              :disabled="!format.available"
-              color="primary"
+          <div class="format-group">
+            <span class="action-label">{{ t('book.download') }}</span>
+            <v-btn
+              v-for="fmt in downloadFormats"
+              v-show="fmt.available"
+              :key="`dl-${fmt.format}`"
+              :href="fmt.path"
               variant="outlined"
-              prepend-icon="mdi-download"
+              :elevation="0"
+              size="small"
+              rounded="md"
+              class="text-none format-btn"
             >
-              {{ format.format.toUpperCase() }}
-            </v-chip>
-          </v-chip-group>
-        </v-card-text>
-      </v-col>
-    </v-row>
-  </v-card>
+              {{ formatLabel(fmt.format) }}
+            </v-btn>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.book-cover {
-  max-width: 260px;
+.book-detail-wrapper {
+  position: relative;
+}
+
+.book-detail-wrapper::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-top: 1px solid rgb(var(--v-theme-grid));
+  bottom: 0;
+}
+
+.book-detail-grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    'cover info'
+    'cover actions';
+  max-width: 1102px;
   margin-inline: auto;
 }
 
-@media (min-width: 960px) {
-  .book-cover {
-    min-height: 360px;
-  }
+.cover-cell {
+  grid-area: cover;
+  padding: 0 1.5rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  border-right: 1px solid rgb(var(--v-theme-grid));
 }
 
-@media (max-width: 959px) {
-  .book-cover {
-    max-height: 60vh;
+.info-cell {
+  grid-area: info;
+  padding: 0 1.5rem 1.5rem;
+  position: relative;
+}
+
+.info-cell::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  border-top: 1px solid rgb(var(--v-theme-grid));
+}
+
+.meta-desktop {
+  display: block;
+}
+
+.meta-cell {
+  display: none;
+  grid-area: meta;
+  padding: 0.75rem 1.5rem;
+}
+
+.actions-cell {
+  grid-area: actions;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Typography shared class */
+.inter-13 {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.H3_SIZE);
+}
+
+.book-title {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.H1_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.H1_SIZE);
+  line-height: 1.3;
+  word-break: break-word;
+  color: rgb(var(--v-theme-title));
+  margin-top: 1.5rem;
+}
+
+.book-desc {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.DESCRIPTION_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.DESCRIPTION_SIZE);
+  line-height: 1.6;
+  color: rgb(var(--v-theme-description));
+  margin-bottom: 0;
+}
+
+.action-label {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+  line-height: 1;
+}
+
+.format-btn.v-btn {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.DESCRIPTION_SIZE);
+  border-radius: 8px;
+  background-color: rgb(var(--v-theme-bgd3Fill));
+  border-color: rgb(var(--v-theme-bgd3Outline));
+  color: rgb(var(--v-theme-text));
+}
+
+.format-btn.v-btn:hover {
+  background-color: rgb(var(--v-theme-format));
+  color: rgb(var(--v-theme-on-format));
+  border-color: rgb(var(--v-theme-format));
+}
+
+.detail-cover {
+  max-width: 320px;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.stars-author-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stars-author-row--mobile {
+  display: none;
+}
+
+.stars-row-mobile {
+  display: none;
+}
+
+.mobile-only {
+  display: none;
+}
+
+.star-rating {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.format-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 2.5rem;
+}
+
+.format-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.author-name {
+  color: rgb(var(--v-theme-author));
+}
+
+.author-name:hover,
+.author-name:focus {
+  color: rgb(var(--v-theme-authorFocus));
+}
+
+.shelf-link {
+  color: rgb(var(--v-theme-author));
+}
+
+.shelf-link:hover,
+.shelf-link:focus {
+  color: rgb(var(--v-theme-text));
+}
+
+.meta-row {
+  word-break: break-word;
+}
+
+.read-more-btn {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+  color: rgb(var(--v-theme-text));
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 0.5rem;
+  line-height: 1.6;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.read-more-btn:hover,
+.read-more-btn:focus {
+  color: rgb(var(--v-theme-text));
+}
+
+@media (max-width: 979px) {
+  .book-detail-grid {
+    grid-template-columns: 5fr 7fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      'cover info'
+      'meta meta'
+      'actions actions';
+    max-width: 802px;
+  }
+
+  .cover-cell {
+    padding: 0 1rem 1rem;
+  }
+
+  .info-cell {
+    padding: 0 1rem 1rem;
+  }
+
+  .info-cell::after {
+    display: none;
+  }
+
+  .meta-desktop {
+    display: none;
+  }
+
+  .meta-cell {
+    display: block;
+    position: relative;
+    padding: 0.75rem 1rem;
+  }
+
+  .meta-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    border-top: 1px solid rgb(var(--v-theme-grid));
+  }
+
+  .actions-cell {
+    position: relative;
+    padding: 0.75rem 1rem;
+  }
+
+  .actions-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    border-top: 1px solid rgb(var(--v-theme-grid));
+  }
+
+  .detail-cover {
+    max-width: 160px;
+  }
+
+  .inter-13 {
+    font-size: v-bind(TYPOGRAPHY.H3_SIZE_MOBILE);
+  }
+
+  .book-title {
+    font-size: v-bind(TYPOGRAPHY.H1_SIZE_MOBILE);
+  }
+
+  .book-desc {
+    font-size: v-bind(TYPOGRAPHY.DESCRIPTION_SIZE_MOBILE);
+  }
+
+  .action-label {
+    font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE_MOBILE);
+  }
+
+  .star-rating {
+    font-size: 0.875rem;
+  }
+
+  .stars-author-row--desktop {
+    display: none;
+  }
+
+  .stars-author-row--mobile {
+    display: flex;
+  }
+
+  .stars-row-mobile {
+    display: flex;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .book-desc--truncated {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .read-more-btn {
+    font-size: v-bind(TYPOGRAPHY.DESCRIPTION_SIZE_MOBILE);
   }
 }
 </style>

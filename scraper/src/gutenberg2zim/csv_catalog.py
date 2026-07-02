@@ -90,7 +90,7 @@ def load_catalog(csv_path: Path) -> list[CatalogEntry]:
         for row in reader:
             try:
                 book_id = int(row["Text#"])
-            except (ValueError, KeyError):
+            except ValueError, KeyError:
                 logger.warning(f"Invalid book ID in row: {row.get('Text#', 'unknown')}")
                 continue
 

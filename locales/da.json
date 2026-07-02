@@ -9,23 +9,8 @@
 	"nav": {
 		"home": "Hjemmeside"
 	},
-	"home": {
-		"title": "Projekt Gutenberg-biblioteket",
-		"subtitle": "Den første producent af frie og gratis e-bøger"
-	},
-	"about": {
-		"offers": "Projekt Gutenberg tilbyder over 60.000 gratis e-bøger",
-		"choose": "Vælg mellem gratis epub-bøger og gratis Kindle-bøger. Download dem eller læs dem online.",
-		"qualityTitle": "Vi fører e-bøger af høj kvalitet",
-		"qualityDesc": "Alle vores e-bøger er tidligere blevet udgivet af velrenommerede forlag. Vi digitaliserede og korrekturlæste dem med hjælp fra tusindvis af frivillige."
-	},
-	"shelves": {
-		"title": "Bogreoler (A-Z)"
-	},
 	"book": {
 		"title": "Titel",
-		"author": "Forfatter",
-		"popularity": "Popularitet",
 		"languages": "Sprog",
 		"license": "Licens",
 		"licensePd": "Offentligt domæne i USA.",
@@ -35,25 +20,16 @@
 		"anonymous": "Anonym",
 		"various": "Forskellige"
 	},
-	"shelf": {
-		"booksInShelf": "Gennemse efter bogreol"
-	},
 	"common": {
 		"loading": "Indlæser...",
 		"search": "Søg",
-		"searchAuthors": "Søg efter forfatternavn",
-		"searchShelf": "Bogreolsøgning",
-		"sort": "Sortér",
 		"sortPopularity": "Sortér bøger efter popularitet",
 		"sortTitle": "Sortér bøger efter titel",
-		"language": "Sprog",
 		"chooseLanguage": "Vælg et sprog...",
 		"mainLanguages": "Hovedsprog",
 		"otherLanguages": "Andre sprog",
 		"anyCatalog": "Vælg kataloget",
-		"format": "Format",
 		"uiLanguage": "Grænsefladesprog",
-		"filter": "Filter",
 		"returnHome": "Gå hjem"
 	},
 	"messages": {

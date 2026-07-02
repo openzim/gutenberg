@@ -1,12 +1,5 @@
 import { getLanguageName } from '@/utils/language-names'
 
-export function formatAuthorName(firstName: string | null, lastName: string): string {
-  if (firstName) {
-    return `${firstName} ${lastName}`
-  }
-  return lastName
-}
-
 export function formatAuthorLifespan(birthYear: string | null, deathYear: string | null): string {
   if (birthYear && deathYear) {
     return `${birthYear} - ${deathYear}`
@@ -20,6 +13,10 @@ export function formatAuthorLifespan(birthYear: string | null, deathYear: string
   return ''
 }
 
+export function formatLabel(format: string): string {
+  return format === 'epub' ? 'ePUB' : format.toUpperCase()
+}
+
 export function formatDownloads(downloads: number): string {
   if (downloads >= 1000000) {
     return `${(downloads / 1000000).toFixed(1)}M`
@@ -28,11 +25,6 @@ export function formatDownloads(downloads: number): string {
     return `${(downloads / 1000).toFixed(1)}K`
   }
   return downloads.toString()
-}
-
-export function getPopularityStars(popularity: number): string {
-  const clamped = Math.max(0, Math.min(5, Math.floor(popularity)))
-  return '★'.repeat(clamped) + '☆'.repeat(5 - clamped)
 }
 
 export function formatLanguages(languages: string[], options?: { uiLocale?: string }): string {

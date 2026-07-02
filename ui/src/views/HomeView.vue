@@ -2,80 +2,103 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useMainStore } from '@/stores/main'
-import type { BookPreview, SortOption, SortOrder } from '@/types'
-import BookGrid from '@/components/book/BookGrid.vue'
-import BookList from '@/components/book/BookList.vue'
-import CollapsibleFilters from '@/components/common/CollapsibleFilters.vue'
-import EmptyState from '@/components/common/EmptyState.vue'
+import type { LCCShelfPreview, BookPreview, AuthorPreview } from '@/types'
+import PopularShelvesBar from '@/components/home/PopularShelvesBar.vue'
+import PopularShelfBooks from '@/components/home/PopularShelfBooks.vue'
+import SelectedAuthorsCarousel from '@/components/home/SelectedAuthorsCarousel.vue'
+import SelectedBooksSection from '@/components/home/SelectedBooksSection.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import PaginationControl from '@/components/common/PaginationControl.vue'
-import ItemCount from '@/components/common/ItemCount.vue'
-import { usePagination } from '@/composables/usePagination'
-import { useListLoader } from '@/composables/useListLoader'
-import type { Books } from '@/types'
-import { useSorting, type SortConfig } from '@/composables/useSorting'
-import { extractUniqueValues } from '@/utils/format-utils'
 import { LAYOUT } from '@/constants/theme'
-import { MESSAGES } from '@/constants/messages'
 
 const { t } = useI18n()
 const main = useMainStore()
 
-const viewMode = ref<'grid' | 'list'>('grid')
-const selectedLanguages = ref<string[]>([])
-const sortBy = ref<SortOption>('popularity')
-const sortOrder = ref<SortOrder>('desc')
+const shelves = ref<LCCShelfPreview[]>([])
+const shelvesLoading = ref(false)
+const activeShelfCode = ref<string | null>(null)
+const shelfBooks = ref<BookPreview[]>([])
+const shelfBooksLoading = ref(false)
 
-const {
-  items: books,
-  loading: booksLoading,
-  loadItems: loadBooks
-} = useListLoader<BookPreview, Books>(() => main.fetchBooks(), 'books')
+const authors = ref<AuthorPreview[]>([])
+const authorsLoading = ref(false)
 
-const availableLanguages = computed(() =>
-  extractUniqueValues(books.value, (book) => book.languages)
+const books = ref<BookPreview[]>([])
+const booksLoading = ref(false)
+
+const popularShelves = computed(() =>
+  [...shelves.value].sort((a, b) => (b.totalPopularity || 0) - (a.totalPopularity || 0)).slice(0, 6)
 )
 
-const filteredBooks = computed(() => {
-  if (selectedLanguages.value.length === 0) {
-    return books.value
-  }
-  return books.value.filter((book) =>
-    book.languages.some((lang) => selectedLanguages.value.includes(lang))
-  )
-})
-
-const sortOptions: SortConfig<BookPreview>[] = [
-  {
-    value: 'popularity',
-    compare: (a, b) => a.popularity - b.popularity
-  },
-  {
-    value: 'title',
-    compare: (a, b) => a.title.localeCompare(b.title)
-  }
-]
-
-const { sortedItems: sortedBooks } = useSorting(
-  () => filteredBooks.value,
-  sortBy,
-  sortOrder,
-  sortOptions
+const popularAuthors = computed(() =>
+  [...authors.value]
+    .sort((a, b) => (b.totalPopularity || 0) - (a.totalPopularity || 0))
+    .slice(0, 10)
 )
 
-const {
-  currentPage,
-  paginatedItems: paginatedBooks,
-  totalPages,
-  goToPage,
-  resetPage
-} = usePagination(() => sortedBooks.value, 24)
+async function loadShelves() {
+  shelvesLoading.value = true
+  try {
+    const result = await main.fetchLCCShelves()
+    shelves.value = result.shelves
+    const top = popularShelves.value[0]
+    if (top && !activeShelfCode.value) {
+      activeShelfCode.value = top.code
+    }
+  } catch (error) {
+    console.error('Failed to load shelves', error)
+  } finally {
+    shelvesLoading.value = false
+  }
+}
 
-watch([selectedLanguages, sortBy, sortOrder], () => {
-  resetPage()
+async function loadShelfBooks(code: string) {
+  shelfBooksLoading.value = true
+  try {
+    const result = await main.fetchLCCShelf(code)
+    shelfBooks.value = result.books
+  } catch (error) {
+    console.error(`Failed to load shelf books for ${code}`, error)
+    shelfBooks.value = []
+  } finally {
+    shelfBooksLoading.value = false
+  }
+}
+
+async function loadAuthors() {
+  authorsLoading.value = true
+  try {
+    const result = await main.fetchAuthors()
+    authors.value = result.authors
+  } catch (error) {
+    console.error('Failed to load authors', error)
+    authors.value = []
+  } finally {
+    authorsLoading.value = false
+  }
+}
+
+async function loadBooks() {
+  booksLoading.value = true
+  try {
+    const result = await main.fetchBooks()
+    books.value = result.books
+  } catch (error) {
+    console.error('Failed to load books', error)
+    books.value = []
+  } finally {
+    booksLoading.value = false
+  }
+}
+
+watch(activeShelfCode, (newCode) => {
+  if (newCode) {
+    loadShelfBooks(newCode)
+  }
 })
 
 onMounted(() => {
+  loadShelves()
+  loadAuthors()
   loadBooks()
 })
 </script>
@@ -83,70 +106,52 @@ onMounted(() => {
 <template>
   <div class="home-view">
     <v-container>
-      <v-row>
-        <v-col cols="12">
-          <h1 class="text-h3 mb-4">{{ t('home.title') }}</h1>
-          <p class="text-body-1 text-medium-emphasis mb-6">
-            {{ t('home.subtitle') }}
-          </p>
-        </v-col>
-      </v-row>
-
-      <v-row v-if="booksLoading">
+      <v-row v-if="shelvesLoading">
         <v-col cols="12">
           <loading-spinner :message="t('common.loading')" />
         </v-col>
       </v-row>
-
-      <v-row v-else-if="books.length > 0">
-        <v-col cols="12">
-          <div class="d-flex justify-space-between align-center mb-4 flex-wrap gap-3">
-            <item-count :current="paginatedBooks.length" :total="sortedBooks.length" type="books" />
-            <div class="d-flex align-center gap-2">
-              <v-btn-toggle v-model="viewMode" mandatory variant="outlined" density="compact">
-                <v-btn value="grid" icon="mdi-view-grid" :aria-label="t('common.gridView')" />
-                <v-btn value="list" icon="mdi-view-list" :aria-label="t('common.listView')" />
-              </v-btn-toggle>
-            </div>
-          </div>
-
-          <collapsible-filters
-            :languages="availableLanguages"
-            v-model:selected-languages="selectedLanguages"
-            v-model:sort-by="sortBy"
-            v-model:sort-order="sortOrder"
-            class="mb-4"
-          />
-
-          <book-grid v-if="viewMode === 'grid'" :books="paginatedBooks" />
-          <book-list v-else :books="paginatedBooks" />
-
-          <pagination-control
-            v-if="sortedBooks.length > 24"
-            :current-page="currentPage"
-            :total-pages="totalPages"
-            @go-to-page="goToPage"
-          />
-        </v-col>
-      </v-row>
-
-      <v-row v-else>
-        <v-col cols="12">
-          <empty-state :message="t(MESSAGES.NO_BOOKS)" type="info" />
-        </v-col>
-      </v-row>
     </v-container>
+
+    <template v-if="!shelvesLoading && popularShelves.length > 0">
+      <popular-shelves-bar
+        :shelves="popularShelves"
+        :active-code="activeShelfCode"
+        @select="(code) => (activeShelfCode = code)"
+      />
+
+      <v-container>
+        <v-row v-if="shelfBooksLoading">
+          <v-col cols="12">
+            <loading-spinner :message="t('common.loading')" />
+          </v-col>
+        </v-row>
+
+        <v-row v-else-if="activeShelfCode && shelfBooks.length > 0">
+          <v-col cols="12">
+            <popular-shelf-books :books="shelfBooks" />
+          </v-col>
+        </v-row>
+      </v-container>
+    </template>
+
+    <selected-authors-carousel
+      v-if="!authorsLoading && popularAuthors.length > 0"
+      :authors="popularAuthors"
+    />
+
+    <selected-books-section v-if="!booksLoading && books.length > 0" :books="books" />
   </div>
 </template>
 
 <style scoped>
 .home-view {
-  padding: v-bind('LAYOUT.VIEW_PADDING');
+  padding: v-bind(LAYOUT.VIEW_PADDING);
 }
 
 @media (max-width: 960px) {
   .home-view {
-    padding: v-bind('LAYOUT.VIEW_PADDING_MOBILE');
+    padding: v-bind(LAYOUT.VIEW_PADDING_MOBILE);
   }
 }
 </style>

@@ -1,6 +1,6 @@
 /**
  * Integration tests for LCCShelfListView
- * Tests LCC shelf browsing with search and pagination
+ * Tests LCC shelf browsing with sidebar selection and book display
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
@@ -9,26 +9,38 @@ import { createPinia, setActivePinia } from 'pinia'
 import { createRouter, createMemoryHistory } from 'vue-router'
 import LCCShelfListView from './LCCShelfListView.vue'
 import { useMainStore } from '@/stores/main'
-import type { LCCShelves } from '@/types'
+import type { LCCShelves, BookPreview } from '@/types'
 
 const mockShelvesData: LCCShelves = {
   totalCount: 4,
   shelves: [
-    { code: 'PR', name: 'English literature', bookCount: 150 },
-    { code: 'PS', name: 'American literature', bookCount: 200 },
-    { code: 'PQ', name: 'French literature', bookCount: 100 },
-    { code: 'PT', name: 'German literature', bookCount: 80 }
+    { code: 'PR', name: 'English literature', bookCount: 150, totalPopularity: 0 },
+    { code: 'PS', name: 'American literature', bookCount: 200, totalPopularity: 0 },
+    { code: 'PQ', name: 'French literature', bookCount: 100, totalPopularity: 0 },
+    { code: 'PT', name: 'German literature', bookCount: 80, totalPopularity: 0 }
   ]
 }
 
-const createManyShelves = (count: number): LCCShelves => ({
-  totalCount: count,
-  shelves: Array.from({ length: count }, (_, i) => ({
-    code: `P${String(i + 1).padStart(3, '0')}`,
-    name: `Literature ${i}`,
-    bookCount: 50
-  }))
-})
+const mockBooks: BookPreview[] = [
+  {
+    id: 1,
+    title: 'Alice in Wonderland',
+    author: { id: '1', name: 'Lewis Carroll', bookCount: 1 },
+    languages: ['en'],
+    popularity: 5,
+    coverPath: null,
+    lccShelf: null
+  },
+  {
+    id: 2,
+    title: 'Pride and Prejudice',
+    author: { id: '2', name: 'Jane Austen', bookCount: 1 },
+    languages: ['en'],
+    popularity: 4,
+    coverPath: null,
+    lccShelf: null
+  }
+]
 
 describe('LCCShelfListView Integration', () => {
   let router: ReturnType<typeof createRouter>
@@ -45,8 +57,24 @@ describe('LCCShelfListView Integration', () => {
     })
   })
 
-  const mountView = async (mockData: LCCShelves = mockShelvesData) => {
-    vi.spyOn(store, 'fetchLCCShelves').mockResolvedValue(mockData)
+  const mountView = async (
+    shelvesData: LCCShelves = mockShelvesData,
+    books: BookPreview[] = mockBooks,
+    shelfQuery?: string
+  ) => {
+    vi.spyOn(store, 'fetchLCCShelves').mockResolvedValue(shelvesData)
+    vi.spyOn(store, 'fetchLCCShelf').mockResolvedValue({
+      code: 'PR',
+      name: 'English literature',
+      bookCount: books.length,
+      totalPopularity: 0,
+      books
+    })
+    vi.spyOn(store, 'fetchBooks').mockResolvedValue({ totalCount: books.length, books })
+
+    await router.push({ path: '/lcc-shelves', query: shelfQuery ? { shelf: shelfQuery } : {} })
+    await router.isReady()
+
     const wrapper = mount(LCCShelfListView, {
       global: {
         plugins: [pinia, router]
@@ -57,100 +85,37 @@ describe('LCCShelfListView Integration', () => {
   }
 
   describe('Data Loading', () => {
-    it('loads and displays shelves on mount', async () => {
+    it('loads shelves on mount', async () => {
       const wrapper = await mountView()
 
       expect(store.fetchLCCShelves).toHaveBeenCalledOnce()
-      expect(wrapper.text()).toContain('English literature')
-      expect(wrapper.text()).toContain('American literature')
-      expect(wrapper.text()).toContain('French literature')
+      expect(wrapper.find('.lcc-sidebar').exists()).toBe(true)
     })
 
-    it('shows empty state when no shelves available', async () => {
-      const wrapper = await mountView({ totalCount: 0, shelves: [] })
-
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      expect(listWrapper.props('hasItems')).toBe(false)
-    })
-  })
-
-  describe('Search Functionality', () => {
-    it.each([
-      {
-        query: 'English',
-        expectedLength: 1,
-        expectedField: 'name',
-        expectedValue: 'English literature'
-      },
-      { query: 'PR', expectedLength: 1, expectedField: 'code', expectedValue: 'PR' },
-      {
-        query: 'AMERICAN',
-        expectedLength: 1,
-        expectedField: 'name',
-        expectedValue: 'American literature'
-      }
-    ] as const)(
-      'filters shelves by "$query"',
-      async ({ query, expectedLength, expectedField, expectedValue }) => {
-        const wrapper = await mountView()
-
-        const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-        await listWrapper.vm.$emit('update:searchQuery', query)
-        await wrapper.vm.$nextTick()
-
-        const shelfGrid = wrapper.findComponent({ name: 'LCCShelfGrid' })
-        expect(shelfGrid.props('shelves')).toHaveLength(expectedLength)
-        expect(shelfGrid.props('shelves')[0][expectedField]).toBe(expectedValue)
-      }
-    )
-  })
-
-  describe('Sorting', () => {
-    it('sorts shelves alphabetically by code by default', async () => {
+    it('loads all books when no shelf is selected', async () => {
       const wrapper = await mountView()
 
-      const shelfGrid = wrapper.findComponent({ name: 'LCCShelfGrid' })
-      const shelves = shelfGrid.props('shelves')
-
-      expect(shelves[0].code).toBe('PQ')
-      expect(shelves[1].code).toBe('PR')
-      expect(shelves[2].code).toBe('PS')
-      expect(shelves[3].code).toBe('PT')
+      await flushPromises()
+      expect(store.fetchBooks).toHaveBeenCalled()
+      expect(wrapper.find('.books-grid').exists()).toBe(true)
     })
   })
 
-  describe('Pagination', () => {
-    it('paginates when more than 24 shelves', async () => {
-      const wrapper = await mountView(createManyShelves(30))
+  describe('Shelf Selection', () => {
+    it('loads shelf books when a shelf is selected', async () => {
+      await mountView(mockShelvesData, mockBooks, 'PR')
 
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      expect(listWrapper.props('totalPages')).toBeGreaterThan(1)
-    })
-
-    it('resets to page 1 when search query changes', async () => {
-      const wrapper = await mountView(createManyShelves(30))
-
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      await listWrapper.vm.$emit('goToPage', 2)
-      await wrapper.vm.$nextTick()
-
-      expect(listWrapper.props('currentPage')).toBe(2)
-
-      await listWrapper.vm.$emit('update:searchQuery', 'test')
-      await wrapper.vm.$nextTick()
-
-      expect(listWrapper.props('currentPage')).toBe(1)
+      await flushPromises()
+      expect(store.fetchLCCShelf).toHaveBeenCalledWith('PR')
     })
   })
 
-  describe('Item Count', () => {
-    it('displays correct shelf count', async () => {
-      const wrapper = await mountView()
+  describe('Empty State', () => {
+    it('shows empty state when no books available', async () => {
+      const wrapper = await mountView(mockShelvesData, [])
 
-      const listWrapper = wrapper.findComponent({ name: 'ListViewWrapper' })
-      expect(listWrapper.props('currentCount')).toBe(4)
-      expect(listWrapper.props('totalCount')).toBe(4)
-      expect(listWrapper.props('itemType')).toBe('shelves')
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'EmptyState' }).exists()).toBe(true)
     })
   })
 })

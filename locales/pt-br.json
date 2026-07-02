@@ -12,62 +12,28 @@
 		"authors": "Autores",
 		"about": "Sobre"
 	},
-	"home": {
-		"title": "Biblioteca do Projeto Gutenberg",
-		"subtitle": "O primeiro produtor de livros eletrônicos gratuitos"
-	},
-	"about": {
-		"offers": "Projeto Gutenberg oferece mais de 60.000 livros eletrônicos gratuitos.",
-		"choose": "Escolha entre livros gratuitos em formato epub e livros gratuitos para Kindle. Faça o download ou leia online.",
-		"qualityTitle": "Dispomos de livros digitais de alta qualidade.",
-		"qualityDesc": "Todos os nossos livros digitais foram publicados anteriormente por editoras idôneas. Nós os digitalizamos e revisamos cuidadosamente com a ajuda de milhares de voluntários.",
-		"linksTitle": "Links",
-		"linkKiwix": "Kiwix"
-	},
-	"stats": {
-		"authors": "Autores"
-	},
-	"authors": {
-		"title": "Autores"
-	},
-	"shelves": {
-		"title": "Estantes de livros (A-Z)"
-	},
 	"book": {
 		"title": "Título",
-		"author": "Autor",
-		"popularity": "Popularidade",
 		"languages": "Idioma",
 		"license": "Licença",
 		"licensePd": "Domínio público nos EUA.",
 		"licenseCopyright": "Protegido por direitos autorais. Leia o aviso de direitos autorais dentro deste livro para obter detalhes.",
-		"description": "Descrição",
 		"fullName": "Nome completo",
 		"cover": "Capa do livro",
 		"coverLabel": "(capa)",
 		"anonymous": "Anônimos",
 		"various": "Vários"
 	},
-	"shelf": {
-		"booksInShelf": "Navegue por estante de livros"
-	},
 	"common": {
 		"loading": "Carregando...",
 		"search": "Pesquisar",
-		"searchAuthors": "Pesquisar por nome do autor",
-		"searchAuthorsByName": "Pesquisar por título",
-		"searchShelf": "Busca na estante",
-		"sort": "Organizar",
 		"sortPopularity": "Ordenar livros por popularidade",
 		"sortTitle": "Ordenar livros por título",
-		"language": "Idioma",
 		"chooseLanguage": "Escolha um idioma...",
 		"mainLanguages": "Principais idiomas",
 		"otherLanguages": "Outros idiomas",
 		"anyCatalog": "Escolha o catálogo",
-		"format": "Formato",
 		"uiLanguage": "Idioma da interface",
-		"filter": "Filtro",
 		"returnHome": "Ir para Início"
 	},
 	"messages": {

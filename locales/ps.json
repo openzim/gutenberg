@@ -6,14 +6,8 @@
 	},
 	"language": "پښتو",
 	"isocode": "ps",
-	"home": {
-		"title": "د گوتېنبېرگ کتابتون پروژه",
-		"subtitle": "د وړيا کتابونو لومړنی توليدوونکی"
-	},
 	"book": {
 		"title": "سرليک",
-		"author": "ليکوال",
-		"popularity": "نومياليتوب",
 		"languages": "ژبه",
 		"license": "منښتليک",
 		"licensePd": "په امريکا متحده ايالتونو کې ټولگړې واک‌سيمه",
@@ -25,15 +19,11 @@
 	"common": {
 		"loading": "بارېږي...",
 		"search": "پلټل",
-		"sort": "اوډل",
 		"sortPopularity": "کتابونه د نومياليتوب له مخې اوډل",
 		"sortTitle": "کتابونه د سرليک له مخې اوډل",
-		"language": "ژبه",
 		"mainLanguages": "ارې ژبې",
 		"otherLanguages": "نورې ژبې",
 		"anyCatalog": "کتلاگ خوښول",
-		"format": "بڼه",
-		"filter": "چاڼگر",
 		"returnHome": "کور ته تلل"
 	},
 	"messages": {

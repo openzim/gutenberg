@@ -11,14 +11,6 @@
 	"nav": {
 		"home": "דף הבית"
 	},
-	"home": {
-		"title": "ספריית פרויקט גוטנברג"
-	},
-	"about": {
-		"offers": "מיזם גוטנברג מציע למעלה מ־70,000 ספרים אלקטרוניים בחינם",
-		"choose": "אפשר לבחור בין מבחר ספרי epub בחינם או ספרי kindle בחינם. אפשר להוריד אותם או לקרוא אותם ישירות מהאתר.",
-		"qualityTitle": "אנו מציעים ספרים אלקטרוניים באיכות גבוהה"
-	},
 	"book": {
 		"title": "ספרים",
 		"languages": "שפה",
@@ -32,17 +24,12 @@
 	"common": {
 		"loading": "טעינה...",
 		"search": "חיפוש",
-		"searchAuthorsByName": "חיפוש סופרים לפי שם",
-		"sort": "מיון",
 		"sortTitle": "כותרת",
-		"language": "שפה",
 		"chooseLanguage": "בחירת שפה...",
 		"mainLanguages": "שפות ראשיות",
 		"otherLanguages": "שפות אחרות",
 		"anyCatalog": "בחירת הקטלוג",
-		"format": "תסדיר",
-		"uiLanguage": "שפת ממשק",
-		"filter": "סינון"
+		"uiLanguage": "שפת ממשק"
 	},
 	"messages": {
 		"noBooks": "לא נמצאו ספרים."

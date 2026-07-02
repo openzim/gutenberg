@@ -10,23 +10,8 @@
 	"nav": {
 		"home": "Inicio"
 	},
-	"home": {
-		"title": "Librería del Proyecto Gutenberg",
-		"subtitle": "El primer editor de ebooks libres"
-	},
-	"about": {
-		"offers": "El Proyecto Gutenberg ofrece más de 60,000 ebooks libres",
-		"choose": "Elija entre ebooks epub libres y ebooks kindle libres. Descárgalos o léelos online.",
-		"qualityTitle": "Tenemos ebooks de gran calidad",
-		"qualityDesc": "Todos nuestros ebooks han sido publicados antes por editoriales de prestigio. Los digitalizamos y comprobamos cuidadosamente con la ayuda de miles de voluntarios."
-	},
-	"shelves": {
-		"title": "Estantes (A-Z)"
-	},
 	"book": {
 		"title": "Título",
-		"author": "Autor",
-		"popularity": "Popularidad",
 		"languages": "Idioma",
 		"license": "Licencia",
 		"licensePd": "De dominio público en EEUU.",
@@ -36,26 +21,16 @@
 		"anonymous": "Anónimo",
 		"various": "Varios"
 	},
-	"shelf": {
-		"booksInShelf": "Buscar por estantería"
-	},
 	"common": {
 		"loading": "Cargando...",
 		"search": "Buscar",
-		"searchAuthors": "Lista de libros de un autor",
-		"searchAuthorsByName": "Buscar autores por nombre",
-		"searchShelf": "Búsqueda de estantería",
-		"sort": "Ordenar",
 		"sortPopularity": "Ordenar libros por popularidad",
 		"sortTitle": "Ordenar libros por título",
-		"language": "Idioma",
 		"chooseLanguage": "Elija un idioma...",
 		"mainLanguages": "Idiomas principales",
 		"otherLanguages": "Otros idiomas",
 		"anyCatalog": "Elija en el catálogo",
-		"format": "Formato",
 		"uiLanguage": "Idioma de la interfaz",
-		"filter": "Filtro",
 		"returnHome": "Volver al inicio"
 	},
 	"messages": {

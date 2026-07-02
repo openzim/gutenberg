@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
   <v-card
-    :to="`/lcc-shelf/${shelf.code}`"
+    :to="`/lcc-shelves?shelf=${shelf.code}`"
     hover
     class="card-full-height"
     :aria-label="`View LCC shelf: ${shelf.code} with ${shelf.bookCount} books`"

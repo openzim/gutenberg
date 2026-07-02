@@ -9,6 +9,7 @@ export interface AuthorPreview {
   id: string
   name: string
   bookCount: number
+  totalPopularity?: number
 }
 
 export interface Author {

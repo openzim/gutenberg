@@ -49,7 +49,12 @@ describe('BookDetailView Integration', () => {
     router = createRouter({
       history: createMemoryHistory(),
       routes: [
-        { path: '/book/:id', name: 'book-detail', component: BookDetailView },
+        {
+          path: '/book/:id',
+          name: 'book-detail',
+          component: BookDetailView,
+          meta: { breadcrumb: 'nav.books', parent: '/books' }
+        },
         { path: '/author/:id', name: 'author-detail', component: { template: '<div>Author</div>' } }
       ]
     })
@@ -97,10 +102,10 @@ describe('BookDetailView Integration', () => {
     it('displays book cover image', async () => {
       const wrapper = await mountView()
 
-      const coverImage = wrapper.findComponent({ name: 'BookCoverImage' })
+      const coverImage = wrapper.find('img.detail-cover')
       expect(coverImage.exists()).toBe(true)
-      expect(coverImage.props('coverPath')).toBe('/covers/1.jpg')
-      expect(coverImage.props('alt')).toBe('Pride and Prejudice cover')
+      expect(coverImage.attributes('src')).toBe('.//covers/1.jpg')
+      expect(coverImage.attributes('alt')).toBe('Pride and Prejudice book.coverLabel')
     })
   })
 
@@ -111,20 +116,13 @@ describe('BookDetailView Integration', () => {
       const authorLink = wrapper.find('a[href*="author"]')
       expect(authorLink.exists()).toBe(true)
     })
-
-    it('has breadcrumbs navigation', async () => {
-      const wrapper = await mountView()
-
-      const breadcrumbs = wrapper.findComponent({ name: 'Breadcrumbs' })
-      expect(breadcrumbs.exists()).toBe(true)
-    })
   })
 
   describe('Download Formats', () => {
     it('displays available download formats', async () => {
       const wrapper = await mountView()
 
-      expect(wrapper.text()).toContain('EPUB')
+      expect(wrapper.text()).toContain('ePUB')
       expect(wrapper.text()).toContain('PDF')
     })
   })

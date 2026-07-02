@@ -23,7 +23,9 @@
     "format-check": "prettier --check src/"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
     "@fontsource/roboto": "^5.2.9",
+    "@mdi/js": "^7.4.47",
     "@wikimedia/language-data": "^2.0.3",
     "axios": "^1.13.5",
     "pinia": "^3.0.4",
@@ -34,7 +36,6 @@
     "vuetify": "^3.11.8"
   },
   "devDependencies": {
-    "cldr-localenames-full": "^48.2.0",
     "@mdi/font": "^7.4.47",
     "@tsconfig/node24": "^24.0.0",
     "@types/jsdom": "^27.0.0",
@@ -44,6 +45,7 @@
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/test-utils": "^2.4.5",
     "@vue/tsconfig": "^0.8.1",
+    "cldr-localenames-full": "^48.2.0",
     "eslint": "^9.39.2",
     "eslint-plugin-vue": "^10.7.0",
     "jsdom": "^28.0.0",

@@ -11,46 +11,11 @@
 		"home": "Homepage",
 		"authors": "Autori"
 	},
-	"home": {
-		"title": "Libreria del Progetto Gutenberg",
-		"subtitle": "Il primo produttore di ebooks gratuiti"
-	},
-	"about": {
-		"title": "Informazioni sul Progetto Gutenberg",
-		"offers": "Il Progetto Gutenberg offre più di 60,000 ebooks gratuiti",
-		"choose": "Scegli fra file epub gratuiti, file kindle gratuiti. Scaricali o leggili online.",
-		"qualityTitle": "Disponiamo di eBook di alta qualità",
-		"qualityDesc": "Tutti i nostri ebook erano precedentemente pubblicati da editori. Li abbiamo digitalizzati e verificati diligentemente con l'aiuto di migliaia di volontari.",
-		"collectionTitle": "Informazioni su questa collezione",
-		"collectionDesc1": "Questa collezione offline contiene una selezione curata di libri provenienti dal Progetto Gutenberg, la prima e più ampia collezione di libri elettronici gratuiti.",
-		"collectionDesc2": "Il Progetto Gutenberg è stato fondato nel 1971 da Michael S. Hart ed è la più antica biblioteca digitale. La missione del Progetto Gutenberg è quella di incoraggiare la creazione e la distribuzione di eBook.",
-		"collectionDesc3": "Questa collezione è resa disponibile offline tramite Kiwix, consentendo di accedere a queste opere letterarie senza una connessione Internet.",
-		"linksTitle": "Collegamenti",
-		"linkGutenberg": "Sito web del Progetto Gutenberg",
-		"linkGutenbergDesc": "Visita il sito ufficiale del Progetto Gutenberg",
-		"linkKiwix": "Kiwix",
-		"linkKiwixDesc": "Scopri di più sui contenuti offline di Kiwix"
-	},
-	"stats": {
-		"books": "Libri",
-		"authors": "Autori"
-	},
-	"authors": {
-		"title": "Autori"
-	},
-	"shelves": {
-		"title": "Scaffali per libri (A-Z)"
-	},
 	"book": {
 		"title": "Titolo",
-		"author": "Autore",
-		"lifespan": "Durata",
-		"popularity": "Popolarità",
 		"languages": "Linguaggio",
 		"license": "Licenza",
 		"licensePd": "Di pubblico dominio negli USA.",
-		"description": "Descrizione",
-		"availableFormats": "Formati disponibili",
 		"worksAvailable": "Opere disponibili",
 		"unknown": "Sconosciuto",
 		"cover": "Copertina del Libro",
@@ -58,44 +23,26 @@
 		"anonymous": "Anonimo",
 		"various": "Vari"
 	},
-	"author": {
-		"lifespan": "Durata",
-		"worksAvailable": "Opere disponibili"
-	},
 	"shelf": {
-		"classificationCode": "Codice di classificazione",
-		"booksInShelf": "Sfoglia per libreria",
-		"booksIn": "Libri in",
-		"bookCount": "{n} libro | {n} libri"
+		"booksIn": "Libri in"
 	},
 	"common": {
 		"loading": "Caricamento in corso...",
 		"loadingBook": "Caricamento dei dettagli del libro..",
 		"loadingAuthor": "Caricamento dei dettagli dell'autore...",
-		"loadingStats": "Caricamento statistiche...",
 		"of": "di",
 		"search": "Cerca",
-		"searchAuthors": "Elenca i libri di un singolo Autore",
-		"searchAuthorsByName": "Cerca libri per titolo",
-		"searchShelf": "Ricerca in libreria",
-		"all": "Tutto",
-		"selectAll": "Seleziona tutto",
-		"sort": "Ordina",
 		"sortBy": "Ordina per",
 		"sortPopularity": "Ordina libri per popolarità",
 		"sortTitle": "Ordina libri per titolo",
-		"language": "Linguaggio",
 		"chooseLanguage": "Scegli la lingua...",
 		"mainLanguages": "Lingue Principali",
 		"otherLanguages": "Altre lingue",
 		"anyCatalog": "Scegli il Catalogo",
-		"format": "Formato",
 		"uiLanguage": "Interfaccia lingua",
 		"selectInterfaceLanguage": "Seleziona la lingua dell'interfaccia",
 		"filterBy": "Filtra per",
 		"filterByTitle": "Filtra per {title}",
-		"filter": "Filtro",
-		"selected": "selezionato",
 		"gridView": "Visualizzazione a griglia",
 		"listView": "Visualizzazione elenco",
 		"browseAllAuthors": "Visualizza tutti gli autori",
@@ -103,8 +50,7 @@
 		"mainNavigation": "Navigazione principale",
 		"mobileNavigation": "Navigazione mobile",
 		"navigateTo": "Vai a",
-		"navigateToItem": "Vai a {item}",
-		"opensInNewTab": "apri in una nuova scheda"
+		"navigateToItem": "Vai a {item}"
 	},
 	"messages": {
 		"noBooks": "Nessun dato disponibile nella tabella",

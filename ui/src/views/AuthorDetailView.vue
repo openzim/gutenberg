@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import AuthorDetailInfo from '@/components/author/AuthorDetailInfo.vue'
-import Breadcrumbs from '@/components/common/Breadcrumbs.vue'
 import DetailViewWrapper from '@/components/common/DetailViewWrapper.vue'
 import { useDetailView } from '@/composables/useDetailView'
 import { useMainStore } from '@/stores/main'
 import { useI18n } from 'vue-i18n'
+import type { AuthorPreview } from '@/types'
 
 const { t } = useI18n()
 
@@ -15,6 +16,17 @@ const {
   notFound,
   loading
 } = useDetailView((id) => main.fetchAuthor(String(id)), 'id')
+
+const authors = ref<AuthorPreview[]>([])
+
+onMounted(async () => {
+  try {
+    const result = await main.fetchAuthors()
+    authors.value = result.authors
+  } catch {
+    authors.value = []
+  }
+})
 </script>
 
 <template>
@@ -27,13 +39,6 @@ const {
     list-route="/authors"
     :list-label="t('common.browseAllAuthors')"
   >
-    <breadcrumbs
-      :items="[
-        { title: t('nav.home'), to: '/' },
-        { title: t('nav.authors'), to: '/authors' },
-        { title: author!.name, disabled: true }
-      ]"
-    />
-    <author-detail-info :author="author!" />
+    <author-detail-info :author="author!" :authors="authors" />
   </detail-view-wrapper>
 </template>

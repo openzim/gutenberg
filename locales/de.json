@@ -9,23 +9,8 @@
 	"nav": {
 		"home": "Homepage"
 	},
-	"home": {
-		"title": "Projekt Gutenberg",
-		"subtitle": "Der erste Produzent freier E-Books"
-	},
-	"about": {
-		"offers": "Projekt Gutenberg bietet mehr als 60.000 freie E-Books",
-		"choose": "Aus freien Büchern auswählen. Lade sie herunter oder lies online.",
-		"qualityTitle": "Wir haben hochwertige E-Books",
-		"qualityDesc": "Alle unsere E-Books waren vorher gemeinnützig veröffentlicht. Wir digitalisierten und prüften sie sorgfältig mit der Hilfe von tausenden Freiwilligen."
-	},
-	"shelves": {
-		"title": "Bücherregale (A–Z)"
-	},
 	"book": {
 		"title": "Titel",
-		"author": "Autor",
-		"popularity": "Beliebtheit",
 		"languages": "Sprache(n)",
 		"license": "Lizenz",
 		"licensePd": "Public domain in den USA.",
@@ -34,26 +19,16 @@
 		"anonymous": "Anonym",
 		"various": "Diverse"
 	},
-	"shelf": {
-		"booksInShelf": "Durchsuchen Sie das Bücherregal"
-	},
 	"common": {
 		"loading": "Lade...",
 		"search": "Suchen",
-		"searchAuthors": "Bücherliste eines einzelnen Autors",
-		"searchAuthorsByName": "Suche nach Autoren nach Namen",
-		"searchShelf": "Bücherregalsuche",
-		"sort": "Sortieren",
 		"sortPopularity": "Sortiere Bücher nach Beliebtheit",
 		"sortTitle": "Sortiere Bücher nach Titel",
-		"language": "Sprache",
 		"chooseLanguage": "Sprache auswählen...",
 		"mainLanguages": "Hauptsprachen",
 		"otherLanguages": "Andere Sprachen",
 		"anyCatalog": "Katalog wählen",
-		"format": "Format",
 		"uiLanguage": "Sprache der Oberfläche",
-		"filter": "Filter",
 		"returnHome": "Nach Hause gehen"
 	},
 	"messages": {

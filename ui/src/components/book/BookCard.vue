@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
-import { getPopularityStars } from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
+import StarRating from '@/components/common/StarRating.vue'
+import { TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
   book: BookPreview
@@ -24,19 +25,17 @@ defineProps<{
       class="book-cover"
     />
 
-    <v-card-title class="text-body-1">
+    <v-card-title class="book-card-title">
       {{ book.title }}
     </v-card-title>
 
-    <v-card-subtitle class="text-caption">
+    <v-card-subtitle class="book-card-author">
       {{ book.author.name }}
     </v-card-subtitle>
 
     <v-card-text class="pa-4">
       <div class="d-flex align-center mb-2">
-        <span class="text-warning" :aria-label="`Popularity: ${book.popularity} out of 5 stars`">
-          {{ getPopularityStars(book.popularity) }}
-        </span>
+        <star-rating :popularity="book.popularity" />
       </div>
 
       <v-chip-group>
@@ -60,18 +59,28 @@ defineProps<{
   border-radius: 4px 4px 0 0;
 }
 
-.v-card-title {
-  font-weight: 500;
+.book-card-title {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
   line-height: 1.4;
   min-height: 3rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  padding: 0.5rem 1rem;
+  text-transform: none;
+  letter-spacing: 0.0125em;
 }
 
-.v-card-subtitle {
+.book-card-author {
+  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
+  font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
   opacity: 0.87;
-  font-weight: 400;
+  padding: 0 1rem;
+  letter-spacing: 0.0178571429em;
 }
 </style>

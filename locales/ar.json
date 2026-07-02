@@ -10,23 +10,8 @@
 	"nav": {
 		"home": "الصفحة الرئيسية"
 	},
-	"home": {
-		"title": "مشروع مكتبة Gutenberg",
-		"subtitle": "المصنع الأول للكتب الأكترونية المجانية"
-	},
-	"about": {
-		"offers": "مشروع Gutenberg يوفر أكثر من 60,000 كتاب ألكتروني مجاني",
-		"choose": "أختر من ضمن كتب ال epub, كتب kindle مجانية. قم بتنزيلهم او قرائتهم عبر الأنترنت.",
-		"qualityTitle": "نقدم كتبًا إلكترونية عالية الجودة",
-		"qualityDesc": "كل كتبنا كانت مسبقا منشورة من قبل ناشرين bona fide. لقد قمنا برقمنتها ومراجعتها بعناية بمساعدة الآلاف من المتطوعين."
-	},
-	"shelves": {
-		"title": "أرفف الكتب (أ-ي)"
-	},
 	"book": {
 		"title": "العنوان",
-		"author": "المؤلف",
-		"popularity": "الشعبية",
 		"languages": "اللغة",
 		"license": "الرخصة",
 		"licensePd": "مجال عام في الولايات المتحدة الأمريكية.",
@@ -35,26 +20,16 @@
 		"anonymous": "مجهول",
 		"various": "متنوع"
 	},
-	"shelf": {
-		"booksInShelf": "تصفح حسب رف الكتب"
-	},
 	"common": {
 		"loading": "جار التحميل...",
 		"search": "بحث",
-		"searchAuthors": "البحث عن المؤلفين",
-		"searchAuthorsByName": "ابحث عن المؤلفين بالاسم",
-		"searchShelf": "بحث رف الكتب",
-		"sort": "ترتيب",
 		"sortPopularity": "رتب الكتب بحسب الشعبية",
 		"sortTitle": "رتب الكتب بحسب العنوان",
-		"language": "اللغة",
 		"chooseLanguage": "أختر لغة...",
 		"mainLanguages": "اللغات الأساسية",
 		"otherLanguages": "اللغات الأخرى",
 		"anyCatalog": "أختر قائمة",
-		"format": "الصيغة",
 		"uiLanguage": "لغة الواجهة",
-		"filter": "فلتر",
 		"returnHome": "العودة للرئيسية"
 	},
 	"messages": {

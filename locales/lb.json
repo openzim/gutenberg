@@ -12,59 +12,30 @@
 		"shelves": "Regaler",
 		"about": "Iwwer"
 	},
-	"about": {
-		"linkKiwix": "Kiwix"
-	},
-	"stats": {
-		"books": "Bicher",
-		"authors": "Auteuren",
-		"shelves": "LCC-Regaler"
-	},
-	"authors": {
-		"title": "Auteuren"
-	},
-	"shelves": {
-		"title": "LCC-Regaler"
-	},
 	"book": {
 		"title": "Titel",
-		"author": "Auteur",
-		"popularity": "Popularitéit",
 		"languages": "Sprooch",
 		"lccShelf": "LCC-Regal",
 		"license": "Lizenz",
 		"licensePd": "Domaine public an den USA.",
-		"description": "Beschreiwung",
-		"availableFormats": "Disponibel Formater",
 		"unknown": "Onbekannt",
 		"anonymous": "Anonym"
 	},
 	"author": {
-		"bookCount": "{n} Buch | {n} Bicher",
-		"booksByAuthor": "Bicher vum {name}"
-	},
-	"shelf": {
 		"bookCount": "{n} Buch | {n} Bicher"
 	},
 	"common": {
 		"loading": "Gëtt gelueden...",
 		"loadingBook": "Buchdetailer gi gelueden...",
 		"search": "Sichen",
-		"searchAuthors": "Mam Numm vum Auteur sichen",
-		"searchAuthorsByName": "Mam Numm vum Auteur sichen",
-		"all": "All",
-		"sort": "Sortéieren",
 		"sortBy": "Sortéieren no",
 		"sortPopularity": "Bicher no Popularitéit sortéieren",
 		"sortTitle": "Bicher no Titel sortéieren",
-		"language": "Sprooch",
 		"chooseLanguage": "Sicht eng Sprooch eraus...",
 		"mainLanguages": "Haaptsproochen",
 		"otherLanguages": "Aner Sproochen",
 		"anyCatalog": "Wielt de Katalog",
-		"format": "Format",
-		"uiLanguage": "Sprooch vum Interface",
-		"filter": "Filter"
+		"uiLanguage": "Sprooch vum Interface"
 	},
 	"messages": {
 		"noBooks": "Kee Buch fonnt.",

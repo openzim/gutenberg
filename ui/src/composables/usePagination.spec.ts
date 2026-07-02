@@ -22,16 +22,16 @@ describe('usePagination', () => {
 
   const createPagination = (itemCount: number, pageSize?: number) => {
     const items = ref(createRange(itemCount))
-    return { items, ...usePagination(() => items.value, pageSize) }
+    return { items, ...usePagination(() => items.value, pageSize, { scrollToTop: true }) }
   }
 
   describe('pagination', () => {
-    it('uses default page size of 24', () => {
+    it('uses default page size of 20', () => {
       const { paginatedItems } = createPagination(50)
 
-      expect(paginatedItems.value).toHaveLength(24)
+      expect(paginatedItems.value).toHaveLength(20)
       expect(paginatedItems.value[0]).toBe(0)
-      expect(paginatedItems.value[23]).toBe(23)
+      expect(paginatedItems.value[19]).toBe(19)
     })
 
     it('uses custom page size', () => {

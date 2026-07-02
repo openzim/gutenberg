@@ -1,97 +1,32 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import type { AuthorDetail } from '@/types'
-import BooksSection from '@/components/common/BooksSection.vue'
-import DetailInfoCard from '@/components/common/DetailInfoCard.vue'
-import { formatAuthorName, formatAuthorLifespan } from '@/utils/format-utils'
-import { AVATAR_SIZES, ICON_SIZES } from '@/constants/theme'
-
-const { t } = useI18n()
+import { toRef } from 'vue'
+import type { AuthorPreview, AuthorDetail, BookPreview } from '@/types'
+import BookDisplay from '@/components/book/BookDisplay.vue'
+import EmptyState from '@/components/common/EmptyState.vue'
+import AuthorDetailCarousel from './AuthorDetailCarousel.vue'
 
 const props = defineProps<{
   author: AuthorDetail
+  authors: AuthorPreview[]
 }>()
 
-const fullName = computed(() => formatAuthorName(props.author.firstName, props.author.lastName))
-const lifespan = computed(() =>
-  formatAuthorLifespan(props.author.birthYear, props.author.deathYear)
-)
+const books = toRef(() => props.author.books as BookPreview[])
 </script>
 
 <template>
   <div>
-    <detail-info-card>
-      <template #avatar>
-        <v-avatar
-          :size="AVATAR_SIZES.DETAIL"
-          color="primary"
-          class="author-avatar mr-6 flex-shrink-0"
-        >
-          <v-icon icon="mdi-account" :size="ICON_SIZES.DETAIL" class="author-icon" />
-        </v-avatar>
-      </template>
+    <author-detail-carousel :authors="authors" :current-author="author" />
 
-      <template #title>
-        <h1
-          class="text-h4 text-md-h3 mb-2 text-wrap"
-          style="word-break: break-word; overflow-wrap: break-word"
-        >
-          {{ author.name }}
-        </h1>
-      </template>
+    <div v-if="books.length > 0" class="author-books">
+      <book-display :books="books" type="books" />
+    </div>
 
-      <template #info>
-        <v-list-item v-if="author.firstName || author.lastName">
-          <template v-slot:prepend>
-            <v-icon icon="mdi-card-account-details" />
-          </template>
-          <v-list-item-title>
-            {{ fullName }}
-          </v-list-item-title>
-          <v-list-item-subtitle>{{ t('author.fullName') }}</v-list-item-subtitle>
-        </v-list-item>
-
-        <v-list-item v-if="author.birthYear || author.deathYear">
-          <template v-slot:prepend>
-            <v-icon icon="mdi-calendar-range" />
-          </template>
-          <v-list-item-title>
-            {{ lifespan }}
-          </v-list-item-title>
-          <v-list-item-subtitle>{{ t('author.lifespan') }}</v-list-item-subtitle>
-        </v-list-item>
-
-        <v-list-item>
-          <template v-slot:prepend>
-            <v-icon icon="mdi-book-multiple" />
-          </template>
-          <v-list-item-title>
-            {{ t('author.bookCount', author.bookCount) }}
-          </v-list-item-title>
-          <v-list-item-subtitle>{{ t('author.worksAvailable') }}</v-list-item-subtitle>
-        </v-list-item>
-      </template>
-    </detail-info-card>
-
-    <books-section
-      :books="author.books"
-      :title="t('author.booksByAuthor', { name: author.name })"
-      :empty-message="t('messages.noBooksForAuthor')"
-    />
+    <empty-state v-else :message="$t('messages.noBooksForAuthor')" />
   </div>
 </template>
 
 <style scoped>
-@media (max-width: 959px) {
-  .author-avatar {
-    width: v-bind('AVATAR_SIZES.DETAIL_MOBILE + "px"') !important;
-    height: v-bind('AVATAR_SIZES.DETAIL_MOBILE + "px"') !important;
-    margin-right: 1rem !important;
-  }
-
-  .author-icon {
-    font-size: v-bind('ICON_SIZES.DETAIL_MOBILE + "px"') !important;
-  }
+.author-books {
+  margin-top: 1.5rem;
 }
 </style>
