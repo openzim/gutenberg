@@ -30,7 +30,8 @@
 		"otherLanguages": "Други јазици",
 		"anyCatalog": "Изберете каталог",
 		"uiLanguage": "Јазик на посредникот",
-		"returnHome": "Оди Дома"
+		"returnHome": "Оди Дома",
+		"sortAuthor": "Автор"
 	},
 	"messages": {
 		"noBooks": "Нема расположливи податоци во табелата"

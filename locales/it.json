@@ -2,14 +2,24 @@
 	"@metadata": {
 		"authors": [
 			"Beta16",
-			"FL2226"
+			"FL2226",
+			"GpieroMW"
 		]
 	},
 	"language": "Italiano",
 	"isocode": "it",
 	"nav": {
 		"home": "Homepage",
-		"authors": "Autori"
+		"authors": "Autori",
+		"books": "Libri"
+	},
+	"home": {
+		"allAuthors": "Tutti gli autori",
+		"selectedAuthors": "Autori selezionati"
+	},
+	"about": {
+		"introHeading": "Informazioni sul Progetto Gutenberg",
+		"introParagraph2": "Michael Hart, fondatore del Progetto Gutenberg, inventò gli eBook nel 1971 e il suo ricordo continua a ispirare la creazione di eBook e contenuti correlati ancora oggi."
 	},
 	"book": {
 		"title": "Titolo",
@@ -21,10 +31,13 @@
 		"cover": "Copertina del Libro",
 		"coverLabel": "(copertina)",
 		"anonymous": "Anonimo",
-		"various": "Vari"
+		"various": "Vari",
+		"download": "Scarica",
+		"sameShelfBooks": "Libri sullo stesso scaffale"
 	},
 	"shelf": {
-		"booksIn": "Libri in"
+		"booksIn": "Libri in {shelf}",
+		"allShelves": "Tutti gli scaffali"
 	},
 	"common": {
 		"loading": "Caricamento in corso...",
@@ -50,7 +63,16 @@
 		"mainNavigation": "Navigazione principale",
 		"mobileNavigation": "Navigazione mobile",
 		"navigateTo": "Vai a",
-		"navigateToItem": "Vai a {item}"
+		"navigateToItem": "Vai a {item}",
+		"close": "Chiudi",
+		"next": "Successivo",
+		"previous": "Precedente",
+		"readMore": "Per saperne di più",
+		"scrollLeft": "Scorri verso sinistra",
+		"scrollRight": "Scorri verso destra",
+		"showAll": "Mostra tutto",
+		"showLess": "Mostra meno",
+		"sortAuthor": "Autore"
 	},
 	"messages": {
 		"noBooks": "Nessun dato disponibile nella tabella",

@@ -24,7 +24,8 @@
 		"mainLanguages": "ارې ژبې",
 		"otherLanguages": "نورې ژبې",
 		"anyCatalog": "کتلاگ خوښول",
-		"returnHome": "کور ته تلل"
+		"returnHome": "کور ته تلل",
+		"sortAuthor": "ليکوال"
 	},
 	"messages": {
 		"noBooks": "لښتيال کې هېڅ اومتوکي نشته"

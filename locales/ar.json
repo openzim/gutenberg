@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Majda GHARRABOU",
 			"Meno25",
 			"Mohammed Qays"
 		]
@@ -8,7 +9,13 @@
 	"language": "العربية",
 	"isocode": "ar",
 	"nav": {
-		"home": "الصفحة الرئيسية"
+		"home": "الصفحة الرئيسية",
+		"authors": "Authors",
+		"shelves": "Shelves",
+		"about": "بخصوص"
+	},
+	"about": {
+		"introHeading": "نبذة عن مشروع غوتنبرغ"
 	},
 	"book": {
 		"title": "العنوان",
@@ -30,7 +37,8 @@
 		"otherLanguages": "اللغات الأخرى",
 		"anyCatalog": "أختر قائمة",
 		"uiLanguage": "لغة الواجهة",
-		"returnHome": "العودة للرئيسية"
+		"returnHome": "العودة للرئيسية",
+		"sortAuthor": "المؤلف"
 	},
 	"messages": {
 		"noBooks": "لا توجد معلومات في الجدول"

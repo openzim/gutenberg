@@ -9,7 +9,11 @@
 	"nav": {
 		"home": "首頁",
 		"authors": "作者",
-		"about": "關於"
+		"about": "關於",
+		"books": "書籍"
+	},
+	"about": {
+		"introHeading": "關於古騰堡計劃"
 	},
 	"book": {
 		"title": "標題",
@@ -55,7 +59,8 @@
 		"mobileNavigation": "行動版導覽",
 		"navigateTo": "導覽至",
 		"navigateToItem": "導覽至{item}",
-		"gutenbergHome": "古騰堡首頁"
+		"gutenbergHome": "古騰堡首頁",
+		"sortAuthor": "作者"
 	},
 	"messages": {
 		"noBooks": "表格裡沒有可用資料",

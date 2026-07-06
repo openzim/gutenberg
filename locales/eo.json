@@ -10,7 +10,8 @@
 		"title": "Titolo"
 	},
 	"common": {
-		"sortTitle": "Titolo"
+		"sortTitle": "Titolo",
+		"sortAuthor": "Aŭtoro"
 	},
 	"metadata_defaults": {
 		"title": "Projekto Biblioteko Gutenberg",

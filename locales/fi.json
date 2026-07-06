@@ -1,18 +1,65 @@
 {
 	"@metadata": {
 		"authors": [
+			"Wikipeedikko",
 			"Yupik"
 		]
 	},
+	"home": {
+		"allAuthors": "Kaikki kirjoittajat",
+		"allShelves": "Kaikki hyllyt",
+		"discoverAllBooks": "Selaa kaikkia kirjoja",
+		"mostDownloaded": "Ladatuimmat",
+		"popularShelves": "Suositut hyllyt",
+		"selectedAuthors": "Valitut kirjoittajat",
+		"selectedBooks": "Valitut kirjat"
+	},
+	"about": {
+		"attribution": "Alkuperäisen englanninkielisen tekstin on kirjoittanut Michael S. Hart 20.6.2004. Teksti on päivitetty 23.10.2004 ja 25.12.2007.",
+		"introParagraph1": "Project Gutenberg on verkkokirjasto, jossa on yli 75 000 maksutonta e-kirjaa.",
+		"introParagraph4": "Kaikki Project Gutenbergin e-kirjat ovat täysin ilmaisia ja tulevat aina olemaankin.",
+		"missionAuthor": "Michael Hart",
+		"missionHeading": "Toiminta-ajatus",
+		"missionParagraph1": "Project Gutenbergin tehtävä on yksinkertainen: kannustaa e-kirjojen luomiseen ja jakeluun.",
+		"missionParagraph4": "Project Gutenbergin taustavoimina toimivat ideat, ihanteet ja idealismi.",
+		"missionParagraph5": "Project Gutenbergiä eivät ylläpidä taloudelliset tai poliittiset vallanpitäjät.",
+		"missionParagraph6": "Koska kaikki toimintamme on vapaaehtoisten varassa, emme mielellämme määrää, mitä vapaaehtoisten pitää tehdä ja miten.",
+		"missionParagraph12": "Kaikki ovat tervetulleita osallistumaan Project Gutenbergin toimintaan.",
+		"missionParagraph16": "Kaikki ovat tervetulleita Project Gutenbergiin.",
+		"missionParagraph17": "Kaikilla on vapaus luoda e-kirjansa haluamallaan tavalla."
+	},
 	"book": {
 		"cover": "Kirjan kansi",
-		"coverLabel": "(kansi)"
+		"coverLabel": "(kansi)",
+		"download": "Lataa",
+		"sameShelfBooks": "Samassa hyllyssä olevat kirjat",
+		"view": "Näytä"
+	},
+	"author": {
+		"viewAuthor": "Näytä kirjoittaja: {name} ({bookCount})"
+	},
+	"shelf": {
+		"booksIn": "Kirjat hyllyssä {shelf}",
+		"allShelves": "Kaikki hyllyt"
 	},
 	"common": {
 		"search": "Haku",
 		"sortTitle": "Otsikko",
 		"chooseLanguage": "Valitse kieli...",
-		"otherLanguages": "Muut kielet"
+		"otherLanguages": "Muut kielet",
+		"close": "Sulje",
+		"next": "Seuraava",
+		"previous": "Edellinen",
+		"readMore": "Lue lisää",
+		"scrollLeft": "Vieritä vasemmalle",
+		"scrollRight": "Vieritä oikealle",
+		"showAll": "Näytä kaikki",
+		"showLess": "Näytä vähemmän",
+		"showN": "Näytä {n}",
+		"sortAuthor": "Kirjoittaja"
+	},
+	"messages": {
+		"noAuthorsForLetter": "Alkukirjaimella {letter} ei löytynyt kirjoittajia."
 	},
 	"metadata_defaults": {
 		"title": "Project Gutenbergin Kirjasto",

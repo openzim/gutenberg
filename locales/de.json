@@ -29,7 +29,8 @@
 		"otherLanguages": "Andere Sprachen",
 		"anyCatalog": "Katalog wählen",
 		"uiLanguage": "Sprache der Oberfläche",
-		"returnHome": "Nach Hause gehen"
+		"returnHome": "Nach Hause gehen",
+		"sortAuthor": "Autor"
 	},
 	"messages": {
 		"noBooks": "Keine Daten zum Anzeigen"

@@ -12,7 +12,11 @@
 		"home": "Page d'accueil",
 		"authors": "Auteurs",
 		"shelves": "Bibliothèques",
-		"about": "À propos"
+		"about": "À propos",
+		"books": "Livres"
+	},
+	"about": {
+		"introHeading": "À propos du projet Gutenberg"
 	},
 	"book": {
 		"title": "Titre",
@@ -67,7 +71,8 @@
 		"mobileNavigation": "Navigation mobile",
 		"navigateTo": "Naviguer vers",
 		"navigateToItem": "Accédez à {item}",
-		"gutenbergHome": "Accueil Gutenberg"
+		"gutenbergHome": "Accueil Gutenberg",
+		"sortAuthor": "Auteur"
 	},
 	"messages": {
 		"noBooks": "Pas de données disponibles",

@@ -31,7 +31,8 @@
 		"otherLanguages": "Otros idiomas",
 		"anyCatalog": "Elija en el catálogo",
 		"uiLanguage": "Idioma de la interfaz",
-		"returnHome": "Volver al inicio"
+		"returnHome": "Volver al inicio",
+		"sortAuthor": "Autor"
 	},
 	"messages": {
 		"noBooks": "No hay datos disponibles en la tabla"

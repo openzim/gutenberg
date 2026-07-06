@@ -8,11 +8,19 @@
 	"book": {
 		"title": "Գրքեր",
 		"license": "Արտոնագիր",
-		"cover": "Գրքի շապիկ"
+		"cover": "Գրքի շապիկ",
+		"download": "Ներբեռնել"
+	},
+	"shelf": {
+		"allShelves": "Բոլոր դարակները"
 	},
 	"common": {
 		"search": "Որոնել",
 		"chooseLanguage": "Ընտրեք լեզուն",
-		"otherLanguages": "Այլ լեզուներ"
+		"otherLanguages": "Այլ լեզուներ",
+		"close": "Փակել",
+		"next": "Հաջորդ",
+		"readMore": "Կարդալ ավելին",
+		"sortAuthor": "Հեղինակ"
 	}
 }
