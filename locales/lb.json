@@ -10,7 +10,16 @@
 		"home": "Haaptsäit",
 		"authors": "Auteuren",
 		"shelves": "Regaler",
-		"about": "Iwwer"
+		"about": "Iwwer",
+		"books": "Bicher"
+	},
+	"home": {
+		"allAuthors": "All Auteuren"
+	},
+	"about": {
+		"missionAuthor": "vum Michael Hart",
+		"missionParagraph12": "Jiddereen ass wëllkomm, fir zum Projet Gutenberg bäizedroen.",
+		"missionParagraph16": "Jiddereen ass wëllkomm hei beim Projet Gutenberg."
 	},
 	"book": {
 		"title": "Titel",
@@ -19,10 +28,15 @@
 		"license": "Lizenz",
 		"licensePd": "Domaine public an den USA.",
 		"unknown": "Onbekannt",
-		"anonymous": "Anonym"
+		"anonymous": "Anonym",
+		"download": "Eroflueden",
+		"view": "Weisen"
 	},
 	"author": {
 		"bookCount": "{n} Buch | {n} Bicher"
+	},
+	"shelf": {
+		"allShelves": "All Regaler"
 	},
 	"common": {
 		"loading": "Gëtt gelueden...",
@@ -35,7 +49,9 @@
 		"mainLanguages": "Haaptsproochen",
 		"otherLanguages": "Aner Sproochen",
 		"anyCatalog": "Wielt de Katalog",
-		"uiLanguage": "Sprooch vum Interface"
+		"uiLanguage": "Sprooch vum Interface",
+		"readMore": "Méi liesen",
+		"sortAuthor": "Auteur"
 	},
 	"messages": {
 		"noBooks": "Kee Buch fonnt.",
@@ -44,7 +60,8 @@
 		"noBooksInShelf": "Et si keng Bicher an dësem Regal disponibel.",
 		"noLanguages": "Keng Sproochen disponibel.",
 		"noFormats": "Kee Format disponibel.",
-		"notFoundShelf": "LCC-Regal net fonnt. D'Regal, no deem Dir gesicht hutt, existéiert net oder et gouf ewechgeholl."
+		"notFoundShelf": "LCC-Regal net fonnt. D'Regal, no deem Dir gesicht hutt, existéiert net oder et gouf ewechgeholl.",
+		"noAuthorsForLetter": "Keng Auteure fonnt fir de Buschtaf {letter}."
 	},
 	"footer": {
 		"tagline": "Projet Gutenberg"

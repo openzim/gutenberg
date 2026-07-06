@@ -10,7 +10,11 @@
 		"home": "Glavna stran",
 		"authors": "Avtorji",
 		"shelves": "Police",
-		"about": "O projektu"
+		"about": "O projektu",
+		"books": "Knjige"
+	},
+	"about": {
+		"introHeading": "O projektu Gutenberg"
 	},
 	"book": {
 		"title": "Naslov",
@@ -65,7 +69,8 @@
 		"mobileNavigation": "Mobilna navigacija",
 		"navigateTo": "Navigacija do",
 		"navigateToItem": "Navigacija do {item}",
-		"gutenbergHome": "Gutenberg Home"
+		"gutenbergHome": "Gutenberg Home",
+		"sortAuthor": "Avtor"
 	},
 	"messages": {
 		"noBooks": "V tabeli ni razpoložljivih podatkov",

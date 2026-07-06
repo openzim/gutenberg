@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"McDutchie",
 			"Siebrand"
 		]
 	},
@@ -10,7 +11,36 @@
 		"home": "Startpagina",
 		"authors": "Auteurs",
 		"shelves": "Boekenplanken",
-		"about": "Over"
+		"about": "Over",
+		"books": "Boeken"
+	},
+	"home": {
+		"allAuthors": "Alle auteurs",
+		"allShelves": "Alle planken",
+		"discoverAllBooks": "Ontdek alle boeken",
+		"mostDownloaded": "Meest gedownload",
+		"popularShelves": "Populaire planken",
+		"selectedAuthors": "Geselecteerde auteurs",
+		"selectedBooks": "Geselecteerde boeken"
+	},
+	"about": {
+		"attribution": "Geschreven door Michael S. Hart op 20 juni 2004. Bijgewerkt op 23 oktober 2004 en 25 december 2007.",
+		"introHeading": "Over Project Gutenberg",
+		"introParagraph1": "Project Gutenberg is een online bibliotheek met meer dan 75.000 gratis e-books.",
+		"introParagraph2": "Michael Hart, de oprichter van Project Gutenberg, heeft in 1971 e-books uitgevonden. Zijn nagedachtenis inspireert ook vandaag nog de creatie van e-books en soortgelijk materiaal.",
+		"introParagraph3": "Sindsdien hebben duizenden vrijwilligers de wereldliteratuur gedigitaliseerd en zorgvuldig proefgelezen. De volledige collectie van Project Gutenberg staat tot uw beschikking.",
+		"introParagraph4": "Alle e-books van Project Gutenberg zijn volledig gratis en dat zal altijd zo blijven.",
+		"missionAuthor": "door Michael Hart",
+		"missionHeading": "Missieverklaring",
+		"missionParagraph1": "De missie van Project Gutenberg is eenvoudig: het stimuleren van de creatie en verspreiding van e-books.",
+		"missionParagraph2": "Daarbij gaat het erom iedereen die geïnteresseerd is in het maken van e-books en het helpen verspreiden ervan zoveel mogelijk aan te moedigen.",
+		"missionParagraph3": "Project Gutenberg keurt in feite ongeveer 99% van alle aanvragen goed van mensen die onze e-books willen maken en gratis willen weggeven, binnen de plaatselijk geldende auteursrechtelijke beperkingen.",
+		"missionParagraph4": "Project Gutenberg wordt gedreven door ideeën, idealen en idealisme.",
+		"missionParagraph5": "Project Gutenberg wordt niet gedreven door  financiële of politieke macht.",
+		"missionParagraph6": "Omdat we geheel op vrijwilligers draaien willen we niet al te dwingend zijn tegenover onze vrijwilligers over wat ze moeten doen of hoe ze dat moeten doen.",
+		"missionParagraph7": "We bieden onze vrijwilligers zoveel mogelijk vrijheid bij het kiezen van de boeken die ze willen verwerken, de formaten van hun voorkeur, of welke andere ideeën ze ook mogen hebben met betrekking tot “het maken en verspreiden van e-boeken“.",
+		"missionParagraph8": "Project Gutenberg houdt zich niet bezig met het vaststellen van standaarden. Als dat wel zo was, zouden we in 1993, toen het World Wide Web nog een gloednieuw concept was, het verzoek om een representatief deel van onze e-boeken in HTML om te zetten graag hebben ingewilligd; we bieden onze lezers graag e-boeken aan in zoveel indelingen als onze vrijwilligers willen maken.",
+		"missionParagraph9": "Ook hanteren we geen hogere nauwkeurigheidsnormen dan de aanbevelingen van instellingen zoals de Amerikaanse Library of Congress, namelijk 99,95%. Hoewel de meeste van onze e-books aan deze normen voldoen en in de meest gangbare indelingen worden aangeboden, is dit geen vereiste; we moedigen iedereen aan om ons e-books in elke indeling en met elk nauwkeurigheidsniveau toe te sturen. We vragen vrijwilligers om deze in andere indelingen om te zetten en eventuele fouten geleidelijk te verbeteren."
 	},
 	"book": {
 		"title": "Titel",
@@ -33,7 +63,7 @@
 		"bookCount": "{n} boek | {n} boeken"
 	},
 	"shelf": {
-		"booksIn": "Boeken in"
+		"booksIn": "Boeken op {shelf}"
 	},
 	"common": {
 		"loading": "Aan het laden...",
@@ -65,7 +95,8 @@
 		"mobileNavigation": "Mobiele navigatie",
 		"navigateTo": "Navigeren naar",
 		"navigateToItem": "Navigeren naar {item}",
-		"gutenbergHome": "Gutenberg Startpagina"
+		"gutenbergHome": "Gutenberg Startpagina",
+		"sortAuthor": "Auteur"
 	},
 	"messages": {
 		"noBooks": "Geen gegevens beschikbaar in tabel",

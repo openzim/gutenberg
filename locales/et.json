@@ -8,7 +8,11 @@
 		"home": "Avaleht",
 		"authors": "Autorid",
 		"shelves": "Riiulid",
-		"about": "Teave"
+		"about": "Teave",
+		"books": "Raamatud"
+	},
+	"about": {
+		"introHeading": "Teave Project Gutenbergi kohta"
 	},
 	"book": {
 		"title": "Raamatud",

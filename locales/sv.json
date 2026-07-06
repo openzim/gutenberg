@@ -12,7 +12,11 @@
 		"home": "Hem",
 		"authors": "Författare",
 		"shelves": "Hyllor",
-		"about": "Om"
+		"about": "Om",
+		"books": "Böcker"
+	},
+	"about": {
+		"introHeading": "Om Projekt Gutenberg"
 	},
 	"book": {
 		"title": "Titel",
@@ -67,7 +71,8 @@
 		"mobileNavigation": "Mobil navigering",
 		"navigateTo": "Navigera till",
 		"navigateToItem": "Navigera till {item}",
-		"gutenbergHome": "Gutenbergs hem"
+		"gutenbergHome": "Gutenbergs hem",
+		"sortAuthor": "Författare"
 	},
 	"messages": {
 		"noBooks": "Ingen data tillgänglig i tabellen",

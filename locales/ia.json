@@ -10,7 +10,11 @@
 		"home": "Pagina initial",
 		"authors": "Autores",
 		"shelves": "Plancas",
-		"about": "A proposito"
+		"about": "A proposito",
+		"books": "Libros"
+	},
+	"about": {
+		"introHeading": "A proposito del Projecto Gutenberg"
 	},
 	"book": {
 		"title": "Titulo",
@@ -65,7 +69,8 @@
 		"mobileNavigation": "Navigation mobile",
 		"navigateTo": "Navigar a",
 		"navigateToItem": "Navigar a {item}",
-		"gutenbergHome": "Pagina principal de Gutenberg"
+		"gutenbergHome": "Pagina principal de Gutenberg",
+		"sortAuthor": "Autor"
 	},
 	"messages": {
 		"noBooks": "Nulle datos disponibile in tabella",

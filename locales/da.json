@@ -30,7 +30,8 @@
 		"otherLanguages": "Andre sprog",
 		"anyCatalog": "Vælg kataloget",
 		"uiLanguage": "Grænsefladesprog",
-		"returnHome": "Gå hjem"
+		"returnHome": "Gå hjem",
+		"sortAuthor": "Forfatter"
 	},
 	"messages": {
 		"noBooks": "Ingen data tilgængelig i tabel"
