@@ -20,7 +20,7 @@ dependencies = [
   "Jinja2==3.1.6",
   "path.py==12.5.0",
   "Babel==2.18.0",
-  "lxml==6.0.2",
+  "lxml==6.1.0",
   "docopt==0.6.2",
   "chardet==5.2.0",
   "apsw==3.51.2.0",
