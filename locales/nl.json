@@ -40,7 +40,15 @@
 		"missionParagraph6": "Omdat we geheel op vrijwilligers draaien willen we niet al te dwingend zijn tegenover onze vrijwilligers over wat ze moeten doen of hoe ze dat moeten doen.",
 		"missionParagraph7": "We bieden onze vrijwilligers zoveel mogelijk vrijheid bij het kiezen van de boeken die ze willen verwerken, de formaten van hun voorkeur, of welke andere ideeën ze ook mogen hebben met betrekking tot “het maken en verspreiden van e-boeken“.",
 		"missionParagraph8": "Project Gutenberg houdt zich niet bezig met het vaststellen van standaarden. Als dat wel zo was, zouden we in 1993, toen het World Wide Web nog een gloednieuw concept was, het verzoek om een representatief deel van onze e-boeken in HTML om te zetten graag hebben ingewilligd; we bieden onze lezers graag e-boeken aan in zoveel indelingen als onze vrijwilligers willen maken.",
-		"missionParagraph9": "Ook hanteren we geen hogere nauwkeurigheidsnormen dan de aanbevelingen van instellingen zoals de Amerikaanse Library of Congress, namelijk 99,95%. Hoewel de meeste van onze e-books aan deze normen voldoen en in de meest gangbare indelingen worden aangeboden, is dit geen vereiste; we moedigen iedereen aan om ons e-books in elke indeling en met elk nauwkeurigheidsniveau toe te sturen. We vragen vrijwilligers om deze in andere indelingen om te zetten en eventuele fouten geleidelijk te verbeteren."
+		"missionParagraph9": "Ook hanteren we geen hogere nauwkeurigheidsnormen dan de aanbevelingen van instellingen zoals de Amerikaanse Library of Congress, namelijk 99,95%. Hoewel de meeste van onze e-books aan deze normen voldoen en in de meest gangbare indelingen worden aangeboden, is dit geen vereiste; we moedigen iedereen aan om ons e-books in elke indeling en met elk nauwkeurigheidsniveau toe te sturen. We vragen vrijwilligers om deze in andere indelingen om te zetten en eventuele fouten geleidelijk te verbeteren.",
+		"missionParagraph10": "Veel van onze populairste e-books begonnen met enorme fouten – pas later bereikten ze het meer gepolijste niveau dat we vandaag de dag zien. Sterker nog, veel van onze e-books werden volledig zonder toezicht gemaakt – door mensen die nog nooit van Project Gutenberg hadden gehoord – en werden pas achteraf naar ons opgestuurd.",
+		"missionParagraph11": "We willen iedereen blijven aanmoedigen om ons e-books te sturen, zelfs als ze er al een paar hebben gemaakt zonder te weten wie we waren, wat we deden of hoe we het deden.",
+		"missionParagraph12": "Iedereen is welkom om bij te dragen aan Project Gutenberg.",
+		"missionParagraph13": "Er zijn dus geen contributies, geen lidmaatschapsvereisten: en nog steeds slechts de meest algemene richtlijnen voor het maken van e-books voor Project Gutenberg.",
+		"missionParagraph14": "We willen zoveel mogelijk e-books in zoveel mogelijk formaten beschikbaar stellen, zodat de hele wereld ze in zoveel mogelijk talen kan lezen.",
+		"missionParagraph15": "Daarom zijn we voortdurend op zoek naar nieuwe vrijwilligers, of het nu gaat om het beschikbaar maken van één favoriet boek, het aanbieden van een nieuwe taal of het helpen met het vertalen van meerdere boeken.",
+		"missionParagraph16": "Iedereen is welkom om bij te dragen aan Project Gutenberg.",
+		"missionParagraph17": "Iedereen staat het vrij om zijn of haar eigen e-books op eigen wijze te maken."
 	},
 	"book": {
 		"title": "Titel",
@@ -57,13 +65,18 @@
 		"cover": "Boekomslag",
 		"coverLabel": "(omslag)",
 		"anonymous": "Anoniem",
-		"various": "Verschillende"
+		"various": "Verschillende",
+		"download": "Downloaden",
+		"sameShelfBooks": "Boeken op dezelfde plank",
+		"view": "Bekijken"
 	},
 	"author": {
-		"bookCount": "{n} boek | {n} boeken"
+		"bookCount": "{n} boek | {n} boeken",
+		"viewAuthor": "Auteur bekijken: {name} ({bookCount})"
 	},
 	"shelf": {
-		"booksIn": "Boeken op {shelf}"
+		"booksIn": "Boeken op {shelf}",
+		"allShelves": "Alle planken"
 	},
 	"common": {
 		"loading": "Aan het laden...",
@@ -96,6 +109,15 @@
 		"navigateTo": "Navigeren naar",
 		"navigateToItem": "Navigeren naar {item}",
 		"gutenbergHome": "Gutenberg Startpagina",
+		"close": "Sluiten",
+		"next": "Volgende",
+		"previous": "Vorige",
+		"readMore": "Meer lezen",
+		"scrollLeft": "Naar links scrollen",
+		"scrollRight": "Naar rechts scrollen",
+		"showAll": "Alles weergeven",
+		"showLess": "Minder weergeven",
+		"showN": "{n} weergeven",
 		"sortAuthor": "Auteur"
 	},
 	"messages": {
@@ -108,7 +130,8 @@
 		"noFormats": "Geen formaten beschikbaar.",
 		"notFoundBook": "Boek niet gevonden. Het boek dat u zoekt bestaat niet of is verwijderd.",
 		"notFoundAuthor": "Auteur niet gevonden. De auteur die u zoekt bestaat niet of is verwijderd.",
-		"notFoundShelf": "LCC-schap niet gevonden. Het schap dat u zoekt bestaat niet of is verwijderd."
+		"notFoundShelf": "LCC-schap niet gevonden. Het schap dat u zoekt bestaat niet of is verwijderd.",
+		"noAuthorsForLetter": "Er zijn geen auteurs gevonden voor de brief {letter}."
 	},
 	"metadata_defaults": {
 		"title": "Project Gutenberg-bibliotheek",
