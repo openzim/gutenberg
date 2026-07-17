@@ -186,8 +186,9 @@ class BookRepository:
     ) -> list[str]:
         """Get list of languages sorted by number of books (most used first)"""
         books = list(self.books.values())
-        if only_books:
-            books = [b for b in books if b.book_id in only_books]
+        if only_books is not None:
+            selected_ids = set(only_books)
+            books = [b for b in books if b.book_id in selected_ids]
 
         # Count books per language
         lang_counts: dict[str, int] = {}

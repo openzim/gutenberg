@@ -152,11 +152,16 @@ def main():
         if lcc_shelves_arg.strip().lower() == "all":
             lcc_shelves = []  # Empty list means all shelves
         else:
-            lcc_shelves = [
-                s.strip().upper()
-                for s in lcc_shelves_arg.split(",")
-                if s.strip().upper() in supported_shelves
+            requested_shelves = [
+                s.strip().upper() for s in lcc_shelves_arg.split(",") if s.strip()
             ]
+            invalid_shelves = set(requested_shelves) - set(supported_shelves)
+            if invalid_shelves:
+                critical_error(
+                    f"Unsupported LCC shelf code(s): "
+                    f"{', '.join(sorted(invalid_shelves))}"
+                )
+            lcc_shelves = requested_shelves
 
     stats_filename: str | None = arguments.get("--stats-filename") or None
     publisher = arguments.get("--publisher") or "openZIM"
@@ -170,7 +175,7 @@ def main():
     )
     # Calculate default UI dist path: from scraper/src/gutenberg2zim/entrypoint.py
     # go up to repo root, then to ui/dist
-    default_ui_dist = Path(__file__).parent.parent.parent.parent.parent / "ui" / "dist"
+    default_ui_dist = Path(__file__).parent.parent.parent.parent / "ui" / "dist"
     ui_dist_raw = arguments.get("--ui-dist") or os.getenv(
         "GUTENBERG_UI_DIST", str(default_ui_dist)
     )
@@ -272,7 +277,7 @@ def main():
         ),
         formats=formats,
         is_selection=len(only_books_ids) > 0 or len(lcc_shelves or []) > 0,
-        zim_file=Path(zim_file).name if zim_file else None,
+        zim_file=zim_file,
         zim_name=zim_name,
         title=zim_title,
         description=description,

@@ -39,8 +39,8 @@ class BookContent:
 
 def resource_exists(url):
     try:
-        r = requests.get(url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT)  # in seconds
-        return r.status_code == requests.codes.ok
+        with requests.get(url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT) as r:
+            return r.status_code == requests.codes.ok
     except Exception as exc:
         logger.error(f"Exception occurred while testing {url}\n {exc}")
         return False
@@ -116,21 +116,19 @@ def download_book(
     """Download a book in all requested formats and return in-memory content"""
     logger.debug(f"\tDownloading content files for Book #{book.book_id}")
 
-    # apply filters
-    if not formats:
-        formats = ALL_FORMATS
+    # apply filters (copy to avoid mutating caller's list or the global ALL_FORMATS)
+    requested_formats = list(formats or ALL_FORMATS)
 
-    # HTML is our base for ZIM for add it if not present
-    if "html" not in formats:
-        formats.append("html")
+    # HTML is our base for ZIM so add it if not present
+    if "html" not in requested_formats:
+        requested_formats.append("html")
 
     book_content = BookContent(book=book)
 
-    for book_format in formats:
+    for book_format in requested_formats:
         logger.debug(f"Processing {book_format}")
 
         pg_type_to_use = None
-        pg_resp = None
         url = None
         for pg_type in PG_PREFERRED_TYPES[book_format]:
             url = url_for_type(
@@ -142,44 +140,45 @@ def download_book(
                     f"Unsupported {pg_type} pg_type for {book_format} #{book.book_id}"
                 )
 
-            pg_resp = requests.get(
+            with requests.get(
                 url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT
-            )  # in seconds
+            ) as pg_resp:  # in seconds
+                if pg_resp.status_code == requests.codes.ok:
+                    # Download content to memory
+                    content_buffer = io.BytesIO()
+                    for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
+                        if chunk:
+                            content_buffer.write(chunk)
+                    content_bytes = content_buffer.getvalue()
 
-            if pg_resp.status_code == requests.codes.ok:
-                pg_type_to_use = pg_type
-                break
+                    if url.endswith(".zip"):
+                        # extract zipfile in memory
+                        extracted_files = handle_zipped_html(
+                            zip_content=content_bytes, book=book
+                        )
+                        if not extracted_files:
+                            # ZIP was corrupt or rejected; try next preferred type
+                            logger.warning(
+                                f"ZIP extraction failed for {book_format} "
+                                f"of #{book.book_id}, trying next type"
+                            )
+                            continue
+                        book_content.files.update(extracted_files)
+                    else:
+                        # Store the file directly
+                        filename = fname_for(book, book_format)
+                        book_content.files[filename] = content_bytes
 
-            pg_resp.close()
+                    pg_type_to_use = pg_type
+                    break
 
         if not url or not pg_type_to_use:
             logger.debug(f"\t\tNo file available for {book_format} of #{book.book_id}")
             book.unsupported_formats.append(book_format)
             continue
 
-        if not pg_resp:
-            # not supposed to happen, this is a bug
-            raise Exception(
-                f"Missing streamed response for {book_format} of #{book.book_id}"
-            )
-
-        # Download content to memory
-        content_bytes = b""
-        for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
-            if chunk:
-                content_bytes += chunk
-
-        if url.endswith(".zip"):
-            # extract zipfile in memory
-            extracted_files = handle_zipped_html(zip_content=content_bytes, book=book)
-            book_content.files.update(extracted_files)
-        else:
-            # Store the file directly
-            filename = fname_for(book, book_format)
-            book_content.files[filename] = content_bytes
-
     # delete book from DB if not downloaded in any format
-    if len(book.unsupported_formats) == len(formats):
+    if all(fmt in book.unsupported_formats for fmt in requested_formats):
         logger.warning(
             f"\t\tBook #{book.book_id} could not be downloaded in any format. "
         )
@@ -204,9 +203,9 @@ def download_book_cover(mirror_url: str, book: Book) -> bytes | None:
     url = f"{mirror_url}/cache/epub/{book.book_id}/pg{book.book_id}.cover.medium.jpg"
     logger.debug(f"Downloading cover image from {url}")
     try:
-        resp = requests.get(url, timeout=DEFAULT_HTTP_TIMEOUT)
-        if resp.status_code == requests.codes.ok:
-            return resp.content
+        with requests.get(url, timeout=DEFAULT_HTTP_TIMEOUT) as resp:
+            if resp.status_code == requests.codes.ok:
+                return resp.content
     except Exception as exc:
         logger.warning(f"Failed to download cover for book #{book.book_id}: {exc}")
 
