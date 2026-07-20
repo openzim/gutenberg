@@ -30,7 +30,7 @@ class RdfParser:
         # Parse and clean the book title
         # Title may be divided into newline-separated title and subtitle
         title = soup.find("dcterms:title")
-        full_title = clean_marc_notation(title.text) if title else "- No Title -"
+        full_title = clean_marc_notation(title.text) if title else ""
         title_elements = full_title.split("\n")
         self.title = title_elements[0]
         self.subtitle = " ".join(title_elements[1:])

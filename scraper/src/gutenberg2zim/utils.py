@@ -7,7 +7,6 @@ from pathlib import Path
 
 import chardet
 import requests
-import six
 
 from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, DL_CHUNCK_SIZE, logger
 from gutenberg2zim.iso639 import language_name
@@ -126,8 +125,8 @@ def get_lang_groups() -> tuple[list[tuple[str, str, int]], list[tuple[str, str, 
         )
 
 
-def md5sum(fpath):
-    return hashlib.md5(read_file(fpath)[0].encode("utf-8")).hexdigest()  # noqa: S324
+def md5sum(fpath: Path) -> str:
+    return hashlib.md5(fpath.read_bytes()).hexdigest()  # noqa: S324
 
 
 def is_bad_cover(fpath: Path) -> bool:
@@ -152,16 +151,14 @@ def guess_file_encoding(fpath: Path) -> str | None:
 
 
 def read_file(fpath: Path):
-    for encoding in ["utf-8", "iso-8859-1"]:
-        try:
-            return read_file_as(fpath, encoding), encoding
-        except UnicodeDecodeError:
-            continue
+    try:
+        return read_file_as(fpath, "utf-8"), "utf-8"
+    except UnicodeDecodeError:
+        pass
 
-    # common encoding failed. try with chardet
     encoding = guess_file_encoding(fpath)
     if not encoding:
-        raise Exception(f"Impossible to guess encoding for {fpath}")
+        encoding = "iso-8859-1"
     return read_file_as(fpath, encoding), encoding
 
 
@@ -171,10 +168,17 @@ def save_file(content, fpath, encoding=UTF8):
 
 
 def zip_epub(epub_fpath: Path, root_folder: Path, fpaths: list[str]) -> None:
-    with zipfile.ZipFile(epub_fpath, "w", zipfile.ZIP_DEFLATED) as zf:
+    if "mimetype" not in fpaths:
+        raise ValueError("EPUB is missing its mimetype file")
+
+    with zipfile.ZipFile(epub_fpath, "w") as zf:
+        # Write mimetype first, uncompressed, per EPUB spec
+        zf.write(root_folder / "mimetype", "mimetype", compress_type=zipfile.ZIP_STORED)
         for fpath in fpaths:
+            if fpath == "mimetype":
+                continue
             zf.write(root_folder / fpath, fpath)
 
 
 def ensure_unicode(v):
-    return six.text_type(v)
+    return str(v)

@@ -4,11 +4,12 @@ import warnings
 import zipfile
 from collections.abc import Iterable
 from dataclasses import asdict
+from html import escape
 from pathlib import Path
 
 import bs4
 from bs4 import BeautifulSoup, Tag, XMLParsedAsHTMLWarning
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, PackageLoader, select_autoescape
 from PIL.Image import open as pilopen
 from zimscraperlib.image.optimization import (
     OptimizeWebpOptions,
@@ -52,8 +53,9 @@ from gutenberg2zim.utils import (
 
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
-jinja_env = Environment(  # noqa: S701
-    loader=PackageLoader("gutenberg2zim", "templates")
+jinja_env = Environment(
+    loader=PackageLoader("gutenberg2zim", "templates"),
+    autoescape=select_autoescape(("html", "htm", "xml")),
 )
 
 default_webp_options = asdict(OptimizeWebpOptions())
@@ -507,6 +509,7 @@ def handle_book_files(
             except Exception as e:
                 logger.exception(e)
                 logger.error(f"\t\tException while handling {other_format}: {e}")
+                raise
 
     # Process all associated files (images, companion HTML files, etc)
     for filename, file_content in book_files.items():
@@ -664,7 +667,24 @@ def optimize_epub_bytes(epub_bytes: bytes, book: Book) -> bytes:
         zipfile.ZipFile(src_buf, "r") as src_zf,
         zipfile.ZipFile(dst_buf, "w", zipfile.ZIP_DEFLATED) as dst_zf,
     ):
-        for info in src_zf.infolist():
+        infos = src_zf.infolist()
+        mimetype_info = next(
+            (info for info in infos if info.filename == "mimetype"), None
+        )
+        if mimetype_info is None:
+            raise ValueError("EPUB is missing its mimetype entry")
+
+        # Write mimetype first, uncompressed, per EPUB spec
+        dst_zf.writestr(
+            "mimetype",
+            src_zf.read(mimetype_info),
+            compress_type=zipfile.ZIP_STORED,
+        )
+
+        for info in infos:
+            if info.filename == "mimetype":
+                continue
+
             name = info.filename
             data = src_zf.read(name)
             suffix = Path(name).suffix.lower()
@@ -686,7 +706,7 @@ def optimize_epub_bytes(epub_bytes: bytes, book: Book) -> bytes:
             elif suffix == ".ncx":
                 data = _process_epub_ncx(data, book)
 
-            dst_zf.writestr(info.filename, data)
+            dst_zf.writestr(info, data)
 
     optimized_bytes = dst_buf.getvalue()
     optimized_size = len(optimized_bytes)
@@ -716,6 +736,17 @@ def lcc_shelf_list_language(lang):
     return _lcc_shelf_list_for_books(
         filter(lambda book: lang in book.languages, repository.get_all_books())
     )
+
+
+def _build_author_books_map(books: Iterable[Book]) -> dict[str, list[Book]]:
+    """Build a mapping from author gut_id to their books."""
+    author_books_map: dict[str, list[Book]] = {}
+    for book in books:
+        author_id = book.author.gut_id
+        if author_id not in author_books_map:
+            author_books_map[author_id] = []
+        author_books_map[author_id].append(book)
+    return author_books_map
 
 
 # JSON Generation Functions for Vue.js UI
@@ -840,10 +871,13 @@ def add_index_entry(title: str, content: str, fname: str, vue_route: str) -> Non
         vue_route: Vue.js route path (e.g., "book/12345")
     """
     redirect_url = f"../index.html#/{vue_route}"
+    safe_title = escape(title)
+    safe_content = escape(content)
+    safe_redirect_url = escape(redirect_url, quote=True)
     html_content = (
-        f"<html><head><title>{title}</title>"
-        f'<meta http-equiv="refresh" content="0;URL=\'{redirect_url}\'" />'
-        f"</head><body>{content}</body></html>"
+        f"<html><head><title>{safe_title}</title>"
+        f'<meta http-equiv="refresh" content="0;URL=\'{safe_redirect_url}\'" />'
+        f"</head><body>{safe_content}</body></html>"
     )
 
     logger.debug(f"Adding {fname} to ZIM index")
@@ -971,11 +1005,13 @@ def generate_json_files(
         )
 
     logger.debug("Generating author detail files and index entries")
+    # Build author_id -> books mapping once to avoid O(authors * books) scans
+    author_books_map = _build_author_books_map(all_books)
+
     for author in all_authors:
         author_books = [
             _book_to_preview(book, formats, author_stats)
-            for book in all_books
-            if book.author.gut_id == author.gut_id
+            for book in author_books_map.get(author.gut_id, [])
         ]
         author_detail = AuthorDetail(
             id=author.gut_id,
@@ -1165,12 +1201,11 @@ def generate_noscript_pages(
 
     # Generate authors listing page
     logger.debug("Generating noscript/authors.html")
-    # Pre-calculate book counts per author
-    author_book_counts = {}
-    for author in all_authors:
-        author_book_counts[author.gut_id] = sum(
-            1 for book in all_books if book.author.gut_id == author.gut_id
-        )
+    # Reuse author_books_map for book counts
+    author_books_map = _build_author_books_map(all_books)
+    author_book_counts = {
+        author_id: len(books) for author_id, books in author_books_map.items()
+    }
     authors_template = jinja_env.get_template("noscript/authors.html")
     authors_html = authors_template.render(
         authors=all_authors,
@@ -1245,9 +1280,7 @@ def generate_noscript_pages(
     logger.debug("Generating No-JS author pages")
     author_template = jinja_env.get_template("noscript/author.html")
     for author in all_authors:
-        author_books = [
-            book for book in all_books if book.author.gut_id == author.gut_id
-        ]
+        author_books = author_books_map.get(author.gut_id, [])
         author_html = author_template.render(
             author=author,
             author_books=author_books,

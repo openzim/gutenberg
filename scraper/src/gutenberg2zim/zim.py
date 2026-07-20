@@ -1,6 +1,7 @@
 import datetime
-import pathlib
 import re
+from html import escape
+from pathlib import Path
 
 from gutenberg2zim import i18n
 from gutenberg2zim.book_processor import process_all_books
@@ -39,7 +40,7 @@ def get_zim_language_metadata(languages: list[str], books: list[CatalogEntry]):
     return sorted(language_counts, key=lambda lang: language_counts[lang], reverse=True)
 
 
-def export_ui_dist(ui_dist: pathlib.Path, title: str) -> None:
+def export_ui_dist(ui_dist: Path, title: str) -> None:
     """Export Vue.js UI dist folder to ZIM file."""
     if not ui_dist.exists():
         raise FileNotFoundError(f"UI dist directory not found: {ui_dist}")
@@ -57,7 +58,7 @@ def export_ui_dist(ui_dist: pathlib.Path, title: str) -> None:
             html_content = file.read_text(encoding="utf-8")
             new_html_content = re.sub(
                 r"(<title>)(.*?)(</title>)",
-                rf"\1{title}\3",
+                lambda match: f"{match.group(1)}{escape(title)}{match.group(3)}",
                 html_content,
                 flags=re.IGNORECASE,
             )
@@ -79,7 +80,7 @@ def export_ui_dist(ui_dist: pathlib.Path, title: str) -> None:
 
 def build_zimfile(
     books: list[CatalogEntry],
-    output_folder: pathlib.Path,
+    output_folder: Path,
     mirror_url: str,
     concurrency: int,
     languages: list[str],
@@ -101,7 +102,7 @@ def build_zimfile(
     progress: ScraperProgress,
     with_fulltext_index: bool,
     debug: bool,
-    ui_dist: pathlib.Path,
+    ui_dist: Path,
 ) -> None:
     """Build ZIM file using singleton BookRepository"""
     progress.increase_total(len(books))
@@ -131,7 +132,12 @@ def build_zimfile(
         zim_file = "{}_{}.zim".format(
             zim_name, datetime.datetime.now().strftime("%Y-%m")  # noqa: DTZ005
         )
-    zim_path = output_folder / zim_file
+        zim_path = output_folder / zim_file
+    else:
+        zim_path = Path(zim_file)
+        if not zim_path.is_absolute() and zim_path.parent == Path("."):
+            # Just a filename, put it in output_folder
+            zim_path = output_folder / zim_path
 
     if zim_path.exists() and not overwrite:
         logger.info(f"ZIM file `{zim_file}` already exist.")
@@ -174,14 +180,13 @@ def build_zimfile(
         # Export Vue.js UI dist folder
         export_ui_dist(ui_dist, title)
 
-    except Exception as exc:
-        # request Creator not to create a ZIM file on finish
+    except KeyboardInterrupt:
         Global.creator.can_finish = False
-        if isinstance(exc, KeyboardInterrupt):
-            logger.error("KeyboardInterrupt, exiting.")
-        else:
-            logger.error(f"Interrupting process due to error: {exc}")
-            logger.exception(exc)
-        return
+        logger.error("KeyboardInterrupt, exiting.")
+        raise
+    except Exception:
+        Global.creator.can_finish = False
+        logger.exception("Interrupting process due to error")
+        raise
     else:
         Global.finish()

@@ -71,7 +71,7 @@ def archive_url(pg_url, mirror_url):
     path = urlparse(pg_url).path
     matched = MATCH_TYPE.search(path)
     if matched and matched.group(2) in FILENAMES:
-        fn = FILENAMES[matched.group(2)].format(id=matched.group(1))
+        fn = FILENAMES[matched.group(2)].format(book_id=matched.group(1))
         return f"{mirror_url}/cache/epub/{matched.group(1)}/{fn}"
     matched = MATCH_DIRS.search(path)
     if matched:
