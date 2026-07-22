@@ -66,7 +66,10 @@ const activeShelfName = computed(() => {
             <svg class="lcc-sidebar__icon" viewBox="0 0 24 24">
               <path :d="mdiBookshelf" />
             </svg>
-            <span>{{ `${t('shelf.allShelves')} (${totalBooks})` }}</span>
+            <span>
+              {{ t('shelf.allShelves') }}
+              <span class="lcc-sidebar__count">({{ totalBooks }})</span>
+            </span>
           </button>
         </li>
         <li v-for="shelf in shelves" :key="shelf.code" class="lcc-sidebar__item">
@@ -76,7 +79,10 @@ const activeShelfName = computed(() => {
             @click="handleSelect(shelf.code)"
           >
             <ShelfIcon :code="shelf.code" :fallback="mdiBookshelf" />
-            <span>{{ t(`lccShelves.${shelf.code}`) }} ({{ shelf.bookCount }})</span>
+            <span>
+              {{ t(`lccShelves.${shelf.code}`) }}
+              <span class="lcc-sidebar__count">({{ shelf.bookCount }})</span>
+            </span>
           </button>
         </li>
       </ul>
@@ -90,7 +96,7 @@ const activeShelfName = computed(() => {
   flex-shrink: 0;
   align-self: flex-start;
   padding: 1.5rem 0;
-  border: 2px solid rgb(var(--v-theme-grid));
+  border: 1.5px solid rgb(var(--v-theme-grid));
 }
 
 .lcc-sidebar__toggle {
@@ -113,7 +119,7 @@ const activeShelfName = computed(() => {
 
 .lcc-sidebar__btn {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
   width: 100%;
   padding: 0.3125rem 0.3125rem;
@@ -153,12 +159,19 @@ const activeShelfName = computed(() => {
   display: inline;
 }
 
+.lcc-sidebar__count {
+  display: inline-block;
+  font-size: v-bind(TYPOGRAPHY.SMALL_SIZE);
+  color: rgb(var(--v-theme-text));
+  opacity: 0.5;
+}
+
 @media (max-width: 1279px) {
   .lcc-sidebar {
     width: 100%;
     max-width: var(--g-layout-max);
     margin-inline: auto;
-    border: 2px solid rgb(var(--v-theme-grid));
+    border: 1.5px solid rgb(var(--v-theme-grid));
     padding: 0;
   }
 

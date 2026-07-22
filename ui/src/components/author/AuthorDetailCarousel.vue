@@ -5,7 +5,7 @@ import type { AuthorPreview, AuthorDetail } from '@/types'
 import AuthorCard from './AuthorCard.vue'
 import CarouselArrow from '@/components/common/CarouselArrow.vue'
 import { AVATAR_SIZES, ICON_SIZES, TYPOGRAPHY } from '@/constants/theme'
-import { formatAuthorLifespan } from '@/utils/format-utils'
+import { formatAuthorLifespan, compareAuthorNames } from '@/utils/format-utils'
 
 const props = defineProps<{
   authors: AuthorPreview[]
@@ -15,17 +15,15 @@ const props = defineProps<{
 const { t } = useI18n()
 
 const sortedAuthors = computed(() =>
-  [...props.authors].sort((a, b) => a.name.localeCompare(b.name))
+  [...props.authors].sort((a, b) => compareAuthorNames(a.name, b.name))
 )
 
 const currentIndex = computed(() =>
   sortedAuthors.value.findIndex((a) => a.id === props.currentAuthor.id)
 )
 
-// Offset controls which small cards are visible next to the current author
 const offset = ref(0)
 
-// Reset offset when current author changes
 watch(currentIndex, () => {
   offset.value = 0
 })
@@ -33,7 +31,7 @@ watch(currentIndex, () => {
 const visibleSmallCards = computed(() => {
   if (currentIndex.value < 0 || sortedAuthors.value.length <= 1) return []
   const result: AuthorPreview[] = []
-  for (let i = 1; i <= 3; i++) {
+  for (let i = 1; result.length < 3 && i <= sortedAuthors.value.length; i++) {
     const idx = (currentIndex.value + offset.value + i) % sortedAuthors.value.length
     const author = sortedAuthors.value[idx]
     if (author && author.id !== props.currentAuthor.id) result.push(author)
@@ -41,29 +39,23 @@ const visibleSmallCards = computed(() => {
   return result
 })
 
-const hasPrevious = computed(() => offset.value > 0)
-const hasNext = computed(() => {
-  if (sortedAuthors.value.length <= 1) return false
-  const totalOtherAuthors = sortedAuthors.value.length - 1
-  return offset.value + 3 < totalOtherAuthors
-})
+const totalOtherAuthors = computed(() => Math.max(0, sortedAuthors.value.length - 1))
+
+const hasPrevious = computed(() => totalOtherAuthors.value > 3)
+const hasNext = computed(() => totalOtherAuthors.value > 3)
 
 const lifespan = computed(() =>
   formatAuthorLifespan(props.currentAuthor.birthYear, props.currentAuthor.deathYear)
 )
 
 function shiftLeft() {
-  if (offset.value > 0) {
-    offset.value--
-  }
+  if (totalOtherAuthors.value === 0) return
+  offset.value = (offset.value - 1 + totalOtherAuthors.value) % totalOtherAuthors.value
 }
 
 function shiftRight() {
-  if (sortedAuthors.value.length <= 1) return
-  const totalOtherAuthors = sortedAuthors.value.length - 1
-  if (offset.value + 3 < totalOtherAuthors) {
-    offset.value++
-  }
+  if (totalOtherAuthors.value === 0) return
+  offset.value = (offset.value + 1) % totalOtherAuthors.value
 }
 
 // Mobile scroll to current author
@@ -192,7 +184,7 @@ watch(
 .carousel-track {
   display: flex;
   width: 100%;
-  padding: 1px;
+  padding: var(--g-card-bleed);
   align-items: stretch;
   height: 220px;
   scrollbar-width: none;
@@ -213,19 +205,19 @@ watch(
 }
 
 .carousel-cell {
-  height: calc(100% + 2px);
-  margin: -1px;
+  height: calc(100% + var(--g-card-border));
+  margin: var(--g-card-negative-bleed);
 }
 
 .carousel-cell--current {
-  /* 442px = 2 book grid cells (220px each) + 2px border overlap */
-  flex: 0 0 442px;
+  /* 441.5px = 2 book grid cells (220px each) + 1.5px border overlap */
+  flex: 0 0 441.5px;
 }
 
 .carousel-cell--small {
-  /* Book grid cells are 222px (220px + 2px border bleed). Match that. */
-  width: 222px;
-  min-width: 222px;
+  /* Book grid cells are 221.5px (220px + 1.5px border bleed). Match that. */
+  width: 221.5px;
+  min-width: 221.5px;
   flex-shrink: 0;
 }
 
@@ -236,8 +228,8 @@ watch(
   padding: 1.5rem 2rem;
   width: 100%;
   height: 100%;
-  border: 2px solid rgb(var(--v-theme-grid));
-  background: rgb(var(--v-theme-background));
+  border: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  background: rgba(var(--v-theme-text), 0.08);
   position: relative;
   z-index: 0;
   transition: box-shadow 0.2s ease;
@@ -291,7 +283,7 @@ watch(
 
   .carousel-track {
     display: flex;
-    padding: 5px 1px; /* extra padding so box-shadow isn't clipped by overflow-x */
+    padding: 5px var(--g-card-bleed); /* extra padding so box-shadow isn't clipped by overflow-x */
     height: 170px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -309,8 +301,8 @@ watch(
 
   .carousel-cell {
     flex: 0 0 75%;
-    height: calc(100% + 2px);
-    margin: -1px;
+    height: calc(100% + var(--g-card-border));
+    margin: var(--g-card-negative-bleed);
     scroll-snap-align: center;
   }
 

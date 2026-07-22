@@ -120,6 +120,6 @@ const showBreadcrumbs = computed(() => breadcrumbItems.value.length > 0)
 .app-breadcrumbs-inner {
   max-width: var(--g-layout-max);
   margin: 0 auto;
-  padding: 0.75rem 0 0;
+  padding: 0.125rem 0;
 }
 </style>

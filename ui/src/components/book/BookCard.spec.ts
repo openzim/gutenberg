@@ -6,7 +6,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import BookCard from './BookCard.vue'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
-import StarRating from '@/components/common/StarRating.vue'
+import FireRating from '@/components/common/FireRating.vue'
 import type { BookPreview } from '@/types'
 
 // Mock format-utils
@@ -83,30 +83,29 @@ describe('BookCard', () => {
 
     it('popularity has aria-label', () => {
       const wrapper = mount(BookCard, {
-        props: { book: createBook({ popularity: 4 }) }
+        props: { book: createBook({ popularity: 2 }) }
       })
 
-      const starRating = wrapper.findComponent(StarRating)
-      expect(starRating.exists()).toBe(true)
-      expect(starRating.attributes('aria-label')).toBe('Popularity: 4 out of 5 stars')
+      const fireRating = wrapper.findComponent(FireRating)
+      expect(fireRating.exists()).toBe(true)
+      expect(fireRating.attributes('aria-label')).toBe('Popularity: 2 out of 3 flames')
     })
   })
 
   describe('Popularity Display', () => {
     it.each([
-      { popularity: 5, expected: 5 },
-      { popularity: 4, expected: 4 },
       { popularity: 3, expected: 3 },
+      { popularity: 2, expected: 2 },
       { popularity: 1, expected: 1 },
       { popularity: 0, expected: 0 }
-    ])('displays $expected filled stars for popularity $popularity', ({ popularity }) => {
+    ])('displays $expected flames for popularity $popularity', ({ popularity }) => {
       const wrapper = mount(BookCard, {
         props: { book: createBook({ popularity }) }
       })
 
-      const starRating = wrapper.findComponent(StarRating)
-      expect(starRating.exists()).toBe(true)
-      expect(starRating.props('popularity')).toBe(popularity)
+      const fireRating = wrapper.findComponent(FireRating)
+      expect(fireRating.exists()).toBe(true)
+      expect(fireRating.props('popularity')).toBe(popularity)
     })
   })
 

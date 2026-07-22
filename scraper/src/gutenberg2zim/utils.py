@@ -171,7 +171,7 @@ def zip_epub(epub_fpath: Path, root_folder: Path, fpaths: list[str]) -> None:
     if "mimetype" not in fpaths:
         raise ValueError("EPUB is missing its mimetype file")
 
-    with zipfile.ZipFile(epub_fpath, "w") as zf:
+    with zipfile.ZipFile(epub_fpath, "w", zipfile.ZIP_DEFLATED) as zf:
         # Write mimetype first, uncompressed, per EPUB spec
         zf.write(root_folder / "mimetype", "mimetype", compress_type=zipfile.ZIP_STORED)
         for fpath in fpaths:

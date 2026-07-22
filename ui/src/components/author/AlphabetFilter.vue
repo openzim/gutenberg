@@ -46,19 +46,15 @@ const ALL_ITEMS = ['ALL', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '0-9']
   background: transparent;
   border: none;
   cursor: pointer;
-  color: rgb(var(--v-theme-author));
+  color: rgb(var(--v-theme-text));
   opacity: 1;
   transition: color 0.2s ease;
 }
 
-.alphabet-btn:hover {
-  color: rgb(var(--v-theme-text));
-}
-
 .alphabet-btn--active {
-  color: rgb(var(--v-theme-text));
+  color: rgb(var(--v-theme-title));
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-underline-offset: 3px;
 }
 
 .alphabet-btn__label {

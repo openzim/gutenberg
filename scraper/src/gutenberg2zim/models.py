@@ -70,7 +70,7 @@ class Book:
     has_cover: bool = False
     description: str | None = None
     unsupported_formats: list[str] = field(default_factory=list)
-    popularity: int = 0  # Computed field for star rating
+    popularity: int = 0  # Computed field for flame rating
     html_cover_path: str | None = None  # Path to cover image extracted from HTML
     _cover_href: str | None = None  # Original href from <link rel="icon"> for detection
 

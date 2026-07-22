@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useCarousel } from '@/composables/useCarousel'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import type { AuthorPreview } from '@/types'
@@ -7,19 +7,48 @@ import CarouselArrow from '@/components/common/CarouselArrow.vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
 import { TYPOGRAPHY, AVATAR_SIZES, ICON_SIZES } from '@/constants/theme'
 
-const props = defineProps<{
+defineProps<{
   authors: AuthorPreview[]
 }>()
 
 const { t } = useI18n()
 const router = useRouter()
 
-const CARDS_PER_VIEW = 5
+const trackRef = ref<HTMLElement | null>(null)
+const hasPrevious = ref(false)
+const hasNext = ref(false)
 
-const { visibleItems, hasPrevious, hasNext, shiftLeft, shiftRight } = useCarousel(
-  () => props.authors,
-  CARDS_PER_VIEW
-)
+function updateScrollState() {
+  const track = trackRef.value
+  if (!track) return
+  hasPrevious.value = track.scrollLeft > 0
+  hasNext.value = track.scrollLeft + track.clientWidth < track.scrollWidth - 1
+}
+
+function scrollByCard(direction: 1 | -1) {
+  const track = trackRef.value
+  if (!track) return
+  const card = track.querySelector('.selected-authors-carousel__card-wrapper')
+  const cardWidth = card ? card.clientWidth : track.clientWidth / 5
+  track.scrollBy({ left: direction * cardWidth, behavior: 'smooth' })
+}
+
+function shiftLeft() {
+  scrollByCard(-1)
+}
+
+function shiftRight() {
+  scrollByCard(1)
+}
+
+onMounted(() => {
+  updateScrollState()
+  window.addEventListener('resize', updateScrollState)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateScrollState)
+})
 
 function goToAuthor(id: string) {
   router.push(`/author/${id}`)
@@ -28,6 +57,11 @@ function goToAuthor(id: string) {
 function goToAuthors() {
   router.push('/authors')
 }
+
+const arrows = [
+  { direction: 'left', ariaKey: 'common.scrollLeft', onClick: () => shiftLeft(), order: 0 },
+  { direction: 'right', ariaKey: 'common.scrollRight', onClick: () => shiftRight(), order: 2 }
+] as const
 </script>
 
 <template>
@@ -40,44 +74,27 @@ function goToAuthors() {
       />
 
       <div class="selected-authors-carousel__wrapper">
-        <div class="carousel-arrow-wrapper g-desktop-only">
+        <div
+          v-for="arrow in arrows"
+          :key="arrow.direction"
+          class="carousel-arrow-wrapper g-desktop-only"
+          :style="{ order: arrow.order }"
+        >
           <carousel-arrow
-            direction="left"
-            :disabled="!hasPrevious"
-            :ariaLabel="t('common.scrollLeft')"
+            :direction="arrow.direction"
+            :disabled="arrow.direction === 'left' ? !hasPrevious : !hasNext"
+            :ariaLabel="t(arrow.ariaKey)"
             beige-shadow
-            @click="shiftLeft"
+            @click="arrow.onClick"
           />
         </div>
 
         <div class="selected-authors-carousel__track-outer">
-          <div class="selected-authors-carousel__track g-desktop-only">
-            <div
-              v-for="author in visibleItems"
-              :key="author.id"
-              class="selected-authors-carousel__card-wrapper"
-            >
-              <button class="selected-author-card" @click="goToAuthor(author.id)">
-                <div class="selected-author-card__avatar-wrapper">
-                  <v-avatar
-                    :size="AVATAR_SIZES.TABLET"
-                    color="primary"
-                    class="selected-author-card__avatar"
-                  >
-                    <v-icon icon="mdi-account" :size="ICON_SIZES.DETAIL" />
-                  </v-avatar>
-                </div>
-                <h3 class="selected-author-card__name">
-                  {{ author.name }}
-                </h3>
-                <p class="selected-author-card__count">
-                  {{ t('author.bookCount', author.bookCount) }}
-                </p>
-              </button>
-            </div>
-          </div>
-
-          <div class="selected-authors-carousel__track g-mobile-only">
+          <div
+            ref="trackRef"
+            class="selected-authors-carousel__track"
+            @scroll.passive="updateScrollState"
+          >
             <div
               v-for="author in authors"
               :key="author.id"
@@ -102,16 +119,6 @@ function goToAuthors() {
               </button>
             </div>
           </div>
-        </div>
-
-        <div class="carousel-arrow-wrapper g-desktop-only">
-          <carousel-arrow
-            direction="right"
-            :disabled="!hasNext"
-            :ariaLabel="t('common.scrollRight')"
-            beige-shadow
-            @click="shiftRight"
-          />
         </div>
       </div>
     </div>
@@ -144,6 +151,7 @@ function goToAuthors() {
   width: 100%;
   flex-shrink: 0;
   padding: 5px;
+  order: 1;
 }
 
 .selected-authors-carousel__track {
@@ -151,22 +159,17 @@ function goToAuthors() {
   align-items: stretch;
   width: 100%;
   padding: 1px;
-}
-
-.selected-authors-carousel__track.g-mobile-only {
-  display: none;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 
-.selected-authors-carousel__track.g-mobile-only::-webkit-scrollbar {
+.selected-authors-carousel__track::-webkit-scrollbar {
   display: none;
 }
 
 .selected-authors-carousel__card-wrapper {
-  width: calc(100% / 5);
-  min-width: calc(100% / 5);
+  flex: 0 0 20%;
   margin: -1px;
   display: flex;
 }
@@ -250,8 +253,7 @@ function goToAuthors() {
   }
 
   .selected-authors-carousel__card-wrapper {
-    width: 160px;
-    min-width: 160px;
+    flex: 0 0 160px;
     margin: 0;
   }
 
@@ -270,7 +272,7 @@ function goToAuthors() {
     padding: 0;
   }
 
-  .selected-authors-carousel__track.g-mobile-only {
+  .selected-authors-carousel__track {
     gap: 1rem;
   }
 }
@@ -280,11 +282,7 @@ function goToAuthors() {
     padding: 1rem 0;
   }
 
-  .selected-authors-carousel__inner {
-    /* margin handled by CSS var */
-  }
-
-  .selected-authors-carousel__track.g-mobile-only {
+  .selected-authors-carousel__track {
     padding: 5px 1rem;
   }
 }

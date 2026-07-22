@@ -114,9 +114,7 @@
 		"readMore": "Čítať viac",
 		"scrollLeft": "Posunúť doľava",
 		"scrollRight": "Posunúť doprava",
-		"showAll": "Zobraziť všetko",
 		"showLess": "Zobraziť menej",
-		"showN": "Zobraziť {n}",
 		"sortAuthor": "Autor"
 	},
 	"messages": {
@@ -137,9 +135,6 @@
 		"description": "Všetky knihy v angličtine od prvého producenta bezplatných elektronických kníh"
 	},
 	"footer": {
-		"tagline": "Projekt Gutenberg",
-		"subtitle": "Bezplatné elektronické knihy",
-		"powered": "Offline prístup poháňaný Kiwixom"
 	},
 	"itemTypes": {
 		"books": "kniha | knihy",

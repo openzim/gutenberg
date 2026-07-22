@@ -1,15 +1,15 @@
 <script setup lang="ts">
 /**
- * SortAndLimitControl — Combined sort, limit, view-mode, and item-count toolbar.
+ * SortAndLimitControl — Combined sort, view-mode, and item-count toolbar.
  *
  * IMPORTANT: When using this component, always pair it with the `useBookDisplay`
  * composable (`@/composables/useBookDisplay`). That composable provides the
- * required sorting, pagination, infinite-scroll, and view-mode logic.
+ * required sorting, infinite-scroll, and view-mode logic.
  */
 import { computed, ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useIsLccShelfPage } from '@/composables/useIsLccShelfPage'
-import type { SortOption, SortOrder, PageSize } from '@/types'
+import type { SortOption, SortOrder } from '@/types'
 import { TYPOGRAPHY } from '@/constants/theme'
 import { mdiDotsGrid, mdiFormatListBulleted } from '@mdi/js'
 
@@ -19,7 +19,6 @@ const isLccShelfPage = useIsLccShelfPage()
 const props = defineProps<{
   sortBy: SortOption
   sortOrder: SortOrder
-  limit: PageSize
   viewMode: 'grid' | 'list'
   current: string
   total: number
@@ -29,7 +28,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:sortBy': [value: SortOption]
   'update:sortOrder': [value: SortOrder]
-  'update:limit': [value: PageSize]
   'update:viewMode': [value: 'grid' | 'list']
 }>()
 
@@ -39,26 +37,11 @@ const sortOptions = computed<{ value: SortOption; text: string }[]>(() => [
   { value: 'author', text: t('common.sortAuthor') }
 ])
 
-const limitOptions = computed<{ value: PageSize; text: string }[]>(() => [
-  { value: 20, text: '20' },
-  { value: 40, text: '40' },
-  { value: 80, text: '80' },
-  { value: 'all', text: t('common.showAll') }
-])
-
 const showSortDropdown = ref(false)
-const showLimitDropdown = ref(false)
 
 const currentSortLabel = computed(() => {
   const option = sortOptions.value.find((o) => o.value === props.sortBy)
   return option?.text ?? ''
-})
-
-const currentLimitLabel = computed(() => {
-  if (props.limit === 'all') {
-    return t('common.showAll')
-  }
-  return t('common.showN', { n: props.limit })
 })
 
 function updateSortBy(value: SortOption) {
@@ -66,11 +49,6 @@ function updateSortBy(value: SortOption) {
   emit('update:sortOrder', newOrder)
   emit('update:sortBy', value)
   showSortDropdown.value = false
-}
-
-function updateLimit(value: PageSize) {
-  emit('update:limit', value)
-  showLimitDropdown.value = false
 }
 
 function updateViewMode(value: 'grid' | 'list') {
@@ -81,7 +59,6 @@ function closeDropdowns(event: MouseEvent) {
   const target = event.target as HTMLElement
   if (!target.closest('.dropdown')) {
     showSortDropdown.value = false
-    showLimitDropdown.value = false
   }
 }
 
@@ -126,43 +103,6 @@ if (typeof document !== 'undefined') {
             role="option"
             :aria-selected="option.value === sortBy"
             @click="updateSortBy(option.value)"
-          >
-            {{ option.text }}
-          </li>
-        </ul>
-      </div>
-
-      <!-- Limit dropdown -->
-      <div class="dropdown limit-dropdown">
-        <button
-          class="dropdown__trigger limit-dropdown__trigger"
-          :aria-expanded="showLimitDropdown"
-          aria-haspopup="listbox"
-          @click.stop="showLimitDropdown = !showLimitDropdown"
-        >
-          <span class="dropdown__label">{{ currentLimitLabel }}</span>
-          <svg
-            class="dropdown__arrow"
-            :class="{ 'dropdown__arrow--open': showLimitDropdown }"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </button>
-        <ul v-if="showLimitDropdown" class="dropdown__menu" role="listbox">
-          <li
-            v-for="option in limitOptions"
-            :key="String(option.value)"
-            class="dropdown__item"
-            :class="{ 'dropdown__item--active': option.value === limit }"
-            role="option"
-            :aria-selected="option.value === limit"
-            @click="updateLimit(option.value)"
           >
             {{ option.text }}
           </li>
@@ -322,16 +262,6 @@ if (typeof document !== 'undefined') {
   width: 160px;
 }
 
-/* Limit dropdown specific widths */
-.limit-dropdown__trigger {
-  gap: 0.25rem;
-  min-width: 100px;
-}
-
-.limit-dropdown {
-  width: 100px;
-}
-
 /* View mode toggle */
 .view-mode-toggle {
   display: flex;
@@ -403,14 +333,6 @@ if (typeof document !== 'undefined') {
 
   .sort-dropdown {
     width: 140px;
-  }
-
-  .limit-dropdown__trigger {
-    min-width: 90px;
-  }
-
-  .limit-dropdown {
-    width: 90px;
   }
 }
 </style>

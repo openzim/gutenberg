@@ -89,9 +89,6 @@
 		"description": "Omne libros in Interlingua ab le prime productor de Ebooks gratuite"
 	},
 	"footer": {
-		"tagline": "Projecto Gutenberg",
-		"subtitle": "Libros electronic gratuite",
-		"powered": "Accesso foras de linea actionate per Kiwix"
 	},
 	"itemTypes": {
 		"books": "libro | libros",

@@ -109,9 +109,7 @@
 		"readMore": "Read more",
 		"scrollLeft": "Scroll left",
 		"scrollRight": "Scroll right",
-		"showAll": "Show all",
 		"showLess": "Show less",
-		"showN": "Show {n}",
 		"sortAuthor": "Author"
 	},
 	"messages": {
@@ -132,9 +130,10 @@
 		"description": "All books in English from the first producer of free Ebooks"
 	},
 	"footer": {
-		"tagline": "Project Gutenberg",
-		"subtitle": "Free eBooks",
-		"powered": "Offline access powered by Kiwix"
+		"createdBy": "Created by",
+		"projectGutenberg": "Project Gutenberg",
+		"packagedBy": "Packaged by",
+		"kiwix": "Kiwix"
 	},
 	"itemTypes": {
 		"books": "book | books",

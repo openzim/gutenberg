@@ -10,6 +10,7 @@ import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { useListLoader } from '@/composables/useListLoader'
 import { MESSAGES } from '@/constants/messages'
 import { LAYOUT } from '@/constants/theme'
+import { compareAuthorNames } from '@/utils/format-utils'
 
 const { t } = useI18n()
 const main = useMainStore()
@@ -23,8 +24,17 @@ const {
 } = useListLoader<AuthorPreview, Authors>(() => main.fetchAuthors(), 'authors')
 
 const sortedAuthors = computed(() =>
-  [...authors.value].sort((a, b) => a.name.localeCompare(b.name))
+  [...authors.value].sort((a, b) => compareAuthorNames(a.name, b.name))
 )
+
+// First character with accents folded to its base letter (É → E)
+function baseFirstChar(name: string): string {
+  return name
+    .charAt(0)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+}
 
 const filteredByLetter = computed(() => {
   if (activeFilter.value === 'ALL') {
@@ -32,15 +42,15 @@ const filteredByLetter = computed(() => {
   }
 
   if (activeFilter.value === '0-9') {
+    // Digits and any other non-letter symbols
     return sortedAuthors.value.filter((author) => {
-      const firstChar = author.name.charAt(0)
-      return firstChar >= '0' && firstChar <= '9'
+      const firstChar = baseFirstChar(author.name)
+      return firstChar < 'A' || firstChar > 'Z'
     })
   }
 
   return sortedAuthors.value.filter((author) => {
-    const firstChar = author.name.charAt(0).toUpperCase()
-    return firstChar === activeFilter.value
+    return baseFirstChar(author.name) === activeFilter.value
   })
 })
 

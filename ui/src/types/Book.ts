@@ -16,7 +16,7 @@ export interface BookPreview {
   title: string
   author: AuthorPreview
   languages: string[]
-  popularity: number // Star rating (0-5)
+  popularity: number // Flame rating (0-3)
   coverPath: string | null
   lccShelf: string | null
   availableFormats?: string[]

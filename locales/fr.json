@@ -91,9 +91,6 @@
 		"description": "Tous les livres en français du premier producteur d'ebooks gratuits"
 	},
 	"footer": {
-		"tagline": "Projet Gutenberg",
-		"subtitle": "Livres électroniques gratuits",
-		"powered": "Accès hors ligne grâce à Kiwix"
 	},
 	"itemTypes": {
 		"books": "livre | livres",

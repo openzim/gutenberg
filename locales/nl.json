@@ -115,9 +115,7 @@
 		"readMore": "Meer lezen",
 		"scrollLeft": "Naar links scrollen",
 		"scrollRight": "Naar rechts scrollen",
-		"showAll": "Alles weergeven",
 		"showLess": "Minder weergeven",
-		"showN": "{n} weergeven",
 		"sortAuthor": "Auteur"
 	},
 	"messages": {
@@ -138,9 +136,6 @@
 		"description": "Alle boeken in het Nederlands van de eerste producent van gratis e-boeken"
 	},
 	"footer": {
-		"tagline": "Project Gutenberg",
-		"subtitle": "Gratis e-books",
-		"powered": "Offline toegang mogelijk gemaakt door Kiwix"
 	},
 	"itemTypes": {
 		"books": "boek | boeken",

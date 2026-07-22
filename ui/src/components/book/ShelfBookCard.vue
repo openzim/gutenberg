@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
-import { formatLabel } from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
-import StarRating from '@/components/common/StarRating.vue'
+import FireRating from '@/components/common/FireRating.vue'
 import { TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
@@ -20,10 +19,6 @@ defineProps<{
       class="shelf-book-cover"
     />
 
-    <div v-if="book.availableFormats?.length" class="format-links text-caption mb-2">
-      {{ book.availableFormats.map(formatLabel).join(' · ') }}
-    </div>
-
     <h3 class="shelf-book-title mb-1">
       {{ book.title }}
     </h3>
@@ -32,7 +27,7 @@ defineProps<{
       {{ book.author?.name }}
     </p>
 
-    <star-rating :popularity="book.popularity" />
+    <fire-rating :popularity="book.popularity" />
   </router-link>
 </template>
 
@@ -45,7 +40,7 @@ defineProps<{
   position: relative;
   z-index: 0;
   color: inherit;
-  border: 2px solid rgb(var(--v-theme-grid));
+  border: var(--g-card-border) solid rgb(var(--v-theme-grid));
   padding: 1rem 1.25rem;
   transition: box-shadow 0.2s ease;
 }
@@ -61,20 +56,14 @@ defineProps<{
   margin-bottom: 12px;
 }
 
-.format-links {
-  color: rgb(var(--v-theme-format));
-  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
-  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
-}
-
 .shelf-book-title {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.H3_SIZE);
   font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
   line-height: 1.4;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-break: break-word;

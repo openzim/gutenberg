@@ -108,7 +108,7 @@ watch(
   display: flex;
   align-items: stretch;
   width: 100%;
-  padding: 1px;
+  padding: var(--g-card-bleed);
 }
 
 .shelf-books-row.g-mobile-only {
@@ -126,7 +126,7 @@ watch(
 .carousel-card-wrapper {
   width: 220px;
   min-width: 220px;
-  margin: -1px;
+  margin: var(--g-card-negative-bleed);
   display: flex;
 }
 

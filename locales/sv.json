@@ -91,9 +91,6 @@
 		"description": "Alla böcker på svenska från den första producenten av gratis e-böcker"
 	},
 	"footer": {
-		"tagline": "Projekt Gutenberg",
-		"subtitle": "Fria e-böcker",
-		"powered": "Offlineåtkomst från Kiwix"
 	},
 	"itemTypes": {
 		"books": "bok | böcker",
