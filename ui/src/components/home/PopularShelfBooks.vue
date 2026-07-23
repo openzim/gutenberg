@@ -33,13 +33,13 @@ const topBooks = computed(() =>
   display: grid;
   grid-template-columns: repeat(auto-fill, 183.33px);
   justify-content: center;
-  padding: 1px;
+  padding: var(--g-card-bleed);
 }
 
 .popular-shelf-books__cell {
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
-  margin: -1px;
+  width: calc(100% + var(--g-card-border));
+  height: calc(100% + var(--g-card-border));
+  margin: var(--g-card-negative-bleed);
 }
 
 @media (max-width: 1279px) {

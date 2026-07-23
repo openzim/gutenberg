@@ -23,7 +23,7 @@ const isLccShelfPage = useIsLccShelfPage()
   display: grid;
   grid-template-columns: repeat(auto-fill, 220px);
   justify-content: center;
-  padding: 1px;
+  padding: var(--g-card-bleed);
   max-width: var(--g-layout-max);
   margin-inline: auto;
 }
@@ -40,8 +40,8 @@ const isLccShelfPage = useIsLccShelfPage()
 }
 
 .grid-cell {
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
-  margin: -1px;
+  width: calc(100% + var(--g-card-border));
+  height: calc(100% + var(--g-card-border));
+  margin: var(--g-card-negative-bleed);
 }
 </style>

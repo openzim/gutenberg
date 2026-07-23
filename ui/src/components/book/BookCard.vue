@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
-import StarRating from '@/components/common/StarRating.vue'
+import FireRating from '@/components/common/FireRating.vue'
 import { TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
@@ -35,7 +35,7 @@ defineProps<{
 
     <v-card-text class="pa-4">
       <div class="d-flex align-center mb-2">
-        <star-rating :popularity="book.popularity" />
+        <fire-rating :popularity="book.popularity" />
       </div>
 
       <v-chip-group>

@@ -14,8 +14,8 @@ defineProps<{
 </script>
 
 <template>
-  <div class="mb-4">
-    <v-breadcrumbs :items="items" class="pa-0 breadcrumbs-nav">
+  <div>
+    <v-breadcrumbs :items="items" class="pa-0 breadcrumbs-nav" density="compact">
       <template v-slot:divider>
         <v-icon icon="mdi-chevron-right" size="small" />
       </template>
@@ -24,6 +24,12 @@ defineProps<{
 </template>
 
 <style scoped>
+.breadcrumbs-nav {
+  /* Fixed row height so the bar is the same thickness whether or not
+     divider icons are rendered (icons are taller than the caption text) */
+  height: 35px;
+}
+
 .breadcrumbs-nav :deep(.v-breadcrumbs-item) {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);

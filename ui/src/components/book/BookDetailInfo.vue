@@ -5,7 +5,7 @@ import { useFormatters } from '@/composables/useFormatters'
 import { normalizeImagePath, formatDownloads, formatLabel } from '@/utils/format-utils'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
-import StarRating from '@/components/common/StarRating.vue'
+import FireRating from '@/components/common/FireRating.vue'
 
 const { t } = useI18n()
 const { formatLanguages } = useFormatters()
@@ -25,9 +25,17 @@ const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
 
 const showFullDescription = ref(false)
 
+const cleanDescription = computed(() =>
+  props.book.description
+    ?.replace(/\s*\(This is an automatically generated summary\.\)\s*$/, '')
+    .trim()
+)
+
+const cleanLicense = computed(() => props.book.license?.replace(/\.$/, ''))
+
 const shouldTruncate = computed(() => {
-  if (!props.book.description) return false
-  return props.book.description.length > 280
+  if (!cleanDescription.value) return false
+  return cleanDescription.value.length > 280
 })
 
 const shelfDisplayName = computed(() => {
@@ -55,7 +63,7 @@ const shelfDisplayName = computed(() => {
 
         <!-- Desktop: stars + author on same row, above description -->
         <div class="stars-author-row stars-author-row--desktop mb-6">
-          <star-rating :popularity="book.popularity" class="mr-3" />
+          <fire-rating :popularity="book.popularity" class="mr-3" />
           <router-link
             v-if="book.author?.id"
             :to="`/author/${book.author.id}`"
@@ -82,12 +90,12 @@ const shelfDisplayName = computed(() => {
           }}</span>
         </div>
 
-        <div v-if="book.description" class="book-desc-wrapper mb-6">
+        <div v-if="cleanDescription" class="book-desc-wrapper mb-6">
           <p
             class="book-desc text-medium-emphasis"
             :class="{ 'book-desc--truncated': !showFullDescription }"
           >
-            {{ book.description }}
+            {{ cleanDescription }}
           </p>
           <button
             v-if="shouldTruncate"
@@ -100,7 +108,7 @@ const shelfDisplayName = computed(() => {
 
         <!-- Mobile: stars below description -->
         <div class="stars-row-mobile mb-6">
-          <star-rating :popularity="book.popularity" />
+          <fire-rating :popularity="book.popularity" />
         </div>
 
         <!-- Desktop-only meta (inside info-cell) -->
@@ -118,7 +126,7 @@ const shelfDisplayName = computed(() => {
             </v-col>
             <v-col cols="4">
               <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
-              <div class="inter-13">{{ book.license }}</div>
+              <div class="inter-13">{{ cleanLicense }}</div>
             </v-col>
           </v-row>
 
@@ -147,7 +155,7 @@ const shelfDisplayName = computed(() => {
           </v-col>
           <v-col cols="4">
             <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
-            <div class="inter-13">{{ book.license }}</div>
+            <div class="inter-13">{{ cleanLicense }}</div>
           </v-col>
         </v-row>
 
@@ -343,7 +351,7 @@ const shelfDisplayName = computed(() => {
   display: none;
 }
 
-.star-rating {
+.fire-rating {
   font-size: 1.25rem;
   line-height: 1;
 }
@@ -481,7 +489,7 @@ const shelfDisplayName = computed(() => {
     font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE_MOBILE);
   }
 
-  .star-rating {
+  .fire-rating {
     font-size: 0.875rem;
   }
 

@@ -70,7 +70,6 @@
 		"readMore": "Per saperne di più",
 		"scrollLeft": "Scorri verso sinistra",
 		"scrollRight": "Scorri verso destra",
-		"showAll": "Mostra tutto",
 		"showLess": "Mostra meno",
 		"sortAuthor": "Autore"
 	},
@@ -88,8 +87,6 @@
 		"description": "Tutti i libri in italiano dal primo produttore di ebook gratuiti"
 	},
 	"footer": {
-		"tagline": "Progetto Gutenberg",
-		"subtitle": "eBook gratuiti"
 	},
 	"itemTypes": {
 		"books": "libro | libri",

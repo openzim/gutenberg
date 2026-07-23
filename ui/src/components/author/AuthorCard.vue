@@ -59,7 +59,7 @@ const isCarousel = () => props.variant === 'carousel'
   justify-content: center;
   width: 100%;
   height: 100%;
-  border: 2px solid rgb(var(--v-theme-grid));
+  border: var(--g-card-border) solid rgb(var(--v-theme-grid));
   background: rgb(var(--v-theme-background));
   color: rgb(var(--v-theme-text));
   position: relative;

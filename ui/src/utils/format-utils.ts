@@ -13,6 +13,11 @@ export function formatAuthorLifespan(birthYear: string | null, deathYear: string
   return ''
 }
 
+export function compareAuthorNames(a: string, b: string): number {
+  const lastName = (name: string) => name.trim().split(/\s+/).pop() ?? name
+  return lastName(a).localeCompare(lastName(b)) || a.localeCompare(b)
+}
+
 export function formatLabel(format: string): string {
   return format === 'epub' ? 'ePUB' : format.toUpperCase()
 }

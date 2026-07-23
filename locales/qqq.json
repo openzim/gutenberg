@@ -114,9 +114,7 @@
 		"readMore": "Read more button for truncated text",
 		"scrollLeft": "Scroll left aria-label for carousel",
 		"scrollRight": "Scroll right aria-label for carousel",
-		"showAll": "Show all items option",
 		"showLess": "Show less button",
-		"showN": "Show N items label. Parameters: {n} - number",
 		"sortAuthor": "Sort by author option"
 	},
 	"messages": {
@@ -137,9 +135,10 @@
 		"description": "Default ZIM description used in ZIM metadata when no specific ZIM description is set"
 	},
 	"footer": {
-		"tagline": "Main tagline text in the footer",
-		"subtitle": "Subtitle text in the footer",
-		"powered": "Text crediting Kiwix for offline access"
+		"createdBy": "Footer text preceding the Project Gutenberg link",
+		"projectGutenberg": "Footer link text pointing to the about page",
+		"packagedBy": "Footer text preceding the Kiwix link",
+		"kiwix": "Footer link text pointing to the Kiwix website"
 	},
 	"itemTypes": {
 		"books": "Pluralization for book items. Format: singular | plural",

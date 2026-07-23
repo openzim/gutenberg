@@ -6,7 +6,7 @@ import type { BookPreview } from '@/types'
 import ShelfBookCard from '@/components/book/ShelfBookCard.vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
 import { normalizeImagePath } from '@/utils/format-utils'
-import StarRating from '@/components/common/StarRating.vue'
+import FireRating from '@/components/common/FireRating.vue'
 import { formatLabel } from '@/utils/format-utils'
 import { TYPOGRAPHY, THEME_COLORS } from '@/constants/theme'
 
@@ -92,7 +92,7 @@ function goToAuthor(id: string) {
           </button>
 
           <div class="featured-book__stars">
-            <star-rating :popularity="mostDownloaded.popularity" />
+            <fire-rating :popularity="mostDownloaded.popularity" />
           </div>
         </div>
       </div>
@@ -112,13 +112,13 @@ function goToAuthor(id: string) {
   grid-template-columns: repeat(4, 183.33px) 366.66px;
   grid-template-rows: repeat(2, auto);
   justify-content: center;
-  padding: 1px;
+  padding: var(--g-card-bleed);
 }
 
 .selected-books-section__cell {
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
-  margin: -1px;
+  width: calc(100% + var(--g-card-border));
+  height: calc(100% + var(--g-card-border));
+  margin: var(--g-card-negative-bleed);
 }
 
 .selected-books-section__featured {
@@ -130,9 +130,9 @@ function goToAuthor(id: string) {
   padding: 1.5rem;
   background-color: v-bind(THEME_COLORS.FOCUS_BOOK);
   color: #ffffff;
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
-  margin: -1px;
+  width: calc(100% + var(--g-card-border));
+  height: calc(100% + var(--g-card-border));
+  margin: var(--g-card-negative-bleed);
   position: relative;
 }
 
@@ -235,7 +235,7 @@ function goToAuthor(id: string) {
   justify-content: flex-start;
 }
 
-.featured-book__stars :deep(.star-icon) {
+.featured-book__stars :deep(.flame-icon) {
   width: 22px;
   height: 22px;
 }

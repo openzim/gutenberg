@@ -2,7 +2,7 @@
 import type { BookPreview } from '@/types'
 import { formatLabel } from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
-import StarRating from '@/components/common/StarRating.vue'
+import FireRating from '@/components/common/FireRating.vue'
 import { TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
@@ -38,7 +38,7 @@ defineProps<{
         {{ book.description }}
       </p>
 
-      <star-rating :popularity="book.popularity" />
+      <fire-rating :popularity="book.popularity" />
     </div>
   </router-link>
 </template>

@@ -60,7 +60,7 @@ class BookPreview(CamelModel):
     title: str
     author: AuthorPreview
     languages: list[str]
-    popularity: int  # Star rating (0-5)
+    popularity: int  # Flame rating (0-3)
     cover_path: str | None = None
     lcc_shelf: str | None = None
     available_formats: list[str] = []

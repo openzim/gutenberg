@@ -116,9 +116,7 @@
 		"readMore": "더 보기",
 		"scrollLeft": "왼쪽으로 스크롤",
 		"scrollRight": "오른쪽으로 스크롤",
-		"showAll": "모두 보기",
 		"showLess": "덜 보기",
-		"showN": "{n}번 항목 보기",
 		"sortAuthor": "저자"
 	},
 	"messages": {
@@ -139,9 +137,6 @@
 		"description": "최초의 무료 전자책 제작사가 제공하는 모든 영어 도서"
 	},
 	"footer": {
-		"tagline": "구텐베르크 프로젝트",
-		"subtitle": "무료 전자책",
-		"powered": "키윅스에서 제공하는 오프라인 액세스"
 	},
 	"itemTypes": {
 		"books": "책",

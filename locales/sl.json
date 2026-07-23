@@ -89,9 +89,6 @@
 		"description": "Vse knjige v slovenščini prvega proizvajalca brezplačnih e-knjig"
 	},
 	"footer": {
-		"tagline": "Projekt Gutenberg",
-		"subtitle": "Proste e-knjige",
-		"powered": "Dostop brez povezave, ki ga omogoča Kiwix"
 	},
 	"itemTypes": {
 		"books": "knjiga | knjige",

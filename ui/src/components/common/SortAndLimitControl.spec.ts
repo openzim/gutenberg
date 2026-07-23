@@ -1,12 +1,12 @@
 /**
  * Unit tests for SortAndLimitControl component
- * Tests sort selection, limit selection, and view mode toggle
+ * Tests sort selection and view mode toggle
  */
 
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import SortAndLimitControl from './SortAndLimitControl.vue'
-import type { SortOption, SortOrder, PageSize } from '@/types'
+import type { SortOption, SortOrder } from '@/types'
 
 // Mock vue-i18n
 vi.mock('vue-i18n', () => ({
@@ -16,8 +16,6 @@ vi.mock('vue-i18n', () => ({
         'common.sortPopularity': 'Popularity',
         'common.sortTitle': 'Title',
         'common.sortAuthor': 'Author',
-        'common.showN': 'Show {n}',
-        'common.showAll': 'Show All',
         'common.gridView': 'Grid view',
         'common.listView': 'List view'
       }
@@ -44,7 +42,6 @@ vi.mock('vue-router', () => ({
 const createWrapper = (props: {
   sortBy: SortOption
   sortOrder: SortOrder
-  limit: PageSize
   viewMode?: 'grid' | 'list'
   current?: string
   total?: number
@@ -65,7 +62,6 @@ describe('SortAndLimitControl', () => {
     const wrapper = createWrapper({
       sortBy: 'title',
       sortOrder: 'asc',
-      limit: 20,
       current: '1-20',
       total: 100,
       type: 'books'
@@ -80,8 +76,7 @@ describe('SortAndLimitControl', () => {
   it('displays current sort label', () => {
     const wrapper = createWrapper({
       sortBy: 'title',
-      sortOrder: 'asc',
-      limit: 20
+      sortOrder: 'asc'
     })
 
     const label = wrapper.find('.sort-dropdown .dropdown__label')
@@ -89,35 +84,10 @@ describe('SortAndLimitControl', () => {
     expect(label.text()).toBe('Title')
   })
 
-  it('displays current limit label', () => {
-    const wrapper = createWrapper({
-      sortBy: 'popularity',
-      sortOrder: 'desc',
-      limit: 40
-    })
-
-    const label = wrapper.find('.limit-dropdown .dropdown__label')
-    expect(label.exists()).toBe(true)
-    expect(label.text()).toBe('Show 40')
-  })
-
-  it('displays show all label correctly', () => {
-    const wrapper = createWrapper({
-      sortBy: 'popularity',
-      sortOrder: 'desc',
-      limit: 'all'
-    })
-
-    const label = wrapper.find('.limit-dropdown .dropdown__label')
-    expect(label.exists()).toBe(true)
-    expect(label.text()).toBe('Show All')
-  })
-
   it('opens sort dropdown on click', async () => {
     const wrapper = createWrapper({
       sortBy: 'popularity',
-      sortOrder: 'desc',
-      limit: 20
+      sortOrder: 'desc'
     })
 
     expect(wrapper.find('.sort-dropdown .dropdown__menu').exists()).toBe(false)
@@ -130,8 +100,7 @@ describe('SortAndLimitControl', () => {
   it('emits update:sortBy when sort option is selected', async () => {
     const wrapper = createWrapper({
       sortBy: 'popularity',
-      sortOrder: 'desc',
-      limit: 20
+      sortOrder: 'desc'
     })
 
     await wrapper.find('.sort-dropdown__trigger').trigger('click')
@@ -153,8 +122,7 @@ describe('SortAndLimitControl', () => {
     async ({ from, to, expectedOrder }) => {
       const wrapper = createWrapper({
         sortBy: from as SortOption,
-        sortOrder: from === 'popularity' ? 'desc' : 'asc',
-        limit: 20
+        sortOrder: from === 'popularity' ? 'desc' : 'asc'
       })
 
       await wrapper.find('.sort-dropdown__trigger').trigger('click')
@@ -168,30 +136,11 @@ describe('SortAndLimitControl', () => {
     }
   )
 
-  it('emits update:limit when limit changes', async () => {
-    const wrapper = createWrapper({
-      sortBy: 'popularity',
-      sortOrder: 'desc',
-      limit: 20
-    })
-
-    await wrapper.find('.limit-dropdown__trigger').trigger('click')
-    const items = wrapper.findAll('.limit-dropdown .dropdown__item')
-    expect(items.length).toBeGreaterThanOrEqual(4)
-
-    await items[items.length - 1]!.trigger('click')
-
-    const emitted = wrapper.emitted('update:limit')
-    expect(emitted).toBeDefined()
-    expect(emitted![0]).toEqual(['all'])
-  })
-
   it('removes document click listener on unmount', () => {
     const removeEventListenerSpy = vi.spyOn(document, 'removeEventListener')
     const wrapper = createWrapper({
       sortBy: 'popularity',
-      sortOrder: 'desc',
-      limit: 20
+      sortOrder: 'desc'
     })
 
     wrapper.unmount()
@@ -204,7 +153,6 @@ describe('SortAndLimitControl', () => {
     const wrapper = createWrapper({
       sortBy: 'popularity',
       sortOrder: 'desc',
-      limit: 20,
       viewMode: 'grid'
     })
 
@@ -216,7 +164,6 @@ describe('SortAndLimitControl', () => {
     const wrapper = createWrapper({
       sortBy: 'popularity',
       sortOrder: 'desc',
-      limit: 20,
       viewMode: 'grid'
     })
 
@@ -229,7 +176,6 @@ describe('SortAndLimitControl', () => {
     const wrapper = createWrapper({
       sortBy: 'popularity',
       sortOrder: 'desc',
-      limit: 20,
       viewMode: 'grid'
     })
 

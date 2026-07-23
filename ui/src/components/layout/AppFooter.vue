@@ -1,22 +1,28 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
 
 const { t } = useI18n()
 
 const currentYear = new Date().getFullYear()
-
-const tagline = computed(() => `${t('footer.tagline')} ${t('footer.subtitle')}`)
-const powered = computed(() => `— ${currentYear} ${t('footer.powered')}`)
 </script>
 
 <template>
   <footer class="app-footer" role="contentinfo">
     <div class="app-footer__inner">
       <p class="app-footer__text">
-        <strong class="app-footer__brand">{{ tagline }}</strong>
-        <span class="app-footer__meta">{{ powered }}</span>
+        © {{ currentYear }} {{ t('footer.createdBy') }}
+        <router-link to="/about" class="app-footer__link">{{
+          t('footer.projectGutenberg')
+        }}</router-link>
+        — {{ t('footer.packagedBy') }}
+        <a
+          href="https://kiwix.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="app-footer__link"
+          >{{ t('footer.kiwix') }}</a
+        >
       </p>
     </div>
   </footer>
@@ -47,11 +53,13 @@ const powered = computed(() => `— ${currentYear} ${t('footer.powered')}`)
   text-align: center;
 }
 
-.app-footer__brand {
-  font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
+.app-footer__link {
+  color: inherit;
+  text-decoration: underline;
 }
 
-.app-footer__meta {
-  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+.app-footer__link:hover,
+.app-footer__link:focus {
+  opacity: 0.8;
 }
 </style>

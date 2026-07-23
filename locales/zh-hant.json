@@ -75,9 +75,6 @@
 		"description": "所有英文書籍均來自首家免費電子書製作者"
 	},
 	"footer": {
-		"tagline": "古騰堡計劃",
-		"subtitle": "自由的電子書",
-		"powered": "Kiwix 提供離線存取技術支援"
 	},
 	"itemTypes": {
 		"books": "書籍 | 書籍",

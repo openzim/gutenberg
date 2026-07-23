@@ -18,7 +18,7 @@ from gutenberg2zim.models import repository
 from gutenberg2zim.rdf import download_and_parse_book_rdf
 from gutenberg2zim.scraper_progress import ScraperProgress
 
-NB_POPULARITY_STARS = 5
+NB_POPULARITY_STARS = 3
 
 
 def process_all_books(

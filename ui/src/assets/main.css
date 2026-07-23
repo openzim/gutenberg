@@ -4,6 +4,12 @@
 @import '@fontsource/roboto/700.css';
 @import '@fontsource-variable/inter/standard.css';
 
+:root {
+  --g-card-border: 1.5px;
+  --g-card-bleed: calc(var(--g-card-border) / 2);
+  --g-card-negative-bleed: calc(var(--g-card-bleed) * -1);
+}
+
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;

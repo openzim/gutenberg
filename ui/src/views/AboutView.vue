@@ -67,10 +67,17 @@ const { t } = useI18n()
   position: relative;
   z-index: 1;
   background: rgb(var(--v-theme-background));
-  max-width: 760px;
+  max-width: var(--g-layout-max);
   width: 100%;
   margin: 3rem auto 0;
   padding: 3rem 4rem;
+}
+
+/* Keep the text column at its original width (760px card minus 4rem
+   padding each side) while the card itself spans wider */
+.content-card > * {
+  max-width: 632px;
+  margin-inline: auto;
 }
 
 .section-title {
