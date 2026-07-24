@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import threading
 from dataclasses import dataclass, field
 
 
@@ -125,6 +126,7 @@ class BookRepository:
         if self._initialized:
             return
         self._initialized = True
+        self._lock = threading.Lock()
         self.books: dict[int, Book] = {}
         self.authors: dict[str, Author] = {}
         self._init_default_authors()
@@ -143,49 +145,56 @@ class BookRepository:
 
     def reset(self) -> None:
         """Reset the repository (useful for testing)"""
-        self.books.clear()
-        self.authors.clear()
-        self._init_default_authors()
+        with self._lock:
+            self.books.clear()
+            self.authors.clear()
+            self._init_default_authors()
 
     def add_author(self, author: Author) -> Author:
         """Add or update author"""
-        if author.gut_id in self.authors:
-            # Update existing author
-            existing = self.authors[author.gut_id]
-            if author.last_name:
-                existing.last_name = author.last_name
-            if author.first_names:
-                existing.first_names = author.first_names
-            if author.birth_year:
-                existing.birth_year = author.birth_year
-            if author.death_year:
-                existing.death_year = author.death_year
-            return existing
-        else:
-            self.authors[author.gut_id] = author
-            return author
+        with self._lock:
+            if author.gut_id in self.authors:
+                # Update existing author
+                existing = self.authors[author.gut_id]
+                if author.last_name:
+                    existing.last_name = author.last_name
+                if author.first_names:
+                    existing.first_names = author.first_names
+                if author.birth_year:
+                    existing.birth_year = author.birth_year
+                if author.death_year:
+                    existing.death_year = author.death_year
+                return existing
+            else:
+                self.authors[author.gut_id] = author
+                return author
 
     def get_author(self, gut_id: str) -> Author | None:
         """Get author by ID"""
-        return self.authors.get(gut_id)
+        with self._lock:
+            return self.authors.get(gut_id)
 
     def add_book(self, book: Book) -> None:
         """Add or update book"""
-        self.books[book.book_id] = book
+        with self._lock:
+            self.books[book.book_id] = book
 
     def get_book(self, book_id: int) -> Book | None:
         """Get book by ID"""
-        return self.books.get(book_id)
+        with self._lock:
+            return self.books.get(book_id)
 
     def get_all_books(self) -> list[Book]:
         """Get filtered and sorted list of books"""
-        return list(self.books.values())
+        with self._lock:
+            return list(self.books.values())
 
     def get_languages_sorted_by_count(
         self, only_books: list[int] | None = None
     ) -> list[str]:
         """Get list of languages sorted by number of books (most used first)"""
-        books = list(self.books.values())
+        with self._lock:
+            books = list(self.books.values())
         if only_books is not None:
             selected_ids = set(only_books)
             books = [b for b in books if b.book_id in selected_ids]
@@ -203,17 +212,20 @@ class BookRepository:
 
     def get_all_authors(self) -> list[Author]:
         """Get list of authors for the given books"""
-        return list(self.authors.values())
+        with self._lock:
+            return list(self.authors.values())
 
     def get_lcc_shelves(self) -> list[str]:
         """Get unique list of LCC shelves"""
-        return sorted(
-            {book.lcc_shelf for book in self.books.values() if book.lcc_shelf}
-        )
+        with self._lock:
+            return sorted(
+                {book.lcc_shelf for book in self.books.values() if book.lcc_shelf}
+            )
 
     def remove_book(self, book_id: int) -> None:
         """Remove a book from the repository"""
-        self.books.pop(book_id, None)
+        with self._lock:
+            self.books.pop(book_id, None)
 
 
 # Module-level singleton instance

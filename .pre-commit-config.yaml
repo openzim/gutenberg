@@ -19,17 +19,17 @@ repos:
     files: ui\/src\/.*(?:\.[jt]sx?|\.vue)$
     args:
     - --config
-    - ui/.eslintrc.cjs
+    - ui/eslint.config.js
 - repo: https://github.com/psf/black
-  rev: "25.9.0"
+  rev: "25.12.0"
   hooks:
   - id: black
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.14.0
+  rev: v0.15.0
   hooks:
   - id: ruff
 - repo: https://github.com/RobertCraigie/pyright-python
-  rev: v1.1.406
+  rev: v1.1.408
   hooks:
   - id: pyright
     name: pyright (system)

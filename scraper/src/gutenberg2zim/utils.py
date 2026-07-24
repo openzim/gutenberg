@@ -1,6 +1,5 @@
 import hashlib
 import subprocess
-import sys
 import unicodedata
 import zipfile
 from pathlib import Path
@@ -36,22 +35,13 @@ def fname_for(book: Book, book_format: str) -> str:
     return f"{book.book_id}.{book_format}"
 
 
-def get_etag_from_url(url: str) -> str | None:
-    try:
-        response_headers = requests.head(
-            url=url, allow_redirects=True, timeout=DEFAULT_HTTP_TIMEOUT
-        ).headers
-
-    except Exception as e:
-        logger.error(url + " > Problem while head request\n" + str(e) + "\n")
-        return None
-    else:
-        return response_headers.get("Etag", None)
+class CriticalError(RuntimeError):
+    """Raised on fatal errors that should abort the scraper"""
 
 
 def critical_error(message):
     logger.critical(f"ERROR: {message}")
-    sys.exit(1)
+    raise CriticalError(message)
 
 
 def normalize(text: str | None = None) -> str | None:
