@@ -37,15 +37,6 @@ class BookContent:
     cover_image: bytes | None = None
 
 
-def resource_exists(url):
-    try:
-        with requests.get(url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT) as r:
-            return r.status_code == requests.codes.ok
-    except Exception as exc:
-        logger.error(f"Exception occurred while testing {url}\n {exc}")
-        return False
-
-
 def handle_zipped_html(zip_content: bytes, book: Book) -> dict[str, bytes]:
     """Extract HTML zip and return files as dict of filename -> bytes"""
 
@@ -136,7 +127,7 @@ def download_book(
             )
             if not url:
                 # not supposed to happen, this is a bug
-                raise Exception(
+                raise RuntimeError(
                     f"Unsupported {pg_type} pg_type for {book_format} #{book.book_id}"
                 )
 

@@ -1,6 +1,6 @@
 import pytest
 
-from gutenberg2zim.rdf import RdfParser, clean_marc_notation
+from gutenberg2zim.rdf import RdfParseError, RdfParser, clean_marc_notation
 
 RDF_HEADER = """
 <?xml version="1.0" encoding="utf-8"?>
@@ -345,7 +345,7 @@ def test_rdf_parser_title_missing_license():
         123,
     )
     with pytest.raises(
-        Exception, match="Impossible to find license tag in book 123 RD"
+        RdfParseError, match="Impossible to find license tag in book 123 RD"
     ):
         rdf.parse()
 
@@ -363,7 +363,7 @@ def test_rdf_parser_title_missing_downloads():
         123,
     )
     with pytest.raises(
-        Exception, match="Impossible to find download tag in book 123 RD"
+        RdfParseError, match="Impossible to find download tag in book 123 RD"
     ):
         rdf.parse()
 

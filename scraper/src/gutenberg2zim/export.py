@@ -47,11 +47,15 @@ from gutenberg2zim.utils import (
     article_name_for,
     book_name_for_fs,
     fname_for,
-    read_file,
     save_file,
 )
 
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
+
+
+class HtmlRewriteError(RuntimeError):
+    """Raised when static HTML rewriting encounters an unexpected structure"""
+
 
 jinja_env = Environment(
     loader=PackageLoader("gutenberg2zim", "templates"),
@@ -120,21 +124,6 @@ jinja_env.filters["article_name_for"] = lambda book, cover=False: article_name_f
     book, cover=cover
 )
 jinja_env.filters["archive_name_for"] = archive_name_for
-
-
-def html_content_for(book: Book, src_dir):
-    html_fpath = src_dir / fname_for(book, "html")
-
-    # is HTML file present?
-    if not html_fpath.exists():
-        logger.warn(f"Missing HTML content for #{book.book_id} at {html_fpath}")
-        return None, None
-
-    try:
-        return read_file(html_fpath)
-    except UnicodeDecodeError:
-        logger.error(f"Unable to read HTML content: {html_fpath}")
-        raise
 
 
 def transform_image_path(book_id: int, path: str) -> str:
@@ -232,7 +221,7 @@ def update_html_for_static(
             soup.title.string = book.title
         else:
             if not soup.html:
-                raise Exception("HTML should be set")
+                raise HtmlRewriteError("HTML should be set")
             head = soup.find("head")
             if not head:
                 head = soup.new_tag("head")
@@ -278,8 +267,7 @@ def update_html_for_static(
             "End of The Project Gutenberg EBook",
         ),
         (
-            "=========================================================="
-            "===============",
+            "=========================================================================",
             "——————————————————————————-",
         ),
         ("Project Gutenberg Etext", "End of Project Gutenberg Etext"),
@@ -289,7 +277,8 @@ def update_html_for_static(
 
     body = soup.find("body")
     if not isinstance(body, Tag):
-        return
+        # No <body> to rewrite; return the original HTML unchanged
+        return soup
     try:
         number_of_children_tags = sum(
             [1 for e in body.children if isinstance(e, bs4.Tag)]
@@ -352,7 +341,7 @@ def update_html_for_static(
         info_soup = BeautifulSoup(infobox_html, "lxml")
         info_box = info_soup.find("div")
         if not isinstance(info_box, Tag):
-            raise Exception("info_box div should be a Tag class")
+            raise HtmlRewriteError("info_box div should be a Tag class")
         body.insert(0, info_box)
 
         # Ensure head exists
@@ -360,7 +349,7 @@ def update_html_for_static(
         if not head:
             html = soup.find("html")
             if not isinstance(html, Tag):
-                raise Exception("html should be a Tag class")
+                raise HtmlRewriteError("html should be a Tag class")
             head = soup.new_tag("head")
             html.insert(0, head)
 
@@ -390,11 +379,11 @@ def update_html_for_static(
         head = soup.find("head")
         html = soup.find("html")
         if not isinstance(head, Tag):
-            raise Exception("head should be a Tag class")
+            raise HtmlRewriteError("head should be a Tag class")
         if not isinstance(html, Tag):
-            raise Exception("html should be a Tag class")
+            raise HtmlRewriteError("html should be a Tag class")
         if not isinstance(meta.head, Tag):
-            raise Exception("meta.head should be a Tag class")
+            raise HtmlRewriteError("meta.head should be a Tag class")
         if head:
             head.insert(0, meta.head.contents[0])
         elif html:

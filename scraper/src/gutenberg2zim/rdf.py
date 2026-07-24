@@ -1,5 +1,4 @@
 import re
-from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup, Tag
@@ -8,6 +7,10 @@ from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, logger
 from gutenberg2zim.csv_catalog import transform_locc_code
 from gutenberg2zim.models import Author, Book, repository
 from gutenberg2zim.utils import normalize
+
+
+class RdfParseError(RuntimeError):
+    """Raised when a book RDF file cannot be parsed"""
 
 
 class RdfParser:
@@ -134,14 +137,18 @@ class RdfParser:
         # This will be used to determine the popularity of the book.
         downloads_tag = soup.find("pgterms:downloads")
         if not isinstance(downloads_tag, Tag):
-            raise Exception(f"Impossible to find download tag in book {self.gid} RDF")
+            raise RdfParseError(
+                f"Impossible to find download tag in book {self.gid} RDF"
+            )
         self.downloads = downloads_tag.text
 
         # The book might be licensed under GPL, public domain
         # or might be copyrighted
         license_tag = soup.find("dcterms:rights")
         if not isinstance(license_tag, Tag):
-            raise Exception(f"Impossible to find license tag in book {self.gid} RDF")
+            raise RdfParseError(
+                f"Impossible to find license tag in book {self.gid} RDF"
+            )
         self.license = license_tag.text
         return self
 
@@ -230,7 +237,7 @@ def download_and_parse_book_rdf(book_id: int, mirror_url: str) -> Book | None:
 
     Raises:
         requests.RequestException: If RDF download fails (retries handled by caller)
-        Exception: If RDF parsing fails
+        RdfParseError: If RDF parsing fails
     """
     rdf_url = f"{mirror_url}/cache/epub/{book_id}/pg{book_id}.rdf"
 
@@ -270,19 +277,3 @@ def get_formatted_number(num: str | None) -> str | None:
     if all(["-" in num, num.replace("-", "").strip().isdigit()]):
         return " ".join([num, "BC"])
     return num
-
-
-if __name__ == "__main__":
-    # Bacic Test with a sample rdf file
-    nums = [f"{i:0=5d}" for i in range(21000, 40000)]
-    for num in nums:
-        logger.debug(f"Testing RDF: {num}")
-        curd = Path(__file__).parent
-        rdf = curd.parent / "rdf-files" / num / f"pg{num}.rdf"
-        if rdf.is_file():
-            data = ""
-            with open(rdf) as f:
-                data = f.read()
-
-            parser = RdfParser(data, num).parse()
-            logger.info(f"Parsed name: {parser.first_name} {parser.last_name}")

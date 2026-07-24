@@ -130,7 +130,8 @@ def build_zimfile(
 
     if zim_file is None:
         zim_file = "{}_{}.zim".format(
-            zim_name, datetime.datetime.now().strftime("%Y-%m")  # noqa: DTZ005
+            zim_name,
+            datetime.datetime.now().strftime("%Y-%m"),  # noqa: DTZ005
         )
         zim_path = output_folder / zim_file
     else:
@@ -138,6 +139,9 @@ def build_zimfile(
         if not zim_path.is_absolute() and zim_path.parent == Path("."):
             # Just a filename, put it in output_folder
             zim_path = output_folder / zim_path
+
+    # Ensure the output folder exists before creating the ZIM
+    zim_path.parent.mkdir(parents=True, exist_ok=True)
 
     if zim_path.exists() and not overwrite:
         logger.info(f"ZIM file `{zim_file}` already exist.")
