@@ -3,9 +3,11 @@ import re
 import requests
 from bs4 import BeautifulSoup, Tag
 
+from gutenberg2zim.adapters import GUTENBERG_SOURCE, book_to_work, work_to_book
 from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, logger
+from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.csv_catalog import transform_locc_code
-from gutenberg2zim.models import Author, Book, repository
+from gutenberg2zim.models import Author, Book
 from gutenberg2zim.utils import normalize
 
 
@@ -169,41 +171,20 @@ def clean_marc_notation(text: str) -> str:
     return re.sub(r"\$[a-z]\s*", "", text) if text else text
 
 
-def _save_rdf_in_repository(parser: RdfParser) -> None:
-    """Save parsed RDF data into the in-memory repository"""
-    # Get or create author
+def _save_rdf_in_work_store(parser: RdfParser, work_store: WorkStore) -> None:
+    """Save parsed RDF data into the work store"""
     if parser.author_id:
-        author = repository.get_author(parser.author_id)
-        if not author:
-            # Create new author
-            normalized_last = normalize(parser.last_name) if parser.last_name else None
-            author = Author(
-                gut_id=parser.author_id,
-                last_name=normalized_last or "Unknown",
-                first_names=normalize(parser.first_name) if parser.first_name else None,
-                birth_year=str(parser.birth_year) if parser.birth_year else None,
-                death_year=str(parser.death_year) if parser.death_year else None,
-            )
-            repository.add_author(author)
-        else:
-            # Update existing author with new data
-            if parser.last_name:
-                normalized_last = normalize(parser.last_name)
-                if normalized_last:
-                    author.last_name = normalized_last
-            if parser.first_name:
-                author.first_names = normalize(parser.first_name)
-            if parser.birth_year:
-                author.birth_year = str(parser.birth_year)
-            if parser.death_year:
-                author.death_year = str(parser.death_year)
+        normalized_last = normalize(parser.last_name) if parser.last_name else None
+        author = Author(
+            gut_id=parser.author_id,
+            last_name=normalized_last or "Unknown",
+            first_names=normalize(parser.first_name) if parser.first_name else None,
+            birth_year=str(parser.birth_year) if parser.birth_year else None,
+            death_year=str(parser.death_year) if parser.death_year else None,
+        )
     else:
         # No author, use Anonymous (gut_id=216)
-        author = repository.get_author("216")
-        if not author:
-            # Should not happen as repository initializes default authors
-            author = Author(gut_id="216", last_name="Anonymous")
-            repository.add_author(author)
+        author = Author(gut_id="216", last_name="Anonymous")
 
     # Create or update book
     normalized_title = normalize(parser.title.strip()) if parser.title else "Untitled"
@@ -221,15 +202,18 @@ def _save_rdf_in_repository(parser: RdfParser) -> None:
             normalize(parser.description.strip()) if parser.description else None
         ),
     )
-    repository.add_book(book)
+    work_store.add(book_to_work(book))
 
 
-def download_and_parse_book_rdf(book_id: int, mirror_url: str) -> Book | None:
+def download_and_parse_book_rdf(
+    book_id: int, mirror_url: str, work_store: WorkStore
+) -> Book | None:
     """Download and parse RDF for a single book from the mirror.
 
     Args:
         book_id: The Gutenberg book ID
         mirror_url: The mirror URL (e.g., "https://gutenberg.mirror.driftle.ss")
+        work_store: The store parsed works are added to
 
     Returns:
         Book object if successful, None only for expected unusable books
@@ -259,8 +243,9 @@ def download_and_parse_book_rdf(book_id: int, mirror_url: str) -> Book | None:
         return None
 
     # All good - save it and return
-    _save_rdf_in_repository(parser)
-    return repository.get_book(book_id)
+    _save_rdf_in_work_store(parser, work_store)
+    work = work_store.get(GUTENBERG_SOURCE, str(book_id))
+    return work_to_book(work) if work else None
 
 
 def get_formatted_number(num: str | None) -> str | None:

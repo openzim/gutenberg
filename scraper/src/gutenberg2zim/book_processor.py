@@ -6,7 +6,10 @@ import apsw
 import backoff
 import requests
 
+from gutenberg2zim.adapters import book_to_work, work_to_book
 from gutenberg2zim.constants import logger
+from gutenberg2zim.core.work_store import WorkStore
+from gutenberg2zim.core.zim_assembler import ZimAssembler
 from gutenberg2zim.download import download_book
 from gutenberg2zim.export import (
     export_book,
@@ -14,7 +17,6 @@ from gutenberg2zim.export import (
     generate_json_files,
     generate_noscript_pages,
 )
-from gutenberg2zim.models import repository
 from gutenberg2zim.rdf import download_and_parse_book_rdf
 from gutenberg2zim.scraper_progress import ScraperProgress
 
@@ -29,6 +31,8 @@ def process_all_books(
     _languages: list[str],
     formats: list[str],
     progress: ScraperProgress,
+    work_store: WorkStore,
+    assembler: ZimAssembler,
     *,
     title_search: bool,
     add_lcc_shelves: bool,
@@ -41,7 +45,7 @@ def process_all_books(
 
     # Export infobox assets (CSS, JS, and icons) first to fail fast if there's an issue
     logger.info("Exporting infobox assets")
-    export_infobox_assets()
+    export_infobox_assets(assembler)
 
     logger.info(
         f"Processing {len(book_ids)} books with {concurrency} (parallel) worker(s)"
@@ -101,7 +105,7 @@ def process_all_books(
     def process_book_inner(book_id: int):
         """Download book content and export directly to ZIM with retry logic"""
 
-        book = download_and_parse_book_rdf(book_id, mirror_url)
+        book = download_and_parse_book_rdf(book_id, mirror_url, work_store)
         if not book:
             return
 
@@ -109,6 +113,7 @@ def process_all_books(
             mirror_url=mirror_url,
             book=book,
             formats=formats,
+            work_store=work_store,
         )
 
         if book_content:
@@ -117,6 +122,7 @@ def process_all_books(
                 book_files=book_content.files,
                 formats=formats,
                 mirror_url=mirror_url,
+                assembler=assembler,
                 _zim_name=zim_name,
                 _title_search=title_search,
                 _add_lcc_shelves=add_lcc_shelves,
@@ -127,7 +133,11 @@ def process_all_books(
     # Compute popularity (a bit too late for rendering on books pages,
     # but still useful for sorting)
     logger.info("Computing book popularity")
-    all_books = repository.get_all_books()
+    all_books = sorted(
+        (work_to_book(work) for work in work_store.works),
+        key=lambda book: book.downloads,
+        reverse=True,
+    )
 
     # Check if any books were successfully downloaded
     if not all_books:
@@ -156,12 +166,16 @@ def process_all_books(
         book.popularity = sum(
             [int(book.downloads >= stars_limits[i]) for i in range(NB_POPULARITY_STARS)]
         )
+        # Write the computed popularity back into the store
+        work_store.add(book_to_work(book))
 
     # export to JSON files (new format for Vue.js UI)
     logger.info("Generating JSON files for Vue.js UI")
     generate_json_files(
         zim_name=zim_name,
         formats=formats,
+        work_store=work_store,
+        assembler=assembler,
         title=title,
         description=description,
         add_lcc_shelves=add_lcc_shelves,
@@ -171,4 +185,8 @@ def process_all_books(
 
     # Generate No-JS fallback pages
     logger.info("Generating No-JS fallback pages")
-    generate_noscript_pages(formats=formats)
+    generate_noscript_pages(
+        formats=formats,
+        work_store=work_store,
+        assembler=assembler,
+    )

@@ -5,11 +5,13 @@ from pathlib import Path
 
 from gutenberg2zim import i18n
 from gutenberg2zim.book_processor import process_all_books
+from gutenberg2zim.config import ScrapeConfig
 from gutenberg2zim.constants import logger
+from gutenberg2zim.core.work_store import WorkStore
+from gutenberg2zim.core.zim_assembler import ZimAssembler
 from gutenberg2zim.csv_catalog import CatalogEntry
 from gutenberg2zim.iso639 import ISO_MATRIX, ISO_MATRIX_REV, ZIM_LANGUAGES_MAP
 from gutenberg2zim.scraper_progress import ScraperProgress
-from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import get_zim_name
 
 
@@ -40,7 +42,7 @@ def get_zim_language_metadata(languages: list[str], books: list[CatalogEntry]):
     return sorted(language_counts, key=lambda lang: language_counts[lang], reverse=True)
 
 
-def export_ui_dist(ui_dist: Path, title: str) -> None:
+def export_ui_dist(ui_dist: Path, title: str, assembler: ZimAssembler) -> None:
     """Export Vue.js UI dist folder to ZIM file."""
     if not ui_dist.exists():
         raise FileNotFoundError(f"UI dist directory not found: {ui_dist}")
@@ -62,14 +64,14 @@ def export_ui_dist(ui_dist: Path, title: str) -> None:
                 html_content,
                 flags=re.IGNORECASE,
             )
-            Global.add_item_for(
+            assembler.add_item_for(
                 path=path,
                 content=new_html_content,
                 mimetype="text/html",
                 is_front=True,
             )
         else:
-            Global.add_item_for(
+            assembler.add_item_for(
                 path=path,
                 fpath=file,
                 is_front=False,
@@ -80,11 +82,8 @@ def export_ui_dist(ui_dist: Path, title: str) -> None:
 
 def build_zimfile(
     books: list[CatalogEntry],
-    output_folder: Path,
-    mirror_url: str,
-    concurrency: int,
-    languages: list[str],
-    formats: list[str],
+    config: ScrapeConfig,
+    work_store: WorkStore,
     zim_file: str | None,
     zim_name: str | None,
     title: str | None,
@@ -92,6 +91,7 @@ def build_zimfile(
     long_description: str | None,
     zim_languages: list[str] | None,
     publisher: str,
+    ui_dist: Path,
     *,
     primary_color: str | None = None,
     secondary_color: str | None = None,
@@ -101,11 +101,15 @@ def build_zimfile(
     add_lcc_shelves: bool,
     progress: ScraperProgress,
     with_fulltext_index: bool,
-    debug: bool,
-    ui_dist: Path,
 ) -> None:
-    """Build ZIM file using singleton BookRepository"""
+    """Build ZIM file from the works collected in the work store"""
     progress.increase_total(len(books))
+    output_folder = config.output_folder
+    mirror_url = config.mirror_url
+    concurrency = config.concurrency
+    languages = config.languages or []
+    formats = config.formats
+    debug = config.debug
     iso_languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
 
     formats.sort()
@@ -150,7 +154,7 @@ def build_zimfile(
         logger.info(f"Removing existing ZIM file {zim_file}")
         zim_path.unlink(missing_ok=True)
 
-    Global.setup(
+    assembler = ZimAssembler(
         filename=zim_path,
         language=zim_languages or get_zim_language_metadata(languages, books),
         title=title,
@@ -158,11 +162,13 @@ def build_zimfile(
         long_description=long_description,
         name=zim_name,
         publisher=publisher,
+        source_creator="gutenberg.org",
+        tags="_category:gutenberg;gutenberg",
         with_fulltext_index=with_fulltext_index,
         debug=debug,
     )
 
-    Global.start()
+    assembler.start()
 
     try:
         process_all_books(
@@ -173,6 +179,8 @@ def build_zimfile(
             _languages=languages,
             formats=formats,
             progress=progress,
+            work_store=work_store,
+            assembler=assembler,
             title_search=title_search,
             add_lcc_shelves=add_lcc_shelves,
             title=title,
@@ -182,15 +190,15 @@ def build_zimfile(
         )
 
         # Export Vue.js UI dist folder
-        export_ui_dist(ui_dist, title)
+        export_ui_dist(ui_dist, title, assembler)
 
     except KeyboardInterrupt:
-        Global.creator.can_finish = False
+        assembler.can_finish = False
         logger.error("KeyboardInterrupt, exiting.")
         raise
     except Exception:
-        Global.creator.can_finish = False
+        assembler.can_finish = False
         logger.exception("Interrupting process due to error")
         raise
     else:
-        Global.finish()
+        assembler.finish()

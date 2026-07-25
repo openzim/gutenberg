@@ -5,12 +5,14 @@ from pathlib import Path
 
 import requests
 
+from gutenberg2zim.adapters import GUTENBERG_SOURCE
 from gutenberg2zim.constants import (
     DEFAULT_HTTP_TIMEOUT,
     DL_CHUNCK_SIZE,
     logger,
 )
-from gutenberg2zim.models import Book, repository
+from gutenberg2zim.core.work_store import WorkStore
+from gutenberg2zim.models import Book
 from gutenberg2zim.pg_archive_urls import url_for_type
 from gutenberg2zim.utils import (
     ALL_FORMATS,
@@ -103,6 +105,7 @@ def download_book(
     mirror_url: str,
     book: Book,
     formats: list[str],
+    work_store: WorkStore,
 ) -> BookContent | None:
     """Download a book in all requested formats and return in-memory content"""
     logger.debug(f"\tDownloading content files for Book #{book.book_id}")
@@ -173,7 +176,7 @@ def download_book(
         logger.warning(
             f"\t\tBook #{book.book_id} could not be downloaded in any format. "
         )
-        repository.remove_book(book.book_id)
+        work_store.remove(GUTENBERG_SOURCE, str(book.book_id))
         return None
 
     # Note: Cover image download moved to export_book to avoid downloading
