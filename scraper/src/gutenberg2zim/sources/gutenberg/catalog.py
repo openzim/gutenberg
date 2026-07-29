@@ -1,11 +1,21 @@
+"""Gutenberg catalog access (moved from `gutenberg2zim.csv_catalog`).
+
+Reads the `pg_catalog.csv.gz` dump and exposes it through the source-agnostic
+`CatalogPort` interface.
+"""
+
 import csv
 import gzip
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
 from gutenberg2zim.constants import logger
+from gutenberg2zim.core.ports import CatalogFilters, CatalogPort, WorkRef
 from gutenberg2zim.utils import download_file
+
+GUTENBERG_SOURCE = "gutenberg"
 
 
 @dataclass
@@ -165,3 +175,30 @@ def filter_books(
         f"lcc_shelves: {lcc_shelves if lcc_shelves is not None else 'not filtering'})"
     )
     return filtered
+
+
+class GutenbergCsvCatalog(CatalogPort):
+    """`CatalogPort` implementation backed by the Gutenberg CSV catalog dump"""
+
+    def __init__(self, csv_path: Path):
+        self._csv_path = csv_path
+
+    def discover(self, filters: CatalogFilters) -> Iterable[WorkRef]:
+        entries = filter_books(
+            load_catalog(self._csv_path),
+            languages=filters.languages,
+            only_books=(
+                [int(book_id) for book_id in filters.book_ids]
+                if filters.book_ids
+                else None
+            ),
+            lcc_shelves=filters.collections,
+        )
+        return [
+            WorkRef(
+                id=str(entry.book_id),
+                source=GUTENBERG_SOURCE,
+                extra={"languages": entry.languages, "lcc_shelf": entry.lcc_shelf},
+            )
+            for entry in entries
+        ]

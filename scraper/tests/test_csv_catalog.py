@@ -1,6 +1,6 @@
 import gzip
 
-from gutenberg2zim.csv_catalog import (
+from gutenberg2zim.sources.gutenberg.catalog import (
     CatalogEntry,
     filter_books,
     load_catalog,

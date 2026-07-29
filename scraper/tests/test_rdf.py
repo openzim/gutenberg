@@ -1,6 +1,10 @@
 import pytest
 
-from gutenberg2zim.rdf import RdfParseError, RdfParser, clean_marc_notation
+from gutenberg2zim.sources.gutenberg.metadata import (
+    RdfParseError,
+    RdfParser,
+    clean_marc_notation,
+)
 
 RDF_HEADER = """
 <?xml version="1.0" encoding="utf-8"?>

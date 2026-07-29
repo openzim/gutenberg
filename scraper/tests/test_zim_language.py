@@ -1,6 +1,6 @@
 import pytest
 
-from gutenberg2zim.csv_catalog import CatalogEntry
+from gutenberg2zim.sources.gutenberg.catalog import CatalogEntry
 from gutenberg2zim.zim import get_zim_language_metadata, resolve_language
 
 

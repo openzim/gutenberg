@@ -5,7 +5,7 @@ from pathlib import Path
 
 import requests
 
-from gutenberg2zim.adapters import GUTENBERG_SOURCE
+from gutenberg2zim.adapters import GUTENBERG_SOURCE, book_to_work
 from gutenberg2zim.constants import (
     DEFAULT_HTTP_TIMEOUT,
     DL_CHUNCK_SIZE,
@@ -13,19 +13,12 @@ from gutenberg2zim.constants import (
 )
 from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.models import Book
-from gutenberg2zim.pg_archive_urls import url_for_type
+from gutenberg2zim.sources.gutenberg.resolver import GutenbergFormatResolver
 from gutenberg2zim.utils import (
     ALL_FORMATS,
     ensure_unicode,
     fname_for,
 )
-
-# map of preferred document type for every format
-PG_PREFERRED_TYPES = {
-    "html": ["zip", "html.images", "html.noimages"],
-    "epub": ["epub3.images", "epub.images", "epub.noimages"],
-    "pdf": ["pdf.images", "pdf.noimages"],
-}
 
 
 @dataclass
@@ -118,22 +111,20 @@ def download_book(
         requested_formats.append("html")
 
     book_content = BookContent(book=book)
+    work = book_to_work(book)
+    resolver = GutenbergFormatResolver(mirror_url)
 
     for book_format in requested_formats:
         logger.debug(f"Processing {book_format}")
 
+        request = resolver.resolve(work, book_format)
+        if request is None:
+            # not supposed to happen, this is a bug
+            raise RuntimeError(f"Unsupported {book_format} format for #{book.book_id}")
+
         pg_type_to_use = None
         url = None
-        for pg_type in PG_PREFERRED_TYPES[book_format]:
-            url = url_for_type(
-                pg_type=pg_type, book_id=book.book_id, mirror_url=mirror_url
-            )
-            if not url:
-                # not supposed to happen, this is a bug
-                raise RuntimeError(
-                    f"Unsupported {pg_type} pg_type for {book_format} #{book.book_id}"
-                )
-
+        for url in request.extra["candidate_urls"]:
             with requests.get(
                 url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT
             ) as pg_resp:  # in seconds
@@ -163,7 +154,7 @@ def download_book(
                         filename = fname_for(book, book_format)
                         book_content.files[filename] = content_bytes
 
-                    pg_type_to_use = pg_type
+                    pg_type_to_use = True
                     break
 
         if not url or not pg_type_to_use:

@@ -12,13 +12,13 @@ from gutenberg2zim.adapters import GUTENBERG_SOURCE
 from gutenberg2zim.config import ScrapeConfig
 from gutenberg2zim.constants import VERSION, logger
 from gutenberg2zim.core.work_store import WorkStore
-from gutenberg2zim.csv_catalog import (
+from gutenberg2zim.scraper_progress import ScraperProgress
+from gutenberg2zim.sources.gutenberg.catalog import (
     download_csv_file,
     filter_books,
     get_csv_fpath,
     load_catalog,
 )
-from gutenberg2zim.scraper_progress import ScraperProgress
 from gutenberg2zim.utils import ALL_FORMATS, critical_error
 from gutenberg2zim.zim import build_zimfile
 

@@ -1,13 +1,21 @@
+"""Gutenberg metadata access (moved from `gutenberg2zim.rdf`).
+
+Downloads and parses the per-book RDF dumps and exposes them through the
+source-agnostic `MetadataPort` interface.
+"""
+
 import re
+from collections.abc import Iterable
 
 import requests
 from bs4 import BeautifulSoup, Tag
 
-from gutenberg2zim.adapters import GUTENBERG_SOURCE, book_to_work, work_to_book
+from gutenberg2zim.adapters import book_to_work
 from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, logger
-from gutenberg2zim.core.work_store import WorkStore
-from gutenberg2zim.csv_catalog import transform_locc_code
+from gutenberg2zim.core.models import Work
+from gutenberg2zim.core.ports import MetadataPort, WorkRef
 from gutenberg2zim.models import Author, Book
+from gutenberg2zim.sources.gutenberg.catalog import transform_locc_code
 from gutenberg2zim.utils import normalize
 
 
@@ -171,8 +179,8 @@ def clean_marc_notation(text: str) -> str:
     return re.sub(r"\$[a-z]\s*", "", text) if text else text
 
 
-def _save_rdf_in_work_store(parser: RdfParser, work_store: WorkStore) -> None:
-    """Save parsed RDF data into the work store"""
+def _work_from_parser(parser: RdfParser) -> Work:
+    """Build a Work from a parsed RDF"""
     if parser.author_id:
         normalized_last = normalize(parser.last_name) if parser.last_name else None
         author = Author(
@@ -186,37 +194,34 @@ def _save_rdf_in_work_store(parser: RdfParser, work_store: WorkStore) -> None:
         # No author, use Anonymous (gut_id=216)
         author = Author(gut_id="216", last_name="Anonymous")
 
-    # Create or update book
     normalized_title = normalize(parser.title.strip()) if parser.title else "Untitled"
-    book = Book(
-        book_id=int(parser.gid),
-        title=normalized_title if normalized_title else "Untitled",
-        subtitle=normalize(parser.subtitle.strip()) if parser.subtitle else None,
-        author=author,
-        languages=[lang.strip() for lang in parser.languages],
-        license=parser.license,
-        downloads=int(parser.downloads),
-        lcc_shelf=parser.lcc_shelf,
-        has_cover=parser.has_cover,
-        description=(
-            normalize(parser.description.strip()) if parser.description else None
-        ),
+    return book_to_work(
+        Book(
+            book_id=int(parser.gid),
+            title=normalized_title if normalized_title else "Untitled",
+            subtitle=normalize(parser.subtitle.strip()) if parser.subtitle else None,
+            author=author,
+            languages=[lang.strip() for lang in parser.languages],
+            license=parser.license,
+            downloads=int(parser.downloads),
+            lcc_shelf=parser.lcc_shelf,
+            has_cover=parser.has_cover,
+            description=(
+                normalize(parser.description.strip()) if parser.description else None
+            ),
+        )
     )
-    work_store.add(book_to_work(book))
 
 
-def download_and_parse_book_rdf(
-    book_id: int, mirror_url: str, work_store: WorkStore
-) -> Book | None:
+def fetch_book_metadata(book_id: int, mirror_url: str) -> Work | None:
     """Download and parse RDF for a single book from the mirror.
 
     Args:
         book_id: The Gutenberg book ID
         mirror_url: The mirror URL (e.g., "https://gutenberg.mirror.driftle.ss")
-        work_store: The store parsed works are added to
 
     Returns:
-        Book object if successful, None only for expected unusable books
+        Work if successful, None only for expected unusable books
         (no license, no title, etc.)
 
     Raises:
@@ -242,10 +247,22 @@ def download_and_parse_book_rdf(
         logger.info(f"\tWARN: Unusable book without title {book_id}")
         return None
 
-    # All good - save it and return
-    _save_rdf_in_work_store(parser, work_store)
-    work = work_store.get(GUTENBERG_SOURCE, str(book_id))
-    return work_to_book(work) if work else None
+    return _work_from_parser(parser)
+
+
+class GutenbergRdfMetadata(MetadataPort):
+    """`MetadataPort` implementation backed by the Gutenberg RDF dumps"""
+
+    def __init__(self, mirror_url: str):
+        self._mirror_url = mirror_url
+
+    def fetch(self, refs: Iterable[WorkRef]) -> Iterable[Work]:
+        works = []
+        for ref in refs:
+            work = fetch_book_metadata(int(ref.id), self._mirror_url)
+            if work is not None:
+                works.append(work)
+        return works
 
 
 def get_formatted_number(num: str | None) -> str | None:
