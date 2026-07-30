@@ -18,10 +18,13 @@ from zimscraperlib.image.optimization import (
 )
 from zimscraperlib.zim.indexing import IndexData
 
+from gutenberg2zim.adapters import work_to_book
 from gutenberg2zim.constants import logger
+from gutenberg2zim.core.work_store import WorkStore
+from gutenberg2zim.core.zim_assembler import ZimAssembler
 from gutenberg2zim.download import download_book_cover
 from gutenberg2zim.iso639 import language_name
-from gutenberg2zim.models import Author, Book, repository
+from gutenberg2zim.models import Author, Book
 from gutenberg2zim.schemas import (
     Author as AuthorSchema,
 )
@@ -40,7 +43,6 @@ from gutenberg2zim.schemas import (
 from gutenberg2zim.schemas import (
     Book as BookSchema,
 )
-from gutenberg2zim.shared import Global
 from gutenberg2zim.utils import (
     UTF8,
     archive_name_for,
@@ -401,6 +403,7 @@ def export_book(
     book_files: dict[str, bytes],
     formats: list[str],
     mirror_url: str,
+    assembler: ZimAssembler,
     _zim_name: str,
     *,
     _title_search: bool,
@@ -411,6 +414,7 @@ def export_book(
         book=book,
         book_files=book_files,
         formats=formats,
+        assembler=assembler,
     )
 
     # Handle cover image
@@ -422,7 +426,7 @@ def export_book(
         logger.debug(
             f"Using HTML cover for book #{book.book_id}: {book.html_cover_path}"
         )
-        Global.add_alias(
+        assembler.add_alias(
             path=cover_path,
             title="",
             target=book.html_cover_path,
@@ -434,7 +438,7 @@ def export_book(
         if cover_image:
             logger.debug(f"Using downloaded cover for book #{book.book_id}")
             cover_image = optimize_content(book, cover_path, cover_image)
-            Global.add_item_for(
+            assembler.add_item_for(
                 path=cover_path,
                 content=cover_image,
                 mimetype="image/webp",
@@ -446,6 +450,7 @@ def handle_book_files(
     book: Book,
     book_files: dict[str, bytes],
     formats: list[str],
+    assembler: ZimAssembler,
 ):
     """Handle book files from in-memory content and add to ZIM"""
 
@@ -466,7 +471,7 @@ def handle_book_files(
             raise
 
         # Add the optimized HTML directly to ZIM
-        Global.add_item_for(
+        assembler.add_item_for(
             path=article_name,
             content=str(new_html),
             mimetype="text/html",
@@ -490,7 +495,7 @@ def handle_book_files(
                 content = book_files[book_filename]
                 if other_format == "epub":
                     content = optimize_epub_bytes(content, book)
-                Global.add_item_for(
+                assembler.add_item_for(
                     path=archive_name,
                     content=content,
                     is_front=False,
@@ -517,7 +522,7 @@ def handle_book_files(
                 new_html = update_html_for_static(
                     book=book, html_content=html_str, formats=formats
                 )
-                Global.add_item_for(
+                assembler.add_item_for(
                     path=filename,
                     content=str(new_html),
                     mimetype="text/html",
@@ -549,7 +554,7 @@ def handle_book_files(
                             f"{output_filename}"
                         )
 
-                Global.add_item_for(
+                assembler.add_item_for(
                     path=output_filename,
                     content=optimized_file_content,
                     is_front=False,
@@ -713,17 +718,22 @@ def optimize_epub_bytes(epub_bytes: bytes, book: Book) -> bytes:
     return optimized_bytes
 
 
+def _all_books(work_store: WorkStore) -> list[Book]:
+    """Get all works from the store, converted back to legacy Book objects"""
+    return [work_to_book(work) for work in work_store.works]
+
+
 def _lcc_shelf_list_for_books(books: Iterable[Book]):
     return sorted({book.lcc_shelf for book in books if book.lcc_shelf})
 
 
-def lcc_shelf_list():
-    return _lcc_shelf_list_for_books(repository.get_all_books())
+def lcc_shelf_list(work_store: WorkStore):
+    return _lcc_shelf_list_for_books(_all_books(work_store))
 
 
-def lcc_shelf_list_language(lang):
+def lcc_shelf_list_language(lang, work_store: WorkStore):
     return _lcc_shelf_list_for_books(
-        filter(lambda book: lang in book.languages, repository.get_all_books())
+        filter(lambda book: lang in book.languages, _all_books(work_store))
     )
 
 
@@ -741,9 +751,9 @@ def _build_author_books_map(books: Iterable[Book]) -> dict[str, list[Book]]:
 # JSON Generation Functions for Vue.js UI
 
 
-def _get_authors_with_books() -> list[Author]:
-    """Get only authors who have at least one book in the repository"""
-    all_books = repository.get_all_books()
+def _get_authors_with_books(work_store: WorkStore) -> list[Author]:
+    """Get only authors who have at least one book in the work store"""
+    all_books = _all_books(work_store)
     authors_dict = {book.author.gut_id: book.author for book in all_books}
     return list(authors_dict.values())
 
@@ -850,7 +860,9 @@ def _lcc_shelf_to_preview(shelf_code: str, all_books: list[Book]) -> LCCShelfPre
     )
 
 
-def add_index_entry(title: str, content: str, fname: str, vue_route: str) -> None:
+def add_index_entry(
+    title: str, content: str, fname: str, vue_route: str, assembler: ZimAssembler
+) -> None:
     """Add a custom item to the ZIM index with HTML redirect to Vue.js route.
 
     Args:
@@ -858,6 +870,7 @@ def add_index_entry(title: str, content: str, fname: str, vue_route: str) -> Non
         content: Content/description for search indexing
         fname: Filename for the index entry (e.g., "book_12345")
         vue_route: Vue.js route path (e.g., "book/12345")
+        assembler: The ZIM assembler to add the item to
     """
     redirect_url = f"../index.html#/{vue_route}"
     safe_title = escape(title)
@@ -870,7 +883,7 @@ def add_index_entry(title: str, content: str, fname: str, vue_route: str) -> Non
     )
 
     logger.debug(f"Adding {fname} to ZIM index")
-    Global.add_item_for(
+    assembler.add_item_for(
         title=title,
         path=f"index/{fname}",
         content=html_content,
@@ -882,6 +895,8 @@ def add_index_entry(title: str, content: str, fname: str, vue_route: str) -> Non
 def generate_json_files(
     zim_name: str,
     formats: list[str],
+    work_store: WorkStore,
+    assembler: ZimAssembler,
     title: str | None = None,
     description: str | None = None,
     *,
@@ -896,8 +911,8 @@ def generate_json_files(
     max_books_in_index = 10
 
     # Fetch data once and reuse
-    all_books = repository.get_all_books()
-    all_authors = _get_authors_with_books()
+    all_books = _all_books(work_store)
+    all_authors = _get_authors_with_books(work_store)
 
     # Build author stats once for O(1) lookups
     author_stats: dict[str, tuple[int, int]] = {}
@@ -912,7 +927,7 @@ def generate_json_files(
         _book_to_preview(book, formats, author_stats) for book in all_books
     ]
     books_collection = Books(books=books_preview, total_count=len(books_preview))
-    Global.add_item_for(
+    assembler.add_item_for(
         path="books.json",
         content=books_collection.model_dump_json(by_alias=True, indent=2),
         mimetype="application/json",
@@ -926,7 +941,7 @@ def generate_json_files(
     authors_collection = Authors(
         authors=authors_preview, total_count=len(authors_preview)
     )
-    Global.add_item_for(
+    assembler.add_item_for(
         path="authors.json",
         content=authors_collection.model_dump_json(by_alias=True, indent=2),
         mimetype="application/json",
@@ -937,12 +952,12 @@ def generate_json_files(
         logger.debug("Generating lcc_shelves.json")
         shelves_preview = [
             _lcc_shelf_to_preview(shelf_code, all_books)
-            for shelf_code in repository.get_lcc_shelves()
+            for shelf_code in _lcc_shelf_list_for_books(all_books)
         ]
         shelves_collection = LCCShelves(
             shelves=shelves_preview, total_count=len(shelves_preview)
         )
-        Global.add_item_for(
+        assembler.add_item_for(
             path="lcc_shelves.json",
             content=shelves_collection.model_dump_json(by_alias=True, indent=2),
             mimetype="application/json",
@@ -956,7 +971,7 @@ def generate_json_files(
         primary_color=primary_color,
         secondary_color=secondary_color,
     )
-    Global.add_item_for(
+    assembler.add_item_for(
         path="config.json",
         content=config.model_dump_json(by_alias=True, indent=2),
         mimetype="application/json",
@@ -967,7 +982,7 @@ def generate_json_files(
     logger.debug("Generating book detail files and index entries")
     for book in all_books:
         book_detail = _book_to_schema(book, formats)
-        Global.add_item_for(
+        assembler.add_item_for(
             path=f"books/{book.book_id}.json",
             content=book_detail.model_dump_json(by_alias=True, indent=2),
             mimetype="application/json",
@@ -991,6 +1006,7 @@ def generate_json_files(
             content=". ".join(index_parts) + ".",
             fname=f"book_{book.book_id}",
             vue_route=f"book/{book.book_id}",
+            assembler=assembler,
         )
 
     logger.debug("Generating author detail files and index entries")
@@ -1013,7 +1029,7 @@ def generate_json_files(
             book_count=len(author_books),
         )
 
-        Global.add_item_for(
+        assembler.add_item_for(
             path=f"authors/{author.gut_id}.json",
             content=author_detail.model_dump_json(by_alias=True, indent=2),
             mimetype="application/json",
@@ -1043,11 +1059,12 @@ def generate_json_files(
             content=". ".join(author_parts) + ".",
             fname=f"author_{author.gut_id}",
             vue_route=f"author/{author.gut_id}",
+            assembler=assembler,
         )
 
     if add_lcc_shelves:
         logger.debug("Generating LCC shelf detail files and index entries")
-        for shelf_code in repository.get_lcc_shelves():
+        for shelf_code in _lcc_shelf_list_for_books(all_books):
             shelf_books = [
                 _book_to_preview(book, formats, author_stats)
                 for book in all_books
@@ -1059,7 +1076,7 @@ def generate_json_files(
                 books=shelf_books,
                 book_count=len(shelf_books),
             )
-            Global.add_item_for(
+            assembler.add_item_for(
                 path=f"lcc_shelves/{shelf_code}.json",
                 content=shelf_detail.model_dump_json(by_alias=True, indent=2),
                 mimetype="application/json",
@@ -1089,6 +1106,7 @@ def generate_json_files(
                 content=". ".join(shelf_parts) + ".",
                 fname=f"lcc_shelf_{shelf_code}",
                 vue_route=f"lcc-shelf/{shelf_code}",
+                assembler=assembler,
             )
 
     # Add index entries for main listing pages
@@ -1098,6 +1116,7 @@ def generate_json_files(
         f"Search and filter by language, format, author, and more.",
         fname="books_list",
         vue_route="books",
+        assembler=assembler,
     )
 
     add_index_entry(
@@ -1106,22 +1125,24 @@ def generate_json_files(
         f"Discover books by your favorite authors.",
         fname="authors_list",
         vue_route="authors",
+        assembler=assembler,
     )
 
     if add_lcc_shelves:
-        shelves = repository.get_lcc_shelves()
+        shelves = _lcc_shelf_list_for_books(all_books)
         add_index_entry(
             title="LCC Shelves - Project Gutenberg",
             content=f"Browse books by Library of Congress Classification. "
             f"{len(shelves)} shelves available covering various subjects and topics.",
             fname="lcc_shelves_list",
             vue_route="lcc-shelves",
+            assembler=assembler,
         )
 
     logger.info("JSON file generation completed")
 
 
-def export_infobox_assets() -> None:
+def export_infobox_assets(assembler: ZimAssembler) -> None:
     """Export infobox CSS, JS, and icon files to ZIM"""
     templates_dir = Path(__file__).parent / "templates"
 
@@ -1140,7 +1161,7 @@ def export_infobox_assets() -> None:
             logger.warning(f"Infobox asset not found: {file_path}")
             continue
         logger.debug(f"Adding {zim_path} to ZIM")
-        Global.add_item_for(
+        assembler.add_item_for(
             path=zim_path,
             fpath=file_path,
             mimetype=mimetype,
@@ -1150,6 +1171,8 @@ def export_infobox_assets() -> None:
 
 def generate_noscript_pages(
     formats: list[str],
+    work_store: WorkStore,
+    assembler: ZimAssembler,
 ) -> None:
     """Generate No-JavaScript fallback HTML pages"""
     logger.info("Generating No-JS fallback pages")
@@ -1158,15 +1181,15 @@ def generate_noscript_pages(
     common_css_path = Path(__file__).parent / "templates" / "noscript" / "common.css"
     if common_css_path.exists():
         logger.debug("Adding noscript/common.css to ZIM")
-        Global.add_item_for(
+        assembler.add_item_for(
             path="noscript/common.css",
             fpath=common_css_path,
             mimetype="text/css",
             is_front=False,
         )
-    all_books = repository.get_all_books()
-    all_authors = _get_authors_with_books()
-    shelves = sorted(repository.get_lcc_shelves())
+    all_books = _all_books(work_store)
+    all_authors = _get_authors_with_books(work_store)
+    shelves = _lcc_shelf_list_for_books(all_books)
     shelf_books_map: dict[str, list[Book]] = {
         shelf_code: [book for book in all_books if book.lcc_shelf == shelf_code]
         for shelf_code in shelves
@@ -1179,7 +1202,7 @@ def generate_noscript_pages(
         books=all_books,
         formats=formats,
     )
-    Global.add_item_for(
+    assembler.add_item_for(
         path="noscript/books.html",
         content=books_html,
         mimetype="text/html",
@@ -1201,7 +1224,7 @@ def generate_noscript_pages(
         all_books=all_books,
         author_book_counts=author_book_counts,
     )
-    Global.add_item_for(
+    assembler.add_item_for(
         path="noscript/authors.html",
         content=authors_html,
         mimetype="text/html",
@@ -1221,7 +1244,7 @@ def generate_noscript_pages(
             for code in shelves
         ]
     )
-    Global.add_item_for(
+    assembler.add_item_for(
         path="noscript/lcc_shelves.html",
         content=shelves_html,
         mimetype="text/html",
@@ -1239,7 +1262,7 @@ def generate_noscript_pages(
             books=shelf_books,
             formats=formats,
         )
-        Global.add_item_for(
+        assembler.add_item_for(
             path=f"noscript/lcc_shelf_{shelf_code}.html",
             content=shelf_html,
             mimetype="text/html",
@@ -1256,7 +1279,7 @@ def generate_noscript_pages(
             book=book,
             formats=formats,
         )
-        Global.add_item_for(
+        assembler.add_item_for(
             path=f"noscript/book_{book.book_id}.html",
             content=book_html,
             mimetype="text/html",
@@ -1274,7 +1297,7 @@ def generate_noscript_pages(
             author=author,
             author_books=author_books,
         )
-        Global.add_item_for(
+        assembler.add_item_for(
             path=f"noscript/author_{author.gut_id}.html",
             content=author_html,
             mimetype="text/html",

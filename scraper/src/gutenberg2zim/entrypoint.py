@@ -8,7 +8,10 @@ from zimscraperlib.image.probing import is_hex_color
 from zimscraperlib.inputs import compute_descriptions
 
 from gutenberg2zim import i18n
+from gutenberg2zim.adapters import GUTENBERG_SOURCE
+from gutenberg2zim.config import ScrapeConfig
 from gutenberg2zim.constants import VERSION, logger
+from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.csv_catalog import (
     download_csv_file,
     filter_books,
@@ -264,25 +267,38 @@ def main():
     # Build ZIM file
     logger.info("BUILDING ZIM")
 
-    build_zimfile(
-        output_folder=output_folder,
-        books=filtered_books,
+    config = ScrapeConfig(
+        source=GUTENBERG_SOURCE,
         mirror_url=mirror_url,
+        output_folder=output_folder,
+        zim_file=Path(zim_file) if zim_file else output_folder,
         concurrency=concurrency,
-        languages=book_languages,
-        zim_languages=(
-            [lang.strip() for lang in zim_languages.split(",")]
-            if (zim_languages := arguments.get("--zim-languages"))
-            else None
-        ),
         formats=formats,
-        is_selection=len(only_books_ids) > 0 or len(lcc_shelves or []) > 0,
+        books=[str(book_id) for book_id in only_books_ids] or None,
+        languages=book_languages,
+        collections=lcc_shelves,
+        ui_dist=ui_dist,
+        debug=debug,
+    )
+    work_store = WorkStore()
+
+    build_zimfile(
+        books=filtered_books,
+        config=config,
+        work_store=work_store,
         zim_file=zim_file,
         zim_name=zim_name,
         title=zim_title,
         description=description,
         long_description=long_description,
         publisher=publisher,
+        ui_dist=ui_dist,
+        zim_languages=(
+            [lang.strip() for lang in zim_languages.split(",")]
+            if (zim_languages := arguments.get("--zim-languages"))
+            else None
+        ),
+        is_selection=len(only_books_ids) > 0 or len(lcc_shelves or []) > 0,
         primary_color=primary_color,
         secondary_color=secondary_color,
         overwrite=overwrite,
@@ -290,8 +306,6 @@ def main():
         add_lcc_shelves=add_lcc_shelves,
         progress=progress,
         with_fulltext_index=with_fulltext_index,
-        debug=debug,
-        ui_dist=ui_dist,
     )
 
     # Final increase to indicate we are done

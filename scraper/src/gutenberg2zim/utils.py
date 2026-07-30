@@ -8,8 +8,9 @@ import chardet
 import requests
 
 from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, DL_CHUNCK_SIZE, logger
+from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.iso639 import language_name
-from gutenberg2zim.models import Book, repository
+from gutenberg2zim.models import Book
 
 UTF8 = "utf-8"
 ALL_FORMATS = ["epub", "pdf", "html"]
@@ -84,12 +85,14 @@ def download_file(url: str, fpath: Path) -> bool:
         return False
 
 
-def get_langs_with_count(languages: list[str] | None) -> list[tuple[str, str, int]]:
-    """Get language counts with their names from singleton BookRepository"""
+def get_langs_with_count(
+    languages: list[str] | None, work_store: WorkStore
+) -> list[tuple[str, str, int]]:
+    """Get language counts with their names from the work store"""
     lang_count = {}
 
-    for book in repository.get_all_books():
-        for code in book.languages:
+    for work in work_store.works:
+        for code in work.languages:
             # if not appear in user request languages list, skip counting
             if languages and code not in languages:
                 continue
@@ -103,9 +106,11 @@ def get_langs_with_count(languages: list[str] | None) -> list[tuple[str, str, in
     ]
 
 
-def get_lang_groups() -> tuple[list[tuple[str, str, int]], list[tuple[str, str, int]]]:
-    """Split languages into main and other groups from singleton BookRepository"""
-    langs_wt_count = get_langs_with_count(None)
+def get_lang_groups(
+    work_store: WorkStore,
+) -> tuple[list[tuple[str, str, int]], list[tuple[str, str, int]]]:
+    """Split languages into main and other groups from the work store"""
+    langs_wt_count = get_langs_with_count(None, work_store)
     if len(langs_wt_count) <= NB_MAIN_LANGS:
         return langs_wt_count, []
     else:
