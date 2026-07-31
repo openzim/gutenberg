@@ -6,9 +6,9 @@ RDF/CSV metadata provides as a raw code (e.g. "PR", "QA", "b123") and which
 we normalize to a shelf identifier via `transform_locc_code`.
 """
 
-from gutenberg2zim.adapters import LCC_SHELF_KIND
 from gutenberg2zim.core.models import CollectionRef, Work
 from gutenberg2zim.core.ports import CollectionMapperPort
+from gutenberg2zim.sources.gutenberg.adapters import LCC_SHELF_KIND
 from gutenberg2zim.sources.gutenberg.catalog import transform_locc_code
 
 

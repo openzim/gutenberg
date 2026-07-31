@@ -1,11 +1,14 @@
-"""Tests for EPUB optimization functions in export.py."""
+"""Tests for EPUB optimization functions in sources/gutenberg/plugins.py."""
 
 from types import SimpleNamespace
 
 import pytest
 from bs4 import BeautifulSoup
 
-from gutenberg2zim.export import _process_epub_html, _process_epub_ncx
+from gutenberg2zim.sources.gutenberg.plugins import (
+    _process_epub_html,
+    _process_epub_ncx,
+)
 
 # Test data for NCX processing
 NCX_WITH_LICENSE = b"""<?xml version="1.0" encoding="utf-8"?>

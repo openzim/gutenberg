@@ -1,4 +1,4 @@
-from gutenberg2zim.utils import (
+from gutenberg2zim.core.utils import (
     archive_name_for,
     article_name_for,
     book_name_for_fs,

@@ -1,22 +1,19 @@
-"""Conversions between the legacy Gutenberg models and the core domain model.
+"""Conversions between the Gutenberg models and the core domain model.
 
 These adapters allow gradual migration: existing code keeps producing
 `Book`/`Author` while new code consumes `Work`/`Creator`. They are
 deliberately lossless for the Gutenberg source, so `work_to_book(book_to_work(b))`
 round-trips.
 
-This module is transitional and will be removed once:
-- no module imports `gutenberg2zim.models` anymore (i.e. `Book`, `Author`
-  and the `repository` singleton are fully replaced by `Work`/`Creator` and
-  `core.work_store.WorkStore`), and
-- `gutenberg2zim/models.py` itself is deleted.
+This module is transitional and will be removed once nothing imports
+`Book`/`Author` anymore (i.e. they are fully replaced by `Work`/`Creator`).
 
-It lives next to the legacy models (not in `core/`) because it is
+It lives in the Gutenberg source package (not in `core/`) because it is
 Gutenberg-specific; `core/` must stay source-agnostic.
 """
 
 from gutenberg2zim.core.models import CollectionRef, Cover, Creator, Work
-from gutenberg2zim.models import Author, Book
+from gutenberg2zim.sources.gutenberg.models import Author, Book
 
 GUTENBERG_SOURCE = "gutenberg"
 LCC_SHELF_KIND = "lcc_shelf"

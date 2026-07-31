@@ -1,8 +1,8 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
-from gutenberg2zim.models import Author, Book, repository
+from gutenberg2zim.sources.gutenberg.models import Author, Book
 
 
 @pytest.fixture
@@ -39,20 +39,5 @@ def mock_book(mock_author):
 
 
 @pytest.fixture
-def mock_repository():
-    """Provide a clean singleton repository and restore it after the test"""
-    repository.reset()
-    yield repository
-    repository.reset()
-
-
-@pytest.fixture
 def mock_zim_creator():
     return MagicMock(name="zim_creator")
-
-
-@pytest.fixture
-def mock_requests():
-    """Mock gutenberg2zim.download.requests for HTTP-less tests"""
-    with patch("gutenberg2zim.download.requests") as mocked:
-        yield mocked

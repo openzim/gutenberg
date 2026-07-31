@@ -3,14 +3,14 @@ import subprocess
 import unicodedata
 import zipfile
 from pathlib import Path
+from typing import Protocol
 
 import chardet
 import requests
 
 from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, DL_CHUNCK_SIZE, logger
+from gutenberg2zim.core.language import language_name
 from gutenberg2zim.core.work_store import WorkStore
-from gutenberg2zim.iso639 import language_name
-from gutenberg2zim.models import Book
 
 UTF8 = "utf-8"
 ALL_FORMATS = ["epub", "pdf", "html"]
@@ -18,21 +18,28 @@ ALL_FORMATS = ["epub", "pdf", "html"]
 NB_MAIN_LANGS = 5
 
 
-def book_name_for_fs(book: Book) -> str:
-    return book.title.strip().replace("/", "-")[:230]  # type: ignore
+class BookNamingInfo(Protocol):
+    """What the ZIM path-naming helpers need from a book (duck-typed)"""
+
+    title: str
+    book_id: int
 
 
-def article_name_for(book: Book, *, cover: bool = False) -> str:
+def book_name_for_fs(book: BookNamingInfo) -> str:
+    return book.title.strip().replace("/", "-")[:230]
+
+
+def article_name_for(book: BookNamingInfo, *, cover: bool = False) -> str:
     cover_suffix = "_cover" if cover else ""
     title = book_name_for_fs(book)
     return f"{title}{cover_suffix}.{book.book_id}"
 
 
-def archive_name_for(book: Book, book_format: str) -> str:
+def archive_name_for(book: BookNamingInfo, book_format: str) -> str:
     return f"{book_name_for_fs(book)}.{book.book_id}.{book_format}"
 
 
-def fname_for(book: Book, book_format: str) -> str:
+def fname_for(book: BookNamingInfo, book_format: str) -> str:
     return f"{book.book_id}.{book_format}"
 
 

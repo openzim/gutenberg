@@ -1,7 +1,7 @@
 import pytest
 
+from gutenberg2zim.core.language import get_zim_language_metadata, resolve_language
 from gutenberg2zim.sources.gutenberg.catalog import CatalogEntry
-from gutenberg2zim.zim import get_zim_language_metadata, resolve_language
 
 
 def _make_books(languages_per_book: list[list[str]]) -> list[CatalogEntry]:
@@ -56,6 +56,13 @@ def test_empty_languages_returns_empty():
     books = _make_books([["en"]])
     result = get_zim_language_metadata([], books)
     assert result == []
+
+
+def test_counts_accumulate_when_codes_collapse_to_same_zim_language():
+    # "en" and "eng" both resolve to "eng"; counts must add, not overwrite
+    books = _make_books([["en"], ["en"], ["eng"], ["fr"]])
+    result = get_zim_language_metadata(["en", "eng", "fr"], books)
+    assert result == ["eng", "fra"]
 
 
 # Regression tests for #337

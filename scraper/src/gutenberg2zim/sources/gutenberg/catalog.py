@@ -13,7 +13,7 @@ from pathlib import Path
 
 from gutenberg2zim.constants import logger
 from gutenberg2zim.core.ports import CatalogFilters, CatalogPort, WorkRef
-from gutenberg2zim.utils import download_file
+from gutenberg2zim.core.utils import download_file
 
 GUTENBERG_SOURCE = "gutenberg"
 

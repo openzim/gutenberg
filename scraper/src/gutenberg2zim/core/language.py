@@ -1,3 +1,6 @@
+from collections.abc import Sequence
+from typing import Protocol
+
 import babel
 
 
@@ -243,3 +246,38 @@ ZIM_LANGUAGES_MAP: dict[str, list[str]] = {
     "nap": ["nap"],  # Neapolitan: no ISO 639-1 code, already valid ISO 639-3
     "fur": ["fvr"],  # Friulian: IETF fur maps to ISO 639-3 fvr
 }
+
+
+class HasLanguages(Protocol):
+    """What `get_zim_language_metadata` needs from a catalog entry (duck-typed)"""
+
+    languages: list[str]
+
+
+def resolve_language(lang: str) -> list[str]:
+    """Helper to resolve one input language code to ZIM language code(s)."""
+    return [
+        zim_lang
+        for zim_lang in ZIM_LANGUAGES_MAP.get(
+            lang,
+            [ISO_MATRIX.get(lang, lang if lang in ISO_MATRIX_REV else None)],
+        )
+        if zim_lang
+    ]
+
+
+def get_zim_language_metadata(
+    languages: list[str], books: Sequence[HasLanguages]
+) -> list[str]:
+    unresolved = [lang for lang in languages if not resolve_language(lang)]
+    if unresolved:
+        raise ValueError(
+            f"Cannot resolve ZIM language metadata for: {', '.join(unresolved)}. "
+            "Use --zim-languages to override."
+        )
+    language_counts: dict[str, int] = {}
+    for lang in languages:
+        count = sum(lang in book.languages for book in books)
+        for zim_lang in resolve_language(lang):
+            language_counts[zim_lang] = language_counts.get(zim_lang, 0) + count
+    return sorted(language_counts, key=lambda lang: language_counts[lang], reverse=True)
