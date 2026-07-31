@@ -1,31 +1,27 @@
 #!/usr/bin/env python
 
-# This file has been retrieved from https://github.com/gutenbergtools/libgutenberg/blob/master/pg_archive_urls.py
+# The URL-translation part of this file has been retrieved from
+# https://github.com/gutenbergtools/libgutenberg/blob/master/pg_archive_urls.py
 # and should be kept in sync manually
 # Last sync: March 29 2025 with https://github.com/gutenbergtools/libgutenberg/commit/be9866b9c2c97b41983265636bd2fa988f159faa
 
-"""
+"""Gutenberg format resolution (moved from `gutenberg2zim.pg_archive_urls`
+and `gutenberg2zim.download`).
 
-pg_archive_urls.py
+PG uses apache rewrites and filesystem symlinks to present decent looking URLs
+on its websites. Mirror sites are updated with rsync and may not present the
+same urls. This module translates the website urls to mirror site urls and
+exposes format resolution through the source-agnostic `FormatResolverPort`.
 
-Copyright 2023 by Project Gutenberg
-
-Distributable under the GNU General Public License Version 3 or newer.
-
-
-PG uses apache rewrites and filesystem symlinks to present decent looking URLs on its
-websites.
-Mirror sites are updated with rsync and may not present the same urls.
-This module, designed to be stand-alone, allows translation of the website urls to
-mirror site urls.
-
-Some mirror sites are not affiliated with PG, a list of morror sites is at
+Some mirror sites are not affiliated with PG, a list of mirror sites is at
 https://www.gutenberg.org/dirs/MIRRORS.ALL but it may or may not be up to date.
-
 """
 
 import re
 from urllib.parse import urlparse
+
+from gutenberg2zim.core.models import Work
+from gutenberg2zim.core.ports import DownloadRequest, FormatResolverPort
 
 # from https://github.com/gutenbergtools/ebookconverter/blob/master/ebookconverter/EbookConverter.py
 FILENAMES = {
@@ -49,6 +45,13 @@ FILENAMES = {
 }
 MATCH_TYPE = re.compile(r"/ebooks/(\d+)\.([^\?\#]*)")
 MATCH_DIRS = re.compile(r"/files/(\d+)/([^\?\#]*)")
+
+# map of preferred document type for every format
+PG_PREFERRED_TYPES = {
+    "html": ["zip", "html.images", "html.noimages"],
+    "epub": ["epub3.images", "epub.images", "epub.noimages"],
+    "pdf": ["pdf.images", "pdf.noimages"],
+}
 
 
 # from https://github.com/gutenbergtools/libgutenberg/blob/master/libgutenberg/GutenbergGlobals.py
@@ -85,10 +88,32 @@ def url_for_type(pg_type, book_id, mirror_url):
         return f"{mirror_url}/cache/epub/{book_id}/{fn}"
 
 
-# example1 = "https://www.gutenberg.org/ebooks/12345.html.images"
-# example2 = "https://www.gutenberg.org/files/12345/12345-h/12345-h.htm"
-# example3 = "https://www.gutenberg.org/cache/epub/12345/pg12345-images.html.utf8"
-# print(archive_url(example1))
-# print(archive_url(example2))
-# print(archive_url(example3))
-# print(url_for_type("zip", 2389))
+class GutenbergFormatResolver(FormatResolverPort):
+    """`FormatResolverPort` implementation for Gutenberg mirror URLs.
+
+    Resolution is deterministic: PG publishes every format at a well-known
+    mirror URL. Because a given file may be missing on the mirror, all
+    candidate URLs (in preference order) are included in
+    `DownloadRequest.extra["candidate_urls"]`; the downloader probes them in
+    order until one succeeds.
+    """
+
+    def __init__(self, mirror_url: str):
+        self._mirror_url = mirror_url
+
+    def resolve(self, work: Work, format_name: str) -> DownloadRequest | None:
+        pg_types = PG_PREFERRED_TYPES.get(format_name)
+        if not pg_types:
+            return None
+        candidate_urls = [
+            url
+            for pg_type in pg_types
+            if (url := url_for_type(pg_type, work.id, self._mirror_url)) is not None
+        ]
+        if not candidate_urls:
+            return None
+        return DownloadRequest(
+            url=candidate_urls[0],
+            format_name=format_name,
+            extra={"pg_type": pg_types[0], "candidate_urls": candidate_urls},
+        )

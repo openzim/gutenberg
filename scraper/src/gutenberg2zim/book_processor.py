@@ -8,6 +8,7 @@ import requests
 
 from gutenberg2zim.adapters import book_to_work, work_to_book
 from gutenberg2zim.constants import logger
+from gutenberg2zim.core.ports import MetadataPort, WorkRef
 from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.core.zim_assembler import ZimAssembler
 from gutenberg2zim.download import download_book
@@ -17,10 +18,78 @@ from gutenberg2zim.export import (
     generate_json_files,
     generate_noscript_pages,
 )
-from gutenberg2zim.rdf import download_and_parse_book_rdf
+from gutenberg2zim.models import Book
 from gutenberg2zim.scraper_progress import ScraperProgress
+from gutenberg2zim.sources.gutenberg.catalog import GUTENBERG_SOURCE
+from gutenberg2zim.sources.gutenberg.metadata import GutenbergRdfMetadata
 
 NB_POPULARITY_STARS = 3
+
+
+class GutenbergProcessor:
+    """Per-book pipeline for the Gutenberg source, wired through ports.
+
+    Metadata goes through the `MetadataPort`; format resolution happens via
+    the `FormatResolverPort` inside `download_book`; HTML rewriting still
+    calls `update_html_for_static` directly (see `GutenbergHtmlRewriter`'s
+    docstring for why the port is not used there yet).
+    """
+
+    def __init__(
+        self,
+        *,
+        metadata: MetadataPort,
+        mirror_url: str,
+        formats: list[str],
+        zim_name: str,
+        work_store: WorkStore,
+        assembler: ZimAssembler,
+        title_search: bool,
+        add_lcc_shelves: bool,
+    ):
+        self.metadata = metadata
+        self.mirror_url = mirror_url
+        self.formats = formats
+        self.zim_name = zim_name
+        self.work_store = work_store
+        self.assembler = assembler
+        self.title_search = title_search
+        self.add_lcc_shelves = add_lcc_shelves
+
+    def fetch_book(self, book_id: int) -> Book | None:
+        """Fetch metadata for one book via the metadata port and store it"""
+        works = list(
+            self.metadata.fetch([WorkRef(id=str(book_id), source=GUTENBERG_SOURCE)])
+        )
+        if not works:
+            return None
+        self.work_store.add(works[0])
+        return work_to_book(works[0])
+
+    def process(self, book_id: int):
+        """Download book content and export directly to ZIM"""
+        book = self.fetch_book(book_id)
+        if not book:
+            return
+
+        book_content = download_book(
+            mirror_url=self.mirror_url,
+            book=book,
+            formats=self.formats,
+            work_store=self.work_store,
+        )
+
+        if book_content:
+            export_book(
+                book=book,
+                book_files=book_content.files,
+                formats=self.formats,
+                mirror_url=self.mirror_url,
+                assembler=self.assembler,
+                _zim_name=self.zim_name,
+                _title_search=self.title_search,
+                _add_lcc_shelves=self.add_lcc_shelves,
+            )
 
 
 def process_all_books(
@@ -80,6 +149,17 @@ def process_all_books(
             return True
         return False
 
+    processor = GutenbergProcessor(
+        metadata=GutenbergRdfMetadata(mirror_url),
+        mirror_url=mirror_url,
+        formats=formats,
+        zim_name=zim_name,
+        work_store=work_store,
+        assembler=assembler,
+        title_search=title_search,
+        add_lcc_shelves=add_lcc_shelves,
+    )
+
     def process_book(book_id: int, progress: ScraperProgress):
         try:
             process_book_inner(book_id)
@@ -104,29 +184,7 @@ def process_all_books(
     )
     def process_book_inner(book_id: int):
         """Download book content and export directly to ZIM with retry logic"""
-
-        book = download_and_parse_book_rdf(book_id, mirror_url, work_store)
-        if not book:
-            return
-
-        book_content = download_book(
-            mirror_url=mirror_url,
-            book=book,
-            formats=formats,
-            work_store=work_store,
-        )
-
-        if book_content:
-            export_book(
-                book=book,
-                book_files=book_content.files,
-                formats=formats,
-                mirror_url=mirror_url,
-                assembler=assembler,
-                _zim_name=zim_name,
-                _title_search=title_search,
-                _add_lcc_shelves=add_lcc_shelves,
-            )
+        processor.process(book_id)
 
     Pool(concurrency).map(partial(process_book, progress=progress), book_ids)
 

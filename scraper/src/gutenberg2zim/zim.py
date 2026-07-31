@@ -9,9 +9,9 @@ from gutenberg2zim.config import ScrapeConfig
 from gutenberg2zim.constants import logger
 from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.core.zim_assembler import ZimAssembler
-from gutenberg2zim.csv_catalog import CatalogEntry
 from gutenberg2zim.iso639 import ISO_MATRIX, ISO_MATRIX_REV, ZIM_LANGUAGES_MAP
 from gutenberg2zim.scraper_progress import ScraperProgress
+from gutenberg2zim.sources.gutenberg.catalog import CatalogEntry
 from gutenberg2zim.utils import get_zim_name
 
 
