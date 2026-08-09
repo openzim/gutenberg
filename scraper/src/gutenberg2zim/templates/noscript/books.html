@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Books - Project Gutenberg</title>
+    <title>All Books - {{ display_name }}</title>
     <link rel="stylesheet" href="common.css">
 </head>
 <body>
@@ -28,9 +28,9 @@
         <tbody>
             {% for book in books %}
             <tr>
-                <td class="book-id">{{ book.book_id }}</td>
-                <td><a href="book_{{ book.book_id }}.html">{{ book.title }}</a></td>
-                <td><a href="author_{{ book.author.gut_id }}.html">{{ book.author.name() }}</a></td>
+                <td class="book-id">{{ book.id }}</td>
+                <td><a href="book_{{ book.id }}.html">{{ book.title }}</a></td>
+                <td><a href="author_{{ book.author.id }}.html">{{ book.author.name }}</a></td>
                 <td>{{ book.languages|join(", ") }}</td>
                 <td>
                     {% for fmt in book.requested_formats(formats) %}

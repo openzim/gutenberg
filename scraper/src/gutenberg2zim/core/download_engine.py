@@ -7,6 +7,8 @@ about any specific source's URL scheme.
 """
 
 import hashlib
+import io
+import threading
 import uuid
 from dataclasses import dataclass
 from http import HTTPStatus
@@ -15,6 +17,7 @@ from urllib.parse import urlparse
 
 import backoff
 import requests
+from requests.adapters import HTTPAdapter
 
 from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, DL_CHUNCK_SIZE, logger
 from gutenberg2zim.core.ports import DownloadRequest
@@ -28,7 +31,7 @@ class DownloadResult:
     from_cache: bool
 
 
-def _is_fatal_http_error(exc: Exception) -> bool:
+def is_fatal_http_error(exc: Exception) -> bool:
     """Give up on error codes 400-499 except 429"""
     return (
         isinstance(exc, requests.HTTPError)
@@ -38,6 +41,42 @@ def _is_fatal_http_error(exc: Exception) -> bool:
         < HTTPStatus.INTERNAL_SERVER_ERROR
         and exc.response.status_code != HTTPStatus.TOO_MANY_REQUESTS
     )
+
+
+def fetch_bytes_with_retry(
+    url: str,
+    session: requests.Session | None = None,
+    timeout: int = DEFAULT_HTTP_TIMEOUT,
+    max_retry_time: int = 30,
+) -> bytes:
+    """GET `url` and return its full content, retrying transient errors.
+
+    Retry lives at the individual-download level: transient network errors
+    are retried with exponential backoff, while fatal HTTP errors (4xx
+    except 429) give up immediately by raising.
+    """
+    get = session.get if session is not None else requests.get
+
+    # logger=None: backoff's own "giving up" messages would fire at ERROR
+    # level for routine 404s (books that simply lack a format on the
+    # mirror); the caller logs failures with proper context instead
+    @backoff.on_exception(
+        backoff.expo,
+        requests.exceptions.RequestException,
+        max_time=max_retry_time,
+        giveup=is_fatal_http_error,
+        logger=None,
+    )
+    def _attempt() -> bytes:
+        with get(url, stream=True, timeout=timeout) as response:
+            response.raise_for_status()
+            content = io.BytesIO()
+            for chunk in response.iter_content(chunk_size=DL_CHUNCK_SIZE):
+                if chunk:
+                    content.write(chunk)
+            return content.getvalue()
+
+    return _attempt()
 
 
 class DownloadEngine:
@@ -50,15 +89,57 @@ class DownloadEngine:
     ):
         self._cache_dir = cache_dir
         self._cache_dir.mkdir(parents=True, exist_ok=True)
-        self._session = session or requests.Session()
+        # Explicit session (mainly tests) or per-worker-thread sessions:
+        # requests.Session is not guaranteed thread-safe, so each worker
+        # thread gets its own lazily-created persistent session
+        self._injected_session = session
+        self._local = threading.local()
+        # Track every lazily-created thread-local session so close() can
+        # release their connection pools at the end of the run
+        self._sessions: list[requests.Session] = []
+        self._sessions_lock = threading.Lock()
         self._timeout = timeout
         self._max_retry_time = max_retry_time
+
+    def _get_session(self) -> requests.Session:
+        if self._injected_session is not None:
+            return self._injected_session
+        session = getattr(self._local, "session", None)
+        if session is None:
+            session = requests.Session()
+            session.mount("https://", HTTPAdapter(max_retries=3))
+            session.mount("http://", HTTPAdapter(max_retries=3))
+            self._local.session = session
+            with self._sessions_lock:
+                self._sessions.append(session)
+        return session
+
+    def close(self) -> None:
+        """Close the injected session and all per-thread sessions"""
+        if self._injected_session is not None:
+            self._injected_session.close()
+        with self._sessions_lock:
+            sessions, self._sessions = self._sessions, []
+        for session in sessions:
+            session.close()
 
     def cache_path_for(self, url: str) -> Path:
         """Deterministic cache path for a URL (hash + original suffix)"""
         digest = hashlib.sha256(url.encode("utf-8")).hexdigest()
         suffix = Path(urlparse(url).path).suffix
         return self._cache_dir / f"{digest}{suffix}"
+
+    def fetch_bytes(self, url: str) -> bytes:
+        """GET `url` and return its full content, retrying transient errors.
+
+        Uses this engine's per-thread session, timeout and retry budget.
+        """
+        return fetch_bytes_with_retry(
+            url,
+            session=self._get_session(),
+            timeout=self._timeout,
+            max_retry_time=self._max_retry_time,
+        )
 
     def download(
         self, request: DownloadRequest, dest: Path | None = None
@@ -94,11 +175,13 @@ class DownloadEngine:
             backoff.expo,
             requests.exceptions.RequestException,
             max_time=self._max_retry_time,
-            giveup=_is_fatal_http_error,
+            giveup=is_fatal_http_error,
             logger=logger,
         )
         def _attempt():
-            with self._session.get(url, stream=True, timeout=self._timeout) as response:
+            with self._get_session().get(
+                url, stream=True, timeout=self._timeout
+            ) as response:
                 response.raise_for_status()
                 target.parent.mkdir(parents=True, exist_ok=True)
                 # Unique tmp name: concurrent downloads of the same URL must not collide

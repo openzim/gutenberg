@@ -78,7 +78,7 @@ export const useMainStore = defineStore('main', () => {
     return fetchList<Books>('./books.json', 'Failed to load books', booksCount, books)
   }
 
-  function fetchBook(id: number) {
+  function fetchBook(id: string) {
     currentBook.value = null
     return fetchData<Book>(`./books/${id}.json`, `Failed to load book ${id}`).then((book) => {
       currentBook.value = book

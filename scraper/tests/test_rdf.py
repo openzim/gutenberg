@@ -1,9 +1,13 @@
+from unittest.mock import MagicMock
+
 import pytest
 
+from gutenberg2zim.core.download_engine import DownloadEngine
 from gutenberg2zim.sources.gutenberg.metadata import (
     RdfParseError,
     RdfParser,
     clean_marc_notation,
+    fetch_book_metadata,
 )
 
 RDF_HEADER = """
@@ -427,3 +431,30 @@ def test_rdf_parser_lcc_values(input_lcc, expected_lcc):
     )
     parsed = rdf.parse()
     assert parsed.lcc_shelf == expected_lcc
+
+
+def test_fetch_book_metadata_caches_rdf_on_disk(tmp_path):
+    """RDF downloads go through the DownloadEngine disk cache (URL hash),
+    so a second fetch of the same book is served from disk with no HTTP call"""
+    session = MagicMock(name="session")
+    resp = MagicMock(name="response")
+    resp.__enter__.return_value = resp
+    resp.raise_for_status.return_value = None
+    resp.iter_content.return_value = iter([BOOK_22094.encode("utf-8")])
+    session.get.return_value = resp
+
+    engine = DownloadEngine(cache_dir=tmp_path / "cache", session=session)
+    mirror_url = "https://mirror.example.org"
+
+    work = fetch_book_metadata(22094, mirror_url, engine=engine)
+    assert work is not None
+    assert work.id == "22094"
+    assert work.title.startswith("Travels in the Great Desert of Sahara")
+    session.get.assert_called_once()
+
+    # second fetch: disk cache hit, no further HTTP
+    session.get.reset_mock()
+    work2 = fetch_book_metadata(22094, mirror_url, engine=engine)
+    assert work2 is not None
+    assert work2.id == work.id
+    session.get.assert_not_called()

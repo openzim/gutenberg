@@ -65,7 +65,7 @@ describe('Main Store Integration', () => {
     })
 
     it.each([
-      { method: 'fetchBook' as const, param: 42, url: './books/42.json' },
+      { method: 'fetchBook' as const, param: '42', url: './books/42.json' },
       { method: 'fetchAuthor' as const, param: 'austen-jane', url: './authors/austen-jane.json' },
       { method: 'fetchLCCShelf' as const, param: 'PR', url: './lcc_shelves/PR.json' }
     ])('$method fetches single item by ID', async ({ method, param, url }) => {
@@ -167,7 +167,7 @@ describe('Main Store Integration', () => {
   describe('Response Caching', () => {
     it('returns cached books without refetching', async () => {
       const store = useMainStore()
-      const mockData = { totalCount: 100, books: [{ id: 1, title: 'Book 1' }] }
+      const mockData = { totalCount: 100, books: [{ id: '1', title: 'Book 1' }] }
       vi.mocked(axios.get).mockResolvedValue({ data: mockData })
 
       const result1 = await store.fetchBooks()
@@ -208,11 +208,11 @@ describe('Main Store Integration', () => {
 
     it('does not cache single item fetches', async () => {
       const store = useMainStore()
-      const mockData = { id: 42, title: 'Book 42' }
+      const mockData = { id: '42', title: 'Book 42' }
       vi.mocked(axios.get).mockResolvedValue({ data: mockData })
 
-      await store.fetchBook(42)
-      await store.fetchBook(42)
+      await store.fetchBook('42')
+      await store.fetchBook('42')
 
       expect(axios.get).toHaveBeenCalledTimes(2)
     })

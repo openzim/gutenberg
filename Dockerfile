@@ -23,6 +23,7 @@ RUN apt-get update \
 # Copy pyproject.toml and its dependencies
 COPY README.md LICENSE /src/
 COPY scraper/pyproject.toml /src/scraper/
+COPY scraper/README.md /src/scraper/
 COPY scraper/src/gutenberg2zim/__about__.py /src/scraper/src/gutenberg2zim/__about__.py
 
 # Install Python dependencies

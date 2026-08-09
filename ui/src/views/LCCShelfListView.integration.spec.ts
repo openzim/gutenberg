@@ -23,7 +23,7 @@ const mockShelvesData: LCCShelves = {
 
 const mockBooks: BookPreview[] = [
   {
-    id: 1,
+    id: '1',
     title: 'Alice in Wonderland',
     author: { id: '1', name: 'Lewis Carroll', bookCount: 1 },
     languages: ['en'],
@@ -32,7 +32,7 @@ const mockBooks: BookPreview[] = [
     lccShelf: null
   },
   {
-    id: 2,
+    id: '2',
     title: 'Pride and Prejudice',
     author: { id: '2', name: 'Jane Austen', bookCount: 1 },
     languages: ['en'],

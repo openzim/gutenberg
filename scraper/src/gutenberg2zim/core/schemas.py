@@ -56,7 +56,7 @@ class BookFormat(CamelModel):
 class BookPreview(CamelModel):
     """Book preview for list views"""
 
-    id: int
+    id: str  # source-specific work id (not necessarily numeric)
     title: str
     author: AuthorPreview
     languages: list[str]

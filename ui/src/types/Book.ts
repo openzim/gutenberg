@@ -12,7 +12,7 @@ export interface BookFormat {
 }
 
 export interface BookPreview {
-  id: number
+  id: string
   title: string
   author: AuthorPreview
   languages: string[]

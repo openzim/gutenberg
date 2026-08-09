@@ -4,7 +4,7 @@
 `ScrapeConfig`" and "ZIM written": logging setup, i18n, CSV catalog
 download/load/filter, language derivation, and `build_zimfile` (moved here
 from the deleted `zim.py`), which creates the `ZimAssembler` and drives the
-`GutenbergPipeline`.
+source's `Pipeline` resolved from the registry profile.
 """
 
 import datetime
@@ -15,27 +15,19 @@ from pathlib import Path
 from gutenberg2zim.config import ScrapeConfig
 from gutenberg2zim.constants import logger
 from gutenberg2zim.core import i18n
+from gutenberg2zim.core.download_engine import DownloadEngine
 from gutenberg2zim.core.exporters.ui_dist_exporter import export_ui_dist
 from gutenberg2zim.core.language import (
     ISO_MATRIX,
     ISO_MATRIX_REV,
     get_zim_language_metadata,
 )
-from gutenberg2zim.core.ports import WorkRef
+from gutenberg2zim.core.ports import CatalogEntryLike, WorkRef
 from gutenberg2zim.core.progress import ScraperProgress
 from gutenberg2zim.core.utils import critical_error, get_zim_name
 from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.core.zim_assembler import ZimAssembler
-from gutenberg2zim.sources.gutenberg.adapters import GUTENBERG_SOURCE
-from gutenberg2zim.sources.gutenberg.catalog import (
-    CatalogEntry,
-    download_csv_file,
-    filter_books,
-    get_csv_fpath,
-    load_catalog,
-)
-from gutenberg2zim.sources.gutenberg.metadata import GutenbergRdfMetadata
-from gutenberg2zim.sources.gutenberg.pipeline import GutenbergPipeline
+from gutenberg2zim.sources.registry import SourceProfile, get_source
 
 
 def run_scrape(config: ScrapeConfig) -> None:
@@ -46,23 +38,31 @@ def run_scrape(config: ScrapeConfig) -> None:
 
     i18n.setup_i18n()
 
-    csv_path = get_csv_fpath()
+    profile = get_source(config.source)
+    # Discovery is still source-specific (CSV catalog for Gutenberg): the
+    # catalog module comes from the profile, checked against CatalogModule
+    catalog = profile.catalog
+    csv_path = catalog.get_csv_fpath()
 
     progress = ScraperProgress(config.stats_filename)
     progress.increase_total(1)
 
+    # Shared download engine: the catalog CSV and RDF metadata are fetched
+    # through it; cached RDFs make re-runs skip re-downloading them
+    engine = DownloadEngine(cache_dir=config.output_folder / "cache")
+
     # Download CSV catalog
-    csv_url = f"{config.mirror_url}/cache/epub/feeds/pg_catalog.csv.gz"
+    csv_url = f"{config.mirror_url.rstrip('/')}{profile.catalog_feed_path}"
     logger.info(f"PREPARING CSV catalog from {csv_url}")
-    download_csv_file(csv_path=csv_path, csv_url=csv_url)
+    catalog.download_csv_file(csv_path=csv_path, csv_url=csv_url, engine=engine)
 
     # Load catalog and filter books
     logger.info(f"LOADING catalog from {csv_path}")
-    catalog = load_catalog(csv_path)
+    catalog_entries = catalog.load_catalog(csv_path)
 
     # Filter books based on languages, specific book IDs, and LCC shelves
-    filtered_books = filter_books(
-        catalog=catalog,
+    filtered_books = catalog.filter_books(
+        catalog=catalog_entries,
         languages=config.languages if config.languages else None,
         only_books=[int(book_id) for book_id in config.books] if config.books else None,
         lcc_shelves=config.collections,
@@ -92,12 +92,18 @@ def run_scrape(config: ScrapeConfig) -> None:
 
     work_store = WorkStore()
 
-    build_zimfile(
-        books=filtered_books,
-        config=replace(config, languages=book_languages),
-        work_store=work_store,
-        progress=progress,
-    )
+    try:
+        build_zimfile(
+            books=filtered_books,
+            config=replace(config, languages=book_languages),
+            work_store=work_store,
+            progress=progress,
+            engine=engine,
+            profile=profile,
+        )
+    finally:
+        # release the per-thread session connection pools
+        engine.close()
 
     # Final increase to indicate we are done
     progress.increase_progress()
@@ -107,10 +113,12 @@ def run_scrape(config: ScrapeConfig) -> None:
 
 
 def build_zimfile(
-    books: list[CatalogEntry],
+    books: list[CatalogEntryLike],
     config: ScrapeConfig,
     work_store: WorkStore,
     progress: ScraperProgress,
+    engine: DownloadEngine,
+    profile: SourceProfile,
 ) -> None:
     """Build ZIM file from the works collected in the work store"""
     progress.increase_total(len(books))
@@ -151,13 +159,14 @@ def build_zimfile(
     # check if user has description input otherwise assign default description
     description = description or i18n.t(
         "metadata_defaults.description",
-        f'All books in "{iso_languages[0]}" language from the first producer of free'
-        " Ebooks",
+        f'All books in "{iso_languages[0]}" language from {profile.tagline}',
     )
 
     logger.info(f"\tWriting {metadata_lang} ZIM for {title}")
 
-    zim_name = zim_name or get_zim_name(languages, formats, is_selection)
+    zim_name = zim_name or get_zim_name(
+        languages, formats, is_selection, prefix=profile.zim_name_prefix
+    )
 
     if zim_file is None:
         zim_file = "{}_{}.zim".format(
@@ -189,8 +198,8 @@ def build_zimfile(
         long_description=long_description,
         name=zim_name,
         publisher=publisher,
-        source_creator="gutenberg.org",
-        tags="_category:gutenberg;gutenberg",
+        source_creator=profile.source_creator,
+        tags=profile.zim_tags,
         with_fulltext_index=with_fulltext_index,
         debug=debug,
     )
@@ -204,13 +213,13 @@ def build_zimfile(
         refs = [
             WorkRef(
                 id=str(book.book_id),
-                source=GUTENBERG_SOURCE,
+                source=profile.slug,
                 extra={"languages": book.languages, "lcc_shelf": book.lcc_shelf},
             )
             for book in books
         ]
-        pipeline = GutenbergPipeline(
-            metadata=GutenbergRdfMetadata(mirror_url),
+        pipeline = profile.pipeline_class(
+            metadata=profile.metadata_class(mirror_url, engine=engine),
             store=work_store,
             assembler=assembler,
             progress=progress,
@@ -222,7 +231,9 @@ def build_zimfile(
             add_lcc_shelves=add_lcc_shelves,
             primary_color=primary_color,
             secondary_color=secondary_color,
+            display_name=profile.display_name,
             mirror_url=mirror_url,
+            engine=engine,
             title_search=title_search,
         )
         pipeline.run(refs)

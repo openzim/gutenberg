@@ -1,11 +1,7 @@
 import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 
-export function useDetailView<T>(
-  fetchFn: (id: string | number) => Promise<T>,
-  paramName: string = 'id',
-  parseParam?: (value: string) => string | number
-) {
+export function useDetailView<T>(fetchFn: (id: string) => Promise<T>, paramName: string = 'id') {
   const route = useRoute()
   const data = ref<T | null>(null)
   const notFound = ref(false)
@@ -23,20 +19,7 @@ export function useDetailView<T>(
 
   function loadData() {
     const param = route.params[paramName]
-    const paramValue = Array.isArray(param) ? param[0] : param
-
-    if (!paramValue) {
-      notFound.value = true
-      return
-    }
-
-    let id: string | number
-    try {
-      id = parseParam ? parseParam(paramValue as string) : (paramValue as string)
-    } catch {
-      notFound.value = true
-      return
-    }
+    const id = Array.isArray(param) ? param[0] : param
 
     if (!id) {
       notFound.value = true

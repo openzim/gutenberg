@@ -1,6 +1,6 @@
 """Generic image rewriting and WebP conversion helpers.
 
-Moved from `sources/gutenberg/plugins.py` (originally `gutenberg2zim.export`).
+Moved from the Gutenberg HTML rewriting module (originally `gutenberg2zim.export`).
 Source-agnostic: nothing here knows about Gutenberg specifics.
 """
 

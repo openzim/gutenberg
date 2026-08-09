@@ -8,7 +8,7 @@ authors = [{ name = "Kiwix", email = "dev@kiwix.org" }]
 keywords = ["kiwix", "zim", "offline", "gutenberg"]
 requires-python = ">=3.14,<3.15"
 description = "Make ZIM file from Gutenberg books"
-readme = "../README.md"
+readme = "README.md"
 license = { text = "GPL-3.0-or-later" }
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -202,6 +202,8 @@ ban-relative-imports = "all"
 [tool.ruff.lint.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
+# Standalone scripts report to stdout
+"scripts/**/*" = ["T201"]
 
 [tool.pytest.ini_options]
 minversion = "7.3"

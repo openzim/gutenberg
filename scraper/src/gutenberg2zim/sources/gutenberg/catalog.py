@@ -12,10 +12,17 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from gutenberg2zim.constants import logger
-from gutenberg2zim.core.ports import CatalogFilters, CatalogPort, WorkRef
-from gutenberg2zim.core.utils import download_file
+from gutenberg2zim.core.download_engine import DownloadEngine
+from gutenberg2zim.core.ports import (
+    CatalogEntryLike,
+    CatalogFilters,
+    CatalogPort,
+    DownloadRequest,
+    WorkRef,
+)
 
 GUTENBERG_SOURCE = "gutenberg"
+LCC_SHELF_KIND = "lcc_shelf"
 
 
 @dataclass
@@ -74,17 +81,19 @@ def get_csv_fpath() -> Path:
     return fpath
 
 
-def download_csv_file(csv_path: Path, csv_url: str) -> None:
+def download_csv_file(csv_path: Path, csv_url: str, engine: DownloadEngine) -> None:
     """Download pg_catalog.csv.gz archive"""
     if csv_path.exists():
         logger.info(f"\tCSV catalog already exists in {csv_path}")
         return
 
     logger.info(f"\tDownloading {csv_url} into {csv_path}")
-    download_file(csv_url, csv_path)
+    # dest bypasses the engine's URL-hash cache: freshness is decided by the
+    # existence check above, the engine provides retry + atomic write
+    engine.download(DownloadRequest(url=csv_url, format_name="csv"), dest=csv_path)
 
 
-def load_catalog(csv_path: Path) -> list[CatalogEntry]:
+def load_catalog(csv_path: Path) -> list[CatalogEntryLike]:
     """
     Load catalog from CSV and return a list of catalog entries.
 
@@ -93,7 +102,7 @@ def load_catalog(csv_path: Path) -> list[CatalogEntry]:
           lcc_shelf
     """
     logger.info(f"\tLoading catalog from {csv_path}")
-    catalog: list[CatalogEntry] = []
+    catalog: list[CatalogEntryLike] = []
 
     with gzip.open(csv_path, "rt", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -127,11 +136,11 @@ def load_catalog(csv_path: Path) -> list[CatalogEntry]:
 
 
 def filter_books(
-    catalog: list[CatalogEntry],
+    catalog: list[CatalogEntryLike],
     languages: list[str] | None = None,
     only_books: list[int] | None = None,
     lcc_shelves: list[str] | None = None,
-) -> list[CatalogEntry]:
+) -> list[CatalogEntryLike]:
     """
     Filter books based on languages, book IDs, and LCC shelves.
 
@@ -145,7 +154,7 @@ def filter_books(
     Returns:
         list: List of book IDs that match the filters
     """
-    filtered: list[CatalogEntry] = []
+    filtered: list[CatalogEntryLike] = []
 
     for entry in catalog:
         # Filter by specific book IDs if requested

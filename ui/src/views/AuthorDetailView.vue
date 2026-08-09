@@ -11,11 +11,7 @@ const { t } = useI18n()
 
 const main = useMainStore()
 
-const {
-  data: author,
-  notFound,
-  loading
-} = useDetailView((id) => main.fetchAuthor(String(id)), 'id')
+const { data: author, notFound, loading } = useDetailView((id) => main.fetchAuthor(id), 'id')
 
 const authors = ref<AuthorPreview[]>([])
 
