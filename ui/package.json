@@ -27,7 +27,7 @@
     "@fontsource/roboto": "^5.2.9",
     "@mdi/js": "^7.4.47",
     "@wikimedia/language-data": "^2.0.3",
-    "axios": "^1.13.5",
+    "axios": "^1.16.0",
     "pinia": "^3.0.4",
     "resize-observer-polyfill": "^1.5.1",
     "vue": "^3.5.28",
