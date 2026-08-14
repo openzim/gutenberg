@@ -1,84 +1,88 @@
 {
-	"@metadata": {
-		"authors": [
-			"Peterleth"
-		]
-	},
-	"language": "Dansk",
-	"isocode": "da",
-	"nav": {
-		"home": "Hjemmeside"
-	},
-	"book": {
-		"title": "Titel",
-		"languages": "Sprog",
-		"license": "Licens",
-		"licensePd": "Offentligt domæne i USA.",
-		"licenseCopyright": "Ophavsretligt beskyttet. Læs ophavsretsmeddelelsen i denne bog for yderligere oplysninger.",
-		"cover": "Bogomslag",
-		"coverLabel": "(omslag)",
-		"anonymous": "Anonym",
-		"various": "Forskellige"
-	},
-	"common": {
-		"loading": "Indlæser...",
-		"search": "Søg",
-		"sortPopularity": "Sortér bøger efter popularitet",
-		"sortTitle": "Sortér bøger efter titel",
-		"chooseLanguage": "Vælg et sprog...",
-		"mainLanguages": "Hovedsprog",
-		"otherLanguages": "Andre sprog",
-		"anyCatalog": "Vælg kataloget",
-		"uiLanguage": "Grænsefladesprog",
-		"returnHome": "Gå hjem",
-		"sortAuthor": "Forfatter"
-	},
-	"messages": {
-		"noBooks": "Ingen data tilgængelig i tabel"
-	},
-	"metadata_defaults": {
-		"title": "Projekt Gutenbergs Bibliotek",
-		"description": "Alle bøger på dansk fra den første producent af gratis e-bøger"
-	},
-	"lccShelves": {
-		"A": "A-Generelle værker",
-		"B": "B-Filosofi, psykologi, religion",
-		"C": "C-Historiens hjælpevidenskaber",
-		"D": "D-Verdenshistorie og historie om Europa, Asien, Afrika, Australien, New Zealand etc.",
-		"E": "E-Amerikas historie",
-		"F": "F-Amerikas historie",
-		"G": "G-Geografi, antropologi, rekreation",
-		"H": "H-Samfundsvidenskab",
-		"J": "J-Statvidenskab",
-		"K": "K-Jura",
-		"L": "L-Uddannelse",
-		"M": "M-Musik og bøger om musik",
-		"N": "N-Kunst",
-		"P": "P-Sprog og litteratur",
-		"Q": "Q-Videnskab",
-		"R": "R-Medicin",
-		"S": "S-Landbrug",
-		"T": "T-Teknologi",
-		"U": "U-Militærvidenskab",
-		"V": "V-Marinevidenskab",
-		"Z": "Z-Bibliografi, biblioteksvidenskab, informationsressourcer (generelt)",
-		"PA": "PA - Græsk og latinsk sprog og litteratur",
-		"PB": "PB - Moderne og keltiske sprog",
-		"PC": "PC-romanske sprog",
-		"PD": "PD-Germanske og skandinaviske sprog",
-		"PE": "PE-engelsk sprog",
-		"PF": "PF-Vestgermanske sprog",
-		"PG": "PG - Slaviske, baltiske og albanske sprog",
-		"PH": "PH-uralske og baskiske sprog",
-		"PJ": "PJ - Orientalske sprog og litteraturer",
-		"PK": "PK-indo-iranske sprog og litteraturer",
-		"PL": "PL - Sprog og litteratur i Østasien, Afrika og Oceanien",
-		"PM": "PM - Hyperboreiske, indiske og kunstige sprog",
-		"PN": "PN-Litteratur (Generel)",
-		"PQ": "PQ - Fransk, italiensk, spansk, portugisisk litteratur",
-		"PR": "PR-engelsk litteratur",
-		"PS": "PS-amerikansk litteratur",
-		"PT": "PT - tysk, hollandsk, flamsk, afrikaans, skandinavisk, oldnordisk, gammelislandsk, oldnorsk, moderne islandsk, færøsk, dansk, norsk og svensk litteratur",
-		"PZ": "PZ-Fiktion og ungdomslitteratur"
-	}
+  "language": "Dansk",
+  "isocode": "da",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Peterleth"
+      ]
+    },
+    "nav": {
+      "home": "Hjemmeside"
+    },
+    "book": {
+      "title": "Titel",
+      "languages": "Sprog",
+      "license": "Licens",
+      "licensePd": "Offentligt domæne i USA.",
+      "licenseCopyright": "Ophavsretligt beskyttet. Læs ophavsretsmeddelelsen i denne bog for yderligere oplysninger.",
+      "cover": "Bogomslag",
+      "coverLabel": "(omslag)",
+      "anonymous": "Anonym",
+      "various": "Forskellige"
+    },
+    "common": {
+      "loading": "Indlæser...",
+      "search": "Søg",
+      "sortPopularity": "Sortér bøger efter popularitet",
+      "sortTitle": "Sortér bøger efter titel",
+      "chooseLanguage": "Vælg et sprog...",
+      "mainLanguages": "Hovedsprog",
+      "otherLanguages": "Andre sprog",
+      "anyCatalog": "Vælg kataloget",
+      "uiLanguage": "Grænsefladesprog",
+      "returnHome": "Gå hjem",
+      "sortAuthor": "Forfatter"
+    },
+    "messages": {
+      "noBooks": "Ingen data tilgængelig i tabel"
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Projekt Gutenbergs Bibliotek",
+      "description": "Alle bøger på dansk fra den første producent af gratis e-bøger"
+    },
+    "collections": {
+      "A": "A-Generelle værker",
+      "B": "B-Filosofi, psykologi, religion",
+      "C": "C-Historiens hjælpevidenskaber",
+      "D": "D-Verdenshistorie og historie om Europa, Asien, Afrika, Australien, New Zealand etc.",
+      "E": "E-Amerikas historie",
+      "F": "F-Amerikas historie",
+      "G": "G-Geografi, antropologi, rekreation",
+      "H": "H-Samfundsvidenskab",
+      "J": "J-Statvidenskab",
+      "K": "K-Jura",
+      "L": "L-Uddannelse",
+      "M": "M-Musik og bøger om musik",
+      "N": "N-Kunst",
+      "P": "P-Sprog og litteratur",
+      "Q": "Q-Videnskab",
+      "R": "R-Medicin",
+      "S": "S-Landbrug",
+      "T": "T-Teknologi",
+      "U": "U-Militærvidenskab",
+      "V": "V-Marinevidenskab",
+      "Z": "Z-Bibliografi, biblioteksvidenskab, informationsressourcer (generelt)",
+      "PA": "PA - Græsk og latinsk sprog og litteratur",
+      "PB": "PB - Moderne og keltiske sprog",
+      "PC": "PC-romanske sprog",
+      "PD": "PD-Germanske og skandinaviske sprog",
+      "PE": "PE-engelsk sprog",
+      "PF": "PF-Vestgermanske sprog",
+      "PG": "PG - Slaviske, baltiske og albanske sprog",
+      "PH": "PH-uralske og baskiske sprog",
+      "PJ": "PJ - Orientalske sprog og litteraturer",
+      "PK": "PK-indo-iranske sprog og litteraturer",
+      "PL": "PL - Sprog og litteratur i Østasien, Afrika og Oceanien",
+      "PM": "PM - Hyperboreiske, indiske og kunstige sprog",
+      "PN": "PN-Litteratur (Generel)",
+      "PQ": "PQ - Fransk, italiensk, spansk, portugisisk litteratur",
+      "PR": "PR-engelsk litteratur",
+      "PS": "PS-amerikansk litteratur",
+      "PT": "PT - tysk, hollandsk, flamsk, afrikaans, skandinavisk, oldnordisk, gammelislandsk, oldnorsk, moderne islandsk, færøsk, dansk, norsk og svensk litteratur",
+      "PZ": "PZ-Fiktion og ungdomslitteratur"
+    }
+  }
 }

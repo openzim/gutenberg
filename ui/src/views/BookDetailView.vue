@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import BookDetailInfo from '@/components/book/BookDetailInfo.vue'
-import ShelfCarousel from '@/components/book/ShelfCarousel.vue'
+import CollectionCarousel from '@/components/book/CollectionCarousel.vue'
 import DetailViewWrapper from '@/components/common/DetailViewWrapper.vue'
 import { useDetailView } from '@/composables/useDetailView'
 import { useMainStore } from '@/stores/main'
 import { useI18n } from 'vue-i18n'
 import { computed, ref, watch } from 'vue'
-import type { LCCShelf } from '@/types'
+import type { Collection } from '@/types'
 
 const { t } = useI18n()
 
@@ -14,28 +14,36 @@ const main = useMainStore()
 
 const { data: book, notFound, loading } = useDetailView((id) => main.fetchBook(id), 'id')
 
-const shelfData = ref<LCCShelf | null>(null)
-const shelfLoading = ref(false)
+const collectionData = ref<Collection | null>(null)
+const collectionLoading = ref(false)
 
-const sameShelfBooks = computed(() => {
-  if (!shelfData.value || !book.value) return []
-  return shelfData.value.books.filter((b) => b.id !== book.value!.id)
+const sameCollectionBooks = computed(() => {
+  if (!collectionData.value || !book.value) return []
+  return collectionData.value.books.filter((b) => b.id !== book.value!.id)
 })
 
 watch(
-  () => book.value?.lccShelf,
-  async (shelfCode) => {
-    if (!shelfCode) {
-      shelfData.value = null
+  () => book.value?.primaryCollection,
+  async (collectionCode) => {
+    if (!collectionCode) {
+      collectionData.value = null
+      collectionLoading.value = false
       return
     }
     try {
-      shelfLoading.value = true
-      shelfData.value = await main.fetchLCCShelf(shelfCode)
+      collectionData.value = null
+      collectionLoading.value = true
+      const result = await main.fetchCollection(collectionCode)
+      if (book.value?.primaryCollection !== collectionCode) return
+      collectionData.value = result
     } catch {
-      shelfData.value = null
+      if (book.value?.primaryCollection === collectionCode) {
+        collectionData.value = null
+      }
     } finally {
-      shelfLoading.value = false
+      if (book.value?.primaryCollection === collectionCode) {
+        collectionLoading.value = false
+      }
     }
   },
   { immediate: true }
@@ -52,6 +60,6 @@ watch(
     no-padding
   >
     <book-detail-info :book="book!" />
-    <shelf-carousel v-if="sameShelfBooks.length > 0" :books="sameShelfBooks" />
+    <collection-carousel v-if="sameCollectionBooks.length > 0" :books="sameCollectionBooks" />
   </detail-view-wrapper>
 </template>

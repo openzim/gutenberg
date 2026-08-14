@@ -8,13 +8,13 @@
  */
 import { computed, ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useIsLccShelfPage } from '@/composables/useIsLccShelfPage'
+import { useIsCollectionPage } from '@/composables/useIsCollectionPage'
 import type { SortOption, SortOrder } from '@/types'
 import { TYPOGRAPHY } from '@/constants/theme'
 import { mdiDotsGrid, mdiFormatListBulleted } from '@mdi/js'
 
 const { t } = useI18n()
-const isLccShelfPage = useIsLccShelfPage()
+const isCollectionPage = useIsCollectionPage()
 
 const props = defineProps<{
   sortBy: SortOption
@@ -69,7 +69,7 @@ if (typeof document !== 'undefined') {
 </script>
 
 <template>
-  <div class="sort-and-limit" :class="{ 'sort-and-limit--lcc-shelf': isLccShelfPage }">
+  <div class="sort-and-limit" :class="{ 'sort-and-limit--collection-view': isCollectionPage }">
     <!-- Controls on the right -->
     <div class="sort-and-limit__controls">
       <!-- Sort dropdown -->
@@ -153,7 +153,7 @@ if (typeof document !== 'undefined') {
   margin-inline: auto;
 }
 
-.sort-and-limit--lcc-shelf {
+.sort-and-limit--collection-view {
   max-width: 882px;
 }
 
@@ -306,7 +306,7 @@ if (typeof document !== 'undefined') {
     gap: 0.5rem;
   }
 
-  .sort-and-limit--lcc-shelf {
+  .sort-and-limit--collection-view {
     margin-inline: auto;
     max-width: var(--g-layout-max);
   }

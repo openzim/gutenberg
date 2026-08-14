@@ -257,11 +257,11 @@ def _work_from_parser(parser: RdfParser) -> Work:
         cover=Cover() if parser.has_cover else None,
         collections=collections,
         popularity=0,
+        primary_metric=int(parser.downloads),
         description=(
             normalize(parser.description.strip()) if parser.description else None
         ),
         extra={
-            "downloads": int(parser.downloads),
             "unsupported_formats": [],
             "has_cover": parser.has_cover,
         },
@@ -276,9 +276,9 @@ def fetch_book_metadata(
     Args:
         book_id: The Gutenberg book ID
         mirror_url: The mirror URL (e.g., "https://gutenberg.mirror.driftle.ss")
-        engine: Optional DownloadEngine; when provided, the RDF is fetched
-            through it and cached on disk by URL hash, so re-runs skip
-            re-downloading RDFs. Without it, a plain requests.get is used.
+        engine: Optional DownloadEngine; when configured with a cache directory,
+            RDF responses are cached on disk by URL hash. Otherwise it performs
+            a plain in-memory fetch.
 
     Returns:
         Work if successful, None only for expected unusable books
@@ -292,11 +292,13 @@ def fetch_book_metadata(
 
     logger.debug(f"Downloading RDF for book {book_id} from {rdf_url}")
 
-    if engine is not None:
+    if engine is not None and engine.cache_enabled:
         # cached on disk by URL hash; cache hits return without any HTTP call
         rdf_data = engine.download(
             DownloadRequest(url=rdf_url, format_name="rdf")
         ).path.read_bytes()
+    elif engine is not None:
+        rdf_data = engine.fetch_bytes(rdf_url)
     else:
         # Plain fetch (no disk cache); retry is per-download, errors bubble up
         rdf_data = fetch_bytes_with_retry(rdf_url)

@@ -1,9 +1,13 @@
 {
-	"@metadata": {
-		"authors": []
-	},
-	"metadata_defaults": {
-		"title": "Biblioteche Project Gutenberg",
-		"description": "Ducj i libris in furlan dal prin produtôr di Ebooks gratis"
-	}
+  "common": {
+    "@metadata": {
+      "authors": []
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Biblioteche Project Gutenberg",
+      "description": "Ducj i libris in furlan dal prin produtôr di Ebooks gratis"
+    }
+  }
 }

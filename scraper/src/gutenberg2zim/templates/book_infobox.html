@@ -1,7 +1,7 @@
-<div id="gutenberg-infobox">
+<div id="html-reader-controls">
     <a 
         href="./index.html#/book/{{ book.id }}" 
-        class="gutenberg-btn gutenberg-btn-info" 
+        class="html-reader-btn html-reader-btn-info"
         aria-label="View book cover and information"
         title="View book cover and information"
     >
@@ -12,7 +12,7 @@
         {% if format == 'epub' %}
             <a 
                 href="{{ book|book_name_for_fs|urlencode }}.{{ book.id }}.epub" 
-                class="gutenberg-btn gutenberg-btn-epub" 
+                class="html-reader-btn html-reader-btn-epub"
                 aria-label="Download EPUB format"
                 title="Download EPUB format"
             >
@@ -21,7 +21,7 @@
         {% elif format == 'pdf' %}
             <a 
                 href="{{ book|book_name_for_fs|urlencode }}.{{ book.id }}.pdf" 
-                class="gutenberg-btn gutenberg-btn-pdf" 
+                class="html-reader-btn html-reader-btn-pdf"
                 aria-label="Download PDF format"
                 title="Download PDF format"
             >
@@ -32,7 +32,7 @@
     
     <a 
         href="#" 
-        class="gutenberg-btn gutenberg-btn-up hidden" 
+        class="html-reader-btn html-reader-btn-up hidden"
         id="scroll-to-top"
         aria-label="Scroll to top"
         title="Scroll to top"

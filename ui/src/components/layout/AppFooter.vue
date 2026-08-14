@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
+import { useMainStore } from '@/stores/main'
 
 const { t } = useI18n()
+const main = useMainStore()
 
 const currentYear = new Date().getFullYear()
 </script>
@@ -13,7 +15,7 @@ const currentYear = new Date().getFullYear()
       <p class="app-footer__text">
         © {{ currentYear }} {{ t('footer.createdBy') }}
         <router-link to="/about" class="app-footer__link">{{
-          t('footer.projectGutenberg')
+          main.config?.source.name || 'Library'
         }}</router-link>
         — {{ t('footer.packagedBy') }}
         <a

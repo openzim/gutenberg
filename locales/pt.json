@@ -1,42 +1,46 @@
 {
-	"@metadata": {
-		"authors": [
-			"Mansil alfalb"
-		]
-	},
-	"language": "Português",
-	"isocode": "pt",
-	"nav": {
-		"home": "Página principal"
-	},
-	"book": {
-		"title": "Título",
-		"languages": "Idioma",
-		"license": "Licença",
-		"licensePd": "Domínio público nos EUA.",
-		"cover": "Capa de Livro",
-		"coverLabel": "(capa)",
-		"anonymous": "Anónimo",
-		"various": "Vários"
-	},
-	"common": {
-		"loading": "A carregar...",
-		"search": "Procurar",
-		"sortPopularity": "Ordenar os livros por popularidade",
-		"sortTitle": "Ordenar os livros por título",
-		"chooseLanguage": "Escolha um idioma...",
-		"mainLanguages": "Idiomas principais",
-		"otherLanguages": "Outros idiomas",
-		"anyCatalog": "Escolha o Catálogo",
-		"uiLanguage": "Idioma da interface",
-		"returnHome": "Ir para Início",
-		"sortAuthor": "Autor"
-	},
-	"messages": {
-		"noBooks": "Nenhum dado disponível na tabela"
-	},
-	"metadata_defaults": {
-		"title": "Biblioteca do Projeto Gutenberg",
-		"description": "Todos os livros em português do primeiro produtor de Ebooks gratuitos"
-	}
+  "language": "Português",
+  "isocode": "pt",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Mansil alfalb"
+      ]
+    },
+    "nav": {
+      "home": "Página principal"
+    },
+    "book": {
+      "title": "Título",
+      "languages": "Idioma",
+      "license": "Licença",
+      "licensePd": "Domínio público nos EUA.",
+      "cover": "Capa de Livro",
+      "coverLabel": "(capa)",
+      "anonymous": "Anónimo",
+      "various": "Vários"
+    },
+    "common": {
+      "loading": "A carregar...",
+      "search": "Procurar",
+      "sortPopularity": "Ordenar os livros por popularidade",
+      "sortTitle": "Ordenar os livros por título",
+      "chooseLanguage": "Escolha um idioma...",
+      "mainLanguages": "Idiomas principais",
+      "otherLanguages": "Outros idiomas",
+      "anyCatalog": "Escolha o Catálogo",
+      "uiLanguage": "Idioma da interface",
+      "returnHome": "Ir para Início",
+      "sortAuthor": "Autor"
+    },
+    "messages": {
+      "noBooks": "Nenhum dado disponível na tabela"
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Biblioteca do Projeto Gutenberg",
+      "description": "Todos os livros em português do primeiro produtor de Ebooks gratuitos"
+    }
+  }
 }

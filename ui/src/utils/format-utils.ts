@@ -22,14 +22,14 @@ export function formatLabel(format: string): string {
   return format === 'epub' ? 'ePUB' : format.toUpperCase()
 }
 
-export function formatDownloads(downloads: number): string {
-  if (downloads >= 1000000) {
-    return `${(downloads / 1000000).toFixed(1)}M`
+export function formatMetric(value: number): string {
+  if (value >= 1000000) {
+    return `${(value / 1000000).toFixed(1)}M`
   }
-  if (downloads >= 1000) {
-    return `${(downloads / 1000).toFixed(1)}K`
+  if (value >= 1000) {
+    return `${(value / 1000).toFixed(1)}K`
   }
-  return downloads.toString()
+  return value.toString()
 }
 
 export function formatLanguages(languages: string[], options?: { uiLocale?: string }): string {
@@ -51,5 +51,14 @@ export function extractUniqueValues<T>(items: T[], getter: (item: T) => string[]
 }
 
 export function normalizeImagePath(path: string): string {
+  return normalizeZimPath(path)
+}
+
+/** Make an archive-relative ZIM path unambiguously relative to the app. */
+export function normalizeZimPath(path: string): string {
+  if (/^[a-z][a-z0-9+.-]*:\/\//i.test(path) || /^(?:blob|data|mailto|tel):/i.test(path)) {
+    return path
+  }
+  if (path.startsWith('/')) return path
   return path.startsWith('./') ? path : `./${path}`
 }

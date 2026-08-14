@@ -7,11 +7,12 @@
 import { describe, it, expect } from 'vitest'
 import {
   formatAuthorLifespan,
-  formatDownloads,
+  formatMetric,
   formatLanguages,
   pluralize,
   extractUniqueValues,
-  normalizeImagePath
+  normalizeImagePath,
+  normalizeZimPath
 } from './format-utils'
 
 describe('formatAuthorLifespan', () => {
@@ -32,7 +33,7 @@ describe('formatAuthorLifespan', () => {
   })
 })
 
-describe('formatDownloads', () => {
+describe('formatMetric', () => {
   it.each([
     { value: 0, expected: '0' },
     { value: 1, expected: '1' },
@@ -48,7 +49,7 @@ describe('formatDownloads', () => {
     { value: 1567890, expected: '1.6M' },
     { value: 15000000, expected: '15.0M' }
   ])('formats $value as $expected', ({ value, expected }) => {
-    expect(formatDownloads(value)).toBe(expected)
+    expect(formatMetric(value)).toBe(expected)
   })
 })
 
@@ -128,11 +129,29 @@ describe('normalizeImagePath', () => {
     { input: '', expected: './', description: 'empty string' },
     {
       input: '/absolute/path.jpg',
-      expected: './/absolute/path.jpg',
-      description: 'absolute path'
+      expected: '/absolute/path.jpg',
+      description: 'root-relative path'
+    },
+    {
+      input: '//cdn.example.com/image.jpg',
+      expected: '//cdn.example.com/image.jpg',
+      description: 'protocol-relative URL'
+    },
+    {
+      input: 'https://example.com/image.jpg',
+      expected: 'https://example.com/image.jpg',
+      description: 'absolute URL'
     },
     { input: '../image.jpg', expected: './../image.jpg', description: 'relative parent path' }
   ])('handles $description: "$input" -> "$expected"', ({ input, expected }) => {
     expect(normalizeImagePath(input)).toBe(expected)
+  })
+})
+
+describe('normalizeZimPath', () => {
+  it('keeps a colon-containing archive path relative', () => {
+    expect(normalizeZimPath('Evidence: Jury Impeachment.108.pdf')).toBe(
+      './Evidence: Jury Impeachment.108.pdf'
+    )
   })
 })

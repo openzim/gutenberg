@@ -1,114 +1,109 @@
 {
-	"@metadata": {
-		"authors": [
-			"Volvox"
-		]
-	},
-	"language": "Lëtzebuergesch",
-	"isocode": "lb",
-	"nav": {
-		"home": "Haaptsäit",
-		"authors": "Auteuren",
-		"shelves": "Regaler",
-		"about": "Iwwer",
-		"books": "Bicher"
-	},
-	"home": {
-		"allAuthors": "All Auteuren"
-	},
-	"about": {
-		"missionAuthor": "vum Michael Hart",
-		"missionParagraph12": "Jiddereen ass wëllkomm, fir zum Projet Gutenberg bäizedroen.",
-		"missionParagraph16": "Jiddereen ass wëllkomm hei beim Projet Gutenberg."
-	},
-	"book": {
-		"title": "Titel",
-		"languages": "Sprooch",
-		"lccShelf": "LCC-Regal",
-		"license": "Lizenz",
-		"licensePd": "Domaine public an den USA.",
-		"unknown": "Onbekannt",
-		"anonymous": "Anonym",
-		"download": "Eroflueden",
-		"view": "Weisen"
-	},
-	"author": {
-		"bookCount": "{n} Buch | {n} Bicher"
-	},
-	"shelf": {
-		"allShelves": "All Regaler"
-	},
-	"common": {
-		"loading": "Gëtt gelueden...",
-		"loadingBook": "Buchdetailer gi gelueden...",
-		"search": "Sichen",
-		"sortBy": "Sortéieren no",
-		"sortPopularity": "Bicher no Popularitéit sortéieren",
-		"sortTitle": "Bicher no Titel sortéieren",
-		"chooseLanguage": "Sicht eng Sprooch eraus...",
-		"mainLanguages": "Haaptsproochen",
-		"otherLanguages": "Aner Sproochen",
-		"anyCatalog": "Wielt de Katalog",
-		"uiLanguage": "Sprooch vum Interface",
-		"readMore": "Méi liesen",
-		"sortAuthor": "Auteur"
-	},
-	"messages": {
-		"noBooks": "Kee Buch fonnt.",
-		"noAuthors": "Keen Auteur fonnt.",
-		"noBooksForAuthor": "Keng Bicher disponibel fir dësen Auteur.",
-		"noBooksInShelf": "Et si keng Bicher an dësem Regal disponibel.",
-		"noLanguages": "Keng Sproochen disponibel.",
-		"noFormats": "Kee Format disponibel.",
-		"notFoundShelf": "LCC-Regal net fonnt. D'Regal, no deem Dir gesicht hutt, existéiert net oder et gouf ewechgeholl.",
-		"noAuthorsForLetter": "Keng Auteure fonnt fir de Buschtaf {letter}."
-	},
-	"footer": {
-	},
-	"itemTypes": {
-		"books": "Buch | Bicher",
-		"authors": "Auteur | Auteuren",
-		"shelves": "Regal | Regaler"
-	},
-	"lccShelves": {
-		"A": "A – Allgemeng Wierker",
-		"B": "B – Philosophie, Psychologie, Relioun",
-		"C": "C – Historesch Hëllefswëssenschaften",
-		"D": "D – Weltgeschicht a Geschicht vun Europa, Asien, Afrika, Australien, Neiséiland etc.",
-		"E": "E – Geschicht vun Amerika",
-		"F": "F – Geschicht vun Amerika",
-		"G": "G – Geographie, Anthropologie, Fräizäit",
-		"H": "H – Sozialwëssenschaften",
-		"J": "J – Politikwëssenschaften",
-		"K": "K – Droit",
-		"L": "L – Educatioun",
-		"M": "M – Musek a Bicher iwwer Musek",
-		"N": "N – Beaux-Arts",
-		"P": "P – Sprooch a Literatur",
-		"Q": "Q – Wëssenschaft",
-		"R": "R – Medezin",
-		"S": "S – Landwirtschaft",
-		"T": "T – Technologie",
-		"U": "U – Militärwëssenschaft",
-		"V": "V – Marinwëssenschaft",
-		"Z": "Z – Bibliographie, Bibliothéikswëssenschaft, Informatiounsressourcen (allgemeng)",
-		"PA": "PA – Griichesch a laténgesch Sprooch a Literatur",
-		"PB": "PB – Modern a keltesch Sproochen",
-		"PC": "PC – Romanesch Sproochen",
-		"PD": "PD – Germanesch a skandinavesch Sproochen",
-		"PE": "PE – Englesch Sprooch",
-		"PF": "PF – Westgermanesch Sproochen",
-		"PG": "PG – Slawesch, baltesch an albanesch Sproochen",
-		"PH": "PH – Uralesch a baskesch Sproochen",
-		"PJ": "PJ – Orientalesch Sproochen a Literatur",
-		"PK": "PK – Indo-iranesch Sproochen a Literatur",
-		"PL": "PL – Sproochen a Literatur aus Ostasien, Afrika an Ozeanien",
-		"PM": "PM – Hyperboreeësch, indesch a kënschtlech Sproochen",
-		"PN": "PN – Literatur (allgemeng)",
-		"PQ": "PQ – Franséisch, italieenesch, spuenesch a portugisesch Literatur",
-		"PR": "PR – Englesch Literatur",
-		"PS": "PS – Amerikanesch Literatur",
-		"PT": "PT – Däitsch, hollännesch, flämesch, Afrikaans-, skandinavesch, alnordesch, alislännesch, alnorwegesch, modern islännesch, färöesch, dänesch, norwegesch a schweedesch Literatur",
-		"PZ": "PZ – Fiktioun a Jugendbelletristik"
-	}
+  "language": "Lëtzebuergesch",
+  "isocode": "lb",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Volvox"
+      ]
+    },
+    "nav": {
+      "home": "Haaptsäit",
+      "authors": "Auteuren",
+      "about": "Iwwer",
+      "books": "Bicher"
+    },
+    "home": {
+      "allAuthors": "All Auteuren"
+    },
+    "book": {
+      "title": "Titel",
+      "languages": "Sprooch",
+      "license": "Lizenz",
+      "licensePd": "Domaine public an den USA.",
+      "unknown": "Onbekannt",
+      "anonymous": "Anonym",
+      "download": "Eroflueden",
+      "view": "Weisen"
+    },
+    "author": {
+      "bookCount": "{n} Buch | {n} Bicher"
+    },
+    "common": {
+      "loading": "Gëtt gelueden...",
+      "loadingBook": "Buchdetailer gi gelueden...",
+      "search": "Sichen",
+      "sortBy": "Sortéieren no",
+      "sortPopularity": "Bicher no Popularitéit sortéieren",
+      "sortTitle": "Bicher no Titel sortéieren",
+      "chooseLanguage": "Sicht eng Sprooch eraus...",
+      "mainLanguages": "Haaptsproochen",
+      "otherLanguages": "Aner Sproochen",
+      "anyCatalog": "Wielt de Katalog",
+      "uiLanguage": "Sprooch vum Interface",
+      "readMore": "Méi liesen",
+      "sortAuthor": "Auteur"
+    },
+    "messages": {
+      "noBooks": "Kee Buch fonnt.",
+      "noAuthors": "Keen Auteur fonnt.",
+      "noBooksForAuthor": "Keng Bicher disponibel fir dësen Auteur.",
+      "noLanguages": "Keng Sproochen disponibel.",
+      "noFormats": "Kee Format disponibel.",
+      "noAuthorsForLetter": "Keng Auteure fonnt fir de Buschtaf {letter}."
+    },
+    "itemTypes": {
+      "books": "Buch | Bicher",
+      "authors": "Auteur | Auteuren"
+    }
+  },
+  "gutenberg": {
+    "about": {
+      "missionAuthor": "vum Michael Hart",
+      "missionParagraph12": "Jiddereen ass wëllkomm, fir zum Projet Gutenberg bäizedroen.",
+      "missionParagraph16": "Jiddereen ass wëllkomm hei beim Projet Gutenberg."
+    },
+    "footer": {},
+    "collections": {
+      "A": "A – Allgemeng Wierker",
+      "B": "B – Philosophie, Psychologie, Relioun",
+      "C": "C – Historesch Hëllefswëssenschaften",
+      "D": "D – Weltgeschicht a Geschicht vun Europa, Asien, Afrika, Australien, Neiséiland etc.",
+      "E": "E – Geschicht vun Amerika",
+      "F": "F – Geschicht vun Amerika",
+      "G": "G – Geographie, Anthropologie, Fräizäit",
+      "H": "H – Sozialwëssenschaften",
+      "J": "J – Politikwëssenschaften",
+      "K": "K – Droit",
+      "L": "L – Educatioun",
+      "M": "M – Musek a Bicher iwwer Musek",
+      "N": "N – Beaux-Arts",
+      "P": "P – Sprooch a Literatur",
+      "Q": "Q – Wëssenschaft",
+      "R": "R – Medezin",
+      "S": "S – Landwirtschaft",
+      "T": "T – Technologie",
+      "U": "U – Militärwëssenschaft",
+      "V": "V – Marinwëssenschaft",
+      "Z": "Z – Bibliographie, Bibliothéikswëssenschaft, Informatiounsressourcen (allgemeng)",
+      "PA": "PA – Griichesch a laténgesch Sprooch a Literatur",
+      "PB": "PB – Modern a keltesch Sproochen",
+      "PC": "PC – Romanesch Sproochen",
+      "PD": "PD – Germanesch a skandinavesch Sproochen",
+      "PE": "PE – Englesch Sprooch",
+      "PF": "PF – Westgermanesch Sproochen",
+      "PG": "PG – Slawesch, baltesch an albanesch Sproochen",
+      "PH": "PH – Uralesch a baskesch Sproochen",
+      "PJ": "PJ – Orientalesch Sproochen a Literatur",
+      "PK": "PK – Indo-iranesch Sproochen a Literatur",
+      "PL": "PL – Sproochen a Literatur aus Ostasien, Afrika an Ozeanien",
+      "PM": "PM – Hyperboreeësch, indesch a kënschtlech Sproochen",
+      "PN": "PN – Literatur (allgemeng)",
+      "PQ": "PQ – Franséisch, italieenesch, spuenesch a portugisesch Literatur",
+      "PR": "PR – Englesch Literatur",
+      "PS": "PS – Amerikanesch Literatur",
+      "PT": "PT – Däitsch, hollännesch, flämesch, Afrikaans-, skandinavesch, alnordesch, alislännesch, alnorwegesch, modern islännesch, färöesch, dänesch, norwegesch a schweedesch Literatur",
+      "PZ": "PZ – Fiktioun a Jugendbelletristik"
+    }
+  }
 }

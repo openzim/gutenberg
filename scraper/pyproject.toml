@@ -5,10 +5,9 @@ build-backend = "hatchling.build"
 [project]
 name = "gutenberg2zim"
 authors = [{ name = "Kiwix", email = "dev@kiwix.org" }]
-keywords = ["kiwix", "zim", "offline", "gutenberg"]
+keywords = ["kiwix", "zim", "offline", "books", "gutenberg", "opentextbooks"]
 requires-python = ">=3.14,<3.15"
-description = "Make ZIM file from Gutenberg books"
-readme = "README.md"
+description = "Build offline ZIM libraries from supported book sources"
 license = { text = "GPL-3.0-or-later" }
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -29,8 +28,9 @@ dependencies = [
   "backoff==2.2.1",
   "i18nice==0.16.0",
   "pydantic==2.12.5",
+  "PyMuPDF==1.27.2.3",
 ]
-dynamic = ["version"]
+dynamic = ["version", "readme"]
 
 [project.optional-dependencies]
 scripts = ["invoke==2.2.1"]
@@ -58,6 +58,9 @@ gutenberg2zim-validate-i18n = "gutenberg2zim.scripts.validate_i18n:main"
 
 [tool.hatch.version]
 path = "src/gutenberg2zim/__about__.py"
+
+[tool.hatch.metadata.hooks.custom]
+path = "hatch_build.py"
 
 [tool.hatch.build]
 exclude = ["/.github"]
@@ -227,6 +230,9 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 include = ["src", "tests", "tasks.py"]
 exclude = ["**/node_modules", "**/__pycache__", "src/gutenberg2zim/templates"]
 extraPaths = ["src"]
+stubPath = "typings"
+venvPath = ".."
+venv = ".venv"
 pythonVersion = "3.14"
 pythonPlatform = "All"
 typeCheckingMode = "basic"

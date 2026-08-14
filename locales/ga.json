@@ -1,9 +1,13 @@
 {
-	"@metadata": {
-		"authors": []
-	},
-	"metadata_defaults": {
-		"title": "Leabharlann Project Gutenberg",
-		"description": "Gach leabhar i nGaeilge ón gcéad léiritheoir leabhar-saor in aisce"
-	}
+  "common": {
+    "@metadata": {
+      "authors": []
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Leabharlann Project Gutenberg",
+      "description": "Gach leabhar i nGaeilge ón gcéad léiritheoir leabhar-saor in aisce"
+    }
+  }
 }

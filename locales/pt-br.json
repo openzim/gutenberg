@@ -1,68 +1,72 @@
 {
-	"@metadata": {
-		"authors": [
-			"Eduardoaddad",
-			"Leosls"
-		]
-	},
-	"language": "Português",
-	"isocode": "pt-BR",
-	"nav": {
-		"home": "Página inicial",
-		"authors": "Autores",
-		"about": "Sobre"
-	},
-	"book": {
-		"title": "Título",
-		"languages": "Idioma",
-		"license": "Licença",
-		"licensePd": "Domínio público nos EUA.",
-		"licenseCopyright": "Protegido por direitos autorais. Leia o aviso de direitos autorais dentro deste livro para obter detalhes.",
-		"fullName": "Nome completo",
-		"cover": "Capa do livro",
-		"coverLabel": "(capa)",
-		"anonymous": "Anônimos",
-		"various": "Vários"
-	},
-	"common": {
-		"loading": "Carregando...",
-		"search": "Pesquisar",
-		"sortPopularity": "Ordenar livros por popularidade",
-		"sortTitle": "Ordenar livros por título",
-		"chooseLanguage": "Escolha um idioma...",
-		"mainLanguages": "Principais idiomas",
-		"otherLanguages": "Outros idiomas",
-		"anyCatalog": "Escolha o catálogo",
-		"uiLanguage": "Idioma da interface",
-		"returnHome": "Ir para Início",
-		"sortAuthor": "Autor"
-	},
-	"messages": {
-		"noBooks": "Não há dados disponíveis na tabela"
-	},
-	"lccShelves": {
-		"A": "A-Obras gerais",
-		"B": "B-Filosofia, psicologia, religião",
-		"C": "C-Ciências auxiliares da história",
-		"D": "D-História mundial e história da Europa, Ásia, África, Austrália, Nova Zelândia, etc.",
-		"E": "E-História das Américas",
-		"F": "F-História das Américas",
-		"G": "G-Geografia, antropologia, recreação",
-		"H": "H-Ciências sociais",
-		"J": "J-Ciência política",
-		"K": "K-Direito",
-		"L": "L-Educação",
-		"M": "M-Música e livros sobre música",
-		"N": "N-Belas artes",
-		"P": "P-Linguagem e literatura",
-		"Q": "Q-Ciência",
-		"R": "R-Medicina",
-		"S": "S-Agricultura",
-		"T": "T-Tecnologia",
-		"U": "U-Ciência militar",
-		"V": "V-Ciência Naval",
-		"Z": "Z-Bibliografia, biblioteconomia, recursos de informação (geral)",
-		"PA": "PA-Língua e literatura grega e latina",
-		"PB": "PB-Línguas modernas e celtas"
-	}
+  "language": "Português",
+  "isocode": "pt-BR",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Eduardoaddad",
+        "Leosls"
+      ]
+    },
+    "nav": {
+      "home": "Página inicial",
+      "authors": "Autores",
+      "about": "Sobre"
+    },
+    "book": {
+      "title": "Título",
+      "languages": "Idioma",
+      "license": "Licença",
+      "licensePd": "Domínio público nos EUA.",
+      "licenseCopyright": "Protegido por direitos autorais. Leia o aviso de direitos autorais dentro deste livro para obter detalhes.",
+      "fullName": "Nome completo",
+      "cover": "Capa do livro",
+      "coverLabel": "(capa)",
+      "anonymous": "Anônimos",
+      "various": "Vários"
+    },
+    "common": {
+      "loading": "Carregando...",
+      "search": "Pesquisar",
+      "sortPopularity": "Ordenar livros por popularidade",
+      "sortTitle": "Ordenar livros por título",
+      "chooseLanguage": "Escolha um idioma...",
+      "mainLanguages": "Principais idiomas",
+      "otherLanguages": "Outros idiomas",
+      "anyCatalog": "Escolha o catálogo",
+      "uiLanguage": "Idioma da interface",
+      "returnHome": "Ir para Início",
+      "sortAuthor": "Autor"
+    },
+    "messages": {
+      "noBooks": "Não há dados disponíveis na tabela"
+    }
+  },
+  "gutenberg": {
+    "collections": {
+      "A": "A-Obras gerais",
+      "B": "B-Filosofia, psicologia, religião",
+      "C": "C-Ciências auxiliares da história",
+      "D": "D-História mundial e história da Europa, Ásia, África, Austrália, Nova Zelândia, etc.",
+      "E": "E-História das Américas",
+      "F": "F-História das Américas",
+      "G": "G-Geografia, antropologia, recreação",
+      "H": "H-Ciências sociais",
+      "J": "J-Ciência política",
+      "K": "K-Direito",
+      "L": "L-Educação",
+      "M": "M-Música e livros sobre música",
+      "N": "N-Belas artes",
+      "P": "P-Linguagem e literatura",
+      "Q": "Q-Ciência",
+      "R": "R-Medicina",
+      "S": "S-Agricultura",
+      "T": "T-Tecnologia",
+      "U": "U-Ciência militar",
+      "V": "V-Ciência Naval",
+      "Z": "Z-Bibliografia, biblioteconomia, recursos de informação (geral)",
+      "PA": "PA-Língua e literatura grega e latina",
+      "PB": "PB-Línguas modernas e celtas"
+    }
+  }
 }

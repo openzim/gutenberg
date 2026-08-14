@@ -1,124 +1,122 @@
 {
-	"@metadata": {
-		"authors": [
-			"Kly"
-		]
-	},
-	"language": "繁體中文",
-	"isocode": "zh-hant",
-	"nav": {
-		"home": "首頁",
-		"authors": "作者",
-		"about": "關於",
-		"books": "書籍"
-	},
-	"about": {
-		"introHeading": "關於古騰堡計劃"
-	},
-	"book": {
-		"title": "標題",
-		"downloads": "下載",
-		"downloadCount": "下載次數",
-		"languages": "語言",
-		"license": "授權條款",
-		"licensePd": "在美國屬於公有領域。",
-		"licenseCopyright": "版權所有。詳情請閱讀本書內的版權聲明。",
-		"fullName": "全名",
-		"unknown": "未知",
-		"cover": "書籍封面",
-		"coverLabel": "（封面）",
-		"anonymous": "匿名作者",
-		"various": "多位作者"
-	},
-	"shelf": {
-		"booksIn": "書籍位在"
-	},
-	"common": {
-		"loading": "載入中…",
-		"loadingBook": "正在載入書籍詳細資訊…",
-		"loadingAuthor": "正在載入作者詳細資訊…",
-		"loadingItems": "正在載入{type}…",
-		"showing": "顯示",
-		"of": "/",
-		"search": "搜尋",
-		"sortBy": "排序依",
-		"sortPopularity": "依照人氣排序書籍",
-		"sortTitle": "依照標題排序書籍",
-		"chooseLanguage": "選擇一種語言…",
-		"mainLanguages": "主要語言",
-		"otherLanguages": "其他語言",
-		"anyCatalog": "選擇目錄",
-		"uiLanguage": "介面語言",
-		"selectInterfaceLanguage": "選擇介面語言",
-		"filterBy": "篩選依照",
-		"filterByTitle": "篩選依照{title}",
-		"returnHome": "返回首頁",
-		"toggleNavigationMenu": "切換導覽選單",
-		"mainNavigation": "主要導覽",
-		"mobileNavigationMenu": "行動版導覽選單",
-		"mobileNavigation": "行動版導覽",
-		"navigateTo": "導覽至",
-		"navigateToItem": "導覽至{item}",
-		"gutenbergHome": "古騰堡首頁",
-		"sortAuthor": "作者"
-	},
-	"messages": {
-		"noBooks": "表格裡沒有可用資料",
-		"noAuthors": "找不到作者。",
-		"noBooksForAuthor": "此位作者沒有這本書。",
-		"noBooksInShelf": "此書架沒有可用的書籍。",
-		"noLanguages": "沒有可用的語言。",
-		"noFormats": "沒有可用的格式。"
-	},
-	"metadata_defaults": {
-		"title": "古騰堡計劃文庫",
-		"description": "所有英文書籍均來自首家免費電子書製作者"
-	},
-	"footer": {
-	},
-	"itemTypes": {
-		"books": "書籍 | 書籍",
-		"authors": "作者 | 作者"
-	},
-	"lccShelves": {
-		"A": "A-總類",
-		"B": "B-哲學、心理學、宗教",
-		"C": "C-歷史輔助科學",
-		"D": "D-世界歷史以及歐洲、亞洲、非洲、澳洲、紐西蘭等地的歷史。",
-		"E": "E-美洲歷史",
-		"F": "F-美洲歷史",
-		"G": "G-地理學、人類學、休閒娛樂",
-		"H": "H-社會科學",
-		"J": "J-政治學",
-		"K": "K-法律",
-		"L": "L-教育",
-		"M": "M-音樂和音樂書籍",
-		"N": "N-美術",
-		"P": "P-語言和文學",
-		"Q": "Q-科學",
-		"R": "R-醫學",
-		"S": "S-農業",
-		"T": "T-技術",
-		"U": "U-軍事科學",
-		"V": "V-海軍科學",
-		"Z": "Z-書目學、圖書館學、資訊資源（一般）",
-		"PA": "PA-希臘語和拉丁語語言文學",
-		"PB": "PB-現代語和凱爾特語",
-		"PC": "PC-羅曼語言",
-		"PD": "PD-日耳曼語和斯堪地那維亞語",
-		"PE": "PE-英語",
-		"PF": "PF-西日耳曼語",
-		"PG": "PG-斯拉夫語、波羅的語和阿爾巴尼亞語",
-		"PH": "PH-烏拉語和巴斯克語",
-		"PJ": "PJ-東方語言和文學",
-		"PK": "PK-印度-伊朗語和文學",
-		"PL": "PL-東亞、非洲、大洋洲語言和文學",
-		"PM": "PM-極北語、印度語和人工語言",
-		"PN": "PN-文學（一般）",
-		"PQ": "PQ-法語、義大利語、西班牙語、葡萄牙語文學",
-		"PR": "PR-英語文學",
-		"PS": "PS-美國文學",
-		"PT": "PT-德語、荷蘭語、佛拉蒙語、南非荷蘭語、斯堪地那維亞語、古諾斯語、古冰島語、古挪威語、現代冰島語、法羅語、丹麥語、挪威語和瑞典語文學",
-		"PZ": "PZ-小說和青少年文學"
-	}
+  "language": "繁體中文",
+  "isocode": "zh-hant",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Kly"
+      ]
+    },
+    "nav": {
+      "home": "首頁",
+      "authors": "作者",
+      "about": "關於",
+      "books": "書籍"
+    },
+    "book": {
+      "title": "標題",
+      "downloads": "下載",
+      "downloadCount": "下載次數",
+      "languages": "語言",
+      "license": "授權條款",
+      "licensePd": "在美國屬於公有領域。",
+      "licenseCopyright": "版權所有。詳情請閱讀本書內的版權聲明。",
+      "fullName": "全名",
+      "unknown": "未知",
+      "cover": "書籍封面",
+      "coverLabel": "（封面）",
+      "anonymous": "匿名作者",
+      "various": "多位作者"
+    },
+    "common": {
+      "loading": "載入中…",
+      "loadingBook": "正在載入書籍詳細資訊…",
+      "loadingAuthor": "正在載入作者詳細資訊…",
+      "loadingItems": "正在載入{type}…",
+      "showing": "顯示",
+      "of": "/",
+      "search": "搜尋",
+      "sortBy": "排序依",
+      "sortPopularity": "依照人氣排序書籍",
+      "sortTitle": "依照標題排序書籍",
+      "chooseLanguage": "選擇一種語言…",
+      "mainLanguages": "主要語言",
+      "otherLanguages": "其他語言",
+      "anyCatalog": "選擇目錄",
+      "uiLanguage": "介面語言",
+      "selectInterfaceLanguage": "選擇介面語言",
+      "filterBy": "篩選依照",
+      "filterByTitle": "篩選依照{title}",
+      "returnHome": "返回首頁",
+      "toggleNavigationMenu": "切換導覽選單",
+      "mainNavigation": "主要導覽",
+      "mobileNavigationMenu": "行動版導覽選單",
+      "mobileNavigation": "行動版導覽",
+      "navigateTo": "導覽至",
+      "navigateToItem": "導覽至{item}",
+      "sortAuthor": "作者"
+    },
+    "messages": {
+      "noBooks": "表格裡沒有可用資料",
+      "noAuthors": "找不到作者。",
+      "noBooksForAuthor": "此位作者沒有這本書。",
+      "noLanguages": "沒有可用的語言。",
+      "noFormats": "沒有可用的格式。"
+    },
+    "itemTypes": {
+      "books": "書籍 | 書籍",
+      "authors": "作者 | 作者"
+    }
+  },
+  "gutenberg": {
+    "about": {
+      "introHeading": "關於古騰堡計劃"
+    },
+    "metadata_defaults": {
+      "title": "古騰堡計劃文庫",
+      "description": "所有英文書籍均來自首家免費電子書製作者"
+    },
+    "footer": {},
+    "collections": {
+      "A": "A-總類",
+      "B": "B-哲學、心理學、宗教",
+      "C": "C-歷史輔助科學",
+      "D": "D-世界歷史以及歐洲、亞洲、非洲、澳洲、紐西蘭等地的歷史。",
+      "E": "E-美洲歷史",
+      "F": "F-美洲歷史",
+      "G": "G-地理學、人類學、休閒娛樂",
+      "H": "H-社會科學",
+      "J": "J-政治學",
+      "K": "K-法律",
+      "L": "L-教育",
+      "M": "M-音樂和音樂書籍",
+      "N": "N-美術",
+      "P": "P-語言和文學",
+      "Q": "Q-科學",
+      "R": "R-醫學",
+      "S": "S-農業",
+      "T": "T-技術",
+      "U": "U-軍事科學",
+      "V": "V-海軍科學",
+      "Z": "Z-書目學、圖書館學、資訊資源（一般）",
+      "PA": "PA-希臘語和拉丁語語言文學",
+      "PB": "PB-現代語和凱爾特語",
+      "PC": "PC-羅曼語言",
+      "PD": "PD-日耳曼語和斯堪地那維亞語",
+      "PE": "PE-英語",
+      "PF": "PF-西日耳曼語",
+      "PG": "PG-斯拉夫語、波羅的語和阿爾巴尼亞語",
+      "PH": "PH-烏拉語和巴斯克語",
+      "PJ": "PJ-東方語言和文學",
+      "PK": "PK-印度-伊朗語和文學",
+      "PL": "PL-東亞、非洲、大洋洲語言和文學",
+      "PM": "PM-極北語、印度語和人工語言",
+      "PN": "PN-文學（一般）",
+      "PQ": "PQ-法語、義大利語、西班牙語、葡萄牙語文學",
+      "PR": "PR-英語文學",
+      "PS": "PS-美國文學",
+      "PT": "PT-德語、荷蘭語、佛拉蒙語、南非荷蘭語、斯堪地那維亞語、古諾斯語、古冰島語、古挪威語、現代冰島語、法羅語、丹麥語、挪威語和瑞典語文學",
+      "PZ": "PZ-小說和青少年文學"
+    }
+  }
 }

@@ -1,6 +1,6 @@
 /**
  * TypeScript interfaces for Author-related data structures
- * Matches Pydantic schemas from scraper/src/gutenberg2zim/schemas.py
+ * Matches the scraper's source-neutral JSON schemas.
  */
 
 import type { BookPreview } from './Book'

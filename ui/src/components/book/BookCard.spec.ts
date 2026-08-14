@@ -26,7 +26,7 @@ describe('BookCard', () => {
     languages: ['en'],
     popularity: 5,
     coverPath: '/covers/1.jpg',
-    lccShelf: 'PR',
+    primaryCollection: 'PR',
     ...overrides
   })
 
@@ -43,7 +43,7 @@ describe('BookCard', () => {
       const coverImage = wrapper.findComponent(BookCoverImage)
       expect(coverImage.exists()).toBe(true)
       expect(coverImage.props('coverPath')).toBe('/covers/1.jpg')
-      expect(coverImage.props('alt')).toBe('Pride and Prejudice cover')
+      expect(coverImage.props('alt')).toBe('book.coverAlt')
       expect(coverImage.props('size')).toBe(64)
       expect(coverImage.props('height')).toBe('200px')
       expect(coverImage.classes()).toContain('book-cover')

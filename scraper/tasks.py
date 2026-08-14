@@ -1,8 +1,8 @@
 # pyright: strict, reportUntypedFunctionDecorator=false
 import os
 
-from invoke.context import Context
-from invoke.tasks import task  # pyright: ignore [reportUnknownVariableType]
+from invoke.context import Context  # pyright: ignore[reportMissingModuleSource]
+from invoke.tasks import task  # pyright: ignore[reportMissingModuleSource]
 
 use_pty = not os.getenv("CI", "")
 

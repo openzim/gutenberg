@@ -1,9 +1,9 @@
 """Generic HTTP download engine.
 
-Source-agnostic downloader with a persistent session, retry with backoff,
-an on-disk cache keyed by URL hash, and streaming to file. Sources hand it
-`DownloadRequest`s (from their `FormatResolverPort`); it knows nothing
-about any specific source's URL scheme.
+Source-agnostic downloader with a persistent session, retry with backoff, and
+optional on-disk caching keyed by URL hash. Sources hand it `DownloadRequest`s
+(from their `FormatResolverPort`); it knows nothing about any specific
+source's URL scheme.
 """
 
 import hashlib
@@ -82,13 +82,14 @@ def fetch_bytes_with_retry(
 class DownloadEngine:
     def __init__(
         self,
-        cache_dir: Path,
+        cache_dir: Path | None = None,
         session: requests.Session | None = None,
         timeout: int = DEFAULT_HTTP_TIMEOUT,
         max_retry_time: int = 30,
     ):
-        self._cache_dir = cache_dir
-        self._cache_dir.mkdir(parents=True, exist_ok=True)
+        self._cache_dir = cache_dir.resolve() if cache_dir else None
+        if self._cache_dir:
+            self._cache_dir.mkdir(parents=True, exist_ok=True)
         # Explicit session (mainly tests) or per-worker-thread sessions:
         # requests.Session is not guaranteed thread-safe, so each worker
         # thread gets its own lazily-created persistent session
@@ -125,9 +126,16 @@ class DownloadEngine:
 
     def cache_path_for(self, url: str) -> Path:
         """Deterministic cache path for a URL (hash + original suffix)"""
+        if self._cache_dir is None:
+            raise RuntimeError("A cache directory is required for cached downloads")
         digest = hashlib.sha256(url.encode("utf-8")).hexdigest()
         suffix = Path(urlparse(url).path).suffix
         return self._cache_dir / f"{digest}{suffix}"
+
+    @property
+    def cache_enabled(self) -> bool:
+        """Whether downloads without an explicit target can be cached."""
+        return self._cache_dir is not None
 
     def fetch_bytes(self, url: str) -> bytes:
         """GET `url` and return its full content, retrying transient errors.
@@ -141,6 +149,21 @@ class DownloadEngine:
             max_retry_time=self._max_retry_time,
         )
 
+    def content_type(self, url: str) -> str | None:
+        """Return a URL's final content type without downloading its body.
+
+        A missing or unsupported HEAD response is deliberately inconclusive:
+        callers can fall back to a normal download and inspect the content.
+        """
+        try:
+            with self._get_session().head(
+                url, allow_redirects=True, timeout=self._timeout
+            ) as response:
+                response.raise_for_status()
+                return response.headers.get("Content-Type", "").split(";", 1)[0].lower()
+        except requests.RequestException:
+            return None
+
     def download(
         self, request: DownloadRequest, dest: Path | None = None
     ) -> DownloadResult:
@@ -150,9 +173,14 @@ class DownloadEngine:
         and no explicit destination is requested.
         """
         target = dest or request.target
-        cache_path = self.cache_path_for(request.url)
+        if target is None and self._cache_dir is None:
+            raise RuntimeError(
+                "A download target is required when no cache directory is configured"
+            )
 
-        if target is None and cache_path.exists():
+        cache_path = self.cache_path_for(request.url) if self._cache_dir else None
+
+        if target is None and cache_path is not None and cache_path.exists():
             logger.debug(f"\t\tCache hit for {request.url}")
             return DownloadResult(
                 url=request.url,
@@ -162,6 +190,8 @@ class DownloadEngine:
             )
 
         target = target or cache_path
+        if target is None:
+            raise RuntimeError("Unable to determine a download target")
         self._download_with_retry(request.url, target)
         return DownloadResult(
             url=request.url,

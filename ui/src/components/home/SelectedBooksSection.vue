@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import type { BookPreview } from '@/types'
-import ShelfBookCard from '@/components/book/ShelfBookCard.vue'
+import CollectionBookCard from '@/components/book/CollectionBookCard.vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
 import { normalizeImagePath } from '@/utils/format-utils'
 import FireRating from '@/components/common/FireRating.vue'
@@ -54,7 +54,7 @@ function goToAuthor(id: string) {
 
       <div class="selected-books-section__grid">
         <div v-for="book in topBooks" :key="book.id" class="selected-books-section__cell">
-          <shelf-book-card :book="book" />
+          <collection-book-card :book="book" />
         </div>
 
         <div v-if="mostDownloaded" class="selected-books-section__featured">
@@ -66,7 +66,7 @@ function goToAuthor(id: string) {
             <img
               v-if="mostDownloaded.coverPath"
               :src="normalizeImagePath(mostDownloaded.coverPath)"
-              :alt="`${mostDownloaded.title} cover`"
+              :alt="t('book.coverAlt', { title: mostDownloaded.title })"
               class="featured-book__cover"
             />
           </div>
@@ -152,8 +152,9 @@ function goToAuthor(id: string) {
   justify-content: center;
   align-items: center;
   margin-bottom: 0.75rem;
-  width: 260px;
-  height: 400px;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  max-height: 450px;
   flex-shrink: 0;
   align-self: center;
 }

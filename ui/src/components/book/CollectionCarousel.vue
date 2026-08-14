@@ -2,7 +2,7 @@
 import { useCarousel } from '@/composables/useCarousel'
 import { ref, watch, nextTick } from 'vue'
 import type { BookPreview } from '@/types'
-import ShelfBookCard from './ShelfBookCard.vue'
+import CollectionBookCard from './CollectionBookCard.vue'
 import CarouselArrow from '@/components/common/CarouselArrow.vue'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY, LAYOUT } from '@/constants/theme'
@@ -36,12 +36,12 @@ watch(
 </script>
 
 <template>
-  <div class="shelf-carousel">
-    <h2 class="shelf-carousel-title mb-4">
-      {{ t('book.sameShelfBooks') }}
+  <div class="collection-carousel">
+    <h2 class="collection-carousel-title mb-4">
+      {{ t('book.sameCollectionBooks') }}
     </h2>
 
-    <div class="shelf-carousel__wrapper">
+    <div class="collection-carousel__wrapper">
       <!-- Desktop arrows -->
       <div class="carousel-arrow-wrapper g-desktop-only">
         <carousel-arrow
@@ -52,16 +52,16 @@ watch(
         />
       </div>
 
-      <div class="shelf-carousel__track-outer">
-        <div class="shelf-books-row g-desktop-only">
+      <div class="collection-carousel__track-outer">
+        <div class="collection-books-row g-desktop-only">
           <div v-for="book in visibleItems" :key="book.id" class="carousel-card-wrapper">
-            <shelf-book-card :book="book" />
+            <collection-book-card :book="book" />
           </div>
         </div>
 
-        <div ref="trackRef" class="shelf-books-row g-mobile-only">
+        <div ref="trackRef" class="collection-books-row g-mobile-only">
           <div v-for="book in books" :key="book.id" class="carousel-card-wrapper">
-            <shelf-book-card :book="book" />
+            <collection-book-card :book="book" />
           </div>
         </div>
       </div>
@@ -79,39 +79,39 @@ watch(
 </template>
 
 <style scoped>
-.shelf-carousel {
+.collection-carousel {
   max-width: var(--g-layout-max);
   margin-inline: auto;
   padding: 1.5rem;
 }
 
-.shelf-carousel-title {
+.collection-carousel-title {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.H3_SIZE);
   font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
 }
 
-.shelf-carousel__wrapper {
+.collection-carousel__wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
 }
 
-.shelf-carousel__track-outer {
+.collection-carousel__track-outer {
   width: 1102px;
   flex-shrink: 0;
   padding: 5px;
 }
 
-.shelf-books-row {
+.collection-books-row {
   display: flex;
   align-items: stretch;
   width: 100%;
   padding: var(--g-card-bleed);
 }
 
-.shelf-books-row.g-mobile-only {
+.collection-books-row.g-mobile-only {
   display: none;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -119,7 +119,7 @@ watch(
   padding: 5px;
 }
 
-.shelf-books-row.g-mobile-only::-webkit-scrollbar {
+.collection-books-row.g-mobile-only::-webkit-scrollbar {
   display: none;
 }
 
@@ -137,12 +137,12 @@ watch(
 }
 
 @media (max-width: 1279px) {
-  .shelf-carousel {
+  .collection-carousel {
     max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
     padding: 1rem;
   }
 
-  .shelf-carousel__track-outer {
+  .collection-carousel__track-outer {
     width: 100%;
     padding: 5px;
   }

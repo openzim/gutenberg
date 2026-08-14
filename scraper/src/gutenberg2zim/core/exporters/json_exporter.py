@@ -1,6 +1,6 @@
 """JSON files exporter for the frontend UI (moved from `gutenberg2zim.export`).
 
-Generates books.json, authors.json, LCC shelves JSON, config.json, and the
+Generates books.json, authors.json, collections JSON, config.json, and the
 per-item detail JSON files. The ZIM search index entries pointing at the
 UI routes live in `search_items_exporter`.
 """
@@ -8,7 +8,6 @@ UI routes live in `search_items_exporter`.
 from collections import defaultdict
 
 from gutenberg2zim.constants import logger
-from gutenberg2zim.core.exporters.catalog_data import collections_for_works
 from gutenberg2zim.core.index_builder import Indexes
 from gutenberg2zim.core.models import Creator, Work
 from gutenberg2zim.core.schemas import (
@@ -21,10 +20,13 @@ from gutenberg2zim.core.schemas import (
     BookFormat,
     BookPreview,
     Books,
+    Collection,
+    CollectionPreview,
+    Collections,
     Config,
-    LCCShelf,
-    LCCShelfPreview,
-    LCCShelves,
+    FeatureFlags,
+    SourceInfo,
+    ThemeConfig,
 )
 from gutenberg2zim.core.schemas import (
     Book as BookSchema,
@@ -32,25 +34,15 @@ from gutenberg2zim.core.schemas import (
 from gutenberg2zim.core.utils import (
     archive_name_for,
     article_name_for,
+    collection_key,
     creator_birth_year,
     creator_death_year,
+    primary_collection_id,
     primary_creator,
     requested_formats,
-    work_lcc_shelf,
 )
 from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.core.zim_assembler import ZimAssembler
-
-
-def lcc_shelf_list(work_store: WorkStore):
-    return collections_for_works(work_store.works)
-
-
-def lcc_shelf_list_language(lang, work_store: WorkStore):
-    return collections_for_works(
-        work for work in work_store.works if lang in work.languages
-    )
-
 
 # JSON Generation Functions for Vue.js UI
 
@@ -96,7 +88,7 @@ def _work_to_preview(
         languages=work.languages,
         popularity=work.popularity or 0,
         cover_path=_cover_path_for(work),
-        lcc_shelf=work_lcc_shelf(work),
+        primary_collection=primary_collection_id(work),
         available_formats=requested_formats(work, formats),
         description=work.description,
     )
@@ -136,24 +128,23 @@ def _work_to_schema(work: Work, formats: list[str]) -> BookSchema:
         author=_creator_to_schema(primary_creator(work)),
         languages=work.languages,
         license=work.license or "Public domain in the USA.",
-        downloads=work.extra.get("downloads", 0),
+        primary_metric=work.primary_metric or 0,
         popularity=work.popularity or 0,
-        lcc_shelf=work_lcc_shelf(work),
+        primary_collection=primary_collection_id(work),
         cover_path=_cover_path_for(work),
         formats=book_formats,
         description=work.description,
     )
 
 
-def _lcc_shelf_to_preview(shelf_code: str, shelf_works: list[Work]) -> LCCShelfPreview:
-    """Convert LCC shelf code to LCCShelfPreview schema"""
-    book_count = len(shelf_works)
-    total_popularity = sum(work.popularity or 0 for work in shelf_works)
-    return LCCShelfPreview(
-        code=shelf_code,
-        name=None,
-        book_count=book_count,
-        total_popularity=total_popularity,
+def _collection_to_preview(
+    collection_id: str, collection_name: str, collection_works: list[Work]
+) -> CollectionPreview:
+    return CollectionPreview(
+        id=collection_id,
+        name=collection_name,
+        book_count=len(collection_works),
+        total_popularity=sum(work.popularity or 0 for work in collection_works),
     )
 
 
@@ -165,11 +156,14 @@ def generate_json_files(
     title: str | None = None,
     description: str | None = None,
     *,
-    add_lcc_shelves: bool = False,
     primary_color: str | None = None,
     secondary_color: str | None = None,
     display_name: str,
     indexes: Indexes,
+    source_slug: str = "source",
+    source_description: str | None = None,
+    collection_label: str = "Collections",
+    collection_icon_style: str = "classification",
 ) -> None:
     """Generate all JSON files for Vue.js frontend"""
     logger.info("Generating JSON files for Vue.js UI")
@@ -199,6 +193,35 @@ def generate_json_files(
     authors_collection = Authors(
         authors=authors_preview, total_count=len(authors_preview)
     )
+
+    collection_works_map: dict[str, list[Work]] = defaultdict(list)
+    collection_names: dict[str, str] = {}
+    for work in all_works:
+        for collection in work.collections:
+            collection_works_map[collection.id].append(work)
+            collection_names.setdefault(collection.id, collection.name)
+    collection_ids = sorted(
+        collection_works_map,
+        key=lambda collection_id: collection_names[collection_id],
+    )
+
+    collections = Collections(
+        collections=[
+            _collection_to_preview(
+                collection_id,
+                collection_names[collection_id],
+                collection_works_map[collection_id],
+            )
+            for collection_id in collection_ids
+        ],
+        total_count=len(collection_ids),
+    )
+    assembler.add_item_for(
+        path="collections.json",
+        content=collections.model_dump_json(by_alias=True, indent=2),
+        mimetype="application/json",
+        is_front=False,
+    )
     assembler.add_item_for(
         path="authors.json",
         content=authors_collection.model_dump_json(by_alias=True, indent=2),
@@ -206,37 +229,34 @@ def generate_json_files(
         is_front=False,
     )
 
-    # Group works by shelf in a single pass, shared by the shelf previews
-    # and the shelf detail files
-    shelf_works_map: dict[str, list[Work]] = defaultdict(list)
-    if add_lcc_shelves:
-        for work in all_works:
-            if (shelf := work_lcc_shelf(work)) is not None:
-                shelf_works_map[shelf].append(work)
-    shelves = sorted(shelf_works_map)
-
-    if add_lcc_shelves:
-        logger.debug("Generating lcc_shelves.json")
-        shelves_preview = [
-            _lcc_shelf_to_preview(shelf_code, shelf_works_map[shelf_code])
-            for shelf_code in shelves
-        ]
-        shelves_collection = LCCShelves(
-            shelves=shelves_preview, total_count=len(shelves_preview)
-        )
-        assembler.add_item_for(
-            path="lcc_shelves.json",
-            content=shelves_collection.model_dump_json(by_alias=True, indent=2),
-            mimetype="application/json",
-            is_front=False,
-        )
-
     logger.debug("Generating config.json")
     config = Config(
         title=title or zim_name or f"{display_name} Library",
         description=description,
         primary_color=primary_color,
         secondary_color=secondary_color,
+        source=SourceInfo(
+            slug=source_slug,
+            name=display_name,
+            description=source_description or display_name,
+        ),
+        theme=ThemeConfig(
+            primary_color=primary_color,
+            secondary_color=secondary_color,
+            format_icons={format_name: format_name for format_name in formats},
+            route_labels={
+                "home": "Home",
+                "works": "Ebooks",
+                "authors": "Authors",
+                "collections": collection_label,
+            },
+            collection_icon_style=collection_icon_style,
+        ),
+        features=FeatureFlags(
+            epub_reader="epub" in formats,
+            pdf_reader="pdf" in formats,
+            noscript_fallback=True,
+        ),
     )
     assembler.add_item_for(
         path="config.json",
@@ -252,6 +272,25 @@ def generate_json_files(
         assembler.add_item_for(
             path=f"books/{work.id}.json",
             content=book_detail.model_dump_json(by_alias=True, indent=2),
+            mimetype="application/json",
+            is_front=False,
+        )
+
+    for collection_id in collection_ids:
+        collection_works = collection_works_map[collection_id]
+        collection = Collection(
+            id=collection_id,
+            name=collection_names[collection_id],
+            book_count=len(collection_works),
+            total_popularity=sum(work.popularity or 0 for work in collection_works),
+            books=[
+                _work_to_preview(work, formats, author_stats)
+                for work in collection_works
+            ],
+        )
+        assembler.add_item_for(
+            path=f"collections/{collection_key(collection_id)}.json",
+            content=collection.model_dump_json(by_alias=True, indent=2),
             mimetype="application/json",
             is_front=False,
         )
@@ -279,25 +318,5 @@ def generate_json_files(
             mimetype="application/json",
             is_front=False,
         )
-
-    if add_lcc_shelves:
-        logger.debug("Generating LCC shelf detail files")
-        for shelf_code in shelves:
-            shelf_works = [
-                _work_to_preview(work, formats, author_stats)
-                for work in shelf_works_map[shelf_code]
-            ]
-            shelf_detail = LCCShelf(
-                code=shelf_code,
-                name=None,
-                books=shelf_works,
-                book_count=len(shelf_works),
-            )
-            assembler.add_item_for(
-                path=f"lcc_shelves/{shelf_code}.json",
-                content=shelf_detail.model_dump_json(by_alias=True, indent=2),
-                mimetype="application/json",
-                is_front=False,
-            )
 
     logger.info("JSON file generation completed")

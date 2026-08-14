@@ -115,7 +115,7 @@ describe('NotFoundState', () => {
       expect(buttons[0]!.text()).toBe('View All Books')
     })
 
-    it.each(['/books', '/authors', '/lcc-shelves', '/books?sort=title'])(
+    it.each(['/books', '/authors', '/collections', '/books?sort=title'])(
       'handles list route: %s',
       (route) => {
         const wrapper = mount(NotFoundState, {

@@ -49,7 +49,7 @@ def add_search_item(
 
 
 def export_search_items(indexes: Indexes, assembler: ZimAssembler) -> None:
-    """Write all search index entries (books, authors, shelves, listings)"""
+    """Write all search index entries (books, authors, collections, listings)"""
     logger.debug("Generating ZIM index entries")
     for entry in indexes.search_entries:
         add_search_item(

@@ -1,115 +1,113 @@
 {
-	"@metadata": {
-		"authors": [
-			"Beta16",
-			"FL2226",
-			"GpieroMW"
-		]
-	},
-	"language": "Italiano",
-	"isocode": "it",
-	"nav": {
-		"home": "Homepage",
-		"authors": "Autori",
-		"books": "Libri"
-	},
-	"home": {
-		"allAuthors": "Tutti gli autori",
-		"selectedAuthors": "Autori selezionati"
-	},
-	"about": {
-		"introHeading": "Informazioni sul Progetto Gutenberg",
-		"introParagraph2": "Michael Hart, fondatore del Progetto Gutenberg, inventò gli eBook nel 1971 e il suo ricordo continua a ispirare la creazione di eBook e contenuti correlati ancora oggi."
-	},
-	"book": {
-		"title": "Titolo",
-		"languages": "Linguaggio",
-		"license": "Licenza",
-		"licensePd": "Di pubblico dominio negli USA.",
-		"worksAvailable": "Opere disponibili",
-		"unknown": "Sconosciuto",
-		"cover": "Copertina del Libro",
-		"coverLabel": "(copertina)",
-		"anonymous": "Anonimo",
-		"various": "Vari",
-		"download": "Scarica",
-		"sameShelfBooks": "Libri sullo stesso scaffale"
-	},
-	"shelf": {
-		"booksIn": "Libri in {shelf}",
-		"allShelves": "Tutti gli scaffali"
-	},
-	"common": {
-		"loading": "Caricamento in corso...",
-		"loadingBook": "Caricamento dei dettagli del libro..",
-		"loadingAuthor": "Caricamento dei dettagli dell'autore...",
-		"of": "di",
-		"search": "Cerca",
-		"sortBy": "Ordina per",
-		"sortPopularity": "Ordina libri per popolarità",
-		"sortTitle": "Ordina libri per titolo",
-		"chooseLanguage": "Scegli la lingua...",
-		"mainLanguages": "Lingue Principali",
-		"otherLanguages": "Altre lingue",
-		"anyCatalog": "Scegli il Catalogo",
-		"uiLanguage": "Interfaccia lingua",
-		"selectInterfaceLanguage": "Seleziona la lingua dell'interfaccia",
-		"filterBy": "Filtra per",
-		"filterByTitle": "Filtra per {title}",
-		"gridView": "Visualizzazione a griglia",
-		"listView": "Visualizzazione elenco",
-		"browseAllAuthors": "Visualizza tutti gli autori",
-		"returnHome": "Andare a casa",
-		"mainNavigation": "Navigazione principale",
-		"mobileNavigation": "Navigazione mobile",
-		"navigateTo": "Vai a",
-		"navigateToItem": "Vai a {item}",
-		"close": "Chiudi",
-		"next": "Successivo",
-		"previous": "Precedente",
-		"readMore": "Per saperne di più",
-		"scrollLeft": "Scorri verso sinistra",
-		"scrollRight": "Scorri verso destra",
-		"showLess": "Mostra meno",
-		"sortAuthor": "Autore"
-	},
-	"messages": {
-		"noBooks": "Nessun dato disponibile nella tabella",
-		"noAuthors": "Nessun autore trovato.",
-		"noBooksForAuthor": "Non sono disponibili libri di questo autore.",
-		"noLanguages": "Nessuna lingua disponibile.",
-		"noFormats": "Nessun formato disponibile.",
-		"notFoundBook": "Libro non trovato. Il libro che stai cercando non esiste o è stato rimosso.",
-		"notFoundAuthor": "Libro non trovato. Il libro che stai cercando non esiste o è stato rimosso."
-	},
-	"metadata_defaults": {
-		"title": "Biblioteca Progetto Gutenberg",
-		"description": "Tutti i libri in italiano dal primo produttore di ebook gratuiti"
-	},
-	"footer": {
-	},
-	"itemTypes": {
-		"books": "libro | libri",
-		"authors": "autore | autori"
-	},
-	"lccShelves": {
-		"B": "B-Filosofia, psicologia, religione",
-		"C": "C-Scienze ausiliarie della storia",
-		"E": "E-Storia delle Americhe",
-		"G": "G-Geografia, antropologia, ricreazione",
-		"H": "H-Scienze sociali",
-		"J": "J-Scienze politiche",
-		"P": "P-Lingua e letteratura",
-		"Q": "Q-Scienza",
-		"S": "S-Agricoltura",
-		"T": "T-Tecnologia",
-		"U": "U-Scienze militari",
-		"V": "V-Scienze navali",
-		"PD": "PD-Lingue germaniche e scandinave",
-		"PE": "PE-Lingua inglese",
-		"PF": "PF-Lingue germaniche occidentali",
-		"PH": "PH-Lingue uraliche e basche",
-		"PR": "PR-Letteratura inglese",
-		"PS": "PS-Letteratura americana"
-	}
+  "language": "Italiano",
+  "isocode": "it",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Beta16",
+        "FL2226",
+        "GpieroMW"
+      ]
+    },
+    "nav": {
+      "home": "Homepage",
+      "authors": "Autori",
+      "books": "Libri"
+    },
+    "home": {
+      "allAuthors": "Tutti gli autori",
+      "selectedAuthors": "Autori selezionati"
+    },
+    "book": {
+      "title": "Titolo",
+      "languages": "Linguaggio",
+      "license": "Licenza",
+      "licensePd": "Di pubblico dominio negli USA.",
+      "worksAvailable": "Opere disponibili",
+      "unknown": "Sconosciuto",
+      "cover": "Copertina del Libro",
+      "coverLabel": "(copertina)",
+      "anonymous": "Anonimo",
+      "various": "Vari",
+      "download": "Scarica"
+    },
+    "common": {
+      "loading": "Caricamento in corso...",
+      "loadingBook": "Caricamento dei dettagli del libro..",
+      "loadingAuthor": "Caricamento dei dettagli dell'autore...",
+      "of": "di",
+      "search": "Cerca",
+      "sortBy": "Ordina per",
+      "sortPopularity": "Ordina libri per popolarità",
+      "sortTitle": "Ordina libri per titolo",
+      "chooseLanguage": "Scegli la lingua...",
+      "mainLanguages": "Lingue Principali",
+      "otherLanguages": "Altre lingue",
+      "anyCatalog": "Scegli il Catalogo",
+      "uiLanguage": "Interfaccia lingua",
+      "selectInterfaceLanguage": "Seleziona la lingua dell'interfaccia",
+      "filterBy": "Filtra per",
+      "filterByTitle": "Filtra per {title}",
+      "gridView": "Visualizzazione a griglia",
+      "listView": "Visualizzazione elenco",
+      "browseAllAuthors": "Visualizza tutti gli autori",
+      "returnHome": "Andare a casa",
+      "mainNavigation": "Navigazione principale",
+      "mobileNavigation": "Navigazione mobile",
+      "navigateTo": "Vai a",
+      "navigateToItem": "Vai a {item}",
+      "close": "Chiudi",
+      "next": "Successivo",
+      "previous": "Precedente",
+      "readMore": "Per saperne di più",
+      "scrollLeft": "Scorri verso sinistra",
+      "scrollRight": "Scorri verso destra",
+      "showLess": "Mostra meno",
+      "sortAuthor": "Autore"
+    },
+    "messages": {
+      "noBooks": "Nessun dato disponibile nella tabella",
+      "noAuthors": "Nessun autore trovato.",
+      "noBooksForAuthor": "Non sono disponibili libri di questo autore.",
+      "noLanguages": "Nessuna lingua disponibile.",
+      "noFormats": "Nessun formato disponibile.",
+      "notFoundBook": "Libro non trovato. Il libro che stai cercando non esiste o è stato rimosso.",
+      "notFoundAuthor": "Libro non trovato. Il libro che stai cercando non esiste o è stato rimosso."
+    },
+    "itemTypes": {
+      "books": "libro | libri",
+      "authors": "autore | autori"
+    }
+  },
+  "gutenberg": {
+    "about": {
+      "introHeading": "Informazioni sul Progetto Gutenberg",
+      "introParagraph2": "Michael Hart, fondatore del Progetto Gutenberg, inventò gli eBook nel 1971 e il suo ricordo continua a ispirare la creazione di eBook e contenuti correlati ancora oggi."
+    },
+    "metadata_defaults": {
+      "title": "Biblioteca Progetto Gutenberg",
+      "description": "Tutti i libri in italiano dal primo produttore di ebook gratuiti"
+    },
+    "footer": {},
+    "collections": {
+      "B": "B-Filosofia, psicologia, religione",
+      "C": "C-Scienze ausiliarie della storia",
+      "E": "E-Storia delle Americhe",
+      "G": "G-Geografia, antropologia, ricreazione",
+      "H": "H-Scienze sociali",
+      "J": "J-Scienze politiche",
+      "P": "P-Lingua e letteratura",
+      "Q": "Q-Scienza",
+      "S": "S-Agricoltura",
+      "T": "T-Tecnologia",
+      "U": "U-Scienze militari",
+      "V": "V-Scienze navali",
+      "PD": "PD-Lingue germaniche e scandinave",
+      "PE": "PE-Lingua inglese",
+      "PF": "PF-Lingue germaniche occidentali",
+      "PH": "PH-Lingue uraliche e basche",
+      "PR": "PR-Letteratura inglese",
+      "PS": "PS-Letteratura americana"
+    }
+  }
 }

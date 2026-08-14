@@ -1,9 +1,13 @@
 {
-	"@metadata": {
-		"authors": []
-	},
-	"metadata_defaults": {
-		"title": "Biblioteca Proxecto Gutenberg",
-		"description": "Todos os libros en galego do primeiro produtor de libros electrónicos gratuítos"
-	}
+  "common": {
+    "@metadata": {
+      "authors": []
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Biblioteca Proxecto Gutenberg",
+      "description": "Todos os libros en galego do primeiro produtor de libros electrónicos gratuítos"
+    }
+  }
 }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
+import { useI18n } from 'vue-i18n'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
 import FireRating from '@/components/common/FireRating.vue'
 import { TYPOGRAPHY } from '@/constants/theme'
@@ -7,23 +8,25 @@ import { TYPOGRAPHY } from '@/constants/theme'
 defineProps<{
   book: BookPreview
 }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
-  <router-link :to="`/book/${book.id}`" class="shelf-book-card text-decoration-none">
+  <router-link :to="`/book/${book.id}`" class="collection-book-card text-decoration-none">
     <book-cover-image
       :cover-path="book.coverPath"
-      :alt="`${book.title} cover`"
+      :alt="t('book.coverAlt', { title: book.title })"
       :size="64"
-      height="180px"
-      class="shelf-book-cover"
+      height="240px"
+      class="collection-book-cover"
     />
 
-    <h3 class="shelf-book-title mb-1">
+    <h3 class="collection-book-title mb-1">
       {{ book.title }}
     </h3>
 
-    <p class="shelf-book-author mb-2">
+    <p class="collection-book-author mb-2">
       {{ book.author?.name }}
     </p>
 
@@ -32,7 +35,7 @@ defineProps<{
 </template>
 
 <style scoped>
-.shelf-book-card {
+.collection-book-card {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -45,18 +48,18 @@ defineProps<{
   transition: box-shadow 0.2s ease;
 }
 
-.shelf-book-card:hover,
-.shelf-book-card:focus {
+.collection-book-card:hover,
+.collection-book-card:focus {
   border-color: rgb(var(--v-theme-text));
   box-shadow: 0 0 5px 0 rgb(var(--v-theme-text));
   z-index: 1;
 }
 
-.shelf-book-cover {
+.collection-book-cover {
   margin-bottom: 12px;
 }
 
-.shelf-book-title {
+.collection-book-title {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.H3_SIZE);
   font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
@@ -69,7 +72,7 @@ defineProps<{
   word-break: break-word;
 }
 
-.shelf-book-author {
+.collection-book-author {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
   font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);

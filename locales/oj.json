@@ -1,6 +1,9 @@
 {
-	"metadata_defaults": {
-		"title": "Ogimaawintamowin Gutenberg",
-		"description": "Awenen mazina`iganan Ojibwemowin gaye ogii-miinigoowizid free e-book ogimaa"
-	}
+  "common": {},
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Ogimaawintamowin Gutenberg",
+      "description": "Awenen mazina`iganan Ojibwemowin gaye ogii-miinigoowizid free e-book ogimaa"
+    }
+  }
 }

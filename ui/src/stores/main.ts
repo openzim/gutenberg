@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
-import type { Books, Book, Authors, AuthorDetail, LCCShelves, LCCShelf, Config } from '@/types'
+import type { Books, Book, Authors, AuthorDetail, Collections, Collection, Config } from '@/types'
 
 export const useMainStore = defineStore('main', () => {
   const errorMessage = ref<string | null>(null)
@@ -11,15 +11,16 @@ export const useMainStore = defineStore('main', () => {
 
   const booksCount = ref(0)
   const authorsCount = ref(0)
-  const shelvesCount = ref(0)
+  const collectionsCount = ref(0)
 
   const currentBook = ref<Book | null>(null)
   const currentAuthor = ref<AuthorDetail | null>(null)
+  const config = ref<Config | null>(null)
 
   // Cached list data to avoid refetching across views
   const books = ref<Books | null>(null)
   const authors = ref<Authors | null>(null)
-  const shelves = ref<LCCShelves | null>(null)
+  const collections = ref<Collections | null>(null)
 
   async function fetchWithDeduplication<T>(url: string): Promise<T> {
     const existing = pendingRequests.get(url)
@@ -100,21 +101,28 @@ export const useMainStore = defineStore('main', () => {
     )
   }
 
-  async function fetchLCCShelves() {
-    return fetchList<LCCShelves>(
-      './lcc_shelves.json',
-      'Failed to load LCC shelves',
-      shelvesCount,
-      shelves
+  async function fetchCollections() {
+    return fetchList<Collections>(
+      './collections.json',
+      'Failed to load collections',
+      collectionsCount,
+      collections
     )
   }
 
-  function fetchLCCShelf(code: string) {
-    return fetchData<LCCShelf>(`./lcc_shelves/${code}.json`, `Failed to load LCC shelf ${code}`)
+  function fetchCollection(id: string) {
+    return fetchData<Collection>(
+      `./collections/${encodeURIComponent(id)}.json`,
+      `Failed to load collection ${id}`
+    )
   }
 
-  function fetchConfig() {
-    return fetchData<Config>('./config.json', 'Failed to load config')
+  async function fetchConfig() {
+    if (config.value) {
+      return config.value
+    }
+    config.value = await fetchData<Config>('./config.json', 'Failed to load config')
+    return config.value
   }
 
   function clearError() {
@@ -124,17 +132,18 @@ export const useMainStore = defineStore('main', () => {
   return {
     currentBook,
     currentAuthor,
+    config,
     errorMessage,
     loading,
     booksCount,
     authorsCount,
-    shelvesCount,
+    collectionsCount,
     fetchBooks,
     fetchBook,
     fetchAuthors,
     fetchAuthor,
-    fetchLCCShelves,
-    fetchLCCShelf,
+    fetchCollections,
+    fetchCollection,
     fetchConfig,
     clearError
   }

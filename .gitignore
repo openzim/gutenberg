@@ -71,6 +71,7 @@ tmp/
 *.zim
 .venv
 output
+/cache/
 
 src/gutenberg2zim/templates/jquery/jquery-1.11.1.min.js
 /.idea/

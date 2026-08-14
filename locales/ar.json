@@ -1,50 +1,53 @@
 {
-	"@metadata": {
-		"authors": [
-			"Majda GHARRABOU",
-			"Meno25",
-			"Mohammed Qays"
-		]
-	},
-	"language": "العربية",
-	"isocode": "ar",
-	"nav": {
-		"home": "الصفحة الرئيسية",
-		"authors": "Authors",
-		"shelves": "Shelves",
-		"about": "بخصوص"
-	},
-	"about": {
-		"introHeading": "نبذة عن مشروع غوتنبرغ"
-	},
-	"book": {
-		"title": "العنوان",
-		"languages": "اللغة",
-		"license": "الرخصة",
-		"licensePd": "مجال عام في الولايات المتحدة الأمريكية.",
-		"cover": "غلاف الكتاب",
-		"coverLabel": "(الغلاف)",
-		"anonymous": "مجهول",
-		"various": "متنوع"
-	},
-	"common": {
-		"loading": "جار التحميل...",
-		"search": "بحث",
-		"sortPopularity": "رتب الكتب بحسب الشعبية",
-		"sortTitle": "رتب الكتب بحسب العنوان",
-		"chooseLanguage": "أختر لغة...",
-		"mainLanguages": "اللغات الأساسية",
-		"otherLanguages": "اللغات الأخرى",
-		"anyCatalog": "أختر قائمة",
-		"uiLanguage": "لغة الواجهة",
-		"returnHome": "العودة للرئيسية",
-		"sortAuthor": "المؤلف"
-	},
-	"messages": {
-		"noBooks": "لا توجد معلومات في الجدول"
-	},
-	"metadata_defaults": {
-		"title": "مكتبة مشروع جوتنبرج",
-		"description": "جميع الكتب باللغة العربية من أول منتج للكتب الإلكترونية المجانية"
-	}
+  "language": "العربية",
+  "isocode": "ar",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Majda GHARRABOU",
+        "Meno25",
+        "Mohammed Qays"
+      ]
+    },
+    "nav": {
+      "home": "الصفحة الرئيسية",
+      "authors": "Authors",
+      "about": "بخصوص"
+    },
+    "book": {
+      "title": "العنوان",
+      "languages": "اللغة",
+      "license": "الرخصة",
+      "licensePd": "مجال عام في الولايات المتحدة الأمريكية.",
+      "cover": "غلاف الكتاب",
+      "coverLabel": "(الغلاف)",
+      "anonymous": "مجهول",
+      "various": "متنوع"
+    },
+    "common": {
+      "loading": "جار التحميل...",
+      "search": "بحث",
+      "sortPopularity": "رتب الكتب بحسب الشعبية",
+      "sortTitle": "رتب الكتب بحسب العنوان",
+      "chooseLanguage": "أختر لغة...",
+      "mainLanguages": "اللغات الأساسية",
+      "otherLanguages": "اللغات الأخرى",
+      "anyCatalog": "أختر قائمة",
+      "uiLanguage": "لغة الواجهة",
+      "returnHome": "العودة للرئيسية",
+      "sortAuthor": "المؤلف"
+    },
+    "messages": {
+      "noBooks": "لا توجد معلومات في الجدول"
+    }
+  },
+  "gutenberg": {
+    "about": {
+      "introHeading": "نبذة عن مشروع غوتنبرغ"
+    },
+    "metadata_defaults": {
+      "title": "مكتبة مشروع جوتنبرج",
+      "description": "جميع الكتب باللغة العربية من أول منتج للكتب الإلكترونية المجانية"
+    }
+  }
 }

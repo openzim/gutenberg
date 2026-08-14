@@ -1,8 +1,10 @@
 import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
+import { useMainStore } from '@/stores/main'
 
 export function useDetailView<T>(fetchFn: (id: string) => Promise<T>, paramName: string = 'id') {
   const route = useRoute()
+  const main = useMainStore()
   const data = ref<T | null>(null)
   const notFound = ref(false)
   const loading = ref(false)
@@ -32,7 +34,7 @@ export function useDetailView<T>(fetchFn: (id: string) => Promise<T>, paramName:
         if (!isMounted) return
         data.value = result
         if (route.meta.title) {
-          document.title = `${getTitle(result)} - Gutenberg Library`
+          document.title = `${getTitle(result)} - ${main.config?.source.name || 'Library'}`
         }
       })
       .catch((error) => {

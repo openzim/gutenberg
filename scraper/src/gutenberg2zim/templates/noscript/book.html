@@ -31,17 +31,17 @@
             <dd>{{ book.languages|join(", ") }}</dd>
             {% endif %}
 
-            {% if book.lcc_shelf %}
-            <dt>LCC Shelf</dt>
-            <dd>{{ book.lcc_shelf }}</dd>
+            {% if book.primary_collection %}
+            <dt>Collection</dt>
+            <dd>{{ book.primary_collection }}</dd>
             {% endif %}
 
             <dt>License</dt>
             <dd>{{ book.license }}</dd>
 
-            {% if book.downloads %}
-            <dt>Downloads</dt>
-            <dd>{{ "{:,}".format(book.downloads) }}</dd>
+            {% if book.primary_metric is not none %}
+            <dt>Metric</dt>
+            <dd>{{ "{:,}".format(book.primary_metric) }}</dd>
             {% endif %}
         </dl>
     </div>

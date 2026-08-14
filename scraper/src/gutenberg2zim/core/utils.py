@@ -5,6 +5,8 @@ import zipfile
 from pathlib import Path
 from types import SimpleNamespace
 from typing import NoReturn, Protocol
+from urllib.parse import quote
+from uuid import uuid4
 
 import chardet
 
@@ -50,17 +52,31 @@ def requested_formats(work: Work, all_requested_formats: list[str]) -> list[str]
     return [fmt for fmt in all_requested_formats if fmt not in unsupported]
 
 
-def work_lcc_shelf(work: Work) -> str | None:
-    """Id of the work's first collection (its classification shelf), if any"""
+def primary_collection_id(work: Work) -> str | None:
+    """Id of a work's primary collection, if any."""
     return work.collections[0].id if work.collections else None
+
+
+def collection_key(collection_id: str) -> str:
+    """Return a reversible, path- and URL-safe key for a collection id."""
+    return quote(collection_id, safe="-_.!~*'()")
+
+
+def atomic_write_text(path: Path, content: str, *, encoding: str = "utf-8") -> None:
+    """Write text through a sibling temporary file and atomically replace it."""
+    temporary_path = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    try:
+        temporary_path.write_text(content, encoding=encoding)
+        temporary_path.replace(path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
 
 
 def primary_creator(work: Work) -> Creator:
     """First creator of the work, with an Anonymous fallback when none"""
     if work.creators:
         return work.creators[0]
-    # Reserved non-numeric id: cannot collide with a real source creator id
-    # (Gutenberg's own Anonymous, id 216, is assigned by its metadata layer)
+    # Reserved non-numeric id: cannot collide with a real source creator id.
     return Creator(id="anonymous", name="Anonymous", sort_name="Anonymous")
 
 
@@ -105,8 +121,8 @@ def work_template_context(work: Work) -> SimpleNamespace:
         subtitle=work.subtitle,
         languages=work.languages,
         license=work.license,
-        downloads=work.extra.get("downloads", 0),
-        lcc_shelf=work_lcc_shelf(work),
+        primary_metric=work.primary_metric,
+        primary_collection=primary_collection_id(work),
         has_cover=work.extra.get("has_cover", work.cover is not None),
         description=work.description,
         author=creator_template_context(primary_creator(work)),

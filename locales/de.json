@@ -1,42 +1,46 @@
 {
-	"@metadata": {
-		"authors": [
-			"Brettchenweber"
-		]
-	},
-	"language": "Deutsch",
-	"isocode": "de",
-	"nav": {
-		"home": "Homepage"
-	},
-	"book": {
-		"title": "Titel",
-		"languages": "Sprache(n)",
-		"license": "Lizenz",
-		"licensePd": "Public domain in den USA.",
-		"cover": "Einband",
-		"coverLabel": "(Einband)",
-		"anonymous": "Anonym",
-		"various": "Diverse"
-	},
-	"common": {
-		"loading": "Lade...",
-		"search": "Suchen",
-		"sortPopularity": "Sortiere Bücher nach Beliebtheit",
-		"sortTitle": "Sortiere Bücher nach Titel",
-		"chooseLanguage": "Sprache auswählen...",
-		"mainLanguages": "Hauptsprachen",
-		"otherLanguages": "Andere Sprachen",
-		"anyCatalog": "Katalog wählen",
-		"uiLanguage": "Sprache der Oberfläche",
-		"returnHome": "Nach Hause gehen",
-		"sortAuthor": "Autor"
-	},
-	"messages": {
-		"noBooks": "Keine Daten zum Anzeigen"
-	},
-	"metadata_defaults": {
-		"title": "Projekt Gutenberg-Bibliothek",
-		"description": "Alle Bücher auf Deutsch vom ersten Produzenten kostenloser E-Books"
-	}
+  "language": "Deutsch",
+  "isocode": "de",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Brettchenweber"
+      ]
+    },
+    "nav": {
+      "home": "Homepage"
+    },
+    "book": {
+      "title": "Titel",
+      "languages": "Sprache(n)",
+      "license": "Lizenz",
+      "licensePd": "Public domain in den USA.",
+      "cover": "Einband",
+      "coverLabel": "(Einband)",
+      "anonymous": "Anonym",
+      "various": "Diverse"
+    },
+    "common": {
+      "loading": "Lade...",
+      "search": "Suchen",
+      "sortPopularity": "Sortiere Bücher nach Beliebtheit",
+      "sortTitle": "Sortiere Bücher nach Titel",
+      "chooseLanguage": "Sprache auswählen...",
+      "mainLanguages": "Hauptsprachen",
+      "otherLanguages": "Andere Sprachen",
+      "anyCatalog": "Katalog wählen",
+      "uiLanguage": "Sprache der Oberfläche",
+      "returnHome": "Nach Hause gehen",
+      "sortAuthor": "Autor"
+    },
+    "messages": {
+      "noBooks": "Keine Daten zum Anzeigen"
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Projekt Gutenberg-Bibliothek",
+      "description": "Alle Bücher auf Deutsch vom ersten Produzenten kostenloser E-Books"
+    }
+  }
 }

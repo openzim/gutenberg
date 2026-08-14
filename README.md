@@ -86,8 +86,16 @@ Note: You'll need to install system dependencies (zim-tools) separately. See [CO
 --publisher=<publisher>              Custom publisher name (default: openZIM)
 --mirror-url=<url>                   Custom Gutenberg mirror URL
 --output=<folder>                    Output folder (default: ./output)
+--cache-dir=<folder>                 Optional persistent metadata and catalog cache
 --debug                              Enable verbose output
 ```
+
+### Caching
+
+Caching is opt-in. Pass `--cache-dir` to persist source metadata and catalog
+data outside the ZIM output directory. To reuse cached data in a later run,
+pass the same directory again; without `--cache-dir`, the scraper performs a
+fresh run and does not create a persistent cache.
 
 ## Features
 

@@ -23,11 +23,11 @@ import {
 } from '@mdi/js'
 
 const props = defineProps<{
-  code: string
+  id: string
   fallback?: string
 }>()
 
-const SHELF_ICONS: Record<string, string> = {
+const COLLECTION_ICONS: Record<string, string> = {
   A: mdiBookOpenPageVariant,
   B: mdiBrain,
   C: mdiHistory,
@@ -51,19 +51,19 @@ const SHELF_ICONS: Record<string, string> = {
   Z: mdiFormatListBulleted
 }
 
-function getShelfIcon(code: string): string {
-  return SHELF_ICONS[code.charAt(0)] || props.fallback || mdiBookshelf
+function getClassificationIcon(id: string): string {
+  return COLLECTION_ICONS[id.charAt(0)] || props.fallback || mdiBookshelf
 }
 </script>
 
 <template>
-  <svg class="shelf-icon" viewBox="0 0 24 24">
-    <path :d="getShelfIcon(code)" />
+  <svg class="collection-icon" viewBox="0 0 24 24">
+    <path :d="getClassificationIcon(id)" />
   </svg>
 </template>
 
 <style scoped>
-.shelf-icon {
+.collection-icon {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
