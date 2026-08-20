@@ -1,4 +1,4 @@
-from gutenberg2zim.entrypoint import main
+from gutenberg2zim.cli import main
 
 if __name__ == "__main__":
     main()

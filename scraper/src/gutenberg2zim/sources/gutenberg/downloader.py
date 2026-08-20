@@ -1,24 +1,33 @@
+"""In-memory download of Gutenberg book content (moved from `download.py`).
+
+Per-book download orchestration on top of `GutenbergFormatResolver`: tries
+the candidate mirror URLs for each requested format, extracts zipped HTML
+in memory and records formats that turn out to be unsupported. Not yet
+migrated to the file-based `core.download_engine.DownloadEngine`.
+"""
+
 import io
 import zipfile
+import zlib
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import requests
 
-from gutenberg2zim.adapters import GUTENBERG_SOURCE, book_to_work
 from gutenberg2zim.constants import (
     DEFAULT_HTTP_TIMEOUT,
     DL_CHUNCK_SIZE,
     logger,
 )
-from gutenberg2zim.core.work_store import WorkStore
-from gutenberg2zim.models import Book
-from gutenberg2zim.sources.gutenberg.resolver import GutenbergFormatResolver
-from gutenberg2zim.utils import (
+from gutenberg2zim.core.utils import (
     ALL_FORMATS,
     ensure_unicode,
     fname_for,
 )
+from gutenberg2zim.core.work_store import WorkStore
+from gutenberg2zim.sources.gutenberg.adapters import GUTENBERG_SOURCE, book_to_work
+from gutenberg2zim.sources.gutenberg.models import Book
+from gutenberg2zim.sources.gutenberg.resolver import GutenbergFormatResolver
 
 
 @dataclass
@@ -40,9 +49,9 @@ def handle_zipped_html(zip_content: bytes, book: Book) -> dict[str, bytes]:
 
     def is_safe(fname):
         name = ensure_unicode(clfn(fname))
-        if Path(fname).name == name:
+        if fname == name:
             return True
-        return fname == f"images/{Path(fname).name}"
+        return fname == f"images/{name}"
 
     result_files = {}
 
@@ -86,9 +95,10 @@ def handle_zipped_html(zip_content: bytes, book: Book) -> dict[str, bytes]:
                 else:
                     result_files[f"{book.book_id}_{fname}"] = file_content
 
-    except zipfile.BadZipfile:
-        # file is not a zip file when it should be.
-        logger.warning(f"Bad zip file for book #{book.book_id}")
+    except (zipfile.BadZipFile, RuntimeError, EOFError, OSError, zlib.error) as exc:
+        # archive is unreadable when it should be a valid zip
+        # (not a zip, encrypted, truncated, or corrupt deflate stream)
+        logger.warning(f"Unreadable zip file for book #{book.book_id}: {exc}")
         return {}
 
     return result_files
@@ -125,37 +135,42 @@ def download_book(
         pg_type_to_use = None
         url = None
         for url in request.extra["candidate_urls"]:
-            with requests.get(
-                url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT
-            ) as pg_resp:  # in seconds
-                if pg_resp.status_code == requests.codes.ok:
-                    # Download content to memory
-                    content_buffer = io.BytesIO()
-                    for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
-                        if chunk:
-                            content_buffer.write(chunk)
-                    content_bytes = content_buffer.getvalue()
+            try:
+                with requests.get(
+                    url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT
+                ) as pg_resp:  # in seconds
+                    if pg_resp.status_code == requests.codes.ok:
+                        # Download content to memory
+                        content_buffer = io.BytesIO()
+                        for chunk in pg_resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
+                            if chunk:
+                                content_buffer.write(chunk)
+                        content_bytes = content_buffer.getvalue()
 
-                    if url.endswith(".zip"):
-                        # extract zipfile in memory
-                        extracted_files = handle_zipped_html(
-                            zip_content=content_bytes, book=book
-                        )
-                        if not extracted_files:
-                            # ZIP was corrupt or rejected; try next preferred type
-                            logger.warning(
-                                f"ZIP extraction failed for {book_format} "
-                                f"of #{book.book_id}, trying next type"
+                        if url.endswith(".zip"):
+                            # extract zipfile in memory
+                            extracted_files = handle_zipped_html(
+                                zip_content=content_bytes, book=book
                             )
-                            continue
-                        book_content.files.update(extracted_files)
-                    else:
-                        # Store the file directly
-                        filename = fname_for(book, book_format)
-                        book_content.files[filename] = content_bytes
+                            if not extracted_files:
+                                # ZIP was corrupt or rejected; try next preferred type
+                                logger.warning(
+                                    f"ZIP extraction failed for {book_format} "
+                                    f"of #{book.book_id}, trying next type"
+                                )
+                                continue
+                            book_content.files.update(extracted_files)
+                        else:
+                            # Store the file directly
+                            filename = fname_for(book, book_format)
+                            book_content.files[filename] = content_bytes
 
-                    pg_type_to_use = True
-                    break
+                        pg_type_to_use = True
+                        break
+            except requests.RequestException as exc:
+                # transport error: treat like a non-ok status, try next candidate
+                logger.warning(f"Request failed for {url} of #{book.book_id}: {exc}")
+                continue
 
         if not url or not pg_type_to_use:
             logger.debug(f"\t\tNo file available for {book_format} of #{book.book_id}")

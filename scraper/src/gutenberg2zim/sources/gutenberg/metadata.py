@@ -10,13 +10,13 @@ from collections.abc import Iterable
 import requests
 from bs4 import BeautifulSoup, Tag
 
-from gutenberg2zim.adapters import book_to_work
 from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, logger
 from gutenberg2zim.core.models import Work
 from gutenberg2zim.core.ports import MetadataPort, WorkRef
-from gutenberg2zim.models import Author, Book
+from gutenberg2zim.core.utils import normalize
+from gutenberg2zim.sources.gutenberg.adapters import book_to_work
 from gutenberg2zim.sources.gutenberg.catalog import transform_locc_code
-from gutenberg2zim.utils import normalize
+from gutenberg2zim.sources.gutenberg.models import Author, Book
 
 
 class RdfParseError(RuntimeError):
