@@ -138,6 +138,10 @@
 		"description": "所有书籍均为简体中文，来自首家免费电子书制作商"
 	},
 	"footer": {
+		"createdBy": "创建者",
+		"projectGutenberg": "古腾堡计划",
+		"packagedBy": "打包者",
+		"kiwix": "Kiwix"
 	},
 	"itemTypes": {
 		"books": "书籍|书籍",

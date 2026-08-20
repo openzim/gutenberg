@@ -136,6 +136,10 @@
 		"description": "Alle boeken in het Nederlands van de eerste producent van gratis e-boeken"
 	},
 	"footer": {
+		"createdBy": "Gemaakt door",
+		"projectGutenberg": "Project Gutenberg",
+		"packagedBy": "Verpakt door",
+		"kiwix": "Kiwix"
 	},
 	"itemTypes": {
 		"books": "boek | boeken",

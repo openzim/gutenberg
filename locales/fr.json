@@ -91,6 +91,7 @@
 		"description": "Tous les livres en français du premier producteur d'ebooks gratuits"
 	},
 	"footer": {
+		"projectGutenberg": "Projet Gutenberg"
 	},
 	"itemTypes": {
 		"books": "livre | livres",

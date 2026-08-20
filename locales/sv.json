@@ -91,6 +91,7 @@
 		"description": "Alla böcker på svenska från den första producenten av gratis e-böcker"
 	},
 	"footer": {
+		"projectGutenberg": "Projekt Gutenberg"
 	},
 	"itemTypes": {
 		"books": "bok | böcker",
