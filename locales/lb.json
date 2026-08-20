@@ -50,6 +50,7 @@
 		"otherLanguages": "Aner Sproochen",
 		"anyCatalog": "Wielt de Katalog",
 		"uiLanguage": "Sprooch vum Interface",
+		"close": "Zoumaachen",
 		"readMore": "Méi liesen",
 		"sortAuthor": "Auteur"
 	},
@@ -64,6 +65,8 @@
 		"noAuthorsForLetter": "Keng Auteure fonnt fir de Buschtaf {letter}."
 	},
 	"footer": {
+		"projectGutenberg": "Projet Gutenberg",
+		"kiwix": "Kiwix"
 	},
 	"itemTypes": {
 		"books": "Buch | Bicher",

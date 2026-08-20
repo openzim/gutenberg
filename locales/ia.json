@@ -89,6 +89,7 @@
 		"description": "Omne libros in Interlingua ab le prime productor de Ebooks gratuite"
 	},
 	"footer": {
+		"projectGutenberg": "Projecto Gutenberg"
 	},
 	"itemTypes": {
 		"books": "libro | libros",

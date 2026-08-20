@@ -89,6 +89,7 @@
 		"description": "Vse knjige v slovenščini prvega proizvajalca brezplačnih e-knjig"
 	},
 	"footer": {
+		"projectGutenberg": "Projekt Gutenberg"
 	},
 	"itemTypes": {
 		"books": "knjiga | knjige",

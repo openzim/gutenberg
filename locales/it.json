@@ -87,6 +87,7 @@
 		"description": "Tutti i libri in italiano dal primo produttore di ebook gratuiti"
 	},
 	"footer": {
+		"projectGutenberg": "Progetto Gutenberg"
 	},
 	"itemTypes": {
 		"books": "libro | libri",

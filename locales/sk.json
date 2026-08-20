@@ -135,6 +135,10 @@
 		"description": "Všetky knihy v angličtine od prvého producenta bezplatných elektronických kníh"
 	},
 	"footer": {
+		"createdBy": "Vytvorené",
+		"projectGutenberg": "Projekt Gutenberg",
+		"packagedBy": "Balené",
+		"kiwix": "Kiwix"
 	},
 	"itemTypes": {
 		"books": "kniha | knihy",
