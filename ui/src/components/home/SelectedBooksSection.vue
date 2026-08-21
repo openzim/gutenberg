@@ -34,7 +34,7 @@ function goToBooks() {
   router.push('/books')
 }
 
-function goToBook(id: number) {
+function goToBook(id: string) {
   router.push(`/book/${id}`)
 }
 

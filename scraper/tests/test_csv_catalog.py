@@ -1,5 +1,6 @@
 import gzip
 
+from gutenberg2zim.core.ports import CatalogEntryLike
 from gutenberg2zim.sources.gutenberg.catalog import (
     CatalogEntry,
     filter_books,
@@ -32,7 +33,7 @@ def test_load_catalog(tmp_path):
 
 
 def test_filter_books_no_filter():
-    catalog = [
+    catalog: list[CatalogEntryLike] = [
         CatalogEntry(book_id=84, languages=["en"], lcc_shelf="PR"),
         CatalogEntry(book_id=11, languages=["en", "fr"], lcc_shelf="PS"),
         CatalogEntry(book_id=1089, languages=["fr"], lcc_shelf="QA"),

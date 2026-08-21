@@ -12,15 +12,7 @@ const { t } = useI18n()
 
 const main = useMainStore()
 
-const {
-  data: book,
-  notFound,
-  loading
-} = useDetailView(
-  (id) => main.fetchBook(Number(id)),
-  'id',
-  (value) => Number(value)
-)
+const { data: book, notFound, loading } = useDetailView((id) => main.fetchBook(id), 'id')
 
 const shelfData = ref<LCCShelf | null>(null)
 const shelfLoading = ref(false)

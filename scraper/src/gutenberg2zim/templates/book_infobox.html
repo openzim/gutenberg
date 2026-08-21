@@ -1,6 +1,6 @@
 <div id="gutenberg-infobox">
     <a 
-        href="./index.html#/book/{{ book.book_id }}" 
+        href="./index.html#/book/{{ book.id }}" 
         class="gutenberg-btn gutenberg-btn-info" 
         aria-label="View book cover and information"
         title="View book cover and information"
@@ -11,7 +11,7 @@
     {% for format in book.requested_formats(formats) %}
         {% if format == 'epub' %}
             <a 
-                href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.epub" 
+                href="{{ book|book_name_for_fs|urlencode }}.{{ book.id }}.epub" 
                 class="gutenberg-btn gutenberg-btn-epub" 
                 aria-label="Download EPUB format"
                 title="Download EPUB format"
@@ -20,7 +20,7 @@
             </a>
         {% elif format == 'pdf' %}
             <a 
-                href="{{ book|book_name_for_fs|urlencode }}.{{ book.book_id }}.pdf" 
+                href="{{ book|book_name_for_fs|urlencode }}.{{ book.id }}.pdf" 
                 class="gutenberg-btn gutenberg-btn-pdf" 
                 aria-label="Download PDF format"
                 title="Download PDF format"

@@ -5,26 +5,25 @@ the Vue.js UI cannot run. Owns the shared `jinja_env` and its filters.
 """
 
 import urllib.parse
-from pathlib import Path
+from importlib import resources
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
 from gutenberg2zim.constants import logger
-from gutenberg2zim.core.exporters.json_exporter import (
-    _all_books,
-    _build_author_books_map,
-    _get_authors_with_books,
-    _lcc_shelf_list_for_books,
-)
+from gutenberg2zim.core.exporters.catalog_data import collections_for_works
+from gutenberg2zim.core.index_builder import Indexes
 from gutenberg2zim.core.language import language_name
+from gutenberg2zim.core.models import Work
 from gutenberg2zim.core.utils import (
     archive_name_for,
     article_name_for,
     book_name_for_fs,
+    creator_template_context,
+    work_lcc_shelf,
+    work_template_context,
 )
 from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.core.zim_assembler import ZimAssembler
-from gutenberg2zim.sources.gutenberg.models import Book
 
 jinja_env = Environment(
     loader=PackageLoader("gutenberg2zim", "templates"),
@@ -64,65 +63,75 @@ def generate_noscript_pages(
     formats: list[str],
     work_store: WorkStore,
     assembler: ZimAssembler,
+    *,
+    display_name: str,
+    indexes: Indexes,
 ) -> None:
     """Generate No-JavaScript fallback HTML pages"""
     logger.info("Generating No-JS fallback pages")
 
     # Add common CSS file to ZIM
-    common_css_path = (
-        Path(__file__).parent.parent.parent / "templates" / "noscript" / "common.css"
+    common_css = (
+        resources.files("gutenberg2zim") / "templates" / "noscript" / "common.css"
     )
-    if common_css_path.exists():
+    if common_css.is_file():
         logger.debug("Adding noscript/common.css to ZIM")
         assembler.add_item_for(
             path="noscript/common.css",
-            fpath=common_css_path,
+            content=common_css.read_bytes(),
             mimetype="text/css",
             is_front=False,
         )
-    all_books = _all_books(work_store)
-    all_authors = _get_authors_with_books(work_store)
-    shelves = _lcc_shelf_list_for_books(all_books)
-    shelf_books_map: dict[str, list[Book]] = {
-        shelf_code: [book for book in all_books if book.lcc_shelf == shelf_code]
+    all_works = list(work_store.works)
+    all_authors = indexes.authors
+    shelves = collections_for_works(all_works)
+    shelf_works_map: dict[str, list[Work]] = {
+        shelf_code: [work for work in all_works if work_lcc_shelf(work) == shelf_code]
         for shelf_code in shelves
+    }
+    # Template-friendly views, shared across all pages
+    book_contexts = {work.id: work_template_context(work) for work in all_works}
+    author_contexts = {
+        creator.id: creator_template_context(creator) for creator in all_authors
     }
 
     # Generate books listing page
     logger.debug("Generating noscript/books.html")
     books_template = jinja_env.get_template("noscript/books.html")
     books_html = books_template.render(
-        books=all_books,
+        books=list(book_contexts.values()),
         formats=formats,
+        display_name=display_name,
     )
     assembler.add_item_for(
         path="noscript/books.html",
         content=books_html,
         mimetype="text/html",
         is_front=False,
-        title="All Books - Project Gutenberg",
+        title=f"All Books - {display_name}",
         auto_index=False,
     )
 
     # Generate authors listing page
     logger.debug("Generating noscript/authors.html")
-    # Reuse author_books_map for book counts
-    author_books_map = _build_author_books_map(all_books)
+    # Reuse the shared per-author index for book counts
+    works_map = indexes.by_author
     author_book_counts = {
-        author_id: len(books) for author_id, books in author_books_map.items()
+        author_id: len(works) for author_id, works in works_map.items()
     }
     authors_template = jinja_env.get_template("noscript/authors.html")
     authors_html = authors_template.render(
-        authors=all_authors,
-        all_books=all_books,
+        authors=list(author_contexts.values()),
+        all_books=list(book_contexts.values()),
         author_book_counts=author_book_counts,
+        display_name=display_name,
     )
     assembler.add_item_for(
         path="noscript/authors.html",
         content=authors_html,
         mimetype="text/html",
         is_front=False,
-        title="All Authors - Project Gutenberg",
+        title=f"All Authors - {display_name}",
         auto_index=False,
     )
 
@@ -132,28 +141,32 @@ def generate_noscript_pages(
         shelves=[
             {
                 "code": code,
-                "book_count": len(shelf_books_map.get(code, [])),
+                "book_count": len(shelf_works_map.get(code, [])),
             }
             for code in shelves
-        ]
+        ],
+        display_name=display_name,
     )
     assembler.add_item_for(
         path="noscript/lcc_shelves.html",
         content=shelves_html,
         mimetype="text/html",
         is_front=False,
-        title="LCC Shelves - Project Gutenberg",
+        title=f"LCC Shelves - {display_name}",
         auto_index=False,
     )
 
     logger.debug("Generating No-JS LCC shelf detail pages")
     shelf_template = jinja_env.get_template("noscript/lcc_shelf.html")
     for shelf_code in shelves:
-        shelf_books = shelf_books_map.get(shelf_code, [])
+        shelf_books = [
+            book_contexts[work.id] for work in shelf_works_map.get(shelf_code, [])
+        ]
         shelf_html = shelf_template.render(
             shelf_code=shelf_code,
             books=shelf_books,
             formats=formats,
+            display_name=display_name,
         )
         assembler.add_item_for(
             path=f"noscript/lcc_shelf_{shelf_code}.html",
@@ -167,35 +180,39 @@ def generate_noscript_pages(
     # Generate individual book pages
     logger.debug("Generating No-JS book detail pages")
     book_template = jinja_env.get_template("noscript/book.html")
-    for book in all_books:
+    for work in all_works:
         book_html = book_template.render(
-            book=book,
+            book=book_contexts[work.id],
             formats=formats,
+            display_name=display_name,
         )
         assembler.add_item_for(
-            path=f"noscript/book_{book.book_id}.html",
+            path=f"noscript/book_{work.id}.html",
             content=book_html,
             mimetype="text/html",
             is_front=False,
-            title=book.title,
+            title=work.title,
             auto_index=False,
         )
 
     # Generate individual author pages
     logger.debug("Generating No-JS author pages")
     author_template = jinja_env.get_template("noscript/author.html")
-    for author in all_authors:
-        author_books = author_books_map.get(author.gut_id, [])
+    for creator in all_authors:
+        author_books = [
+            book_contexts[work.id] for work in works_map.get(creator.id, [])
+        ]
         author_html = author_template.render(
-            author=author,
+            author=author_contexts[creator.id],
             author_books=author_books,
+            display_name=display_name,
         )
         assembler.add_item_for(
-            path=f"noscript/author_{author.gut_id}.html",
+            path=f"noscript/author_{creator.id}.html",
             content=author_html,
             mimetype="text/html",
             is_front=False,
-            title=author.name(),
+            title=creator.name,
             auto_index=False,
         )
 

@@ -12,7 +12,7 @@ import { useMainStore } from '@/stores/main'
 import type { Book } from '@/types'
 
 const mockBookData: Book = {
-  id: 1,
+  id: '1',
   title: 'Pride and Prejudice',
   author: {
     id: 'austen-jane',
@@ -78,7 +78,7 @@ describe('BookDetailView Integration', () => {
     it('loads and displays book details on mount', async () => {
       const wrapper = await mountView()
 
-      expect(store.fetchBook).toHaveBeenCalledWith(1)
+      expect(store.fetchBook).toHaveBeenCalledWith('1')
       expect(wrapper.text()).toContain('Pride and Prejudice')
       expect(wrapper.text()).toContain('Jane Austen')
     })
@@ -86,7 +86,7 @@ describe('BookDetailView Integration', () => {
     it('handles different book IDs from route params', async () => {
       await mountView('42')
 
-      expect(store.fetchBook).toHaveBeenCalledWith(42)
+      expect(store.fetchBook).toHaveBeenCalledWith('42')
     })
   })
 

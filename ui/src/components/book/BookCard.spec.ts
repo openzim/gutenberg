@@ -16,7 +16,7 @@ vi.mock('@/utils/format-utils', () => ({
 
 describe('BookCard', () => {
   const createBook = (overrides?: Partial<BookPreview>): BookPreview => ({
-    id: 1,
+    id: '1',
     title: 'Pride and Prejudice',
     author: {
       id: 'austen-jane',
@@ -63,7 +63,7 @@ describe('BookCard', () => {
 
     it('links to correct book ID', () => {
       const wrapper = mount(BookCard, {
-        props: { book: createBook({ id: 42 }) }
+        props: { book: createBook({ id: '42' }) }
       })
 
       expect(wrapper.findComponent({ name: 'VCard' }).props('to')).toBe('/book/42')
@@ -205,12 +205,12 @@ describe('BookCard', () => {
   describe('Edge Cases', () => {
     it('handles extreme book IDs', () => {
       const wrapper0 = mount(BookCard, {
-        props: { book: createBook({ id: 0 }) }
+        props: { book: createBook({ id: '0' }) }
       })
       expect(wrapper0.findComponent({ name: 'VCard' }).props('to')).toBe('/book/0')
 
       const wrapper999999 = mount(BookCard, {
-        props: { book: createBook({ id: 999999 }) }
+        props: { book: createBook({ id: '999999' }) }
       })
       expect(wrapper999999.findComponent({ name: 'VCard' }).props('to')).toBe('/book/999999')
     })

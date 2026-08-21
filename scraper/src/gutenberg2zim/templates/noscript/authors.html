@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Authors - Project Gutenberg</title>
+    <title>All Authors - {{ display_name }}</title>
     <link rel="stylesheet" href="common.css">
 </head>
 <body>
@@ -27,8 +27,8 @@
         <tbody>
             {% for author in authors %}
             <tr>
-                <td class="author-id">{{ author.gut_id }}</td>
-                <td><a href="author_{{ author.gut_id }}.html">{{ author.name() }}</a></td>
+                <td class="author-id">{{ author.id }}</td>
+                <td><a href="author_{{ author.id }}.html">{{ author.name }}</a></td>
                 <td>
                     {% if author.birth_year or author.death_year %}
                         {% if author.birth_year %}{{ author.birth_year }}{% endif %}
@@ -38,7 +38,7 @@
                         -
                     {% endif %}
                 </td>
-                <td class="book-count">{{ author_book_counts[author.gut_id] }}</td>
+                <td class="book-count">{{ author_book_counts[author.id] }}</td>
             </tr>
             {% endfor %}
         </tbody>

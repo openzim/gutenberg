@@ -3,13 +3,14 @@ import subprocess
 import unicodedata
 import zipfile
 from pathlib import Path
-from typing import Protocol
+from types import SimpleNamespace
+from typing import NoReturn, Protocol
 
 import chardet
-import requests
 
-from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, DL_CHUNCK_SIZE, logger
+from gutenberg2zim.constants import logger
 from gutenberg2zim.core.language import language_name
+from gutenberg2zim.core.models import Creator, Work
 from gutenberg2zim.core.work_store import WorkStore
 
 UTF8 = "utf-8"
@@ -18,36 +19,106 @@ ALL_FORMATS = ["epub", "pdf", "html"]
 NB_MAIN_LANGS = 5
 
 
-class BookNamingInfo(Protocol):
-    """What the ZIM path-naming helpers need from a book (duck-typed)"""
+class WorkNamingInfo(Protocol):
+    """What the ZIM path-naming helpers need from a work (duck-typed)"""
 
     title: str
-    book_id: int
+    id: str
 
 
-def book_name_for_fs(book: BookNamingInfo) -> str:
-    return book.title.strip().replace("/", "-")[:230]
+def book_name_for_fs(work: WorkNamingInfo) -> str:
+    return work.title.strip().replace("/", "-")[:230]
 
 
-def article_name_for(book: BookNamingInfo, *, cover: bool = False) -> str:
+def article_name_for(work: WorkNamingInfo, *, cover: bool = False) -> str:
     cover_suffix = "_cover" if cover else ""
-    title = book_name_for_fs(book)
-    return f"{title}{cover_suffix}.{book.book_id}"
+    title = book_name_for_fs(work)
+    return f"{title}{cover_suffix}.{work.id}"
 
 
-def archive_name_for(book: BookNamingInfo, book_format: str) -> str:
-    return f"{book_name_for_fs(book)}.{book.book_id}.{book_format}"
+def archive_name_for(work: WorkNamingInfo, book_format: str) -> str:
+    return f"{book_name_for_fs(work)}.{work.id}.{book_format}"
 
 
-def fname_for(book: BookNamingInfo, book_format: str) -> str:
-    return f"{book.book_id}.{book_format}"
+def fname_for(work: WorkNamingInfo, book_format: str) -> str:
+    return f"{work.id}.{book_format}"
+
+
+def requested_formats(work: Work, all_requested_formats: list[str]) -> list[str]:
+    """Requested formats minus the ones that turned out unsupported"""
+    unsupported = work.extra.get("unsupported_formats", [])
+    return [fmt for fmt in all_requested_formats if fmt not in unsupported]
+
+
+def work_lcc_shelf(work: Work) -> str | None:
+    """Id of the work's first collection (its classification shelf), if any"""
+    return work.collections[0].id if work.collections else None
+
+
+def primary_creator(work: Work) -> Creator:
+    """First creator of the work, with an Anonymous fallback when none"""
+    if work.creators:
+        return work.creators[0]
+    # Reserved non-numeric id: cannot collide with a real source creator id
+    # (Gutenberg's own Anonymous, id 216, is assigned by its metadata layer)
+    return Creator(id="anonymous", name="Anonymous", sort_name="Anonymous")
+
+
+def work_creators(work: Work) -> list[Creator]:
+    """The work's creators, with the Anonymous fallback when it has none"""
+    return work.creators or [primary_creator(work)]
+
+
+def creator_birth_year(creator: Creator) -> str | None:
+    """Raw birth year string of a creator, if known"""
+    raw = creator.extra.get("birth_year_raw")
+    if raw is not None:
+        return str(raw)
+    return str(creator.birth_date) if creator.birth_date is not None else None
+
+
+def creator_death_year(creator: Creator) -> str | None:
+    """Raw death year string of a creator, if known"""
+    raw = creator.extra.get("death_year_raw")
+    if raw is not None:
+        return str(raw)
+    return str(creator.death_date) if creator.death_date is not None else None
+
+
+def creator_template_context(creator: Creator) -> SimpleNamespace:
+    """Template-friendly view of a Creator"""
+    return SimpleNamespace(
+        id=creator.id,
+        name=creator.name,
+        first_names=creator.extra.get("first_names"),
+        last_name=creator.sort_name,
+        birth_year=creator_birth_year(creator),
+        death_year=creator_death_year(creator),
+    )
+
+
+def work_template_context(work: Work) -> SimpleNamespace:
+    """Template-friendly view of a Work for the Jinja templates"""
+    return SimpleNamespace(
+        id=work.id,
+        title=work.title,
+        subtitle=work.subtitle,
+        languages=work.languages,
+        license=work.license,
+        downloads=work.extra.get("downloads", 0),
+        lcc_shelf=work_lcc_shelf(work),
+        has_cover=work.extra.get("has_cover", work.cover is not None),
+        description=work.description,
+        author=creator_template_context(primary_creator(work)),
+        requested_formats=lambda formats: requested_formats(work, formats),
+    )
 
 
 class CriticalError(RuntimeError):
     """Raised on fatal errors that should abort the scraper"""
 
 
-def critical_error(message):
+def critical_error(message) -> NoReturn:
     logger.critical(f"ERROR: {message}")
     raise CriticalError(message)
 
@@ -56,8 +127,8 @@ def normalize(text: str | None = None) -> str | None:
     return None if text is None else unicodedata.normalize("NFC", text)
 
 
-def get_zim_name(languages, formats, is_selection):
-    parts = ["gutenberg"]
+def get_zim_name(languages, formats, is_selection, prefix: str):
+    parts = [prefix]
     parts.append("mul" if len(languages) > 1 else languages[0])
     if len(formats) < len(ALL_FORMATS):
         parts.append("-".join(formats))
@@ -72,24 +143,6 @@ def exec_cmd(cmd):
         args = cmd.split(" ")
     logger.debug(" ".join(args))
     return subprocess.run(args, check=False).returncode
-
-
-def download_file(url: str, fpath: Path) -> bool:
-    fpath.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        resp = requests.get(
-            url, stream=True, timeout=DEFAULT_HTTP_TIMEOUT
-        )  # in seconds
-        resp.raise_for_status()
-        with open(fpath, "wb") as fh:
-            for chunk in resp.iter_content(chunk_size=DL_CHUNCK_SIZE):
-                if chunk:
-                    fh.write(chunk)
-        return True
-    except Exception as exc:
-        logger.error(f"Error while downloading from {url}: {exc}")
-        fpath.unlink(missing_ok=True)
-        return False
 
 
 def get_langs_with_count(

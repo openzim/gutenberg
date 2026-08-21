@@ -19,23 +19,23 @@ Notes:
   `run()` an already-discovered list of `WorkRef`s. For Gutenberg the
   entrypoint needs the filtered catalog entries anyway (language metadata,
   empty-result error, progress total), so discovery stays there.
-- Downloads are not migrated to `DownloadEngine` yet: the Gutenberg
-  per-book flow keeps using `download_book` (in-memory) inside its
-  `process_ref` implementation, so no download engine is accepted here.
+- Downloads go through `DownloadEngine`, which lives outside this class:
+  the caller (orchestrator) owns one engine and hands it to the metadata
+  port and the source pipeline; per-book downloads retry individually
+  (see `core.download_engine.fetch_bytes_with_retry`).
 """
 
 from abc import ABC, abstractmethod
-from functools import partial
-from http import HTTPStatus
 
 import apsw
 import backoff
-import requests
 
 from gutenberg2zim.constants import logger
 from gutenberg2zim.core.concurrency import parallel_map
 from gutenberg2zim.core.exporters.json_exporter import generate_json_files
 from gutenberg2zim.core.exporters.nojs_exporter import generate_noscript_pages
+from gutenberg2zim.core.exporters.search_items_exporter import export_search_items
+from gutenberg2zim.core.index_builder import IndexBuilder
 from gutenberg2zim.core.ports import MetadataPort, WorkRef
 from gutenberg2zim.core.progress import ScraperProgress
 from gutenberg2zim.core.work_store import WorkStore
@@ -108,6 +108,10 @@ class Pipeline(ABC):
         add_lcc_shelves: bool,
         primary_color: str | None = None,
         secondary_color: str | None = None,
+        # human-readable source name, used in ZIM titles, search entries
+        # and No-JS page titles; the orchestrator passes
+        # `SourceProfile.display_name`
+        display_name: str,
     ):
         self.metadata = metadata
         self.store = store
@@ -121,6 +125,7 @@ class Pipeline(ABC):
         self.add_lcc_shelves = add_lcc_shelves
         self.primary_color = primary_color
         self.secondary_color = secondary_color
+        self.display_name = display_name
 
     def setup(self) -> None:
         """Hook run once before any work is processed (default: no-op)"""
@@ -146,40 +151,10 @@ class Pipeline(ABC):
                 "{kwargs} due to apsw.BusyError".format(**details)
             )
 
-        def backoff_request_error_hdlr(details):
-            logger.warning(
-                "Backing off {wait:0.1f} seconds after {tries} tries "
-                "calling function {target} with args {args} and kwargs "
-                "{kwargs} due to requests error".format(**details)
-            )
-
-        def fatal_code(e):
-            """Give up on errors codes 400-499 except 429"""
-            if (
-                isinstance(e, requests.HTTPError)
-                and e.response is not None
-                and (
-                    HTTPStatus.BAD_REQUEST
-                    <= e.response.status_code
-                    < HTTPStatus.INTERNAL_SERVER_ERROR
-                    and e.response.status_code != HTTPStatus.TOO_MANY_REQUESTS
-                )
-            ):
-                logger.warning(
-                    f"{getattr(e.request, 'url', 'unknown url')} returned a "
-                    f"non-retryable HTTP error code "
-                    f"{e.response.status_code}"
-                )
-                return True
-            return False
-
-        @backoff.on_exception(
-            partial(backoff.expo, base=3, factor=2),
-            requests.exceptions.RequestException,
-            max_time=30,  # secs
-            on_backoff=backoff_request_error_hdlr,
-            giveup=fatal_code,
-        )
+        # Only ZIM-write contention (apsw.BusyError) is retried at the book
+        # level: network downloads retry individually (see
+        # core.download_engine.fetch_bytes_with_retry), so a RequestException
+        # reaching this point already exhausted its own retries
         @backoff.on_exception(
             backoff.constant,
             apsw.BusyError,
@@ -204,6 +179,16 @@ class Pipeline(ABC):
 
         compute_popularity(self.store)
 
+        # Derived indexes (authors, per-author stats, search entries) built
+        # once and shared by all exporters
+        indexes = IndexBuilder(self.store).build(
+            add_lcc_shelves=self.add_lcc_shelves, display_name=self.display_name
+        )
+
+        # Write the ZIM search index entries (books, authors, shelves,
+        # listing pages) pointing at the UI routes
+        export_search_items(indexes, self.assembler)
+
         # export to JSON files (new format for Vue.js UI)
         logger.info("Generating JSON files for Vue.js UI")
         generate_json_files(
@@ -216,6 +201,8 @@ class Pipeline(ABC):
             add_lcc_shelves=self.add_lcc_shelves,
             primary_color=self.primary_color,
             secondary_color=self.secondary_color,
+            display_name=self.display_name,
+            indexes=indexes,
         )
 
         # Generate No-JS fallback pages
@@ -224,4 +211,6 @@ class Pipeline(ABC):
             formats=self.formats,
             work_store=self.store,
             assembler=self.assembler,
+            display_name=self.display_name,
+            indexes=indexes,
         )

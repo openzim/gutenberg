@@ -1,11 +1,11 @@
-"""Tests for EPUB optimization functions in sources/gutenberg/plugins.py."""
+"""Tests for EPUB optimization functions in sources/gutenberg/epub_optimize.py."""
 
 from types import SimpleNamespace
 
 import pytest
 from bs4 import BeautifulSoup
 
-from gutenberg2zim.sources.gutenberg.plugins import (
+from gutenberg2zim.sources.gutenberg.epub_optimize import (
     _process_epub_html,
     _process_epub_ncx,
 )
@@ -92,11 +92,11 @@ class TestProcessEpubHtml:
 
     @pytest.fixture
     def book_stub(self):
-        """Create minimal book stub for HTML processing."""
+        """Create minimal work stub for HTML processing."""
         return SimpleNamespace(
-            book_id=12345,
+            id="12345",
             title="Test Book",
-            author=SimpleNamespace(name=lambda: "Test Author"),
+            extra={},
         )
 
     def test_process_epub_html_removes_preamble_and_postamble(self, book_stub):

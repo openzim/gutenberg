@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ author.name() }} - Project Gutenberg</title>
+    <title>{{ author.name }} - {{ display_name }}</title>
     <link rel="stylesheet" href="common.css">
 </head>
 <body class="detail-page">
     {% include 'noscript/_nav.html' %}
     
-    <h1>{{ author.name() }}</h1>
+    <h1>{{ author.name }}</h1>
     
     <div class="detail-info">
         <dl>
             <dt>Author ID</dt>
-            <dd>{{ author.gut_id }}</dd>
+            <dd>{{ author.id }}</dd>
             
             {% if author.first_names %}
             <dt>First Name</dt>
@@ -38,19 +38,19 @@
     </div>
     
     <div class="books-list">
-        <h2>Books by {{ author.name() }}</h2>
+        <h2>Books by {{ author.name }}</h2>
         <div class="stats">
             {{ author_books|length }} book{% if author_books|length != 1 %}s{% endif %} available
         </div>
         
         {% for book in author_books %}
         <div class="book-item">
-            <a href="book_{{ book.book_id }}.html">{{ book.title }}</a>
+            <a href="book_{{ book.id }}.html">{{ book.title }}</a>
             {% if book.subtitle %}
             <div class="book-meta">{{ book.subtitle }}</div>
             {% endif %}
             <div class="book-meta">
-                Book ID: {{ book.book_id }}
+                Book ID: {{ book.id }}
                 {% if book.languages %} | Languages: {{ book.languages|join(", ") }}{% endif %}
             </div>
         </div>

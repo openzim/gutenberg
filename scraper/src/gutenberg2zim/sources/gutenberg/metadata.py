@@ -7,16 +7,21 @@ source-agnostic `MetadataPort` interface.
 import re
 from collections.abc import Iterable
 
-import requests
 from bs4 import BeautifulSoup, Tag
 
-from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, logger
-from gutenberg2zim.core.models import Work
-from gutenberg2zim.core.ports import MetadataPort, WorkRef
+from gutenberg2zim.constants import logger
+from gutenberg2zim.core.download_engine import DownloadEngine, fetch_bytes_with_retry
+from gutenberg2zim.core.models import CollectionRef, Cover, Creator, Work
+from gutenberg2zim.core.ports import DownloadRequest, MetadataPort, WorkRef
 from gutenberg2zim.core.utils import normalize
-from gutenberg2zim.sources.gutenberg.adapters import book_to_work
-from gutenberg2zim.sources.gutenberg.catalog import transform_locc_code
-from gutenberg2zim.sources.gutenberg.models import Author, Book
+from gutenberg2zim.sources.gutenberg.catalog import (
+    GUTENBERG_SOURCE,
+    LCC_SHELF_KIND,
+    transform_locc_code,
+)
+
+# Gutenberg's creator id for "Anonymous" in their RDF catalog
+ANONYMOUS_CREATOR_ID = "216"
 
 
 class RdfParseError(RuntimeError):
@@ -36,6 +41,8 @@ class RdfParser:
         self.lcc_shelf = None
         self.has_cover = False
         self.description = None
+        self.birth_year: str | None = None
+        self.death_year: str | None = None
 
     def parse(self):
         soup = BeautifulSoup(self.rdf_data, "lxml-xml")
@@ -126,14 +133,14 @@ class RdfParser:
 
         # Parsing the birth and (death, if the case) year of the author.
         # These values are likely to be null.
-        self.birth_year = soup.find("pgterms:birthdate")
+        birthdate_tag = soup.find("pgterms:birthdate")
         self.birth_year = (
-            get_formatted_number(self.birth_year.text) if self.birth_year else None
+            get_formatted_number(birthdate_tag.text) if birthdate_tag else None
         )
 
-        self.death_year = soup.find("pgterms:deathdate")
+        deathdate_tag = soup.find("pgterms:deathdate")
         self.death_year = (
-            get_formatted_number(self.death_year.text) if self.death_year else None
+            get_formatted_number(deathdate_tag.text) if deathdate_tag else None
         )
 
         # ISO 639-3 language codes that consist of 2 or 3 letters
@@ -179,46 +186,99 @@ def clean_marc_notation(text: str) -> str:
     return re.sub(r"\$[a-z]\s*", "", text) if text else text
 
 
+def format_author_name(last_name: str | None, first_names: str | None) -> str:
+    """Formatted author name, sanitized for use as a filename component"""
+
+    def sanitize(text: str) -> str:
+        return text.strip().replace("/", "-")[:230]
+
+    if not first_names and not last_name:
+        return sanitize("Anonymous")
+
+    if not first_names:
+        return sanitize(str(last_name))
+
+    if not last_name:
+        return sanitize(first_names)
+
+    return sanitize(f"{first_names} {last_name}")
+
+
+def _parse_year(value: str | None) -> int | None:
+    """Parse a year from a raw string field, None if missing or not numeric"""
+    if value and value.strip().isdigit():
+        return int(value.strip())
+    return None
+
+
 def _work_from_parser(parser: RdfParser) -> Work:
     """Build a Work from a parsed RDF"""
+    creators = []
     if parser.author_id:
-        normalized_last = normalize(parser.last_name) if parser.last_name else None
-        author = Author(
-            gut_id=parser.author_id,
-            last_name=normalized_last or "Unknown",
-            first_names=normalize(parser.first_name) if parser.first_name else None,
-            birth_year=str(parser.birth_year) if parser.birth_year else None,
-            death_year=str(parser.death_year) if parser.death_year else None,
+        last_name = normalize(parser.last_name) if parser.last_name else None
+        first_names = normalize(parser.first_name) if parser.first_name else None
+        creators.append(
+            Creator(
+                id=parser.author_id,
+                name=format_author_name(last_name or "Unknown", first_names),
+                sort_name=last_name,
+                birth_date=_parse_year(parser.birth_year),
+                death_date=_parse_year(parser.death_year),
+                extra={
+                    "first_names": first_names,
+                    "birth_year_raw": parser.birth_year,
+                    "death_year_raw": parser.death_year,
+                },
+            )
         )
     else:
-        # No author, use Anonymous (gut_id=216)
-        author = Author(gut_id="216", last_name="Anonymous")
+        # No author, use Anonymous
+        creators.append(
+            Creator(id=ANONYMOUS_CREATOR_ID, name="Anonymous", sort_name="Anonymous")
+        )
+
+    collections = []
+    if parser.lcc_shelf:
+        collections.append(
+            CollectionRef(
+                id=parser.lcc_shelf, name=parser.lcc_shelf, kind=LCC_SHELF_KIND
+            )
+        )
 
     normalized_title = normalize(parser.title.strip()) if parser.title else "Untitled"
-    return book_to_work(
-        Book(
-            book_id=int(parser.gid),
-            title=normalized_title if normalized_title else "Untitled",
-            subtitle=normalize(parser.subtitle.strip()) if parser.subtitle else None,
-            author=author,
-            languages=[lang.strip() for lang in parser.languages],
-            license=parser.license,
-            downloads=int(parser.downloads),
-            lcc_shelf=parser.lcc_shelf,
-            has_cover=parser.has_cover,
-            description=(
-                normalize(parser.description.strip()) if parser.description else None
-            ),
-        )
+    return Work(
+        id=str(parser.gid),
+        source=GUTENBERG_SOURCE,
+        title=normalized_title if normalized_title else "Untitled",
+        subtitle=normalize(parser.subtitle.strip()) if parser.subtitle else None,
+        creators=creators,
+        languages=[lang.strip() for lang in parser.languages],
+        license=parser.license,
+        cover=Cover() if parser.has_cover else None,
+        collections=collections,
+        popularity=0,
+        description=(
+            normalize(parser.description.strip()) if parser.description else None
+        ),
+        extra={
+            "downloads": int(parser.downloads),
+            "unsupported_formats": [],
+            "has_cover": parser.has_cover,
+        },
     )
 
 
-def fetch_book_metadata(book_id: int, mirror_url: str) -> Work | None:
+def fetch_book_metadata(
+    book_id: int, mirror_url: str, engine: DownloadEngine | None = None
+) -> Work | None:
     """Download and parse RDF for a single book from the mirror.
 
     Args:
         book_id: The Gutenberg book ID
         mirror_url: The mirror URL (e.g., "https://gutenberg.mirror.driftle.ss")
+        engine: Optional DownloadEngine; when provided, the RDF is fetched
+            through it and cached on disk by URL hash, so re-runs skip
+            re-downloading RDFs. Without it, a plain requests.get is used.
 
     Returns:
         Work if successful, None only for expected unusable books
@@ -232,10 +292,14 @@ def fetch_book_metadata(book_id: int, mirror_url: str) -> Work | None:
 
     logger.debug(f"Downloading RDF for book {book_id} from {rdf_url}")
 
-    # Download and parse the RDF - any errors will bubble up to the caller
-    response = requests.get(rdf_url, timeout=DEFAULT_HTTP_TIMEOUT)
-    response.raise_for_status()
-    rdf_data = response.content
+    if engine is not None:
+        # cached on disk by URL hash; cache hits return without any HTTP call
+        rdf_data = engine.download(
+            DownloadRequest(url=rdf_url, format_name="rdf")
+        ).path.read_bytes()
+    else:
+        # Plain fetch (no disk cache); retry is per-download, errors bubble up
+        rdf_data = fetch_bytes_with_retry(rdf_url)
 
     parser = RdfParser(rdf_data, str(book_id)).parse()
 
@@ -253,13 +317,14 @@ def fetch_book_metadata(book_id: int, mirror_url: str) -> Work | None:
 class GutenbergRdfMetadata(MetadataPort):
     """`MetadataPort` implementation backed by the Gutenberg RDF dumps"""
 
-    def __init__(self, mirror_url: str):
+    def __init__(self, mirror_url: str, engine: DownloadEngine | None = None):
         self._mirror_url = mirror_url
+        self._engine = engine
 
     def fetch(self, refs: Iterable[WorkRef]) -> Iterable[Work]:
         works = []
         for ref in refs:
-            work = fetch_book_metadata(int(ref.id), self._mirror_url)
+            work = fetch_book_metadata(int(ref.id), self._mirror_url, self._engine)
             if work is not None:
                 works.append(work)
         return works

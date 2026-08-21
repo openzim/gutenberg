@@ -9,11 +9,48 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any, Protocol
 
 from bs4 import BeautifulSoup
 
 from gutenberg2zim.core.models import CollectionRef, Work
+
+if TYPE_CHECKING:
+    from gutenberg2zim.core.download_engine import DownloadEngine
+
+
+class CatalogEntryLike(Protocol):
+    """The attributes the source-agnostic layers read from a catalog entry"""
+
+    book_id: int
+    languages: list[str]
+    lcc_shelf: str
+
+
+class CatalogModule(Protocol):
+    """Contract a source's catalog module must satisfy.
+
+    Discovery is source-specific, so the catalog is a module rather than a
+    class; profiles reference the module object directly, so a source
+    missing one of these functions fails type checking at registration
+    instead of at runtime.
+    """
+
+    def get_csv_fpath(self) -> Path: ...
+
+    def download_csv_file(
+        self, csv_path: Path, csv_url: str, engine: DownloadEngine
+    ) -> None: ...
+
+    def load_catalog(self, csv_path: Path) -> list[CatalogEntryLike]: ...
+
+    def filter_books(
+        self,
+        catalog: list[CatalogEntryLike],
+        languages: list[str] | None = None,
+        only_books: list[int] | None = None,
+        lcc_shelves: list[str] | None = None,
+    ) -> list[CatalogEntryLike]: ...
 
 
 @dataclass(frozen=True, slots=True)

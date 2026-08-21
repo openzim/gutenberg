@@ -2,12 +2,14 @@
 
 from unittest.mock import MagicMock, patch
 
+import requests
+
 from gutenberg2zim.core.models import Work
 from gutenberg2zim.core.pipeline import Pipeline, compute_popularity
 from gutenberg2zim.core.ports import WorkRef
 from gutenberg2zim.core.progress import ScraperProgress
 from gutenberg2zim.core.work_store import WorkStore
-from gutenberg2zim.sources.gutenberg.adapters import GUTENBERG_SOURCE
+from gutenberg2zim.sources.gutenberg.catalog import GUTENBERG_SOURCE
 
 
 def make_work(work_id: str, downloads: int) -> Work:
@@ -51,6 +53,7 @@ def build_pipeline(calls: list[str], store: WorkStore) -> DummyPipeline:
         formats=["html"],
         zim_name="test",
         add_lcc_shelves=False,
+        display_name="Test Source",
     )
 
 
@@ -94,3 +97,29 @@ def test_compute_popularity_assigns_stars_by_downloads():
     assert popularity["1"] >= popularity["2"]
     assert popularity["2"] > popularity["3"]
     assert popularity["3"] > popularity["4"]
+
+
+def test_no_book_level_retry_for_network_errors():
+    """Network downloads retry individually inside the download helpers, so a
+    RequestException escaping process_ref must NOT reprocess the whole book"""
+    calls: list[str] = []
+    store = WorkStore()
+    pipeline = build_pipeline(calls, store)
+    refs = [WorkRef(id=str(i), source=GUTENBERG_SOURCE) for i in (1, 2)]
+
+    def flaky_process(ref: WorkRef):
+        calls.append(f"process:{ref.id}")
+        if ref.id == "1":
+            raise requests.ConnectionError("network down")
+        store.add(make_work(ref.id, downloads=100))
+
+    pipeline.process_ref = flaky_process
+    with (
+        patch("gutenberg2zim.core.pipeline.generate_json_files"),
+        patch("gutenberg2zim.core.pipeline.generate_noscript_pages"),
+    ):
+        pipeline.run(refs)
+
+    # book 1 failed once (no whole-book reprocessing), book 2 still processed
+    assert calls.count("process:1") == 1
+    assert calls.count("process:2") == 1

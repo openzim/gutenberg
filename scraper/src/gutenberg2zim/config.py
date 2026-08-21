@@ -13,7 +13,7 @@ from zimscraperlib.image.probing import is_hex_color
 from zimscraperlib.inputs import compute_descriptions
 
 from gutenberg2zim.core.utils import ALL_FORMATS, critical_error
-from gutenberg2zim.sources.gutenberg.adapters import GUTENBERG_SOURCE
+from gutenberg2zim.sources.registry import get_source
 
 SUPPORTED_LCC_SHELVES = [
     "A",
@@ -100,7 +100,8 @@ def build_scrape_config(arguments: dict) -> ScrapeConfig:
     """Turn parsed CLI arguments (docopt result) into a `ScrapeConfig`"""
     zim_file = arguments.get("--zim-file")
     zim_name = arguments.get("--zim-name")
-    mirror_url = arguments.get("--mirror-url") or "https://gutenberg.mirror.driftle.ss"
+    source = get_source(arguments.get("--source") or "gutenberg")
+    mirror_url = arguments.get("--mirror-url") or source.default_mirror_url
 
     books_csv = arguments.get("--books") or ""
     zim_title = arguments.get("--zim-title")
@@ -201,7 +202,7 @@ def build_scrape_config(arguments: dict) -> ScrapeConfig:
     only_books_ids = list(set(only_books_ids))
 
     return ScrapeConfig(
-        source=GUTENBERG_SOURCE,
+        source=source.slug,
         mirror_url=mirror_url,
         output_folder=output_folder,
         concurrency=concurrency,
