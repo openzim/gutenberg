@@ -1,7 +1,6 @@
 """Generic image rewriting and WebP conversion helpers.
 
-Moved from the Gutenberg HTML rewriting module (originally `gutenberg2zim.export`).
-Source-agnostic: nothing here knows about Gutenberg specifics.
+Source-agnostic: this module contains no source-specific behavior.
 """
 
 import io

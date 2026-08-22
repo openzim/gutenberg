@@ -1,6 +1,6 @@
 /**
  * TypeScript interfaces for Book-related data structures
- * Matches Pydantic schemas from scraper/src/gutenberg2zim/schemas.py
+ * Matches the scraper's source-neutral JSON schemas.
  */
 
 import type { AuthorPreview, Author } from './Author'
@@ -18,7 +18,7 @@ export interface BookPreview {
   languages: string[]
   popularity: number // Flame rating (0-3)
   coverPath: string | null
-  lccShelf: string | null
+  primaryCollection: string | null
   availableFormats?: string[]
   description?: string | null
 }
@@ -27,7 +27,7 @@ export interface Book extends Omit<BookPreview, 'author'> {
   subtitle: string | null
   author: Author // Full author instead of preview
   license: string
-  downloads: number
+  primaryMetric: number
   formats: BookFormat[]
   description: string | null
 }

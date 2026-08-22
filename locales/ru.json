@@ -1,26 +1,29 @@
 {
-	"@metadata": {
-		"authors": [
-			"Danil Kostenkov"
-		]
-	},
-	"language": "Английский",
-	"isocode": "en",
-	"nav": {
-		"home": "Главная",
-		"authors": "Авторы",
-		"shelves": "Книжные полки",
-		"about": "О приложении",
-		"books": "Книги"
-	},
-	"about": {
-		"introHeading": "О проекте Гутенберга"
-	},
-	"book": {
-		"fullName": "Полное имя"
-	},
-	"metadata_defaults": {
-		"title": "Библиотека Проекта Гутенберг",
-		"description": "Bce книги на русском языке от первого производителя бесплатных электронных книг"
-	}
+  "language": "Английский",
+  "isocode": "en",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Danil Kostenkov"
+      ]
+    },
+    "nav": {
+      "home": "Главная",
+      "authors": "Авторы",
+      "about": "О приложении",
+      "books": "Книги"
+    },
+    "book": {
+      "fullName": "Полное имя"
+    }
+  },
+  "gutenberg": {
+    "about": {
+      "introHeading": "О проекте Гутенберга"
+    },
+    "metadata_defaults": {
+      "title": "Библиотека Проекта Гутенберг",
+      "description": "Bce книги на русском языке от первого производителя бесплатных электронных книг"
+    }
+  }
 }

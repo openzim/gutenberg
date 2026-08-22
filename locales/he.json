@@ -1,41 +1,45 @@
 {
-	"@metadata": {
-		"authors": [
-			"Amire80",
-			"Neriah",
-			"YaronSh"
-		]
-	},
-	"language": "עברית",
-	"isocode": "he",
-	"nav": {
-		"home": "דף הבית"
-	},
-	"book": {
-		"title": "ספרים",
-		"languages": "שפה",
-		"license": "רישיון",
-		"licensePd": "נחלת הכלל בארה״ב.",
-		"cover": "כריכת הספר",
-		"coverLabel": "(כריכה)",
-		"anonymous": "אלמוני",
-		"various": "מגוון"
-	},
-	"common": {
-		"loading": "טעינה...",
-		"search": "חיפוש",
-		"sortTitle": "כותרת",
-		"chooseLanguage": "בחירת שפה...",
-		"mainLanguages": "שפות ראשיות",
-		"otherLanguages": "שפות אחרות",
-		"anyCatalog": "בחירת הקטלוג",
-		"uiLanguage": "שפת ממשק"
-	},
-	"messages": {
-		"noBooks": "לא נמצאו ספרים."
-	},
-	"metadata_defaults": {
-		"title": "ספריית פרויקט גוטנברג",
-		"description": "כל הספרים בעברית מהמפיק הראשון של ספרים אלקטרוניים בחינם"
-	}
+  "language": "עברית",
+  "isocode": "he",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Amire80",
+        "Neriah",
+        "YaronSh"
+      ]
+    },
+    "nav": {
+      "home": "דף הבית"
+    },
+    "book": {
+      "title": "ספרים",
+      "languages": "שפה",
+      "license": "רישיון",
+      "licensePd": "נחלת הכלל בארה״ב.",
+      "cover": "כריכת הספר",
+      "coverLabel": "(כריכה)",
+      "anonymous": "אלמוני",
+      "various": "מגוון"
+    },
+    "common": {
+      "loading": "טעינה...",
+      "search": "חיפוש",
+      "sortTitle": "כותרת",
+      "chooseLanguage": "בחירת שפה...",
+      "mainLanguages": "שפות ראשיות",
+      "otherLanguages": "שפות אחרות",
+      "anyCatalog": "בחירת הקטלוג",
+      "uiLanguage": "שפת ממשק"
+    },
+    "messages": {
+      "noBooks": "לא נמצאו ספרים."
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "ספריית פרויקט גוטנברג",
+      "description": "כל הספרים בעברית מהמפיק הראשון של ספרים אלקטרוניים בחינם"
+    }
+  }
 }

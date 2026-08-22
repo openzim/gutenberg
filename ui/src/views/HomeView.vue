@@ -2,9 +2,9 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useMainStore } from '@/stores/main'
-import type { LCCShelfPreview, BookPreview, AuthorPreview } from '@/types'
-import PopularShelvesBar from '@/components/home/PopularShelvesBar.vue'
-import PopularShelfBooks from '@/components/home/PopularShelfBooks.vue'
+import type { CollectionPreview, BookPreview, AuthorPreview } from '@/types'
+import PopularCollectionsBar from '@/components/home/PopularCollectionsBar.vue'
+import PopularCollectionBooks from '@/components/home/PopularCollectionBooks.vue'
 import SelectedAuthorsCarousel from '@/components/home/SelectedAuthorsCarousel.vue'
 import SelectedBooksSection from '@/components/home/SelectedBooksSection.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
@@ -13,11 +13,11 @@ import { LAYOUT } from '@/constants/theme'
 const { t } = useI18n()
 const main = useMainStore()
 
-const shelves = ref<LCCShelfPreview[]>([])
-const shelvesLoading = ref(false)
-const activeShelfCode = ref<string | null>(null)
-const shelfBooks = ref<BookPreview[]>([])
-const shelfBooksLoading = ref(false)
+const collections = ref<CollectionPreview[]>([])
+const collectionsLoading = ref(false)
+const activeCollectionId = ref<string | null>(null)
+const collectionBooks = ref<BookPreview[]>([])
+const collectionBooksLoading = ref(false)
 
 const authors = ref<AuthorPreview[]>([])
 const authorsLoading = ref(false)
@@ -25,8 +25,10 @@ const authorsLoading = ref(false)
 const books = ref<BookPreview[]>([])
 const booksLoading = ref(false)
 
-const popularShelves = computed(() =>
-  [...shelves.value].sort((a, b) => (b.totalPopularity || 0) - (a.totalPopularity || 0)).slice(0, 6)
+const popularCollections = computed(() =>
+  [...collections.value]
+    .sort((a, b) => (b.totalPopularity || 0) - (a.totalPopularity || 0))
+    .slice(0, 6)
 )
 
 const popularAuthors = computed(() =>
@@ -35,32 +37,37 @@ const popularAuthors = computed(() =>
     .slice(0, 10)
 )
 
-async function loadShelves() {
-  shelvesLoading.value = true
+async function loadCollections() {
+  collectionsLoading.value = true
   try {
-    const result = await main.fetchLCCShelves()
-    shelves.value = result.shelves
-    const top = popularShelves.value[0]
-    if (top && !activeShelfCode.value) {
-      activeShelfCode.value = top.code
+    const result = await main.fetchCollections()
+    collections.value = result.collections.map((collection) => ({
+      id: collection.id,
+      name: collection.name,
+      bookCount: collection.bookCount,
+      totalPopularity: collection.totalPopularity
+    }))
+    const top = popularCollections.value[0]
+    if (top && !activeCollectionId.value) {
+      activeCollectionId.value = top.id
     }
   } catch (error) {
-    console.error('Failed to load shelves', error)
+    console.error('Failed to load collections', error)
   } finally {
-    shelvesLoading.value = false
+    collectionsLoading.value = false
   }
 }
 
-async function loadShelfBooks(code: string) {
-  shelfBooksLoading.value = true
+async function loadCollectionBooks(id: string) {
+  collectionBooksLoading.value = true
   try {
-    const result = await main.fetchLCCShelf(code)
-    shelfBooks.value = result.books
+    const result = await main.fetchCollection(id)
+    collectionBooks.value = result.books
   } catch (error) {
-    console.error(`Failed to load shelf books for ${code}`, error)
-    shelfBooks.value = []
+    console.error(`Failed to load collection books for ${id}`, error)
+    collectionBooks.value = []
   } finally {
-    shelfBooksLoading.value = false
+    collectionBooksLoading.value = false
   }
 }
 
@@ -90,14 +97,14 @@ async function loadBooks() {
   }
 }
 
-watch(activeShelfCode, (newCode) => {
+watch(activeCollectionId, (newCode) => {
   if (newCode) {
-    loadShelfBooks(newCode)
+    loadCollectionBooks(newCode)
   }
 })
 
 onMounted(() => {
-  loadShelves()
+  loadCollections()
   loadAuthors()
   loadBooks()
 })
@@ -106,30 +113,30 @@ onMounted(() => {
 <template>
   <div class="home-view">
     <v-container>
-      <v-row v-if="shelvesLoading">
+      <v-row v-if="collectionsLoading">
         <v-col cols="12">
           <loading-spinner :message="t('common.loading')" />
         </v-col>
       </v-row>
     </v-container>
 
-    <template v-if="!shelvesLoading && popularShelves.length > 0">
-      <popular-shelves-bar
-        :shelves="popularShelves"
-        :active-code="activeShelfCode"
-        @select="(code) => (activeShelfCode = code)"
+    <template v-if="!collectionsLoading && popularCollections.length > 0">
+      <popular-collections-bar
+        :collections="popularCollections"
+        :active-id="activeCollectionId"
+        @select="(id) => (activeCollectionId = id)"
       />
 
       <v-container>
-        <v-row v-if="shelfBooksLoading">
+        <v-row v-if="collectionBooksLoading">
           <v-col cols="12">
             <loading-spinner :message="t('common.loading')" />
           </v-col>
         </v-row>
 
-        <v-row v-else-if="activeShelfCode && shelfBooks.length > 0">
+        <v-row v-else-if="activeCollectionId && collectionBooks.length > 0">
           <v-col cols="12">
-            <popular-shelf-books :books="shelfBooks" />
+            <popular-collection-books :books="collectionBooks" />
           </v-col>
         </v-row>
       </v-container>

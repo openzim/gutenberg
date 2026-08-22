@@ -1,14 +1,18 @@
 {
-	"@metadata": {
-		"authors": [
-			"StanProg"
-		]
-	},
-	"common": {
-		"search": "Търсене"
-	},
-	"metadata_defaults": {
-		"title": "Библиотека на проект Гутенберг",
-		"description": "Всички книги на български от първия производител на безплатни електронни книги"
-	}
+  "common": {
+    "@metadata": {
+      "authors": [
+        "StanProg"
+      ]
+    },
+    "common": {
+      "search": "Търсене"
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Библиотека на проект Гутенберг",
+      "description": "Всички книги на български от първия производител на безплатни електронни книги"
+    }
+  }
 }

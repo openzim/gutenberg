@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { useIsLccShelfPage } from '@/composables/useIsLccShelfPage'
+import { useIsCollectionPage } from '@/composables/useIsCollectionPage'
 import type { BookPreview } from '@/types'
-import ShelfBookCard from './ShelfBookCard.vue'
+import CollectionBookCard from './CollectionBookCard.vue'
 
 defineProps<{
   books: BookPreview[]
 }>()
 
-const isLccShelfPage = useIsLccShelfPage()
+const isCollectionPage = useIsCollectionPage()
 </script>
 
 <template>
-  <div class="books-grid" :class="{ 'books-grid--lcc-shelf': isLccShelfPage }">
+  <div class="books-grid" :class="{ 'books-grid--collection-view': isCollectionPage }">
     <div v-for="book in books" :key="book.id" class="grid-cell">
-      <shelf-book-card :book="book" />
+      <collection-book-card :book="book" />
     </div>
   </div>
 </template>
@@ -28,13 +28,13 @@ const isLccShelfPage = useIsLccShelfPage()
   margin-inline: auto;
 }
 
-.books-grid--lcc-shelf {
+.books-grid--collection-view {
   max-width: 882px;
 }
 
 @media (max-width: 1279px) {
   .books-grid,
-  .books-grid--lcc-shelf {
+  .books-grid--collection-view {
     grid-template-columns: repeat(auto-fill, 160px);
   }
 }

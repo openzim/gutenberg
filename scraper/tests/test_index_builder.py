@@ -91,17 +91,32 @@ def test_search_entries_for_collections():
         _work("1", "Bleak House", creators=[DICKENS], collections=[LCC_SHELF]),
         _work("2", "Emma", creators=[AUSTEN], collections=[LCC_SHELF]),
     )
-    indexes = IndexBuilder(store).build(
-        add_lcc_shelves=True, display_name="Test Source"
-    )
+    indexes = IndexBuilder(store).build(display_name="Test Source")
     entries = {entry.fname: entry for entry in indexes.search_entries}
 
-    entry = entries["lcc_shelf_PR"]
-    assert entry.title == "LCC Shelf PR"
-    assert entry.route == "lcc-shelf/PR"
-    assert "Library of Congress Classification shelf PR" in entry.content
+    entry = entries["collection_PR"]
+    assert entry.title == "Collection PR"
+    assert entry.route == "collections?collection=PR"
+    assert "Collection PR" in entry.content
     assert "2 book(s)" in entry.content
     assert "Bleak House" in entry.content
+
+
+def test_search_entries_encode_collection_ids_in_filenames_and_routes():
+    collection = CollectionRef(
+        id="Computer/Science & Maths#1?", name="Computer Science"
+    )
+    store = _store_with(_work("1", "Book", collections=[collection]))
+
+    entries = {
+        entry.fname: entry
+        for entry in IndexBuilder(store).build(display_name="Test").search_entries
+    }
+
+    entry = entries["collection_Computer%2FScience%20%26%20Maths%231%3F"]
+    assert (
+        entry.route == "collections?collection=Computer%2FScience%20%26%20Maths%231%3F"
+    )
 
 
 def test_empty_store_builds_empty_indexes():
@@ -114,4 +129,5 @@ def test_empty_store_builds_empty_indexes():
     assert [entry.fname for entry in indexes.search_entries] == [
         "books_list",
         "authors_list",
+        "collections_list",
     ]

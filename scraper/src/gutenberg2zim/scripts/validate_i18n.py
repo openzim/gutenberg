@@ -60,6 +60,19 @@ def get_leaf_values(data: dict[str, Any], prefix: str = "") -> dict[str, str]:
     return result
 
 
+def merge_locale_data(
+    common_data: dict[str, Any], source_data: dict[str, Any]
+) -> dict[str, Any]:
+    """Deep-merge a source locale over the common locale."""
+    merged = common_data.copy()
+    for key, value in source_data.items():
+        if isinstance(merged.get(key), dict) and isinstance(value, dict):
+            merged[key] = merge_locale_data(merged[key], value)
+        else:
+            merged[key] = value
+    return merged
+
+
 def extract_placeholders(text: str) -> set[str]:
     """Extract placeholders like {count}, {name} from translation text."""
     return set(re.findall(r"\{([^}]+)\}", text))
@@ -183,7 +196,7 @@ def get_ignored_keys(en_data: dict[str, Any]) -> set[str]:
     These include:
     - Locale metadata fields (e.g., 'language', 'isocode')
       These exist in locale files but are not accessed by application code
-    - Dynamic LCC shelf keys (e.g., 'lccShelves.A', 'lccShelves.B')
+    - Dynamic collection keys (e.g., 'collections.A', 'collections.18')
       Accessed dynamically or reserved for future use
     """
     base_ignored = {
@@ -191,16 +204,14 @@ def get_ignored_keys(en_data: dict[str, Any]) -> set[str]:
         "isocode",
     }
 
-    # Extract LCC codes from en.json lccShelves section
-    lcc_codes = []
-    if "lccShelves" in en_data:
-        lcc_codes = list(en_data["lccShelves"].keys())
+    collection_ids = list(en_data.get("collections", {}).keys())
 
     template_keys = {
         "book.anonymous",
         "book.cover",
         "book.coverLabel",
         "book.downloads",
+        "book.downloadCount",
         "book.fullName",
         "book.licenseCopyright",
         "book.licensePd",
@@ -218,20 +229,22 @@ def get_ignored_keys(en_data: dict[str, Any]) -> set[str]:
         "common.uiLanguage",
         "itemTypes.authors",
         "itemTypes.books",
-        "itemTypes.shelves",
+        "itemTypes.collections",
         "messages.noAuthors",
         "messages.noBooks",
-        "messages.noBooksInShelf",
+        "messages.noBooksInCollection",
         "messages.noFormats",
         "messages.noLanguages",
-        "messages.noShelves",
-        "messages.notFoundShelf",
-        "shelf.booksIn",
+        "messages.noCollections",
+        "messages.notFoundCollection",
+        "collection.booksIn",
         "authors.title",
+        "metadata_defaults.description",
+        "metadata_defaults.title",
     }
 
     ignored = base_ignored | template_keys
-    ignored.update(f"lccShelves.{code}" for code in lcc_codes)
+    ignored.update(f"collections.{collection_id}" for collection_id in collection_ids)
 
     return ignored
 
@@ -304,14 +317,40 @@ def main() -> int:
     else:
         print("   ✅ en.json and qqq.json keys match perfectly")
 
-    # Check other locale files
+    source_en_data = {
+        namespace: data
+        for namespace, data in en_data.items()
+        if namespace not in {"@metadata", "language", "isocode"}
+        and isinstance(data, dict)
+    }
+    if "common" not in source_en_data:
+        errors.append("❌ en.json must define a common locale namespace")
+
+    for namespace, source_en in source_en_data.items():
+        source_qqq = qqq_data.get(namespace)
+        if not isinstance(source_qqq, dict):
+            errors.append(f"❌ qqq.json must document the {namespace} namespace")
+            continue
+
+        source_en_keys = get_leaf_keys(source_en)
+        source_qqq_keys = get_leaf_keys(source_qqq)
+        if source_en_keys != source_qqq_keys:
+            errors.append(
+                f"❌ {namespace} keys do not match between en.json and qqq.json"
+            )
+            for key in sorted(source_en_keys - source_qqq_keys):
+                errors.append(f"   - Missing documentation: {namespace}.{key}")
+            for key in sorted(source_qqq_keys - source_en_keys):
+                errors.append(f"   - Extra documentation: {namespace}.{key}")
+        else:
+            print(f"   ✅ {namespace} en.json and qqq.json keys match perfectly")
+
     quality_issues: dict[str, list[str]] = {}
 
     for locale_file in sorted(locales_dir.glob("*.json")):
         if locale_file.name in ["en.json", "qqq.json"]:
             continue
 
-        # Load locale file once and reuse
         locale_data = load_json(locale_file)
         locale_keys = get_leaf_keys(locale_data)
         extra_keys = locale_keys - en_keys
@@ -323,7 +362,6 @@ def main() -> int:
         else:
             print(f"   ✅ {locale_file.name} keys are valid subset")
 
-        # Check translation quality using already-loaded data
         issues = validate_translation_quality_from_data(locale_data, en_values)
         if issues:
             quality_issues[locale_file.name] = issues
@@ -378,30 +416,73 @@ def main() -> int:
     # Cross-validate code vs locale files
     print("🔗 Cross-validating code vs. locale files...")
 
-    # Keys used in code but not in en.json
-    missing_in_locales = code_keys - en_keys
+    common_en_data = source_en_data.get("common", {})
+    source_specific_data = {
+        source: source_data
+        for source, source_data in source_en_data.items()
+        if source != "common"
+    }
+    if not source_specific_data:
+        errors.append("❌ en.json must define at least one source locale namespace")
+
+    merged_source_data = {
+        source: merge_locale_data(common_en_data, source_data)
+        for source, source_data in source_specific_data.items()
+    }
+    merged_key_sets = {
+        source: get_leaf_keys(merged_data)
+        for source, merged_data in merged_source_data.items()
+    }
+    all_locale_keys = (
+        set().union(*merged_key_sets.values()) if merged_key_sets else set()
+    )
+    missing_in_locales = code_keys - all_locale_keys
     if missing_in_locales:
         errors.append(
-            f"❌ Keys used in code but missing in en.json ({len(missing_in_locales)}):"
+            "❌ Keys used in code but missing in every locale namespace "
+            f"({len(missing_in_locales)}):"
         )
         for key in sorted(missing_in_locales):
             files = ", ".join(key_locations[key])
             errors.append(f"   - {key} (used in: {files})")
     else:
-        print("   ✅ All code keys exist in en.json")
+        print("   ✅ All code keys exist in at least one English locale namespace")
 
-    # Keys in en.json but not used in code
-    ignored_keys = get_ignored_keys(en_data)
-    unused_keys = {
-        key for key in en_keys if key not in ignored_keys and key not in code_keys
+    source_key_sets = {
+        source: get_leaf_keys(source_data)
+        for source, source_data in source_specific_data.items()
     }
-
-    if unused_keys:
-        errors.append(f"❌ Keys in en.json but not used in code ({len(unused_keys)}):")
-        for key in sorted(unused_keys):
-            errors.append(f"   - {key}")
-    else:
-        print("   ✅ All en.json keys are used in code")
+    for source, merged_data in merged_source_data.items():
+        merged_keys = merged_key_sets[source]
+        ignored_keys = get_ignored_keys(merged_data)
+        keys_owned_by_other_sources = (
+            set().union(
+                *(
+                    keys
+                    for other_source, keys in source_key_sets.items()
+                    if other_source != source
+                )
+            )
+            - source_key_sets[source]
+        )
+        unused_keys = {
+            key
+            for key in merged_keys
+            if (
+                key not in ignored_keys
+                and key not in code_keys
+                and key not in keys_owned_by_other_sources
+            )
+        }
+        if unused_keys:
+            errors.append(
+                "❌ Keys in common + "
+                f"{source} English locales but not used in code ({len(unused_keys)}):"
+            )
+            for key in sorted(unused_keys):
+                errors.append(f"   - {key}")
+        else:
+            print(f"   ✅ All common + {source} English locale keys are used in code")
 
     print()
 

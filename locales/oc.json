@@ -1,9 +1,13 @@
 {
-	"@metadata": {
-		"authors": []
-	},
-	"metadata_defaults": {
-		"title": "Bibliotèca Project Gutenberg",
-		"description": "Totes los libres en occitan del primièr productor de libres electronics gratuïts"
-	}
+  "common": {
+    "@metadata": {
+      "authors": []
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Bibliotèca Project Gutenberg",
+      "description": "Totes los libres en occitan del primièr productor de libres electronics gratuïts"
+    }
+  }
 }

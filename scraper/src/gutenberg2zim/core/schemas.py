@@ -62,7 +62,7 @@ class BookPreview(CamelModel):
     languages: list[str]
     popularity: int  # Flame rating (0-3)
     cover_path: str | None = None
-    lcc_shelf: str | None = None
+    primary_collection: str | None = None
     available_formats: list[str] = []
     description: str | None = None
 
@@ -72,26 +72,10 @@ class Book(BookPreview):
 
     subtitle: str | None = None
     license: str
-    downloads: int
+    primary_metric: int
     author: Author
     formats: list[BookFormat]
-    description: str | None = None  # If available from RDF
-
-
-# LCC Shelf Models
-class LCCShelfPreview(CamelModel):
-    """LCC shelf preview for list views"""
-
-    code: str
-    name: str | None = None
-    book_count: int
-    total_popularity: int = 0
-
-
-class LCCShelf(LCCShelfPreview):
-    """Full LCC shelf details"""
-
-    books: list[BookPreview]
+    description: str | None = None
 
 
 # Collection Models
@@ -109,11 +93,52 @@ class Authors(CamelModel):
     total_count: int
 
 
-class LCCShelves(CamelModel):
-    """List of LCC shelf previews"""
+class CollectionPreview(CamelModel):
+    """Collection preview for source-neutral collection views."""
 
-    shelves: list[LCCShelfPreview]
+    id: str
+    name: str
+    book_count: int
+    total_popularity: int = 0
+
+
+class Collection(CollectionPreview):
+    """Collection detail with its works."""
+
+    books: list[BookPreview]
+
+
+class Collections(CamelModel):
+    """List of collection previews."""
+
+    collections: list[CollectionPreview]
     total_count: int
+
+
+class SourceInfo(CamelModel):
+    """Identity and description of the content source."""
+
+    slug: str
+    name: str
+    description: str
+
+
+class ThemeConfig(CamelModel):
+    """Source-specific UI presentation settings."""
+
+    primary_color: str | None = None
+    secondary_color: str | None = None
+    format_icons: dict[str, str]
+    route_labels: dict[str, str]
+    collection_icon_style: str = "classification"
+
+
+class FeatureFlags(CamelModel):
+    """Capabilities available to the UI."""
+
+    epub_reader: bool
+    pdf_reader: bool
+    noscript_fallback: bool
 
 
 class Config(CamelModel):
@@ -123,6 +148,9 @@ class Config(CamelModel):
     description: str | None = None
     primary_color: str | None = None
     secondary_color: str | None = None
+    source: SourceInfo
+    theme: ThemeConfig
+    features: FeatureFlags
 
 
 # Update forward references for Pydantic v2

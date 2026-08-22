@@ -1,0 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{{ collection_label }} - {{ display_name }}</title><link rel="stylesheet" href="common.css"></head>
+<body>{% include 'noscript/_nav.html' %}<h1>{{ collection_label }}</h1><ul>{% for collection in collections %}<li><a href="collection_{{ collection.key }}.html">{{ collection.name }}</a> ({{ collection.book_count }} books)</li>{% endfor %}</ul></body>
+</html>

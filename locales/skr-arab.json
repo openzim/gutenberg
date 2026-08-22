@@ -1,22 +1,25 @@
 {
-	"@metadata": {
-		"authors": [
-			"Saraiki"
-		]
-	},
-	"nav": {
-		"home": "گھر",
-		"authors": "مصنف",
-		"about": "تعارف",
-		"books": "کتاباں"
-	},
-	"book": {
-		"title": "کتاباں",
-		"languages": "زبان(اں)",
-		"anonymous": "گمنام"
-	},
-	"common": {
-		"sortTitle": "عنوان",
-		"listView": "تندیر نظارہ"
-	}
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Saraiki"
+      ]
+    },
+    "nav": {
+      "home": "گھر",
+      "authors": "مصنف",
+      "about": "تعارف",
+      "books": "کتاباں"
+    },
+    "book": {
+      "title": "کتاباں",
+      "languages": "زبان(اں)",
+      "anonymous": "گمنام"
+    },
+    "common": {
+      "sortTitle": "عنوان",
+      "listView": "تندیر نظارہ"
+    }
+  },
+  "gutenberg": {}
 }

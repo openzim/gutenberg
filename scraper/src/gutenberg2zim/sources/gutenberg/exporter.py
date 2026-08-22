@@ -32,7 +32,6 @@ def export_book(
     _zim_name: str,
     *,
     _title_search: bool,
-    _add_lcc_shelves: bool,
 ):
     """Export book to ZIM using in-memory content"""
     handle_book_files(

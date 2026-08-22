@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useIsLccShelfPage } from '@/composables/useIsLccShelfPage'
+import { useIsCollectionPage } from '@/composables/useIsCollectionPage'
 import { useIntersectionObserver } from '@/composables/useIntersectionObserver'
 import type { BookPreview } from '@/types'
 import ListBookCard from './ListBookCard.vue'
@@ -16,7 +16,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const isLccShelfPage = useIsLccShelfPage()
+const isCollectionPage = useIsCollectionPage()
 
 const { displayedItems, hasMore, loadMore } = useInfiniteScroll(() => props.books, 24)
 
@@ -36,7 +36,7 @@ const { sentinelRef } = useIntersectionObserver(() => {
 </script>
 
 <template>
-  <div class="books-list" :class="{ 'books-list--lcc-shelf': isLccShelfPage }">
+  <div class="books-list" :class="{ 'books-list--collection-view': isCollectionPage }">
     <div v-for="book in displayedItems" :key="book.id" class="list-cell">
       <list-book-card :book="book" />
     </div>
@@ -54,13 +54,13 @@ const { sentinelRef } = useIntersectionObserver(() => {
   margin-inline: auto;
 }
 
-.books-list--lcc-shelf {
+.books-list--collection-view {
   max-width: 882px;
 }
 
 @media (max-width: 599px) {
   .books-list,
-  .books-list--lcc-shelf {
+  .books-list--collection-view {
     margin-inline: auto;
   }
 }

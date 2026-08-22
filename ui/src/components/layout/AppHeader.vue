@@ -2,18 +2,20 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
+import { useMainStore } from '@/stores/main'
 import { TYPOGRAPHY } from '@/constants/theme'
 
 const { t } = useI18n()
 const route = useRoute()
+const main = useMainStore()
 
 const drawer = ref(false)
 
 const navItems = computed(() => [
-  { title: t('nav.home'), to: '/' },
-  { title: t('nav.books'), to: '/books' },
-  { title: t('nav.authors'), to: '/authors' },
-  { title: t('nav.shelves'), to: '/lcc-shelves' },
+  { title: main.config?.theme.routeLabels.home || t('nav.home'), to: '/' },
+  { title: main.config?.theme.routeLabels.works || t('nav.books'), to: '/books' },
+  { title: main.config?.theme.routeLabels.authors || t('nav.authors'), to: '/authors' },
+  { title: main.config?.theme.routeLabels.collections || t('nav.collections'), to: '/collections' },
   { title: t('nav.about'), to: '/about' }
 ])
 
@@ -28,8 +30,8 @@ function isActive(path: string): boolean {
 <template>
   <header class="app-header" role="banner">
     <div class="app-header__inner">
-      <router-link to="/" class="app-header__brand" :aria-label="t('common.gutenbergHome')">
-        <span>Project Gutenberg</span>
+      <router-link to="/" class="app-header__brand" :aria-label="t('nav.home')">
+        <span>{{ main.config?.source.name || 'Library' }}</span>
       </router-link>
 
       <v-app-bar-nav-icon

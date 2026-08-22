@@ -23,7 +23,7 @@ RUN apt-get update \
 # Copy pyproject.toml and its dependencies
 COPY README.md LICENSE /src/
 COPY scraper/pyproject.toml /src/scraper/
-COPY scraper/README.md /src/scraper/
+COPY scraper/hatch_build.py /src/scraper/
 COPY scraper/src/gutenberg2zim/__about__.py /src/scraper/src/gutenberg2zim/__about__.py
 
 # Install Python dependencies
@@ -41,7 +41,7 @@ RUN pip install --no-cache-dir /src/scraper \
 # Copy Vue.js UI build output
 COPY --from=ui /src/dist /src/zimui
 
-ENV GUTENBERG_UI_DIST=/src/zimui
+ENV ZIM_UI_DIST=/src/zimui
 
 # default output directory
 RUN mkdir -p /output
@@ -50,6 +50,6 @@ WORKDIR /output
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8 \
-    GUTENBERG_OUTPUT=/output
+    ZIM_OUTPUT=/output
 
 CMD ["gutenberg2zim", "--help"]

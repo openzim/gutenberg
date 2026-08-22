@@ -1,6 +1,9 @@
 {
-	"metadata_defaults": {
-		"title": "Cholnajil Project Gutenberg",
-		"description": "Pob llyfr yn Saxoneg gan gynhyrchydd cyntaf llyfrau rhad"
-	}
+  "common": {},
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Cholnajil Project Gutenberg",
+      "description": "Pob llyfr yn Saxoneg gan gynhyrchydd cyntaf llyfrau rhad"
+    }
+  }
 }

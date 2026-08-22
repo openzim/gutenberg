@@ -12,6 +12,7 @@ export type Language = {
 }
 
 const localesFiles = import.meta.glob('../../../locales/*.json')
+let sourceLocaleNamespace: string | null = null
 
 // Overrides for codes not in @wikimedia/language-data or where the autonym
 // differs significantly from what we want to display
@@ -23,7 +24,7 @@ const AUTONYM_OVERRIDES: Record<string, string> = {
 function getLocaleCodesFromFiles(): string[] {
   return Object.keys(localesFiles)
     .map((path) => {
-      const match = path.match(/\/([^/]+)\.json$/)
+      const match = path.match(/\/locales\/([^/]+)\.json$/)
       return match ? match[1] : null
     })
     .filter((code): code is string => code !== null && code !== 'qqq')
@@ -58,20 +59,61 @@ const i18n = createI18n({
 
 const loadedLocales: string[] = []
 
+type LocaleMessages = Record<string, unknown>
+
+function deepMerge(base: LocaleMessages, override: LocaleMessages): LocaleMessages {
+  const merged: LocaleMessages = { ...base }
+
+  for (const [key, value] of Object.entries(override)) {
+    const baseValue = merged[key]
+    if (
+      typeof baseValue === 'object' &&
+      baseValue !== null &&
+      !Array.isArray(baseValue) &&
+      typeof value === 'object' &&
+      value !== null &&
+      !Array.isArray(value)
+    ) {
+      merged[key] = deepMerge(baseValue as LocaleMessages, value as LocaleMessages)
+    } else {
+      merged[key] = value
+    }
+  }
+
+  return merged
+}
+
+async function loadLocaleFile(code: string): Promise<LocaleMessages | null> {
+  const localeLoader = localesFiles[`../../../locales/${code}.json`]
+  if (!localeLoader) return null
+
+  const localeModule = (await localeLoader()) as { default?: LocaleMessages } | LocaleMessages
+  return ('default' in localeModule ? localeModule.default : localeModule) as LocaleMessages
+}
+
+async function loadLocaleMessages(code: string): Promise<LocaleMessages | null> {
+  const localeMessages = await loadLocaleFile(code)
+  if (!localeMessages) return null
+
+  const commonMessages = localeMessages.common as LocaleMessages | undefined
+  if (!commonMessages) return null
+  const sourceMessages = sourceLocaleNamespace
+    ? (localeMessages[sourceLocaleNamespace] as LocaleMessages | undefined)
+    : undefined
+  return sourceMessages ? deepMerge(commonMessages, sourceMessages) : commonMessages
+}
+
+export function setLocaleSource(namespace: string): void {
+  sourceLocaleNamespace = namespace
+}
+
 export async function setCurrentLocale(locale: Language): Promise<boolean> {
   if (!loadedLocales.includes(locale.code)) {
-    const localeKey = `../../../locales/${locale.code}.json`
-    const localeLoader = localesFiles[localeKey]
-    if (!localeLoader) {
+    const localeMessages = await loadLocaleMessages(locale.code)
+    if (!localeMessages) {
       console.error(`Locale file not found for ${locale.code}`)
       return false
     }
-    const localeModule = (await localeLoader()) as
-      | { default?: Record<string, unknown> }
-      | Record<string, unknown>
-    const localeMessages = (
-      'default' in localeModule ? localeModule.default : localeModule
-    ) as Record<string, unknown>
     i18n.global.setLocaleMessage(locale.code, localeMessages)
     loadedLocales.push(locale.code)
   }
@@ -96,16 +138,10 @@ function getInitialLanguage(): Language {
   return defaultLanguage
 }
 
-async function loadI18n() {
-  const enLocaleKey = '../../../locales/en.json'
-  const enLocaleLoader = localesFiles[enLocaleKey]
-  if (enLocaleLoader) {
-    const enLocaleModule = (await enLocaleLoader()) as
-      | { default?: Record<string, unknown> }
-      | Record<string, unknown>
-    const enLocaleMessages = (
-      'default' in enLocaleModule ? enLocaleModule.default : enLocaleModule
-    ) as Record<string, unknown>
+async function loadI18n(sourceNamespace: string) {
+  setLocaleSource(sourceNamespace)
+  const enLocaleMessages = await loadLocaleMessages('en')
+  if (enLocaleMessages) {
     i18n.global.setLocaleMessage('en', enLocaleMessages)
     loadedLocales.push('en')
   }

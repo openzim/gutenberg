@@ -1,85 +1,89 @@
 {
-	"@metadata": {
-		"authors": [
-			"Laranxa",
-			"Monicapozo03"
-		]
-	},
-	"language": "español",
-	"isocode": "es",
-	"nav": {
-		"home": "Inicio"
-	},
-	"book": {
-		"title": "Título",
-		"languages": "Idioma",
-		"license": "Licencia",
-		"licensePd": "De dominio público en EEUU.",
-		"licenseCopyright": "Tiene derechos de autor. Lea el aviso de derechos de autor dentro de este libro para más detalles.",
-		"cover": "Portada del libro",
-		"coverLabel": "(portada)",
-		"anonymous": "Anónimo",
-		"various": "Varios"
-	},
-	"common": {
-		"loading": "Cargando...",
-		"search": "Buscar",
-		"sortPopularity": "Ordenar libros por popularidad",
-		"sortTitle": "Ordenar libros por título",
-		"chooseLanguage": "Elija un idioma...",
-		"mainLanguages": "Idiomas principales",
-		"otherLanguages": "Otros idiomas",
-		"anyCatalog": "Elija en el catálogo",
-		"uiLanguage": "Idioma de la interfaz",
-		"returnHome": "Volver al inicio",
-		"sortAuthor": "Autor"
-	},
-	"messages": {
-		"noBooks": "No hay datos disponibles en la tabla"
-	},
-	"metadata_defaults": {
-		"title": "Biblioteca Proyecto Gutenberg",
-		"description": "Los libros en español del primer productor de libros electrónicos gratuitos"
-	},
-	"lccShelves": {
-		"A": "A-Obras generales",
-		"B": "B-Filosofía, psicología, religión",
-		"C": "C-Ciencias auxiliares de la historia",
-		"D": "D-Historia mundial e historia de Europa, Asia, África, Australia, Nueva Zelanda, etc.",
-		"E": "E-Historia de las Américas",
-		"F": "F-Historia de las Américas",
-		"G": "G-Geografía, antropología, recreación",
-		"H": "H-Ciencias sociales",
-		"J": "J-Ciencias políticas",
-		"K": "K-Derecho",
-		"L": "L-Educación",
-		"M": "M-Música y libros sobre música",
-		"N": "N-Bellas artes",
-		"P": "P-Lengua y literatura",
-		"Q": "Q-Ciencia",
-		"R": "R-Medicina",
-		"S": "S-Agricultura",
-		"T": "T-Tecnología",
-		"U": "U-Ciencia militar",
-		"V": "V-Ciencia naval",
-		"Z": "Z-Bibliografía, bibliotecología, recursos de la información (general)",
-		"PA": "PA-Lengua y literatura griega y latina",
-		"PB": "PB-Lenguas modernas y celtas",
-		"PC": "PC-Lenguas romances",
-		"PD": "PD-Lenguas germánicas y escandinavas",
-		"PE": "PE-Lengua inglesa",
-		"PF": "PF-Lenguas germánicas occidentales",
-		"PG": "PG-Lenguas eslavas, bálticas y albanesas",
-		"PH": "PH-Lenguas urálicas y vascas",
-		"PJ": "PJ-Lenguas y literaturas orientales",
-		"PK": "PK-Lenguas y literaturas indoiraníes",
-		"PL": "PL-Lenguas y literaturas de Asia Oriental, África y Oceanía",
-		"PM": "PM-Lenguas hiperbóreas, indias y artificiales",
-		"PN": "PN-Literatura (General)",
-		"PQ": "PQ-Literatura francesa, italiana, española y portuguesa",
-		"PR": "PR-Literatura inglesa",
-		"PS": "PS-Literatura estadounidense",
-		"PT": "PT-Literatura alemana, holandesa, flamenca, africana, escandinava, nórdica antigua, islandesa antigua, noruega antigua, islandesa moderna, faroesa, danesa, noruega y Sueca",
-		"PZ": "PZ-Ficción y bellas letras juveniles"
-	}
+  "language": "español",
+  "isocode": "es",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Laranxa",
+        "Monicapozo03"
+      ]
+    },
+    "nav": {
+      "home": "Inicio"
+    },
+    "book": {
+      "title": "Título",
+      "languages": "Idioma",
+      "license": "Licencia",
+      "licensePd": "De dominio público en EEUU.",
+      "licenseCopyright": "Tiene derechos de autor. Lea el aviso de derechos de autor dentro de este libro para más detalles.",
+      "cover": "Portada del libro",
+      "coverLabel": "(portada)",
+      "anonymous": "Anónimo",
+      "various": "Varios"
+    },
+    "common": {
+      "loading": "Cargando...",
+      "search": "Buscar",
+      "sortPopularity": "Ordenar libros por popularidad",
+      "sortTitle": "Ordenar libros por título",
+      "chooseLanguage": "Elija un idioma...",
+      "mainLanguages": "Idiomas principales",
+      "otherLanguages": "Otros idiomas",
+      "anyCatalog": "Elija en el catálogo",
+      "uiLanguage": "Idioma de la interfaz",
+      "returnHome": "Volver al inicio",
+      "sortAuthor": "Autor"
+    },
+    "messages": {
+      "noBooks": "No hay datos disponibles en la tabla"
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Biblioteca Proyecto Gutenberg",
+      "description": "Los libros en español del primer productor de libros electrónicos gratuitos"
+    },
+    "collections": {
+      "A": "A-Obras generales",
+      "B": "B-Filosofía, psicología, religión",
+      "C": "C-Ciencias auxiliares de la historia",
+      "D": "D-Historia mundial e historia de Europa, Asia, África, Australia, Nueva Zelanda, etc.",
+      "E": "E-Historia de las Américas",
+      "F": "F-Historia de las Américas",
+      "G": "G-Geografía, antropología, recreación",
+      "H": "H-Ciencias sociales",
+      "J": "J-Ciencias políticas",
+      "K": "K-Derecho",
+      "L": "L-Educación",
+      "M": "M-Música y libros sobre música",
+      "N": "N-Bellas artes",
+      "P": "P-Lengua y literatura",
+      "Q": "Q-Ciencia",
+      "R": "R-Medicina",
+      "S": "S-Agricultura",
+      "T": "T-Tecnología",
+      "U": "U-Ciencia militar",
+      "V": "V-Ciencia naval",
+      "Z": "Z-Bibliografía, bibliotecología, recursos de la información (general)",
+      "PA": "PA-Lengua y literatura griega y latina",
+      "PB": "PB-Lenguas modernas y celtas",
+      "PC": "PC-Lenguas romances",
+      "PD": "PD-Lenguas germánicas y escandinavas",
+      "PE": "PE-Lengua inglesa",
+      "PF": "PF-Lenguas germánicas occidentales",
+      "PG": "PG-Lenguas eslavas, bálticas y albanesas",
+      "PH": "PH-Lenguas urálicas y vascas",
+      "PJ": "PJ-Lenguas y literaturas orientales",
+      "PK": "PK-Lenguas y literaturas indoiraníes",
+      "PL": "PL-Lenguas y literaturas de Asia Oriental, África y Oceanía",
+      "PM": "PM-Lenguas hiperbóreas, indias y artificiales",
+      "PN": "PN-Literatura (General)",
+      "PQ": "PQ-Literatura francesa, italiana, española y portuguesa",
+      "PR": "PR-Literatura inglesa",
+      "PS": "PS-Literatura estadounidense",
+      "PT": "PT-Literatura alemana, holandesa, flamenca, africana, escandinava, nórdica antigua, islandesa antigua, noruega antigua, islandesa moderna, faroesa, danesa, noruega y Sueca",
+      "PZ": "PZ-Ficción y bellas letras juveniles"
+    }
+  }
 }

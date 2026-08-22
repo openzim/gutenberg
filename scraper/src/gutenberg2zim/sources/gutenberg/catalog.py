@@ -14,7 +14,6 @@ from pathlib import Path
 from gutenberg2zim.constants import logger
 from gutenberg2zim.core.download_engine import DownloadEngine
 from gutenberg2zim.core.ports import (
-    CatalogEntryLike,
     CatalogFilters,
     CatalogPort,
     DownloadRequest,
@@ -93,7 +92,7 @@ def download_csv_file(csv_path: Path, csv_url: str, engine: DownloadEngine) -> N
     engine.download(DownloadRequest(url=csv_url, format_name="csv"), dest=csv_path)
 
 
-def load_catalog(csv_path: Path) -> list[CatalogEntryLike]:
+def load_catalog(csv_path: Path) -> list[CatalogEntry]:
     """
     Load catalog from CSV and return a list of catalog entries.
 
@@ -102,7 +101,7 @@ def load_catalog(csv_path: Path) -> list[CatalogEntryLike]:
           lcc_shelf
     """
     logger.info(f"\tLoading catalog from {csv_path}")
-    catalog: list[CatalogEntryLike] = []
+    catalog: list[CatalogEntry] = []
 
     with gzip.open(csv_path, "rt", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -136,11 +135,11 @@ def load_catalog(csv_path: Path) -> list[CatalogEntryLike]:
 
 
 def filter_books(
-    catalog: list[CatalogEntryLike],
+    catalog: list[CatalogEntry],
     languages: list[str] | None = None,
     only_books: list[int] | None = None,
     lcc_shelves: list[str] | None = None,
-) -> list[CatalogEntryLike]:
+) -> list[CatalogEntry]:
     """
     Filter books based on languages, book IDs, and LCC shelves.
 
@@ -154,7 +153,7 @@ def filter_books(
     Returns:
         list: List of book IDs that match the filters
     """
-    filtered: list[CatalogEntryLike] = []
+    filtered: list[CatalogEntry] = []
 
     for entry in catalog:
         # Filter by specific book IDs if requested
@@ -207,7 +206,7 @@ class GutenbergCsvCatalog(CatalogPort):
             WorkRef(
                 id=str(entry.book_id),
                 source=GUTENBERG_SOURCE,
-                extra={"languages": entry.languages, "lcc_shelf": entry.lcc_shelf},
+                extra={"languages": entry.languages},
             )
             for entry in entries
         ]

@@ -1,141 +1,134 @@
 {
-	"@metadata": {
-		"authors": [
-			"Benoit74",
-			"Chpol",
-			"Dash777"
-		]
-	},
-	"language": "Français",
-	"isocode": "fr",
-	"nav": {
-		"home": "Page d'accueil",
-		"authors": "Auteurs",
-		"shelves": "Bibliothèques",
-		"about": "À propos",
-		"books": "Livres"
-	},
-	"about": {
-		"introHeading": "À propos du projet Gutenberg"
-	},
-	"book": {
-		"title": "Titre",
-		"downloads": "téléchargements",
-		"downloadCount": "Nombre de téléchargements",
-		"languages": "Langue",
-		"lccShelf": "Bibliothèque LCC",
-		"license": "Licence",
-		"licensePd": "Domaine public aux États-Unis.",
-		"licenseCopyright": "Protégé par le droit d'auteur. Consultez la mention de droit d'auteur à l'intérieur de ce livre pour plus de détails.",
-		"fullName": "Nom complet",
-		"worksAvailable": "Œuvres disponibles",
-		"unknown": "Non disponible",
-		"cover": "Couverture du livre",
-		"coverLabel": "(couverture)",
-		"anonymous": "Anonyme",
-		"various": "Plusieurs"
-	},
-	"author": {
-		"bookCount": "{n} livre | {n} livres"
-	},
-	"shelf": {
-		"booksIn": "Livres dans"
-	},
-	"common": {
-		"loading": "Chargement...",
-		"loadingBook": "Chargement des informations sur le livre…",
-		"loadingAuthor": "Chargement des informations sur l'auteur…",
-		"loadingItems": "Chargement de {type}…",
-		"showing": "Affichage",
-		"of": "sur",
-		"search": "Rechercher",
-		"sortBy": "Trier par",
-		"sortPopularity": "Trier les livres par popularité",
-		"sortTitle": "Trier les livres par titre",
-		"chooseLanguage": "Choisissez une langue...",
-		"mainLanguages": "Langues principales",
-		"otherLanguages": "Autres langues",
-		"anyCatalog": "Choisir le catalogue",
-		"uiLanguage": "Langue de l`interface",
-		"selectInterfaceLanguage": "Sélectionner la langue de l’interface",
-		"filterBy": "Filtrer par",
-		"filterByTitle": "Filtrer par {title}",
-		"gridView": "Affichage en grille",
-		"listView": "Affichage en liste",
-		"browseAll": "Tout parcourir",
-		"browseAllAuthors": "Parcourir tous les auteurs",
-		"returnHome": "Retour",
-		"toggleNavigationMenu": "Bascule du menu de navigation",
-		"mainNavigation": "Navigation principale",
-		"mobileNavigationMenu": "Menu de navigation mobile",
-		"mobileNavigation": "Navigation mobile",
-		"navigateTo": "Naviguer vers",
-		"navigateToItem": "Accédez à {item}",
-		"gutenbergHome": "Accueil Gutenberg",
-		"sortAuthor": "Auteur"
-	},
-	"messages": {
-		"noBooks": "Pas de données disponibles",
-		"noAuthors": "Aucun auteur trouvé.",
-		"noShelves": "Aucune bibliothèque trouvée.",
-		"noBooksForAuthor": "Aucun livre n'est disponible pour cet auteur.",
-		"noBooksInShelf": "Aucun livre n'est disponible dans cette bibliothèque.",
-		"noLanguages": "Aucune langue disponible.",
-		"noFormats": "Aucun format disponible.",
-		"notFoundBook": "Livre introuvable. Le livre que vous recherchez n'existe pas ou a été supprimé.",
-		"notFoundAuthor": "Auteur introuvable. L'auteur que vous recherchez n'existe pas ou a été supprimé.",
-		"notFoundShelf": "Bibliothèque LCC introuvable. La bibliothèque que vous recherchez n'existe pas ou a été retirée."
-	},
-	"metadata_defaults": {
-		"title": "Projet Bibliothèque Gutenberg",
-		"description": "Tous les livres en français du premier producteur d'ebooks gratuits"
-	},
-	"footer": {
-	},
-	"itemTypes": {
-		"books": "livre | livres",
-		"authors": "auteur | auteurs",
-		"shelves": "bibliothèque | bibliothèques"
-	},
-	"lccShelves": {
-		"A": "A-Généralités",
-		"B": "B-Philosophie, psychologie, religion",
-		"C": "C-Sciences auxiliaires de l'histoire",
-		"D": "D-Histoire du monde et histoire de l'Europe, l'Asie, l'Afrique, l'Australie, la Nouvelle-Zélande, etc.",
-		"E": "E-Histoire des Amériques (généralités et États-Unis)",
-		"F": "F-Histoire des Amériques (autres pays d'Amérique)",
-		"G": "G-Géographie, anthropologie, loisir",
-		"H": "H-Sciences sociales",
-		"J": "J-Sciences politiques",
-		"K": "K-Droit",
-		"L": "L-Éducation",
-		"M": "M-Musique et livres sur la musique",
-		"N": "N-Beaux-Arts",
-		"P": "P-Langage et littérature",
-		"Q": "Q-Sciences",
-		"R": "R-Médecine",
-		"S": "S-Agriculture",
-		"T": "T-Technologie",
-		"U": "U-Science militaire",
-		"V": "V-Science navale",
-		"Z": "Z-Bibliographie, bibliothéconomie, ressources d'information",
-		"PA": "PA-Langue et littérature grecques et latines",
-		"PB": "PB-Langues modernes et celtiques",
-		"PC": "PC-Langues romanes",
-		"PD": "PD-Langues germaniques et scandinaves",
-		"PE": "PE-Langue anglaise",
-		"PF": "PF-Langues germaniques occidentales",
-		"PG": "PG-Langues slaves, baltes et albanaises",
-		"PH": "PH-Langues ouraliennes et basques",
-		"PJ": "PJ-Langues et littératures orientales",
-		"PK": "PK-Langues et littératures indo-iraniennes",
-		"PL": "PL-Langues et littératures d'Asie de l'Est, d'Afrique et d'Océanie",
-		"PM": "PM-Langues hyperboréennes, indiennes et artificielles",
-		"PN": "PN-Littérature (général)",
-		"PQ": "PQ-Littérature française, italienne, espagnole et portugaise",
-		"PR": "PR-Littérature anglaise",
-		"PS": "PS-Littérature américaine",
-		"PT": "PT - Littératures allemande, néerlandaise, flamande, afrikaans, scandinave, vieux norrois, ancienne islandaise, vieux norvégien, islandais moderne, féroïen, danois, norvégien et suédois",
-		"PZ": "PZ-Fiction et belles lettres pour jeunes"
-	}
+  "language": "Français",
+  "isocode": "fr",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Benoit74",
+        "Chpol",
+        "Dash777"
+      ]
+    },
+    "nav": {
+      "home": "Page d'accueil",
+      "authors": "Auteurs",
+      "about": "À propos",
+      "books": "Livres"
+    },
+    "book": {
+      "title": "Titre",
+      "downloads": "téléchargements",
+      "downloadCount": "Nombre de téléchargements",
+      "languages": "Langue",
+      "license": "Licence",
+      "licensePd": "Domaine public aux États-Unis.",
+      "licenseCopyright": "Protégé par le droit d'auteur. Consultez la mention de droit d'auteur à l'intérieur de ce livre pour plus de détails.",
+      "fullName": "Nom complet",
+      "worksAvailable": "Œuvres disponibles",
+      "unknown": "Non disponible",
+      "cover": "Couverture du livre",
+      "coverLabel": "(couverture)",
+      "anonymous": "Anonyme",
+      "various": "Plusieurs"
+    },
+    "author": {
+      "bookCount": "{n} livre | {n} livres"
+    },
+    "common": {
+      "loading": "Chargement...",
+      "loadingBook": "Chargement des informations sur le livre…",
+      "loadingAuthor": "Chargement des informations sur l'auteur…",
+      "loadingItems": "Chargement de {type}…",
+      "showing": "Affichage",
+      "of": "sur",
+      "search": "Rechercher",
+      "sortBy": "Trier par",
+      "sortPopularity": "Trier les livres par popularité",
+      "sortTitle": "Trier les livres par titre",
+      "chooseLanguage": "Choisissez une langue...",
+      "mainLanguages": "Langues principales",
+      "otherLanguages": "Autres langues",
+      "anyCatalog": "Choisir le catalogue",
+      "uiLanguage": "Langue de l`interface",
+      "selectInterfaceLanguage": "Sélectionner la langue de l’interface",
+      "filterBy": "Filtrer par",
+      "filterByTitle": "Filtrer par {title}",
+      "gridView": "Affichage en grille",
+      "listView": "Affichage en liste",
+      "browseAll": "Tout parcourir",
+      "browseAllAuthors": "Parcourir tous les auteurs",
+      "returnHome": "Retour",
+      "toggleNavigationMenu": "Bascule du menu de navigation",
+      "mainNavigation": "Navigation principale",
+      "mobileNavigationMenu": "Menu de navigation mobile",
+      "mobileNavigation": "Navigation mobile",
+      "navigateTo": "Naviguer vers",
+      "navigateToItem": "Accédez à {item}",
+      "sortAuthor": "Auteur"
+    },
+    "messages": {
+      "noBooks": "Pas de données disponibles",
+      "noAuthors": "Aucun auteur trouvé.",
+      "noBooksForAuthor": "Aucun livre n'est disponible pour cet auteur.",
+      "noLanguages": "Aucune langue disponible.",
+      "noFormats": "Aucun format disponible.",
+      "notFoundBook": "Livre introuvable. Le livre que vous recherchez n'existe pas ou a été supprimé.",
+      "notFoundAuthor": "Auteur introuvable. L'auteur que vous recherchez n'existe pas ou a été supprimé."
+    },
+    "itemTypes": {
+      "books": "livre | livres",
+      "authors": "auteur | auteurs"
+    }
+  },
+  "gutenberg": {
+    "about": {
+      "introHeading": "À propos du projet Gutenberg"
+    },
+    "metadata_defaults": {
+      "title": "Projet Bibliothèque Gutenberg",
+      "description": "Tous les livres en français du premier producteur d'ebooks gratuits"
+    },
+    "footer": {},
+    "collections": {
+      "A": "A-Généralités",
+      "B": "B-Philosophie, psychologie, religion",
+      "C": "C-Sciences auxiliaires de l'histoire",
+      "D": "D-Histoire du monde et histoire de l'Europe, l'Asie, l'Afrique, l'Australie, la Nouvelle-Zélande, etc.",
+      "E": "E-Histoire des Amériques (généralités et États-Unis)",
+      "F": "F-Histoire des Amériques (autres pays d'Amérique)",
+      "G": "G-Géographie, anthropologie, loisir",
+      "H": "H-Sciences sociales",
+      "J": "J-Sciences politiques",
+      "K": "K-Droit",
+      "L": "L-Éducation",
+      "M": "M-Musique et livres sur la musique",
+      "N": "N-Beaux-Arts",
+      "P": "P-Langage et littérature",
+      "Q": "Q-Sciences",
+      "R": "R-Médecine",
+      "S": "S-Agriculture",
+      "T": "T-Technologie",
+      "U": "U-Science militaire",
+      "V": "V-Science navale",
+      "Z": "Z-Bibliographie, bibliothéconomie, ressources d'information",
+      "PA": "PA-Langue et littérature grecques et latines",
+      "PB": "PB-Langues modernes et celtiques",
+      "PC": "PC-Langues romanes",
+      "PD": "PD-Langues germaniques et scandinaves",
+      "PE": "PE-Langue anglaise",
+      "PF": "PF-Langues germaniques occidentales",
+      "PG": "PG-Langues slaves, baltes et albanaises",
+      "PH": "PH-Langues ouraliennes et basques",
+      "PJ": "PJ-Langues et littératures orientales",
+      "PK": "PK-Langues et littératures indo-iraniennes",
+      "PL": "PL-Langues et littératures d'Asie de l'Est, d'Afrique et d'Océanie",
+      "PM": "PM-Langues hyperboréennes, indiennes et artificielles",
+      "PN": "PN-Littérature (général)",
+      "PQ": "PQ-Littérature française, italienne, espagnole et portugaise",
+      "PR": "PR-Littérature anglaise",
+      "PS": "PS-Littérature américaine",
+      "PT": "PT - Littératures allemande, néerlandaise, flamande, afrikaans, scandinave, vieux norrois, ancienne islandaise, vieux norvégien, islandais moderne, féroïen, danois, norvégien et suédois",
+      "PZ": "PZ-Fiction et belles lettres pour jeunes"
+    }
+  }
 }

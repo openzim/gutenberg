@@ -59,15 +59,15 @@ const i18n = createI18n({
         unknown: 'Unknown',
         downloadsCount: '{n} downloads'
       },
-      shelf: {
+      collection: {
         bookCount: '{n} book | {n} books'
       },
       messages: {
         noBooksForAuthor: 'No books available for this author',
-        noBooksInShelf: 'No books in this shelf',
+        noBooksInCollection: 'No books in this collection',
         noBooks: 'No books found',
         noAuthors: 'No authors found',
-        noShelves: 'No shelves found',
+        noCollections: 'No collections found',
         noLanguages: 'No languages available',
         noFormats: 'No formats available'
       }

@@ -1,139 +1,132 @@
 {
-	"@metadata": {
-		"authors": [
-			"McDutchie"
-		]
-	},
-	"language": "Interlingua",
-	"isocode": "ia",
-	"nav": {
-		"home": "Pagina initial",
-		"authors": "Autores",
-		"shelves": "Plancas",
-		"about": "A proposito",
-		"books": "Libros"
-	},
-	"about": {
-		"introHeading": "A proposito del Projecto Gutenberg"
-	},
-	"book": {
-		"title": "Titulo",
-		"downloads": "discargamentos",
-		"downloadCount": "Numero de discargamentos",
-		"languages": "Lingua",
-		"lccShelf": "Planca LCC",
-		"license": "Licentia",
-		"licensePd": "De dominio public in le Statos Unite.",
-		"licenseCopyright": "Protegite per le derecto de autor. Consulta le aviso de derecto de autor in iste libro pro plus detalios.",
-		"fullName": "Nomine complete",
-		"worksAvailable": "Obras disponibile",
-		"unknown": "Incognite",
-		"cover": "Copertura de libro",
-		"coverLabel": "(copertura)",
-		"anonymous": "Anonyme",
-		"various": "Plures"
-	},
-	"author": {
-		"bookCount": "{n} libro | {n} libros"
-	},
-	"shelf": {
-		"booksIn": "Libros in"
-	},
-	"common": {
-		"loading": "Cargamento…",
-		"loadingBook": "Cargamento del detalios del libro…",
-		"loadingAuthor": "Cargamento del detalios del autor…",
-		"loadingItems": "Cargamento de {type}…",
-		"showing": "Es monstrate",
-		"of": "de",
-		"search": "Cercar",
-		"sortBy": "Ordinar per",
-		"sortPopularity": "Ordinar libros per popularitate",
-		"sortTitle": "Ordinar libros per titulo",
-		"chooseLanguage": "Elige un lingua…",
-		"mainLanguages": "Linguas principal",
-		"otherLanguages": "Altere linguas",
-		"anyCatalog": "Elige le catalogo",
-		"uiLanguage": "Lingua del interfacie",
-		"selectInterfaceLanguage": "Selige le lingua del interfacie",
-		"filterBy": "Filtrar per",
-		"filterByTitle": "Filtrar per {title}",
-		"gridView": "Disposition in grillia",
-		"listView": "Disposition in lista",
-		"browseAll": "Explorar toto",
-		"browseAllAuthors": "Explorar tote le autores",
-		"returnHome": "Retornar al initio",
-		"toggleNavigationMenu": "Monstrar/celar le menu de navigation",
-		"mainNavigation": "Navigation principal",
-		"mobileNavigationMenu": "Menu de navigation mobile",
-		"mobileNavigation": "Navigation mobile",
-		"navigateTo": "Navigar a",
-		"navigateToItem": "Navigar a {item}",
-		"gutenbergHome": "Pagina principal de Gutenberg",
-		"sortAuthor": "Autor"
-	},
-	"messages": {
-		"noBooks": "Nulle datos disponibile in tabella",
-		"noAuthors": "Necun autor trovate.",
-		"noShelves": "Necun planca trovate.",
-		"noBooksForAuthor": "Necun libro de iste autor es disponibile.",
-		"noBooksInShelf": "Necun libro es disponibile in iste planca.",
-		"noLanguages": "Necun lingua disponibile.",
-		"noFormats": "Nulle formato disponibile.",
-		"notFoundBook": "Libro non trovate. Le libro que tu cerca non existe o ha essite removite.",
-		"notFoundAuthor": "Autor non trovate. Le autor que tu cerca non existe o ha essite removite.",
-		"notFoundShelf": "Planca LCC non trovate. Le planca que tu cerca non existe o ha essite removite."
-	},
-	"metadata_defaults": {
-		"title": "Bibliotheca Project Gutenberg",
-		"description": "Omne libros in Interlingua ab le prime productor de Ebooks gratuite"
-	},
-	"footer": {
-	},
-	"itemTypes": {
-		"books": "libro | libros",
-		"authors": "autor | autores",
-		"shelves": "planca | plancas"
-	},
-	"lccShelves": {
-		"A": "A-Obras general",
-		"B": "B-Philosophia, psychologia, religion",
-		"C": "C-Scientias auxiliar del historia",
-		"D": "D-Historia del mundo e de Europa, Asia, Africa, Australia, Nove Zelanda, etc.",
-		"E": "E-Historia del Americas",
-		"F": "F-Historia del Americas",
-		"G": "G-Geographia, anthropologia, recreation",
-		"H": "H-Scientias social",
-		"J": "J-Politicologia",
-		"K": "K-Derecto",
-		"L": "L-Education",
-		"M": "M-Musica e libros sur musica",
-		"N": "N-Belle artes",
-		"P": "P-Lingua e litteratura",
-		"Q": "Q-Scientia",
-		"R": "R-Medicina",
-		"S": "S-Agricultura",
-		"T": "T-Technologia",
-		"U": "U-Scientia militar",
-		"V": "V-Scientia naval",
-		"Z": "Z-Bibliographia, bibliotheconomia, ressources de information (general)",
-		"PA": "PA-Lingua e litteratura grec e latin",
-		"PB": "PB-Linguas moderne e celtic",
-		"PC": "PC-Linguas romanic",
-		"PD": "PD-Linguas germanic e scandinave",
-		"PE": "PE-Lingua anglese",
-		"PF": "PF-Linguas germanic occidental",
-		"PG": "PG-Linguas slave, baltic e albanese",
-		"PH": "PH-Linguas uralic e basc",
-		"PJ": "PJ-Linguas e litteraturas oriental",
-		"PK": "PK-Linguas e litteraturas indo-iranian",
-		"PL": "PL-Linguas e litteraturas de Asia del Est, Africa, Oceania",
-		"PM": "PM-Linguas hyperboree, indian e artificial",
-		"PN": "PN-Litteratura (general)",
-		"PQ": "PQ-Litteratura francese, italian, espaniol e portugese",
-		"PR": "PR-Litteratura anglese",
-		"PS": "PS-Litteratura american",
-		"PT": "PT-Litteratura german, nederlandese, flaminge, afrikaans, scandinave, nordico ancian, islandese ancian, norvegiano ancian, islandese moderne, faroese, danese, norvegiano e svedese",
-		"PZ": "PZ-Fiction e belle litteras pro juvenes"
-	}
+  "language": "Interlingua",
+  "isocode": "ia",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "McDutchie"
+      ]
+    },
+    "nav": {
+      "home": "Pagina initial",
+      "authors": "Autores",
+      "about": "A proposito",
+      "books": "Libros"
+    },
+    "book": {
+      "title": "Titulo",
+      "downloads": "discargamentos",
+      "downloadCount": "Numero de discargamentos",
+      "languages": "Lingua",
+      "license": "Licentia",
+      "licensePd": "De dominio public in le Statos Unite.",
+      "licenseCopyright": "Protegite per le derecto de autor. Consulta le aviso de derecto de autor in iste libro pro plus detalios.",
+      "fullName": "Nomine complete",
+      "worksAvailable": "Obras disponibile",
+      "unknown": "Incognite",
+      "cover": "Copertura de libro",
+      "coverLabel": "(copertura)",
+      "anonymous": "Anonyme",
+      "various": "Plures"
+    },
+    "author": {
+      "bookCount": "{n} libro | {n} libros"
+    },
+    "common": {
+      "loading": "Cargamento…",
+      "loadingBook": "Cargamento del detalios del libro…",
+      "loadingAuthor": "Cargamento del detalios del autor…",
+      "loadingItems": "Cargamento de {type}…",
+      "showing": "Es monstrate",
+      "of": "de",
+      "search": "Cercar",
+      "sortBy": "Ordinar per",
+      "sortPopularity": "Ordinar libros per popularitate",
+      "sortTitle": "Ordinar libros per titulo",
+      "chooseLanguage": "Elige un lingua…",
+      "mainLanguages": "Linguas principal",
+      "otherLanguages": "Altere linguas",
+      "anyCatalog": "Elige le catalogo",
+      "uiLanguage": "Lingua del interfacie",
+      "selectInterfaceLanguage": "Selige le lingua del interfacie",
+      "filterBy": "Filtrar per",
+      "filterByTitle": "Filtrar per {title}",
+      "gridView": "Disposition in grillia",
+      "listView": "Disposition in lista",
+      "browseAll": "Explorar toto",
+      "browseAllAuthors": "Explorar tote le autores",
+      "returnHome": "Retornar al initio",
+      "toggleNavigationMenu": "Monstrar/celar le menu de navigation",
+      "mainNavigation": "Navigation principal",
+      "mobileNavigationMenu": "Menu de navigation mobile",
+      "mobileNavigation": "Navigation mobile",
+      "navigateTo": "Navigar a",
+      "navigateToItem": "Navigar a {item}",
+      "sortAuthor": "Autor"
+    },
+    "messages": {
+      "noBooks": "Nulle datos disponibile in tabella",
+      "noAuthors": "Necun autor trovate.",
+      "noBooksForAuthor": "Necun libro de iste autor es disponibile.",
+      "noLanguages": "Necun lingua disponibile.",
+      "noFormats": "Nulle formato disponibile.",
+      "notFoundBook": "Libro non trovate. Le libro que tu cerca non existe o ha essite removite.",
+      "notFoundAuthor": "Autor non trovate. Le autor que tu cerca non existe o ha essite removite."
+    },
+    "itemTypes": {
+      "books": "libro | libros",
+      "authors": "autor | autores"
+    }
+  },
+  "gutenberg": {
+    "about": {
+      "introHeading": "A proposito del Projecto Gutenberg"
+    },
+    "metadata_defaults": {
+      "title": "Bibliotheca Project Gutenberg",
+      "description": "Omne libros in Interlingua ab le prime productor de Ebooks gratuite"
+    },
+    "footer": {},
+    "collections": {
+      "A": "A-Obras general",
+      "B": "B-Philosophia, psychologia, religion",
+      "C": "C-Scientias auxiliar del historia",
+      "D": "D-Historia del mundo e de Europa, Asia, Africa, Australia, Nove Zelanda, etc.",
+      "E": "E-Historia del Americas",
+      "F": "F-Historia del Americas",
+      "G": "G-Geographia, anthropologia, recreation",
+      "H": "H-Scientias social",
+      "J": "J-Politicologia",
+      "K": "K-Derecto",
+      "L": "L-Education",
+      "M": "M-Musica e libros sur musica",
+      "N": "N-Belle artes",
+      "P": "P-Lingua e litteratura",
+      "Q": "Q-Scientia",
+      "R": "R-Medicina",
+      "S": "S-Agricultura",
+      "T": "T-Technologia",
+      "U": "U-Scientia militar",
+      "V": "V-Scientia naval",
+      "Z": "Z-Bibliographia, bibliotheconomia, ressources de information (general)",
+      "PA": "PA-Lingua e litteratura grec e latin",
+      "PB": "PB-Linguas moderne e celtic",
+      "PC": "PC-Linguas romanic",
+      "PD": "PD-Linguas germanic e scandinave",
+      "PE": "PE-Lingua anglese",
+      "PF": "PF-Linguas germanic occidental",
+      "PG": "PG-Linguas slave, baltic e albanese",
+      "PH": "PH-Linguas uralic e basc",
+      "PJ": "PJ-Linguas e litteraturas oriental",
+      "PK": "PK-Linguas e litteraturas indo-iranian",
+      "PL": "PL-Linguas e litteraturas de Asia del Est, Africa, Oceania",
+      "PM": "PM-Linguas hyperboree, indian e artificial",
+      "PN": "PN-Litteratura (general)",
+      "PQ": "PQ-Litteratura francese, italian, espaniol e portugese",
+      "PR": "PR-Litteratura anglese",
+      "PS": "PS-Litteratura american",
+      "PT": "PT-Litteratura german, nederlandese, flaminge, afrikaans, scandinave, nordico ancian, islandese ancian, norvegiano ancian, islandese moderne, faroese, danese, norvegiano e svedese",
+      "PZ": "PZ-Fiction e belle litteras pro juvenes"
+    }
+  }
 }

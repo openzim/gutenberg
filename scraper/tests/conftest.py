@@ -40,7 +40,8 @@ def mock_work(mock_creator):
         license="Public domain in the USA.",
         cover=Cover(),
         collections=[CollectionRef(id="DT", name="DT", kind="lcc_shelf")],
-        extra={"downloads": 548, "has_cover": True},
+        primary_metric=548,
+        extra={"has_cover": True},
     )
 
 

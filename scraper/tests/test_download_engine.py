@@ -78,6 +78,18 @@ def test_explicit_target_is_honored(engine, session, tmp_path):
     assert dest.parent.exists()
 
 
+def test_explicit_target_does_not_require_or_create_a_cache(tmp_path, session):
+    engine = DownloadEngine(session=session)
+    session.get.return_value = _streaming_response([b"payload"])
+    dest = tmp_path / "out" / "book.epub"
+
+    result = engine.download(DownloadRequest(url=URL, format_name="epub"), dest=dest)
+
+    assert result.path == dest
+    assert result.path.read_bytes() == b"payload"
+    assert not engine.cache_enabled
+
+
 def test_retries_transient_error_then_succeeds(engine, session):
     session.get.side_effect = [
         requests.ConnectionError("connection reset"),

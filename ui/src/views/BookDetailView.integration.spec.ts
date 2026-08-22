@@ -25,10 +25,10 @@ const mockBookData: Book = {
   languages: ['en'],
   popularity: 5,
   coverPath: '/covers/1.jpg',
-  lccShelf: 'PR',
+  primaryCollection: 'PR',
   subtitle: null,
   license: 'Public domain',
-  downloads: 50000,
+  primaryMetric: 50000,
   description: 'A classic novel of manners',
   formats: [
     { format: 'html', path: 'https://example.com/1.html', available: true },
@@ -104,8 +104,8 @@ describe('BookDetailView Integration', () => {
 
       const coverImage = wrapper.find('img.detail-cover')
       expect(coverImage.exists()).toBe(true)
-      expect(coverImage.attributes('src')).toBe('.//covers/1.jpg')
-      expect(coverImage.attributes('alt')).toBe('Pride and Prejudice book.coverLabel')
+      expect(coverImage.attributes('src')).toBe('/covers/1.jpg')
+      expect(coverImage.attributes('alt')).toBe('book.coverAlt')
     })
   })
 

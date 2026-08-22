@@ -1,14 +1,25 @@
 <script setup lang="ts">
 import type { Book } from '@/types'
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useFormatters } from '@/composables/useFormatters'
-import { normalizeImagePath, formatDownloads, formatLabel } from '@/utils/format-utils'
+import {
+  normalizeImagePath,
+  normalizeZimPath,
+  formatMetric,
+  formatLabel
+} from '@/utils/format-utils'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
 import FireRating from '@/components/common/FireRating.vue'
+import EpubReader from '@/components/reader/EpubReader.vue'
+import PdfReader from '@/components/reader/PdfReader.vue'
+import { useMainStore } from '@/stores/main'
+import { useDisplay } from 'vuetify'
 
 const { t } = useI18n()
 const { formatLanguages } = useFormatters()
+const main = useMainStore()
+const { mdAndDown, xs } = useDisplay()
 
 const props = defineProps<{
   book: Book
@@ -20,10 +31,39 @@ function orderedFormats(order: string[]) {
     .filter((f): f is NonNullable<typeof f> => !!f)
 }
 
-const viewFormats = computed(() => orderedFormats(['html']))
+const readerFormat = ref<string | null>(null)
+const readerSource = computed(() => {
+  const path = props.book.formats.find((format) => format.format === readerFormat.value)?.path
+  return path ? normalizeZimPath(path) : ''
+})
+const readerOpen = computed({
+  get: () => readerFormat.value !== null,
+  set: (open: boolean) => {
+    if (!open) readerFormat.value = null
+  }
+})
+const viewFormats = computed(() =>
+  orderedFormats(['html', 'epub', 'pdf']).filter(
+    (format) =>
+      format.format === 'html' ||
+      (format.format === 'epub' && main.config?.features.epubReader) ||
+      (format.format === 'pdf' && main.config?.features.pdfReader)
+  )
+)
 const downloadFormats = computed(() => orderedFormats(['pdf', 'epub']))
+const availableDownloadFormats = computed(() =>
+  downloadFormats.value.filter((format) => format.available)
+)
 
-const showFullDescription = ref(false)
+function openReader(format: string) {
+  readerFormat.value = format
+}
+
+const showFullDescriptionMobile = ref(false)
+const showFullDescriptionDesktop = ref(false)
+const descriptionRef = ref<HTMLElement | null>(null)
+const shouldTruncateDesktop = ref(false)
+let descriptionResizeObserver: ResizeObserver | null = null
 
 const cleanDescription = computed(() =>
   props.book.description
@@ -33,14 +73,50 @@ const cleanDescription = computed(() =>
 
 const cleanLicense = computed(() => props.book.license?.replace(/\.$/, ''))
 
-const shouldTruncate = computed(() => {
+const shouldTruncateMobile = computed(() => {
   if (!cleanDescription.value) return false
   return cleanDescription.value.length > 280
 })
 
-const shelfDisplayName = computed(() => {
-  if (!props.book.lccShelf) return null
-  return t(`lccShelves.${props.book.lccShelf}`)
+async function updateDesktopTruncation() {
+  await nextTick()
+  const description = descriptionRef.value
+  if (!description || mdAndDown.value) {
+    shouldTruncateDesktop.value = false
+    return
+  }
+  const lineHeight = Number.parseFloat(window.getComputedStyle(description).lineHeight)
+  shouldTruncateDesktop.value = description.scrollHeight > lineHeight * 13 + 1
+}
+
+onMounted(() => {
+  descriptionResizeObserver = new ResizeObserver(() => void updateDesktopTruncation())
+  watch(
+    descriptionRef,
+    (element) => {
+      descriptionResizeObserver?.disconnect()
+      if (element) descriptionResizeObserver?.observe(element)
+      void updateDesktopTruncation()
+    },
+    { immediate: true, flush: 'post' }
+  )
+  window.addEventListener('resize', updateDesktopTruncation)
+  void updateDesktopTruncation()
+})
+
+watch(cleanDescription, () => {
+  showFullDescriptionDesktop.value = false
+  void updateDesktopTruncation()
+})
+
+onBeforeUnmount(() => {
+  descriptionResizeObserver?.disconnect()
+  window.removeEventListener('resize', updateDesktopTruncation)
+})
+
+const collectionDisplayName = computed(() => {
+  if (!props.book.primaryCollection) return null
+  return t(`collections.${props.book.primaryCollection}`, props.book.primaryCollection)
 })
 </script>
 
@@ -51,7 +127,7 @@ const shelfDisplayName = computed(() => {
         <img
           v-if="book.coverPath"
           :src="normalizeImagePath(book.coverPath)"
-          :alt="`${book.title} ${t('book.coverLabel')}`"
+          :alt="t('book.coverAlt', { title: book.title })"
           class="detail-cover"
         />
       </div>
@@ -92,17 +168,28 @@ const shelfDisplayName = computed(() => {
 
         <div v-if="cleanDescription" class="book-desc-wrapper mb-6">
           <p
+            ref="descriptionRef"
             class="book-desc text-medium-emphasis"
-            :class="{ 'book-desc--truncated': !showFullDescription }"
+            :class="{
+              'book-desc--truncated': !showFullDescriptionMobile,
+              'book-desc--desktop-truncated': !showFullDescriptionDesktop
+            }"
           >
             {{ cleanDescription }}
           </p>
           <button
-            v-if="shouldTruncate"
+            v-if="shouldTruncateMobile"
             class="read-more-btn mobile-only"
-            @click="showFullDescription = !showFullDescription"
+            @click="showFullDescriptionMobile = !showFullDescriptionMobile"
           >
-            {{ showFullDescription ? t('common.showLess') : t('common.readMore') }}
+            {{ showFullDescriptionMobile ? t('common.showLess') : t('common.readMore') }}
+          </button>
+          <button
+            v-if="shouldTruncateDesktop"
+            class="read-more-btn desktop-only"
+            @click="showFullDescriptionDesktop = !showFullDescriptionDesktop"
+          >
+            {{ showFullDescriptionDesktop ? t('common.showLess') : t('common.showMore') }}
           </button>
         </div>
 
@@ -120,9 +207,9 @@ const shelfDisplayName = computed(() => {
             </v-col>
             <v-col cols="4">
               <div class="inter-13 text-medium-emphasis">
-                {{ t('book.downloadCount') }}
+                {{ t('book.primaryMetric') }}
               </div>
-              <div class="inter-13">{{ formatDownloads(book.downloads) }}</div>
+              <div class="inter-13">{{ formatMetric(book.primaryMetric) }}</div>
             </v-col>
             <v-col cols="4">
               <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
@@ -130,13 +217,13 @@ const shelfDisplayName = computed(() => {
             </v-col>
           </v-row>
 
-          <div v-if="book.lccShelf">
-            <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.lccShelf') }}</div>
+          <div v-if="book.primaryCollection">
+            <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.collection') }}</div>
             <router-link
-              :to="{ path: '/lcc-shelves', query: { shelf: book.lccShelf } }"
-              class="inter-13 text-decoration-underline shelf-link"
+              :to="{ path: '/collections', query: { collection: book.primaryCollection } }"
+              class="inter-13 text-decoration-underline collection-link"
             >
-              {{ shelfDisplayName }}
+              {{ collectionDisplayName }}
             </router-link>
           </div>
         </div>
@@ -150,8 +237,8 @@ const shelfDisplayName = computed(() => {
             <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
           </v-col>
           <v-col cols="4">
-            <div class="inter-13 text-medium-emphasis">{{ t('book.downloadCount') }}</div>
-            <div class="inter-13">{{ formatDownloads(book.downloads) }}</div>
+            <div class="inter-13 text-medium-emphasis">{{ t('book.primaryMetric') }}</div>
+            <div class="inter-13">{{ formatMetric(book.primaryMetric) }}</div>
           </v-col>
           <v-col cols="4">
             <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
@@ -159,13 +246,13 @@ const shelfDisplayName = computed(() => {
           </v-col>
         </v-row>
 
-        <div v-if="book.lccShelf">
-          <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.lccShelf') }}</div>
+        <div v-if="book.primaryCollection">
+          <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.collection') }}</div>
           <router-link
-            :to="{ path: '/lcc-shelves', query: { shelf: book.lccShelf } }"
-            class="inter-13 text-decoration-underline shelf-link"
+            :to="{ path: '/collections', query: { collection: book.primaryCollection } }"
+            class="inter-13 text-decoration-underline collection-link"
           >
-            {{ shelfDisplayName }}
+            {{ collectionDisplayName }}
           </router-link>
         </div>
       </div>
@@ -178,24 +265,24 @@ const shelfDisplayName = computed(() => {
               v-for="fmt in viewFormats"
               v-show="fmt.available"
               :key="`view-${fmt.format}`"
-              :href="fmt.path"
+              :href="fmt.format === 'html' ? normalizeZimPath(fmt.path) : undefined"
               variant="outlined"
               :elevation="0"
               size="small"
               rounded="md"
               class="text-none format-btn"
+              @click="fmt.format !== 'html' && openReader(fmt.format)"
             >
               {{ formatLabel(fmt.format) }}
             </v-btn>
           </div>
 
-          <div class="format-group">
+          <div v-if="availableDownloadFormats.length" class="format-group">
             <span class="action-label">{{ t('book.download') }}</span>
             <v-btn
-              v-for="fmt in downloadFormats"
-              v-show="fmt.available"
+              v-for="fmt in availableDownloadFormats"
               :key="`dl-${fmt.format}`"
-              :href="fmt.path"
+              :href="normalizeZimPath(fmt.path)"
               variant="outlined"
               :elevation="0"
               size="small"
@@ -209,11 +296,67 @@ const shelfDisplayName = computed(() => {
       </div>
     </div>
   </div>
+  <v-dialog v-model="readerOpen" fullscreen>
+    <v-card>
+      <v-toolbar class="reader-dialog__toolbar" :class="{ 'reader-dialog__toolbar--small': xs }">
+        <v-toolbar-title>{{ book.title }}</v-toolbar-title>
+        <button
+          class="reader-dialog__close"
+          type="button"
+          :aria-label="t('reader.close')"
+          @click="readerFormat = null"
+        >
+          ×
+        </button>
+      </v-toolbar>
+      <v-card-text class="reader-dialog__content">
+        <epub-reader v-if="readerFormat === 'epub'" :src="readerSource" />
+        <pdf-reader v-else-if="readerFormat === 'pdf'" :src="readerSource" />
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>
 .book-detail-wrapper {
   position: relative;
+}
+
+.reader-dialog__content {
+  height: calc(100dvh - 64px);
+  min-height: 0;
+  padding: 0;
+  background: #252525;
+}
+
+.reader-dialog__toolbar {
+  padding-inline: 1rem;
+}
+
+.reader-dialog__toolbar :deep(.v-toolbar-title) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reader-dialog__close {
+  border: 0;
+  background: transparent;
+  color: currentColor;
+  cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+}
+
+.reader-dialog__toolbar--small {
+  padding-inline: max(0.5rem, env(safe-area-inset-left));
+}
+
+.reader-dialog__toolbar--small .reader-dialog__close {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
 }
 
 .book-detail-wrapper::after {
@@ -351,6 +494,18 @@ const shelfDisplayName = computed(() => {
   display: none;
 }
 
+.desktop-only {
+  display: block;
+}
+
+.book-desc--desktop-truncated {
+  display: -webkit-box;
+  -webkit-line-clamp: 13;
+  line-clamp: 13;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .fire-rating {
   font-size: 1.25rem;
   line-height: 1;
@@ -379,12 +534,12 @@ const shelfDisplayName = computed(() => {
   color: rgb(var(--v-theme-authorFocus));
 }
 
-.shelf-link {
+.collection-link {
   color: rgb(var(--v-theme-author));
 }
 
-.shelf-link:hover,
-.shelf-link:focus {
+.collection-link:hover,
+.collection-link:focus {
   color: rgb(var(--v-theme-text));
 }
 
@@ -411,7 +566,7 @@ const shelfDisplayName = computed(() => {
   color: rgb(var(--v-theme-text));
 }
 
-@media (max-width: 979px) {
+@media (max-width: 960px) {
   .book-detail-grid {
     grid-template-columns: 5fr 7fr;
     grid-template-rows: auto auto auto;
@@ -507,6 +662,18 @@ const shelfDisplayName = computed(() => {
 
   .mobile-only {
     display: block;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .book-desc--desktop-truncated {
+    display: block;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    -webkit-box-orient: initial;
+    overflow: visible;
   }
 
   .book-desc--truncated {

@@ -63,15 +63,15 @@ defineEmits<{
 
 .carousel-arrow.beige-shadow {
   box-shadow:
-    0 0 6px v-bind('THEME_COLORS.SHELF_BEIGE_SHADOW_LIGHT'),
-    0 0 12px v-bind('THEME_COLORS.SHELF_BEIGE_SHADOW_LIGHTER');
+    0 0 6px v-bind('THEME_COLORS.COLLECTION_BEIGE_SHADOW_LIGHT'),
+    0 0 12px v-bind('THEME_COLORS.COLLECTION_BEIGE_SHADOW_LIGHTER');
 }
 
 .carousel-arrow.beige-shadow:hover:not(:disabled) {
   box-shadow:
-    0 0 12px v-bind('THEME_COLORS.SHELF_BEIGE_SHADOW_MEDIUM'),
-    0 0 24px v-bind('THEME_COLORS.SHELF_BEIGE_SHADOW_HEAVY'),
-    0 0 36px v-bind('THEME_COLORS.SHELF_BEIGE_SHADOW_LIGHTER');
+    0 0 12px v-bind('THEME_COLORS.COLLECTION_BEIGE_SHADOW_MEDIUM'),
+    0 0 24px v-bind('THEME_COLORS.COLLECTION_BEIGE_SHADOW_HEAVY'),
+    0 0 36px v-bind('THEME_COLORS.COLLECTION_BEIGE_SHADOW_LIGHTER');
 }
 
 .carousel-arrow.beige-shadow:disabled {

@@ -1,9 +1,8 @@
 """Source-agnostic domain model.
 
 These dataclasses describe any book-like "work" independently of the source
-it came from (Project Gutenberg, Standard Ebooks, ...). Source-specific code
-converts its own metadata into these models; everything downstream (storage,
-export, ZIM assembly) only ever sees these types.
+it came from. Source-specific code converts its own metadata into these models;
+everything downstream (storage, export, ZIM assembly) only ever sees these types.
 """
 
 from dataclasses import dataclass, field
@@ -41,7 +40,7 @@ class Cover:
 class CollectionRef:
     id: str
     name: str
-    kind: str = "subject"
+    kind: str = "collection"
     extra: dict[str, Any] = field(default_factory=dict)
 
 
@@ -58,6 +57,7 @@ class Work:
     cover: Cover | None = None
     collections: list[CollectionRef] = field(default_factory=list)
     popularity: int | None = None
+    primary_metric: int | None = None
     description: str | None = None
     published: date | None = None
     source_url: str | None = None

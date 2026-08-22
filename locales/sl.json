@@ -1,139 +1,132 @@
 {
-	"@metadata": {
-		"authors": [
-			"Eleassar"
-		]
-	},
-	"language": "slovenščina",
-	"isocode": "sl",
-	"nav": {
-		"home": "Glavna stran",
-		"authors": "Avtorji",
-		"shelves": "Police",
-		"about": "O projektu",
-		"books": "Knjige"
-	},
-	"about": {
-		"introHeading": "O projektu Gutenberg"
-	},
-	"book": {
-		"title": "Naslov",
-		"downloads": "prenosi",
-		"downloadCount": "Število prenosov",
-		"languages": "Jezik",
-		"lccShelf": "Polica LCC",
-		"license": "Licenca",
-		"licensePd": "Javna domena v ZDA.",
-		"licenseCopyright": "Avtorsko zavarovano. Za podrobnosti preberite obvestilo o avtorskih pravicah v tej knjigi.",
-		"fullName": "Celotno ime",
-		"worksAvailable": "Dela na voljo",
-		"unknown": "Neznano",
-		"cover": "Naslovnica knjige",
-		"coverLabel": "(naslovnica)",
-		"anonymous": "Anonimno",
-		"various": "Razni"
-	},
-	"author": {
-		"bookCount": "{n} knjiga | {n} knjig"
-	},
-	"shelf": {
-		"booksIn": "Knjige v"
-	},
-	"common": {
-		"loading": "Nalaganje ...",
-		"loadingBook": "Nalaganje podatkov o knjigi ...",
-		"loadingAuthor": "Nalaganje podatkov o avtorju ...",
-		"loadingItems": "Nalaganje {type} ...",
-		"showing": "Prikazano",
-		"of": "od",
-		"search": "Išči",
-		"sortBy": "Razvrsti po",
-		"sortPopularity": "Razvrsti knjige po priljubljenosti",
-		"sortTitle": "Naslov",
-		"chooseLanguage": "Izberite jezik ...",
-		"mainLanguages": "Glavni jeziki",
-		"otherLanguages": "Drugi jeziki",
-		"anyCatalog": "Izberite katalog",
-		"uiLanguage": "Jezik vmesnika",
-		"selectInterfaceLanguage": "Izberite jezik vmesnika",
-		"filterBy": "Filtriraj po",
-		"filterByTitle": "Filtriraj po {title}",
-		"gridView": "Mrežni pogled",
-		"listView": "Pogled seznama",
-		"browseAll": "Prebrskaj vse",
-		"browseAllAuthors": "Brskaj po vseh avtorjih",
-		"returnHome": "Pojdi domov",
-		"toggleNavigationMenu": "Preklopi navigacijski meni",
-		"mainNavigation": "Glavna navigacija",
-		"mobileNavigationMenu": "Mobilni navigacijski meni",
-		"mobileNavigation": "Mobilna navigacija",
-		"navigateTo": "Navigacija do",
-		"navigateToItem": "Navigacija do {item}",
-		"gutenbergHome": "Gutenberg Home",
-		"sortAuthor": "Avtor"
-	},
-	"messages": {
-		"noBooks": "V tabeli ni razpoložljivih podatkov",
-		"noAuthors": "Ni najdenih avtorjev.",
-		"noShelves": "Ni najdenih polic.",
-		"noBooksForAuthor": "Za tega avtorja ni na voljo nobenih knjig.",
-		"noBooksInShelf": "Na tej polici ni na voljo nobena knjiga.",
-		"noLanguages": "Na voljo ni noben jezik.",
-		"noFormats": "Na voljo ni noben format.",
-		"notFoundBook": "Knjiga ni bila najdena. Knjiga, ki jo iščete, ne obstaja ali pa je bila odstranjena.",
-		"notFoundAuthor": "Avtorja ni mogoče najti. Avtor, ki ga iščete, ne obstaja ali pa je bil odstranjen.",
-		"notFoundShelf": "Police LCC ni bilo mogoče najti. Polica, ki jo iščete, ne obstaja ali pa je bila odstranjena."
-	},
-	"metadata_defaults": {
-		"title": "Projekt Gutenbergova knjižnica",
-		"description": "Vse knjige v slovenščini prvega proizvajalca brezplačnih e-knjig"
-	},
-	"footer": {
-	},
-	"itemTypes": {
-		"books": "knjiga | knjige",
-		"authors": "avtor | avtorji",
-		"shelves": "polica | police"
-	},
-	"lccShelves": {
-		"A": "A – Splošna dela",
-		"B": "B – Filozofija, psihologija, religija",
-		"C": "C – Pomožne zgodovinske vede",
-		"D": "D – Svetovna zgodovina in zgodovina Evrope, Azije, Afrike, Avstralije, Nove Zelandije idr.",
-		"E": "E – Zgodovina Amerike",
-		"F": "F – Zgodovina Amerike",
-		"G": "G – Geografija, antropologija, rekreacija",
-		"H": "H – Družboslovje",
-		"J": "J – Politologija",
-		"K": "K – Pravo",
-		"L": "L – Izobraževanje",
-		"M": "M – Glasba in knjige o glasbi",
-		"N": "N – Likovna umetnost",
-		"P": "P – Jezik in literatura",
-		"Q": "Q – Naravoslovje",
-		"R": "R – Medicina",
-		"S": "S – Kmetijstvo",
-		"T": "T – Tehnologija",
-		"U": "U – Vojaške vede",
-		"V": "V – Pomorska znanost",
-		"Z": "Z – Bibliografija, bibliotekarstvo, informacijski viri (splošno)",
-		"PA": "PA – Grški in latinski jezik in književnost",
-		"PB": "PB – Sodobni in keltski jeziki",
-		"PC": "PC – Romanski jeziki",
-		"PD": "PD – Germanski in skandinavski jeziki",
-		"PE": "PE – Angleški jeziki",
-		"PF": "PF – Zahodnogermanski jeziki",
-		"PG": "PG – Slovanski, baltski in albanski jeziki",
-		"PH": "PH – Uralski in baskovski jeziki",
-		"PJ": "PJ – Orientalski jeziki in književnosti",
-		"PK": "PK – Indoiranski jeziki in književnosti",
-		"PL": "PL – Jeziki in književnosti Vzhodne Azije, Afrike in Oceanije",
-		"PM": "PM – Hiperborejski, indijski in umetni jeziki",
-		"PN": "PN – Književnost (splošno)",
-		"PQ": "PQ – Francoska, italijanska, španska in portugalska književnost",
-		"PR": "PR – Angleška književnost",
-		"PS": "PS – Ameriška književnost",
-		"PT": "PT – Nemška, nizozemska, flamska, afrikanska, skandinavska, staronordijska, staroislandska, staronorveška, moderna islandska, ferska, danska, norveška in švedska književnost",
-		"PZ": "PZ – Leposlovje in beletristika za mlade"
-	}
+  "language": "slovenščina",
+  "isocode": "sl",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Eleassar"
+      ]
+    },
+    "nav": {
+      "home": "Glavna stran",
+      "authors": "Avtorji",
+      "about": "O projektu",
+      "books": "Knjige"
+    },
+    "book": {
+      "title": "Naslov",
+      "downloads": "prenosi",
+      "downloadCount": "Število prenosov",
+      "languages": "Jezik",
+      "license": "Licenca",
+      "licensePd": "Javna domena v ZDA.",
+      "licenseCopyright": "Avtorsko zavarovano. Za podrobnosti preberite obvestilo o avtorskih pravicah v tej knjigi.",
+      "fullName": "Celotno ime",
+      "worksAvailable": "Dela na voljo",
+      "unknown": "Neznano",
+      "cover": "Naslovnica knjige",
+      "coverLabel": "(naslovnica)",
+      "anonymous": "Anonimno",
+      "various": "Razni"
+    },
+    "author": {
+      "bookCount": "{n} knjiga | {n} knjig"
+    },
+    "common": {
+      "loading": "Nalaganje ...",
+      "loadingBook": "Nalaganje podatkov o knjigi ...",
+      "loadingAuthor": "Nalaganje podatkov o avtorju ...",
+      "loadingItems": "Nalaganje {type} ...",
+      "showing": "Prikazano",
+      "of": "od",
+      "search": "Išči",
+      "sortBy": "Razvrsti po",
+      "sortPopularity": "Razvrsti knjige po priljubljenosti",
+      "sortTitle": "Naslov",
+      "chooseLanguage": "Izberite jezik ...",
+      "mainLanguages": "Glavni jeziki",
+      "otherLanguages": "Drugi jeziki",
+      "anyCatalog": "Izberite katalog",
+      "uiLanguage": "Jezik vmesnika",
+      "selectInterfaceLanguage": "Izberite jezik vmesnika",
+      "filterBy": "Filtriraj po",
+      "filterByTitle": "Filtriraj po {title}",
+      "gridView": "Mrežni pogled",
+      "listView": "Pogled seznama",
+      "browseAll": "Prebrskaj vse",
+      "browseAllAuthors": "Brskaj po vseh avtorjih",
+      "returnHome": "Pojdi domov",
+      "toggleNavigationMenu": "Preklopi navigacijski meni",
+      "mainNavigation": "Glavna navigacija",
+      "mobileNavigationMenu": "Mobilni navigacijski meni",
+      "mobileNavigation": "Mobilna navigacija",
+      "navigateTo": "Navigacija do",
+      "navigateToItem": "Navigacija do {item}",
+      "sortAuthor": "Avtor"
+    },
+    "messages": {
+      "noBooks": "V tabeli ni razpoložljivih podatkov",
+      "noAuthors": "Ni najdenih avtorjev.",
+      "noBooksForAuthor": "Za tega avtorja ni na voljo nobenih knjig.",
+      "noLanguages": "Na voljo ni noben jezik.",
+      "noFormats": "Na voljo ni noben format.",
+      "notFoundBook": "Knjiga ni bila najdena. Knjiga, ki jo iščete, ne obstaja ali pa je bila odstranjena.",
+      "notFoundAuthor": "Avtorja ni mogoče najti. Avtor, ki ga iščete, ne obstaja ali pa je bil odstranjen."
+    },
+    "itemTypes": {
+      "books": "knjiga | knjige",
+      "authors": "avtor | avtorji"
+    }
+  },
+  "gutenberg": {
+    "about": {
+      "introHeading": "O projektu Gutenberg"
+    },
+    "metadata_defaults": {
+      "title": "Projekt Gutenbergova knjižnica",
+      "description": "Vse knjige v slovenščini prvega proizvajalca brezplačnih e-knjig"
+    },
+    "footer": {},
+    "collections": {
+      "A": "A – Splošna dela",
+      "B": "B – Filozofija, psihologija, religija",
+      "C": "C – Pomožne zgodovinske vede",
+      "D": "D – Svetovna zgodovina in zgodovina Evrope, Azije, Afrike, Avstralije, Nove Zelandije idr.",
+      "E": "E – Zgodovina Amerike",
+      "F": "F – Zgodovina Amerike",
+      "G": "G – Geografija, antropologija, rekreacija",
+      "H": "H – Družboslovje",
+      "J": "J – Politologija",
+      "K": "K – Pravo",
+      "L": "L – Izobraževanje",
+      "M": "M – Glasba in knjige o glasbi",
+      "N": "N – Likovna umetnost",
+      "P": "P – Jezik in literatura",
+      "Q": "Q – Naravoslovje",
+      "R": "R – Medicina",
+      "S": "S – Kmetijstvo",
+      "T": "T – Tehnologija",
+      "U": "U – Vojaške vede",
+      "V": "V – Pomorska znanost",
+      "Z": "Z – Bibliografija, bibliotekarstvo, informacijski viri (splošno)",
+      "PA": "PA – Grški in latinski jezik in književnost",
+      "PB": "PB – Sodobni in keltski jeziki",
+      "PC": "PC – Romanski jeziki",
+      "PD": "PD – Germanski in skandinavski jeziki",
+      "PE": "PE – Angleški jeziki",
+      "PF": "PF – Zahodnogermanski jeziki",
+      "PG": "PG – Slovanski, baltski in albanski jeziki",
+      "PH": "PH – Uralski in baskovski jeziki",
+      "PJ": "PJ – Orientalski jeziki in književnosti",
+      "PK": "PK – Indoiranski jeziki in književnosti",
+      "PL": "PL – Jeziki in književnosti Vzhodne Azije, Afrike in Oceanije",
+      "PM": "PM – Hiperborejski, indijski in umetni jeziki",
+      "PN": "PN – Književnost (splošno)",
+      "PQ": "PQ – Francoska, italijanska, španska in portugalska književnost",
+      "PR": "PR – Angleška književnost",
+      "PS": "PS – Ameriška književnost",
+      "PT": "PT – Nemška, nizozemska, flamska, afrikanska, skandinavska, staronordijska, staroislandska, staronorveška, moderna islandska, ferska, danska, norveška in švedska književnost",
+      "PZ": "PZ – Leposlovje in beletristika za mlade"
+    }
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "gutenberg-ui",
+  "name": "library-ui",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -28,7 +28,9 @@
     "@mdi/js": "^7.4.47",
     "@wikimedia/language-data": "^2.0.3",
     "axios": "^1.13.5",
+    "foliate-js": "^1.0.1",
     "pinia": "^3.0.4",
+    "pdfjs-dist": "^4.10.38",
     "resize-observer-polyfill": "^1.5.1",
     "vue": "^3.5.28",
     "vue-i18n": "^11.2.8",

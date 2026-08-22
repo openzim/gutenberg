@@ -50,16 +50,16 @@ describe('Main Store Integration', () => {
       expect(store.errorMessage).toBeNull()
     })
 
-    it('fetches shelves and updates count', async () => {
+    it('fetches collections and updates count', async () => {
       const store = useMainStore()
-      const mockData = { totalCount: 20, shelves: [] }
+      const mockData = { totalCount: 20, collections: [] }
       vi.mocked(axios.get).mockResolvedValue({ data: mockData })
 
-      const result = await store.fetchLCCShelves()
+      const result = await store.fetchCollections()
 
-      expect(axios.get).toHaveBeenCalledWith('./lcc_shelves.json')
+      expect(axios.get).toHaveBeenCalledWith('./collections.json')
       expect(result).toEqual(mockData)
-      expect(store.shelvesCount).toBe(20)
+      expect(store.collectionsCount).toBe(20)
       expect(store.loading).toBe(false)
       expect(store.errorMessage).toBeNull()
     })
@@ -67,7 +67,12 @@ describe('Main Store Integration', () => {
     it.each([
       { method: 'fetchBook' as const, param: '42', url: './books/42.json' },
       { method: 'fetchAuthor' as const, param: 'austen-jane', url: './authors/austen-jane.json' },
-      { method: 'fetchLCCShelf' as const, param: 'PR', url: './lcc_shelves/PR.json' }
+      { method: 'fetchCollection' as const, param: 'PR', url: './collections/PR.json' },
+      {
+        method: 'fetchCollection' as const,
+        param: 'Computer/Science & Maths#1?',
+        url: './collections/Computer%2FScience%20%26%20Maths%231%3F.json'
+      }
     ])('$method fetches single item by ID', async ({ method, param, url }) => {
       const store = useMainStore()
       const mockData = { id: param }
@@ -82,10 +87,32 @@ describe('Main Store Integration', () => {
     it('fetches config data', async () => {
       const store = useMainStore()
       const mockConfig: Config = {
-        title: 'Gutenberg Library',
-        description: 'Project Gutenberg books',
+        title: 'Test Library',
+        description: 'Test source books',
         primaryColor: null,
-        secondaryColor: null
+        secondaryColor: null,
+        source: {
+          slug: 'test-source',
+          name: 'Test Source',
+          description: 'Test source books'
+        },
+        theme: {
+          primaryColor: null,
+          secondaryColor: null,
+          formatIcons: { epub: 'epub', html: 'html' },
+          routeLabels: {
+            home: 'Home',
+            works: 'Books',
+            authors: 'Authors',
+            collections: 'Collections'
+          },
+          collectionIconStyle: 'classification'
+        },
+        features: {
+          epubReader: true,
+          pdfReader: true,
+          noscriptFallback: true
+        }
       }
 
       vi.mocked(axios.get).mockResolvedValue({ data: mockConfig })
@@ -193,15 +220,15 @@ describe('Main Store Integration', () => {
       expect(result2).toEqual(mockData)
     })
 
-    it('returns cached shelves without refetching', async () => {
+    it('returns cached collections without refetching', async () => {
       const store = useMainStore()
-      const mockData = { totalCount: 20, shelves: [{ code: 'PR', bookCount: 5 }] }
+      const mockData = { totalCount: 20, collections: [{ id: 'PR', bookCount: 5 }] }
       vi.mocked(axios.get).mockResolvedValue({ data: mockData })
 
-      await store.fetchLCCShelves()
+      await store.fetchCollections()
       expect(axios.get).toHaveBeenCalledTimes(1)
 
-      const result2 = await store.fetchLCCShelves()
+      const result2 = await store.fetchCollections()
       expect(axios.get).toHaveBeenCalledTimes(1)
       expect(result2).toEqual(mockData)
     })

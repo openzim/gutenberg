@@ -1,56 +1,18 @@
 """Ports (interfaces) between the source-agnostic core and a source.
 
-Each source (Gutenberg, Standard Ebooks, ...) implements these interfaces;
-the pipeline only ever talks to the abstractions. This is what keeps
-`core/` free of source-specific knowledge.
+Each source implements these interfaces; the pipeline only ever talks to the
+abstractions. This is what keeps `core/` free of source-specific knowledge.
 """
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Protocol
+from typing import Any
 
 from bs4 import BeautifulSoup
 
-from gutenberg2zim.core.models import CollectionRef, Work
-
-if TYPE_CHECKING:
-    from gutenberg2zim.core.download_engine import DownloadEngine
-
-
-class CatalogEntryLike(Protocol):
-    """The attributes the source-agnostic layers read from a catalog entry"""
-
-    book_id: int
-    languages: list[str]
-    lcc_shelf: str
-
-
-class CatalogModule(Protocol):
-    """Contract a source's catalog module must satisfy.
-
-    Discovery is source-specific, so the catalog is a module rather than a
-    class; profiles reference the module object directly, so a source
-    missing one of these functions fails type checking at registration
-    instead of at runtime.
-    """
-
-    def get_csv_fpath(self) -> Path: ...
-
-    def download_csv_file(
-        self, csv_path: Path, csv_url: str, engine: DownloadEngine
-    ) -> None: ...
-
-    def load_catalog(self, csv_path: Path) -> list[CatalogEntryLike]: ...
-
-    def filter_books(
-        self,
-        catalog: list[CatalogEntryLike],
-        languages: list[str] | None = None,
-        only_books: list[int] | None = None,
-        lcc_shelves: list[str] | None = None,
-    ) -> list[CatalogEntryLike]: ...
+from gutenberg2zim.core.models import Work
 
 
 @dataclass(frozen=True, slots=True)
@@ -60,6 +22,8 @@ class CatalogFilters:
     languages: list[str] | None = None
     book_ids: list[str] | None = None
     collections: list[str] | None = None
+    formats: list[str] | None = None
+    options: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)
@@ -107,10 +71,3 @@ class RewriterPort(ABC):
 
     @abstractmethod
     def rewrite_html(self, work: Work, html: BeautifulSoup) -> BeautifulSoup: ...
-
-
-class CollectionMapperPort(ABC):
-    """Maps a work to the collections (shelves, subjects, ...) it belongs to"""
-
-    @abstractmethod
-    def map(self, work: Work) -> list[CollectionRef]: ...

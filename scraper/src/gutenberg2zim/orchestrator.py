@@ -9,8 +9,11 @@ source's `Pipeline` resolved from the registry profile.
 
 import datetime
 import logging
+from collections.abc import Callable, Sequence
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
+from typing import Any, cast
 
 from gutenberg2zim.config import ScrapeConfig
 from gutenberg2zim.constants import logger
@@ -20,9 +23,14 @@ from gutenberg2zim.core.exporters.ui_dist_exporter import export_ui_dist
 from gutenberg2zim.core.language import (
     ISO_MATRIX,
     ISO_MATRIX_REV,
+    HasLanguages,
     get_zim_language_metadata,
 )
-from gutenberg2zim.core.ports import CatalogEntryLike, WorkRef
+from gutenberg2zim.core.ports import (
+    CatalogFilters,
+    CatalogPort,
+    WorkRef,
+)
 from gutenberg2zim.core.progress import ScraperProgress
 from gutenberg2zim.core.utils import critical_error, get_zim_name
 from gutenberg2zim.core.work_store import WorkStore
@@ -36,63 +44,84 @@ def run_scrape(config: ScrapeConfig) -> None:
         for handler in logger.handlers:
             handler.setLevel(logging.DEBUG)
 
-    i18n.setup_i18n()
-
     profile = get_source(config.source)
-    # Discovery is still source-specific (CSV catalog for Gutenberg): the
-    # catalog module comes from the profile, checked against CatalogModule
-    catalog = profile.catalog
-    csv_path = catalog.get_csv_fpath()
+    i18n.setup_i18n(profile.locale_namespace)
 
     progress = ScraperProgress(config.stats_filename)
     progress.increase_total(1)
-
-    # Shared download engine: the catalog CSV and RDF metadata are fetched
-    # through it; cached RDFs make re-runs skip re-downloading them
-    engine = DownloadEngine(cache_dir=config.output_folder / "cache")
-
-    # Download CSV catalog
-    csv_url = f"{config.mirror_url.rstrip('/')}{profile.catalog_feed_path}"
-    logger.info(f"PREPARING CSV catalog from {csv_url}")
-    catalog.download_csv_file(csv_path=csv_path, csv_url=csv_url, engine=engine)
-
-    # Load catalog and filter books
-    logger.info(f"LOADING catalog from {csv_path}")
-    catalog_entries = catalog.load_catalog(csv_path)
-
-    # Filter books based on languages, specific book IDs, and LCC shelves
-    filtered_books = catalog.filter_books(
-        catalog=catalog_entries,
-        languages=config.languages if config.languages else None,
-        only_books=[int(book_id) for book_id in config.books] if config.books else None,
-        lcc_shelves=config.collections,
-    )
-    if not len(filtered_books):
-        critical_error(
-            "Unable to proceed. Combination of languages, "
-            "books, formats and LCC shelves has no result."
-        )
-
-    # Get list of languages from catalog entries
-    book_languages = (
-        config.languages
-        if config.languages
-        else list({lang for book in filtered_books for lang in book.languages})
-    )
-    if len(book_languages) > 1 and config.with_fulltext_index:
-        logger.warning(
-            "Full text index with multiple languages in a single ZIM does not work "
-            "well. You should probably disable full-text index with --no-index "
-            "argument."
-        )
-    progress.increase_progress()
-
-    # Build ZIM file
-    logger.info("BUILDING ZIM")
-
-    work_store = WorkStore()
-
+    engine = DownloadEngine(cache_dir=config.cache_dir)
     try:
+        if isinstance(profile.catalog, type):
+            catalog_factory = cast(Callable[..., CatalogPort], profile.catalog)
+            catalog = catalog_factory(
+                engine,
+                base_url=config.mirror_url,
+                cache_dir=config.cache_dir,
+                refresh_catalog=bool(config.source_options.get("refresh_catalog")),
+            )
+            if profile.handle_cli_action(catalog, config.source_options):
+                return
+            filtered_books = list(
+                catalog.discover(
+                    CatalogFilters(
+                        languages=config.languages,
+                        book_ids=config.books,
+                        collections=config.collections,
+                        formats=config.formats,
+                        options=config.source_options,
+                    )
+                )
+            )
+        else:
+            catalog = profile.catalog
+            csv_path = catalog.get_csv_fpath()
+            csv_url = f"{config.mirror_url.rstrip('/')}{profile.catalog_feed_path}"
+            logger.info(f"PREPARING CSV catalog from {csv_url}")
+            catalog.download_csv_file(csv_path=csv_path, csv_url=csv_url, engine=engine)
+            logger.info(f"LOADING catalog from {csv_path}")
+            catalog_entries = catalog.load_catalog(csv_path)
+            filtered_books = catalog.filter_books(
+                catalog=catalog_entries,
+                languages=config.languages if config.languages else None,
+                only_books=(
+                    [int(book_id) for book_id in config.books] if config.books else None
+                ),
+                lcc_shelves=config.collections,
+            )
+        if not len(filtered_books):
+            critical_error(
+                "Unable to proceed. Combination of languages, "
+                "books, formats and LCC shelves has no result."
+            )
+
+        # Get list of languages from catalog entries
+        book_languages = (
+            config.languages
+            if config.languages
+            else list(
+                {
+                    lang
+                    for book in filtered_books
+                    for lang in (
+                        book.extra.get("languages", [])
+                        if isinstance(book, WorkRef)
+                        else book.languages
+                    )
+                }
+            )
+        )
+        if len(book_languages) > 1 and config.with_fulltext_index:
+            logger.warning(
+                "Full text index with multiple languages in a single ZIM does not "
+                "work well. You should probably disable full-text index with "
+                "--no-index argument."
+            )
+        progress.increase_progress()
+
+        # Build ZIM file
+        logger.info("BUILDING ZIM")
+
+        work_store = WorkStore()
         build_zimfile(
             books=filtered_books,
             config=replace(config, languages=book_languages),
@@ -101,19 +130,18 @@ def run_scrape(config: ScrapeConfig) -> None:
             engine=engine,
             profile=profile,
         )
+
+        # Final increase to indicate we are done
+        progress.increase_progress()
+        progress.report_progress()  # force flushing scraper progress to file
+
+        logger.info("Scraper has finished normally")
     finally:
-        # release the per-thread session connection pools
         engine.close()
-
-    # Final increase to indicate we are done
-    progress.increase_progress()
-    progress.report_progress()  # force flushing scraper progress to file
-
-    logger.info("Scraper has finished normally")
 
 
 def build_zimfile(
-    books: list[CatalogEntryLike],
+    books: Sequence[Any | WorkRef],
     config: ScrapeConfig,
     work_store: WorkStore,
     progress: ScraperProgress,
@@ -143,7 +171,6 @@ def build_zimfile(
     overwrite = config.overwrite
     is_selection = config.is_selection
     title_search = config.title_search
-    add_lcc_shelves = config.add_lcc_shelves
     with_fulltext_index = config.with_fulltext_index
     iso_languages = [ISO_MATRIX.get(lang, lang) for lang in languages]
 
@@ -155,10 +182,10 @@ def build_zimfile(
 
     i18n.change_locale(metadata_locales_lang)
 
-    title = title or i18n.t("metadata_defaults.title")
+    title = title or i18n.t(f"{profile.locale_namespace}.metadata_defaults.title")
     # check if user has description input otherwise assign default description
     description = description or i18n.t(
-        "metadata_defaults.description",
+        f"{profile.locale_namespace}.metadata_defaults.description",
         f'All books in "{iso_languages[0]}" language from {profile.tagline}',
     )
 
@@ -192,7 +219,21 @@ def build_zimfile(
 
     assembler = ZimAssembler(
         filename=zim_path,
-        language=zim_languages or get_zim_language_metadata(languages, books),
+        language=zim_languages
+        or get_zim_language_metadata(
+            languages,
+            cast(
+                Sequence[HasLanguages],
+                [
+                    (
+                        book
+                        if not isinstance(book, WorkRef)
+                        else SimpleNamespace(languages=book.extra.get("languages", []))
+                    )
+                    for book in books
+                ],
+            ),
+        ),
         title=title,
         description=description,
         long_description=long_description,
@@ -211,15 +252,23 @@ def build_zimfile(
         # catalog entries for language metadata, the empty-result error and
         # the progress total), so the pipeline receives ready-made refs
         refs = [
-            WorkRef(
-                id=str(book.book_id),
-                source=profile.slug,
-                extra={"languages": book.languages, "lcc_shelf": book.lcc_shelf},
+            (
+                book
+                if isinstance(book, WorkRef)
+                else WorkRef(
+                    id=str(book.book_id),
+                    source=profile.slug,
+                    extra={"languages": book.languages},
+                )
             )
             for book in books
         ]
         pipeline = profile.pipeline_class(
-            metadata=profile.metadata_class(mirror_url, engine=engine),
+            metadata=profile.metadata_class(
+                mirror_url,
+                engine=engine,
+                **profile.metadata_options(config.cache_dir),
+            ),
             store=work_store,
             assembler=assembler,
             progress=progress,
@@ -228,13 +277,16 @@ def build_zimfile(
             zim_name=zim_name,
             title=title,
             description=description,
-            add_lcc_shelves=add_lcc_shelves,
             primary_color=primary_color,
             secondary_color=secondary_color,
             display_name=profile.display_name,
-            mirror_url=mirror_url,
+            source_slug=profile.slug,
+            source_description=profile.source_description,
+            collection_label=profile.collection_label,
+            collection_icon_style=profile.collection_icon_style,
             engine=engine,
             title_search=title_search,
+            **profile.pipeline_options(mirror_url, config.cache_dir),
         )
         pipeline.run(refs)
 

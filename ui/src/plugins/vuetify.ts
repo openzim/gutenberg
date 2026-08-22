@@ -1,11 +1,10 @@
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
-import axios from 'axios'
 import { createVuetify, type ThemeDefinition } from 'vuetify'
 import type { Config } from '@/types/Config'
 import { THEME_COLORS } from '@/constants/theme'
 
-async function loadVuetify() {
+async function loadVuetify(config: Config) {
   const PRIMARY = '#1976D2'
   const SECONDARY = '#424242'
   const ACCENT = '#82B1FF'
@@ -21,13 +20,8 @@ async function loadVuetify() {
   let primaryColor: string = PRIMARY
   let secondaryColor: string = SECONDARY
 
-  try {
-    const response = await axios.get<Config>('./config.json')
-    primaryColor = response.data.primaryColor || primaryColor
-    secondaryColor = response.data.secondaryColor || secondaryColor
-  } catch (error) {
-    console.warn('Failed to load config.json for theme colors, using defaults.', error)
-  }
+  primaryColor = config.primaryColor || primaryColor
+  secondaryColor = config.secondaryColor || secondaryColor
 
   const sharedColors = {
     primary: primaryColor,
@@ -45,7 +39,7 @@ async function loadVuetify() {
     description: THEME_COLORS.DESCRIPTION,
     focusBook: THEME_COLORS.FOCUS_BOOK,
     menuActive: THEME_COLORS.MENU_ACTIVE,
-    shelfIcon: THEME_COLORS.SHELF_ICON,
+    collectionIcon: THEME_COLORS.COLLECTION_ICON,
     bgd1: THEME_COLORS.BGD_1,
     bgd2: THEME_COLORS.BGD_2,
     bgd3Fill: THEME_COLORS.BGD_3_FILL,
@@ -71,7 +65,7 @@ async function loadVuetify() {
     bgd3Fill: THEME_COLORS.BGD_3_FILL_DARK,
     bgd3Outline: THEME_COLORS.BGD_3_OUTLINE_DARK,
     focusBook: THEME_COLORS.FOCUS_BOOK_DARK,
-    shelfIcon: THEME_COLORS.SHELF_ICON_DARK
+    collectionIcon: THEME_COLORS.COLLECTION_ICON_DARK
   }
 
   const lightTheme: ThemeDefinition = {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
+import { useI18n } from 'vue-i18n'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
 import FireRating from '@/components/common/FireRating.vue'
 import { TYPOGRAPHY } from '@/constants/theme'
@@ -7,6 +8,8 @@ import { TYPOGRAPHY } from '@/constants/theme'
 defineProps<{
   book: BookPreview
 }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -19,7 +22,7 @@ defineProps<{
   >
     <book-cover-image
       :cover-path="book.coverPath"
-      :alt="`${book.title} cover`"
+      :alt="t('book.coverAlt', { title: book.title })"
       :size="64"
       height="200px"
       class="book-cover"

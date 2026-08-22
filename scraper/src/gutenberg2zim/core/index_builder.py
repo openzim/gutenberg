@@ -18,11 +18,12 @@ from dataclasses import dataclass, field
 
 from gutenberg2zim.core.models import Creator, Work
 from gutenberg2zim.core.utils import (
+    collection_key,
     creator_birth_year,
     creator_death_year,
+    primary_collection_id,
     primary_creator,
     work_creators,
-    work_lcc_shelf,
 )
 from gutenberg2zim.core.work_store import WorkStore
 
@@ -58,12 +59,10 @@ class IndexBuilder:
     def __init__(self, store: WorkStore):
         self._store = store
 
-    def build(self, *, add_lcc_shelves: bool = False, display_name: str) -> Indexes:
+    def build(self, *, display_name: str) -> Indexes:
         authors: dict[str, Creator] = {}
         by_author: dict[str, list[Work]] = defaultdict(list)
         by_collection: dict[str, list[Work]] = defaultdict(list)
-        # shelf grouping (a work's primary collection) for the search entries
-        by_shelf: dict[str, list[Work]] = defaultdict(list)
         author_stats: dict[str, tuple[int, int]] = {}
 
         works = self._store.works
@@ -78,16 +77,13 @@ class IndexBuilder:
                 )
             for collection in work.collections:
                 by_collection[collection.id].append(work)
-            if shelf := work_lcc_shelf(work):
-                by_shelf[shelf].append(work)
 
         search_entries = list(
             self._search_entries(
                 works,
                 list(authors.values()),
                 by_author,
-                by_shelf,
-                add_lcc_shelves=add_lcc_shelves,
+                by_collection,
                 display_name=display_name,
             )
         )
@@ -105,9 +101,8 @@ class IndexBuilder:
         works: list[Work],
         authors: list[Creator],
         by_author: dict[str, list[Work]],
-        by_shelf: dict[str, list[Work]],
+        by_collection: dict[str, list[Work]],
         *,
-        add_lcc_shelves: bool,
         display_name: str,
     ) -> Iterable[IndexEntry]:
         for work in works:
@@ -120,9 +115,8 @@ class IndexBuilder:
                 parts.insert(0, work.subtitle)
             if work.languages:
                 parts.append(f"Languages: {', '.join(work.languages)}")
-            lcc_shelf = work_lcc_shelf(work)
-            if lcc_shelf:
-                parts.append(f"LCC Shelf: {lcc_shelf}")
+            if collection_id := primary_collection_id(work):
+                parts.append(f"Collection: {collection_id}")
             yield IndexEntry(
                 title=work.title,
                 content=". ".join(parts) + ".",
@@ -151,29 +145,29 @@ class IndexBuilder:
                 route=f"author/{creator.id}",
             )
 
-        if add_lcc_shelves:
-            for shelf_code in sorted(by_shelf):
-                shelf_works = by_shelf[shelf_code]
-                parts = [
-                    f"Library of Congress Classification shelf {shelf_code}",
-                    f"{len(shelf_works)} book(s)",
+        for collection_id in sorted(by_collection):
+            collection_works = by_collection[collection_id]
+            key = collection_key(collection_id)
+            parts = [
+                f"Collection {collection_id}",
+                f"{len(collection_works)} book(s)",
+            ]
+            if collection_works:
+                entries = [
+                    f"{work.title} by {primary_creator(work).name}"
+                    for work in collection_works[:MAX_WORKS_IN_ENTRY]
                 ]
-                if shelf_works:
-                    entries = [
-                        f"{work.title} by {primary_creator(work).name}"
-                        for work in shelf_works[:MAX_WORKS_IN_ENTRY]
-                    ]
-                    parts.append("Books: " + ", ".join(entries))
-                    if len(shelf_works) > MAX_WORKS_IN_ENTRY:
-                        parts.append(
-                            f"and {len(shelf_works) - MAX_WORKS_IN_ENTRY} more"
-                        )
-                yield IndexEntry(
-                    title=f"LCC Shelf {shelf_code}",
-                    content=". ".join(parts) + ".",
-                    fname=f"lcc_shelf_{shelf_code}",
-                    route=f"lcc-shelf/{shelf_code}",
-                )
+                parts.append("Books: " + ", ".join(entries))
+                if len(collection_works) > MAX_WORKS_IN_ENTRY:
+                    parts.append(
+                        f"and {len(collection_works) - MAX_WORKS_IN_ENTRY} more"
+                    )
+            yield IndexEntry(
+                title=f"Collection {collection_id}",
+                content=". ".join(parts) + ".",
+                fname=f"collection_{key}",
+                route=f"collections?collection={key}",
+            )
 
         # Entries for the main listing pages
         yield IndexEntry(
@@ -190,12 +184,12 @@ class IndexBuilder:
             fname="authors_list",
             route="authors",
         )
-        if add_lcc_shelves:
-            yield IndexEntry(
-                title=f"LCC Shelves - {display_name}",
-                content=f"Browse books by Library of Congress Classification. "
-                f"{len(by_shelf)} shelves available covering various subjects and "
-                f"topics.",
-                fname="lcc_shelves_list",
-                route="lcc-shelves",
-            )
+        yield IndexEntry(
+            title=f"Collections - {display_name}",
+            content=(
+                f"Browse books by collection. {len(by_collection)} collections "
+                "available."
+            ),
+            fname="collections_list",
+            route="collections",
+        )

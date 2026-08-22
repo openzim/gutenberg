@@ -10,7 +10,6 @@ from importlib import resources
 from jinja2 import Environment, PackageLoader, select_autoescape
 
 from gutenberg2zim.constants import logger
-from gutenberg2zim.core.exporters.catalog_data import collections_for_works
 from gutenberg2zim.core.index_builder import Indexes
 from gutenberg2zim.core.language import language_name
 from gutenberg2zim.core.models import Work
@@ -18,8 +17,8 @@ from gutenberg2zim.core.utils import (
     archive_name_for,
     article_name_for,
     book_name_for_fs,
+    collection_key,
     creator_template_context,
-    work_lcc_shelf,
     work_template_context,
 )
 from gutenberg2zim.core.work_store import WorkStore
@@ -65,6 +64,7 @@ def generate_noscript_pages(
     assembler: ZimAssembler,
     *,
     display_name: str,
+    collection_label: str = "Collections",
     indexes: Indexes,
 ) -> None:
     """Generate No-JavaScript fallback HTML pages"""
@@ -84,11 +84,12 @@ def generate_noscript_pages(
         )
     all_works = list(work_store.works)
     all_authors = indexes.authors
-    shelves = collections_for_works(all_works)
-    shelf_works_map: dict[str, list[Work]] = {
-        shelf_code: [work for work in all_works if work_lcc_shelf(work) == shelf_code]
-        for shelf_code in shelves
-    }
+    collection_works_map: dict[str, list[Work]] = {}
+    collection_names: dict[str, str] = {}
+    for work in all_works:
+        for collection in work.collections:
+            collection_works_map.setdefault(collection.id, []).append(work)
+            collection_names.setdefault(collection.id, collection.name)
     # Template-friendly views, shared across all pages
     book_contexts = {work.id: work_template_context(work) for work in all_works}
     author_contexts = {
@@ -135,45 +136,52 @@ def generate_noscript_pages(
         auto_index=False,
     )
 
-    logger.debug("Generating noscript/lcc_shelves.html")
-    shelves_template = jinja_env.get_template("noscript/lcc_shelves.html")
-    shelves_html = shelves_template.render(
-        shelves=[
+    logger.debug("Generating noscript/collections.html")
+    collections_template = jinja_env.get_template("noscript/collections.html")
+    collections_html = collections_template.render(
+        collections=[
             {
-                "code": code,
-                "book_count": len(shelf_works_map.get(code, [])),
+                "id": collection_id,
+                "key": collection_key(collection_id),
+                "name": collection_names[collection_id],
+                "book_count": len(collection_works_map[collection_id]),
             }
-            for code in shelves
+            for collection_id in sorted(
+                collection_works_map,
+                key=lambda collection_id: collection_names[collection_id],
+            )
         ],
         display_name=display_name,
+        collection_label=collection_label,
     )
     assembler.add_item_for(
-        path="noscript/lcc_shelves.html",
-        content=shelves_html,
+        path="noscript/collections.html",
+        content=collections_html,
         mimetype="text/html",
         is_front=False,
-        title=f"LCC Shelves - {display_name}",
+        title=f"{collection_label} - {display_name}",
         auto_index=False,
     )
 
-    logger.debug("Generating No-JS LCC shelf detail pages")
-    shelf_template = jinja_env.get_template("noscript/lcc_shelf.html")
-    for shelf_code in shelves:
-        shelf_books = [
-            book_contexts[work.id] for work in shelf_works_map.get(shelf_code, [])
-        ]
-        shelf_html = shelf_template.render(
-            shelf_code=shelf_code,
-            books=shelf_books,
+    logger.debug("Generating No-JS collection detail pages")
+    collection_template = jinja_env.get_template("noscript/collection.html")
+    for collection_id, collection_works in collection_works_map.items():
+        collection_books = [book_contexts[work.id] for work in collection_works]
+        collection_html = collection_template.render(
+            collection_id=collection_id,
+            collection_key=collection_key(collection_id),
+            collection_name=collection_names[collection_id],
+            books=collection_books,
             formats=formats,
             display_name=display_name,
+            collection_label=collection_label,
         )
         assembler.add_item_for(
-            path=f"noscript/lcc_shelf_{shelf_code}.html",
-            content=shelf_html,
+            path=f"noscript/collection_{collection_key(collection_id)}.html",
+            content=collection_html,
             mimetype="text/html",
             is_front=False,
-            title=f"LCC Shelf {shelf_code}",
+            title=f"{collection_label}: {collection_names[collection_id]}",
             auto_index=False,
         )
 

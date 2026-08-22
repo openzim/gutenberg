@@ -1,20 +1,24 @@
 {
-	"@metadata": {
-		"authors": [
-			"Tymewalk"
-		]
-	},
-	"language": "Esperanto",
-	"isocode": "eo",
-	"book": {
-		"title": "Titolo"
-	},
-	"common": {
-		"sortTitle": "Titolo",
-		"sortAuthor": "Aŭtoro"
-	},
-	"metadata_defaults": {
-		"title": "Projekto Biblioteko Gutenberg",
-		"description": "Ĉiuj libroj en Esperanto de la unua produktanto de senpagaj Ebooks"
-	}
+  "language": "Esperanto",
+  "isocode": "eo",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Tymewalk"
+      ]
+    },
+    "book": {
+      "title": "Titolo"
+    },
+    "common": {
+      "sortTitle": "Titolo",
+      "sortAuthor": "Aŭtoro"
+    }
+  },
+  "gutenberg": {
+    "metadata_defaults": {
+      "title": "Projekto Biblioteko Gutenberg",
+      "description": "Ĉiuj libroj en Esperanto de la unua produktanto de senpagaj Ebooks"
+    }
+  }
 }

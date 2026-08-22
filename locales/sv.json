@@ -1,141 +1,134 @@
 {
-	"@metadata": {
-		"authors": [
-			"Apq",
-			"Michael FOSS",
-			"Sabelöga"
-		]
-	},
-	"language": "svenska",
-	"isocode": "sv",
-	"nav": {
-		"home": "Hem",
-		"authors": "Författare",
-		"shelves": "Hyllor",
-		"about": "Om",
-		"books": "Böcker"
-	},
-	"about": {
-		"introHeading": "Om Projekt Gutenberg"
-	},
-	"book": {
-		"title": "Titel",
-		"downloads": "nedladdningar",
-		"downloadCount": "Antalet nedladdningar",
-		"languages": "Språk",
-		"lccShelf": "LCC-hylla",
-		"license": "Licens",
-		"licensePd": "Public domain i USA.",
-		"licenseCopyright": "Upphovsrättsskyddad. Läs upphovsrättsmeddelandet i boken för mer information.",
-		"fullName": "Fullständigt namn",
-		"worksAvailable": "Tillgängliga verk",
-		"unknown": "Okänd",
-		"cover": "Bokomslag",
-		"coverLabel": "(omslag)",
-		"anonymous": "Anonym",
-		"various": "Diverse"
-	},
-	"author": {
-		"bookCount": "{n} bok | {n} böcker"
-	},
-	"shelf": {
-		"booksIn": "Böcker på"
-	},
-	"common": {
-		"loading": "Laddar...",
-		"loadingBook": "Laddar in bokdetaljer...",
-		"loadingAuthor": "Laddar in författardetaljer...",
-		"loadingItems": "Laddar in {type}...",
-		"showing": "Visar",
-		"of": "av",
-		"search": "Sök",
-		"sortBy": "Sortera efter",
-		"sortPopularity": "Sortera efter popularitet",
-		"sortTitle": "Sortera efter titel",
-		"chooseLanguage": "Välj ett språk...",
-		"mainLanguages": "Huvudspråk",
-		"otherLanguages": "Andra språk",
-		"anyCatalog": "Välj Katalogen",
-		"uiLanguage": "Gränssnittsspråk",
-		"selectInterfaceLanguage": "Välj gränssnittsspråk",
-		"filterBy": "Filtrera efter",
-		"filterByTitle": "Filtrera efter {title}",
-		"gridView": "Rutnätsvy",
-		"listView": "Listvy",
-		"browseAll": "Bläddra alla",
-		"browseAllAuthors": "Bläddra alla författare",
-		"returnHome": "Hem",
-		"toggleNavigationMenu": "Växla navigeringsmenyn",
-		"mainNavigation": "Huvudnavigering",
-		"mobileNavigationMenu": "Mobil navigeringsmeny",
-		"mobileNavigation": "Mobil navigering",
-		"navigateTo": "Navigera till",
-		"navigateToItem": "Navigera till {item}",
-		"gutenbergHome": "Gutenbergs hem",
-		"sortAuthor": "Författare"
-	},
-	"messages": {
-		"noBooks": "Ingen data tillgänglig i tabellen",
-		"noAuthors": "Inga författare hittades.",
-		"noShelves": "Inga hyllor hittades.",
-		"noBooksForAuthor": "Inga böcker tillgängliga för den här författaren.",
-		"noBooksInShelf": "Inga böcker tillgängliga på den här hyllan.",
-		"noLanguages": "Inga språk tillgängliga.",
-		"noFormats": "Inga format tillgängliga.",
-		"notFoundBook": "Boken hittades inte. Boken du letar efter finns inte eller har tagits bort.",
-		"notFoundAuthor": "Författaren finns inte. Författaren du letar efter finns inte eller har tagits bort.",
-		"notFoundShelf": "LCC-hyllan hittades inte. Hyllan du letar efter finns inte eller har tagits bort."
-	},
-	"metadata_defaults": {
-		"title": "Projekt Gutenbergs Bibliotek",
-		"description": "Alla böcker på svenska från den första producenten av gratis e-böcker"
-	},
-	"footer": {
-	},
-	"itemTypes": {
-		"books": "bok | böcker",
-		"authors": "författare | författare",
-		"shelves": "hylla | hyllor"
-	},
-	"lccShelves": {
-		"A": "A-Allmänna verk",
-		"B": "B-Filosofi, psykologi, religion",
-		"C": "C-Historiska hjälpvetenskaper",
-		"D": "D-Världshistoria och Europas, Asiens, Afrikas, Australiens, Nya Zeelands historia, etc.",
-		"E": "E-Amerikas historia",
-		"F": "F-Amerikas historia",
-		"G": "G-Geografi, antropologi, rekreation",
-		"H": "H-Samhällsvetenskap",
-		"J": "J-Statsvetenskap",
-		"K": "K-Juridik",
-		"L": "L-Utbildning",
-		"M": "M-Musik och böcker om musik",
-		"N": "N-Konst",
-		"P": "P-Språk och litteratur",
-		"Q": "Q-Vetenskap",
-		"R": "R-Medicin",
-		"S": "S-Jordbruk",
-		"T": "T-Teknik",
-		"U": "U-Militärvetenskap",
-		"V": "V-Örlogsvetenskap",
-		"Z": "Z-Bibliografi, biblioteksvetenskap, informationsresurser (allmänt)",
-		"PA": "PA-Grekiska och latinska språket och litteratur",
-		"PB": "PB-Moderna och keltiska språk",
-		"PC": "PC-Romanska språk",
-		"PD": "PD-Germanska och skandinaviska språk",
-		"PE": "PE-Engelska språket",
-		"PF": "PF-Västgermanska språk",
-		"PG": "PG-Slaviska, baltiska och albanska språk",
-		"PH": "PH-Uraliska och baskiska språk",
-		"PJ": "PJ-Orientaliska språk och litteraturer",
-		"PK": "PK-Indo-iranska språk och litteraturer",
-		"PL": "PL-Språk och litteraturer i Östasien, Afrika, Oceanien",
-		"PM": "PM-Hyperboreanska, indiska och artificiella språk",
-		"PN": "PN-Litteratur (Allmänt)",
-		"PQ": "PQ-Fransk, italiensk, spansk, portugisisk litteratur",
-		"PR": "PR-Engelsk litteratur",
-		"PS": "PS-Amerikansk litteratur",
-		"PT": "PT-Tyska, nederländska, flamländska, afrikaans, skandinaviska, fornnordiska, fornisländska, fornnorska, moderna isländska, färöiska, danska, norska och svenska litteraturer",
-		"PZ": "PZ-Skönlitteratur och vitterhet"
-	}
+  "language": "svenska",
+  "isocode": "sv",
+  "common": {
+    "@metadata": {
+      "authors": [
+        "Apq",
+        "Michael FOSS",
+        "Sabelöga"
+      ]
+    },
+    "nav": {
+      "home": "Hem",
+      "authors": "Författare",
+      "about": "Om",
+      "books": "Böcker"
+    },
+    "book": {
+      "title": "Titel",
+      "downloads": "nedladdningar",
+      "downloadCount": "Antalet nedladdningar",
+      "languages": "Språk",
+      "license": "Licens",
+      "licensePd": "Public domain i USA.",
+      "licenseCopyright": "Upphovsrättsskyddad. Läs upphovsrättsmeddelandet i boken för mer information.",
+      "fullName": "Fullständigt namn",
+      "worksAvailable": "Tillgängliga verk",
+      "unknown": "Okänd",
+      "cover": "Bokomslag",
+      "coverLabel": "(omslag)",
+      "anonymous": "Anonym",
+      "various": "Diverse"
+    },
+    "author": {
+      "bookCount": "{n} bok | {n} böcker"
+    },
+    "common": {
+      "loading": "Laddar...",
+      "loadingBook": "Laddar in bokdetaljer...",
+      "loadingAuthor": "Laddar in författardetaljer...",
+      "loadingItems": "Laddar in {type}...",
+      "showing": "Visar",
+      "of": "av",
+      "search": "Sök",
+      "sortBy": "Sortera efter",
+      "sortPopularity": "Sortera efter popularitet",
+      "sortTitle": "Sortera efter titel",
+      "chooseLanguage": "Välj ett språk...",
+      "mainLanguages": "Huvudspråk",
+      "otherLanguages": "Andra språk",
+      "anyCatalog": "Välj Katalogen",
+      "uiLanguage": "Gränssnittsspråk",
+      "selectInterfaceLanguage": "Välj gränssnittsspråk",
+      "filterBy": "Filtrera efter",
+      "filterByTitle": "Filtrera efter {title}",
+      "gridView": "Rutnätsvy",
+      "listView": "Listvy",
+      "browseAll": "Bläddra alla",
+      "browseAllAuthors": "Bläddra alla författare",
+      "returnHome": "Hem",
+      "toggleNavigationMenu": "Växla navigeringsmenyn",
+      "mainNavigation": "Huvudnavigering",
+      "mobileNavigationMenu": "Mobil navigeringsmeny",
+      "mobileNavigation": "Mobil navigering",
+      "navigateTo": "Navigera till",
+      "navigateToItem": "Navigera till {item}",
+      "sortAuthor": "Författare"
+    },
+    "messages": {
+      "noBooks": "Ingen data tillgänglig i tabellen",
+      "noAuthors": "Inga författare hittades.",
+      "noBooksForAuthor": "Inga böcker tillgängliga för den här författaren.",
+      "noLanguages": "Inga språk tillgängliga.",
+      "noFormats": "Inga format tillgängliga.",
+      "notFoundBook": "Boken hittades inte. Boken du letar efter finns inte eller har tagits bort.",
+      "notFoundAuthor": "Författaren finns inte. Författaren du letar efter finns inte eller har tagits bort."
+    },
+    "itemTypes": {
+      "books": "bok | böcker",
+      "authors": "författare | författare"
+    }
+  },
+  "gutenberg": {
+    "about": {
+      "introHeading": "Om Projekt Gutenberg"
+    },
+    "metadata_defaults": {
+      "title": "Projekt Gutenbergs Bibliotek",
+      "description": "Alla böcker på svenska från den första producenten av gratis e-böcker"
+    },
+    "footer": {},
+    "collections": {
+      "A": "A-Allmänna verk",
+      "B": "B-Filosofi, psykologi, religion",
+      "C": "C-Historiska hjälpvetenskaper",
+      "D": "D-Världshistoria och Europas, Asiens, Afrikas, Australiens, Nya Zeelands historia, etc.",
+      "E": "E-Amerikas historia",
+      "F": "F-Amerikas historia",
+      "G": "G-Geografi, antropologi, rekreation",
+      "H": "H-Samhällsvetenskap",
+      "J": "J-Statsvetenskap",
+      "K": "K-Juridik",
+      "L": "L-Utbildning",
+      "M": "M-Musik och böcker om musik",
+      "N": "N-Konst",
+      "P": "P-Språk och litteratur",
+      "Q": "Q-Vetenskap",
+      "R": "R-Medicin",
+      "S": "S-Jordbruk",
+      "T": "T-Teknik",
+      "U": "U-Militärvetenskap",
+      "V": "V-Örlogsvetenskap",
+      "Z": "Z-Bibliografi, biblioteksvetenskap, informationsresurser (allmänt)",
+      "PA": "PA-Grekiska och latinska språket och litteratur",
+      "PB": "PB-Moderna och keltiska språk",
+      "PC": "PC-Romanska språk",
+      "PD": "PD-Germanska och skandinaviska språk",
+      "PE": "PE-Engelska språket",
+      "PF": "PF-Västgermanska språk",
+      "PG": "PG-Slaviska, baltiska och albanska språk",
+      "PH": "PH-Uraliska och baskiska språk",
+      "PJ": "PJ-Orientaliska språk och litteraturer",
+      "PK": "PK-Indo-iranska språk och litteraturer",
+      "PL": "PL-Språk och litteraturer i Östasien, Afrika, Oceanien",
+      "PM": "PM-Hyperboreanska, indiska och artificiella språk",
+      "PN": "PN-Litteratur (Allmänt)",
+      "PQ": "PQ-Fransk, italiensk, spansk, portugisisk litteratur",
+      "PR": "PR-Engelsk litteratur",
+      "PS": "PS-Amerikansk litteratur",
+      "PT": "PT-Tyska, nederländska, flamländska, afrikaans, skandinaviska, fornnordiska, fornisländska, fornnorska, moderna isländska, färöiska, danska, norska och svenska litteraturer",
+      "PZ": "PZ-Skönlitteratur och vitterhet"
+    }
+  }
 }

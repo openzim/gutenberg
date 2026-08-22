@@ -257,19 +257,19 @@ def update_html_for_static(
             html.insert(0, head)
 
         # Add CSS link if not already present in head
-        if not head.find("link", {"href": "css/gutenberg-infobox.css"}):
+        if not head.find("link", {"href": "css/html-reader-controls.css"}):
             css_link = soup.new_tag(
                 "link",
                 rel="stylesheet",
-                href="css/gutenberg-infobox.css",
+                href="css/html-reader-controls.css",
                 type="text/css",
             )
             head.append(css_link)
 
         # Add JS script at the end of body if not already present
-        if not body.find("script", {"src": "js/gutenberg-infobox.js"}):
+        if not body.find("script", {"src": "js/html-reader-controls.js"}):
             js_script = soup.new_tag(
-                "script", src="js/gutenberg-infobox.js", type="text/javascript"
+                "script", src="js/html-reader-controls.js", type="text/javascript"
             )
             body.append(js_script)
 
@@ -292,13 +292,13 @@ def update_html_for_static(
     return soup
 
 
-def export_infobox_assets(assembler: ZimAssembler) -> None:
-    """Export infobox CSS, JS, and icon files to ZIM (fail-fast on missing)"""
+def export_html_reader_control_assets(assembler: ZimAssembler) -> None:
+    """Export shared HTML-reader controls and icons to the ZIM."""
     templates_dir = resources.files("gutenberg2zim") / "templates"
 
     assets = [
-        ("css/gutenberg-infobox.css", "css", "text/css"),
-        ("js/gutenberg-infobox.js", "js", "text/javascript"),
+        ("css/html-reader-controls.css", "css", "text/css"),
+        ("js/html-reader-controls.js", "js", "text/javascript"),
         ("icons/info.svg", "icons", "image/svg+xml"),
         ("icons/epub.svg", "icons", "image/svg+xml"),
         ("icons/pdf.svg", "icons", "image/svg+xml"),

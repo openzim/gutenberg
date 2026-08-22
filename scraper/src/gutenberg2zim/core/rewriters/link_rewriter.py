@@ -1,4 +1,4 @@
-"""Generic relative link rewriting (moved from the Gutenberg rewriting module).
+"""Generic relative link rewriting.
 
 Rewrites relative links to sibling HTML pages into `{item_id}_{page}` form
 so they resolve inside the ZIM. Source-agnostic: takes a plain item id.

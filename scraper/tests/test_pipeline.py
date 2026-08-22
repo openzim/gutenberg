@@ -5,19 +5,22 @@ from unittest.mock import MagicMock, patch
 import requests
 
 from gutenberg2zim.core.models import Work
-from gutenberg2zim.core.pipeline import Pipeline, compute_popularity
+from gutenberg2zim.core.pipeline import (
+    Pipeline,
+    compute_flame_ratings,
+)
 from gutenberg2zim.core.ports import WorkRef
 from gutenberg2zim.core.progress import ScraperProgress
 from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.sources.gutenberg.catalog import GUTENBERG_SOURCE
 
 
-def make_work(work_id: str, downloads: int) -> Work:
+def make_work(work_id: str, primary_metric: int) -> Work:
     return Work(
         id=work_id,
         source=GUTENBERG_SOURCE,
         title=f"Book {work_id}",
-        extra={"downloads": downloads},
+        primary_metric=primary_metric,
     )
 
 
@@ -37,11 +40,14 @@ class DummyPipeline(Pipeline):
             self.store.add(works[0])
         self.calls.append(f"process:{ref.id}")
 
+    def flame_score(self, work: Work) -> int | None:
+        return work.primary_metric
+
 
 def build_pipeline(calls: list[str], store: WorkStore) -> DummyPipeline:
     metadata = MagicMock(name="metadata")
     metadata.fetch.side_effect = lambda refs: [
-        make_work(ref.id, downloads=100) for ref in refs
+        make_work(ref.id, primary_metric=100) for ref in refs
     ]
     return DummyPipeline(
         calls,
@@ -52,7 +58,7 @@ def build_pipeline(calls: list[str], store: WorkStore) -> DummyPipeline:
         concurrency=2,
         formats=["html"],
         zim_name="test",
-        add_lcc_shelves=False,
+        source_slug="test",
         display_name="Test Source",
     )
 
@@ -85,18 +91,53 @@ def test_run_calls_hooks_in_order_and_stores_works():
     assert mock_nojs.call_args.kwargs["work_store"] is store
 
 
-def test_compute_popularity_assigns_stars_by_downloads():
+def test_compute_flame_ratings_assigns_flames_from_source_scores():
     store = WorkStore()
     for work_id, downloads in [("1", 500), ("2", 300), ("3", 100), ("4", 0)]:
-        store.add(make_work(work_id, downloads))
+        store.add(make_work(work_id, primary_metric=downloads))
 
-    compute_popularity(store)
+    compute_flame_ratings(store, lambda work: work.primary_metric)
 
     popularity = {work.id: work.popularity or 0 for work in store.works}
     assert all(work.popularity is not None for work in store.works)
     assert popularity["1"] >= popularity["2"]
     assert popularity["2"] > popularity["3"]
     assert popularity["3"] > popularity["4"]
+
+
+def test_compute_flame_ratings_leaves_works_without_scores_unset():
+    store = WorkStore()
+    store.add(Work(id="1", source="opentextbooks", title="Textbook"))
+
+    compute_flame_ratings(store, lambda work: work.primary_metric)
+
+    assert store.works[0].popularity is None
+
+
+def test_compute_flame_ratings_uses_source_supplied_review_scores_only():
+    store = WorkStore()
+    reviewed = [
+        Work(
+            id="1",
+            source="opentextbooks",
+            title="Excellent",
+            extra={"review_score": 4.9},
+        ),
+        Work(id="2", source="opentextbooks", title="Good", extra={"review_score": 4.0}),
+        Work(id="3", source="opentextbooks", title="Fair", extra={"review_score": 3.0}),
+    ]
+    unreviewed = Work(id="4", source="opentextbooks", title="Unreviewed")
+    for work in [*reviewed, unreviewed]:
+        store.add(work)
+
+    compute_flame_ratings(store, lambda work: work.extra.get("review_score"))
+
+    assert reviewed[0].popularity is not None
+    assert reviewed[1].popularity is not None
+    assert reviewed[2].popularity is not None
+    assert reviewed[0].popularity >= reviewed[1].popularity
+    assert reviewed[1].popularity > reviewed[2].popularity
+    assert unreviewed.popularity is None
 
 
 def test_no_book_level_retry_for_network_errors():
@@ -111,7 +152,7 @@ def test_no_book_level_retry_for_network_errors():
         calls.append(f"process:{ref.id}")
         if ref.id == "1":
             raise requests.ConnectionError("network down")
-        store.add(make_work(ref.id, downloads=100))
+        store.add(make_work(ref.id, primary_metric=100))
 
     pipeline.process_ref = flaky_process
     with (
