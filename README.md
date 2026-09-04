@@ -42,8 +42,10 @@ docker run ghcr.io/openzim/gutenberg gutenberg2zim --help
 
 Example with custom options:
 
+```bash
 docker run -v $(pwd)/output:/output ghcr.io/openzim/gutenberg \
   gutenberg2zim -l en,fr -f pdf --books 100-200 --lcc-shelves all
+```
 
 ### Using PyPI
 
