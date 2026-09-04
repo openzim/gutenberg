@@ -237,6 +237,8 @@ ISO_MATRIX = {
 ISO_MATRIX_REV = {value: key for key, value in ISO_MATRIX.items()}
 
 ZIM_LANGUAGES_MAP: dict[str, list[str]] = {
+    # Bodo: valid ISO 639-3 code with no ISO 639-1 counterpart
+    "brx": ["brx"],
     # no idea how to map `myn` and `nai` in ZIM Language metadata for now
     # do not block if these are parts of another language but refuse to create ZIM
     # if only this language is requested and --zim-lang is not passed

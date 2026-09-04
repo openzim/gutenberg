@@ -79,3 +79,13 @@ def test_nap_resolves():
 def test_oji_resolves():
     books = _make_books([["oji"]])
     assert get_zim_language_metadata(["oji"], books) == ["oji"]
+
+
+def test_brx_resolves_for_book_53506_languages():
+    books = _make_books([["de", "en", "brx"]])
+
+    assert get_zim_language_metadata(["de", "en", "brx"], books) == [
+        "deu",
+        "eng",
+        "brx",
+    ]
