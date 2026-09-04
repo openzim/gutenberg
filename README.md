@@ -60,9 +60,9 @@ Note: You'll need to install system dependencies (zim-tools) separately. See [CO
 
 ### Scraping Sources
 
-The scraper supports two sources. Select a source with --source:
+The scraper supports two sources, select a source with `--source`:
 
---source=<source>    Source slug or short name:
+`--source=<source>`    Source slug or short name:
                      gutenberg (PG) or opentextbooks (OTL)
                      Default: gutenberg
 
