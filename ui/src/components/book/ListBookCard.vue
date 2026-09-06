@@ -56,14 +56,14 @@ const { t } = useI18n()
   z-index: 0;
   color: inherit;
   border: 2px solid rgb(var(--v-theme-grid));
-  padding: 1rem 1.25rem;
+  padding: 1.5rem;
   transition: box-shadow 0.2s ease;
 }
 
 .list-book-card:hover,
 .list-book-card:focus {
-  border-color: rgb(var(--v-theme-text));
-  box-shadow: 0 0 5px 0 rgb(var(--v-theme-text));
+  border-color: rgb(var(--v-theme-grid));
+  box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
   z-index: 1;
 }
 
@@ -75,6 +75,7 @@ const { t } = useI18n()
   display: flex;
   flex-direction: column;
   min-width: 0;
+  padding-left: 1.5rem;
 }
 
 .format-links {

@@ -131,7 +131,7 @@ docker build -t local-gutenberg .
 docker run --rm -it -v "$PWD/output":/output \
   local-gutenberg \
   gutenberg2zim --books 1,2,3 --languages en --formats html \
-  --zim-file gutenberg_dev --output /output
+  --zim-file gutenberg_dev.zim --output /output
 ```
 
 Adjust `--books`, `--languages`, and `--formats` to match your test dataset.

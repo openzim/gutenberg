@@ -42,6 +42,8 @@ const flames = computed(() => Math.max(0, Math.min(3, Math.floor(props.popularit
   fill: currentColor;
   color: #ff8c00;
   opacity: 1;
+  margin-right: -2px;
+  margin-left: -2px;
 }
 
 .flame-icon--dim {

@@ -134,17 +134,19 @@ function goToAuthor(id: string) {
   height: calc(100% + var(--g-card-border));
   margin: var(--g-card-negative-bleed);
   position: relative;
+  padding: 4rem;
 }
 
 .featured-book__label {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
-  font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
+  font-weight: bold;
   color: #ffffff;
   opacity: 0.9;
   margin: 0 0 1rem;
   text-align: left;
   width: 100%;
+  padding: 0rem;
 }
 
 .featured-book__cover-wrapper {
@@ -157,6 +159,7 @@ function goToAuthor(id: string) {
   max-height: 450px;
   flex-shrink: 0;
   align-self: center;
+  padding: 1.5rem;
 }
 
 .featured-book__cover {

@@ -12,7 +12,7 @@ repos:
   - id: prettier
     files: ui\/.*$
 - repo: https://github.com/pre-commit/mirrors-eslint
-  rev: v8.51.0
+  rev: v9.39.1
   hooks:
   - id: eslint
     types: [file]

@@ -40,6 +40,7 @@ async function loadVuetify(config: Config) {
     focusBook: THEME_COLORS.FOCUS_BOOK,
     menuActive: THEME_COLORS.MENU_ACTIVE,
     collectionIcon: THEME_COLORS.COLLECTION_ICON,
+    authorAvatarBgd: THEME_COLORS.AUTHOR_AVATAR_BGD,
     bgd1: THEME_COLORS.BGD_1,
     bgd2: THEME_COLORS.BGD_2,
     bgd3Fill: THEME_COLORS.BGD_3_FILL,
@@ -65,7 +66,8 @@ async function loadVuetify(config: Config) {
     bgd3Fill: THEME_COLORS.BGD_3_FILL_DARK,
     bgd3Outline: THEME_COLORS.BGD_3_OUTLINE_DARK,
     focusBook: THEME_COLORS.FOCUS_BOOK_DARK,
-    collectionIcon: THEME_COLORS.COLLECTION_ICON_DARK
+    collectionIcon: THEME_COLORS.COLLECTION_ICON_DARK,
+    authorAvatarBgd: THEME_COLORS.AUTHOR_AVATAR_BGD_DARK
   }
 
   const lightTheme: ThemeDefinition = {

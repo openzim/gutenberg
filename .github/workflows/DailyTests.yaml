@@ -25,7 +25,6 @@ jobs:
           mkdir -p output
           docker run --rm -v "$PWD/output:/output" gutenberg gutenberg2zim \
             --source gutenberg \
-            --mirror-url https://www.gutenberg.org \
             --output /output \
             --zim-file /output/gutenberg-integration.zim \
             --zim-name gutenberg_integration_test \

@@ -275,7 +275,7 @@ def fetch_book_metadata(
 
     Args:
         book_id: The Gutenberg book ID
-        mirror_url: The mirror URL (e.g., "https://gutenberg.mirror.driftle.ss")
+        mirror_url: The mirror URL (e.g., "https://aleph.pglaf.org")
         engine: Optional DownloadEngine; when configured with a cache directory,
             RDF responses are cached on disk by URL hash. Otherwise it performs
             a plain in-memory fetch.

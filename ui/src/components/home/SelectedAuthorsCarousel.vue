@@ -104,10 +104,10 @@ const arrows = [
                 <div class="selected-author-card__avatar-wrapper">
                   <v-avatar
                     :size="AVATAR_SIZES.TABLET"
-                    color="primary"
+                    color="rgb(var(--v-theme-authorAvatarBgd))"
                     class="selected-author-card__avatar"
                   >
-                    <v-icon icon="mdi-account" :size="ICON_SIZES.DETAIL" />
+                    <v-icon color="white" icon="mdi-account" :size="ICON_SIZES.DETAIL" />
                   </v-avatar>
                 </div>
                 <h3 class="selected-author-card__name">
@@ -200,7 +200,7 @@ const arrows = [
 
 .selected-author-card:hover .selected-author-card__avatar-wrapper,
 .selected-author-card:focus .selected-author-card__avatar-wrapper {
-  transform: scale(1.08);
+  transform: scale(1.05);
   box-shadow:
     0 0 12px rgba(var(--v-theme-text), 0.15),
     0 0 24px rgba(var(--v-theme-text), 0.1),

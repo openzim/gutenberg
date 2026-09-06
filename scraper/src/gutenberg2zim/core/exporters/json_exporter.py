@@ -246,7 +246,7 @@ def generate_json_files(
             format_icons={format_name: format_name for format_name in formats},
             route_labels={
                 "home": "Home",
-                "works": "Ebooks",
+                "works": "eBooks",
                 "authors": "Authors",
                 "collections": collection_label,
             },

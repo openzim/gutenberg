@@ -127,7 +127,7 @@ onMounted(() => {
         @select="(id) => (activeCollectionId = id)"
       />
 
-      <v-container>
+      <v-container class="collection-books">
         <v-row v-if="collectionBooksLoading">
           <v-col cols="12">
             <loading-spinner :message="t('common.loading')" />
@@ -154,6 +154,16 @@ onMounted(() => {
 <style scoped>
 .home-view {
   padding: v-bind(LAYOUT.VIEW_PADDING);
+}
+
+.collection-books {
+  padding-bottom: 5rem;
+}
+
+.selected-authors-carousel,
+.selected-books-section {
+  padding-top: 6rem;
+  padding-bottom: 5rem;
 }
 
 @media (max-width: 960px) {
