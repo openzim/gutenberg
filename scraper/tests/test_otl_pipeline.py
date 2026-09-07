@@ -1,6 +1,8 @@
 """Tests for OTL per-work processing."""
 
+from io import BytesIO
 from unittest.mock import MagicMock, patch
+from zipfile import ZIP_STORED, ZipFile
 
 from gutenberg2zim.core.models import Format, Work
 from gutenberg2zim.core.ports import WorkRef
@@ -25,6 +27,13 @@ def _pipeline(work: Work, engine: MagicMock, assembler: MagicMock):
         title_search=False,
         engine=engine,
     )
+
+
+def _valid_epub() -> bytes:
+    output = BytesIO()
+    with ZipFile(output, "w", ZIP_STORED) as archive:
+        archive.writestr("mimetype", "application/epub+zip")
+    return output.getvalue()
 
 
 def test_process_ref_exports_direct_files_and_marks_unavailable_formats():
@@ -197,12 +206,10 @@ def test_html_is_not_mirrored_when_a_binary_format_is_available_after_it():
     pipeline.formats = ["html", "pdf"]
     edition = MagicMock(pages={"Calculus.10": b"<!doctype html><html></html>"})
 
-    with (
-        patch(
-            "gutenberg2zim.sources.opentextbooks.pipeline.download_html_edition",
-            return_value=edition,
-        ) as mirror,
-    ):
+    with patch(
+        "gutenberg2zim.sources.opentextbooks.pipeline.download_html_edition",
+        return_value=edition,
+    ) as mirror:
         pipeline.process_ref(WorkRef(id="10", source="opentextbooks"))
 
     mirror.assert_not_called()
@@ -229,7 +236,7 @@ def test_process_ref_accepts_a_valid_epub_archive():
         ],
     )
     engine = MagicMock()
-    engine.fetch_bytes.return_value = b"PK\x03\x04 epub bytes"
+    engine.fetch_bytes.return_value = _valid_epub()
     assembler = MagicMock()
     pipeline = _pipeline(work, engine, assembler)
 
@@ -239,7 +246,7 @@ def test_process_ref_accepts_a_valid_epub_archive():
     assert "epub" not in work.extra["unsupported_formats"]
     assembler.add_item_for.assert_called_once_with(
         path="Calculus.10.epub",
-        content=b"PK\x03\x04 epub bytes",
+        content=_valid_epub(),
         mimetype="application/epub+zip",
         is_front=False,
     )
