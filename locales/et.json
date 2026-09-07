@@ -1,61 +1,67 @@
 {
-  "@metadata": {
-    "authors": [
-      "Rivoz"
-    ]
-  },
-  "common": {
-    "nav": {
-      "home": "Avaleht",
-      "authors": "Autorid",
-      "about": "Teave",
-      "books": "Raamatud"
-    },
-    "book": {
-      "title": "Raamatud",
-      "downloads": "allalaadimised",
-      "downloadCount": "Allalaadimiste arv",
-      "languages": "Keel(ed)",
-      "fullName": "Täisnimi",
-      "unknown": "Tundmatu"
-    },
-    "author": {
-      "bookCount": "{n} raamat | {n} raamatut"
-    },
-    "common": {
-      "loadingAuthor": "Autori info laadimine...",
-      "loadingItems": "Laadimine {type}...",
-      "sortBy": "Sorteeri",
-      "sortPopularity": "Populaarsus",
-      "uiLanguage": "Kasutajaliidese keel",
-      "selectInterfaceLanguage": "Vali kasutajaliidese keel",
-      "gridView": "Ruudustikuvaade",
-      "listView": "Loendivaade",
-      "browseAll": "Sirvi kõiki",
-      "browseAllAuthors": "Sirvi kõiki autoreid",
-      "returnHome": "Tagasi avalehele",
-      "toggleNavigationMenu": "Navigeerimismenüü avamine/sulgemine"
-    },
-    "messages": {
-      "noBooks": "Raamatuid ei leitud.",
-      "noAuthors": "Autoreid ei leitud.",
-      "noLanguages": "Keeli pole saadaval.",
-      "noFormats": "Vorminguid pole saadaval."
-    },
-    "itemTypes": {
-      "books": "raamat | raamatud"
-    }
-  },
-  "gutenberg": {
-    "about": {
-      "introHeading": "Teave Project Gutenbergi kohta"
-    },
-    "metadata_defaults": {
-      "title": "Projekt Gutenbergi raamatukogu",
-      "description": "Kõik eestikeelsed raamatud esimeselt tasuta e-raamatute tootjalt"
-    },
-    "collections": {
-      "B": "B-Filosoofia, psühholoogia, religioon"
-    }
-  }
+	"@metadata": {
+		"authors": [
+			"Rivoz"
+		]
+	},
+	"common": {
+		"nav": {
+			"home": "Avaleht",
+			"authors": "Autorid",
+			"about": "Teave",
+			"books": "Raamatud"
+		},
+		"book": {
+			"title": "Raamatud",
+			"downloads": "allalaadimised",
+			"downloadCount": "Allalaadimiste arv",
+			"languages": "Keel(ed)",
+			"fullName": "Täisnimi",
+			"unknown": "Tundmatu"
+		},
+		"author": {
+			"bookCount": "{n} raamat | {n} raamatut"
+		},
+		"common": {
+			"loadingAuthor": "Autori info laadimine...",
+			"loadingItems": "Laadimine {type}...",
+			"sortBy": "Sorteeri",
+			"sortPopularity": "Populaarsus",
+			"uiLanguage": "Kasutajaliidese keel",
+			"selectInterfaceLanguage": "Vali kasutajaliidese keel",
+			"gridView": "Ruudustikuvaade",
+			"listView": "Loendivaade",
+			"browseAll": "Sirvi kõiki",
+			"browseAllAuthors": "Sirvi kõiki autoreid",
+			"returnHome": "Tagasi avalehele",
+			"toggleNavigationMenu": "Navigeerimismenüü avamine/sulgemine"
+		},
+		"messages": {
+			"noBooks": "Raamatuid ei leitud.",
+			"noAuthors": "Autoreid ei leitud.",
+			"noLanguages": "Keeli pole saadaval.",
+			"noFormats": "Vorminguid pole saadaval."
+		},
+		"itemTypes": {
+			"books": "raamat | raamatud"
+		}
+	},
+	"gutenberg": {
+		"about": {
+			"introHeading": "Teave Project Gutenbergi kohta"
+		},
+		"metadata_defaults": {
+			"title": "Projekt Gutenbergi raamatukogu",
+			"description": "Kõik eestikeelsed raamatud esimeselt tasuta e-raamatute tootjalt"
+		},
+		"nav": {
+			"collections": "Riiulid"
+		},
+		"book": {
+			"collection": "LCC riiul"
+		},
+		"collections": {
+			"B": "B-Filosoofia, psühholoogia, religioon"
+		}
+	}
 }

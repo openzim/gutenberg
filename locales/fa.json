@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "پروژه کتابخانه گوتنبرگ",
-      "description": "همه کتاب‌های فارسی از اولین تولید کننده کتاب‌های الکترونیکی رایگان"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "پروژه کتابخانه گوتنبرگ",
+			"description": "همه کتاب‌های فارسی از اولین تولید کننده کتاب‌های الکترونیکی رایگان"
+		}
+	}
 }

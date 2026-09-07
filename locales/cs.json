@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Projekt Gutenbergova knihovna",
-      "description": "Všechny knihy v češtině od prvního výrobce bezplatných e-knih"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Projekt Gutenbergova knihovna",
+			"description": "Všechny knihy v češtině od prvního výrobce bezplatných e-knih"
+		}
+	}
 }

@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Prosjekt Gutenberg bibliotek",
-      "description": "Alle bøker på norsk fra den første produsenten av gratis e-bøker"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Prosjekt Gutenberg bibliotek",
+			"description": "Alle bøker på norsk fra den første produsenten av gratis e-bøker"
+		}
+	}
 }

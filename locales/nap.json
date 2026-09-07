@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Librarìa Project Gutenberg",
-      "description": "Tutti `e libbre in napulitano d``o primmo produttore `e e-book gratuite"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Librarìa Project Gutenberg",
+			"description": "Tutti `e libbre in napulitano d``o primmo produttore `e e-book gratuite"
+		}
+	}
 }

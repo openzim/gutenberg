@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Biblioteca Project Gutenberg",
-      "description": "Tots els llibres en català del primer productor de llibres electrònics gratuïts"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Biblioteca Project Gutenberg",
+			"description": "Tots els llibres en català del primer productor de llibres electrònics gratuïts"
+		}
+	}
 }

@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Project Gutenberg Bibleteek",
-      "description": "Alle boeken yn it Frysk fan de earste produsint fan fergese e-boeken"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Project Gutenberg Bibleteek",
+			"description": "Alle boeken yn it Frysk fan de earste produsint fan fergese e-boeken"
+		}
+	}
 }

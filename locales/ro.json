@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Biblioteca Proiect Gutenberg",
-      "description": "Toate cărțile în română de la primul producător de cărți electronice gratuite"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Biblioteca Proiect Gutenberg",
+			"description": "Toate cărțile în română de la primul producător de cărți electronice gratuite"
+		}
+	}
 }
