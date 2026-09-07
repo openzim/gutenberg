@@ -73,6 +73,8 @@ tmp/
 output
 /cache/
 /scraper/src/gutenberg2zim/zimui/
+# Parent README copied by hatch-openzim while building the scraper package.
+/scraper/README.md
 
 src/gutenberg2zim/templates/jquery/jquery-1.11.1.min.js
 /.idea/

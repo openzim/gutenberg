@@ -1,19 +1,11 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-openzim>=0.3.0"]
 build-backend = "hatchling.build"
 
 [project]
 name = "gutenberg2zim"
-authors = [{ name = "Kiwix", email = "dev@kiwix.org" }]
-keywords = ["kiwix", "zim", "offline", "books", "gutenberg", "opentextbooks"]
 requires-python = ">=3.14,<3.15"
 description = "Build offline ZIM libraries from supported book sources"
-license = { text = "GPL-3.0-or-later" }
-classifiers = [
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.14",
-  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-]
 dependencies = [
   "beautifulsoup4==4.14.3",
   "Jinja2==3.1.6",
@@ -30,7 +22,15 @@ dependencies = [
   "pydantic==2.12.5",
   "PyMuPDF==1.27.2.3",
 ]
-dynamic = ["version", "readme"]
+dynamic = [
+  "authors",
+  "classifiers",
+  "keywords",
+  "license",
+  "readme",
+  "urls",
+  "version",
+]
 
 [project.optional-dependencies]
 scripts = ["invoke==2.2.1"]
@@ -48,10 +48,6 @@ dev = [
   "gutenberg2zim[check]",
 ]
 
-[project.urls]
-Homepage = "https://github.com/openzim/gutenberg"
-Donate = "https://www.kiwix.org/en/support-us/"
-
 [project.scripts]
 gutenberg2zim = "gutenberg2zim.cli:main"
 gutenberg2zim-validate-i18n = "gutenberg2zim.scripts.validate_i18n:main"
@@ -59,8 +55,12 @@ gutenberg2zim-validate-i18n = "gutenberg2zim.scripts.validate_i18n:main"
 [tool.hatch.version]
 path = "src/gutenberg2zim/__about__.py"
 
-[tool.hatch.metadata.hooks.custom]
-path = "hatch_build.py"
+[tool.hatch.metadata.hooks.openzim-metadata]
+kind = "scraper"
+additional-keywords = ["books", "gutenberg", "opentextbooks"]
+readme = "../README.md"
+
+[tool.hatch.build.hooks.openzim-build]
 
 [tool.hatch.build]
 exclude = ["/.github"]
