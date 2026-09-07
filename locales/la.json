@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Bibliotheca Projecti Gutenberg",
-      "description": "Omnes libri Latine a primo creatore Librorum Digitalium Gratuitorum"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Bibliotheca Projecti Gutenberg",
+			"description": "Omnes libri Latine a primo creatore Librorum Digitalium Gratuitorum"
+		}
+	}
 }

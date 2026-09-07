@@ -1,26 +1,30 @@
 {
-  "@metadata": {
-    "authors": [
-      "Kareyac"
-    ]
-  },
-  "language": "Հայերեն",
-  "common": {
-    "book": {
-      "title": "Գրքեր",
-      "license": "Արտոնագիր",
-      "cover": "Գրքի շապիկ",
-      "download": "Ներբեռնել"
-    },
-    "common": {
-      "search": "Որոնել",
-      "chooseLanguage": "Ընտրեք լեզուն",
-      "otherLanguages": "Այլ լեզուներ",
-      "close": "Փակել",
-      "next": "Հաջորդ",
-      "readMore": "Կարդալ ավելին",
-      "sortAuthor": "Հեղինակ"
-    }
-  },
-  "gutenberg": {}
+	"@metadata": {
+		"authors": [
+			"Kareyac"
+		]
+	},
+	"language": "Հայերեն",
+	"common": {
+		"book": {
+			"title": "Գրքեր",
+			"license": "Արտոնագիր",
+			"cover": "Գրքի շապիկ",
+			"download": "Ներբեռնել"
+		},
+		"common": {
+			"search": "Որոնել",
+			"chooseLanguage": "Ընտրեք լեզուն",
+			"otherLanguages": "Այլ լեզուներ",
+			"close": "Փակել",
+			"next": "Հաջորդ",
+			"readMore": "Կարդալ ավելին",
+			"sortAuthor": "Հեղինակ"
+		}
+	},
+	"gutenberg": {
+		"collection": {
+			"allCollections": "Բոլոր դարակները"
+		}
+	}
 }

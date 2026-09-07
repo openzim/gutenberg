@@ -1,15 +1,14 @@
 {
-  "@metadata": {
-    "authors": [
-      "Omotecho",
-      "RhAnish"
-    ]
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "プロジェクト・グーテンベルク・ライブラリー",
-      "description": "無料電子書籍第1号の製作者による全巻日本語の本"
-    }
-  }
+	"@metadata": {
+		"authors": [
+			"Omotecho",
+			"RhAnish"
+		]
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "プロジェクト・グーテンベルク・ライブラリー",
+			"description": "無料電子書籍第1号の製作者による全巻日本語の本"
+		}
+	}
 }

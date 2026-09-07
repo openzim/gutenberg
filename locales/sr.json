@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Пројекат Библиотека Гутенберг",
-      "description": "Све књиге на српском од првог произвођача бесплатних e-књига"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Пројекат Библиотека Гутенберг",
+			"description": "Све књиге на српском од првог произвођача бесплатних e-књига"
+		}
+	}
 }

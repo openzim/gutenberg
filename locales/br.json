@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Levraoueg Raktres Gutenberg",
-      "description": "An holl levrioù e brezhoneg digant kentañ produer al levrioù elekronik digoust"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Levraoueg Raktres Gutenberg",
+			"description": "An holl levrioù e brezhoneg digant kentañ produer al levrioù elekronik digoust"
+		}
+	}
 }

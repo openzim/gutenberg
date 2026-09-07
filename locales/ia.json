@@ -1,132 +1,228 @@
 {
-  "@metadata": {
-    "authors": [
-      "McDutchie"
-    ]
-  },
-  "language": "Interlingua",
-  "isocode": "ia",
-  "common": {
-    "nav": {
-      "home": "Pagina initial",
-      "authors": "Autores",
-      "about": "A proposito",
-      "books": "Libros"
-    },
-    "book": {
-      "title": "Titulo",
-      "downloads": "discargamentos",
-      "downloadCount": "Numero de discargamentos",
-      "languages": "Lingua",
-      "license": "Licentia",
-      "licensePd": "De dominio public in le Statos Unite.",
-      "licenseCopyright": "Protegite per le derecto de autor. Consulta le aviso de derecto de autor in iste libro pro plus detalios.",
-      "fullName": "Nomine complete",
-      "worksAvailable": "Obras disponibile",
-      "unknown": "Incognite",
-      "cover": "Copertura de libro",
-      "coverLabel": "(copertura)",
-      "anonymous": "Anonyme",
-      "various": "Plures"
-    },
-    "author": {
-      "bookCount": "{n} libro | {n} libros"
-    },
-    "common": {
-      "loading": "Cargamento…",
-      "loadingBook": "Cargamento del detalios del libro…",
-      "loadingAuthor": "Cargamento del detalios del autor…",
-      "loadingItems": "Cargamento de {type}…",
-      "showing": "Es monstrate",
-      "of": "de",
-      "search": "Cercar",
-      "sortBy": "Ordinar per",
-      "sortPopularity": "Ordinar libros per popularitate",
-      "sortTitle": "Ordinar libros per titulo",
-      "chooseLanguage": "Elige un lingua…",
-      "mainLanguages": "Linguas principal",
-      "otherLanguages": "Altere linguas",
-      "anyCatalog": "Elige le catalogo",
-      "uiLanguage": "Lingua del interfacie",
-      "selectInterfaceLanguage": "Selige le lingua del interfacie",
-      "filterBy": "Filtrar per",
-      "filterByTitle": "Filtrar per {title}",
-      "gridView": "Disposition in grillia",
-      "listView": "Disposition in lista",
-      "browseAll": "Explorar toto",
-      "browseAllAuthors": "Explorar tote le autores",
-      "returnHome": "Retornar al initio",
-      "toggleNavigationMenu": "Monstrar/celar le menu de navigation",
-      "mainNavigation": "Navigation principal",
-      "mobileNavigationMenu": "Menu de navigation mobile",
-      "mobileNavigation": "Navigation mobile",
-      "navigateTo": "Navigar a",
-      "navigateToItem": "Navigar a {item}",
-      "sortAuthor": "Autor"
-    },
-    "messages": {
-      "noBooks": "Nulle datos disponibile in tabella",
-      "noAuthors": "Necun autor trovate.",
-      "noBooksForAuthor": "Necun libro de iste autor es disponibile.",
-      "noLanguages": "Necun lingua disponibile.",
-      "noFormats": "Nulle formato disponibile.",
-      "notFoundBook": "Libro non trovate. Le libro que tu cerca non existe o ha essite removite.",
-      "notFoundAuthor": "Autor non trovate. Le autor que tu cerca non existe o ha essite removite."
-    },
-    "itemTypes": {
-      "books": "libro | libros",
-      "authors": "autor | autores"
-    }
-  },
-  "gutenberg": {
-    "about": {
-      "introHeading": "A proposito del Projecto Gutenberg"
-    },
-    "metadata_defaults": {
-      "title": "Bibliotheca Project Gutenberg",
-      "description": "Omne libros in Interlingua ab le prime productor de eBooks gratuite"
-    },
-    "footer": {},
-    "collections": {
-      "A": "A-Obras general",
-      "B": "B-Philosophia, psychologia, religion",
-      "C": "C-Scientias auxiliar del historia",
-      "D": "D-Historia del mundo e de Europa, Asia, Africa, Australia, Nove Zelanda, etc.",
-      "E": "E-Historia del Americas",
-      "F": "F-Historia del Americas",
-      "G": "G-Geographia, anthropologia, recreation",
-      "H": "H-Scientias social",
-      "J": "J-Politicologia",
-      "K": "K-Derecto",
-      "L": "L-Education",
-      "M": "M-Musica e libros sur musica",
-      "N": "N-Belle artes",
-      "P": "P-Lingua e litteratura",
-      "Q": "Q-Scientia",
-      "R": "R-Medicina",
-      "S": "S-Agricultura",
-      "T": "T-Technologia",
-      "U": "U-Scientia militar",
-      "V": "V-Scientia naval",
-      "Z": "Z-Bibliographia, bibliotheconomia, ressources de information (general)",
-      "PA": "PA-Lingua e litteratura grec e latin",
-      "PB": "PB-Linguas moderne e celtic",
-      "PC": "PC-Linguas romanic",
-      "PD": "PD-Linguas germanic e scandinave",
-      "PE": "PE-Lingua anglese",
-      "PF": "PF-Linguas germanic occidental",
-      "PG": "PG-Linguas slave, baltic e albanese",
-      "PH": "PH-Linguas uralic e basc",
-      "PJ": "PJ-Linguas e litteraturas oriental",
-      "PK": "PK-Linguas e litteraturas indo-iranian",
-      "PL": "PL-Linguas e litteraturas de Asia del Est, Africa, Oceania",
-      "PM": "PM-Linguas hyperboree, indian e artificial",
-      "PN": "PN-Litteratura (general)",
-      "PQ": "PQ-Litteratura francese, italian, espaniol e portugese",
-      "PR": "PR-Litteratura anglese",
-      "PS": "PS-Litteratura american",
-      "PT": "PT-Litteratura german, nederlandese, flaminge, afrikaans, scandinave, nordico ancian, islandese ancian, norvegiano ancian, islandese moderne, faroese, danese, norvegiano e svedese",
-      "PZ": "PZ-Fiction e belle litteras pro juvenes"
-    }
-  }
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"language": "Interlingua",
+	"isocode": "ia",
+	"common": {
+		"nav": {
+			"home": "Pagina initial",
+			"authors": "Autores",
+			"collections": "Collectiones",
+			"about": "A proposito",
+			"books": "Libros"
+		},
+		"home": {
+			"allAuthors": "Tote le autores",
+			"allCollections": "Tote le collectiones",
+			"discoverAllBooks": "Discoperir tote le libros",
+			"mostDownloaded": "Le plus discargate",
+			"popularCollections": "Collectiones popular",
+			"selectedAuthors": "Autores seligite",
+			"selectedBooks": "Libros seligite"
+		},
+		"book": {
+			"title": "Titulo",
+			"downloads": "discargamentos",
+			"downloadCount": "Numero de discargamentos",
+			"primaryMetric": "Statistica",
+			"languages": "Lingua",
+			"collection": "Collection",
+			"license": "Licentia",
+			"licensePd": "De dominio public in le Statos Unite.",
+			"licenseCopyright": "Protegite per le derecto de autor. Consulta le aviso de derecto de autor in iste libro pro plus detalios.",
+			"fullName": "Nomine complete",
+			"worksAvailable": "Obras disponibile",
+			"unknown": "Incognite",
+			"cover": "Copertura de libro",
+			"coverAlt": "Copertura de {title}",
+			"coverLabel": "(copertura)",
+			"anonymous": "Anonyme",
+			"various": "Plures",
+			"download": "Discargar",
+			"sameCollectionBooks": "Libros in le mesme collection",
+			"view": "Vider"
+		},
+		"author": {
+			"bookCount": "{n} libro | {n} libros",
+			"viewAuthor": "Vider le autor: {name} ({bookCount})"
+		},
+		"collection": {
+			"booksIn": "Libros in {collection}",
+			"allCollections": "Tote le collectiones"
+		},
+		"reader": {
+			"close": "Clauder lector",
+			"closeTableOfContents": "Clauder tabula de contento",
+			"contents": "Contento",
+			"epub": "Lector EPUB",
+			"nextSection": "Proxime section",
+			"pdf": "Lector PDF",
+			"previousSection": "Previe section",
+			"tableOfContents": "Tabula de contento",
+			"toggleTableOfContents": "Commutar le tabula de contento",
+			"unableToOpenEpub": "Impossibile aperir le file EPUB.",
+			"unableToOpenPdf": "Impossibile aperir le file PDF."
+		},
+		"common": {
+			"loading": "Cargamento…",
+			"loadingBook": "Cargamento del detalios del libro…",
+			"loadingAuthor": "Cargamento del detalios del autor…",
+			"loadingItems": "Cargamento de {type}…",
+			"showing": "Es monstrate",
+			"of": "de",
+			"search": "Cercar",
+			"sortBy": "Ordinar per",
+			"sortPopularity": "Ordinar libros per popularitate",
+			"sortTitle": "Ordinar libros per titulo",
+			"chooseLanguage": "Elige un lingua…",
+			"mainLanguages": "Linguas principal",
+			"otherLanguages": "Altere linguas",
+			"anyCatalog": "Elige le catalogo",
+			"uiLanguage": "Lingua del interfacie",
+			"selectInterfaceLanguage": "Selige le lingua del interfacie",
+			"filterBy": "Filtrar per",
+			"filterByTitle": "Filtrar per {title}",
+			"gridView": "Disposition in grillia",
+			"listView": "Disposition in lista",
+			"browseAll": "Explorar toto",
+			"browseAllAuthors": "Explorar tote le autores",
+			"returnHome": "Retornar al initio",
+			"toggleNavigationMenu": "Monstrar/celar le menu de navigation",
+			"mainNavigation": "Navigation principal",
+			"mobileNavigationMenu": "Menu de navigation mobile",
+			"mobileNavigation": "Navigation mobile",
+			"navigateTo": "Navigar a",
+			"navigateToItem": "Navigar a {item}",
+			"close": "Clauder",
+			"next": "Sequente",
+			"previous": "Precedente",
+			"readMore": "Leger plus",
+			"showMore": "Monstrar plus",
+			"scrollLeft": "Rolar al sinistra",
+			"scrollRight": "Rolar al dextra",
+			"showLess": "Monstrar minus",
+			"sortAuthor": "Autor"
+		},
+		"messages": {
+			"noBooks": "Nulle datos disponibile in tabella",
+			"noAuthors": "Necun autor trovate.",
+			"noCollections": "Nulle collection trovate.",
+			"noBooksForAuthor": "Necun libro de iste autor es disponibile.",
+			"noBooksInCollection": "Necun libro es disponibile in iste collection.",
+			"noLanguages": "Necun lingua disponibile.",
+			"noFormats": "Nulle formato disponibile.",
+			"notFoundBook": "Libro non trovate. Le libro que tu cerca non existe o ha essite removite.",
+			"notFoundAuthor": "Autor non trovate. Le autor que tu cerca non existe o ha essite removite.",
+			"notFoundCollection": "Collection non trovate. Le collection que tu cerca non existe o ha essite removite.",
+			"noAuthorsForLetter": "Necun autor trovate pro le littera {letter}."
+		},
+		"itemTypes": {
+			"books": "libro | libros",
+			"authors": "autor | autores",
+			"collections": "collection | collectiones"
+		}
+	},
+	"gutenberg": {
+		"about": {
+			"attribution": "Scribite per Michael S. Hart le 20 de junio 2004. Actualisate le 23 de octobre 2004 e le 25 de decembre 2007.",
+			"introHeading": "A proposito del Projecto Gutenberg",
+			"introParagraph1": "Project Gutenberg es un bibliotheca in linea con plus de 75.000 eLibros gratuite.",
+			"introParagraph2": "Michael Hart, fundator de Project Gutenberg, ha inventate le eLibros in 1971 e su memoria continua a inspirar le creation de eLibros e contento similar etiam hodie.",
+			"introParagraph3": "Desde alora, milles de voluntarios ha digitalisate e diligentemente corrigite le litteratura del mundo. Tote le collection de Project Gutenburg es a tu disposition.",
+			"introParagraph4": "Tote le eLibros de Project Gutenberg es gratuite e sempre lo essera.",
+			"missionAuthor": "per Michael Hart",
+			"missionHeading": "Declaration de mission",
+			"missionParagraph1": "Le mission de Project Gutenberg es simple: incoragiar le creation e distribution de eLibros.",
+			"missionParagraph2": "Iste mission es, tanto como possibile, incoragiar tote illes qui es interessate in crear eLibros e adjutar a donar los a tote le mundo.",
+			"missionParagraph3": "De facto, Project Gutenberg approba circa 99% de tote le requestas de illes qui vole crear nostre eLibros e distribuer los gratuitemente, intra lor varie limitationes local de derecto de autor.",
+			"missionParagraph4": "Project Gutenberg es motivate per ideas, per ideales, e per idealismo.",
+			"missionParagraph5": "Project Gutenberg non es motivate per poter financiari o politic.",
+			"missionParagraph6": "Perque nos depende totalmente de voluntarios, nos hesita a esser multo imperiose quanto a lo que nostre voluntarios deberea facer, o como illes deberea facer lo.",
+			"missionParagraph7": "Nos offere a nostre voluntarios tante libertates como possibile, in le selection de qual libros crear, in qual formatos crear los, o in qualcunque altere ideas que illes pote haber concernente “le creation e distribution de eLibros”.",
+			"missionParagraph8": "Project Gutenberg non se occupa de establir standards. Alteremente, nos haberea acceptate con placer le requesta de converter un parte representative de nostre eLibros in HTML quando le Tela Trans-Terrestre esseva un idea novissime in 1993; nos es felice de presentar eLibros a nostre lectores in tante formatos como nostre voluntarios desira facer.",
+			"missionParagraph9": "In addition, nos non forni normas de exactitude superior a illos recommendate per institutos como le Bibliotheca del Congresso del Statos Unite al nivello de 99,95%. Ben que le major parte de nostre eLibros excede iste normas e es presentate in le formatos le plus commun, isto non es un requisito; le gente es incoragiate a inviar nos eLibros in qualcunque formato e a qualcunque nivello de exactitude, e nos recrutara voluntarios pro converter los in altere formatos e pro corriger errores gradualmente in le curso el tempore.",
+			"missionParagraph10": "Multes de nostre eLibros le plus popular comenciava con enorme nivellos de errores. Solmente plus tarde illos arrivava al nivellos plus polite visibile hodie. In effecto, multes de nostre eLibros esseva facite totalmente sin supervision, per personas que non habeva jammais audite de Project Gutenberg, e inviate a nos solmente post le facto.",
+			"missionParagraph11": "Nos vole continuar a incoragiar omnes a inviar nos eLibros, incluse personas qui ha jam create alcunes sin cognoscentia de qui nos es, lo que nos face, o como nos lo face.",
+			"missionParagraph12": "Omnes es benvenite a contribuer a Project Gutenberg.",
+			"missionParagraph13": "Dunque, il ha ni quotisationes, ni requisitos de adherentia; e ancora hodie il ha solmente le directivas le plus general pro facer eLibros pro Project Gutenberg.",
+			"missionParagraph14": "Nos vole fornir tante eLibros in tante formatos como possibile, de maniera que tote le mundo pote leger los in tante linguas como possibile.",
+			"missionParagraph15": "Dunque, nos cerca continuemente nove voluntarios, sia pro render disponibile un sol libro favorite, sia pro offerer un libro in un nove lingua, sia pro adjutar nos con plure libros.",
+			"missionParagraph16": "Omnes es benvenite a contribuer a Project Gutenberg.",
+			"missionParagraph17": "Omnes es libere de facer lor proprie eLibros in lor proprie maniera."
+		},
+		"metadata_defaults": {
+			"title": "Bibliotheca Project Gutenberg",
+			"description": "Omne libros in Interlingua ab le prime productor de eBooks gratuite"
+		},
+		"nav": {
+			"collections": "Plancas"
+		},
+		"home": {
+			"allCollections": "Tote le plancas",
+			"popularCollections": "Plancas popular"
+		},
+		"collection": {
+			"allCollections": "Tote le plancas"
+		},
+		"book": {
+			"collection": "Planca LCC",
+			"primaryMetric": "Numero de discargamentos",
+			"sameCollectionBooks": "Libros sur le mesme planca"
+		},
+		"footer": {
+			"createdBy": "Create per",
+			"packagedBy": "Impacchettate per",
+			"kiwix": "Kiwix"
+		},
+		"collections": {
+			"A": "A-Obras general",
+			"B": "B-Philosophia, psychologia, religion",
+			"C": "C-Scientias auxiliar del historia",
+			"D": "D-Historia del mundo e de Europa, Asia, Africa, Australia, Nove Zelanda, etc.",
+			"E": "E-Historia del Americas",
+			"F": "F-Historia del Americas",
+			"G": "G-Geographia, anthropologia, recreation",
+			"H": "H-Scientias social",
+			"J": "J-Politicologia",
+			"K": "K-Derecto",
+			"L": "L-Education",
+			"M": "M-Musica e libros sur musica",
+			"N": "N-Belle artes",
+			"P": "P-Lingua e litteratura",
+			"Q": "Q-Scientia",
+			"R": "R-Medicina",
+			"S": "S-Agricultura",
+			"T": "T-Technologia",
+			"U": "U-Scientia militar",
+			"V": "V-Scientia naval",
+			"Z": "Z-Bibliographia, bibliotheconomia, ressources de information (general)",
+			"PA": "PA-Lingua e litteratura grec e latin",
+			"PB": "PB-Linguas moderne e celtic",
+			"PC": "PC-Linguas romanic",
+			"PD": "PD-Linguas germanic e scandinave",
+			"PE": "PE-Lingua anglese",
+			"PF": "PF-Linguas germanic occidental",
+			"PG": "PG-Linguas slave, baltic e albanese",
+			"PH": "PH-Linguas uralic e basc",
+			"PJ": "PJ-Linguas e litteraturas oriental",
+			"PK": "PK-Linguas e litteraturas indo-iranian",
+			"PL": "PL-Linguas e litteraturas de Asia del Est, Africa, Oceania",
+			"PM": "PM-Linguas hyperboree, indian e artificial",
+			"PN": "PN-Litteratura (general)",
+			"PQ": "PQ-Litteratura francese, italian, espaniol e portugese",
+			"PR": "PR-Litteratura anglese",
+			"PS": "PS-Litteratura american",
+			"PT": "PT-Litteratura german, nederlandese, flaminge, afrikaans, scandinave, nordico ancian, islandese ancian, norvegiano ancian, islandese moderne, faroese, danese, norvegiano e svedese",
+			"PZ": "PZ-Fiction e belle litteras pro juvenes"
+		}
+	},
+	"opentextbooks": {
+		"about": {
+			"attribution": "Information fornite per Open Textbook Library.",
+			"introHeading": "A proposito de Open Textbook Library"
+		}
+	}
 }

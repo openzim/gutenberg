@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Librarya sa Proyekto Gutenberg",
-      "description": "Tanang mga libro sa Cebuano gikan sa unang prodyuser sa libre nga mga Ebook"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Librarya sa Proyekto Gutenberg",
+			"description": "Tanang mga libro sa Cebuano gikan sa unang prodyuser sa libre nga mga Ebook"
+		}
+	}
 }

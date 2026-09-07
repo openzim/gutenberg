@@ -1,21 +1,20 @@
 {
-  "@metadata": {
-    "authors": [
-      "Saurmandal"
-    ]
-  },
-  "language": "हिन्दी",
-  "common": {
-    "book": {
-      "anonymous": "अनाम"
-    },
-    "common": {
-      "search": "खोजें",
-      "sortTitle": "शीर्षक",
-      "chooseLanguage": "भाषा चुनें...",
-      "otherLanguages": "अन्य भाषाएँ",
-      "sortAuthor": "लेखक"
-    }
-  },
-  "gutenberg": {}
+	"@metadata": {
+		"authors": [
+			"Saurmandal"
+		]
+	},
+	"language": "हिन्दी",
+	"common": {
+		"book": {
+			"anonymous": "अनाम"
+		},
+		"common": {
+			"search": "खोजें",
+			"sortTitle": "शीर्षक",
+			"chooseLanguage": "भाषा चुनें...",
+			"otherLanguages": "अन्य भाषाएँ",
+			"sortAuthor": "लेखक"
+		}
+	}
 }

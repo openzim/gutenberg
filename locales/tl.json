@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Aklatan Proyektong Gutenberg",
-      "description": "Lahat ng aklat sa Filipino mula sa unang tagalikha ng mga Libreng eBooks"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Aklatan Proyektong Gutenberg",
+			"description": "Lahat ng aklat sa Filipino mula sa unang tagalikha ng mga Libreng eBooks"
+		}
+	}
 }

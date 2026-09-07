@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "ᐱᕙᓪᓕᐊᔪᖅ ᐃᓄᒃᑎᑐᑦ ᒪᓕᒐᖃᑎᒌᖕᒥ",
-      "description": "ᐃᓄᒃᑎᑐᑦ ᐊᑐᐃᓐᓇᕐᓂᖅ ᒪᓕᒐᖃᑎᒌᖕᒥ ᐱᕙᓪᓕᐊᔪᖅ ᐊᑐᐃᓐᓇᖅᑐᓂᖅ"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "ᐱᕙᓪᓕᐊᔪᖅ ᐃᓄᒃᑎᑐᑦ ᒪᓕᒐᖃᑎᒌᖕᒥ",
+			"description": "ᐃᓄᒃᑎᑐᑦ ᐊᑐᐃᓐᓇᕐᓂᖅ ᒪᓕᒐᖃᑎᒌᖕᒥ ᐱᕙᓪᓕᐊᔪᖅ ᐊᑐᐃᓐᓇᖅᑐᓂᖅ"
+		}
+	}
 }

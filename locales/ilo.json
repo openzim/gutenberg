@@ -1,12 +1,11 @@
 {
-  "@metadata": {
-    "authors": []
-  },
-  "common": {},
-  "gutenberg": {
-    "metadata_defaults": {
-      "title": "Libroyan ti Proyekto Gutenberg",
-      "description": "Amin a libro iti Iloko manipud ti immuna a producer ti libre nga eBooks"
-    }
-  }
+	"@metadata": {
+		"authors": []
+	},
+	"gutenberg": {
+		"metadata_defaults": {
+			"title": "Libroyan ti Proyekto Gutenberg",
+			"description": "Amin a libro iti Iloko manipud ti immuna a producer ti libre nga eBooks"
+		}
+	}
 }
