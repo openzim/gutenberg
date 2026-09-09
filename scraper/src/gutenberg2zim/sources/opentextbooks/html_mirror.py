@@ -12,6 +12,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from gutenberg2zim.constants import logger
+from gutenberg2zim.core.content_validation import is_html_document
 from gutenberg2zim.core.download_engine import is_fatal_http_error
 from gutenberg2zim.core.models import Work
 from gutenberg2zim.core.rewriters.image_rewriter import ImageProcessor
@@ -508,12 +509,3 @@ def _asset_path(work: Work, url: str) -> str:
 
 def _is_css_url(url: str) -> bool:
     return urlparse(url).path.lower().endswith(".css")
-
-
-def is_html_document(content: bytes) -> bool:
-    prefix = content.lstrip()[:512].lower()
-    return (
-        prefix.startswith(b"<!doctype html")
-        or prefix.startswith(b"<html")
-        or b"<html" in prefix
-    )
