@@ -7,6 +7,7 @@ from pathlib import Path
 import requests
 
 from gutenberg2zim.constants import logger
+from gutenberg2zim.core.content_validation import is_html_document, is_valid_book_file
 from gutenberg2zim.core.download_engine import DownloadEngine, is_fatal_http_error
 from gutenberg2zim.core.models import Cover, Work
 from gutenberg2zim.core.pipeline import Pipeline
@@ -17,7 +18,6 @@ from gutenberg2zim.sources.opentextbooks.covers import extract_cover, fetch_page
 from gutenberg2zim.sources.opentextbooks.html_mirror import (
     HtmlEdition,
     download_html_edition,
-    is_html_document,
     set_download_controls,
 )
 from gutenberg2zim.sources.opentextbooks.invalid_urls import InvalidEditionCache
@@ -193,7 +193,7 @@ class OpenTextbookLibraryPipeline(Pipeline):
             self.invalid_urls.add(url)
             unsupported.append(format_name)
             return
-        if not _is_valid_book_file(content, format_name):
+        if not is_valid_book_file(content, format_name):
             logger.warning(
                 "OTL textbook #%s returned a non-%s response for %s",
                 work.id,
@@ -225,14 +225,3 @@ class OpenTextbookLibraryPipeline(Pipeline):
         return future or self._cover_executor.submit(
             fetch_page_cover, self.engine, work.source_url
         )
-
-
-def _is_valid_book_file(content: bytes, format_name: str) -> bool:
-    """Reject landing pages masquerading as directly linked book files."""
-    if format_name == "pdf":
-        return content.lstrip().startswith(b"%PDF-")
-    if format_name == "epub":
-        return content.startswith(b"PK\x03\x04")
-    if format_name == "html":
-        return is_html_document(content)
-    return False
