@@ -113,14 +113,18 @@ function goToAuthor(id: string) {
   display: grid;
   grid-template-columns: repeat(4, 183.33px) 366.66px;
   grid-template-rows: repeat(2, auto);
+  /* Fixed (non-auto-fill) tracks, so fit-content already matches their
+     total size exactly — no leftover slack — and border-top/left below
+     line up exactly with row-1/column-1's own edges. */
+  width: fit-content;
   justify-content: center;
-  padding: var(--g-card-bleed);
-}
-
-.selected-books-section__cell {
-  width: calc(100% + var(--g-card-border));
-  height: calc(100% + var(--g-card-border));
-  margin: var(--g-card-negative-bleed);
+  margin-inline: auto;
+  /* Cards only draw their own border-right/border-bottom (see
+     CollectionBookCard.vue), so no two cards ever paint the same seam. The
+     grid supplies the missing top/left edge once, for every cell in row 1
+     (top) and column 1 (left). */
+  border-top: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-left: var(--g-card-border) solid rgb(var(--v-theme-grid));
 }
 
 .selected-books-section__featured {
@@ -129,9 +133,8 @@ function goToAuthor(id: string) {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: calc(100% + var(--g-card-border));
-  height: calc(100% + var(--g-card-border));
-  margin-top: var(--g-card-negative-bleed);
+  width: 100%;
+  height: 100%;
   position: relative;
 }
 

@@ -59,9 +59,11 @@ watch(
           </div>
         </div>
 
-        <div ref="trackRef" class="collection-books-row g-mobile-only">
-          <div v-for="book in books" :key="book.id" class="carousel-card-wrapper">
-            <collection-book-card :book="book" />
+        <div ref="trackRef" class="collection-books-scroll g-mobile-only">
+          <div class="collection-books-row">
+            <div v-for="book in books" :key="book.id" class="carousel-card-wrapper">
+              <collection-book-card :book="book" />
+            </div>
           </div>
         </div>
       </div>
@@ -107,26 +109,38 @@ watch(
 .collection-books-row {
   display: flex;
   align-items: stretch;
-  width: 100%;
-  padding: var(--g-card-bleed);
+  /* Shrinks to exactly the rendered cards instead of stretching to the full
+     track width — otherwise border-top/left below would extend past a
+     short row (e.g. only 1-2 books) into empty space. */
+  width: fit-content;
+  /* Each card only draws its own right/bottom border (see
+     CollectionBookCard.vue), so no two cards ever paint the same seam. The
+     row supplies the top/left edge once, for whichever card ends up first —
+     flex packs from the left by default, so the row's own edge lines up
+     exactly with that card's edge with no extra math needed. */
+  border-top: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-left: var(--g-card-border) solid rgb(var(--v-theme-grid));
 }
 
-.collection-books-row.g-mobile-only {
+.collection-books-scroll.g-mobile-only {
   display: none;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  /* This is the scrollable viewport, sized to the available width — the
+     .collection-books-row inside it (which carries the border) is left to
+     size itself to fit-content, so it doesn't stretch the border with it. */
+  width: 100%;
   padding: 5px;
 }
 
-.collection-books-row.g-mobile-only::-webkit-scrollbar {
+.collection-books-scroll.g-mobile-only::-webkit-scrollbar {
   display: none;
 }
 
 .carousel-card-wrapper {
   width: 220px;
   min-width: 220px;
-  margin: var(--g-card-negative-bleed);
   display: flex;
 }
 

@@ -45,14 +45,21 @@ const { t } = useI18n()
   position: relative;
   z-index: 0;
   color: inherit;
-  border: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  /* Only the right/bottom edges carry a border. Two adjacent cards would
+     otherwise each draw a border on their shared edge — even lined up
+     pixel-perfectly, the two independently anti-aliased edges stack and
+     read as a visibly darker/thicker seam (most obvious at 4-way grid
+     corners, where up to 4 cards' edges pile up). Drawing each seam exactly
+     once avoids that entirely. The grid/row container supplies the
+     top/left edge of the whole layout once, since no card does. */
+  border-right: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-bottom: var(--g-card-border) solid rgb(var(--v-theme-grid));
   padding: 1rem 1.25rem;
   transition: box-shadow 0.2s ease;
 }
 
 .collection-book-card:hover,
 .collection-book-card:focus {
-  border-color: rgb(var(--v-theme-grid));
   box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
   z-index: 1;
 }

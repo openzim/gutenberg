@@ -6,8 +6,6 @@
 
 :root {
   --g-card-border: 1.5px;
-  --g-card-bleed: calc(var(--g-card-border) / 2);
-  --g-card-negative-bleed: calc(var(--g-card-bleed) * -1);
 }
 
 body {

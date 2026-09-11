@@ -31,15 +31,31 @@ const topBooks = computed(() =>
 
 .popular-collection-books__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 183.33px);
-  justify-content: center;
-  padding: var(--g-card-bleed);
-}
-
-.popular-collection-books__cell {
-  width: calc(100% + var(--g-card-border));
-  height: calc(100% + var(--g-card-border));
-  margin: var(--g-card-negative-bleed);
+  /* auto-fit (not auto-fill): auto-fill would still create as many column
+     tracks as fit the available width even when there are fewer cards than
+     that — those extra empty tracks still count toward width: fit-content
+     below, stretching border-top/left past the actual cards. auto-fit
+     collapses any trailing tracks nothing got placed into. */
+  grid-template-columns: repeat(auto-fit, 183.33px);
+  /* `width: fit-content` shrinks the box to exactly the rendered tracks —
+     no leftover slack — so border-top/left below line up exactly with
+     row-1/column-1's own edges. It still needs its own max-width: auto-fit
+     can't tell how much space it has to fill without a definite bound
+     declared on this same element — .popular-collection-books already
+     being that width isn't enough. No margin-inline/justify-content
+     centering here though: this grid stays left-aligned within
+     .popular-collection-books, which is what's actually centered on the
+     page — otherwise a half-empty row (or a grid with only 1-2 cards)
+     would re-center itself in the middle of the page instead of lining up
+     with a full row's left edge. */
+  width: fit-content;
+  max-width: var(--g-layout-max);
+  /* Cards only draw their own border-right/border-bottom (see
+     CollectionBookCard.vue), so no two cards ever paint the same seam. The
+     grid supplies the missing top/left edge once, for every cell in row 1
+     (top) and column 1 (left). */
+  border-top: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-left: var(--g-card-border) solid rgb(var(--v-theme-grid));
 }
 
 @media (max-width: 1279px) {
@@ -48,7 +64,7 @@ const topBooks = computed(() =>
   }
 
   .popular-collection-books__grid {
-    grid-template-columns: repeat(auto-fill, 160px);
+    grid-template-columns: repeat(auto-fit, 160px);
   }
 }
 

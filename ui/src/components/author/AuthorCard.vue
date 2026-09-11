@@ -59,7 +59,17 @@ const isCarousel = () => props.variant === 'carousel'
   justify-content: center;
   width: 100%;
   height: 100%;
-  border: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  /* Right/bottom carry a border so no two adjacent cards ever paint the
+     same seam (see CollectionBookCard.vue for the full rationale). Top is
+     each card's own too — safe since this only ever sits in a single-row
+     carousel, so no other card shares that edge — which also avoids the
+     carousel track's border-top overshooting past a short row (see
+     AuthorDetailCarousel.vue's .carousel-track). Left is not drawn here at
+     all — it's only ever needed on the first card in the row, and
+     .carousel-cell:first-child (in the parent) adds it there directly. */
+  border-top: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-right: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-bottom: var(--g-card-border) solid rgb(var(--v-theme-grid));
   background: rgb(var(--v-theme-background));
   color: rgb(var(--v-theme-text));
   position: relative;
@@ -69,7 +79,6 @@ const isCarousel = () => props.variant === 'carousel'
 
 .author-card--carousel:hover,
 .author-card--carousel:focus {
-  border-color: rgb(var(--v-theme-grid));
   box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
   z-index: 1;
 }
