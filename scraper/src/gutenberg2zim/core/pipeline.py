@@ -108,8 +108,6 @@ class Pipeline(ABC):
         zim_name: str,
         title: str | None = None,
         description: str | None = None,
-        primary_color: str | None = None,
-        secondary_color: str | None = None,
         # human-readable source name, used in ZIM titles, search entries
         # and No-JS page titles; the orchestrator passes
         # `SourceProfile.display_name`
@@ -129,8 +127,6 @@ class Pipeline(ABC):
         self.zim_name = zim_name
         self.title = title
         self.description = description
-        self.primary_color = primary_color
-        self.secondary_color = secondary_color
         self.display_name = display_name
         self.source_slug = source_slug
         self.source_description = source_description
@@ -214,8 +210,6 @@ class Pipeline(ABC):
             assembler=self.assembler,
             title=self.title,
             description=self.description,
-            primary_color=self.primary_color,
-            secondary_color=self.secondary_color,
             display_name=self.display_name,
             source_slug=self.source_slug,
             source_description=self.source_description,

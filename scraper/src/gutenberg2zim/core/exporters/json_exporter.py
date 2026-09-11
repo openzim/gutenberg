@@ -158,8 +158,6 @@ def generate_json_files(
     title: str | None = None,
     description: str | None = None,
     *,
-    primary_color: str | None = None,
-    secondary_color: str | None = None,
     display_name: str,
     indexes: Indexes,
     source_slug: str = "source",
@@ -235,16 +233,12 @@ def generate_json_files(
     config = Config(
         title=title or zim_name or f"{display_name} Library",
         description=description,
-        primary_color=primary_color,
-        secondary_color=secondary_color,
         source=SourceInfo(
             slug=source_slug,
             name=display_name,
             description=source_description or display_name,
         ),
         theme=ThemeConfig(
-            primary_color=primary_color,
-            secondary_color=secondary_color,
             format_icons={format_name: format_name for format_name in formats},
             route_labels={
                 "home": "Home",

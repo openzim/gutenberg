@@ -126,8 +126,6 @@ class SourceInfo(CamelModel):
 class ThemeConfig(CamelModel):
     """Source-specific UI presentation settings."""
 
-    primary_color: str | None = None
-    secondary_color: str | None = None
     format_icons: dict[str, str]
     route_labels: dict[str, str]
     collection_icon_style: str = "classification"
@@ -146,8 +144,6 @@ class Config(CamelModel):
 
     title: str
     description: str | None = None
-    primary_color: str | None = None
-    secondary_color: str | None = None
     source: SourceInfo
     theme: ThemeConfig
     features: FeatureFlags
