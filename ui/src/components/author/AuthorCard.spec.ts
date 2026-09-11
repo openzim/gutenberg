@@ -39,6 +39,8 @@ describe('AuthorCard', () => {
   const createAuthor = (overrides?: Partial<AuthorPreview>): AuthorPreview => ({
     id: 'austen-jane',
     name: 'Jane Austen',
+    firstName: 'Jane',
+    lastName: 'Austen',
     bookCount: 42,
     ...overrides
   })

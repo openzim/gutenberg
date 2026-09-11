@@ -21,6 +21,8 @@ describe('BookCard', () => {
     author: {
       id: 'austen-jane',
       name: 'Jane Austen',
+      firstName: 'Jane',
+      lastName: 'Austen',
       bookCount: 6
     },
     languages: ['en'],
@@ -178,9 +180,21 @@ describe('BookCard', () => {
     })
 
     it.each([
-      { id: 'doyle', name: 'Arthur Conan Doyle', bookCount: 10 },
-      { id: 'homer', name: 'Homer', bookCount: 2 },
-      { id: 'bronte', name: 'Brontë, Charlotte', bookCount: 7 }
+      {
+        id: 'doyle',
+        name: 'Arthur Conan Doyle',
+        firstName: 'Arthur Conan',
+        lastName: 'Doyle',
+        bookCount: 10
+      },
+      { id: 'homer', name: 'Homer', firstName: null, lastName: 'Homer', bookCount: 2 },
+      {
+        id: 'bronte',
+        name: 'Brontë, Charlotte',
+        firstName: 'Charlotte',
+        lastName: 'Brontë',
+        bookCount: 7
+      }
     ])('handles author name: $name', (author) => {
       const wrapper = mount(BookCard, {
         props: { book: createBook({ author }) }

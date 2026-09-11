@@ -23,13 +23,11 @@ const {
   loadItems: loadAuthors
 } = useListLoader<AuthorPreview, Authors>(() => main.fetchAuthors(), 'authors')
 
-const sortedAuthors = computed(() =>
-  [...authors.value].sort((a, b) => compareAuthorNames(a.name, b.name))
-)
+const sortedAuthors = computed(() => [...authors.value].sort((a, b) => compareAuthorNames(a, b)))
 
 // First character with accents folded to its base letter (É → E)
-function baseFirstChar(name: string): string {
-  return name
+function baseFirstChar(value: string): string {
+  return value
     .charAt(0)
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -44,13 +42,13 @@ const filteredByLetter = computed(() => {
   if (activeFilter.value === '0-9') {
     // Digits and any other non-letter symbols
     return sortedAuthors.value.filter((author) => {
-      const firstChar = baseFirstChar(author.name)
+      const firstChar = baseFirstChar(author.lastName)
       return firstChar < 'A' || firstChar > 'Z'
     })
   }
 
   return sortedAuthors.value.filter((author) => {
-    return baseFirstChar(author.name) === activeFilter.value
+    return baseFirstChar(author.lastName) === activeFilter.value
   })
 })
 

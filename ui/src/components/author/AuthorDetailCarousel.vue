@@ -14,9 +14,7 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
-const sortedAuthors = computed(() =>
-  [...props.authors].sort((a, b) => compareAuthorNames(a.name, b.name))
-)
+const sortedAuthors = computed(() => [...props.authors].sort((a, b) => compareAuthorNames(a, b)))
 
 const currentIndex = computed(() =>
   sortedAuthors.value.findIndex((a) => a.id === props.currentAuthor.id)
