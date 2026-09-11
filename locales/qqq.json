@@ -81,6 +81,7 @@
 			"mainLanguages": "Label for the main/primary languages section",
 			"otherLanguages": "Label for the other/secondary languages section",
 			"anyCatalog": "Label for the option to view all language catalogs",
+      		"backToTop": "Label for the back to top button",
 			"uiLanguage": "Title for the user interface language switcher control",
 			"selectInterfaceLanguage": "Accessible label for the interface language selector",
 			"filterBy": "Label for filter controls",

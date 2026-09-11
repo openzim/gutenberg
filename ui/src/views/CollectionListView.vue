@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useMainStore } from '@/stores/main'
 import type { BookPreview, CollectionPreview } from '@/types'
 import BookDisplay from '@/components/book/BookDisplay.vue'
+import BackToTopButton from '@/components/common/BackToTopButton.vue'
 import CollectionSidebar from '@/components/collection/CollectionSidebar.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
@@ -116,6 +117,8 @@ function selectCollection(id: string | null) {
         <empty-state v-else :message="t(MESSAGES.NO_BOOKS)" type="info" />
       </div>
     </div>
+
+    <back-to-top-button />
   </div>
 </template>
 
