@@ -58,41 +58,43 @@ function goToAuthor(id: string) {
         </div>
 
         <div v-if="mostDownloaded" class="selected-books-section__featured">
-          <p class="featured-book__label">
-            {{ t('home.mostDownloaded') }}
-          </p>
-
-          <div class="featured-book__cover-wrapper">
-            <img
-              v-if="mostDownloaded.coverPath"
-              :src="normalizeImagePath(mostDownloaded.coverPath)"
-              :alt="t('book.coverAlt', { title: mostDownloaded.title })"
-              class="featured-book__cover"
-            />
-          </div>
-
-          <div v-if="mostDownloaded.availableFormats?.length" class="featured-book__formats">
-            {{ mostDownloaded.availableFormats.map(formatLabel).join(' · ') }}
-          </div>
-
-          <button class="featured-book__title-button" @click="goToBook(mostDownloaded.id)">
-            <h3 class="featured-book__title">
-              {{ mostDownloaded.title }}
-            </h3>
-          </button>
-
-          <button
-            v-if="mostDownloaded.author"
-            class="featured-book__author-button"
-            @click="goToAuthor(mostDownloaded.author.id)"
-          >
-            <p class="featured-book__author">
-              {{ mostDownloaded.author?.name }}
+          <div class="selected-books-section__featured-inner">
+            <p class="featured-book__label">
+              {{ t('home.mostDownloaded') }}
             </p>
-          </button>
 
-          <div class="featured-book__stars">
-            <fire-rating :popularity="mostDownloaded.popularity" />
+            <div class="featured-book__cover-wrapper">
+              <img
+                v-if="mostDownloaded.coverPath"
+                :src="normalizeImagePath(mostDownloaded.coverPath)"
+                :alt="t('book.coverAlt', { title: mostDownloaded.title })"
+                class="featured-book__cover"
+              />
+            </div>
+
+            <div v-if="mostDownloaded.availableFormats?.length" class="featured-book__formats">
+              {{ mostDownloaded.availableFormats.map(formatLabel).join(' · ') }}
+            </div>
+
+            <button class="featured-book__title-button" @click="goToBook(mostDownloaded.id)">
+              <h3 class="featured-book__title">
+                {{ mostDownloaded.title }}
+              </h3>
+            </button>
+
+            <button
+              v-if="mostDownloaded.author"
+              class="featured-book__author-button"
+              @click="goToAuthor(mostDownloaded.author.id)"
+            >
+              <p class="featured-book__author">
+                {{ mostDownloaded.author?.name }}
+              </p>
+            </button>
+
+            <div class="featured-book__stars">
+              <fire-rating :popularity="mostDownloaded.popularity" />
+            </div>
           </div>
         </div>
       </div>
@@ -127,14 +129,16 @@ function goToAuthor(id: string) {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 1.5rem;
-  background-color: v-bind(THEME_COLORS.FOCUS_BOOK);
-  color: #ffffff;
   width: calc(100% + var(--g-card-border));
   height: calc(100% + var(--g-card-border));
-  margin: var(--g-card-negative-bleed);
+  margin-top: var(--g-card-negative-bleed);
   position: relative;
+}
+
+.selected-books-section__featured-inner {
   padding: 4rem;
+  background-color: v-bind(THEME_COLORS.FOCUS_BOOK);
+  color: #ffffff;
 }
 
 .featured-book__label {
