@@ -22,15 +22,17 @@ const { t } = useI18n()
       class="collection-book-cover"
     />
 
-    <h3 class="collection-book-title mb-1">
-      {{ book.title }}
-    </h3>
+    <div class="collection-book-info">
+      <h3 class="collection-book-title mb-1">
+        {{ book.title }}
+      </h3>
 
-    <p class="collection-book-author mb-2">
-      {{ book.author?.name }}
-    </p>
+      <p class="collection-book-author mb-2">
+        {{ book.author?.name }}
+      </p>
+    </div>
 
-    <fire-rating :popularity="book.popularity" />
+    <fire-rating :popularity="book.popularity" class="collection-book-fire-rating" />
   </router-link>
 </template>
 
@@ -56,7 +58,16 @@ const { t } = useI18n()
 }
 
 .collection-book-cover {
+  flex: 0 0 220px;
   margin-bottom: 12px;
+}
+
+.collection-book-cover :deep(.v-img__img) {
+  object-position: top;
+}
+
+.collection-book-info {
+  min-height: calc(v-bind(TYPOGRAPHY.H3_SIZE) * 1.4 * 3 + v-bind(TYPOGRAPHY.CAPTION_SIZE) * 1.4);
 }
 
 .collection-book-title {
@@ -76,11 +87,17 @@ const { t } = useI18n()
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
   font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
+  line-height: 1.4;
+  min-height: calc(v-bind(TYPOGRAPHY.CAPTION_SIZE) * 1.4);
   color: rgb(var(--v-theme-text));
   opacity: 0.6;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.collection-book-fire-rating {
+  margin-top: auto;
 }
 </style>
