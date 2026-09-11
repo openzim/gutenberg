@@ -182,10 +182,15 @@ watch(
 .carousel-track {
   display: flex;
   width: 100%;
-  padding: var(--g-card-bleed);
   align-items: stretch;
   height: 220px;
   scrollbar-width: none;
+  /* No border-left here (see .carousel-cell:first-child below) and no
+     border-top: a horizontal border's length always equals the full track
+     width, which would overshoot past the actual cells whenever there are
+     fewer than fill the track (e.g. an author with only 1-2 other
+     authors). Every cell draws its own border-top instead — safe since
+     this is a single row, so no two cells ever share a top seam. */
 }
 
 .carousel-track.g-mobile-only {
@@ -202,21 +207,28 @@ watch(
   justify-content: center;
 }
 
-.carousel-cell {
-  height: calc(100% + var(--g-card-border));
-  margin: var(--g-card-negative-bleed);
-}
-
 .carousel-cell--current {
-  /* 441.5px = 2 book grid cells (220px each) + 1.5px border overlap */
-  flex: 0 0 441.5px;
+  /* 440px = 2 book grid cells (220px each) */
+  flex: 0 0 440px;
 }
 
 .carousel-cell--small {
-  /* Book grid cells are 221.5px (220px + 1.5px border bleed). Match that. */
-  width: 221.5px;
-  min-width: 221.5px;
+  /* Match a book grid cell's width. */
+  width: 220px;
+  min-width: 220px;
   flex-shrink: 0;
+}
+
+.carousel-cell:first-child {
+  /* Left border lives on the first cell itself rather than the track: on
+     mobile the track scrolls, so a border on the track's own (fixed)
+     edge would stay put and keep showing even once you've scrolled past
+     the first cell. Anchoring it to the cell instead means it scrolls
+     away with that cell, and it's sized to just the cell's own height
+     rather than the track's full height (which includes vertical padding
+     added below for shadow clearance — that padding would otherwise make
+     the border taller than the actual card). */
+  border-left: var(--g-card-border) solid rgb(var(--v-theme-grid));
 }
 
 .current-author {
@@ -226,7 +238,13 @@ watch(
   padding: 1.5rem 2rem;
   width: 100%;
   height: 100%;
-  border: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  /* Top/right/bottom are each cell's own responsibility (see
+     .carousel-track above for why top moved here). Left is not drawn here
+     at all — it's only ever needed on the first cell in the row, and
+     .carousel-cell:first-child (in the parent) adds it there directly. */
+  border-top: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-right: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-bottom: var(--g-card-border) solid rgb(var(--v-theme-grid));
   background: rgba(var(--v-theme-text), 0.08);
   position: relative;
   z-index: 0;
@@ -235,7 +253,6 @@ watch(
 
 .current-author:hover,
 .current-author:focus {
-  border-color: rgb(var(--v-theme-grid));
   box-shadow: none;
   z-index: 0;
 }
@@ -281,7 +298,7 @@ watch(
 
   .carousel-track {
     display: flex;
-    padding: 5px var(--g-card-bleed); /* extra padding so box-shadow isn't clipped by overflow-x */
+    padding: 5px 0; /* extra vertical padding so box-shadow isn't clipped by overflow-x */
     height: 170px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -299,8 +316,6 @@ watch(
 
   .carousel-cell {
     flex: 0 0 75%;
-    height: calc(100% + var(--g-card-border));
-    margin: var(--g-card-negative-bleed);
     scroll-snap-align: center;
   }
 
@@ -323,7 +338,6 @@ watch(
 
   .current-author:hover,
   .current-author:focus {
-    border-color: rgb(var(--v-theme-grid));
     box-shadow: none;
     z-index: 0;
   }
