@@ -109,7 +109,7 @@ const activeCollectionName = computed(() => {
   flex-shrink: 0;
   align-self: flex-start;
   padding: 1.5rem 0;
-  border: 1.5px solid rgb(var(--v-theme-grid));
+  margin-top: 4.7rem;
 }
 
 .collection-sidebar__toggle {
@@ -186,6 +186,7 @@ const activeCollectionName = computed(() => {
     margin-inline: auto;
     border: 1.5px solid rgb(var(--v-theme-grid));
     padding: 0;
+    margin-top: auto;
   }
 
   .collection-sidebar__toggle {
