@@ -10,7 +10,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from zimscraperlib.image.probing import is_hex_color
 from zimscraperlib.inputs import compute_descriptions
 
 from gutenberg2zim.core.utils import ALL_FORMATS, critical_error
@@ -45,16 +44,6 @@ class ScrapeConfig:
     title_search: bool = False
     with_fulltext_index: bool = True
     stats_filename: str | None = None
-    primary_color: str | None = None
-    secondary_color: str | None = None
-
-
-def _validate_colors(primary_color: str | None, secondary_color: str | None) -> None:
-    """Validate hex color formats if provided"""
-    if primary_color and not is_hex_color(primary_color):
-        critical_error(f"--primary-color is not a valid hex color: {primary_color}")
-    if secondary_color and not is_hex_color(secondary_color):
-        critical_error(f"--secondary-color is not a valid hex color: {secondary_color}")
 
 
 def _was_option_supplied(value: object) -> bool:
@@ -99,9 +88,6 @@ def build_scrape_config(arguments: dict) -> ScrapeConfig:
 
     stats_filename: str | None = arguments.get("--stats-filename") or None
     publisher = arguments.get("--publisher") or "openZIM"
-    primary_color = arguments.get("--primary-color")
-    secondary_color = arguments.get("--secondary-color")
-    _validate_colors(primary_color, secondary_color)
 
     debug = arguments.get("--debug") or False
     output_folder = Path(
@@ -206,6 +192,4 @@ def build_scrape_config(arguments: dict) -> ScrapeConfig:
         title_search=title_search,
         with_fulltext_index=with_fulltext_index,
         stats_filename=stats_filename,
-        primary_color=primary_color,
-        secondary_color=secondary_color,
     )

@@ -89,16 +89,12 @@ describe('Main Store Integration', () => {
       const mockConfig: Config = {
         title: 'Test Library',
         description: 'Test source books',
-        primaryColor: null,
-        secondaryColor: null,
         source: {
           slug: 'test-source',
           name: 'Test Source',
           description: 'Test source books'
         },
         theme: {
-          primaryColor: null,
-          secondaryColor: null,
           formatIcons: { epub: 'epub', html: 'html' },
           routeLabels: {
             home: 'Home',

@@ -23,7 +23,7 @@ mainStore
   .fetchConfig()
   .then((config) => {
     setRouterConfig(config)
-    return Promise.all([loadI18n(config.source.slug), loadVuetify(config)])
+    return Promise.all([loadI18n(config.source.slug), loadVuetify()])
   })
   .then(([i18n, vuetify]) => {
     const app = createApp(App)

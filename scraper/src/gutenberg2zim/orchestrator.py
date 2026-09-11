@@ -166,8 +166,6 @@ def build_zimfile(
     ui_dist = config.ui_dist
     # build_scrape_config always resolves ui_dist (CLI arg, env var, or default)
     assert ui_dist is not None  # noqa: S101
-    primary_color = config.primary_color
-    secondary_color = config.secondary_color
     overwrite = config.overwrite
     is_selection = config.is_selection
     title_search = config.title_search
@@ -277,8 +275,6 @@ def build_zimfile(
             zim_name=zim_name,
             title=title,
             description=description,
-            primary_color=primary_color,
-            secondary_color=secondary_color,
             display_name=profile.display_name,
             source_slug=profile.slug,
             source_description=profile.source_description,

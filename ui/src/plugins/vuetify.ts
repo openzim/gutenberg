@@ -1,10 +1,9 @@
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 import { createVuetify, type ThemeDefinition } from 'vuetify'
-import type { Config } from '@/types/Config'
 import { THEME_COLORS } from '@/constants/theme'
 
-async function loadVuetify(config: Config) {
+async function loadVuetify() {
   const PRIMARY = '#1976D2'
   const SECONDARY = '#424242'
   const ACCENT = '#82B1FF'
@@ -17,15 +16,9 @@ async function loadVuetify(config: Config) {
   const SURFACE_LIGHT = '#FAFAFA'
   const SURFACE_DARK = '#1E1E1E'
 
-  let primaryColor: string = PRIMARY
-  let secondaryColor: string = SECONDARY
-
-  primaryColor = config.primaryColor || primaryColor
-  secondaryColor = config.secondaryColor || secondaryColor
-
   const sharedColors = {
-    primary: primaryColor,
-    secondary: secondaryColor,
+    primary: PRIMARY,
+    secondary: SECONDARY,
     accent: ACCENT,
     error: ERROR,
     info: INFO,

@@ -156,8 +156,6 @@ The Open Textbook Library-specific options are:
 --output=<output_folder>            Output folder
 --cache-dir=<cache_folder>          Optional persistent metadata and catalog cache
 
---primary-color=<color>             Primary UI color
---secondary-color=<color>           Secondary UI color
 --ui-dist=<ui_dist>                 Built UI distribution directory
 --debug                             Enable verbose output
 ```

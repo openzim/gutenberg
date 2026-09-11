@@ -44,8 +44,6 @@ Options:
   --mirror-url=<mirror_url>       Source mirror URL
   --output=<output_folder>        Output directory [default: ./output]
   --cache-dir=<cache_folder>      Persist caches here; pass again to reuse them
-  --primary-color=<color>         Custom primary color
-  --secondary-color=<color>       Custom secondary color
   --ui-dist=<ui_dist>             Vue UI distribution directory
   --debug                         Enable verbose output
 """
