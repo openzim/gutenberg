@@ -8,6 +8,8 @@ import type { BookPreview } from './Book'
 export interface AuthorPreview {
   id: string
   name: string
+  firstName: string | null
+  lastName: string
   bookCount: number
   totalPopularity?: number
 }

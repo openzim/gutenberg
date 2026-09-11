@@ -55,6 +55,8 @@ def _creator_to_preview(
     return AuthorPreview(
         id=creator.id,
         name=creator.name,
+        first_name=creator.extra.get("first_names"),
+        last_name=creator.sort_name or "",
         book_count=book_count,
         total_popularity=total_popularity,
     )

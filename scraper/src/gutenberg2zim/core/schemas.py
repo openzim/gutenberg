@@ -29,7 +29,9 @@ class AuthorPreview(CamelModel):
     """Author preview for list views"""
 
     id: str
-    name: str
+    name: str  # Formatted full name
+    first_name: str | None = None
+    last_name: str
     book_count: int
     total_popularity: int = 0
 
@@ -37,8 +39,6 @@ class AuthorPreview(CamelModel):
 class AuthorDetail(AuthorPreview):
     """Full author details with books list"""
 
-    first_name: str | None = None
-    last_name: str
     birth_year: str | None = None
     death_year: str | None = None
     books: list[BookPreview]
