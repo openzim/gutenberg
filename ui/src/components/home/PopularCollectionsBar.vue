@@ -209,15 +209,11 @@ function handleSelect(id: string) {
   }
 
   .popular-collections-bar__card {
-    padding: 1rem 1rem 0;
-  }
-
-  .popular-collections-bar__shelves {
-    gap: 0.5rem;
+    padding: 1rem;
   }
 
   .popular-collections-bar__collection-btn {
-    width: calc((100% - 3rem) / 4);
+    width: calc((100% - 3rem) / 5);
   }
 
   .popular-collections-bar__collection-btn:nth-child(n + 5) {
@@ -265,13 +261,19 @@ function handleSelect(id: string) {
   }
 
   .popular-collections-bar__collection-btn {
-    width: 160px;
-    min-width: 160px;
+    width: 105px;
+    min-width: 105px;
     flex-shrink: 0;
     background-color: rgb(var(--v-theme-bgd1));
-    border-radius: 5px;
-    padding: 1rem 0.5rem;
     min-height: auto;
+  }
+
+  .popular-collections-bar__collection-name {
+    font-size: v-bind(TYPOGRAPHY.SMALL_SIZE_MOBILE);
+  }
+
+  .popular-collections-bar__collection-btn--active {
+    background-color: rgb(var(--v-theme-collectionIcon));
   }
 
   .popular-collections-bar__collection-btn:nth-child(n + 5) {
