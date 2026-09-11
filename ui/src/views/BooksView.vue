@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useMainStore } from '@/stores/main'
 import type { BookPreview } from '@/types'
+import BackToTopButton from '@/components/common/BackToTopButton.vue'
 import BookDisplay from '@/components/book/BookDisplay.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
@@ -59,6 +60,8 @@ onMounted(() => {
         </v-col>
       </v-row>
     </v-container>
+
+    <back-to-top-button />
   </div>
 </template>
 

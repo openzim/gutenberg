@@ -5,6 +5,7 @@ import { useMainStore } from '@/stores/main'
 import type { AuthorPreview, Authors } from '@/types'
 import AuthorsList from '@/components/author/AuthorsList.vue'
 import AlphabetFilter from '@/components/author/AlphabetFilter.vue'
+import BackToTopButton from '@/components/common/BackToTopButton.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { useListLoader } from '@/composables/useListLoader'
@@ -83,6 +84,8 @@ onMounted(() => {
         </v-col>
       </v-row>
     </v-container>
+
+    <back-to-top-button />
   </div>
 </template>
 
