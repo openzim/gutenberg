@@ -140,7 +140,7 @@ Adjust `--books`, `--languages`, and `--formats` to match your test dataset.
 
 ```bash
 # Clean previous assets
-find ui/public/ -mindepth 1 ! -name ".gitignore" -name ".about-bg.jpg" -delete
+find ui/public/ -mindepth 1 ! -name ".gitignore" ! -name ".about-bg.jpg" -delete
 
 # Extract from ZIM
 docker run -it --rm -v $(pwd)/output:/data ghcr.io/openzim/zim-tools:latest \

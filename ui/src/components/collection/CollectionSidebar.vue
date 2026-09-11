@@ -43,6 +43,10 @@ const activeCollectionName = computed(() => {
   }
   return props.activeId
 })
+
+const sortedCollections = computed(() =>
+  [...props.collections].sort((a, b) => a.name.localeCompare(b.name))
+)
 </script>
 
 <template>
@@ -80,7 +84,11 @@ const activeCollectionName = computed(() => {
             </span>
           </button>
         </li>
-        <li v-for="collection in collections" :key="collection.id" class="collection-sidebar__item">
+        <li
+          v-for="collection in sortedCollections"
+          :key="collection.id"
+          class="collection-sidebar__item"
+        >
           <button
             class="collection-sidebar__btn"
             :class="{ 'collection-sidebar__btn--active': activeId === collection.id }"
