@@ -68,7 +68,6 @@ function handleSelect(id: string) {
               displayCollectionName(collection)
             }}</span>
           </div>
-          <div v-if="activeId === collection.id" class="popular-collections-bar__tip" />
         </button>
       </div>
     </div>
@@ -127,14 +126,14 @@ function handleSelect(id: string) {
 .popular-collections-bar__card {
   background-color: rgb(var(--v-theme-bgd1));
   border-radius: 5px;
-  padding: 1.5rem 2rem 0;
+  padding: 0.5rem 2rem;
 }
 
 .popular-collections-bar__shelves {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  gap: 1rem;
+  gap: 3rem;
 }
 
 .popular-collections-bar__collection-btn {
@@ -143,15 +142,21 @@ function handleSelect(id: string) {
   align-items: center;
   justify-content: space-between;
   gap: 0;
-  padding: 0.5rem 0.5rem 0;
   background: none;
   border: none;
   cursor: pointer;
   color: rgb(var(--v-theme-text));
   position: relative;
-  width: calc((100% - 5rem) / 6);
+  width: calc((100% - 22rem) / 6);
   min-width: 0;
+  padding: 1rem;
   min-height: 120px;
+  border-radius: 1rem;
+}
+
+.popular-collections-bar__collection-btn--active {
+  background-color: rgb(var(--v-theme-collectionIcon));
+  color: white;
 }
 
 .popular-collections-bar__collection-content {
@@ -168,9 +173,13 @@ function handleSelect(id: string) {
   flex-shrink: 0;
 }
 
+.popular-collections-bar__collection-btn--active .popular-collections-bar__collection-icon {
+  fill: white;
+}
+
 .popular-collections-bar__collection-name {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
-  font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
+  font-size: v-bind(TYPOGRAPHY.SMALL_SIZE);
   font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
   line-height: 1.4;
   text-align: center;
@@ -187,16 +196,6 @@ function handleSelect(id: string) {
 .popular-collections-bar__collection-btn:hover .popular-collections-bar__collection-name {
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-.popular-collections-bar__tip {
-  margin-top: 0.5rem;
-  align-self: center;
-  width: 0;
-  height: 0;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-bottom: 18px solid rgb(var(--v-theme-background));
 }
 
 @media (max-width: 960px) {
@@ -223,17 +222,6 @@ function handleSelect(id: string) {
 
   .popular-collections-bar__collection-btn:nth-child(n + 5) {
     display: none;
-  }
-
-  .popular-collections-bar__tip {
-    position: absolute;
-    bottom: -1px;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 14px solid rgb(var(--v-theme-background));
   }
 }
 
@@ -288,14 +276,6 @@ function handleSelect(id: string) {
 
   .popular-collections-bar__collection-btn:nth-child(n + 5) {
     display: flex;
-  }
-
-  .popular-collections-bar__tip {
-    position: absolute;
-    bottom: -1px;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 0;
   }
 }
 </style>
