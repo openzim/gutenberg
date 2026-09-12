@@ -11,12 +11,14 @@ Supplies the source-specific hooks of `core.pipeline.Pipeline`:
 
 from gutenberg2zim.constants import logger
 from gutenberg2zim.core.download_engine import DownloadEngine
+from gutenberg2zim.core.exporters.html_reader_controls import (
+    export_html_reader_control_assets,
+)
 from gutenberg2zim.core.models import Work
 from gutenberg2zim.core.pipeline import Pipeline
 from gutenberg2zim.core.ports import WorkRef
 from gutenberg2zim.sources.gutenberg.downloader import download_book
 from gutenberg2zim.sources.gutenberg.exporter import export_book
-from gutenberg2zim.sources.gutenberg.rewriter import export_html_reader_control_assets
 
 
 class GutenbergPipeline(Pipeline):
@@ -28,8 +30,7 @@ class GutenbergPipeline(Pipeline):
         self.mirror_url = mirror_url
 
     def setup(self) -> None:
-        # Export infobox assets (CSS, JS, and icons) first to fail fast if
-        # there's an issue
+        # Export shared reader-control assets first to fail fast if any are missing.
         logger.info("Exporting HTML reader controls")
         export_html_reader_control_assets(self.assembler)
 

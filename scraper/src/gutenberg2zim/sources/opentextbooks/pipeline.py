@@ -9,11 +9,13 @@ import requests
 from gutenberg2zim.constants import logger
 from gutenberg2zim.core.content_validation import is_html_document, is_valid_book_file
 from gutenberg2zim.core.download_engine import DownloadEngine, is_fatal_http_error
+from gutenberg2zim.core.exporters.html_reader_controls import (
+    export_html_reader_control_assets,
+)
 from gutenberg2zim.core.models import Cover, Work
 from gutenberg2zim.core.pipeline import Pipeline
 from gutenberg2zim.core.ports import WorkRef
 from gutenberg2zim.core.utils import archive_name_for
-from gutenberg2zim.sources.gutenberg.rewriter import export_html_reader_control_assets
 from gutenberg2zim.sources.opentextbooks.covers import extract_cover, fetch_page_cover
 from gutenberg2zim.sources.opentextbooks.html_mirror import (
     HtmlEdition,
