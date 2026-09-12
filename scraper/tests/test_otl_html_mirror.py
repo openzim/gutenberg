@@ -38,6 +38,10 @@ def test_mirrors_linked_chapters_and_rewrites_navigation():
     (companion_path,) = companion_paths
     assert companion_path.startswith("html/10/")
     assert f'href="{companion_path}"'.encode() in edition.pages["Calculus.10"]
+    companion_html = edition.pages[companion_path]
+    assert b'href="../../css/html-reader-controls.css"' in companion_html
+    assert b'src="../../js/html-reader-controls.js"' in companion_html
+    assert b'src="../../icons/info.svg"' in companion_html
 
 
 def test_rejects_a_landing_page_without_mirrored_book_pages():
