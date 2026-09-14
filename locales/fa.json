@@ -1,11 +1,18 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Hanooz"
+		]
 	},
 	"gutenberg": {
 		"metadata_defaults": {
 			"title": "پروژه کتابخانه گوتنبرگ",
 			"description": "همه کتاب‌های فارسی از اولین تولید کننده کتاب‌های الکترونیکی رایگان"
+		},
+		"collections": {
+			"A": "کلیات",
+			"N": "هنرهای زیبا",
+			"S": "کشاورزی"
 		}
 	}
 }

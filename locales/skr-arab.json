@@ -20,5 +20,11 @@
 			"sortTitle": "عنوان",
 			"listView": "تندیر نظارہ"
 		}
+	},
+	"gutenberg": {
+		"collections": {
+			"K": "قنون",
+			"T": "ٹیکنالوجی"
+		}
 	}
 }
