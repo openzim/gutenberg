@@ -11,10 +11,10 @@ jobs:
       id-token: write  # mandatory for PyPI trusted publishing
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: "ui/package.json"
 
@@ -25,7 +25,7 @@ jobs:
           npm run build
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version-file: scraper/pyproject.toml
           architecture: x64
