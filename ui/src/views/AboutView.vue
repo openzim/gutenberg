@@ -47,16 +47,16 @@ const { t } = useI18n()
 .about-page {
   position: relative;
   min-height: 100vh;
-  padding: 2rem 2rem 4rem;
+  padding: 2.5rem 2rem;
 }
 
 .about-page::before {
   content: '';
-  position: absolute;
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  height: 80vh;
+  display: block;
+  height: 100dvh;
+  margin: -2.5rem -2rem;
   background-image: url('/about-bg.jpg');
   background-size: cover;
   background-position: center;
@@ -69,7 +69,7 @@ const { t } = useI18n()
   background: rgb(var(--v-theme-background));
   max-width: 801px;
   width: 100%;
-  margin: 3rem auto 0;
+  margin: calc(-100dvh + 2.5rem) auto 0;
   padding: 3rem 4rem;
 }
 
@@ -126,11 +126,11 @@ p {
 
 @media (max-width: 767px) {
   .about-page {
-    padding: 1.5rem 1rem 3rem;
+    padding: 3rem 1rem;
   }
 
   .about-page::before {
-    height: 55vh;
+    margin: -3rem -1rem;
   }
 
   .content-card {
