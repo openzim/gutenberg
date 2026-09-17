@@ -10,10 +10,10 @@ jobs:
   test-scraper:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version-file: scraper/pyproject.toml
           architecture: x64
@@ -29,17 +29,17 @@ jobs:
         run: inv coverage --args "-vvv"
 
       - name: Upload coverage report to codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   build-scraper:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: "ui/package.json"
 
@@ -50,7 +50,7 @@ jobs:
           npm run build
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version-file: scraper/pyproject.toml
           architecture: x64
@@ -64,10 +64,10 @@ jobs:
   build-and-test-zimui:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: "ui/package.json"
 
@@ -104,7 +104,7 @@ jobs:
   run-integration-tests:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Build the Docker image
         run: docker build -t gutenberg .
@@ -159,7 +159,7 @@ jobs:
             bash -c "pip install --no-cache-dir pytest && pytest -v /src/scraper/tests-integration"
 
       - name: Archive integration ZIMs
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: integration-zims
           path: output/*.zim

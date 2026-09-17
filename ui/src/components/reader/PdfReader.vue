@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import * as pdfjsLib from 'pdfjs-dist'
-import type { PDFDocumentProxy } from 'pdfjs-dist'
+import type { PDFDocumentLoadingTask, PDFDocumentProxy } from 'pdfjs-dist'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import 'pdfjs-dist/web/pdf_viewer.css'
@@ -23,6 +23,9 @@ const viewer = ref<HTMLDivElement | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 let documentProxy: PDFDocumentProxy | null = null
+// pdfjs-dist 6.x removed `PDFDocumentProxy.destroy()`; cleanup now happens
+// via the loading task returned by `getDocument()` instead.
+let loadingTask: PDFDocumentLoadingTask | null = null
 let viewerInstance: {
   cleanup: () => void
   currentScaleValue: string
@@ -63,7 +66,7 @@ onMounted(async () => {
     eventBus.on('pagesinit', pagesInitListener)
     // Kiwix serves local ZIM content reliably as a complete response but not
     // for every byte-range request that PDF.js otherwise makes.
-    documentProxy = await pdfjsLib.getDocument({
+    loadingTask = pdfjsLib.getDocument({
       url: props.src,
       cMapUrl,
       cMapPacked: true,
@@ -71,11 +74,13 @@ onMounted(async () => {
       disableAutoFetch: true,
       disableRange: true,
       disableStream: true
-    }).promise
+    })
+    documentProxy = await loadingTask.promise
     if (viewerInstance) {
       viewerInstance.setDocument(documentProxy)
     } else {
-      void documentProxy.destroy()
+      void loadingTask.destroy()
+      loadingTask = null
       documentProxy = null
     }
   } catch (cause) {
@@ -95,7 +100,8 @@ onBeforeUnmount(() => {
   viewerInstance?.cleanup()
   viewerInstance?.setDocument(null as unknown as PDFDocumentProxy)
   viewerInstance = null
-  void documentProxy?.destroy()
+  void loadingTask?.destroy()
+  loadingTask = null
   documentProxy = null
 })
 </script>
