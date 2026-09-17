@@ -7,19 +7,6 @@ import AuthorDetailView from '../views/AuthorDetailView.vue'
 import CollectionListView from '../views/CollectionListView.vue'
 import AboutView from '../views/AboutView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
-import type { Config } from '@/types'
-
-let config: Config | null = null
-
-export function setRouterConfig(nextConfig: Config) {
-  config = nextConfig
-}
-
-function routeTitle(routeName: string): string {
-  const labels = config?.theme.routeLabels
-  const label = labels?.[routeName] || routeName
-  return config ? `${label} - ${config.title}` : `${label} - Library`
-}
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -80,13 +67,6 @@ const router = createRouter({
   scrollBehavior() {
     return { top: 0, behavior: 'smooth' }
   }
-})
-
-router.beforeEach((to, _from, next) => {
-  document.title = routeTitle(
-    to.name === 'collection-list' ? 'collections' : String(to.name || 'home')
-  )
-  next()
 })
 
 export default router
