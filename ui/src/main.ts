@@ -5,7 +5,6 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-import { setRouterConfig } from './router'
 import { useMainStore } from './stores/main'
 import loadVuetify from './plugins/vuetify'
 import loadI18n, { i18nPlugin } from './plugins/i18n'
@@ -22,7 +21,6 @@ const mainStore = useMainStore(pinia)
 mainStore
   .fetchConfig()
   .then((config) => {
-    setRouterConfig(config)
     return Promise.all([loadI18n(config.source.slug), loadVuetify()])
   })
   .then(([i18n, vuetify]) => {

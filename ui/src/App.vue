@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useMainStore } from '@/stores/main'
@@ -46,6 +46,49 @@ const breadcrumbItems = computed(() => {
 })
 
 const showBreadcrumbs = computed(() => breadcrumbItems.value.length > 0)
+
+// Section label for the current route, honoring the same config-driven
+// overrides (theme.routeLabels) as the header nav — not the raw route name.
+const sectionLabel = computed(() => {
+  const labels = main.config?.theme.routeLabels
+  switch (route.name) {
+    case 'home':
+      return labels?.home || t('nav.home')
+    case 'books':
+    case 'book-detail':
+      return labels?.works || t('nav.books')
+    case 'author-list':
+    case 'author-detail':
+      return labels?.authors || t('nav.authors')
+    case 'collection-list':
+      return labels?.collections || t('nav.collections')
+    case 'about':
+      return t('nav.about')
+    default:
+      return 'Page Not Found'
+  }
+})
+
+// Detail pages prefer the loaded entity's own name once it's fetched,
+// falling back to the section label (e.g. "Books") while it's still loading.
+const pageTitle = computed(() => {
+  const siteTitle = main.config?.title || 'Library'
+  if (route.name === 'book-detail' && main.currentBook) {
+    return `${main.currentBook.title} - ${siteTitle}`
+  }
+  if (route.name === 'author-detail' && main.currentAuthor) {
+    return `${main.currentAuthor.name} - ${siteTitle}`
+  }
+  return `${sectionLabel.value} - ${siteTitle}`
+})
+
+watch(
+  pageTitle,
+  (title) => {
+    document.title = title
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
