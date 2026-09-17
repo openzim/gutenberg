@@ -60,30 +60,20 @@ onMounted(() => {
 
 <template>
   <div class="author-list-view">
-    <v-container>
-      <v-row v-if="authorsLoading">
-        <v-col cols="12">
-          <loading-spinner :message="t('common.loadingItems', { type: t('itemTypes.authors') })" />
-        </v-col>
-      </v-row>
+    <loading-spinner
+      v-if="authorsLoading"
+      :message="t('common.loadingItems', { type: t('itemTypes.authors') })"
+    />
+    <template v-else-if="authors.length > 0">
+      <alphabet-filter v-model="activeFilter" />
 
-      <v-row v-else-if="authors.length > 0">
-        <v-col cols="12">
-          <alphabet-filter v-model="activeFilter" />
+      <authors-list v-if="filteredByLetter.length > 0" :authors="filteredByLetter" />
+      <p v-else class="text-body-1 text-medium-emphasis text-center py-8">
+        {{ t('messages.noAuthorsForLetter', { letter: activeFilter }) }}
+      </p>
+    </template>
 
-          <authors-list v-if="filteredByLetter.length > 0" :authors="filteredByLetter" />
-          <p v-else class="text-body-1 text-medium-emphasis text-center py-8">
-            {{ t('messages.noAuthorsForLetter', { letter: activeFilter }) }}
-          </p>
-        </v-col>
-      </v-row>
-
-      <v-row v-else>
-        <v-col cols="12">
-          <empty-state :message="t(MESSAGES.NO_AUTHORS)" type="info" />
-        </v-col>
-      </v-row>
-    </v-container>
+    <empty-state v-else :message="t(MESSAGES.NO_AUTHORS)" type="info" />
 
     <back-to-top-button />
   </div>
@@ -92,9 +82,11 @@ onMounted(() => {
 <style scoped>
 .author-list-view {
   padding: v-bind(LAYOUT.VIEW_PADDING);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
+  margin: 0 auto;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 767px) {
   .author-list-view {
     padding: v-bind(LAYOUT.VIEW_PADDING_MOBILE);
   }

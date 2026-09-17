@@ -4,10 +4,6 @@
 @import '@fontsource/roboto/700.css';
 @import '@fontsource-variable/inter/standard.css';
 
-:root {
-  --g-card-border: 1.5px;
-}
-
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
@@ -48,7 +44,7 @@ button,
 }
 
 /* Responsive typography */
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .text-h1 {
     font-size: 1.75rem;
   }

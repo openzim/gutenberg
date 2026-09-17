@@ -3,12 +3,12 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import type { BookPreview } from '@/types'
-import CollectionBookCard from '@/components/book/CollectionBookCard.vue'
+import BooksGrid from '@/components/book/BooksGrid.vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
 import { normalizeImagePath } from '@/utils/format-utils'
 import FireRating from '@/components/common/FireRating.vue'
 import { formatLabel } from '@/utils/format-utils'
-import { TYPOGRAPHY, THEME_COLORS } from '@/constants/theme'
+import { TYPOGRAPHY, THEME_COLORS, LAYOUT } from '@/constants/theme'
 
 const props = defineProps<{
   books: BookPreview[]
@@ -53,8 +53,14 @@ function goToAuthor(id: string) {
       />
 
       <div class="selected-books-section__grid">
-        <div v-for="book in topBooks" :key="book.id" class="selected-books-section__cell">
-          <collection-book-card :book="book" />
+        <div class="books-grid">
+          <books-grid
+            :books="topBooks"
+            :columns="4"
+            :book-width="160"
+            :cover-height="180"
+            centered
+          />
         </div>
 
         <div v-if="mostDownloaded" class="selected-books-section__featured">
@@ -104,37 +110,25 @@ function goToAuthor(id: string) {
 
 <style scoped>
 .selected-books-section {
-  max-width: var(--g-layout-max);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
   margin-inline: auto;
   padding: 1.5rem 0;
 }
 
 .selected-books-section__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 183.33px) 366.66px;
-  grid-template-rows: repeat(2, auto);
-  /* Fixed (non-auto-fill) tracks, so fit-content already matches their
-     total size exactly — no leftover slack — and border-top/left below
-     line up exactly with row-1/column-1's own edges. */
-  width: fit-content;
-  justify-content: center;
-  margin-inline: auto;
-  /* Cards only draw their own border-right/border-bottom (see
-     CollectionBookCard.vue), so no two cards ever paint the same seam. The
-     grid supplies the missing top/left edge once, for every cell in row 1
-     (top) and column 1 (left). */
-  border-top: var(--g-card-border) solid rgb(var(--v-theme-grid));
-  border-left: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  display: flex;
+}
+
+.books-grid {
+  flex-grow: 1;
+  flex-shrink: 1;
 }
 
 .selected-books-section__featured {
-  grid-column: 5 / 6;
-  grid-row: 1 / 3;
+  width: calc(2 * 160px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 100%;
-  height: 100%;
   position: relative;
 }
 
@@ -251,60 +245,14 @@ function goToAuthor(id: string) {
   height: 22px;
 }
 
-@media (max-width: 1279px) {
-  .selected-books-section {
-    padding: 1.5rem 1rem;
-  }
-
+@media (max-width: 767px) {
   .selected-books-section__grid {
-    grid-template-columns: repeat(4, 160px) 320px;
-  }
-}
-
-@media (max-width: 960px) {
-  .selected-books-section {
-    padding: 1rem 0;
-  }
-
-  .selected-books-section__header {
-    margin-inline: auto;
-    padding: 0;
-  }
-
-  .selected-books-section__grid {
-    grid-template-columns: repeat(2, 160px) 320px;
-    grid-template-rows: repeat(2, auto);
-  }
-
-  .selected-books-section__cell:nth-child(n + 5) {
-    display: none;
+    display: inline;
   }
 
   .selected-books-section__featured {
-    grid-column: 3 / 4;
-    grid-row: 1 / 3;
-  }
-}
-
-@media (max-width: 599px) {
-  .selected-books-section {
-    /* margin handled by CSS var */
-  }
-
-  .selected-books-section__grid {
-    grid-template-columns: repeat(2, 160px);
-    grid-template-rows: auto;
-    max-width: 320px;
+    padding-top: 4rem;
     margin-inline: auto;
-  }
-
-  .selected-books-section__cell:nth-child(n + 5) {
-    display: flex;
-  }
-
-  .selected-books-section__featured {
-    grid-column: 1 / 3;
-    grid-row: auto;
   }
 }
 </style>

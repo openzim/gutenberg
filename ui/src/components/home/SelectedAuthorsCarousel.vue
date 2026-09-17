@@ -2,10 +2,11 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { useDisplay } from 'vuetify'
 import type { AuthorPreview } from '@/types'
 import CarouselArrow from '@/components/common/CarouselArrow.vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
-import { TYPOGRAPHY, AVATAR_SIZES, ICON_SIZES } from '@/constants/theme'
+import { TYPOGRAPHY, AVATAR_SIZES, ICON_SIZES, LAYOUT } from '@/constants/theme'
 
 defineProps<{
   authors: AuthorPreview[]
@@ -17,6 +18,8 @@ const router = useRouter()
 const trackRef = ref<HTMLElement | null>(null)
 const hasPrevious = ref(false)
 const hasNext = ref(false)
+
+const { mobile } = useDisplay()
 
 function updateScrollState() {
   const track = trackRef.value
@@ -74,20 +77,22 @@ const arrows = [
       />
 
       <div class="selected-authors-carousel__wrapper">
-        <div
-          v-for="arrow in arrows"
-          :key="arrow.direction"
-          class="carousel-arrow-wrapper g-desktop-only"
-          :style="{ order: arrow.order }"
-        >
-          <carousel-arrow
-            :direction="arrow.direction"
-            :disabled="arrow.direction === 'left' ? !hasPrevious : !hasNext"
-            :ariaLabel="t(arrow.ariaKey)"
-            beige-shadow
-            @click="arrow.onClick"
-          />
-        </div>
+        <template v-if="!mobile">
+          <div
+            v-for="arrow in arrows"
+            :key="arrow.direction"
+            class="carousel-arrow-wrapper"
+            :style="{ order: arrow.order }"
+          >
+            <carousel-arrow
+              :direction="arrow.direction"
+              :disabled="arrow.direction === 'left' ? !hasPrevious : !hasNext"
+              :ariaLabel="t(arrow.ariaKey)"
+              beige-shadow
+              @click="arrow.onClick"
+            />
+          </div>
+        </template>
 
         <div class="selected-authors-carousel__track-outer">
           <div
@@ -102,13 +107,9 @@ const arrows = [
             >
               <button class="selected-author-card" @click="goToAuthor(author.id)">
                 <div class="selected-author-card__avatar-wrapper">
-                  <v-avatar
-                    :size="AVATAR_SIZES.TABLET"
-                    color="rgb(var(--v-theme-authorAvatarBgd))"
-                    class="selected-author-card__avatar"
-                  >
-                    <v-icon color="white" icon="mdi-account" :size="ICON_SIZES.DETAIL" />
-                  </v-avatar>
+                  <div class="selected-author-card__avatar">
+                    <v-icon color="white" icon="mdi-account" :size="ICON_SIZES.COMFORTABLE" />
+                  </div>
                 </div>
                 <h3 class="selected-author-card__name">
                   {{ author.name }}
@@ -131,11 +132,11 @@ const arrows = [
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  padding: 1.5rem 0;
 }
 
 .selected-authors-carousel__inner {
-  max-width: var(--g-layout-max);
+  padding: 0 v-bind(LAYOUT.VIEW_PADDING_HORIZONTAL);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
   margin-inline: auto;
 }
 
@@ -146,14 +147,6 @@ const arrows = [
   gap: 1.5rem;
 }
 
-.selected-authors-carousel__track-outer {
-  max-width: var(--g-layout-max);
-  width: 100%;
-  flex-shrink: 0;
-  padding: 5px;
-  order: 1;
-}
-
 .selected-authors-carousel__track {
   display: flex;
   align-items: stretch;
@@ -162,6 +155,13 @@ const arrows = [
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+}
+
+.selected-authors-carousel__track-outer {
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
+  flex: 1 1 auto;
+  min-width: 0;
+  order: 1;
 }
 
 .selected-authors-carousel__track::-webkit-scrollbar {
@@ -208,7 +208,14 @@ const arrows = [
 }
 
 .selected-author-card__avatar {
+  background-color: rgb(var(--v-theme-authorAvatarBgd));
+  border-radius: 50%;
+  width: v-bind(AVATAR_SIZES.COMFORTABLE + 'px');
+  height: v-bind(AVATAR_SIZES.COMFORTABLE + 'px');
   transition: transform 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .selected-author-card__name {
@@ -223,7 +230,7 @@ const arrows = [
   overflow: hidden;
   word-break: break-word;
   margin: 0 0 0.25rem;
-  max-width: 100%;
+  max-width: 200px;
 }
 
 .selected-author-card__count {
@@ -243,47 +250,21 @@ const arrows = [
   justify-content: center;
 }
 
-@media (max-width: 1279px) {
-  .selected-authors-carousel__inner {
-    padding: 0 1rem;
-  }
-
-  .selected-authors-carousel__track-outer {
-    width: 100%;
-  }
-
+@media (max-width: 1300px) {
   .selected-authors-carousel__card-wrapper {
-    flex: 0 0 160px;
-    margin: 0;
-  }
-
-  .selected-author-card {
-    padding: 1rem 0.5rem;
+    flex: 0 0 25%;
   }
 }
 
-@media (max-width: 960px) {
-  .selected-authors-carousel__inner {
-    padding: 0;
-  }
-
-  .selected-authors-carousel__header {
-    margin-inline: auto;
-    padding: 0;
-  }
-
-  .selected-authors-carousel__track {
-    gap: 1rem;
+@media (max-width: 1000px) {
+  .selected-authors-carousel__card-wrapper {
+    flex: 0 0 33.3333%;
   }
 }
 
-@media (max-width: 599px) {
-  .selected-authors-carousel {
-    padding: 1rem 0;
-  }
-
-  .selected-authors-carousel__track {
-    padding: 5px 1rem;
+@media (max-width: 767px) {
+  .selected-authors-carousel__card-wrapper {
+    flex: 0 0 50%;
   }
 }
 </style>

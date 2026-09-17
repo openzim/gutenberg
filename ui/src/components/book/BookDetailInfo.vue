@@ -200,61 +200,59 @@ const collectionDisplayName = computed(() => {
 
         <!-- Desktop-only meta (inside info-cell) -->
         <div class="meta-desktop">
-          <v-row class="meta-row mb-4">
-            <v-col cols="4">
+          <v-row class="meta-row">
+            <v-col cols="3">
               <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
               <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="3">
               <div class="inter-13 text-medium-emphasis">
                 {{ t('book.primaryMetric') }}
               </div>
               <div class="inter-13">{{ formatMetric(book.primaryMetric) }}</div>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="3">
               <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
               <div class="inter-13">{{ cleanLicense }}</div>
             </v-col>
+            <v-col cols="3" v-if="book.primaryCollection">
+              <div class="inter-13 text-medium-emphasis">{{ t('book.collection') }}</div>
+              <router-link
+                :to="{ path: '/collections', query: { collection: book.primaryCollection } }"
+                class="inter-13 text-decoration-underline collection-link"
+              >
+                {{ collectionDisplayName }}
+              </router-link>
+            </v-col>
           </v-row>
+        </div>
+      </div>
 
-          <div v-if="book.primaryCollection">
-            <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.collection') }}</div>
+      <!-- Mobile-only meta (full width row) -->
+      <div class="meta-cell">
+        <v-row class="meta-row">
+          <v-col cols="3">
+            <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
+            <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
+          </v-col>
+          <v-col cols="3">
+            <div class="inter-13 text-medium-emphasis">{{ t('book.primaryMetric') }}</div>
+            <div class="inter-13">{{ formatMetric(book.primaryMetric) }}</div>
+          </v-col>
+          <v-col cols="3">
+            <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
+            <div class="inter-13">{{ cleanLicense }}</div>
+          </v-col>
+          <v-col cols="3" v-if="book.primaryCollection">
+            <div class="inter-13 text-medium-emphasis">{{ t('book.collection') }}</div>
             <router-link
               :to="{ path: '/collections', query: { collection: book.primaryCollection } }"
               class="inter-13 text-decoration-underline collection-link"
             >
               {{ collectionDisplayName }}
             </router-link>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mobile-only meta (full width row) -->
-      <div class="meta-cell">
-        <v-row class="meta-row mb-4">
-          <v-col cols="4">
-            <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
-            <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
-          </v-col>
-          <v-col cols="4">
-            <div class="inter-13 text-medium-emphasis">{{ t('book.primaryMetric') }}</div>
-            <div class="inter-13">{{ formatMetric(book.primaryMetric) }}</div>
-          </v-col>
-          <v-col cols="4">
-            <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
-            <div class="inter-13">{{ cleanLicense }}</div>
           </v-col>
         </v-row>
-
-        <div v-if="book.primaryCollection">
-          <div class="inter-13 text-medium-emphasis mb-1">{{ t('book.collection') }}</div>
-          <router-link
-            :to="{ path: '/collections', query: { collection: book.primaryCollection } }"
-            class="inter-13 text-decoration-underline collection-link"
-          >
-            {{ collectionDisplayName }}
-          </router-link>
-        </div>
       </div>
 
       <div class="actions-cell">
@@ -371,7 +369,7 @@ const collectionDisplayName = computed(() => {
 
 .book-detail-grid {
   display: grid;
-  grid-template-columns: 5fr 7fr;
+  grid-template-columns: 3fr 7fr;
   grid-template-rows: auto auto;
   grid-template-areas:
     'cover info'
@@ -424,8 +422,8 @@ const collectionDisplayName = computed(() => {
 /* Typography shared class */
 .inter-13 {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
-  font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
-  font-size: v-bind(TYPOGRAPHY.H3_SIZE);
+  font-weight: v-bind(TYPOGRAPHY.H4_WEIGHT);
+  font-size: v-bind(TYPOGRAPHY.H4_SIZE);
 }
 
 .book-title {
@@ -435,7 +433,7 @@ const collectionDisplayName = computed(() => {
   line-height: 1.3;
   word-break: break-word;
   color: rgb(var(--v-theme-title));
-  margin-top: 1.5rem;
+  margin-top: 5rem;
 }
 
 .book-desc {
@@ -473,7 +471,7 @@ const collectionDisplayName = computed(() => {
 .detail-cover {
   max-width: 320px;
   width: 100%;
-  margin-top: 1.5rem;
+  margin-top: 5rem;
 }
 
 .stars-author-row {
@@ -535,6 +533,7 @@ const collectionDisplayName = computed(() => {
 }
 
 .collection-link {
+  display: block;
   color: rgb(var(--v-theme-author));
 }
 
@@ -566,7 +565,7 @@ const collectionDisplayName = computed(() => {
   color: rgb(var(--v-theme-text));
 }
 
-@media (max-width: 960px) {
+@media (max-width: 767px) {
   .book-detail-grid {
     grid-template-columns: 5fr 7fr;
     grid-template-rows: auto auto auto;
@@ -574,7 +573,6 @@ const collectionDisplayName = computed(() => {
       'cover info'
       'meta meta'
       'actions actions';
-    max-width: 802px;
   }
 
   .cover-cell {
@@ -629,7 +627,7 @@ const collectionDisplayName = computed(() => {
   }
 
   .inter-13 {
-    font-size: v-bind(TYPOGRAPHY.H3_SIZE_MOBILE);
+    font-size: v-bind(TYPOGRAPHY.H4_SIZE_MOBILE);
   }
 
   .book-title {

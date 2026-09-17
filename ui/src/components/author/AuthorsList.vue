@@ -32,27 +32,50 @@ const { sentinelRef } = useIntersectionObserver(() => {
 
 <template>
   <div class="authors-list">
-    <v-row class="ma-0 gap-4">
-      <v-col
-        v-for="author in displayedItems"
-        :key="author.id"
-        cols="6"
-        sm="4"
-        md="3"
-        lg="2"
-        class="pa-2"
-      >
-        <author-card :author="author" />
-      </v-col>
-    </v-row>
+    <author-card
+      class="author-card"
+      v-for="author in displayedItems"
+      :key="author.id"
+      :author="author"
+      variant="full"
+    />
     <div ref="sentinelRef" class="sentinel" />
   </div>
 </template>
 
 <style scoped>
 .authors-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(5, 20%);
+}
+
+@media (max-width: 1200px) {
+  .authors-list {
+    grid-template-columns: repeat(4, 25%);
+  }
+}
+
+@media (max-width: 1000px) {
+  .authors-list {
+    grid-template-columns: repeat(3, 33.333333%);
+  }
+}
+
+@media (max-width: 767px) {
+  .authors-list {
+    grid-template-columns: repeat(2, 50%);
+  }
+}
+
+@media (max-width: 470px) {
+  .authors-list {
+    grid-template-columns: 100%;
+  }
+}
+
+.author-card {
+  height: 17rem;
+  flex: 1 1 20%;
 }
 
 .sentinel {

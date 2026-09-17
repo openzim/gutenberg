@@ -67,7 +67,7 @@ const { t } = useI18n()
   position: relative;
   z-index: 1;
   background: rgb(var(--v-theme-background));
-  max-width: var(--g-layout-max);
+  max-width: 801px;
   width: 100%;
   margin: 3rem auto 0;
   padding: 3rem 4rem;
@@ -124,7 +124,7 @@ p {
   margin-bottom: 0;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .about-page {
     padding: 1.5rem 1rem 3rem;
   }
@@ -135,10 +135,23 @@ p {
 
   .content-card {
     padding: 2rem 1.5rem;
+    max-width: 80%;
   }
 
   .section-title {
-    font-size: v-bind(TYPOGRAPHY.H2_SIZE);
+    font-size: v-bind(TYPOGRAPHY.H1_SIZE_MOBILE);
+  }
+
+  .mission-by {
+    font-size: v-bind(TYPOGRAPHY.BODY_SIZE_MOBILE);
+  }
+
+  p {
+    font-size: v-bind(TYPOGRAPHY.BODY_SIZE_MOBILE);
+  }
+
+  .attribution p {
+    font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE_MOBILE);
   }
 }
 </style>

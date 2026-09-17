@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { TYPOGRAPHY } from '@/constants/theme'
+import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 import { useMainStore } from '@/stores/main'
 
 const { t } = useI18n()
@@ -40,10 +40,11 @@ const currentYear = new Date().getFullYear()
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: var(--g-layout-max);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
   margin: 0 auto;
-  padding: 1.5rem 0;
-  min-height: 64px;
+  padding: v-bind(LAYOUT.VIEW_PADDING);
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
 }
 
 .app-footer__text {

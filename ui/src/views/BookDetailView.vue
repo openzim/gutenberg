@@ -7,6 +7,7 @@ import { useMainStore } from '@/stores/main'
 import { useI18n } from 'vue-i18n'
 import { computed, ref, watch } from 'vue'
 import type { Collection } from '@/types'
+import { LAYOUT } from '@/constants/theme'
 
 const { t } = useI18n()
 
@@ -52,6 +53,7 @@ watch(
 
 <template>
   <detail-view-wrapper
+    class="book-detail-view"
     :loading="loading"
     :not-found="notFound"
     :has-data="!!book"
@@ -63,3 +65,18 @@ watch(
     <collection-carousel v-if="sameCollectionBooks.length > 0" :books="sameCollectionBooks" />
   </detail-view-wrapper>
 </template>
+
+<style scoped>
+.book-detail-view {
+  padding: v-bind(LAYOUT.VIEW_PADDING);
+  padding-top: 0px;
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .book-detail-view {
+    padding: 0px; /* Short padding on this view because we have lot's to display */
+  }
+}
+</style>

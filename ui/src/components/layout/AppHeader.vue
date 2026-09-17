@@ -3,11 +3,13 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/stores/main'
-import { TYPOGRAPHY } from '@/constants/theme'
+import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
+import { useDisplay } from 'vuetify'
 
 const { t } = useI18n()
 const route = useRoute()
 const main = useMainStore()
+const { mobile } = useDisplay()
 
 const drawer = ref(false)
 
@@ -36,13 +38,13 @@ function isActive(path: string): boolean {
 
       <v-app-bar-nav-icon
         @click="drawer = !drawer"
-        class="d-md-none"
         :aria-label="t('common.toggleNavigationMenu')"
         variant="text"
-        density="comfortable"
+        density="compact"
+        v-if="mobile"
       />
 
-      <nav :aria-label="t('common.mainNavigation')" class="app-header__nav d-none d-md-flex">
+      <nav v-if="!mobile" :aria-label="t('common.mainNavigation')" class="app-header__nav">
         <router-link
           v-for="item in navItems"
           :key="item.to"
@@ -195,10 +197,11 @@ function isActive(path: string): boolean {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: var(--g-layout-max);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
   margin: 0 auto;
-  padding: 0;
-  height: 64px;
+  padding: v-bind(LAYOUT.VIEW_PADDING);
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
 }
 
 .app-header__brand {

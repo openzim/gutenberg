@@ -25,5 +25,13 @@ import { LAYOUT } from '@/constants/theme'
 <style scoped>
 .not-found-view {
   padding: v-bind(LAYOUT.VIEW_PADDING);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .not-found-view {
+    padding: v-bind(LAYOUT.VIEW_PADDING_MOBILE);
+  }
 }
 </style>

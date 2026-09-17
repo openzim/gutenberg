@@ -34,20 +34,22 @@ export const LAYOUT = {
   MAX_CONTENT_WIDTH: '1200px',
   HEADER_HEIGHT: '64px',
   FOOTER_HEIGHT: '136px',
-  VIEW_PADDING: '2rem 0',
-  VIEW_PADDING_MOBILE: '1.5rem 0'
+  VIEW_PADDING_HORIZONTAL: '1.6rem',
+  VIEW_PADDING: '2rem 1.6rem',
+  VIEW_PADDING_MOBILE: '1.5rem 1.6rem',
+  CARD_BORDER: '1.5px'
 } as const
 
 export const AVATAR_SIZES = {
-  CARD: 80,
-  CAROUSEL: 64,
-  DETAIL: 120,
-  TABLET: 100
+  COMPACT: 48,
+  COMFORTABLE: 100,
+  FULL: 160
 } as const
 
 export const ICON_SIZES = {
-  DETAIL: 48,
-  LIST: 32
+  COMPACT: 28,
+  COMFORTABLE: 80,
+  FULL: 100
 } as const
 
 export const CAROUSEL_ARROW_SIZES = {
@@ -66,6 +68,9 @@ export const TYPOGRAPHY = {
   H3_SIZE: '0.9375rem',
   H3_SIZE_MOBILE: '0.75rem',
   H3_WEIGHT: 600,
+  H4_SIZE: '0.75rem',
+  H4_SIZE_MOBILE: '0.65rem',
+  H4_WEIGHT: 500,
   BODY_SIZE: '0.875rem',
   BODY_SIZE_MOBILE: '0.75rem',
   BODY_WEIGHT: 400,
@@ -78,7 +83,7 @@ export const TYPOGRAPHY = {
   BUTTON_SIZE: '0.875rem',
   BUTTON_SIZE_MOBILE: '0.875rem',
   BUTTON_WEIGHT: 500,
-  DESCRIPTION_SIZE: '0.75rem',
+  DESCRIPTION_SIZE: '0.90rem',
   DESCRIPTION_SIZE_MOBILE: '0.625rem',
   DESCRIPTION_WEIGHT: 500
 } as const

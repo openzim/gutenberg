@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { useCarousel } from '@/composables/useCarousel'
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, computed } from 'vue'
 import type { BookPreview } from '@/types'
 import CollectionBookCard from './CollectionBookCard.vue'
 import CarouselArrow from '@/components/common/CarouselArrow.vue'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY, LAYOUT } from '@/constants/theme'
+import { useDisplay } from 'vuetify'
 
 const props = defineProps<{
   books: BookPreview[]
 }>()
 
 const { t } = useI18n()
+const { mobile } = useDisplay()
 
 const CARDS_PER_VIEW = 5
 
@@ -22,6 +24,8 @@ const { visibleItems, hasPrevious, hasNext, shiftLeft, shiftRight } = useCarouse
 
 // Mobile scroll to first book
 const trackRef = ref<HTMLElement | null>(null)
+
+const coverHeight = computed(() => (mobile ? 180 : 230))
 
 watch(
   () => props.books,
@@ -55,14 +59,14 @@ watch(
       <div class="collection-carousel__track-outer">
         <div class="collection-books-row g-desktop-only">
           <div v-for="book in visibleItems" :key="book.id" class="carousel-card-wrapper">
-            <collection-book-card :book="book" />
+            <collection-book-card :book="book" :cover-height="coverHeight" />
           </div>
         </div>
 
         <div ref="trackRef" class="collection-books-scroll g-mobile-only">
           <div class="collection-books-row">
             <div v-for="book in books" :key="book.id" class="carousel-card-wrapper">
-              <collection-book-card :book="book" />
+              <collection-book-card :book="book" :cover-height="coverHeight" />
             </div>
           </div>
         </div>
@@ -82,7 +86,6 @@ watch(
 
 <style scoped>
 .collection-carousel {
-  max-width: var(--g-layout-max);
   margin-inline: auto;
   padding: 1.5rem;
 }
@@ -101,7 +104,7 @@ watch(
 }
 
 .collection-carousel__track-outer {
-  width: 1102px;
+  width: calc(100% - 170px);
   flex-shrink: 0;
   padding: 5px;
 }
@@ -118,8 +121,8 @@ watch(
      row supplies the top/left edge once, for whichever card ends up first —
      flex packs from the left by default, so the row's own edge lines up
      exactly with that card's edge with no extra math needed. */
-  border-top: var(--g-card-border) solid rgb(var(--v-theme-grid));
-  border-left: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-top: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
+  border-left: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
 }
 
 .collection-books-scroll.g-mobile-only {

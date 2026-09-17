@@ -76,8 +76,6 @@ function handleSelect(id: string) {
 
 <style scoped>
 .popular-collections-bar {
-  max-width: var(--g-layout-max);
-  margin-inline: auto;
   padding: 1.5rem 0;
 }
 
@@ -147,8 +145,7 @@ function handleSelect(id: string) {
   cursor: pointer;
   color: rgb(var(--v-theme-text));
   position: relative;
-  width: calc((100% - 22rem) / 6);
-  min-width: 0;
+  width: 110px;
   padding: 1rem;
   min-height: 120px;
   border-radius: 1rem;
@@ -198,40 +195,19 @@ function handleSelect(id: string) {
   text-underline-offset: 3px;
 }
 
-@media (max-width: 960px) {
-  .popular-collections-bar {
-    max-width: var(--g-layout-max);
-    padding: 1rem 0;
+@media (max-width: 1050px) {
+  .popular-collections-bar__collection-btn:nth-child(n + 6) {
+    display: none;
   }
+}
 
-  .popular-collections-bar__header {
-    padding: 0 1rem;
-  }
-
-  .popular-collections-bar__card {
-    padding: 1rem;
-  }
-
-  .popular-collections-bar__collection-btn {
-    width: calc((100% - 3rem) / 5);
-  }
-
+@media (max-width: 900px) {
   .popular-collections-bar__collection-btn:nth-child(n + 5) {
     display: none;
   }
 }
 
-@media (max-width: 599px) {
-  .popular-collections-bar {
-    /* margin handled by CSS var */
-  }
-
-  .popular-collections-bar__header {
-    max-width: var(--g-layout-max);
-    margin-inline: auto;
-    padding: 0;
-  }
-
+@media (max-width: 767px) {
   .popular-collections-bar__title {
     font-size: v-bind(TYPOGRAPHY.H1_SIZE_MOBILE);
   }

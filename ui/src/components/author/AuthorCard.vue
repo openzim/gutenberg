@@ -1,49 +1,87 @@
 <script setup lang="ts">
 import type { AuthorPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
-import { AVATAR_SIZES, ICON_SIZES, TYPOGRAPHY } from '@/constants/theme'
+import { AVATAR_SIZES, ICON_SIZES, LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 
 interface Props {
   author: AuthorPreview
-  variant?: 'default' | 'carousel'
+  variant?: 'compact' | 'comfortable' | 'full'
+  navigate?: boolean
+  bordered?: boolean
+  noRightBorder?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  variant: 'default'
+withDefaults(defineProps<Props>(), {
+  variant: 'compact',
+  navigate: true,
+  bordered: false,
+  noRightBorder: false
 })
 
 const { t } = useI18n()
-
-const isCarousel = () => props.variant === 'carousel'
 </script>
 
 <template>
-  <router-link
-    :to="`/author/${author.id}`"
-    :class="['author-card', 'text-decoration-none', { 'author-card--carousel': isCarousel() }]"
+  <v-list-item
+    :to="navigate ? `/author/${author.id}` : undefined"
     :aria-label="
       t('author.viewAuthor', {
         bookCount: t('author.bookCount', author.bookCount),
         name: author.name
       })
     "
+    variant="flat"
+    base-color="transparent"
   >
-    <v-avatar
-      :size="isCarousel() ? AVATAR_SIZES.CAROUSEL : 100"
-      color="primary"
-      :class="['author-card__avatar', { 'author-card__avatar--carousel': isCarousel() }]"
+    <div
+      :class="[
+        'author-card',
+        'text-decoration-none',
+        {
+          'author-card--compact': variant === 'compact',
+          'author-card--comfortable': variant === 'comfortable',
+          'author-card--full': variant === 'full',
+          'author-card--bordered': bordered,
+          'author-card__navigate': navigate,
+          'author-card__no-right-border': noRightBorder
+        }
+      ]"
     >
-      <v-icon icon="mdi-account" :size="isCarousel() ? ICON_SIZES.LIST : 48" />
-    </v-avatar>
+      <v-avatar
+        :size="
+          variant === 'compact'
+            ? AVATAR_SIZES.COMPACT
+            : variant === 'comfortable'
+              ? AVATAR_SIZES.COMFORTABLE
+              : AVATAR_SIZES.FULL
+        "
+        color="rgb(var(--v-theme-authorAvatarBgd))"
+        class="author-card__avatar"
+      >
+        <v-icon
+          icon="mdi-account"
+          color="white"
+          :size="
+            variant === 'compact'
+              ? ICON_SIZES.COMPACT
+              : variant === 'comfortable'
+                ? ICON_SIZES.COMFORTABLE
+                : ICON_SIZES.FULL
+          "
+        />
+      </v-avatar>
 
-    <h3 :class="['author-card__name', { 'author-card__name--carousel': isCarousel() }]">
-      {{ author.name }}
-    </h3>
+      <div class="author-card--infos">
+        <h2 class="author-card__name">
+          {{ author.name }}
+        </h2>
 
-    <p :class="['author-card__count', { 'author-card__count--carousel': isCarousel() }]">
-      {{ t('author.bookCount', author.bookCount) }}
-    </p>
-  </router-link>
+        <p class="author-card__count">
+          {{ t('author.bookCount', author.bookCount) }}
+        </p>
+      </div>
+    </div>
+  </v-list-item>
 </template>
 
 <style scoped>
@@ -51,47 +89,67 @@ const isCarousel = () => props.variant === 'carousel'
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem 0.5rem;
-  color: inherit;
-}
-
-.author-card--carousel {
   justify-content: center;
+  padding: 1rem;
   width: 100%;
-  height: 100%;
-  /* Right/bottom carry a border so no two adjacent cards ever paint the
-     same seam (see CollectionBookCard.vue for the full rationale). Top is
-     each card's own too — safe since this only ever sits in a single-row
-     carousel, so no other card shares that edge — which also avoids the
-     carousel track's border-top overshooting past a short row (see
-     AuthorDetailCarousel.vue's .carousel-track). Left is not drawn here at
-     all — it's only ever needed on the first card in the row, and
-     .carousel-cell:first-child (in the parent) adds it there directly. */
-  border-top: var(--g-card-border) solid rgb(var(--v-theme-grid));
-  border-right: var(--g-card-border) solid rgb(var(--v-theme-grid));
-  border-bottom: var(--g-card-border) solid rgb(var(--v-theme-grid));
-  background: rgb(var(--v-theme-background));
+  height: 12rem;
   color: rgb(var(--v-theme-text));
   position: relative;
   z-index: 0;
   transition: box-shadow 0.2s ease;
 }
 
-.author-card--carousel:hover,
-.author-card--carousel:focus {
-  box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
-  z-index: 1;
+.author-card--bordered {
+  border-top: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
+  border-right: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
+  border-bottom: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
+}
+
+.author-card__no-right-border {
+  border-right: 0px;
+}
+
+.v-list-item {
+  padding: 0;
+}
+
+.author-card--compact {
+  padding-top: 2rem;
+}
+
+.author-card--comfortable {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+}
+
+.author-card--full {
+  height: 17rem;
+}
+
+.author-card--infos {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 100%;
+}
+
+.author-card--comfortable .author-card--infos {
+  align-items: start;
+}
+
+.author-card--full .author-card__avatar,
+.author-card--compact .author-card__avatar {
+  margin-bottom: 1rem;
 }
 
 .author-card__avatar {
-  margin-bottom: 0.75rem;
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
 }
 
-.author-card:hover .author-card__avatar,
-.author-card:focus .author-card__avatar {
+.author-card__navigate:hover .author-card__avatar,
+.author-card__navigate:focus .author-card__avatar {
   transform: scale(1.05);
   box-shadow:
     0 0 12px rgba(var(--v-theme-text), 0.15),
@@ -99,19 +157,8 @@ const isCarousel = () => props.variant === 'carousel'
     0 0 36px rgba(var(--v-theme-text), 0.05);
 }
 
-.author-card__avatar--carousel {
-  transition: none;
-}
-
-.author-card:hover .author-card__avatar--carousel,
-.author-card:focus .author-card__avatar--carousel {
-  transform: none;
-  box-shadow: none;
-}
-
 .author-card__name {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
-  font-size: v-bind(TYPOGRAPHY.H3_SIZE);
   font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
   line-height: 1.4;
   text-align: center;
@@ -121,14 +168,19 @@ const isCarousel = () => props.variant === 'carousel'
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-break: break-word;
-  max-width: 100%;
-  margin-bottom: 0.25rem;
+  text-align: start;
 }
 
-.author-card__name--carousel {
-  font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
-  line-height: 1.3;
-  margin: 0 0 0.25rem;
+.author-card--comfortable .author-card__name {
+  font-size: v-bind(TYPOGRAPHY.H2_SIZE);
+  margin-bottom: 0.5rem;
+}
+
+.author-card--compact .author-card__name,
+.author-card--full .author-card__name {
+  font-size: v-bind(TYPOGRAPHY.H3_SIZE);
+  margin-bottom: 0.25rem;
+  text-align: center;
 }
 
 .author-card__count {
@@ -140,23 +192,5 @@ const isCarousel = () => props.variant === 'carousel'
   opacity: 0.6;
   margin: 0;
   text-align: center;
-}
-
-.author-card__count--carousel {
-  margin-bottom: 0.25rem;
-}
-
-@media (max-width: 1279px) {
-  .author-card--carousel {
-    padding: 0.75rem 0.5rem;
-  }
-
-  .author-card__name--carousel {
-    font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
-  }
-
-  .author-card__count--carousel {
-    font-size: v-bind(TYPOGRAPHY.SMALL_SIZE);
-  }
 }
 </style>
