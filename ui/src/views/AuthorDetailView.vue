@@ -6,6 +6,7 @@ import { useDetailView } from '@/composables/useDetailView'
 import { useMainStore } from '@/stores/main'
 import { useI18n } from 'vue-i18n'
 import type { AuthorPreview } from '@/types'
+import { LAYOUT } from '@/constants/theme'
 
 const { t } = useI18n()
 
@@ -27,6 +28,7 @@ onMounted(async () => {
 
 <template>
   <detail-view-wrapper
+    class="author-detail-view"
     :loading="loading"
     :not-found="notFound"
     :has-data="!!author"
@@ -38,3 +40,17 @@ onMounted(async () => {
     <author-detail-info :author="author!" :authors="authors" />
   </detail-view-wrapper>
 </template>
+
+<style scoped>
+.author-detail-view {
+  padding: v-bind(LAYOUT.VIEW_PADDING);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .author-detail-view {
+    padding: v-bind(LAYOUT.VIEW_PADDING_MOBILE);
+  }
+}
+</style>

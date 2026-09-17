@@ -3,10 +3,11 @@ import type { BookPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
 import FireRating from '@/components/common/FireRating.vue'
-import { TYPOGRAPHY } from '@/constants/theme'
+import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
   book: BookPreview
+  coverHeight: number
 }>()
 
 const { t } = useI18n()
@@ -52,8 +53,8 @@ const { t } = useI18n()
      corners, where up to 4 cards' edges pile up). Drawing each seam exactly
      once avoids that entirely. The grid/row container supplies the
      top/left edge of the whole layout once, since no card does. */
-  border-right: var(--g-card-border) solid rgb(var(--v-theme-grid));
-  border-bottom: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-right: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
+  border-bottom: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
   padding: 1rem 1.25rem;
   transition: box-shadow 0.2s ease;
 }
@@ -65,7 +66,7 @@ const { t } = useI18n()
 }
 
 .collection-book-cover {
-  flex: 0 0 220px;
+  flex: 0 0 v-bind(coverHeight + 'px');
   margin-bottom: 12px;
 }
 

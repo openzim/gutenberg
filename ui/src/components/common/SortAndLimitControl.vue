@@ -10,7 +10,7 @@ import { computed, ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useIsCollectionPage } from '@/composables/useIsCollectionPage'
 import type { SortOption, SortOrder } from '@/types'
-import { TYPOGRAPHY } from '@/constants/theme'
+import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 import { mdiDotsGrid, mdiFormatListBulleted } from '@mdi/js'
 
 const { t } = useI18n()
@@ -149,8 +149,9 @@ if (typeof document !== 'undefined') {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.75rem;
-  max-width: var(--g-layout-max);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
   margin-inline: auto;
+  padding: 2.25rem 0;
 }
 
 .sort-and-limit--collection-view {
@@ -297,7 +298,7 @@ if (typeof document !== 'undefined') {
   fill: currentColor;
 }
 
-@media (max-width: 599px) {
+@media (max-width: 767px) {
   .sort-and-limit {
     margin-inline: auto;
     padding: 0;
@@ -308,7 +309,7 @@ if (typeof document !== 'undefined') {
 
   .sort-and-limit--collection-view {
     margin-inline: auto;
-    max-width: var(--g-layout-max);
+    max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
   }
 
   .sort-and-limit__count {

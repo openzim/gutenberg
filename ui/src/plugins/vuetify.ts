@@ -97,9 +97,9 @@ async function loadVuetify() {
     display: {
       mobileBreakpoint: 'sm',
       thresholds: {
-        xs: 0,
-        sm: 600,
-        md: 960,
+        xs: 500,
+        sm: 768,
+        md: 1024,
         lg: 1280,
         xl: 1920
       }

@@ -12,11 +12,13 @@ import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { useListLoader } from '@/composables/useListLoader'
 import { LAYOUT } from '@/constants/theme'
 import { MESSAGES } from '@/constants/messages'
+import { useDisplay } from 'vuetify'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const main = useMainStore()
+const { mobile } = useDisplay()
 
 const {
   items: collections,
@@ -111,6 +113,10 @@ function selectCollection(id: string | null) {
         <book-display
           v-else-if="collectionBooks.length > 0"
           :books="collectionBooks"
+          :columns="4"
+          :book-grid-width="mobile ? 160 : 214"
+          :cover-grid-height="mobile ? 180 : 270"
+          :centered="true"
           type="books"
         />
 
@@ -125,13 +131,13 @@ function selectCollection(id: string | null) {
 <style scoped>
 .collection-view-view {
   padding: v-bind(LAYOUT.VIEW_PADDING);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
+  margin: 0 auto;
 }
 
 .collection-view-view__layout {
   display: flex;
   justify-content: space-between;
-  max-width: 1200px;
-  margin-inline: auto;
 }
 
 .collection-view-view__content {
@@ -147,7 +153,7 @@ function selectCollection(id: string | null) {
   min-height: 200px;
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 767px) {
   .collection-view-view {
     padding: v-bind(LAYOUT.VIEW_PADDING_MOBILE);
   }
@@ -157,7 +163,7 @@ function selectCollection(id: string | null) {
   }
 
   .collection-view-view__content {
-    padding: 1rem;
+    padding: 1.5rem 0rem;
   }
 }
 </style>

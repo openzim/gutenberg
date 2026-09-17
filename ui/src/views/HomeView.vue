@@ -127,19 +127,13 @@ onMounted(() => {
         @select="(id) => (activeCollectionId = id)"
       />
 
-      <v-container class="collection-books">
-        <v-row v-if="collectionBooksLoading">
-          <v-col cols="12">
-            <loading-spinner :message="t('common.loading')" />
-          </v-col>
-        </v-row>
-
-        <v-row v-else-if="activeCollectionId && collectionBooks.length > 0">
-          <v-col cols="12">
-            <popular-collection-books :books="collectionBooks" />
-          </v-col>
-        </v-row>
-      </v-container>
+      <div class="collection-books">
+        <loading-spinner v-if="collectionBooksLoading" :message="t('common.loading')" />
+        <popular-collection-books
+          v-else-if="activeCollectionId && collectionBooks.length > 0"
+          :books="collectionBooks"
+        />
+      </div>
     </template>
 
     <selected-authors-carousel
@@ -154,6 +148,8 @@ onMounted(() => {
 <style scoped>
 .home-view {
   padding: v-bind(LAYOUT.VIEW_PADDING);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
+  margin: 0 auto;
 }
 
 .collection-books {
@@ -166,7 +162,7 @@ onMounted(() => {
   padding-bottom: 5rem;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 767px) {
   .home-view {
     padding: v-bind(LAYOUT.VIEW_PADDING_MOBILE);
   }

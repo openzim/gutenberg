@@ -73,19 +73,7 @@ defineEmits<{
   fill: currentColor;
 }
 
-@media (max-width: 960px) {
-  .section-header {
-    max-width: var(--g-layout-max);
-    margin-inline: auto;
-    padding: 0;
-  }
-}
-
-@media (max-width: 599px) {
-  .section-header {
-    max-width: var(--g-layout-max);
-  }
-
+@media (max-width: 767px) {
   .section-header__title {
     font-size: v-bind(TYPOGRAPHY.H1_SIZE_MOBILE);
   }

@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import type { CollectionPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
+
 import { mdiBookshelf, mdiPlus, mdiMinus } from '@mdi/js'
 import ClassificationIcon from '@/components/common/ClassificationIcon.vue'
 import SubjectCollectionIcon from '@/components/common/SubjectCollectionIcon.vue'
@@ -117,7 +118,7 @@ const sortedCollections = computed(() =>
   flex-shrink: 0;
   align-self: flex-start;
   padding: 1.5rem 0;
-  margin-top: 4.7rem;
+  margin-top: 3.2rem;
 }
 
 .collection-sidebar__toggle {
@@ -187,10 +188,9 @@ const sortedCollections = computed(() =>
   opacity: 0.5;
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 767px) {
   .collection-sidebar {
     width: 100%;
-    max-width: var(--g-layout-max);
     margin-inline: auto;
     border: 1.5px solid rgb(var(--v-theme-grid));
     padding: 0;
@@ -238,18 +238,6 @@ const sortedCollections = computed(() =>
 
   .collection-sidebar__list {
     padding: 0.5rem 0;
-  }
-}
-
-@media (max-width: 960px) {
-  .collection-sidebar {
-    /* width handled by CSS var */
-  }
-}
-
-@media (max-width: 599px) {
-  .collection-sidebar {
-    /* width handled by CSS var */
   }
 }
 </style>

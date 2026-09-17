@@ -80,23 +80,23 @@
     display: none !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     #html-reader-controls {
         top: 10px;
         right: 10px;
         gap: 8px;
     }
-    
+
     #html-reader-controls .html-reader-btn {
         width: 48px;
         height: 48px;
     }
-    
+
     #html-reader-controls .html-reader-btn img {
         width: 20px;
         height: 20px;
     }
-    
+
     .html-reader-btn-up {
         bottom: 10px;
         left: 10px;

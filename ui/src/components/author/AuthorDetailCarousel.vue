@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, watch, nextTick } from 'vue'
+import { computed, ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { AuthorPreview, AuthorDetail } from '@/types'
 import AuthorCard from './AuthorCard.vue'
 import CarouselArrow from '@/components/common/CarouselArrow.vue'
-import { AVATAR_SIZES, ICON_SIZES, TYPOGRAPHY } from '@/constants/theme'
-import { formatAuthorLifespan, compareAuthorNames } from '@/utils/format-utils'
+import { compareAuthorNames } from '@/utils/format-utils'
+import { useDisplay } from 'vuetify'
+import { LAYOUT } from '@/constants/theme.ts'
+
+const { mobile } = useDisplay()
 
 const props = defineProps<{
   authors: AuthorPreview[]
@@ -20,56 +23,54 @@ const currentIndex = computed(() =>
   sortedAuthors.value.findIndex((a) => a.id === props.currentAuthor.id)
 )
 
-const offset = ref(0)
+const trackRef = ref<HTMLElement | null>(null)
+const hasPrevious = ref(false)
+const hasNext = ref(false)
 
-watch(currentIndex, () => {
-  offset.value = 0
-})
+function updateScrollState() {
+  const track = trackRef.value
+  if (!track) return
+  hasPrevious.value = track.scrollLeft > 0
+  hasNext.value = track.scrollLeft + track.clientWidth < track.scrollWidth - 1
+}
 
-const visibleSmallCards = computed(() => {
-  if (currentIndex.value < 0 || sortedAuthors.value.length <= 1) return []
-  const result: AuthorPreview[] = []
-  for (let i = 1; result.length < 3 && i <= sortedAuthors.value.length; i++) {
-    const idx = (currentIndex.value + offset.value + i) % sortedAuthors.value.length
-    const author = sortedAuthors.value[idx]
-    if (author && author.id !== props.currentAuthor.id) result.push(author)
-  }
-  return result
-})
-
-const totalOtherAuthors = computed(() => Math.max(0, sortedAuthors.value.length - 1))
-
-const hasPrevious = computed(() => totalOtherAuthors.value > 3)
-const hasNext = computed(() => totalOtherAuthors.value > 3)
-
-const lifespan = computed(() =>
-  formatAuthorLifespan(props.currentAuthor.birthYear, props.currentAuthor.deathYear)
-)
+function scrollByCell(direction: 1 | -1) {
+  const track = trackRef.value
+  if (!track) return
+  const cell = track.querySelector('.carousel-cell--others')
+  const cellWidth = cell ? cell.clientWidth : track.clientWidth / 5
+  track.scrollBy({ left: direction * cellWidth, behavior: 'smooth' })
+}
 
 function shiftLeft() {
-  if (totalOtherAuthors.value === 0) return
-  offset.value = (offset.value - 1 + totalOtherAuthors.value) % totalOtherAuthors.value
+  scrollByCell(-1)
 }
 
 function shiftRight() {
-  if (totalOtherAuthors.value === 0) return
-  offset.value = (offset.value + 1) % totalOtherAuthors.value
+  scrollByCell(1)
 }
 
-// Mobile scroll to current author
-const trackRef = ref<HTMLElement | null>(null)
+onMounted(() => {
+  updateScrollState()
+  window.addEventListener('resize', updateScrollState)
+})
 
+onUnmounted(() => {
+  window.removeEventListener('resize', updateScrollState)
+})
+
+// Scroll to current author
 watch(
   currentIndex,
   async () => {
     await nextTick()
-    if (trackRef.value && window.innerWidth <= 1279) {
-      const currentCell = trackRef.value.querySelector('.carousel-cell--current') as HTMLElement
+    if (trackRef.value) {
+      const currentCell =
+        (trackRef.value.querySelector('.carousel-cell--current') as HTMLElement) ||
+        (trackRef.value.querySelector('.carousel-cell--hidden-current') as HTMLElement)
       if (currentCell) {
-        const trackWidth = trackRef.value.offsetWidth
-        const cellWidth = currentCell.offsetWidth
-        const scrollLeft = currentCell.offsetLeft - (trackWidth - cellWidth) / 2
-        trackRef.value.scrollTo({ left: scrollLeft, behavior: 'smooth' })
+        trackRef.value.scrollTo({ left: currentCell.offsetLeft })
+        updateScrollState()
       }
     }
   },
@@ -79,7 +80,7 @@ watch(
 
 <template>
   <div class="author-detail-carousel">
-    <div class="carousel-arrow-wrapper carousel-arrow-wrapper--left g-desktop-only">
+    <div class="carousel-arrow-wrapper carousel-arrow-wrapper--left" v-if="!mobile">
       <carousel-arrow
         direction="left"
         :disabled="!hasPrevious"
@@ -89,72 +90,41 @@ watch(
     </div>
 
     <div class="carousel-track-wrapper">
-      <!-- Desktop: current + 3 small cards -->
-      <div class="carousel-track g-desktop-only">
-        <div class="carousel-cell carousel-cell--current">
-          <div class="current-author">
-            <v-avatar :size="AVATAR_SIZES.DETAIL" color="primary" class="current-author__avatar">
-              <v-icon icon="mdi-account" :size="ICON_SIZES.DETAIL" />
-            </v-avatar>
-
-            <div class="current-author__info">
-              <h1 class="current-author__name">
-                {{ currentAuthor.name }}
-              </h1>
-              <p v-if="lifespan" class="current-author__lifespan">
-                {{ lifespan }}
-              </p>
-              <p class="current-author__count">
-                {{ t('author.bookCount', currentAuthor.bookCount) }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div
-          v-for="author in visibleSmallCards"
-          :key="author.id"
-          class="carousel-cell carousel-cell--small"
-        >
-          <author-card :author="author" variant="carousel" />
-        </div>
+      <div v-if="!mobile" class="carousel-cell carousel-cell--current">
+        <author-card
+          :author="currentAuthor"
+          variant="comfortable"
+          bordered
+          :navigate="false"
+          :noRightBorder="true"
+        />
       </div>
-
-      <!-- Mobile: all authors scrollable -->
-      <div ref="trackRef" class="carousel-track g-mobile-only">
-        <div
-          v-for="author in sortedAuthors"
-          :key="author.id"
-          class="carousel-cell"
-          :class="{
-            'carousel-cell--current': author.id === currentAuthor.id,
-            'carousel-cell--small': author.id !== currentAuthor.id
-          }"
-        >
-          <div v-if="author.id === currentAuthor.id" class="current-author">
-            <v-avatar :size="AVATAR_SIZES.DETAIL" color="primary" class="current-author__avatar">
-              <v-icon icon="mdi-account" :size="ICON_SIZES.DETAIL" />
-            </v-avatar>
-
-            <div class="current-author__info">
-              <h1 class="current-author__name">
-                {{ currentAuthor.name }}
-              </h1>
-              <p v-if="lifespan" class="current-author__lifespan">
-                {{ lifespan }}
-              </p>
-              <p class="current-author__count">
-                {{ t('author.bookCount', currentAuthor.bookCount) }}
-              </p>
-            </div>
+      <div ref="trackRef" class="carousel-track" @scroll.passive="updateScrollState">
+        <template v-for="author in sortedAuthors" :key="author.id">
+          <div
+            v-if="mobile || author.id != currentAuthor.id"
+            class="carousel-cell"
+            :class="{
+              'carousel-cell--current': author.id === currentAuthor.id,
+              'carousel-cell--others': author.id !== currentAuthor.id
+            }"
+          >
+            <author-card
+              :author="author"
+              :variant="mobile ? 'comfortable' : 'compact'"
+              :navigate="author.id != currentAuthor.id"
+              bordered
+            />
           </div>
-
-          <author-card v-else :author="author" variant="carousel" />
-        </div>
+          <div
+            v-else-if="!mobile && author.id == currentAuthor.id"
+            class="carousel-cell carousel-cell--hidden-current"
+          ></div>
+        </template>
       </div>
     </div>
 
-    <div class="carousel-arrow-wrapper carousel-arrow-wrapper--right g-desktop-only">
+    <div class="carousel-arrow-wrapper carousel-arrow-wrapper--right" v-if="!mobile">
       <carousel-arrow
         direction="right"
         :disabled="!hasNext"
@@ -171,30 +141,26 @@ watch(
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  padding: 1rem 0;
+  padding: 3rem 0;
 }
 
 .carousel-track-wrapper {
-  width: 1102px;
+  width: calc(100% - 170px);
   flex-shrink: 0;
+  display: flex;
 }
 
 .carousel-track {
   display: flex;
+  position: relative;
   width: 100%;
   align-items: stretch;
-  height: 220px;
   scrollbar-width: none;
-  /* No border-left here (see .carousel-cell:first-child below) and no
-     border-top: a horizontal border's length always equals the full track
-     width, which would overshoot past the actual cells whenever there are
-     fewer than fill the track (e.g. an author with only 1-2 other
-     authors). Every cell draws its own border-top instead — safe since
-     this is a single row, so no two cells ever share a top seam. */
-}
-
-.carousel-track.g-mobile-only {
-  display: none;
+  padding: 5px 1px; /* extra vertical padding so box-shadow isn't clipped by overflow-x + right border is not clipped by rounding errors*/
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .carousel-track::-webkit-scrollbar {
@@ -207,153 +173,64 @@ watch(
   justify-content: center;
 }
 
-.carousel-cell--current {
-  /* 440px = 2 book grid cells (220px each) */
-  flex: 0 0 440px;
+.carousel-cell {
+  /* Every cell needs this, not just the current one — otherwise
+     scroll-snap-type: x mandatory (below) has only one valid snap point
+     and snaps straight back to it after any other scroll attempt,
+     including the arrow buttons. */
+  scroll-snap-align: start;
 }
 
-.carousel-cell--small {
-  /* Match a book grid cell's width. */
-  width: 220px;
-  min-width: 220px;
-  flex-shrink: 0;
+.carousel-cell--current {
+  flex: 0 0 40%;
+  margin: 5px 0; /* extra vertical padding so box-shadow isn't clipped by overflow-x */
+  background-color: rgba(var(--v-theme-text), 0.08);
+}
+
+.carousel-cell--others {
+  flex: 0 0 33.333%;
+}
+
+@media (max-width: 1200px) {
+  .carousel-cell--current {
+    flex: 0 0 50%;
+  }
+
+  .carousel-cell--others {
+    flex: 0 0 50%;
+  }
 }
 
 .carousel-cell:first-child {
-  /* Left border lives on the first cell itself rather than the track: on
-     mobile the track scrolls, so a border on the track's own (fixed)
-     edge would stay put and keep showing even once you've scrolled past
-     the first cell. Anchoring it to the cell instead means it scrolls
-     away with that cell, and it's sized to just the cell's own height
-     rather than the track's full height (which includes vertical padding
-     added below for shadow clearance — that padding would otherwise make
-     the border taller than the actual card). */
-  border-left: var(--g-card-border) solid rgb(var(--v-theme-grid));
+  border-left: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
 }
 
-.current-author {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem 2rem;
-  width: 100%;
-  height: 100%;
-  /* Top/right/bottom are each cell's own responsibility (see
-     .carousel-track above for why top moved here). Left is not drawn here
-     at all — it's only ever needed on the first cell in the row, and
-     .carousel-cell:first-child (in the parent) adds it there directly. */
-  border-top: var(--g-card-border) solid rgb(var(--v-theme-grid));
-  border-right: var(--g-card-border) solid rgb(var(--v-theme-grid));
-  border-bottom: var(--g-card-border) solid rgb(var(--v-theme-grid));
-  background: rgba(var(--v-theme-text), 0.08);
-  position: relative;
-  z-index: 0;
-  transition: box-shadow 0.2s ease;
+.carousel-cell--others {
+  transition: box-shadow 0.25s ease;
 }
 
-.current-author:hover,
-.current-author:focus {
-  box-shadow: none;
-  z-index: 0;
+.carousel-cell--others:hover,
+.carousel-cell--others:focus {
+  box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
 }
 
-.current-author__avatar {
-  flex-shrink: 0;
-}
-
-.current-author__info {
-  min-width: 0;
-}
-
-.current-author__name {
-  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
-  font-size: v-bind(TYPOGRAPHY.H1_SIZE);
-  font-weight: v-bind(TYPOGRAPHY.H1_WEIGHT);
-  line-height: 1.2;
-  margin: 0 0 0.5rem;
-  overflow-wrap: break-word;
-}
-
-.current-author__lifespan,
-.current-author__count {
-  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
-  font-size: v-bind(TYPOGRAPHY.BODY_SIZE);
-  font-weight: v-bind(TYPOGRAPHY.BODY_WEIGHT);
-  line-height: 1.5;
-  color: rgb(var(--v-theme-text));
-  opacity: 0.7;
-  margin: 0;
-}
-
-@media (max-width: 1279px) {
+@media (max-width: 767px) {
   .author-detail-carousel {
-    gap: 0;
-    padding: 1rem 6px; /* 6px horizontal padding so first/last card shadows aren't clipped */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
   }
 
   .carousel-track-wrapper {
     width: 100%;
-    flex-shrink: 1;
-  }
-
-  .carousel-track {
-    display: flex;
-    padding: 5px 0; /* extra vertical padding so box-shadow isn't clipped by overflow-x */
-    height: 170px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .carousel-track.g-desktop-only {
-    display: none !important;
-  }
-
-  .carousel-track.g-mobile-only {
-    display: flex !important;
   }
 
   .carousel-cell {
     flex: 0 0 75%;
-    scroll-snap-align: center;
   }
 
   .carousel-cell--current {
-    flex: 0 0 75%;
-  }
-
-  .carousel-cell--small {
-    width: auto;
-    min-width: auto;
-  }
-
-  .current-author {
-    padding: 1rem;
-    gap: 1rem;
-    position: relative;
-    z-index: 0;
-    transition: box-shadow 0.2s ease;
-  }
-
-  .current-author:hover,
-  .current-author:focus {
-    box-shadow: none;
-    z-index: 0;
-  }
-
-  .current-author__avatar {
-    width: v-bind(AVATAR_SIZES.TABLET + 'px') !important;
-    height: v-bind(AVATAR_SIZES.TABLET + 'px') !important;
-  }
-
-  .current-author__name {
-    font-size: v-bind(TYPOGRAPHY.H3_SIZE);
-  }
-
-  .current-author__lifespan,
-  .current-author__count {
-    font-size: v-bind(TYPOGRAPHY.CAPTION_SIZE);
+    margin: 0;
   }
 }
 </style>

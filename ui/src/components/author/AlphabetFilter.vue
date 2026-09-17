@@ -30,14 +30,19 @@ const ALL_ITEMS = ['ALL', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '0-9']
 <style scoped>
 .alphabet-filter {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 2.25rem 0;
   gap: 0.25rem;
   margin-bottom: 1.5rem;
 }
 
 .alphabet-btn {
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -65,22 +70,7 @@ const ALL_ITEMS = ['ALL', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '0-9']
   text-transform: uppercase;
 }
 
-@media (max-width: 1279px) {
-  .alphabet-filter {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding: 0.25rem 0;
-  }
-
-  .alphabet-filter::-webkit-scrollbar {
-    display: none;
-  }
-
-  .alphabet-btn {
-    flex-shrink: 0;
-  }
+.alphabet-filter::-webkit-scrollbar {
+  display: none;
 }
 </style>

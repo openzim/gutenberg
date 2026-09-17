@@ -92,7 +92,7 @@ onUnmounted(() => {
   box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
 }
 
-@media (max-width: 960px) {
+@media (max-width: 767px) {
   .back-to-top-anchor {
     bottom: 1rem;
   }

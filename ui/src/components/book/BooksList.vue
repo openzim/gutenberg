@@ -6,6 +6,7 @@ import { useIntersectionObserver } from '@/composables/useIntersectionObserver'
 import type { BookPreview } from '@/types'
 import ListBookCard from './ListBookCard.vue'
 import { useInfiniteScroll } from '@/composables/useInfiniteScroll'
+import { LAYOUT } from '@/constants/theme.ts'
 
 const props = defineProps<{
   books: BookPreview[]
@@ -50,19 +51,12 @@ const { sentinelRef } = useIntersectionObserver(() => {
 .books-list {
   display: flex;
   flex-direction: column;
-  max-width: var(--g-layout-max);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
   margin-inline: auto;
 }
 
 .books-list--collection-view {
   max-width: 882px;
-}
-
-@media (max-width: 599px) {
-  .books-list,
-  .books-list--collection-view {
-    margin-inline: auto;
-  }
 }
 
 .list-cell {

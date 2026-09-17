@@ -45,6 +45,9 @@ describe('AuthorCard', () => {
     ...overrides
   })
 
+  const linkTarget = (wrapper: ReturnType<typeof mount>) =>
+    wrapper.findComponent({ name: 'VListItem' }).props('to')
+
   describe('Rendering', () => {
     it('renders card with author name', () => {
       const wrapper = mount(AuthorCard, {
@@ -62,13 +65,13 @@ describe('AuthorCard', () => {
 
       const avatar = wrapper.findComponent({ name: 'VAvatar' })
       expect(avatar.exists()).toBe(true)
-      expect(avatar.props('size')).toBe(100)
-      expect(avatar.props('color')).toBe('primary')
+      expect(avatar.props('size')).toBe(48)
+      expect(avatar.props('color')).toBe('rgb(var(--v-theme-authorAvatarBgd))')
 
       const icons = wrapper.findAllComponents({ name: 'VIcon' })
       const accountIcon = icons.find((icon) => icon.props('icon') === 'mdi-account')
       expect(accountIcon).toBeDefined()
-      expect(accountIcon!.props('size')).toBe(48)
+      expect(accountIcon!.props('size')).toBe(28)
     })
   })
 
@@ -78,8 +81,7 @@ describe('AuthorCard', () => {
         props: { author: createAuthor() }
       })
 
-      const link = wrapper.find('.author-card')
-      expect(link.attributes('to')).toBe('/author/austen-jane')
+      expect(linkTarget(wrapper)).toBe('/author/austen-jane')
     })
 
     it('links to correct author ID', () => {
@@ -87,7 +89,7 @@ describe('AuthorCard', () => {
         props: { author: createAuthor({ id: 'shakespeare-william' }) }
       })
 
-      expect(wrapper.find('.author-card').attributes('to')).toBe('/author/shakespeare-william')
+      expect(linkTarget(wrapper)).toBe('/author/shakespeare-william')
     })
   })
 
@@ -97,8 +99,7 @@ describe('AuthorCard', () => {
         props: { author: createAuthor() }
       })
 
-      const link = wrapper.find('.author-card')
-      expect(link.attributes('aria-label')).toBe('View author: Jane Austen (42 books)')
+      expect(wrapper.attributes('aria-label')).toBe('View author: Jane Austen (42 books)')
     })
   })
 
@@ -150,7 +151,7 @@ describe('AuthorCard', () => {
           props: { author: createAuthor({ id }) }
         })
 
-        expect(wrapper.find('.author-card').attributes('to')).toBe(`/author/${id}`)
+        expect(linkTarget(wrapper)).toBe(`/author/${id}`)
       }
     )
   })
@@ -162,7 +163,7 @@ describe('AuthorCard', () => {
       })
 
       expect(wrapper.find('.author-card__name').text()).toBe('')
-      expect(wrapper.find('.author-card').attributes('to')).toBe('/author/')
+      expect(linkTarget(wrapper)).toBe('/author/')
     })
   })
 })

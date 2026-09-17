@@ -8,6 +8,10 @@ import { useBookDisplay } from '@/composables/useBookDisplay'
 
 const props = defineProps<{
   books: BookPreview[]
+  columns: number
+  bookGridWidth: number
+  coverGridHeight: number
+  centered?: boolean
   type?: 'books' | 'authors' | 'shelves'
 }>()
 
@@ -43,8 +47,14 @@ function onDisplayedCount(count: number) {
       :type="type || 'books'"
       class="mb-4"
     />
-
-    <books-grid v-if="isGridView" :books="displayedBooks" />
+    <books-grid
+      v-if="isGridView"
+      :books="displayedBooks"
+      :columns="columns"
+      :centered="centered"
+      :book-width="bookGridWidth"
+      :cover-height="coverGridHeight"
+    />
     <books-list v-else :books="displayedBooks" @update:displayed-count="onDisplayedCount" />
 
     <div v-if="infiniteHasMore" ref="sentinelRef" class="text-caption text-center py-4">

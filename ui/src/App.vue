@@ -68,25 +68,6 @@ const showBreadcrumbs = computed(() => breadcrumbItems.value.length > 0)
 </template>
 
 <style>
-/* Global layout CSS custom properties */
-:root {
-  --g-layout-max: 1102px;
-  --g-layout-tablet: 642px;
-  --g-layout-mobile: 322px;
-}
-
-@media (max-width: 960px) {
-  :root {
-    --g-layout-max: 642px;
-  }
-}
-
-@media (max-width: 599px) {
-  :root {
-    --g-layout-max: 322px;
-  }
-}
-
 /* Desktop/mobile toggle utility classes */
 .g-desktop-only {
   display: flex;
@@ -96,7 +77,7 @@ const showBreadcrumbs = computed(() => breadcrumbItems.value.length > 0)
   display: none;
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 767px) {
   .g-desktop-only {
     display: none !important;
   }
@@ -118,7 +99,7 @@ const showBreadcrumbs = computed(() => breadcrumbItems.value.length > 0)
 }
 
 .app-breadcrumbs-inner {
-  max-width: var(--g-layout-max);
+  max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
   margin: 0 auto;
   padding: 0.125rem 0;
 }

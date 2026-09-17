@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { computed } from 'vue'
-import { TYPOGRAPHY } from '@/constants/theme'
+import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 import { useDisplay } from 'vuetify'
 
 interface BreadcrumbItem {
@@ -14,7 +14,7 @@ const props = defineProps<{
   items: BreadcrumbItem[]
 }>()
 
-const { xs } = useDisplay()
+const { mobile } = useDisplay()
 
 function truncateToWords(title: string, wordCount: number) {
   const words = title.trim().split(/\s+/)
@@ -26,7 +26,7 @@ const displayItems = computed(() =>
   props.items.map((item, index) => ({
     ...item,
     title:
-      xs.value && index === props.items.length - 1 ? truncateToWords(item.title, 2) : item.title
+      mobile.value && index === props.items.length - 1 ? truncateToWords(item.title, 2) : item.title
   }))
 )
 </script>
@@ -35,8 +35,8 @@ const displayItems = computed(() =>
   <div>
     <v-breadcrumbs
       :items="displayItems"
-      class="pa-0 breadcrumbs-nav"
-      :class="{ 'breadcrumbs-nav--small': xs }"
+      class="breadcrumbs-nav"
+      :class="{ 'breadcrumbs-nav--small': mobile }"
       density="compact"
     >
       <template v-slot:divider>
@@ -51,6 +51,7 @@ const displayItems = computed(() =>
   /* Fixed row height so the bar is the same thickness whether or not
      divider icons are rendered (icons are taller than the caption text) */
   height: 35px;
+  padding: 0 calc(v-bind(LAYOUT.VIEW_PADDING_HORIZONTAL) - 4px);
 }
 
 .breadcrumbs-nav :deep(.v-breadcrumbs-item) {
