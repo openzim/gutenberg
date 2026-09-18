@@ -20,7 +20,6 @@ const { t } = useI18n()
         :cover-path="book.coverPath"
         :alt="t('book.coverAlt', { title: book.title })"
         :size="64"
-        height="140px"
       />
     </div>
 

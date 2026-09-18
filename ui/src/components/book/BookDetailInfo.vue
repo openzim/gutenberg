@@ -469,9 +469,11 @@ const collectionDisplayName = computed(() => {
 }
 
 .detail-cover {
-  max-width: 320px;
-  width: 100%;
+  width: 200px;
   margin-top: 5rem;
+  height: 306px;
+  object-fit: contain;
+  box-shadow: 0 2px 8px rgb(var(--v-theme-grid));
 }
 
 .stars-author-row {
@@ -623,7 +625,8 @@ const collectionDisplayName = computed(() => {
   }
 
   .detail-cover {
-    max-width: 160px;
+    width: 145px;
+    height: 220px;
   }
 
   .inter-13 {

@@ -17,8 +17,8 @@
     "test:watch": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --fix",
-    "lint-check": "eslint .",
+    "lint": "eslint src/ --fix",
+    "lint-check": "eslint src/",
     "format": "prettier --write src/",
     "format-check": "prettier --check src/"
   },

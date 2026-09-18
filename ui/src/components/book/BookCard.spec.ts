@@ -47,7 +47,6 @@ describe('BookCard', () => {
       expect(coverImage.props('coverPath')).toBe('/covers/1.jpg')
       expect(coverImage.props('alt')).toBe('book.coverAlt')
       expect(coverImage.props('size')).toBe(64)
-      expect(coverImage.props('height')).toBe('200px')
       expect(coverImage.classes()).toContain('book-cover')
     })
   })

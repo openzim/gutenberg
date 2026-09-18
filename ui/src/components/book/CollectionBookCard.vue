@@ -19,10 +19,8 @@ const { t } = useI18n()
       :cover-path="book.coverPath"
       :alt="t('book.coverAlt', { title: book.title })"
       :size="64"
-      height="240px"
       class="collection-book-cover"
     />
-
     <div class="collection-book-info">
       <h3 class="collection-book-title mb-1">
         {{ book.title }}
@@ -68,10 +66,7 @@ const { t } = useI18n()
 .collection-book-cover {
   flex: 0 0 v-bind(coverHeight + 'px');
   margin-bottom: 12px;
-}
-
-.collection-book-cover :deep(.v-img__img) {
-  object-position: top;
+  box-shadow: 0 2px 8px rgb(var(--v-theme-grid));
 }
 
 .collection-book-info {
