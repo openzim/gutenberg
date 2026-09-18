@@ -65,10 +65,11 @@ const descriptionRef = ref<HTMLElement | null>(null)
 const shouldTruncateDesktop = ref(false)
 let descriptionResizeObserver: ResizeObserver | null = null
 
-const cleanDescription = computed(() =>
-  props.book.description
-    ?.replace(/\s*\(This is an automatically generated summary\.\)\s*$/, '')
-    .trim()
+const cleanDescription = computed(
+  () =>
+    props.book.description
+      ?.replace(/\s*\(This is an automatically generated summary\.\)\s*$/, '')
+      .trim()
 )
 
 const cleanLicense = computed(() => props.book.license?.replace(/\.$/, ''))
@@ -469,9 +470,11 @@ const collectionDisplayName = computed(() => {
 }
 
 .detail-cover {
-  max-width: 320px;
-  width: 100%;
+  width: 240px;
   margin-top: 5rem;
+  height: 306px;
+  object-fit: contain;
+  box-shadow: 0 2px 8px rgb(var(--v-theme-grid));
 }
 
 .stars-author-row {
@@ -623,7 +626,8 @@ const collectionDisplayName = computed(() => {
   }
 
   .detail-cover {
-    max-width: 160px;
+    width: 160px;
+    height: 220px;
   }
 
   .inter-13 {

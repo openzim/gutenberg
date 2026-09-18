@@ -77,7 +77,7 @@ const gridWidth = computed(() => {
 }
 
 .books-grid__cell {
-  max-width: v-bind(bookWidth + 'px');
+  width: v-bind(bookWidth + 'px');
   display: flex;
 }
 </style>
