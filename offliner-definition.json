@@ -11,11 +11,18 @@
       "choices": [
         {
           "title": "Project Gutenberg",
-          "value": "gutenberg"
+          "value": "gutenberg",
+          "dependents": [
+            "lcc_shelves"
+          ]
         },
         {
           "title": "Open Textbook Library",
-          "value": "opentextbooks"
+          "value": "opentextbooks",
+          "dependents": [
+            "subjects",
+            "otl_ids"
+          ]
         }
       ]
     },

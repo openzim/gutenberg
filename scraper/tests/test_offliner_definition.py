@@ -19,8 +19,16 @@ def test_recipe_defines_supported_sources_and_source_specific_filters():
             "combine options from different sources."
         ),
         "choices": [
-            {"title": "Project Gutenberg", "value": "gutenberg"},
-            {"title": "Open Textbook Library", "value": "opentextbooks"},
+            {
+                "title": "Project Gutenberg",
+                "value": "gutenberg",
+                "dependents": ["lcc_shelves"],
+            },
+            {
+                "title": "Open Textbook Library",
+                "value": "opentextbooks",
+                "dependents": ["subjects", "otl_ids"],
+            },
         ],
     }
     assert {"lcc_shelves", "subjects", "otl_ids"}.issubset(flags)
