@@ -58,14 +58,22 @@ watch(
 
       <div class="collection-carousel__track-outer">
         <div class="collection-books-row g-desktop-only">
-          <div v-for="book in visibleItems" :key="book.id" class="carousel-card-wrapper">
+          <div
+            v-for="book in visibleItems"
+            :key="book.id"
+            class="carousel-card-wrapper carousel-card-wrapper--desktop"
+          >
             <collection-book-card :book="book" :cover-height="coverHeight" />
           </div>
         </div>
 
         <div ref="trackRef" class="collection-books-scroll g-mobile-only">
           <div class="collection-books-row">
-            <div v-for="book in books" :key="book.id" class="carousel-card-wrapper">
+            <div
+              v-for="book in books"
+              :key="book.id"
+              class="carousel-card-wrapper carousel-card-wrapper--mobile"
+            >
               <collection-book-card :book="book" :cover-height="coverHeight" />
             </div>
           </div>
@@ -111,11 +119,6 @@ watch(
 
 .collection-books-row {
   display: flex;
-  align-items: stretch;
-  /* Shrinks to exactly the rendered cards instead of stretching to the full
-     track width — otherwise border-top/left below would extend past a
-     short row (e.g. only 1-2 books) into empty space. */
-  width: fit-content;
   /* Each card only draws its own right/bottom border (see
      CollectionBookCard.vue), so no two cards ever paint the same seam. The
      row supplies the top/left edge once, for whichever card ends up first —
@@ -142,8 +145,7 @@ watch(
 }
 
 .carousel-card-wrapper {
-  width: 220px;
-  min-width: 220px;
+  width: 20%;
   display: flex;
 }
 
@@ -153,20 +155,27 @@ watch(
   justify-content: center;
 }
 
-@media (max-width: 1279px) {
-  .collection-carousel {
-    max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
-    padding: 1rem;
+.carousel-card-wrapper--mobile {
+  width: 160px;
+}
+
+@media (max-width: 1050px) {
+  .carousel-card-wrapper--desktop {
+    width: 25%;
   }
 
-  .collection-carousel__track-outer {
-    width: 100%;
-    padding: 5px;
+  .carousel-card-wrapper--desktop:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .carousel-card-wrapper--desktop {
+    width: 33.33333%;
   }
 
-  .carousel-card-wrapper {
-    width: 160px;
-    min-width: 160px;
+  .carousel-card-wrapper--desktop:nth-child(n + 4) {
+    display: none;
   }
 }
 </style>

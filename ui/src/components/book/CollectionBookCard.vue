@@ -19,7 +19,6 @@ const { t } = useI18n()
       :cover-path="book.coverPath"
       :alt="t('book.coverAlt', { title: book.title })"
       :size="64"
-      height="240px"
       class="collection-book-cover"
     />
     <div class="collection-book-info">
