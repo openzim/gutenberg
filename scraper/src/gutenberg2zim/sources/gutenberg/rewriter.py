@@ -9,20 +9,16 @@ infobox injection. Exposed through the source-agnostic `RewriterPort` via
 
 import urllib.parse
 import warnings
-from importlib import resources
-from pathlib import Path
 
 import bs4
 from bs4 import BeautifulSoup, Tag, XMLParsedAsHTMLWarning
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-from gutenberg2zim.constants import logger
 from gutenberg2zim.core.models import Work
 from gutenberg2zim.core.ports import RewriterPort
 from gutenberg2zim.core.rewriters.image_rewriter import rewrite_html_image_references
 from gutenberg2zim.core.rewriters.link_rewriter import replacement_link
 from gutenberg2zim.core.utils import book_name_for_fs, work_template_context
-from gutenberg2zim.core.zim_assembler import ZimAssembler
 
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
@@ -290,32 +286,6 @@ def update_html_for_static(
         head.insert(0, meta.head.contents[0])
 
     return soup
-
-
-def export_html_reader_control_assets(assembler: ZimAssembler) -> None:
-    """Export shared HTML-reader controls and icons to the ZIM."""
-    templates_dir = resources.files("gutenberg2zim") / "templates"
-
-    assets = [
-        ("css/html-reader-controls.css", "css", "text/css"),
-        ("js/html-reader-controls.js", "js", "text/javascript"),
-        ("icons/info.svg", "icons", "image/svg+xml"),
-        ("icons/epub.svg", "icons", "image/svg+xml"),
-        ("icons/pdf.svg", "icons", "image/svg+xml"),
-        ("icons/scroll-up.svg", "icons", "image/svg+xml"),
-    ]
-
-    for zim_path, subdir, mimetype in assets:
-        resource = templates_dir / subdir / Path(zim_path).name
-        if not resource.is_file():
-            raise HtmlRewriteError(f"Infobox asset not found: {resource}")
-        logger.debug(f"Adding {zim_path} to ZIM")
-        assembler.add_item_for(
-            path=zim_path,
-            content=resource.read_bytes(),
-            mimetype=mimetype,
-            is_front=False,
-        )
 
 
 class GutenbergHtmlRewriter(RewriterPort):
