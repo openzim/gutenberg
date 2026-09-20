@@ -35,7 +35,7 @@ onBeforeUnmount(() => {
 })
 
 const nbCols = computed(() => {
-  return Math.min(Math.floor(width.value / props.bookWidth), props.columns)
+  return Math.min(Math.floor((width.value - 1) / props.bookWidth), props.columns)
 })
 
 const gridWidth = computed(() => {
