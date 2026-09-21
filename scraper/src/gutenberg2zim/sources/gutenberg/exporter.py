@@ -1,5 +1,7 @@
 """Per-book ZIM export orchestration for Gutenberg works."""
 
+import re
+
 from gutenberg2zim.constants import logger
 from gutenberg2zim.core.download_engine import DownloadEngine
 from gutenberg2zim.core.models import Work
@@ -20,6 +22,15 @@ from gutenberg2zim.sources.gutenberg.rewriter import (
     transform_image_path,
     update_html_for_static,
 )
+
+_COVER_BASENAME_RE = re.compile(r"^(?:cover|\d+-cover)\.(?:jpe?g|png|webp)$", re.I)
+
+
+def is_cover_asset(work_id: str, filename: str) -> bool:
+    """Return True when a book file is a Project Gutenberg cover asset"""
+    prefix = f"{work_id}_"
+    basename = filename[len(prefix) :] if filename.startswith(prefix) else filename
+    return bool(_COVER_BASENAME_RE.match(basename))
 
 
 def export_book(
@@ -70,6 +81,135 @@ def export_book(
             )
 
 
+def _add_main_html(
+    work: Work,
+    book_files: dict[str, bytes],
+    formats: list[str],
+    assembler: ZimAssembler,
+    main_html_filename: str,
+):
+    if main_html_filename not in book_files:
+        return
+    html_content = book_files[main_html_filename].decode("utf-8", errors="replace")
+    new_html = update_html_for_static(
+        work=work, html_content=html_content, formats=formats
+    )
+    assembler.add_item_for(
+        path=article_name_for(work),
+        content=str(new_html),
+        mimetype="text/html",
+        is_front=False,
+        title=work.title,
+        auto_index=True,
+    )
+
+
+def _add_other_formats(
+    work: Work,
+    book_files: dict[str, bytes],
+    formats: list[str],
+    assembler: ZimAssembler,
+):
+    for other_format in [
+        fmt for fmt in requested_formats(work, formats) if fmt != "html"
+    ]:
+        book_filename = fname_for(work, other_format)
+        if book_filename not in book_files:
+            continue
+        try:
+            content = book_files[book_filename]
+            if other_format == "epub":
+                content = optimize_epub_bytes(content, work)
+            assembler.add_item_for(
+                path=archive_name_for(work, other_format),
+                content=content,
+                is_front=False,
+            )
+        except Exception as e:
+            logger.exception(e)
+            logger.error(f"\t\tException while handling {other_format}: {e}")
+            raise
+
+
+def _add_companion_html(
+    work: Work,
+    filename: str,
+    file_content: bytes,
+    formats: list[str],
+    assembler: ZimAssembler,
+):
+    try:
+        html_str = file_content.decode("utf-8", errors="replace")
+        new_html = update_html_for_static(
+            work=work, html_content=html_str, formats=formats
+        )
+        assembler.add_item_for(
+            path=filename,
+            content=str(new_html),
+            mimetype="text/html",
+            is_front=False,
+        )
+    except Exception as e:
+        logger.exception(e)
+        logger.error(f"\t\tException while handling companion HTML: {e}")
+
+
+def _detect_html_cover(work: Work, filename: str, output_filename: str):
+    if work.extra.get("html_cover_path"):
+        return
+    cover_href = work.extra.get("_cover_href")
+    expected_cover = (
+        ImageProcessor.get_output_filename(transform_image_path(work.id, cover_href))
+        if cover_href
+        else None
+    )
+    is_bundled_cover = (
+        expected_cover is None
+        and work.extra.get("has_cover")
+        and is_cover_asset(work.id, filename)
+    )
+    if output_filename != expected_cover and not is_bundled_cover:
+        return
+    work.extra["html_cover_path"] = output_filename
+    logger.debug(f"Detected HTML cover for book #{work.id}: {output_filename}")
+
+
+def _add_asset_file(work: Work, filename: str, file_content: bytes, assembler):
+    try:
+        output_filename = ImageProcessor.get_output_filename(filename)
+        optimized_file_content = optimize_content(work, filename, file_content)
+        assembler.add_item_for(
+            path=output_filename,
+            content=optimized_file_content,
+            is_front=False,
+        )
+        _detect_html_cover(work, filename, output_filename)
+    except Exception as e:
+        logger.exception(e)
+        logger.error(f"\t\tException while handling file {filename}: {e}")
+
+
+def _add_associated_files(
+    work: Work,
+    book_files: dict[str, bytes],
+    formats: list[str],
+    assembler: ZimAssembler,
+    main_html_filename: str,
+):
+    other_filenames = {
+        fname_for(work, fmt)
+        for fmt in requested_formats(work, formats)
+        if fmt != "html"
+    }
+    for filename, file_content in book_files.items():
+        if filename == main_html_filename or filename in other_filenames:
+            continue
+        if filename.endswith((".html", ".htm")):
+            _add_companion_html(work, filename, file_content, formats, assembler)
+        else:
+            _add_asset_file(work, filename, file_content, assembler)
+
+
 def handle_book_files(
     work: Work,
     book_files: dict[str, bytes],
@@ -77,106 +217,7 @@ def handle_book_files(
     assembler: ZimAssembler,
 ):
     """Handle book files from in-memory content and add to ZIM"""
-
-    # Find the main HTML file
     main_html_filename = f"{work.id}.html"
-    html_content = None
-
-    if main_html_filename in book_files:
-        html_content = book_files[main_html_filename].decode("utf-8", errors="replace")
-
-    if html_content:
-        article_name = article_name_for(work)
-        new_html = update_html_for_static(
-            work=work, html_content=html_content, formats=formats
-        )
-
-        # Add the optimized HTML directly to ZIM
-        assembler.add_item_for(
-            path=article_name,
-            content=str(new_html),
-            mimetype="text/html",
-            is_front=False,
-            title=work.title,
-            auto_index=True,
-        )
-
-    # Handle other formats (epub, pdf)
-    other_filenames = []
-    for other_format in [
-        fmt for fmt in requested_formats(work, formats) if fmt != "html"
-    ]:
-        book_filename = fname_for(work, other_format)
-        if book_filename in book_files:
-            other_filenames.append(book_filename)
-            try:
-                archive_name = archive_name_for(work, other_format)
-                content = book_files[book_filename]
-                if other_format == "epub":
-                    content = optimize_epub_bytes(content, work)
-                assembler.add_item_for(
-                    path=archive_name,
-                    content=content,
-                    is_front=False,
-                )
-            except Exception as e:
-                logger.exception(e)
-                logger.error(f"\t\tException while handling {other_format}: {e}")
-                raise
-
-    # Process all associated files (images, companion HTML files, etc)
-    for filename, file_content in book_files.items():
-        # Skip the main HTML file as it's already processed
-        if filename == main_html_filename:
-            continue
-
-        # Skip files matching a specific format since they have already been processed
-        if filename in other_filenames:
-            continue
-
-        if filename.endswith((".html", ".htm")):
-            # Process companion HTML files
-            try:
-                html_str = file_content.decode("utf-8", errors="replace")
-                new_html = update_html_for_static(
-                    work=work, html_content=html_str, formats=formats
-                )
-                assembler.add_item_for(
-                    path=filename,
-                    content=str(new_html),
-                    mimetype="text/html",
-                    is_front=False,
-                )
-            except Exception as e:
-                logger.exception(e)
-                logger.error(f"\t\tException while handling companion HTML: {e}")
-        else:
-            # Add other files (images, etc) directly
-            try:
-                optimized_file_content = optimize_content(work, filename, file_content)
-                output_filename = ImageProcessor.get_output_filename(filename)
-
-                # Check if this is the cover image by comparing with transformed href
-                # Note: filename is already transformed (e.g., "1_cover.jpg")
-                # by download.py so we transform the stored cover href the same way
-                cover_href = work.extra.get("_cover_href")
-                if cover_href:
-                    # Transform cover href same way we transform image paths
-                    expected_cover = transform_image_path(work.id, cover_href)
-                    expected_cover = ImageProcessor.get_output_filename(expected_cover)
-
-                    if output_filename == expected_cover:
-                        work.extra["html_cover_path"] = output_filename
-                        logger.debug(
-                            f"Detected HTML cover for book #{work.id}: "
-                            f"{output_filename}"
-                        )
-
-                assembler.add_item_for(
-                    path=output_filename,
-                    content=optimized_file_content,
-                    is_front=False,
-                )
-            except Exception as e:
-                logger.exception(e)
-                logger.error(f"\t\tException while handling file {filename}: {e}")
+    _add_main_html(work, book_files, formats, assembler, main_html_filename)
+    _add_other_formats(work, book_files, formats, assembler)
+    _add_associated_files(work, book_files, formats, assembler, main_html_filename)
