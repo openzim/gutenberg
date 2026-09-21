@@ -15,11 +15,6 @@ jobs:
       - name: Build the Docker image
         run: docker build -t gutenberg .
 
-      - name: Install zimtools
-        run: |
-          wget -qO- https://download.openzim.org/release/zim-tools/zim-tools_linux-x86_64.tar.gz | tar xvz
-          sudo mv zim-tools_linux-x86_64-*/zim* /usr/local/bin/
-
       - name: Build small integration ZIMs
         run: |
           mkdir -p output
@@ -48,8 +43,10 @@ jobs:
 
       - name: Run zimcheck
         run: |
-          zimcheck output/gutenberg-integration.zim
-          zimcheck output/opentextbooks-integration.zim
+          docker run --rm -v "$PWD/output:/output" \
+            ghcr.io/openzim/zim-tools:3.8.0 zimcheck /output/gutenberg-integration.zim
+          docker run --rm -v "$PWD/output:/output" \
+            ghcr.io/openzim/zim-tools:3.8.0 zimcheck /output/opentextbooks-integration.zim
 
       - name: Run integration test suite
         run: |
