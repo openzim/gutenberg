@@ -10,6 +10,7 @@ as of 2.0.0.
 
 ### Changed
 
+- Use Docker image for zim-tools in CI instead of downloading it (#586)
 - Use CLDR data for language names instead of languageNames i18n keys (#487)
 
 ### Fixed
