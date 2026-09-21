@@ -18,7 +18,6 @@
 			"allAuthors": "Tote le autores",
 			"allCollections": "Tote le collectiones",
 			"discoverAllBooks": "Discoperir tote le libros",
-			"mostDownloaded": "Le plus discargate",
 			"popularCollections": "Collectiones popular",
 			"selectedAuthors": "Autores seligite",
 			"selectedBooks": "Libros seligite"
@@ -162,6 +161,7 @@
 		},
 		"home": {
 			"allCollections": "Tote le plancas",
+			"mostPopular": "Le plus discargate",
 			"popularCollections": "Plancas popular"
 		},
 		"collection": {

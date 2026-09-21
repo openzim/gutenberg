@@ -13,7 +13,6 @@
       "allAuthors": "All authors",
       "allCollections": "All collections",
       "discoverAllBooks": "Discover all books",
-      "mostDownloaded": "Most downloaded",
       "popularCollections": "Popular collections",
       "selectedAuthors": "Selected authors",
       "selectedBooks": "Selected books"
@@ -158,6 +157,7 @@
     },
     "home": {
       "allCollections": "All shelves",
+      "mostPopular": "Most downloaded",
       "popularCollections": "Popular shelves"
     },
     "collection": {
@@ -248,6 +248,7 @@
     },
     "home": {
       "allCollections": "All subjects",
+      "mostPopular": "Most reviewed",
       "popularCollections": "Popular subjects"
     },
     "collection": {

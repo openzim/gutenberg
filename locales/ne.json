@@ -8,7 +8,6 @@
 		"home": {
 			"allAuthors": "सबै लेखकहरू",
 			"discoverAllBooks": "सबै पुस्तकहरू पत्ता लगाउनुहोस्",
-			"mostDownloaded": "सबैभन्दा धेरै डाउनलोड गरिएका",
 			"selectedAuthors": "चयन गरिएका लेखकहरू",
 			"selectedBooks": "चुनिएका पुस्तकहरू"
 		},
@@ -61,6 +60,7 @@
 		},
 		"home": {
 			"allCollections": "सबै सेल्फहरू",
+			"mostPopular": "सबैभन्दा धेरै डाउनलोड गरिएका",
 			"popularCollections": "लोकप्रिय शेल्फहरू"
 		},
 		"collection": {
