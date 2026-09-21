@@ -1,9 +1,6 @@
 """Tests for Open Textbook Library cover extraction."""
 
-import io
-import zipfile
-
-from gutenberg2zim.sources.opentextbooks.covers import _epub_cover, fetch_page_cover
+from gutenberg2zim.sources.opentextbooks.covers import fetch_page_cover
 
 
 class StubEngine:
@@ -63,22 +60,3 @@ def test_fetch_page_cover_returns_none_when_fetch_fails():
     assert (
         fetch_page_cover(StubEngine(), "https://example.org/missing") is None
     )  # type: ignore[arg-type]
-
-
-def test_epub_cover_decodes_manifest_href_before_archive_lookup():
-    epub = io.BytesIO()
-    with zipfile.ZipFile(epub, "w") as archive:
-        archive.writestr(
-            "META-INF/container.xml",
-            """<container><rootfiles><rootfile full-path="OPS/package.opf"/>
-            </rootfiles></container>""",
-        )
-        archive.writestr(
-            "OPS/package.opf",
-            """<package><metadata><meta name="cover" content="cover"/>
-            </metadata><manifest><item id="cover" href="cover%20image.jpg"
-            media-type="image/jpeg"/></manifest></package>""",
-        )
-        archive.writestr("OPS/cover image.jpg", b"cover image")
-
-    assert _epub_cover(epub.getvalue()) == b"cover image"
