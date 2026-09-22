@@ -46,7 +46,7 @@ describe('AuthorCard', () => {
   })
 
   const linkTarget = (wrapper: ReturnType<typeof mount>) =>
-    wrapper.findComponent({ name: 'VListItem' }).props('to')
+    wrapper.findComponent({ name: 'RouterLink' }).props('to')
 
   describe('Rendering', () => {
     it('renders card with author name', () => {

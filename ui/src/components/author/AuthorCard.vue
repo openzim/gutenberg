@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AuthorPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
+import { RouterLink } from 'vue-router'
 import { AVATAR_SIZES, ICON_SIZES, LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 
 interface Props {
@@ -22,7 +23,8 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <v-list-item
+  <component
+    :is="navigate ? RouterLink : 'div'"
     :to="navigate ? `/author/${author.id}` : undefined"
     :aria-label="
       t('author.viewAuthor', {
@@ -30,58 +32,53 @@ const { t } = useI18n()
         name: author.name
       })
     "
-    variant="flat"
-    base-color="transparent"
+    :class="[
+      'author-card',
+      'text-decoration-none',
+      {
+        'author-card--compact': variant === 'compact',
+        'author-card--comfortable': variant === 'comfortable',
+        'author-card--full': variant === 'full',
+        'author-card--bordered': bordered,
+        'author-card__navigate': navigate,
+        'author-card__no-right-border': noRightBorder
+      }
+    ]"
   >
-    <div
-      :class="[
-        'author-card',
-        'text-decoration-none',
-        {
-          'author-card--compact': variant === 'compact',
-          'author-card--comfortable': variant === 'comfortable',
-          'author-card--full': variant === 'full',
-          'author-card--bordered': bordered,
-          'author-card__navigate': navigate,
-          'author-card__no-right-border': noRightBorder
-        }
-      ]"
+    <v-avatar
+      :size="
+        variant === 'compact'
+          ? AVATAR_SIZES.COMPACT
+          : variant === 'comfortable'
+            ? AVATAR_SIZES.COMFORTABLE
+            : AVATAR_SIZES.FULL
+      "
+      color="rgb(var(--v-theme-authorAvatarBgd))"
+      class="author-card__avatar"
     >
-      <v-avatar
+      <v-icon
+        icon="mdi-account"
+        color="white"
         :size="
           variant === 'compact'
-            ? AVATAR_SIZES.COMPACT
+            ? ICON_SIZES.COMPACT
             : variant === 'comfortable'
-              ? AVATAR_SIZES.COMFORTABLE
-              : AVATAR_SIZES.FULL
+              ? ICON_SIZES.COMFORTABLE
+              : ICON_SIZES.FULL
         "
-        color="rgb(var(--v-theme-authorAvatarBgd))"
-        class="author-card__avatar"
-      >
-        <v-icon
-          icon="mdi-account"
-          color="white"
-          :size="
-            variant === 'compact'
-              ? ICON_SIZES.COMPACT
-              : variant === 'comfortable'
-                ? ICON_SIZES.COMFORTABLE
-                : ICON_SIZES.FULL
-          "
-        />
-      </v-avatar>
+      />
+    </v-avatar>
 
-      <div class="author-card--infos">
-        <h2 class="author-card__name">
-          {{ author.name }}
-        </h2>
+    <div class="author-card--infos">
+      <h2 class="author-card__name">
+        {{ author.name }}
+      </h2>
 
-        <p class="author-card__count">
-          {{ t('author.bookCount', author.bookCount) }}
-        </p>
-      </div>
+      <p class="author-card__count">
+        {{ t('author.bookCount', author.bookCount) }}
+      </p>
     </div>
-  </v-list-item>
+  </component>
 </template>
 
 <style scoped>
@@ -107,10 +104,6 @@ const { t } = useI18n()
 
 .author-card__no-right-border {
   border-right: 0px;
-}
-
-.v-list-item {
-  padding: 0;
 }
 
 .author-card--compact {
