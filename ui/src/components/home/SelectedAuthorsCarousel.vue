@@ -88,7 +88,6 @@ const arrows = [
               :direction="arrow.direction"
               :disabled="arrow.direction === 'left' ? !hasPrevious : !hasNext"
               :ariaLabel="t(arrow.ariaKey)"
-              beige-shadow
               @click="arrow.onClick"
             />
           </div>
