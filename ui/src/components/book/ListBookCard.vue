@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { BookPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
-import { formatLabel } from '@/utils/format-utils'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
 import FireRating from '@/components/common/FireRating.vue'
 import { TYPOGRAPHY } from '@/constants/theme'
@@ -25,10 +24,6 @@ const { t } = useI18n()
     </div>
 
     <div class="list-book-content">
-      <div v-if="book.availableFormats?.length" class="format-links text-caption mb-1">
-        {{ book.availableFormats.map(formatLabel).join(' · ') }}
-      </div>
-
       <h3 class="list-book-title mb-1">
         {{ book.title }}
       </h3>
@@ -80,12 +75,6 @@ const { t } = useI18n()
   flex-direction: column;
   min-width: 0;
   padding-left: 1.5rem;
-}
-
-.format-links {
-  color: rgb(var(--v-theme-format));
-  font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
-  font-weight: v-bind(TYPOGRAPHY.CAPTION_WEIGHT);
 }
 
 .list-book-title {
