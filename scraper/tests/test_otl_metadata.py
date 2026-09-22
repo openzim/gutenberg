@@ -95,11 +95,11 @@ def test_fetch_maps_record_to_work():
     assert work.license == "Attribution-NonCommercial-ShareAlike"
     assert work.description == "A calculus textbook."
     assert work.source_url == f"{BASE}/textbooks/calculus"
-    assert work.popularity is None  # assigned after all books are processed
+    assert work.popularity == 4.07
+    assert work.flames is None  # assigned after all books are processed
     assert work.extra["copyright_year"] == 2016
     assert work.extra["review_rating"] == "4"
-    assert work.primary_metric == 7
-    assert work.extra["review_score"] == 4.07
+    assert work.extra["review_count"] == 7
 
 
 def test_fetch_keeps_only_authors_as_creators():

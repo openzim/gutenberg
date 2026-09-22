@@ -4,24 +4,23 @@ import { mdiFire } from '@mdi/js'
 
 const props = withDefaults(
   defineProps<{
-    popularity?: number
+    flames?: number
   }>(),
   {
-    popularity: 0
+    flames: 0
   }
 )
 
-// Popularity comes from the scraper on a 0-3 flame scale
-const flames = computed(() => Math.max(0, Math.min(3, Math.floor(props.popularity))))
+const flameCount = computed(() => Math.max(0, Math.min(3, Math.floor(props.flames))))
 </script>
 
 <template>
-  <div class="fire-rating" :aria-label="`Popularity: ${flames} out of 3 flames`">
+  <div class="fire-rating" :aria-label="`${flameCount} out of 3 flames`">
     <svg
       v-for="i in 3"
       :key="i"
       class="flame-icon"
-      :class="{ 'flame-icon--dim': i > flames }"
+      :class="{ 'flame-icon--dim': i > flameCount }"
       viewBox="0 0 24 24"
     >
       <path :d="mdiFire" />

@@ -51,7 +51,7 @@ class Indexes:
     by_collection: dict[str, list[Work]] = field(default_factory=dict)
     # creator id -> (work count, summed popularity; works without a
     # popularity value count for the work count only)
-    author_stats: dict[str, tuple[int, int]] = field(default_factory=dict)
+    author_stats: dict[str, tuple[int, float]] = field(default_factory=dict)
     search_entries: list[IndexEntry] = field(default_factory=list)
 
 
@@ -63,7 +63,7 @@ class IndexBuilder:
         authors: dict[str, Creator] = {}
         by_author: dict[str, list[Work]] = defaultdict(list)
         by_collection: dict[str, list[Work]] = defaultdict(list)
-        author_stats: dict[str, tuple[int, int]] = {}
+        author_stats: dict[str, tuple[int, float]] = {}
 
         works = self._store.works
         for work in works:

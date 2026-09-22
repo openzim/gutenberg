@@ -2,12 +2,7 @@
 import type { Book } from '@/types'
 import { ref, computed, nextTick, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useFormatters } from '@/composables/useFormatters'
-import {
-  normalizeImagePath,
-  normalizeZimPath,
-  formatMetric,
-  formatLabel
-} from '@/utils/format-utils'
+import { normalizeImagePath, normalizeZimPath, formatLabel } from '@/utils/format-utils'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
 import FireRating from '@/components/common/FireRating.vue'
@@ -139,9 +134,9 @@ const collectionDisplayName = computed(() => {
           {{ book.title }}
         </h1>
 
-        <!-- Desktop: stars + author on same row, above description -->
-        <div class="stars-author-row stars-author-row--desktop mb-6">
-          <fire-rating :popularity="book.popularity" class="mr-3" />
+        <!-- Desktop: flames + author on same row, above description -->
+        <div class="flames-author-row flames-author-row--desktop mb-6">
+          <fire-rating :flames="book.flames" class="mr-3" />
           <router-link
             v-if="book.author?.id"
             :to="`/author/${book.author.id}`"
@@ -155,7 +150,7 @@ const collectionDisplayName = computed(() => {
         </div>
 
         <!-- Mobile: author only, above description -->
-        <div class="stars-author-row stars-author-row--mobile mb-2">
+        <div class="flames-author-row flames-author-row--mobile mb-2">
           <router-link
             v-if="book.author?.id"
             :to="`/author/${book.author.id}`"
@@ -195,29 +190,23 @@ const collectionDisplayName = computed(() => {
           </button>
         </div>
 
-        <!-- Mobile: stars below description -->
-        <div class="stars-row-mobile mb-6">
-          <fire-rating :popularity="book.popularity" />
+        <!-- Mobile: flames below description -->
+        <div class="flames-row-mobile mb-6">
+          <fire-rating :flames="book.flames" />
         </div>
 
         <!-- Desktop-only meta (inside info-cell) -->
         <div class="meta-desktop">
           <v-row class="meta-row">
-            <v-col cols="3">
+            <v-col cols="4">
               <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
               <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
             </v-col>
-            <v-col cols="3">
-              <div class="inter-13 text-medium-emphasis">
-                {{ t('book.primaryMetric') }}
-              </div>
-              <div class="inter-13">{{ formatMetric(book.primaryMetric) }}</div>
-            </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
               <div class="inter-13">{{ cleanLicense }}</div>
             </v-col>
-            <v-col cols="3" v-if="book.primaryCollection">
+            <v-col cols="4" v-if="book.primaryCollection">
               <div class="inter-13 text-medium-emphasis">{{ t('book.collection') }}</div>
               <router-link
                 :to="{ path: '/collections', query: { collection: book.primaryCollection } }"
@@ -233,19 +222,15 @@ const collectionDisplayName = computed(() => {
       <!-- Mobile-only meta (full width row) -->
       <div class="meta-cell">
         <v-row class="meta-row">
-          <v-col cols="3">
+          <v-col cols="4">
             <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
             <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
           </v-col>
-          <v-col cols="3">
-            <div class="inter-13 text-medium-emphasis">{{ t('book.primaryMetric') }}</div>
-            <div class="inter-13">{{ formatMetric(book.primaryMetric) }}</div>
-          </v-col>
-          <v-col cols="3">
+          <v-col cols="4">
             <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
             <div class="inter-13">{{ cleanLicense }}</div>
           </v-col>
-          <v-col cols="3" v-if="book.primaryCollection">
+          <v-col cols="4" v-if="book.primaryCollection">
             <div class="inter-13 text-medium-emphasis">{{ t('book.collection') }}</div>
             <router-link
               :to="{ path: '/collections', query: { collection: book.primaryCollection } }"
@@ -481,17 +466,17 @@ const collectionDisplayName = computed(() => {
   display: flex;
 }
 
-.stars-author-row {
+.flames-author-row {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
 }
 
-.stars-author-row--mobile {
+.flames-author-row--mobile {
   display: none;
 }
 
-.stars-row-mobile {
+.flames-row-mobile {
   display: none;
 }
 
@@ -653,15 +638,15 @@ const collectionDisplayName = computed(() => {
     font-size: 0.875rem;
   }
 
-  .stars-author-row--desktop {
+  .flames-author-row--desktop {
     display: none;
   }
 
-  .stars-author-row--mobile {
+  .flames-author-row--mobile {
     display: flex;
   }
 
-  .stars-row-mobile {
+  .flames-row-mobile {
     display: flex;
   }
 

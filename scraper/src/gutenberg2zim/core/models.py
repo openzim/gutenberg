@@ -56,8 +56,8 @@ class Work:
     formats: list[Format] = field(default_factory=list)
     cover: Cover | None = None
     collections: list[CollectionRef] = field(default_factory=list)
-    popularity: int | None = None
-    primary_metric: int | None = None
+    popularity: float | int | None = None
+    flames: int | None = None
     description: str | None = None
     published: date | None = None
     source_url: str | None = None

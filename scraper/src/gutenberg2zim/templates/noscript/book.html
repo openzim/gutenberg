@@ -39,10 +39,6 @@
             <dt>License</dt>
             <dd>{{ book.license }}</dd>
 
-            {% if book.primary_metric is not none %}
-            <dt>Metric</dt>
-            <dd>{{ "{:,}".format(book.primary_metric) }}</dd>
-            {% endif %}
         </dl>
     </div>
 

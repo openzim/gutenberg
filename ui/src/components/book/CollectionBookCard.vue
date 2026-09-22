@@ -34,7 +34,7 @@ const { t } = useI18n()
       </p>
     </div>
 
-    <fire-rating :popularity="book.popularity" class="collection-book-fire-rating" />
+    <fire-rating :flames="book.flames" class="collection-book-fire-rating" />
   </router-link>
 </template>
 

@@ -256,8 +256,7 @@ def _work_from_parser(parser: RdfParser) -> Work:
         license=parser.license,
         cover=Cover() if parser.has_cover else None,
         collections=collections,
-        popularity=0,
-        primary_metric=int(parser.downloads),
+        popularity=int(parser.downloads),
         description=(
             normalize(parser.description.strip()) if parser.description else None
         ),

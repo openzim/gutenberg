@@ -10,7 +10,7 @@ def _work(
     title: str,
     creators: list[Creator] | None = None,
     collections: list[CollectionRef] | None = None,
-    popularity: int | None = None,
+    popularity: float | int | None = None,
     description: str | None = None,
 ) -> Work:
     return Work(
