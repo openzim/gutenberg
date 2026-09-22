@@ -17,6 +17,7 @@ as of 2.0.0.
 
 - Fix language codes not recognized correctly (#337)
 - Add a function to remove MARC notations (#372)
+- Deduplicate the cover image bundled in the HTML zip but not referenced from the HTML (#581)
 - Deduplicate cover images by reusing HTML version (#437)
 - Prevent crash when all books fail to download (#416)
 - Add Friulian (fur) language code mapping (#415)
