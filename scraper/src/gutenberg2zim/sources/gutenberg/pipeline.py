@@ -14,7 +14,6 @@ from gutenberg2zim.core.download_engine import DownloadEngine
 from gutenberg2zim.core.exporters.html_reader_controls import (
     export_html_reader_control_assets,
 )
-from gutenberg2zim.core.models import Work
 from gutenberg2zim.core.pipeline import Pipeline
 from gutenberg2zim.core.ports import WorkRef
 from gutenberg2zim.sources.gutenberg.downloader import download_book
@@ -33,10 +32,6 @@ class GutenbergPipeline(Pipeline):
         # Export shared reader-control assets first to fail fast if any are missing.
         logger.info("Exporting HTML reader controls")
         export_html_reader_control_assets(self.assembler)
-
-    def flame_score(self, work: Work) -> int | None:
-        """Rank Gutenberg works by their source-provided download count."""
-        return work.primary_metric
 
     def process_ref(self, ref: WorkRef) -> None:
         """Fetch metadata, download book content and export directly to ZIM"""

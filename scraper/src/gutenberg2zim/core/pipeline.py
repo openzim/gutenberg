@@ -26,7 +26,6 @@ Notes:
 """
 
 from abc import ABC, abstractmethod
-from collections.abc import Callable
 
 import apsw
 import backoff
@@ -37,19 +36,16 @@ from gutenberg2zim.core.exporters.json_exporter import generate_json_files
 from gutenberg2zim.core.exporters.nojs_exporter import generate_noscript_pages
 from gutenberg2zim.core.exporters.search_items_exporter import export_search_items
 from gutenberg2zim.core.index_builder import IndexBuilder
-from gutenberg2zim.core.models import Work
 from gutenberg2zim.core.ports import MetadataPort, WorkRef
 from gutenberg2zim.core.progress import ScraperProgress
 from gutenberg2zim.core.work_store import WorkStore
 from gutenberg2zim.core.zim_assembler import ZimAssembler
 
-NB_POPULARITY_FLAMES = 3
+NB_FLAMES = 3
 
 
-def compute_flame_ratings(
-    store: WorkStore, score_for: Callable[[Work], float | int | None]
-) -> None:
-    """Bucket source-supplied scores into zero to three flames."""
+def compute_flame_ratings(store: WorkStore) -> None:
+    """Bucket each work's popularity score into zero to three flames."""
     logger.info("Computing book flame ratings")
     all_works = store.works
 
@@ -61,7 +57,7 @@ def compute_flame_ratings(
         )
 
     works_with_scores = sorted(
-        ((work, score) for work in all_works if (score := score_for(work)) is not None),
+        ((work, score) for work in all_works if (score := work.popularity) is not None),
         key=lambda item: item[1],
         reverse=True,
     )
@@ -70,15 +66,12 @@ def compute_flame_ratings(
         return
 
     all_works_count = len(works_with_scores)
-    flame_limits = [0.0] * NB_POPULARITY_FLAMES
-    flames = NB_POPULARITY_FLAMES
+    flame_limits = [0.0] * NB_FLAMES
+    flames = NB_FLAMES
     score_value = works_with_scores[0][1]
     for iwork, (_, work_score) in enumerate(works_with_scores):
         if (
-            iwork
-            > float(NB_POPULARITY_FLAMES - flames + 1)
-            / NB_POPULARITY_FLAMES
-            * all_works_count
+            iwork > float(NB_FLAMES - flames + 1) / NB_FLAMES * all_works_count
             and work_score < score_value
         ):
             flame_limits[flames - 1] = score_value
@@ -86,10 +79,10 @@ def compute_flame_ratings(
         score_value = work_score
 
     for work, work_score in works_with_scores:
-        work.popularity = sum(
-            [int(work_score >= flame_limits[i]) for i in range(NB_POPULARITY_FLAMES)]
+        work.flames = sum(
+            [int(work_score >= flame_limits[i]) for i in range(NB_FLAMES)]
         )
-        # Write the computed popularity back into the store
+        # Write the computed flames back into the store.
         store.add(work)
 
 
@@ -142,13 +135,9 @@ class Pipeline(ABC):
         """Fetch metadata, download and export one work (source-specific)"""
         ...
 
-    def compute_popularity(self) -> None:
+    def compute_flames(self) -> None:
         """Compute flame ratings after all works are processed."""
-        compute_flame_ratings(self.store, self.flame_score)
-
-    def flame_score(self, _work: Work) -> float | int | None:
-        """Return this source's score for a work, or None when it has no score."""
-        return None
+        compute_flame_ratings(self.store)
 
     def run(self, refs: list[WorkRef]) -> None:
         """Orchestrate processing of discovered works and final exports"""
@@ -191,7 +180,7 @@ class Pipeline(ABC):
 
         parallel_map(process_one, refs, self.concurrency)
 
-        self.compute_popularity()
+        self.compute_flames()
 
         # Derived indexes (authors, per-author stats, search entries) built
         # once and shared by all exporters

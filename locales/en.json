@@ -21,7 +21,6 @@
       "title": "Books",
       "downloads": "downloads",
       "downloadCount": "Download count",
-      "primaryMetric": "Metric",
       "languages": "Language(s)",
       "collection": "Collection",
       "license": "License",
@@ -165,7 +164,6 @@
     },
     "book": {
       "collection": "LCC Shelf",
-      "primaryMetric": "Download count",
       "sameCollectionBooks": "Books in the same shelf"
     },
     "footer": {
@@ -270,7 +268,6 @@
     },
     "book": {
       "collection": "Subject",
-      "primaryMetric": "Faculty reviews",
       "sameCollectionBooks": "Books in the same subject"
     },
     "collections": {

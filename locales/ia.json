@@ -26,7 +26,6 @@
 			"title": "Titulo",
 			"downloads": "discargamentos",
 			"downloadCount": "Numero de discargamentos",
-			"primaryMetric": "Statistica",
 			"languages": "Lingua",
 			"collection": "Collection",
 			"license": "Licentia",
@@ -169,7 +168,6 @@
 		},
 		"book": {
 			"collection": "Planca LCC",
-			"primaryMetric": "Numero de discargamentos",
 			"sameCollectionBooks": "Libros sur le mesme planca"
 		},
 		"footer": {

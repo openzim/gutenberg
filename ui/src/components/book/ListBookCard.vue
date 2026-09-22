@@ -36,7 +36,7 @@ const { t } = useI18n()
         {{ book.description }}
       </p>
 
-      <fire-rating class="list-fire-rating" :popularity="book.popularity" />
+      <fire-rating class="list-fire-rating" :flames="book.flames" />
     </div>
   </router-link>
 </template>

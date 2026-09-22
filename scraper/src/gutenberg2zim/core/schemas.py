@@ -33,7 +33,7 @@ class AuthorPreview(CamelModel):
     first_name: str | None = None
     last_name: str
     book_count: int
-    total_popularity: int = 0
+    total_popularity: float = 0
 
 
 class AuthorDetail(AuthorPreview):
@@ -60,7 +60,8 @@ class BookPreview(CamelModel):
     title: str
     author: AuthorPreview
     languages: list[str]
-    popularity: int  # Flame rating (0-3)
+    popularity: float  # Source-specific ranking score
+    flames: int = 0
     cover_path: str | None = None
     primary_collection: str | None = None
     available_formats: list[str] = []
@@ -72,7 +73,6 @@ class Book(BookPreview):
 
     subtitle: str | None = None
     license: str
-    primary_metric: int
     author: Author
     formats: list[BookFormat]
     description: str | None = None
@@ -99,7 +99,7 @@ class CollectionPreview(CamelModel):
     id: str
     name: str
     book_count: int
-    total_popularity: int = 0
+    total_popularity: float = 0
 
 
 class Collection(CollectionPreview):

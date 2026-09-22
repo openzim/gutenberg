@@ -97,7 +97,7 @@ def test_run_exports_a_downloaded_otl_work_without_popularity_metrics():
     ):
         pipeline.run([WorkRef(id="10", source="opentextbooks")])
 
-    assert work.popularity is None
+    assert work.flames is None
     assert work.extra["has_cover"] is True
     assert work.cover is not None
     assembler.add_item_for.assert_any_call(

@@ -48,7 +48,7 @@ from gutenberg2zim.core.zim_assembler import ZimAssembler
 
 
 def _creator_to_preview(
-    creator: Creator, author_stats: dict[str, tuple[int, int]]
+    creator: Creator, author_stats: dict[str, tuple[int, float]]
 ) -> AuthorPreview:
     """Convert Creator to AuthorPreview schema"""
     book_count, total_popularity = author_stats.get(creator.id, (0, 0))
@@ -80,7 +80,7 @@ def _cover_path_for(work: Work) -> str | None:
 
 
 def _work_to_preview(
-    work: Work, formats: list[str], author_stats: dict[str, tuple[int, int]]
+    work: Work, formats: list[str], author_stats: dict[str, tuple[int, float]]
 ) -> BookPreview:
     """Convert Work to BookPreview schema"""
     return BookPreview(
@@ -88,7 +88,8 @@ def _work_to_preview(
         title=work.title,
         author=_creator_to_preview(primary_creator(work), author_stats),
         languages=work.languages,
-        popularity=work.popularity or 0,
+        popularity=float(work.popularity or 0),
+        flames=work.flames or 0,
         cover_path=_cover_path_for(work),
         primary_collection=primary_collection_id(work),
         available_formats=requested_formats(work, formats),
@@ -130,8 +131,8 @@ def _work_to_schema(work: Work, formats: list[str]) -> BookSchema:
         author=_creator_to_schema(primary_creator(work)),
         languages=work.languages,
         license=work.license or "Public domain in the USA.",
-        primary_metric=work.primary_metric or 0,
-        popularity=work.popularity or 0,
+        popularity=float(work.popularity or 0),
+        flames=work.flames or 0,
         primary_collection=primary_collection_id(work),
         cover_path=_cover_path_for(work),
         formats=book_formats,

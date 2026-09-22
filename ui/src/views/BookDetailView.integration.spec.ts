@@ -23,12 +23,12 @@ const mockBookData: Book = {
     deathYear: '1817'
   },
   languages: ['en'],
-  popularity: 5,
+  popularity: 50000,
+  flames: 3,
   coverPath: '/covers/1.jpg',
   primaryCollection: 'PR',
   subtitle: null,
   license: 'Public domain',
-  primaryMetric: 50000,
   description: 'A classic novel of manners',
   formats: [
     { format: 'html', path: 'https://example.com/1.html', available: true },
@@ -81,6 +81,7 @@ describe('BookDetailView Integration', () => {
       expect(store.fetchBook).toHaveBeenCalledWith('1')
       expect(wrapper.text()).toContain('Pride and Prejudice')
       expect(wrapper.text()).toContain('Jane Austen')
+      expect(wrapper.text()).not.toContain('50000')
     })
 
     it('handles different book IDs from route params', async () => {

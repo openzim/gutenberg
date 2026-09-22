@@ -62,11 +62,6 @@ class OpenTextbookLibraryPipeline(Pipeline):
         finally:
             self._cover_executor.shutdown(wait=True)
 
-    def flame_score(self, work: Work) -> float | None:
-        """Rank OTL works by the source's aggregate peer-review score."""
-        score = work.extra.get("review_score")
-        return float(score) if score is not None else None
-
     def process_ref(self, ref: WorkRef) -> None:
         works = list(self.metadata.fetch([ref]))
         if not works:

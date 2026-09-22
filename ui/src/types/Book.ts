@@ -16,7 +16,8 @@ export interface BookPreview {
   title: string
   author: AuthorPreview
   languages: string[]
-  popularity: number // Flame rating (0-3)
+  popularity: number // Source-specific ranking score
+  flames: number // Flame rating (0-3)
   coverPath: string | null
   primaryCollection: string | null
   availableFormats?: string[]
@@ -27,7 +28,6 @@ export interface Book extends Omit<BookPreview, 'author'> {
   subtitle: string | null
   author: Author // Full author instead of preview
   license: string
-  primaryMetric: number
   formats: BookFormat[]
   description: string | null
 }

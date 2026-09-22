@@ -121,7 +121,6 @@ def work_template_context(work: Work) -> SimpleNamespace:
         subtitle=work.subtitle,
         languages=work.languages,
         license=work.license,
-        primary_metric=work.primary_metric,
         primary_collection=primary_collection_id(work),
         has_cover=work.extra.get("has_cover", work.cover is not None),
         description=work.description,

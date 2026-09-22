@@ -92,7 +92,6 @@
 			"allCollections": "Kaikki hyllyt"
 		},
 		"book": {
-			"primaryMetric": "Latausmäärä",
 			"sameCollectionBooks": "Samassa hyllyssä olevat kirjat"
 		}
 	},

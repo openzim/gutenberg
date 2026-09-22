@@ -26,7 +26,6 @@
 			"title": "Label for the book title field",
 			"downloads": "Label for the downloads metric",
 			"downloadCount": "Label for the download count field",
-			"primaryMetric": "Label for the source-defined primary numeric book metric",
 			"languages": "Label for the language field or filter",
 			"collection": "Label for a source-defined collection field",
 			"license": "Label for the license field",
@@ -170,7 +169,6 @@
 		},
 		"book": {
 			"collection": "Label for the Project Gutenberg Library of Congress Classification shelf field",
-			"primaryMetric": "Label for the Project Gutenberg download count field",
 			"sameCollectionBooks": "Heading for the carousel of books in the same Project Gutenberg LCC shelf"
 		},
 		"footer": {
@@ -275,7 +273,6 @@
 		},
 		"book": {
 			"collection": "Label for the Open Textbook Library subject field",
-			"primaryMetric": "Label for the Open Textbook Library faculty peer-review count field",
 			"sameCollectionBooks": "Heading for the carousel of books in the same Open Textbook Library subject"
 		},
 		"collections": {

@@ -7,7 +7,6 @@
 import { describe, it, expect } from 'vitest'
 import {
   formatAuthorLifespan,
-  formatMetric,
   formatLanguages,
   pluralize,
   extractUniqueValues,
@@ -30,26 +29,6 @@ describe('formatAuthorLifespan', () => {
     }
   ])('formats $description', ({ birth, death, expected }) => {
     expect(formatAuthorLifespan(birth, death)).toBe(expected)
-  })
-})
-
-describe('formatMetric', () => {
-  it.each([
-    { value: 0, expected: '0' },
-    { value: 1, expected: '1' },
-    { value: 999, expected: '999' },
-    { value: 1000, expected: '1.0K' },
-    { value: 1234, expected: '1.2K' },
-    { value: 5500, expected: '5.5K' },
-    { value: 999000, expected: '999.0K' },
-    { value: 999999, expected: '1000.0K' },
-    { value: 1000000, expected: '1.0M' },
-    { value: 1234567, expected: '1.2M' },
-    { value: 1500000, expected: '1.5M' },
-    { value: 1567890, expected: '1.6M' },
-    { value: 15000000, expected: '15.0M' }
-  ])('formats $value as $expected', ({ value, expected }) => {
-    expect(formatMetric(value)).toBe(expected)
   })
 })
 

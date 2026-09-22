@@ -21,8 +21,8 @@ def _work(work_id: str, title: str, creator: Creator, shelf: str) -> Work:
         creators=[creator],
         languages=["en"],
         collections=[CollectionRef(id=shelf, name=shelf, kind="lcc_shelf")],
-        popularity=1,
-        primary_metric=100,
+        popularity=100,
+        flames=1,
         extra={"has_cover": False},
     )
 
@@ -50,6 +50,15 @@ def _config_content(assembler: MagicMock) -> dict:
     return json.loads(call.kwargs["content"])
 
 
+def _books_content(assembler: MagicMock) -> dict:
+    call = next(
+        call
+        for call in assembler.add_item_for.call_args_list
+        if call.kwargs["path"] == "books.json"
+    )
+    return json.loads(call.kwargs["content"])
+
+
 def test_generate_json_files_emits_collections():
     assembler = MagicMock(name="assembler")
 
@@ -71,6 +80,24 @@ def test_generate_json_files_emits_collections():
     # per-book and per-author detail files
     assert "books/1.json" in paths
     assert "authors/37.json" in paths
+
+
+def test_book_previews_export_raw_popularity_and_flames():
+    assembler = MagicMock(name="assembler")
+
+    store = _store()
+    generate_json_files(
+        zim_name="test",
+        formats=["html"],
+        work_store=store,
+        assembler=assembler,
+        display_name="Test Source",
+        indexes=_indexes(store),
+    )
+
+    preview = _books_content(assembler)["books"][0]
+    assert preview["popularity"] == 100
+    assert preview["flames"] == 1
 
 
 def test_generate_json_files_does_not_emit_legacy_shelf_files():
@@ -163,7 +190,7 @@ def test_config_only_advertises_enabled_readers():
     }
 
 
-def test_book_detail_exports_source_defined_primary_metric():
+def test_book_detail_exports_popularity_and_flames():
     assembler = MagicMock(name="assembler")
     creator = Creator(id="1", name="Reviewer")
     store = WorkStore()
@@ -173,7 +200,8 @@ def test_book_detail_exports_source_defined_primary_metric():
             source="opentextbooks",
             title="Reviewed Textbook",
             creators=[creator],
-            primary_metric=7,
+            popularity=4.07,
+            flames=3,
         )
     )
 
@@ -192,4 +220,7 @@ def test_book_detail_exports_source_defined_primary_metric():
         for call in assembler.add_item_for.call_args_list
         if call.kwargs["path"] == "books/10.json"
     )
-    assert json.loads(detail_call.kwargs["content"])["primaryMetric"] == 7
+    detail = json.loads(detail_call.kwargs["content"])
+    assert detail["popularity"] == 4.07
+    assert detail["flames"] == 3
+    assert "primaryMetric" not in detail

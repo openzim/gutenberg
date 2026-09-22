@@ -159,8 +159,7 @@ class OpenTextbookLibraryMetadata(MetadataPort):
                 and isinstance(subject_name := subject.get("name"), str)
                 and subject_name
             ],
-            popularity=None,
-            primary_metric=_review_count(record),
+            popularity=_review_score(record),
             description=record.get("description") or ref.extra.get("description"),
             source_url=record.get("url") or ref.extra.get("source_url"),
             extra={
@@ -170,11 +169,7 @@ class OpenTextbookLibraryMetadata(MetadataPort):
                 "isbn10": record.get("isbn10") or ref.extra.get("isbn10"),
                 "isbn13": record.get("isbn13") or ref.extra.get("isbn13"),
                 "review_rating": record.get("rating"),
-                **(
-                    {"review_score": score}
-                    if (score := _review_score(record)) is not None
-                    else {}
-                ),
+                "review_count": _review_count(record),
             },
         )
 

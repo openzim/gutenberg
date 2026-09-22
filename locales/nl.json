@@ -27,7 +27,6 @@
 			"title": "Titel",
 			"downloads": "downloads",
 			"downloadCount": "Aantal downloads",
-			"primaryMetric": "Statistiek",
 			"languages": "Taal",
 			"collection": "Verzameling",
 			"license": "Licentie",
@@ -171,7 +170,6 @@
 		},
 		"book": {
 			"collection": "LCC-boekenplank",
-			"primaryMetric": "Aantal downloads",
 			"sameCollectionBooks": "Boeken op dezelfde plank"
 		},
 		"footer": {
@@ -275,7 +273,6 @@
 		},
 		"book": {
 			"collection": "Onderwerp",
-			"primaryMetric": "Docentenevaluatie",
 			"sameCollectionBooks": "Boeken over hetzelfde onderwerp"
 		},
 		"collections": {

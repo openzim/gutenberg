@@ -92,8 +92,8 @@ function goToAuthor(id: string) {
               </p>
             </button>
 
-            <div class="featured-book__stars">
-              <fire-rating :popularity="mostPopular.popularity" />
+            <div class="featured-book__flames">
+              <fire-rating :flames="mostPopular.flames" />
             </div>
           </div>
         </div>
@@ -227,14 +227,14 @@ function goToAuthor(id: string) {
   text-decoration: underline;
 }
 
-.featured-book__stars {
+.featured-book__flames {
   padding-top: 0.25rem;
   width: 100%;
   display: flex;
   justify-content: flex-start;
 }
 
-.featured-book__stars :deep(.flame-icon) {
+.featured-book__flames :deep(.flame-icon) {
   width: 22px;
   height: 22px;
 }

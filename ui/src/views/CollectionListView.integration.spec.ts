@@ -33,7 +33,8 @@ const mockBooks: BookPreview[] = [
       bookCount: 1
     },
     languages: ['en'],
-    popularity: 5,
+    popularity: 50000,
+    flames: 3,
     coverPath: null,
     primaryCollection: null
   },
@@ -42,7 +43,8 @@ const mockBooks: BookPreview[] = [
     title: 'Pride and Prejudice',
     author: { id: '2', name: 'Jane Austen', firstName: 'Jane', lastName: 'Austen', bookCount: 1 },
     languages: ['en'],
-    popularity: 4,
+    popularity: 30000,
+    flames: 2,
     coverPath: null,
     primaryCollection: null
   }
