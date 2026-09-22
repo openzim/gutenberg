@@ -2,16 +2,29 @@
 import type { BookPreview } from '@/types'
 import CollectionBookCard from './CollectionBookCard.vue'
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
-import { LAYOUT } from '@/constants/theme.ts'
+import { useDisplay } from 'vuetify'
+import { BOOK_GRID, LAYOUT, type BookGridVariant } from '@/constants/theme.ts'
 
-const props = defineProps<{
-  books: BookPreview[]
-  columns: number
-  bookWidth: number
-  coverHeight: number
-  centered?: boolean
-  right?: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    books: BookPreview[]
+    columns: number
+    variant?: BookGridVariant
+    centered?: boolean
+    right?: boolean
+  }>(),
+  {
+    variant: 'default'
+  }
+)
+
+const { mobile } = useDisplay()
+
+const sizes = computed(() => BOOK_GRID[props.variant])
+const bookWidth = computed(() => (mobile.value ? sizes.value.widthMobile : sizes.value.width))
+const coverHeight = computed(() =>
+  mobile.value ? sizes.value.coverHeightMobile : sizes.value.coverHeight
+)
 
 const gridRef = ref<HTMLElement | null>(null)
 
@@ -35,11 +48,11 @@ onBeforeUnmount(() => {
 })
 
 const nbCols = computed(() => {
-  return Math.min(Math.floor((width.value - 1) / props.bookWidth), props.columns)
+  return Math.min(Math.floor((width.value - 1) / bookWidth.value), props.columns)
 })
 
 const gridWidth = computed(() => {
-  return props.bookWidth * Math.min(nbCols.value, props.books.length) + 1
+  return bookWidth.value * Math.min(nbCols.value, props.books.length) + 1
 })
 </script>
 

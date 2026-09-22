@@ -54,13 +54,7 @@ function goToAuthor(id: string) {
 
       <div class="selected-books-section__grid">
         <div class="books-grid">
-          <books-grid
-            :books="topBooks"
-            :columns="4"
-            :book-width="160"
-            :cover-height="180"
-            centered
-          />
+          <books-grid :books="topBooks" :columns="4" variant="compact" centered />
         </div>
 
         <div v-if="mostPopular" class="selected-books-section__featured">

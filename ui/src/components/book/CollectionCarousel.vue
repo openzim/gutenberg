@@ -25,7 +25,7 @@ const { visibleItems, hasPrevious, hasNext, shiftLeft, shiftRight } = useCarouse
 // Mobile scroll to first book
 const trackRef = ref<HTMLElement | null>(null)
 
-const coverHeight = computed(() => (mobile ? 180 : 230))
+const coverHeight = computed(() => (mobile ? 145 : 190))
 
 watch(
   () => props.books,

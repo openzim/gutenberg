@@ -52,6 +52,14 @@ export const ICON_SIZES = {
   FULL: 100
 } as const
 
+export const BOOK_GRID = {
+  default: { width: 190, widthMobile: 160, coverHeight: 190, coverHeightMobile: 145 },
+  wide: { width: 214, widthMobile: 160, coverHeight: 190, coverHeightMobile: 145 },
+  compact: { width: 160, widthMobile: 160, coverHeight: 145, coverHeightMobile: 145 }
+} as const
+
+export type BookGridVariant = keyof typeof BOOK_GRID
+
 export const CAROUSEL_ARROW_SIZES = {
   BUTTON: 40,
   ICON: 28

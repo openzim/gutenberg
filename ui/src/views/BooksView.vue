@@ -10,11 +10,9 @@ import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { useListLoader } from '@/composables/useListLoader'
 import { LAYOUT } from '@/constants/theme'
 import { MESSAGES } from '@/constants/messages'
-import { useDisplay } from 'vuetify'
 
 const { t } = useI18n()
 const main = useMainStore()
-const { mobile } = useDisplay()
 
 const selectedLanguages = ref<string[]>([])
 
@@ -48,8 +46,6 @@ onMounted(() => {
       v-else-if="books.length > 0"
       :books="filteredBooks"
       :columns="5"
-      :book-grid-width="mobile ? 160 : 190"
-      :cover-grid-height="mobile ? 180 : 230"
       centered
       type="books"
     />
