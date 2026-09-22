@@ -147,6 +147,9 @@ const collectionDisplayName = computed(() => {
           <span v-else class="inter-13 author-name">{{
             book.author?.name || t('book.unknown')
           }}</span>
+          <span class="author-book-count">
+            ({{ t('author.bookCount', book.author.bookCount) }})
+          </span>
         </div>
 
         <!-- Mobile: author only, above description -->
@@ -161,6 +164,9 @@ const collectionDisplayName = computed(() => {
           <span v-else class="inter-13 author-name">{{
             book.author?.name || t('book.unknown')
           }}</span>
+          <span class="author-book-count">
+            ({{ t('author.bookCount', book.author.bookCount) }})
+          </span>
         </div>
 
         <div v-if="cleanDescription" class="book-desc-wrapper mb-12">
@@ -517,6 +523,14 @@ const collectionDisplayName = computed(() => {
 
 .author-name {
   color: rgb(var(--v-theme-author));
+}
+
+.author-book-count {
+  display: inline-block;
+  font-size: v-bind(TYPOGRAPHY.SMALL_SIZE);
+  color: rgb(var(--v-theme-text));
+  opacity: 0.5;
+  margin-left: 0.5rem;
 }
 
 .author-name:hover,

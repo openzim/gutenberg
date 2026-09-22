@@ -14,17 +14,6 @@ class CamelModel(BaseModel):
 
 
 # Author Models
-class Author(CamelModel):
-    """Author information for JSON export"""
-
-    id: str  # gut_id
-    first_name: str | None = None
-    last_name: str
-    birth_year: str | None = None
-    death_year: str | None = None
-    name: str  # Formatted full name
-
-
 class AuthorPreview(CamelModel):
     """Author preview for list views"""
 
@@ -36,11 +25,16 @@ class AuthorPreview(CamelModel):
     total_popularity: float = 0
 
 
-class AuthorDetail(AuthorPreview):
-    """Full author details with books list"""
+class Author(AuthorPreview):
+    """Author information for JSON export"""
 
     birth_year: str | None = None
     death_year: str | None = None
+
+
+class AuthorDetail(Author):
+    """Full author details with books list"""
+
     books: list[BookPreview]
 
 
