@@ -11,7 +11,7 @@ async function loadVuetify() {
   const INFO = '#1976D2'
   const SUCCESS = '#388E3C'
   const WARNING = '#F57C00'
-  const BACKGROUND_LIGHT = '#FFFFFF'
+  const BACKGROUND_LIGHT = '#FBF9F9'
   const BACKGROUND_DARK = '#121212'
   const SURFACE_LIGHT = '#FAFAFA'
   const SURFACE_DARK = '#1E1E1E'
