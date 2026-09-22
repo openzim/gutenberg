@@ -1,9 +1,11 @@
 """Per-book ZIM export orchestration for Gutenberg works."""
 
 import re
+from functools import partial
 
 from gutenberg2zim.constants import logger
 from gutenberg2zim.core.download_engine import DownloadEngine
+from gutenberg2zim.core.epub_optimizer import optimize_epub_bytes
 from gutenberg2zim.core.models import Work
 from gutenberg2zim.core.rewriters.image_rewriter import ImageProcessor
 from gutenberg2zim.core.utils import (
@@ -16,7 +18,7 @@ from gutenberg2zim.core.zim_assembler import ZimAssembler
 from gutenberg2zim.sources.gutenberg.downloader import download_book_cover
 from gutenberg2zim.sources.gutenberg.epub_optimize import (
     optimize_content,
-    optimize_epub_bytes,
+    transform_epub_document,
 )
 from gutenberg2zim.sources.gutenberg.rewriter import (
     transform_image_path,
@@ -119,7 +121,11 @@ def _add_other_formats(
         try:
             content = book_files[book_filename]
             if other_format == "epub":
-                content = optimize_epub_bytes(content, work)
+                content = optimize_epub_bytes(
+                    content,
+                    document_transform=partial(transform_epub_document, work=work),
+                    log_context=f"book {work.id}",
+                )
             assembler.add_item_for(
                 path=archive_name_for(work, other_format),
                 content=content,

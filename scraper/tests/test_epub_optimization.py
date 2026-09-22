@@ -1,4 +1,4 @@
-"""Tests for EPUB optimization functions in sources/gutenberg/epub_optimize.py."""
+"""Tests for Gutenberg EPUB document transforms."""
 
 from types import SimpleNamespace
 
