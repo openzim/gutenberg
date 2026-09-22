@@ -20,6 +20,7 @@ const { t } = useI18n()
         :cover-path="book.coverPath"
         :alt="t('book.coverAlt', { title: book.title })"
         :size="64"
+        class="book-cover"
       />
     </div>
 
@@ -68,6 +69,10 @@ const { t } = useI18n()
 
 .cover-wrapper {
   flex: 0 0 100px;
+}
+
+.book-cover {
+  box-shadow: 0 2px 8px rgb(var(--v-theme-grid));
 }
 
 .list-book-content {
