@@ -16,7 +16,6 @@
 		"home": {
 			"allAuthors": "Všetci autori",
 			"discoverAllBooks": "Objavte všetky knihy",
-			"mostDownloaded": "Najsťahovanejšie",
 			"selectedAuthors": "Vybraní autori",
 			"selectedBooks": "Vybrané knihy"
 		},
@@ -133,6 +132,7 @@
 		},
 		"home": {
 			"allCollections": "Všetky poličky",
+			"mostPopular": "Najsťahovanejšie",
 			"popularCollections": "Obľúbené poličky"
 		},
 		"collection": {

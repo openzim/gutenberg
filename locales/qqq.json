@@ -18,7 +18,6 @@
 			"allAuthors": "All authors link",
 			"allCollections": "All collections link",
 			"discoverAllBooks": "Discover all books link",
-			"mostDownloaded": "Most downloaded label",
 			"popularCollections": "Popular collections heading",
 			"selectedAuthors": "Selected authors heading",
 			"selectedBooks": "Selected books heading"
@@ -163,6 +162,7 @@
 		},
 		"home": {
 			"allCollections": "Link label for browsing all Project Gutenberg LCC shelves",
+			"mostPopular": "Featured-book label for the most downloaded Project Gutenberg book",
 			"popularCollections": "Heading for the popular Project Gutenberg LCC shelves section"
 		},
 		"collection": {
@@ -253,6 +253,7 @@
 		},
 		"home": {
 			"allCollections": "Link label for browsing all Open Textbook Library subjects",
+			"mostPopular": "Featured-book label for the Open Textbook Library book with the most reviews",
 			"popularCollections": "Heading for the popular Open Textbook Library subjects section"
 		},
 		"collection": {

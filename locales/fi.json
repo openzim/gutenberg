@@ -13,7 +13,6 @@
 			"allAuthors": "Kaikki kirjoittajat",
 			"allCollections": "Kaikki kokoelmat",
 			"discoverAllBooks": "Selaa kaikkia kirjoja",
-			"mostDownloaded": "Ladatuimmat",
 			"popularCollections": "Suositut kokoelmat",
 			"selectedAuthors": "Valitut kirjoittajat",
 			"selectedBooks": "Valitut kirjat"
@@ -86,6 +85,7 @@
 		},
 		"home": {
 			"allCollections": "Kaikki hyllyt",
+			"mostPopular": "Ladatuimmat",
 			"popularCollections": "Suositut hyllyt"
 		},
 		"collection": {

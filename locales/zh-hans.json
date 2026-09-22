@@ -19,7 +19,6 @@
 		"home": {
 			"allAuthors": "所有作者",
 			"discoverAllBooks": "探索所有书籍",
-			"mostDownloaded": "最多下载",
 			"selectedAuthors": "精选作者",
 			"selectedBooks": "精选书籍"
 		},
@@ -136,6 +135,7 @@
 		},
 		"home": {
 			"allCollections": "所有书架",
+			"mostPopular": "最多下载",
 			"popularCollections": "热门书架"
 		},
 		"collection": {

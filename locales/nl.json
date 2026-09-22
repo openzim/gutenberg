@@ -19,7 +19,6 @@
 			"allAuthors": "Alle auteurs",
 			"allCollections": "Alle verzamelingen",
 			"discoverAllBooks": "Ontdek alle boeken",
-			"mostDownloaded": "Meest gedownload",
 			"popularCollections": "Populaire verzamelingen",
 			"selectedAuthors": "Geselecteerde auteurs",
 			"selectedBooks": "Geselecteerde boeken"
@@ -164,6 +163,7 @@
 		},
 		"home": {
 			"allCollections": "Alle planken",
+			"mostPopular": "Meest gedownload",
 			"popularCollections": "Populaire planken"
 		},
 		"collection": {

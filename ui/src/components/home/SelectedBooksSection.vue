@@ -17,13 +17,13 @@ const props = defineProps<{
 const { t } = useI18n()
 const router = useRouter()
 
-const mostDownloaded = computed(() => {
+const mostPopular = computed(() => {
   if (props.books.length === 0) return null
   return [...props.books].sort((a, b) => b.popularity - a.popularity)[0]
 })
 
 const topBooks = computed(() => {
-  const excludedId = mostDownloaded.value?.id
+  const excludedId = mostPopular.value?.id
   return [...props.books]
     .filter((b) => b.id !== excludedId)
     .sort((a, b) => b.popularity - a.popularity)
@@ -63,43 +63,43 @@ function goToAuthor(id: string) {
           />
         </div>
 
-        <div v-if="mostDownloaded" class="selected-books-section__featured">
+        <div v-if="mostPopular" class="selected-books-section__featured">
           <div class="selected-books-section__featured-inner">
             <p class="featured-book__label">
-              {{ t('home.mostDownloaded') }}
+              {{ t('home.mostPopular') }}
             </p>
 
             <div class="featured-book__cover-wrapper">
               <img
-                v-if="mostDownloaded.coverPath"
-                :src="normalizeImagePath(mostDownloaded.coverPath)"
-                :alt="t('book.coverAlt', { title: mostDownloaded.title })"
+                v-if="mostPopular.coverPath"
+                :src="normalizeImagePath(mostPopular.coverPath)"
+                :alt="t('book.coverAlt', { title: mostPopular.title })"
                 class="featured-book__cover"
               />
             </div>
 
-            <div v-if="mostDownloaded.availableFormats?.length" class="featured-book__formats">
-              {{ mostDownloaded.availableFormats.map(formatLabel).join(' · ') }}
+            <div v-if="mostPopular.availableFormats?.length" class="featured-book__formats">
+              {{ mostPopular.availableFormats.map(formatLabel).join(' · ') }}
             </div>
 
-            <button class="featured-book__title-button" @click="goToBook(mostDownloaded.id)">
+            <button class="featured-book__title-button" @click="goToBook(mostPopular.id)">
               <h3 class="featured-book__title">
-                {{ mostDownloaded.title }}
+                {{ mostPopular.title }}
               </h3>
             </button>
 
             <button
-              v-if="mostDownloaded.author"
+              v-if="mostPopular.author"
               class="featured-book__author-button"
-              @click="goToAuthor(mostDownloaded.author.id)"
+              @click="goToAuthor(mostPopular.author.id)"
             >
               <p class="featured-book__author">
-                {{ mostDownloaded.author?.name }}
+                {{ mostPopular.author?.name }}
               </p>
             </button>
 
             <div class="featured-book__stars">
-              <fire-rating :popularity="mostDownloaded.popularity" />
+              <fire-rating :popularity="mostPopular.popularity" />
             </div>
           </div>
         </div>

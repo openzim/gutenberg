@@ -20,7 +20,6 @@
 			"allAuthors": "모든 저자",
 			"allCollections": "모든 모음집",
 			"discoverAllBooks": "모든 책을 발견하기",
-			"mostDownloaded": "가장 많이 다운로드됨",
 			"popularCollections": "인기 모음집",
 			"selectedAuthors": "선택된 저자",
 			"selectedBooks": "선택된 책"
@@ -142,6 +141,7 @@
 		},
 		"home": {
 			"allCollections": "모든 책장",
+			"mostPopular": "가장 많이 다운로드됨",
 			"popularCollections": "인기 있는 책장"
 		},
 		"collection": {
