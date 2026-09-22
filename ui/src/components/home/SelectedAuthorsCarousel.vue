@@ -144,6 +144,7 @@ const arrows = [
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
+  padding-top: 2rem;
 }
 
 .selected-authors-carousel__track {

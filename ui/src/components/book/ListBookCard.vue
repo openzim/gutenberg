@@ -41,7 +41,7 @@ const { t } = useI18n()
         {{ book.description }}
       </p>
 
-      <fire-rating :popularity="book.popularity" />
+      <fire-rating class="list-fire-rating" :popularity="book.popularity" />
     </div>
   </router-link>
 </template>
@@ -55,7 +55,7 @@ const { t } = useI18n()
   position: relative;
   z-index: 0;
   color: inherit;
-  border: 2px solid rgb(var(--v-theme-grid));
+  border: 1px solid rgb(var(--v-theme-grid));
   padding: 1.5rem;
   transition: box-shadow 0.2s ease;
 }
@@ -127,5 +127,9 @@ const { t } = useI18n()
   overflow: hidden;
   word-break: break-word;
   line-height: 1.5;
+}
+
+.list-fire-rating {
+  padding-top: 20px;
 }
 </style>

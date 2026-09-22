@@ -131,7 +131,7 @@ function handleSelect(id: string) {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  gap: 3rem;
+  gap: 1rem;
 }
 
 .popular-collections-bar__collection-btn {
@@ -145,8 +145,8 @@ function handleSelect(id: string) {
   cursor: pointer;
   color: rgb(var(--v-theme-text));
   position: relative;
-  width: 110px;
-  padding: 1rem;
+  width: 180px;
+  padding: 1rem 0.5rem;
   min-height: 120px;
   border-radius: 1rem;
 }
@@ -160,7 +160,7 @@ function handleSelect(id: string) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
 }
 
 .popular-collections-bar__collection-icon {
@@ -221,6 +221,9 @@ function handleSelect(id: string) {
     padding: 0.75rem 0;
     border-radius: 0;
     background-color: transparent;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
   }
 
   .popular-collections-bar__shelves {

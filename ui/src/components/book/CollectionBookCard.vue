@@ -56,7 +56,8 @@ const { t } = useI18n()
      top/left edge of the whole layout once, since no card does. */
   border-right: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
   border-bottom: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
-  padding: 1rem 1.25rem;
+  padding: 2rem;
+  padding-bottom: 1.2rem;
   transition: box-shadow 0.2s ease;
 }
 
@@ -110,5 +111,6 @@ const { t } = useI18n()
 
 .collection-book-fire-rating {
   margin-top: auto;
+  padding-top: 12px;
 }
 </style>

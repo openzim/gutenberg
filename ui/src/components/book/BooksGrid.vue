@@ -78,6 +78,7 @@ const gridWidth = computed(() => {
   max-width: v-bind(gridWidth + 'px');
   border-top: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
   border-left: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
+  margin-bottom: 6rem;
 }
 
 .books-grid--centered {

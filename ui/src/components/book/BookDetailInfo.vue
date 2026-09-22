@@ -168,7 +168,7 @@ const collectionDisplayName = computed(() => {
           }}</span>
         </div>
 
-        <div v-if="cleanDescription" class="book-desc-wrapper mb-6">
+        <div v-if="cleanDescription" class="book-desc-wrapper mb-12">
           <p
             ref="descriptionRef"
             class="book-desc text-medium-emphasis"

@@ -136,7 +136,7 @@ const sortedCollections = computed(() =>
 }
 
 .collection-sidebar__item {
-  padding: 0 0.5rem;
+  padding: 0.1rem 0.5rem;
 }
 
 .collection-sidebar__btn {
