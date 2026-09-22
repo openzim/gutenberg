@@ -41,6 +41,7 @@ function isActive(path: string): boolean {
         :aria-label="t('common.toggleNavigationMenu')"
         variant="text"
         density="compact"
+        elevation="0"
         v-if="mobile"
       />
 

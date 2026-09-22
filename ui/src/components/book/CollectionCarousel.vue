@@ -25,7 +25,7 @@ const { visibleItems, hasPrevious, hasNext, shiftLeft, shiftRight } = useCarouse
 // Mobile scroll to first book
 const trackRef = ref<HTMLElement | null>(null)
 
-const coverHeight = computed(() => (mobile ? 180 : 230))
+const coverHeight = computed(() => (mobile ? 145 : 190))
 
 watch(
   () => props.books,
@@ -96,12 +96,15 @@ watch(
 .collection-carousel {
   margin-inline: auto;
   padding: 1.5rem;
+  padding-bottom: 5rem;
 }
 
 .collection-carousel-title {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.H3_SIZE);
   font-weight: v-bind(TYPOGRAPHY.H3_WEIGHT);
+  padding-top: 3rem;
+  padding-bottom: 1.5rem;
 }
 
 .collection-carousel__wrapper {
@@ -137,7 +140,7 @@ watch(
      .collection-books-row inside it (which carries the border) is left to
      size itself to fit-content, so it doesn't stretch the border with it. */
   width: 100%;
-  padding: 5px;
+  padding: 5px 50px;
 }
 
 .collection-books-scroll.g-mobile-only::-webkit-scrollbar {
@@ -176,6 +179,13 @@ watch(
 
   .carousel-card-wrapper--desktop:nth-child(n + 4) {
     display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .collection-carousel__track-outer {
+    width: 100vw;
+    padding: 0;
   }
 }
 </style>

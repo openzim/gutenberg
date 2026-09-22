@@ -124,12 +124,14 @@ const collectionDisplayName = computed(() => {
   <div class="book-detail-wrapper">
     <div class="book-detail-grid">
       <div class="cover-cell">
-        <img
-          v-if="book.coverPath"
-          :src="normalizeImagePath(book.coverPath)"
-          :alt="t('book.coverAlt', { title: book.title })"
-          class="detail-cover"
-        />
+        <div class="cover-wrapper">
+          <img
+            v-if="book.coverPath"
+            :src="normalizeImagePath(book.coverPath)"
+            :alt="t('book.coverAlt', { title: book.title })"
+            class="detail-cover"
+          />
+        </div>
       </div>
 
       <div class="info-cell">
@@ -166,7 +168,7 @@ const collectionDisplayName = computed(() => {
           }}</span>
         </div>
 
-        <div v-if="cleanDescription" class="book-desc-wrapper mb-6">
+        <div v-if="cleanDescription" class="book-desc-wrapper mb-12">
           <p
             ref="descriptionRef"
             class="book-desc text-medium-emphasis"
@@ -469,11 +471,14 @@ const collectionDisplayName = computed(() => {
 }
 
 .detail-cover {
-  width: 200px;
-  margin-top: 5rem;
-  height: 306px;
   object-fit: contain;
   box-shadow: 0 2px 8px rgb(var(--v-theme-grid));
+}
+
+.cover-wrapper {
+  margin-top: 5rem;
+  height: 240px;
+  display: flex;
 }
 
 .stars-author-row {
@@ -624,9 +629,8 @@ const collectionDisplayName = computed(() => {
     border-top: 1px solid rgb(var(--v-theme-grid));
   }
 
-  .detail-cover {
-    width: 145px;
-    height: 220px;
+  .cover-wrapper {
+    height: 210px;
   }
 
   .inter-13 {

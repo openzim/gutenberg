@@ -15,12 +15,15 @@ const { t } = useI18n()
 
 <template>
   <router-link :to="`/book/${book.id}`" class="collection-book-card text-decoration-none">
-    <book-cover-image
-      :cover-path="book.coverPath"
-      :alt="t('book.coverAlt', { title: book.title })"
-      :size="64"
-      class="collection-book-cover"
-    />
+    <div class="collection-book-cover--wrapper">
+      <book-cover-image
+        :cover-path="book.coverPath"
+        :alt="t('book.coverAlt', { title: book.title })"
+        :size="64"
+        class="collection-book-cover"
+        :height="`${coverHeight}px`"
+      />
+    </div>
     <div class="collection-book-info">
       <h3 class="collection-book-title mb-1">
         {{ book.title }}
@@ -53,7 +56,8 @@ const { t } = useI18n()
      top/left edge of the whole layout once, since no card does. */
   border-right: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
   border-bottom: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
-  padding: 1rem 1.25rem;
+  padding: 2rem;
+  padding-bottom: 1.2rem;
   transition: box-shadow 0.2s ease;
 }
 
@@ -63,14 +67,19 @@ const { t } = useI18n()
   z-index: 1;
 }
 
-.collection-book-cover {
+.collection-book-cover--wrapper {
   flex: 0 0 v-bind(coverHeight + 'px');
-  margin-bottom: 12px;
+  max-height: v-bind(coverHeight + 'px');
+  margin-bottom: 18px;
+}
+
+.collection-book-cover {
   box-shadow: 0 2px 8px rgb(var(--v-theme-grid));
 }
 
 .collection-book-info {
   min-height: calc(v-bind(TYPOGRAPHY.H3_SIZE) * 1.4 * 3 + v-bind(TYPOGRAPHY.CAPTION_SIZE) * 1.4);
+  margin-right: -1rem;
 }
 
 .collection-book-title {
@@ -102,5 +111,6 @@ const { t } = useI18n()
 
 .collection-book-fire-rating {
   margin-top: auto;
+  padding-top: 12px;
 }
 </style>

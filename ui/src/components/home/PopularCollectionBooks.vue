@@ -2,9 +2,7 @@
 import { computed } from 'vue'
 import type { BookPreview } from '@/types'
 import BooksGrid from '@/components/book/BooksGrid.vue'
-import { useDisplay } from 'vuetify'
 
-const { mobile } = useDisplay()
 const props = defineProps<{
   books: BookPreview[]
 }>()
@@ -16,13 +14,7 @@ const topBooks = computed(() =>
 
 <template>
   <div class="popular-collection-books">
-    <books-grid
-      :books="topBooks"
-      :columns="6"
-      :book-width="mobile ? 160 : 190"
-      :cover-height="mobile ? 180 : 230"
-      centered
-    />
+    <books-grid :books="topBooks" :columns="6" centered />
   </div>
 </template>
 

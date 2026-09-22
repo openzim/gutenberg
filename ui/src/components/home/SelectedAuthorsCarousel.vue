@@ -88,7 +88,6 @@ const arrows = [
               :direction="arrow.direction"
               :disabled="arrow.direction === 'left' ? !hasPrevious : !hasNext"
               :ariaLabel="t(arrow.ariaKey)"
-              beige-shadow
               @click="arrow.onClick"
             />
           </div>
@@ -145,6 +144,7 @@ const arrows = [
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
+  padding-top: 2rem;
 }
 
 .selected-authors-carousel__track {

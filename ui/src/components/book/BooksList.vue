@@ -53,6 +53,7 @@ const { sentinelRef } = useIntersectionObserver(() => {
   flex-direction: column;
   max-width: v-bind(LAYOUT.MAX_CONTENT_WIDTH);
   margin-inline: auto;
+  padding-bottom: 2rem;
 }
 
 .books-list--collection-view {
@@ -60,7 +61,7 @@ const { sentinelRef } = useIntersectionObserver(() => {
 }
 
 .list-cell {
-  margin-bottom: -2px;
+  margin-bottom: -1px;
 }
 
 .list-cell:nth-last-child(2) {

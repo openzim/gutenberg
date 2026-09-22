@@ -23,7 +23,8 @@ const props = withDefaults(defineProps<Props>(), {
     v-if="coverPath"
     :src="normalizeImagePath(coverPath)"
     :alt="alt"
-    :height="height"
+    :max-height="height"
+    width="fit-content"
     :class="props.class"
   >
     <template v-slot:placeholder>
@@ -36,3 +37,17 @@ const props = withDefaults(defineProps<Props>(), {
 
   <cover-fallback v-else :size="size" :height="height" :class="props.class" />
 </template>
+
+<style scoped>
+.v-img.v-img--fit-content {
+  margin-inline: auto;
+}
+
+:deep(.v-img__img) {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: v-bind(height);
+}
+</style>

@@ -166,5 +166,9 @@ onMounted(() => {
   .home-view {
     padding: v-bind(LAYOUT.VIEW_PADDING_MOBILE);
   }
+
+  .collection-books {
+    padding-bottom: 0rem;
+  }
 }
 </style>

@@ -12,13 +12,11 @@ import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { useListLoader } from '@/composables/useListLoader'
 import { LAYOUT } from '@/constants/theme'
 import { MESSAGES } from '@/constants/messages'
-import { useDisplay } from 'vuetify'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const main = useMainStore()
-const { mobile } = useDisplay()
 
 const {
   items: collections,
@@ -114,8 +112,7 @@ function selectCollection(id: string | null) {
           v-else-if="collectionBooks.length > 0"
           :books="collectionBooks"
           :columns="4"
-          :book-grid-width="mobile ? 160 : 214"
-          :cover-grid-height="mobile ? 180 : 270"
+          variant="wide"
           :centered="true"
           type="books"
         />

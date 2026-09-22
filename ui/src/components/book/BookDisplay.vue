@@ -5,12 +5,12 @@ import BooksGrid from '@/components/book/BooksGrid.vue'
 import BooksList from '@/components/book/BooksList.vue'
 import SortAndLimitControl from '@/components/common/SortAndLimitControl.vue'
 import { useBookDisplay } from '@/composables/useBookDisplay'
+import type { BookGridVariant } from '@/constants/theme'
 
 const props = defineProps<{
   books: BookPreview[]
   columns: number
-  bookGridWidth: number
-  coverGridHeight: number
+  variant?: BookGridVariant
   centered?: boolean
   type?: 'books' | 'authors' | 'shelves'
 }>()
@@ -52,8 +52,7 @@ function onDisplayedCount(count: number) {
       :books="displayedBooks"
       :columns="columns"
       :centered="centered"
-      :book-width="bookGridWidth"
-      :cover-height="coverGridHeight"
+      :variant="variant"
     />
     <books-list v-else :books="displayedBooks" @update:displayed-count="onDisplayedCount" />
 
