@@ -56,6 +56,7 @@ def test_fetch_maps_the_feed_entry_into_a_work():
     assert {fmt.name for fmt in work.formats} == {"epub", "xhtml"}
     epub = next(fmt for fmt in work.formats if fmt.name == "epub")
     assert epub.media_type == "application/epub+zip"
+    assert epub.url is not None
     assert epub.url.endswith("format=epub&page=First_Book")
 
 
