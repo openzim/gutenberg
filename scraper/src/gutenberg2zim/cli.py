@@ -24,7 +24,8 @@ Options:
   -h --help                       Display this help message
   --overwrite                     Overwrite ZIM file if target already exists
   --source=<source>               Source slug or short name: gutenberg (PG),
-                                  opentextbooks (OTL) [default: gutenberg]
+                                  opentextbooks (OTL), wikisource (WS)
+                                  [default: gutenberg]
   -l --languages=<list>           Comma-separated language codes
   -f --formats=<list>             Formats: epub, html, pdf, or all
   -z --zim-file=<file>            ZIM output path

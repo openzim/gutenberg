@@ -343,5 +343,39 @@
       "title": "Open Textbook Library",
       "description": "Free, peer-reviewed, openly licensed textbooks"
     }
+  },
+  "wikisource": {
+    "about": {
+      "attribution": "Text provided by Wikisource, the free library.",
+      "introHeading": "About Wikisource",
+      "introParagraph1": "Wikisource is a free online library of source texts that anyone can improve.",
+      "introParagraph2": "Its volunteers transcribe and proofread books, documents, and other published works.",
+      "introParagraph3": "The texts are drawn from public-domain and freely licensed sources.",
+      "introParagraph4": "This library makes those texts available for offline reading."
+    },
+    "metadata_defaults": {
+      "title": "Wikisource Library",
+      "description": "Free source texts from Wikisource"
+    },
+    "nav": {
+      "collections": "Collections"
+    },
+    "home": {
+      "allCollections": "All collections",
+      "mostPopular": "Most popular",
+      "popularCollections": "Popular collections"
+    },
+    "collection": {
+      "allCollections": "All collections"
+    },
+    "book": {
+      "collection": "Collection",
+      "sameCollectionBooks": "Books in the same collection"
+    },
+    "footer": {
+      "createdBy": "Created by",
+      "packagedBy": "Packaged by",
+      "kiwix": "Kiwix"
+    }
   }
 }

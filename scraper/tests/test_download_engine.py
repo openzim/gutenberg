@@ -151,6 +151,14 @@ def test_worker_session_has_mounted_retries(tmp_path):
         assert adapter.max_retries.total == 3
 
 
+def test_worker_session_sends_a_descriptive_user_agent(tmp_path):
+    """The default python-requests UA is rejected by some hosts (ws-export)."""
+    engine = DownloadEngine(cache_dir=tmp_path / "cache")
+    user_agent = engine._get_session().headers["User-Agent"]
+    assert "gutenberg2zim" in user_agent
+    assert "python-requests" not in user_agent
+
+
 def test_injected_session_takes_precedence(tmp_path, session):
     engine = DownloadEngine(cache_dir=tmp_path / "cache", session=session)
     assert engine._get_session() is session
