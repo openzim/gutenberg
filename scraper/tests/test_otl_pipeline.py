@@ -240,13 +240,18 @@ def test_process_ref_accepts_a_valid_epub_archive():
     assembler = MagicMock()
     pipeline = _pipeline(work, engine, assembler)
 
-    pipeline.process_ref(WorkRef(id="10", source="opentextbooks"))
+    with patch(
+        "gutenberg2zim.sources.opentextbooks.pipeline.optimize_epub_bytes",
+        return_value=b"optimized epub",
+    ) as optimize_epub:
+        pipeline.process_ref(WorkRef(id="10", source="opentextbooks"))
 
     assert pipeline.store.get("opentextbooks", "10") is work
     assert "epub" not in work.extra["unsupported_formats"]
+    optimize_epub.assert_called_once_with(_valid_epub(), log_context="OTL textbook 10")
     assembler.add_item_for.assert_called_once_with(
         path="Calculus.10.epub",
-        content=_valid_epub(),
+        content=b"optimized epub",
         mimetype="application/epub+zip",
         is_front=False,
     )

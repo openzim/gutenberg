@@ -1,11 +1,6 @@
-"""In-memory EPUB/binary optimization helpers for Gutenberg book files."""
-
-import io
-import zipfile
-from pathlib import Path
+"""Gutenberg-specific EPUB document and HTML asset transforms."""
 
 from bs4 import BeautifulSoup
-from zimscraperlib.image.optimization import optimize_jpeg, optimize_png
 
 from gutenberg2zim.constants import logger
 from gutenberg2zim.core.models import Work
@@ -29,20 +24,6 @@ def optimize_content(work: Work, filename: str, file_content: bytes) -> bytes:
 
     # Do not optimize other file types
     return file_content
-
-
-def _optimize_epub_jpeg(data: bytes) -> bytes:
-    """Optimize JPEG image in-memory for EPUB, keeping original format."""
-    dst = io.BytesIO()
-    optimize_jpeg(src=io.BytesIO(data), dst=dst)
-    return dst.getvalue()
-
-
-def _optimize_epub_png(data: bytes) -> bytes:
-    """Optimize PNG image in-memory for EPUB, keeping original format."""
-    dst = io.BytesIO()
-    optimize_png(src=io.BytesIO(data), dst=dst)
-    return dst.getvalue()
 
 
 def _process_epub_html(data: bytes, work: Work, *, is_xml: bool = False) -> bytes:
@@ -77,75 +58,13 @@ def _process_epub_ncx(data: bytes, work: Work | None = None) -> bytes:
     return str(soup).encode(UTF8)
 
 
-def optimize_epub_bytes(epub_bytes: bytes, work: Work) -> bytes:
-    """Optimize EPUB in-memory: process HTML/NCX and optimize images without FS."""
-    src_buf = io.BytesIO(epub_bytes)
-    dst_buf = io.BytesIO()
-    original_size = len(epub_bytes)
-
-    with (
-        zipfile.ZipFile(src_buf, "r") as src_zf,
-        zipfile.ZipFile(dst_buf, "w", zipfile.ZIP_DEFLATED) as dst_zf,
-    ):
-        infos = src_zf.infolist()
-        mimetype_info = next(
-            (info for info in infos if info.filename == "mimetype"), None
+def transform_epub_document(filename: str, data: bytes, work: Work) -> bytes:
+    """Apply Gutenberg-only cleanup to an EPUB document member."""
+    lowercase_filename = filename.lower()
+    if lowercase_filename.endswith((".htm", ".html", ".xhtml")):
+        return _process_epub_html(
+            data, work, is_xml=lowercase_filename.endswith(".xhtml")
         )
-        if mimetype_info is None:
-            raise ValueError("EPUB is missing its mimetype entry")
-
-        # Write mimetype first, uncompressed, per EPUB spec
-        dst_zf.writestr(
-            "mimetype",
-            src_zf.read(mimetype_info),
-            compress_type=zipfile.ZIP_STORED,
-        )
-
-        for info in infos:
-            if info.filename == "mimetype":
-                continue
-
-            name = info.filename
-            # read by ZipInfo, not name: with duplicate member names, read(name)
-            # would return the last duplicate for every entry
-            data = src_zf.read(info)
-            suffix = Path(name).suffix.lower()
-
-            if suffix in (".jpg", ".jpeg"):
-                optimized_data = _optimize_epub_jpeg(data)
-                if len(optimized_data) < len(data):  # ignore bigger compressed version
-                    data = optimized_data
-            elif suffix == ".png":
-                optimized_data = _optimize_epub_png(data)
-                if len(optimized_data) < len(data):  # ignore bigger compressed version
-                    data = optimized_data
-            elif suffix in (".gif", ".webp"):
-                logger.warning(
-                    f"Unexpected {suffix} image in EPUB for book {work.id}: {name}"
-                )
-            elif suffix in (".htm", ".html", ".xhtml"):
-                data = _process_epub_html(data, work, is_xml=(suffix == ".xhtml"))
-            elif suffix == ".ncx":
-                data = _process_epub_ncx(data, work)
-
-            # copy metadata but force deflate: the source ZipInfo's
-            # compress_type would otherwise override the archive default
-            out_info = zipfile.ZipInfo(filename=info.filename, date_time=info.date_time)
-            out_info.external_attr = info.external_attr
-            out_info.compress_type = zipfile.ZIP_DEFLATED
-            dst_zf.writestr(out_info, data)
-
-    optimized_bytes = dst_buf.getvalue()
-    optimized_size = len(optimized_bytes)
-    if optimized_size > original_size:
-        logger.warning(
-            f"Optimized EPUB for book {work.id} is larger than original: "
-            f"{optimized_size} > {original_size} bytes"
-        )
-    else:
-        logger.debug(
-            f"Optimized EPUB for book {work.id}: "
-            f"{optimized_size} < {original_size} bytes"
-        )
-
-    return optimized_bytes
+    if lowercase_filename.endswith(".ncx"):
+        return _process_epub_ncx(data, work)
+    return data

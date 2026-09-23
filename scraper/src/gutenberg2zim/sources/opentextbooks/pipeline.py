@@ -10,6 +10,7 @@ from gutenberg2zim.constants import logger
 from gutenberg2zim.core.content_validation import is_html_document, is_valid_book_file
 from gutenberg2zim.core.covers import extract_cover
 from gutenberg2zim.core.download_engine import DownloadEngine, is_fatal_http_error
+from gutenberg2zim.core.epub_optimizer import optimize_epub_bytes
 from gutenberg2zim.core.exporters.html_reader_controls import (
     export_html_reader_control_assets,
 )
@@ -200,6 +201,11 @@ class OpenTextbookLibraryPipeline(Pipeline):
             )
             unsupported.append(format_name)
             return
+
+        if format_name == "epub":
+            content = optimize_epub_bytes(
+                content, log_context=f"OTL textbook {work.id}"
+            )
 
         self.assembler.add_item_for(
             path=archive_name_for(work, format_name),
