@@ -122,7 +122,7 @@ The Open Textbook Library-specific options are:
 
 Select Wikisource with `--source=wikisource` (or `--source=WS`).
 
-Wikisource is organised per language, so `--languages` is required: the scraper reads the ["ready for export" OPDS feeds](https://ws-export.wmcloud.org/opds/) published by [ws-export](https://ws-export.wmcloud.org) for each requested language and downloads each book as an EPUB.
+Wikisource is organised per language, so `--languages` is required: the scraper reads the ["ready for export" OPDS feeds](https://ws-export.wmcloud.org/opds/) published by [ws-export](https://ws-export.wmcloud.org) for each requested language and downloads each book as an EPUB. The supported language codes are the ones listed on the [ws-export OPDS index](https://ws-export.wmcloud.org/opds/); pass them to `--languages`.
 
 ```bash
 docker run -v $(pwd)/output:/output ghcr.io/openzim/gutenberg \
