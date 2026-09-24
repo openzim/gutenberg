@@ -70,7 +70,6 @@ def _creator_to_schema(
     book_count, total_popularity = author_stats.get(creator.id, (0, 0))
     return AuthorSchema(
         id=creator.id,
-        name=creator.name,
         first_name=creator.extra.get("first_names"),
         last_name=creator.sort_name or "",
         birth_year=creator_birth_year(creator),
@@ -312,7 +311,6 @@ def generate_json_files(
         ]
         author_detail = AuthorDetail(
             id=creator.id,
-            name=creator.name,
             first_name=creator.extra.get("first_names"),
             last_name=creator.sort_name or "",
             birth_year=creator_birth_year(creator),
