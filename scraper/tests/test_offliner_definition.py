@@ -29,6 +29,11 @@ def test_recipe_defines_supported_sources_and_source_specific_filters():
                 "value": "opentextbooks",
                 "dependents": ["subjects", "otl_ids"],
             },
+            {
+                "title": "Wikisource",
+                "value": "wikisource",
+                "dependents": [],
+            },
         ],
     }
     assert {"lcc_shelves", "subjects", "otl_ids"}.issubset(flags)

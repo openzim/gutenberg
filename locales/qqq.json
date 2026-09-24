@@ -348,5 +348,39 @@
 			"title": "Default ZIM title used in metadata when no specific title is set",
 			"description": "Default ZIM description used in metadata when no specific description is set"
 		}
+	},
+	"wikisource": {
+		"about": {
+			"attribution": "Attribution text shown at the end of the Wikisource about page",
+			"introHeading": "Introduction section heading for Wikisource",
+			"introParagraph1": "Introduction paragraph 1 for Wikisource",
+			"introParagraph2": "Introduction paragraph 2 for Wikisource",
+			"introParagraph3": "Introduction paragraph 3 for Wikisource",
+			"introParagraph4": "Introduction paragraph 4 for Wikisource"
+		},
+		"metadata_defaults": {
+			"title": "Default ZIM title used in metadata when no specific title is set",
+			"description": "Default ZIM description used in metadata when no specific description is set"
+		},
+		"nav": {
+			"collections": "Navigation and breadcrumb label for the Wikisource collections page"
+		},
+		"home": {
+			"allCollections": "Link label for browsing all Wikisource collections",
+			"mostPopular": "Featured-book label for the most popular Wikisource book",
+			"popularCollections": "Heading for the popular Wikisource collections section"
+		},
+		"collection": {
+			"allCollections": "All Wikisource collections link in the sidebar"
+		},
+		"book": {
+			"collection": "Label for the Wikisource collection field",
+			"sameCollectionBooks": "Heading for the carousel of books in the same Wikisource collection"
+		},
+		"footer": {
+			"createdBy": "Footer text preceding the source library link",
+			"packagedBy": "Footer text preceding the Kiwix link",
+			"kiwix": "Footer link text pointing to the Kiwix website"
+		}
 	}
 }

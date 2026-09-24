@@ -1,6 +1,6 @@
 # Gutenberg Offline
 
-This multi-source scraper downloads content from [Project Gutenberg](https://www.gutenberg.org) and the [Open Textbook Library](https://open.umn.edu/opentextbooks/) and packages it into a [ZIM](https://openzim.org) file, a clean and user-friendly format for storing content for offline usage.
+This multi-source scraper downloads content from [Project Gutenberg](https://www.gutenberg.org), the [Open Textbook Library](https://open.umn.edu/opentextbooks/) and [Wikisource](https://wikisource.org) and packages it into a [ZIM](https://openzim.org) file, a clean and user-friendly format for storing content for offline usage.
 
 The ZIM file includes a modern, responsive Vue.js interface with features like:
 - Browse books by title, author, or source-specific categories such as Library of Congress Classification (LCC) shelves or Open Textbook Library subjects
@@ -60,10 +60,10 @@ Note: You'll need to install system dependencies (zim-tools) separately. See [CO
 
 ### Scraping Sources
 
-The scraper supports two sources, select a source with `--source`:
+The scraper supports three sources, select a source with `--source`:
 
 `--source=<source>`    Source slug or short name:
-                     gutenberg (PG) or opentextbooks (OTL)
+                     gutenberg (PG), opentextbooks (OTL) or wikisource (WS)
                      Default: gutenberg
 
 ### Project Gutenberg
@@ -118,13 +118,26 @@ The Open Textbook Library-specific options are:
 
 `--otl-ids` and `--books` cannot be used together.
 
+### Wikisource
+
+Select Wikisource with `--source=wikisource` (or `--source=WS`).
+
+Wikisource is organised per language, so `--languages` is required: the scraper reads the ["ready for export" OPDS feeds](https://ws-export.wmcloud.org/opds/) published by [ws-export](https://ws-export.wmcloud.org) for each requested language and downloads each book as an EPUB. The supported language codes are the ones listed on the [ws-export OPDS index](https://ws-export.wmcloud.org/opds/); pass them to `--languages`.
+
+```bash
+docker run -v $(pwd)/output:/output ghcr.io/openzim/gutenberg \
+  gutenberg2zim --source=wikisource -l en,fr
+```
+
+Wikisource adds no source-specific options; use `--languages` to choose the wikis and `--books` to select books by catalog position.
+
 ## Command-Line Options
 
 ### Source Selection
 
 ```text
 --source=<source>                  Source slug or short name:
-                                   gutenberg (PG) or opentextbooks (OTL)
+                                   gutenberg (PG), opentextbooks (OTL) or wikisource (WS)
                                    Default: gutenberg
 ```
 

@@ -23,6 +23,11 @@
             "subjects",
             "otl_ids"
           ]
+        },
+        {
+          "title": "Wikisource",
+          "value": "wikisource",
+          "dependents": []
         }
       ]
     },

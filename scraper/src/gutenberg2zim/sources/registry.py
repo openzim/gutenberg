@@ -28,6 +28,10 @@ from gutenberg2zim.sources.opentextbooks import cli as opentextbooks_cli
 from gutenberg2zim.sources.opentextbooks.catalog import OpenTextbookLibraryCatalog
 from gutenberg2zim.sources.opentextbooks.metadata import OpenTextbookLibraryMetadata
 from gutenberg2zim.sources.opentextbooks.pipeline import OpenTextbookLibraryPipeline
+from gutenberg2zim.sources.wikisource import cli as wikisource_cli
+from gutenberg2zim.sources.wikisource.catalog import WikisourceCatalog
+from gutenberg2zim.sources.wikisource.metadata import WikisourceMetadata
+from gutenberg2zim.sources.wikisource.pipeline import WikisourcePipeline
 
 
 @dataclass(frozen=True, slots=True)
@@ -110,6 +114,30 @@ OPEN_TEXTBOOK_LIBRARY_PROFILE = SourceProfile(
     pipeline_class=OpenTextbookLibraryPipeline,
 )
 
+WIKISOURCE_PROFILE = SourceProfile(
+    slug="wikisource",
+    aliases=("WS",),
+    locale_namespace="wikisource",
+    display_name="Wikisource",
+    source_creator="wikisource.org",
+    zim_tags="_category:wikisource;wikisource",
+    zim_name_prefix="wikisource-export",
+    tagline="the free library",
+    source_description="A library of free source texts from Wikisource.",
+    collection_label="Collections",
+    collection_icon_style="classification",
+    default_mirror_url="https://ws-export.wmcloud.org",
+    catalog_feed_path="",
+    catalog=WikisourceCatalog,
+    cli_options=wikisource_cli.CLI_OPTIONS,
+    parse_cli_options=wikisource_cli.parse_options,
+    handle_cli_action=wikisource_cli.handle_cli_action,
+    pipeline_options=lambda _mirror_url, _cache_dir: {},
+    metadata_options=lambda _cache_dir: {},
+    metadata_class=WikisourceMetadata,
+    pipeline_class=WikisourcePipeline,
+)
+
 SOURCES: dict[str, SourceProfile] = {}
 SOURCE_ALIASES: dict[str, SourceProfile] = {}
 
@@ -187,3 +215,4 @@ def get_source(slug: str) -> SourceProfile:
 
 register_source(GUTENBERG_PROFILE)
 register_source(OPEN_TEXTBOOK_LIBRARY_PROFILE)
+register_source(WIKISOURCE_PROFILE)

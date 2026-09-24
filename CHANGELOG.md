@@ -8,6 +8,10 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Add Wikisource as a source, ingesting the ws-export OPDS feeds (#582)
+
 ### Changed
 
 - Use Docker image for zim-tools in CI instead of downloading it (#586)

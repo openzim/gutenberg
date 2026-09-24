@@ -19,8 +19,18 @@ import backoff
 import requests
 from requests.adapters import HTTPAdapter
 
-from gutenberg2zim.constants import DEFAULT_HTTP_TIMEOUT, DL_CHUNCK_SIZE, logger
+from gutenberg2zim.constants import (
+    DEFAULT_HTTP_TIMEOUT,
+    DL_CHUNCK_SIZE,
+    SCRAPER,
+    logger,
+)
 from gutenberg2zim.core.ports import DownloadRequest
+
+# A descriptive User-Agent with contact info: the default python-requests UA is
+# rejected (HTTP 403) by some hosts, e.g. Wikimedia's ws-export, whose policy
+# requires identifying the client. See https://meta.wikimedia.org/wiki/User-Agent_policy
+USER_AGENT = f"{SCRAPER} (+https://github.com/openzim/gutenberg)"
 
 
 @dataclass(frozen=True, slots=True)
@@ -108,6 +118,7 @@ class DownloadEngine:
         session = getattr(self._local, "session", None)
         if session is None:
             session = requests.Session()
+            session.headers["User-Agent"] = USER_AGENT
             session.mount("https://", HTTPAdapter(max_retries=3))
             session.mount("http://", HTTPAdapter(max_retries=3))
             self._local.session = session
