@@ -149,7 +149,8 @@ def test_rdf_parser():
     assert parsed.last_name == "Richardson"
     assert parsed.subtitle == ""
     assert (
-        parsed.webpage_resource == "https://en.wikipedia.org/wiki/James_Richardson_(explorer)"
+        parsed.webpage_resource
+        == "https://en.wikipedia.org/wiki/James_Richardson_(explorer)"
     )
     assert (
         parsed.title

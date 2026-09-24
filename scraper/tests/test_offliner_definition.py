@@ -36,9 +36,7 @@ def test_recipe_defines_supported_sources_and_source_specific_filters():
             },
         ],
     }
-    assert {"lcc_shelves", "subjects", "otl_ids", "with_author_details"}.issubset(
-        flags
-    )
+    assert {"lcc_shelves", "subjects", "otl_ids", "with_author_details"}.issubset(flags)
 
 
 def test_recipe_uses_enum_choices_for_supported_formats():
