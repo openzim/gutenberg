@@ -20,7 +20,8 @@ const mockBookData: Book = {
     firstName: 'Jane',
     lastName: 'Austen',
     birthYear: '1775',
-    deathYear: '1817'
+    deathYear: '1817',
+    bookCount: 95
   },
   languages: ['en'],
   popularity: 50000,
@@ -81,6 +82,7 @@ describe('BookDetailView Integration', () => {
       expect(store.fetchBook).toHaveBeenCalledWith('1')
       expect(wrapper.text()).toContain('Pride and Prejudice')
       expect(wrapper.text()).toContain('Jane Austen')
+      expect(wrapper.text()).toContain('(95 books)')
       expect(wrapper.text()).not.toContain('50000')
     })
 

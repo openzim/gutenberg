@@ -14,17 +14,12 @@ export interface AuthorPreview {
   totalPopularity?: number
 }
 
-export interface Author {
-  id: string
-  firstName: string | null
-  lastName: string
+export interface Author extends AuthorPreview {
   birthYear: string | null
   deathYear: string | null
-  name: string
 }
 
 export interface AuthorDetail extends Author {
-  bookCount: number
   books: BookPreview[]
 }
 

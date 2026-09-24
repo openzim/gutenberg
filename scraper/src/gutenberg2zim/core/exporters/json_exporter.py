@@ -62,15 +62,20 @@ def _creator_to_preview(
     )
 
 
-def _creator_to_schema(creator: Creator) -> AuthorSchema:
+def _creator_to_schema(
+    creator: Creator, author_stats: dict[str, tuple[int, float]]
+) -> AuthorSchema:
     """Convert Creator to Author schema"""
+    book_count, total_popularity = author_stats.get(creator.id, (0, 0))
     return AuthorSchema(
         id=creator.id,
+        name=creator.name,
         first_name=creator.extra.get("first_names"),
         last_name=creator.sort_name or "",
         birth_year=creator_birth_year(creator),
         death_year=creator_death_year(creator),
-        name=creator.name,
+        book_count=book_count,
+        total_popularity=total_popularity,
     )
 
 
@@ -97,7 +102,9 @@ def _work_to_preview(
     )
 
 
-def _work_to_schema(work: Work, formats: list[str]) -> BookSchema:
+def _work_to_schema(
+    work: Work, formats: list[str], author_stats: dict[str, tuple[int, float]]
+) -> BookSchema:
     """Convert Work to Book schema with formats"""
     book_formats: list[BookFormat] = []
     available_formats = requested_formats(work, formats)
@@ -128,7 +135,7 @@ def _work_to_schema(work: Work, formats: list[str]) -> BookSchema:
         id=work.id,
         title=work.title,
         subtitle=work.subtitle,
-        author=_creator_to_schema(primary_creator(work)),
+        author=_creator_to_schema(primary_creator(work), author_stats),
         languages=work.languages,
         license=work.license or "Public domain in the USA.",
         popularity=float(work.popularity or 0),
@@ -265,7 +272,7 @@ def generate_json_files(
     logger.info("Generating detail JSON files")
     logger.debug("Generating book detail files")
     for work in all_works:
-        book_detail = _work_to_schema(work, formats)
+        book_detail = _work_to_schema(work, formats, author_stats)
         assembler.add_item_for(
             path=f"books/{work.id}.json",
             content=book_detail.model_dump_json(by_alias=True, indent=2),
@@ -300,13 +307,14 @@ def generate_json_files(
         ]
         author_detail = AuthorDetail(
             id=creator.id,
+            name=creator.name,
             first_name=creator.extra.get("first_names"),
             last_name=creator.sort_name or "",
             birth_year=creator_birth_year(creator),
             death_year=creator_death_year(creator),
-            name=creator.name,
             books=creator_works,
             book_count=len(creator_works),
+            total_popularity=author_stats.get(creator.id, (0, 0))[1],
         )
 
         assembler.add_item_for(
