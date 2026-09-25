@@ -53,7 +53,7 @@ def fetch_bytes_with_retry(
     session: requests.Session | None = None,
     timeout: int = DEFAULT_HTTP_TIMEOUT,
     max_retry_time: int = 30,
-    headers: dict[str, str] | None = None,
+    headers: dict[str, str | None] | None = None,
 ) -> bytes:
     """GET `url` and return its full content, retrying transient errors.
 
@@ -78,7 +78,15 @@ def fetch_bytes_with_retry(
         # Default User-Agent for session-less downloads (sessions set it too,
         # see _get_session) so every request identifies the caller
         merged_headers.setdefault("User-Agent", USER_AGENT)
-        with get(url, stream=True, timeout=timeout, headers=merged_headers) as response:
+        # A `None` header value means "do not send this header" (e.g. a
+        # `None` User-Agent): requests cannot represent a dropped header in
+        # the dict it passes to the transport, so drop None-valued entries
+        # here — this is what makes it possible to NOT send the User-Agent
+        # header when the caller does not want to identify itself
+        send_headers = {
+            name: value for name, value in merged_headers.items() if value is not None
+        }
+        with get(url, stream=True, timeout=timeout, headers=send_headers) as response:
             response.raise_for_status()
             content = io.BytesIO()
             for chunk in response.iter_content(chunk_size=DL_CHUNCK_SIZE):
@@ -104,6 +112,15 @@ class DownloadEngine:
         # requests.Session is not guaranteed thread-safe, so each worker
         # thread gets its own lazily-created persistent session
         self._injected_session = session
+        # Apply the default User-Agent on an injected session just once, at
+        # class initialization (setdefault semantics: only when the caller
+        # did not provide their own), so every request identifies the caller
+        # without defaulting it again on every _get_session() call
+        if (
+            isinstance(session, requests.Session)
+            and "User-Agent" not in session.headers
+        ):
+            session.headers["User-Agent"] = USER_AGENT
         self._local = threading.local()
         # Track every lazily-created thread-local session so close() can
         # release their connection pools at the end of the run
@@ -114,13 +131,8 @@ class DownloadEngine:
 
     def _get_session(self) -> requests.Session:
         if self._injected_session is not None:
-            # Also default the User-Agent on an injected session when the
-            # caller did not provide one, so requests stay identifiable
-            if (
-                isinstance(self._injected_session, requests.Session)
-                and "User-Agent" not in self._injected_session.headers
-            ):
-                self._injected_session.headers["User-Agent"] = USER_AGENT
+            # An injected session got its default User-Agent at class
+            # initialization (see __init__); nothing to re-apply here
             return self._injected_session
         session = getattr(self._local, "session", None)
         if session is None:
@@ -155,7 +167,9 @@ class DownloadEngine:
         """Whether downloads without an explicit target can be cached."""
         return self._cache_dir is not None
 
-    def fetch_bytes(self, url: str, headers: dict[str, str] | None = None) -> bytes:
+    def fetch_bytes(
+        self, url: str, headers: dict[str, str | None] | None = None
+    ) -> bytes:
         """GET `url` (with optional `headers`) and return its full content.
 
         Uses this engine's per-thread session, timeout and retry budget.

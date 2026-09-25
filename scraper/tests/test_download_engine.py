@@ -8,7 +8,6 @@ import requests
 from requests.adapters import HTTPAdapter
 
 from gutenberg2zim.core.download_engine import (
-    USER_AGENT,
     DownloadEngine,
     fetch_bytes_with_retry,
 )
@@ -196,9 +195,7 @@ def test_fetch_bytes_gives_up_immediately_on_fatal_4xx(session):
 # explicit `None` User-Agent must not be overwritten (see benoit74 review
 # comments on this file) so every caller can decide its own identity
 def test_fetch_bytes_custom_user_agent_wins_over_default(session):
-    fetch_bytes_with_retry(
-        URL, session=session, headers={"User-Agent": "custom/1.0"}
-    )
+    fetch_bytes_with_retry(URL, session=session, headers={"User-Agent": "custom/1.0"})
 
     merged = session.get.call_args.kwargs["headers"]
     assert merged["User-Agent"] == "custom/1.0"
@@ -206,8 +203,10 @@ def test_fetch_bytes_custom_user_agent_wins_over_default(session):
 
 
 def test_fetch_bytes_none_user_agent_is_passed_through(session):
+    # A `None` UA means "do not send the User-Agent header" (benoit74 review):
+    # the caller deliberately refuses to identify itself, so the merged
+    # headers passed to the transport must NOT contain the key at all
     fetch_bytes_with_retry(URL, session=session, headers={"User-Agent": None})
 
     merged = session.get.call_args.kwargs["headers"]
-    assert merged["User-Agent"] is None
-    assert merged["User-Agent"] is not USER_AGENT
+    assert "User-Agent" not in merged
