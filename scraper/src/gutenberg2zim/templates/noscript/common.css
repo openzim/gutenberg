@@ -194,3 +194,19 @@ tr:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+.author-portrait {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    margin: 20px 0;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.author-bio {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+}
+

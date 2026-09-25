@@ -34,6 +34,23 @@ def test_subjects_are_stored_for_opentextbooks():
     assert config.source_options["subjects"] == ["Mathematics", "Business - Accounting"]
 
 
+def test_with_author_details_is_opt_in_for_gutenberg():
+    config = build_scrape_config({"--source": "gutenberg"})
+    assert "with_author_details" not in config.source_options
+
+    config = build_scrape_config(
+        {"--source": "gutenberg", "--with-author-details": True}
+    )
+    assert config.source_options["with_author_details"] is True
+
+
+def test_with_author_details_is_rejected_for_opentextbooks():
+    with pytest.raises(CriticalError, match="belongs to --source gutenberg"):
+        build_scrape_config(
+            {"--source": "opentextbooks", "--with-author-details": True}
+        )
+
+
 def test_otl_ids_are_stored_for_opentextbooks():
     config = build_scrape_config({"--source": "opentextbooks", "--otl-ids": "42,108"})
 

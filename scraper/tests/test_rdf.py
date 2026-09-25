@@ -149,6 +149,9 @@ def test_rdf_parser():
     assert parsed.last_name == "Richardson"
     assert parsed.subtitle == ""
     assert (
+        parsed.webpage_resource == "https://en.wikipedia.org/wiki/James_Richardson_(explorer)"
+    )
+    assert (
         parsed.title
         == "Travels in the Great Desert of Sahara, in the Years of 1845 and 1846"
     )
@@ -178,6 +181,27 @@ def test_rdf_parser_minimal():
     assert parsed.bookshelf is None
     assert parsed.lcc_shelf is None
     assert parsed.languages == []
+
+
+def test_rdf_parser_webpage_defaults_to_none():
+    rdf = RdfParser(
+        f"""
+  {RDF_HEADER}
+  <pgterms:ebook rdf:about="ebooks/22094">
+    <dcterms:rights>Public domain in the USA.</dcterms:rights>
+    <pgterms:downloads>548</pgterms:downloads>
+    <dcterms:creator>
+      <pgterms:agent rdf:about="2009/agents/1">
+        <pgterms:name>Homer</pgterms:name>
+      </pgterms:agent>
+    </dcterms:creator>
+  </pgterms:ebook>
+</rdf:RDF>
+""",
+        22094,
+    )
+    parsed = rdf.parse()
+    assert parsed.webpage_resource is None
 
 
 def test_rdf_parser_multi_languages():
@@ -338,6 +362,7 @@ def test_rdf_parser_author(name, author_id, expected_first_name, expected_last_n
     assert parsed.first_name == expected_first_name
     assert parsed.last_name == expected_last_name
     assert parsed.author_id == author_id
+    assert parsed.webpage_resource == "https://en.wikipedia.org/wiki/J._W._N._Sullivan"
 
 
 def test_rdf_parser_title_missing_license():
@@ -450,6 +475,10 @@ def test_fetch_book_metadata_caches_rdf_on_disk(tmp_path):
     assert work is not None
     assert work.id == "22094"
     assert work.title.startswith("Travels in the Great Desert of Sahara")
+    assert (
+        work.creators[0].extra["webpage_resource"]
+        == "https://en.wikipedia.org/wiki/James_Richardson_(explorer)"
+    )
     session.get.assert_called_once()
 
     # second fetch: disk cache hit, no further HTTP

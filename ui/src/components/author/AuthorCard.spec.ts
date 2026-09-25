@@ -3,9 +3,11 @@
  */
 
 import { describe, it, expect, vi } from 'vitest'
+import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import AuthorCard from './AuthorCard.vue'
 import type { AuthorPreview } from '@/types'
+import { normalizeImagePath } from '@/utils/format-utils'
 
 // Mock i18n
 vi.mock('vue-i18n', () => ({
@@ -56,6 +58,40 @@ describe('AuthorCard', () => {
 
       expect(wrapper.find('.author-card').exists()).toBe(true)
       expect(wrapper.text()).toContain('Jane Austen')
+    })
+
+    it('renders portrait image when portraitPath is provided', () => {
+      const wrapper = mount(AuthorCard, {
+        props: { author: createAuthor({ portraitPath: './authors/austen-jane.webp' }) }
+      })
+
+      const avatar = wrapper.findComponent({ name: 'VAvatar' })
+      expect(avatar.exists()).toBe(true)
+
+      const portrait = avatar.findComponent({ name: 'VImg' })
+      expect(portrait.exists()).toBe(true)
+      expect(portrait.props('src')).toBe(normalizeImagePath('./authors/austen-jane.webp'))
+      expect(portrait.props('cover')).toBe(true)
+
+      const placeholder = portrait.findComponent({ name: 'VIcon' })
+      expect(placeholder.exists()).toBe(true)
+      expect(placeholder.props('icon')).toBe('mdi-account')
+    })
+
+    it('falls back to account icon placeholder when portrait fails to load', async () => {
+      const wrapper = mount(AuthorCard, {
+        props: { author: createAuthor({ portraitPath: './authors/austen-jane.webp' }) }
+      })
+
+      const avatar = wrapper.findComponent({ name: 'VAvatar' })
+      expect(avatar.findComponent({ name: 'VImg' }).exists()).toBe(true)
+
+      await avatar.find('img').trigger('error')
+      await nextTick()
+
+      expect(avatar.findComponent({ name: 'VImg' }).exists()).toBe(false)
+      const icons = avatar.findAllComponents({ name: 'VIcon' })
+      expect(icons.find((icon) => icon.props('icon') === 'mdi-account')).toBeDefined()
     })
 
     it('renders avatar with account icon', () => {

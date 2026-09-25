@@ -4,9 +4,10 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import type { AuthorPreview } from '@/types'
+import AuthorAvatar from '@/components/author/AuthorAvatar.vue'
 import CarouselArrow from '@/components/common/CarouselArrow.vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
-import { TYPOGRAPHY, AVATAR_SIZES, ICON_SIZES, LAYOUT } from '@/constants/theme'
+import { TYPOGRAPHY, LAYOUT } from '@/constants/theme'
 
 defineProps<{
   authors: AuthorPreview[]
@@ -106,9 +107,12 @@ const arrows = [
             >
               <button class="selected-author-card" @click="goToAuthor(author.id)">
                 <div class="selected-author-card__avatar-wrapper">
-                  <div class="selected-author-card__avatar">
-                    <v-icon color="white" icon="mdi-account" :size="ICON_SIZES.COMFORTABLE" />
-                  </div>
+                  <author-avatar
+                    :portrait-path="author.portraitPath"
+                    :name="author.name"
+                    variant="comfortable"
+                    class="selected-author-card__avatar"
+                  />
                 </div>
                 <h3 class="selected-author-card__name">
                   {{ author.name }}
@@ -208,14 +212,7 @@ const arrows = [
 }
 
 .selected-author-card__avatar {
-  background-color: rgb(var(--v-theme-authorAvatarBgd));
-  border-radius: 50%;
-  width: v-bind(AVATAR_SIZES.COMFORTABLE + 'px');
-  height: v-bind(AVATAR_SIZES.COMFORTABLE + 'px');
   transition: transform 0.2s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .selected-author-card__name {

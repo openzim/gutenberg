@@ -13,7 +13,8 @@
           "title": "Project Gutenberg",
           "value": "gutenberg",
           "dependents": [
-            "lcc_shelves"
+            "lcc_shelves",
+            "with_author_details"
           ]
         },
         {
@@ -151,6 +152,12 @@
       "required": false,
       "title": "Textbook IDs (Open Textbook Library only)",
       "description": "Comma-separated exact Open Textbook Library record IDs. Cannot be combined with Books."
+    },
+    "with_author_details": {
+      "type": "boolean",
+      "required": false,
+      "title": "With author details",
+      "description": "Add author details (biography and portrait) fetched from the English Wikipedia. Project Gutenberg source only for now."
     },
     "publisher": {
       "type": "string",

@@ -10,7 +10,15 @@
     {% include 'noscript/_nav.html' %}
     
     <h1>{{ author.name }}</h1>
-    
+
+    {% if author.portrait_path %}
+    <img class="author-portrait" src="../{{ author.portrait_path }}" alt="Portrait of {{ author.name }}">
+    {% endif %}
+
+    {% if author.bio %}
+    <div class="author-bio">{{ author.bio }}</div>
+    {% endif %}
+
     <div class="detail-info">
         <dl>
             <dt>Author ID</dt>
@@ -33,6 +41,11 @@
                 {% if author.birth_year or author.death_year %} - {% endif %}
                 {% if author.death_year %}{{ author.death_year }}{% endif %}
             </dd>
+            {% endif %}
+
+            {% if author.webpage_resource %}
+            <dt>Source</dt>
+            <dd><a href="{{ author.webpage_resource }}">{{ author.webpage_resource }}</a></dd>
             {% endif %}
         </dl>
     </div>

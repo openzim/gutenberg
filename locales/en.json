@@ -40,7 +40,9 @@
     },
     "author": {
       "bookCount": "{n} book | {n} books",
-      "viewAuthor": "View author: {name} ({bookCount})"
+      "viewAuthor": "View author: {name} ({bookCount})",
+      "about": "About",
+      "wikipediaSource": "Source: Wikipedia"
     },
     "collection": {
       "booksIn": "Books in {collection}",

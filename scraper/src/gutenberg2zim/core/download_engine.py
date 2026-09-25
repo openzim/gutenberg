@@ -22,15 +22,10 @@ from requests.adapters import HTTPAdapter
 from gutenberg2zim.constants import (
     DEFAULT_HTTP_TIMEOUT,
     DL_CHUNCK_SIZE,
-    SCRAPER,
+    USER_AGENT,
     logger,
 )
 from gutenberg2zim.core.ports import DownloadRequest
-
-# A descriptive User-Agent with contact info: the default python-requests UA is
-# rejected (HTTP 403) by some hosts, e.g. Wikimedia's ws-export, whose policy
-# requires identifying the client. See https://meta.wikimedia.org/wiki/User-Agent_policy
-USER_AGENT = f"{SCRAPER} (+https://github.com/openzim/gutenberg)"
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,6 +53,7 @@ def fetch_bytes_with_retry(
     session: requests.Session | None = None,
     timeout: int = DEFAULT_HTTP_TIMEOUT,
     max_retry_time: int = 30,
+    headers: dict[str, str] | None = None,
 ) -> bytes:
     """GET `url` and return its full content, retrying transient errors.
 
@@ -78,7 +74,11 @@ def fetch_bytes_with_retry(
         logger=None,
     )
     def _attempt() -> bytes:
-        with get(url, stream=True, timeout=timeout) as response:
+        merged_headers = dict(headers) if headers else {}
+        # Default User-Agent for session-less downloads (sessions set it too,
+        # see _get_session) so every request identifies the caller
+        merged_headers.setdefault("User-Agent", USER_AGENT)
+        with get(url, stream=True, timeout=timeout, headers=merged_headers) as response:
             response.raise_for_status()
             content = io.BytesIO()
             for chunk in response.iter_content(chunk_size=DL_CHUNCK_SIZE):
@@ -114,6 +114,13 @@ class DownloadEngine:
 
     def _get_session(self) -> requests.Session:
         if self._injected_session is not None:
+            # Also default the User-Agent on an injected session when the
+            # caller did not provide one, so requests stay identifiable
+            if (
+                isinstance(self._injected_session, requests.Session)
+                and "User-Agent" not in self._injected_session.headers
+            ):
+                self._injected_session.headers["User-Agent"] = USER_AGENT
             return self._injected_session
         session = getattr(self._local, "session", None)
         if session is None:
@@ -148,8 +155,8 @@ class DownloadEngine:
         """Whether downloads without an explicit target can be cached."""
         return self._cache_dir is not None
 
-    def fetch_bytes(self, url: str) -> bytes:
-        """GET `url` and return its full content, retrying transient errors.
+    def fetch_bytes(self, url: str, headers: dict[str, str] | None = None) -> bytes:
+        """GET `url` (with optional `headers`) and return its full content.
 
         Uses this engine's per-thread session, timeout and retry budget.
         """
@@ -158,6 +165,7 @@ class DownloadEngine:
             session=self._get_session(),
             timeout=self._timeout,
             max_retry_time=self._max_retry_time,
+            headers=headers,
         )
 
     def content_type(self, url: str) -> str | None:

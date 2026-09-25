@@ -110,6 +110,9 @@ def creator_template_context(creator: Creator) -> SimpleNamespace:
         last_name=creator.sort_name,
         birth_year=creator_birth_year(creator),
         death_year=creator_death_year(creator),
+        portrait_path=creator.extra.get("portrait_path"),
+        bio=creator.extra.get("bio"),
+        webpage_resource=creator.extra.get("webpage_resource"),
     )
 
 

@@ -43,6 +43,7 @@ class RdfParser:
         self.description = None
         self.birth_year: str | None = None
         self.death_year: str | None = None
+        self.webpage_resource: str | None = None
 
     def parse(self):
         soup = BeautifulSoup(self.rdf_data, "lxml-xml")
@@ -130,6 +131,12 @@ class RdfParser:
                         [element.strip() for element in author_name_elements[:0:-1]]
                     )
                 self.last_name = author_name_elements[0]
+
+            webpage_tag = author_tag.find("pgterms:webpage")
+            if isinstance(webpage_tag, Tag):
+                webpage_resource = webpage_tag.get("rdf:resource")
+                if isinstance(webpage_resource, str):
+                    self.webpage_resource = webpage_resource
 
         # Parsing the birth and (death, if the case) year of the author.
         # These values are likely to be null.
@@ -228,6 +235,7 @@ def _work_from_parser(parser: RdfParser) -> Work:
                     "first_names": first_names,
                     "birth_year_raw": parser.birth_year,
                     "death_year_raw": parser.death_year,
+                    "webpage_resource": parser.webpage_resource,
                 },
             )
         )

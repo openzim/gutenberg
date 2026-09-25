@@ -40,6 +40,9 @@ class DummyPipeline(Pipeline):
             self.store.add(works[0])
         self.calls.append(f"process:{ref.id}")
 
+    def enrich_authors(self) -> None:
+        self.calls.append("enrich")
+
 
 def build_pipeline(calls: list[str], store: WorkStore) -> DummyPipeline:
     metadata = MagicMock(name="metadata")
@@ -70,11 +73,24 @@ def test_run_calls_hooks_in_order_and_stores_works():
         patch("gutenberg2zim.core.pipeline.generate_json_files") as mock_json,
         patch("gutenberg2zim.core.pipeline.generate_noscript_pages") as mock_nojs,
     ):
+        mock_json.side_effect = lambda **_kwargs: calls.append("export")
         pipeline.run(refs)
 
     # setup hook ran first, then every ref was processed
     assert calls[0] == "setup"
-    assert sorted(calls[1:]) == ["process:1", "process:2", "process:3"]
+    assert sorted(calls[1:]) == [
+        "enrich",
+        "export",
+        "process:1",
+        "process:2",
+        "process:3",
+    ]
+
+    process_idxs = [
+        index for index, call in enumerate(calls) if call.startswith("process")
+    ]
+    assert calls.index("enrich") > max(process_idxs)
+    assert calls.index("export") > calls.index("enrich")
 
     # works were stored and flames were computed from their popularity
     assert len(store.works) == 3

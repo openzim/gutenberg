@@ -11,6 +11,7 @@ as of 2.0.0.
 ### Added
 
 - Add Wikisource as a source, ingesting the ws-export OPDS feeds (#582)
+- Add author biographies and portraits from Wikipedia with `--with-author-details` (#513)
 
 ### Changed
 

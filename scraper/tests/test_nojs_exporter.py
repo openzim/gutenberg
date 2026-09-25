@@ -74,3 +74,31 @@ def test_book_format_links_are_url_encoded():
     assert "Alice%27s%20Adventures%20in%20Wonderland.11" in page
     assert "Alice%27s%20Adventures%20in%20Wonderland.11.epub" in page
     assert "Alice%27s%20Adventures%20in%20Wonderland.11.pdf" in page
+
+
+def test_author_page_renders_bio_portrait_and_wikipedia_link():
+    assembler = MagicMock(name="assembler")
+    creator = Creator(
+        id="68",
+        name="Jane Austen",
+        extra={
+            "webpage_resource": "https://en.wikipedia.org/wiki/Jane_Austen",
+            "bio": "An English novelist.",
+            "portrait_path": "authors/68.webp",
+        },
+    )
+    store = WorkStore()
+    store.add(Work(id="1", source="gutenberg", title="Emma", creators=[creator]))
+
+    generate_noscript_pages(
+        formats=["html"],
+        work_store=store,
+        assembler=assembler,
+        display_name="Project Gutenberg",
+        indexes=IndexBuilder(store).build(display_name="Project Gutenberg"),
+    )
+
+    page = _item_call(assembler, "noscript/author_68.html").kwargs["content"]
+    assert "authors/68.webp" in page
+    assert "An English novelist." in page
+    assert "en.wikipedia.org/wiki/Jane_Austen" in page

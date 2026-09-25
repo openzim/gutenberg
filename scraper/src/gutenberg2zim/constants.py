@@ -13,6 +13,12 @@ VERSION = __version__
 
 SCRAPER = f"{NAME} {VERSION}"
 
+# Descriptive User-Agent identifying this scraper to every HTTP server we
+# talk to. The default python-requests UA is rejected (HTTP 403) by some
+# hosts, e.g. Wikimedia's ws-export, whose policy requires identifying the
+# client. See https://meta.wikimedia.org/wiki/User-Agent_policy
+USER_AGENT = f"{NAME}/{VERSION} (+https://github.com/openzim/gutenberg)"
+
 logger = getLogger(NAME, level=logging.INFO)
 
 FAVICON_PATH = ROOT_DIR / "templates" / "favicon.png"

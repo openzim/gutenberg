@@ -282,7 +282,9 @@ def build_zimfile(
             collection_icon_style=profile.collection_icon_style,
             engine=engine,
             title_search=title_search,
-            **profile.pipeline_options(mirror_url, config.cache_dir),
+            **profile.pipeline_options(
+                mirror_url, config.cache_dir, config.source_options
+            ),
         )
         pipeline.run(refs)
 

@@ -16,6 +16,7 @@ from gutenberg2zim.core.exporters.html_reader_controls import (
 )
 from gutenberg2zim.core.pipeline import Pipeline
 from gutenberg2zim.core.ports import WorkRef
+from gutenberg2zim.sources.gutenberg.author_enricher import enrich_authors
 from gutenberg2zim.sources.gutenberg.downloader import download_book
 from gutenberg2zim.sources.gutenberg.exporter import export_book
 
@@ -23,15 +24,34 @@ from gutenberg2zim.sources.gutenberg.exporter import export_book
 class GutenbergPipeline(Pipeline):
     """Per-book pipeline for the Gutenberg source, wired through ports"""
 
-    def __init__(self, *, engine: DownloadEngine, mirror_url: str, **kwargs):
+    def __init__(
+        self,
+        *,
+        engine: DownloadEngine,
+        mirror_url: str,
+        with_author_details: bool = False,
+        **kwargs,
+    ):
         super().__init__(**kwargs)
         self.engine = engine
         self.mirror_url = mirror_url
+        self.with_author_details = with_author_details
 
     def setup(self) -> None:
         # Export shared reader-control assets first to fail fast if any are missing.
         logger.info("Exporting HTML reader controls")
         export_html_reader_control_assets(self.assembler)
+
+    def enrich_authors(self) -> None:
+        """Fetch a biography and portrait for each author when requested."""
+        if not self.with_author_details:
+            return
+        enrich_authors(
+            self.store,
+            self.engine,
+            self.assembler,
+            concurrency=self.concurrency,
+        )
 
     def process_ref(self, ref: WorkRef) -> None:
         """Fetch metadata, download book content and export directly to ZIM"""

@@ -2,7 +2,8 @@
 import type { AuthorPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
-import { AVATAR_SIZES, ICON_SIZES, LAYOUT, TYPOGRAPHY } from '@/constants/theme'
+import AuthorAvatar from './AuthorAvatar.vue'
+import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 
 interface Props {
   author: AuthorPreview
@@ -45,29 +46,12 @@ const { t } = useI18n()
       }
     ]"
   >
-    <v-avatar
-      :size="
-        variant === 'compact'
-          ? AVATAR_SIZES.COMPACT
-          : variant === 'comfortable'
-            ? AVATAR_SIZES.COMFORTABLE
-            : AVATAR_SIZES.FULL
-      "
-      color="rgb(var(--v-theme-authorAvatarBgd))"
+    <author-avatar
+      :portrait-path="author.portraitPath"
+      :name="author.name"
+      :variant="variant"
       class="author-card__avatar"
-    >
-      <v-icon
-        icon="mdi-account"
-        color="white"
-        :size="
-          variant === 'compact'
-            ? ICON_SIZES.COMPACT
-            : variant === 'comfortable'
-              ? ICON_SIZES.COMFORTABLE
-              : ICON_SIZES.FULL
-        "
-      />
-    </v-avatar>
+    />
 
     <div class="author-card--infos">
       <h2 class="author-card__name">

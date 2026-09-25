@@ -139,6 +139,13 @@ class Pipeline(ABC):
         """Compute flame ratings after all works are processed."""
         compute_flame_ratings(self.store)
 
+    def enrich_authors(self) -> None:
+        """Optional post-processing hook to enrich author metadata before export.
+
+        Runs after popularity is computed and before the derived indexes and
+        exporters are built, so enriched data flows through the normal path.
+        """
+
     def run(self, refs: list[WorkRef]) -> None:
         """Orchestrate processing of discovered works and final exports"""
         self.setup()
@@ -181,6 +188,7 @@ class Pipeline(ABC):
         parallel_map(process_one, refs, self.concurrency)
 
         self.compute_flames()
+        self.enrich_authors()
 
         # Derived indexes (authors, per-author stats, search entries) built
         # once and shared by all exporters

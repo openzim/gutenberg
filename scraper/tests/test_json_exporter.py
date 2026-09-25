@@ -220,7 +220,51 @@ def test_book_detail_exports_popularity_and_flames():
         for call in assembler.add_item_for.call_args_list
         if call.kwargs["path"] == "books/10.json"
     )
+
     detail = json.loads(detail_call.kwargs["content"])
     assert detail["popularity"] == 4.07
     assert detail["flames"] == 3
     assert "primaryMetric" not in detail
+
+
+def test_author_details_include_wikipedia_enrichment_fields():
+    assembler = MagicMock(name="assembler")
+    creator = Creator(
+        id="68",
+        name="Jane Austen",
+        extra={
+            "first_names": "Jane",
+            "webpage_resource": "https://en.wikipedia.org/wiki/Jane_Austen",
+            "bio": "An English novelist.",
+            "portrait_path": "authors/68.webp",
+        },
+    )
+    store = WorkStore()
+    store.add(_work("1", "Emma", creator, "PR"))
+
+    generate_json_files(
+        zim_name="test",
+        formats=["html"],
+        work_store=store,
+        assembler=assembler,
+        display_name="Test Source",
+        indexes=_indexes(store),
+    )
+
+    detail_call = next(
+        call
+        for call in assembler.add_item_for.call_args_list
+        if call.kwargs["path"] == "authors/68.json"
+    )
+    detail = json.loads(detail_call.kwargs["content"])
+    assert detail["bio"] == "An English novelist."
+    assert detail["portraitPath"] == "authors/68.webp"
+    assert detail["webpageResource"] == "https://en.wikipedia.org/wiki/Jane_Austen"
+
+    listing_call = next(
+        call
+        for call in assembler.add_item_for.call_args_list
+        if call.kwargs["path"] == "authors.json"
+    )
+    authors = json.loads(listing_call.kwargs["content"])["authors"]
+    assert authors[0]["portraitPath"] == "authors/68.webp"
