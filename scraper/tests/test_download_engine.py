@@ -7,7 +7,11 @@ import pytest
 import requests
 from requests.adapters import HTTPAdapter
 
-from gutenberg2zim.core.download_engine import DownloadEngine, fetch_bytes_with_retry
+from gutenberg2zim.core.download_engine import (
+    USER_AGENT,
+    DownloadEngine,
+    fetch_bytes_with_retry,
+)
 from gutenberg2zim.core.ports import DownloadRequest
 
 URL = "https://example.org/books/12345.epub"
@@ -186,3 +190,24 @@ def test_fetch_bytes_gives_up_immediately_on_fatal_4xx(session):
         fetch_bytes_with_retry(URL, session=session)
 
     session.get.assert_called_once()
+
+
+# headers passed in as arg must win over the default User-Agent and an
+# explicit `None` User-Agent must not be overwritten (see benoit74 review
+# comments on this file) so every caller can decide its own identity
+def test_fetch_bytes_custom_user_agent_wins_over_default(session):
+    fetch_bytes_with_retry(
+        URL, session=session, headers={"User-Agent": "custom/1.0"}
+    )
+
+    merged = session.get.call_args.kwargs["headers"]
+    assert merged["User-Agent"] == "custom/1.0"
+    assert "gutenberg2zim" not in merged["User-Agent"]
+
+
+def test_fetch_bytes_none_user_agent_is_passed_through(session):
+    fetch_bytes_with_retry(URL, session=session, headers={"User-Agent": None})
+
+    merged = session.get.call_args.kwargs["headers"]
+    assert merged["User-Agent"] is None
+    assert merged["User-Agent"] is not USER_AGENT
