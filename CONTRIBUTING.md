@@ -1,6 +1,8 @@
 # Contributing
 
-Thank you for your interest in contributing to the Gutenberg scraper! This document provides guidelines for contributing to the project.
+Thank you for your interest in contributing to this multi-source book scraper!
+This document provides guidelines for contributing to the scraper and its ZIM
+user interface.
 
 For general openZIM contribution guidelines, see the [openZIM Contributing Wiki](https://github.com/openzim/overview/wiki/Contributing).
 
@@ -8,45 +10,55 @@ For general openZIM contribution guidelines, see the [openZIM Contributing Wiki]
 
 The project consists of several components:
 
-- **`scraper/`**: Python scraper that downloads books and generates ZIM files
+- **`scraper/`**: Python scraper that discovers works, downloads their editions,
+  and generates ZIM files
+  - `src/gutenberg2zim/core/`: source-agnostic models, ports, download and
+    optimization helpers, orchestration, indexing, and exporters
+  - `src/gutenberg2zim/sources/`: one package per source integration
+  - `src/gutenberg2zim/sources/registry.py`: the composition root where source
+    profiles are registered
 - **`ui/`**: Vue.js frontend that provides the user interface within the ZIM
-- **`locales/`**: UI translation files (multiple languages supported)
-- **`scraper/docs/`**: Technical documentation
-  - `JSON_FILE_STRUCTURE.md`: JSON schema documentation for the Vue.js UI
-  - `GUTENBERG_STRUCTURE.md`: Project Gutenberg structure and metadata documentation
+- **`locales/`**: Translatewiki-compatible UI messages, with shared and
+  source-specific namespaces
+- **`offliner-definition.json`**: Zimfarm recipe options
 
 ## Ways to Contribute
 
 ### 1. Adding UI Translations
 
-UI translations are managed through [translatewiki.net](https://translatewiki.net/w/i.php?title=Special:MessageGroupStats/kiwix-gutenberg). We welcome volunteers to contribute translations in their native languages.
+UI translations are managed through
+[translatewiki.net](https://translatewiki.net/w/i.php?title=Special:MessageGroupStats/kiwix-gutenberg).
+We welcome volunteers to contribute translations there.
 
-When a new language `<new_code>` starts being translated, developers need to add support for it:
+When code introduces a new message:
 
-1. **Add to `ui/src/plugins/i18n.ts`**:
-   - Add the language to the `supportedLanguages` dictionary
-   - Specify its native name and whether it's RTL (right-to-left)
+1. Add its English value to `locales/en.json`.
+2. Add translator documentation for the same key to `locales/qqq.json`.
+3. Do **not** add or modify that key in any other locale. Those translations
+   are maintained by Translatewiki contributors.
 
-2. **Update locale files**:
-   - Add `languageNames.<new_code>` key in `locales/en.json`
-   - Add `languageNames.<new_code>` key in `locales/qqq.json` (documentation)
-   - Add `languageNames.<new_code>` key in `locales/<new_code>.json`
+Shared messages belong below the top-level `common` key. Source wording belongs
+below the source's namespace, such as `gutenberg`, `opentextbooks`, or
+`wikisource`. Keep the top-level `@metadata` key first when it is present.
 
-**Example**: See [commit adding Hindi support](https://github.com/openzim/gutenberg/commit/f03b6320febda3545b44619864825ba1367802c9)
+Run `gutenberg2zim-validate-i18n` after changing messages. Missing source keys
+can otherwise appear literally in the UI.
 
 ### 2. Contributing Code
 
 #### Python Scraper
 
-The scraper is located in `scraper/src/gutenberg2zim/`. Key files:
+The scraper is located in `scraper/src/gutenberg2zim/`. Key areas are:
 
-- `entrypoint.py`: CLI argument parsing
-- `zim.py`: ZIM file creation
-- `download.py`: Book downloading logic
-- `export.py`: JSON generation for Vue.js UI
-- `rdf.py`: RDF metadata parsing
+- `cli.py` and `config.py`: global CLI parsing and validated scrape configuration
+- `orchestrator.py`: catalog construction, source wiring, and ZIM lifecycle
+- `core/`: reusable source-agnostic engine
+- `sources/registry.py`: source profiles and aliases
+- `sources/<source>/`: source-owned discovery, metadata, resolution, and
+  per-work processing
 
 **Setup**:
+
 ```bash
 cd scraper
 pip install hatch
@@ -54,6 +66,7 @@ hatch shell
 ```
 
 **Testing**:
+
 ```bash
 hatch run test:run
 ```
@@ -61,28 +74,23 @@ hatch run test:run
 **Linting**:
 
 Linux/macOS:
+
 ```bash
 hatch run lint:all
 ```
 
 Windows (hatch scripts don't work due to pty limitation):
+
 ```bash
 black src
 ruff check src
 ```
 
 **Type Checking**:
+
 ```bash
 hatch run check:all
 ```
-
-**Documentation**:
-
-Before contributing, familiarize yourself with these key documents:
-
-- **[JSON File Structure](scraper/docs/JSON_FILE_STRUCTURE.md)**: Detailed specification of the JSON schema used by the Vue.js UI. Essential reading if you're working on data export (`export.py`) or the Vue.js frontend. Explains the two-tier architecture (preview + detail files), file naming conventions, and loading strategies.
-
-- **[Gutenberg Structure](scraper/docs/GUTENBERG_STRUCTURE.md)**: Comprehensive overview of the project architecture, including directory structure, Python-to-Vue.js data flow, Pydantic schemas, and design decisions. Useful for understanding how the scraper and UI work together.
 
 #### Vue.js UI
 
@@ -95,27 +103,35 @@ The UI is located in `ui/src/`. Key directories:
 - `plugins/`: i18n and Vuetify setup
 
 **Setup**:
+
 ```bash
 cd ui
 npm install
 ```
 
 **Development**:
+
 ```bash
 npm run dev
 ```
 
 **Build**:
+
 ```bash
 npm run build
 ```
 
 **Linting**:
+
 ```bash
 npm run lint
 ```
 
-### 3. Developing the Vue.js UI with Real Data
+### 3. Adding a New Source
+
+See [Adding a New Source](docs/adding-a-source.md) for the complete architecture, implementation, and testing guide.
+
+### 4. Developing the Vue.js UI with Real Data
 
 When developing the UI, you need JSON assets (`books.json`, `authors.json`, etc.) generated by the scraper. Here's the recommended workflow:
 
@@ -168,20 +184,27 @@ The UI will be available at `http://localhost:5173` with hot reload.
 ## Code Style
 
 ### Python
+
 - Follow PEP 8 style guide
 - Use `ruff` for linting (configured in `pyproject.toml`)
 - Use `black` for formatting
 - Run `hatch run lint:all` before committing
+
 ### TypeScript/Vue
+
 - Follow the project's ESLint configuration
 - Use Prettier for formatting (configured in `.prettierrc.json`)
 - Run `npm run lint` before committing
 - Use TypeScript for type safety
 
 ### Locale Files
-- Use TAB indentation (not spaces)
-- Use CRLF line endings (Windows style)
-- Keep keys sorted alphabetically
+
+- Add new messages only to `locales/en.json` and `locales/qqq.json`.
+- Do not manually edit translations maintained through Translatewiki.
+- Keep `@metadata` at the top level and first when present.
+- Preserve the existing file's indentation and line endings; avoid unrelated
+  locale reformatting.
+- Keep keys organized consistently within their `common` or source namespace.
 
 ## Pull Request Guidelines
 
