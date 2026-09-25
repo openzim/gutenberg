@@ -14,6 +14,7 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.13",
   "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Development Status :: 7 - Inactive",
 ]
 dependencies = [
   "beautifulsoup4==4.14.2",
